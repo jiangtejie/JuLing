@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>juling</artifactId>
+        <groupId>com.lxjl.boot</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>juling-module-mall</artifactId>
+    <packaging>pom</packaging>
+
+    <name>${project.artifactId}</name>
+
+    <description>
+        商城大模块，由 product 商品、promotion 营销、trade 交易、statistics 统计等组成
+    </description>
+    <modules>
+        <module>juling-module-product</module>
+        <module>juling-module-promotion</module>
+        <module>juling-module-trade</module>
+        <module>juling-module-statistics</module>
+        <!--
+            特殊：为什么会有 juling-module-trade-api 呢？
+                juling-module-promotion 和 juling-module-trade 之间相互循环依赖，所以抽出 juling-module-trade-api 模块，这样：
+                1. juling-module-promotion 依赖 juling-module-trade-api
+                2. juling-module-trade 依赖 juling-module-promotion
+            从而不存在相互（循环）依赖，即 juling-module-trade => juling-module-promotion => juling-module-trade-api
+         -->
+        <module>juling-module-trade-api</module>
+    </modules>
+
+</project>

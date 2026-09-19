@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# pre-commit 钩子:阻止把大文件提交进仓库(默认阈值 5MB)
+#
+# 启用方式(每个克隆者执行一次):
+#     git config core.hooksPath script/git-hooks
+#
+# 临时绕过(确需提交大文件时):
+#     git commit --no-verify
+#
+# 建议:大文件放对象存储 / 附件服务器 / Git LFS,而不是提交进仓库。
+
+LIMIT_MB="${LARGE_FILE_LIMIT_MB:-5}"
+LIMIT=$((LIMIT_MB * 1024 * 1024))
+failed=0
+
+for f in $(git diff --cached --name-only --diff-filter=ACM); do
+    [ -f "$f" ] || continue
+    size=$(wc -c <"$f" 2>/dev/null || echo 0)
+    if [ "$size" -gt "$LIMIT" ]; then
+        mb=$((size / 1024 / 1024))
+        echo "  ✗ $f  (约 ${mb}MB)"
+        failed=1
+    fi
+done
+
+if [ "$failed" -ne 0 ]; then
+    echo ""
+    echo "提交被拒绝:以上文件超过 ${LIMIT_MB}MB。"
+    echo "  · 确需提交请使用:git commit --no-verify"
+    echo "  · 或改为放入对象存储/附件服务器,并在代码中引用其地址。"
+    exit 1
+fi
+
+exit 0

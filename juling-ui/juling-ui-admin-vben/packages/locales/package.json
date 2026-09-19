@@ -1,0 +1,29 @@
+{
+  "name": "@vben/locales",
+  "version": "5.7.0",
+  "homepage": "https://github.com/jiangtejie/JuLing",
+  "bugs": "https://github.com/jiangtejie/JuLing/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiangtejie/JuLing.git",
+    "directory": "packages/locales"
+  },
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@intlify/core-base": "catalog:",
+    "@vben-core/composables": "workspace:*",
+    "@vben-core/typings": "workspace:*",
+    "vue": "catalog:",
+    "vue-i18n": "catalog:"
+  }
+}

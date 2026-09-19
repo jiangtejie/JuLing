@@ -1,0 +1,58 @@
+[ {
+  "contentPath" : "java/InfraStudentPageReqVO",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/controller/admin/demo/vo/InfraStudentPageReqVO.java"
+}, {
+  "contentPath" : "java/InfraStudentRespVO",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/controller/admin/demo/vo/InfraStudentRespVO.java"
+}, {
+  "contentPath" : "java/InfraStudentSaveReqVO",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/controller/admin/demo/vo/InfraStudentSaveReqVO.java"
+}, {
+  "contentPath" : "java/InfraStudentImportExcelVO",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/controller/admin/demo/vo/InfraStudentImportExcelVO.java"
+}, {
+  "contentPath" : "java/InfraStudentImportRespVO",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/controller/admin/demo/vo/InfraStudentImportRespVO.java"
+}, {
+  "contentPath" : "java/InfraStudentController",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/controller/admin/demo/InfraStudentController.java"
+}, {
+  "contentPath" : "java/InfraStudentDO",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/dal/dataobject/demo/InfraStudentDO.java"
+}, {
+  "contentPath" : "java/InfraStudentMapper",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/dal/mysql/demo/InfraStudentMapper.java"
+}, {
+  "contentPath" : "xml/InfraStudentMapper",
+  "filePath" : "juling-module-infra/src/main/resources/mapper/demo/InfraStudentMapper.xml"
+}, {
+  "contentPath" : "java/InfraStudentServiceImpl",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/service/demo/InfraStudentServiceImpl.java"
+}, {
+  "contentPath" : "java/InfraStudentService",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/service/demo/InfraStudentService.java"
+}, {
+  "contentPath" : "java/InfraStudentServiceImplTest",
+  "filePath" : "juling-module-infra/src/test/java/com/lxjl/juling/module/infra/service/demo/InfraStudentServiceImplTest.java"
+}, {
+  "contentPath" : "java/ErrorCodeConstants_手动操作",
+  "filePath" : "juling-module-infra/src/main/java/com/lxjl/juling/module/infra/enums/ErrorCodeConstants_手动操作.java"
+}, {
+  "contentPath" : "sql/sql",
+  "filePath" : "sql/sql.sql"
+}, {
+  "contentPath" : "sql/h2",
+  "filePath" : "sql/h2.sql"
+}, {
+  "contentPath" : "vue/index",
+  "filePath" : "juling-ui-admin-vue3/src/views/infra/demo/index.vue"
+}, {
+  "contentPath" : "vue/StudentForm",
+  "filePath" : "juling-ui-admin-vue3/src/views/infra/demo/StudentForm.vue"
+}, {
+  "contentPath" : "vue/StudentImportForm",
+  "filePath" : "juling-ui-admin-vue3/src/views/infra/demo/StudentImportForm.vue"
+}, {
+  "contentPath" : "ts/index",
+  "filePath" : "juling-ui-admin-vue3/src/api/infra/demo/index.ts"
+} ]

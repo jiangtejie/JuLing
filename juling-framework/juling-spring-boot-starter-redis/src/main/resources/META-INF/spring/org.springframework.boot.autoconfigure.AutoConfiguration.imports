@@ -1,0 +1,2 @@
+com.lxjl.juling.framework.redis.config.JuLingRedisAutoConfiguration
+com.lxjl.juling.framework.redis.config.JuLingCacheAutoConfiguration

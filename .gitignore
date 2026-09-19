@@ -1,0 +1,129 @@
+######################################################################
+# Build Tools
+
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+.flattened-pom.xml
+
+######################################################################
+# IDE
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/*
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+######################################################################
+# Others
+*.log
+*.xml.versionsBackup
+*.swp
+
+!*/build/*.java
+!*/build/*.html
+!*/build/*.xml
+
+### JRebel ###
+rebel.xml
+
+application-my.yaml
+
+/juling-ui-app/unpackage/
+.DS_Store
+**/.DS_Store
+
+######################################################################
+# 大文件 / 安装包 / 归档(防止误提交把仓库撑大)
+# 说明:上游曾误提交 78MB 的安装包导致历史体积巨大;确需纳入请用 git add -f
+# 更强的体积校验可启用 script/git-hooks/pre-commit(见该目录说明)
+
+### 可执行文件 / 安装包
+*.exe
+*.msi
+*.msix
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.apk
+*.ipa
+*.appx
+*.iso
+*.img
+*.vhd
+*.vhdx
+
+### 归档文件
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bz2
+*.xz
+*.lz
+*.lzma
+*.zst
+
+### 大体积媒体 / 设计稿
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.wmv
+*.webm
+*.psd
+*.ai
+*.sketch
+*.fig
+*.cdr
+*.xmind
+
+### 大体积二进制 / 转储
+*.war
+*.aar
+*.so
+*.dll
+*.dylib
+*.dmp
+*.hprof
+*.pdb
+*.map
+
+### 本地临时 / 备份
+*.bak
+*.orig
+*.rej
+*.tmp
+*.temp
+*.cache
+
+### 运行期产物（日志/上传文件/临时文件），启动脚本仍纳入版本管理
+run/*
+!run/*.ps1
+!run/README.md

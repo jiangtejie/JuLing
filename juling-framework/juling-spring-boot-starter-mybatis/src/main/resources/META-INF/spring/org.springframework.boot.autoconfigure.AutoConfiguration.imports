@@ -1,0 +1,3 @@
+com.lxjl.juling.framework.datasource.config.JuLingDataSourceAutoConfiguration
+com.lxjl.juling.framework.mybatis.config.JuLingMybatisAutoConfiguration
+com.lxjl.juling.framework.translate.config.JuLingTranslateAutoConfiguration

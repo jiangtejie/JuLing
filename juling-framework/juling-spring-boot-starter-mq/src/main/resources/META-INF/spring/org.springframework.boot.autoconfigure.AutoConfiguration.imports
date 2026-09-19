@@ -1,0 +1,3 @@
+com.lxjl.juling.framework.mq.redis.config.JuLingRedisMQProducerAutoConfiguration
+com.lxjl.juling.framework.mq.redis.config.JuLingRedisMQConsumerAutoConfiguration
+com.lxjl.juling.framework.mq.rabbitmq.config.JuLingRabbitMQAutoConfiguration

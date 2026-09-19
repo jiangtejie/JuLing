@@ -1,0 +1,2 @@
+com.lxjl.juling.framework.quartz.config.JuLingQuartzAutoConfiguration
+com.lxjl.juling.framework.quartz.config.JuLingAsyncAutoConfiguration

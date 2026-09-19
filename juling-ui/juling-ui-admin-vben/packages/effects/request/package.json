@@ -1,0 +1,33 @@
+{
+  "name": "@vben/request",
+  "version": "5.7.0",
+  "homepage": "https://github.com/jiangtejie/JuLing",
+  "bugs": "https://github.com/jiangtejie/JuLing/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiangtejie/JuLing.git",
+    "directory": "packages/effects/request"
+  },
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@microsoft/fetch-event-source": "catalog:",
+    "@vben/locales": "workspace:*",
+    "@vben/utils": "workspace:*",
+    "axios": "catalog:",
+    "qs": "catalog:"
+  },
+  "devDependencies": {
+    "@types/qs": "catalog:",
+    "axios-mock-adapter": "catalog:"
+  }
+}

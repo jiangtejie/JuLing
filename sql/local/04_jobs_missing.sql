@@ -1,0 +1,7 @@
+-- 补齐缺失定时任务(由 MySQL 版转换;cms 模块任务已跳过)
+-- 幂等
+
+INSERT INTO infra_job (id, name, status, handler_name, handler_param, cron_expression, retry_count, retry_interval, monitor_timeout, creator, create_time, updater, update_time, deleted) VALUES (7111, 'HRM 薪资调整生效', 1, 'hrmSalaryChangeJob', '2026-08-01', '0 10 0 * * ?', 3, 60000, 1800000, 'admin', '2026-07-18 10:29:44', 1, '2026-07-30 15:08:29', 0) ON CONFLICT (id) DO NOTHING;
+INSERT INTO infra_job (id, name, status, handler_name, handler_param, cron_expression, retry_count, retry_interval, monitor_timeout, creator, create_time, updater, update_time, deleted) VALUES (7112, 'HRM 绩效申诉超期处理', 2, 'hrmPerformanceAppealTimeoutJob', '', '0 */5 * * * ?', 3, 60000, 1800000, 'admin', '2026-08-02 12:47:22', 'admin', '2026-08-02 12:47:22', 0) ON CONFLICT (id) DO NOTHING;
+INSERT INTO infra_job (id, name, status, handler_name, handler_param, cron_expression, retry_count, retry_interval, monitor_timeout, creator, create_time, updater, update_time, deleted) VALUES (12903, 'HRM 员工生命周期生效', 1, 'hrmEmployeeChangeJob', '', '0 5 0 * * ?', 3, 60000, 1800000, 1, '2026-08-02 21:16:44', 1, '2026-08-02 21:16:44', 0) ON CONFLICT (id) DO NOTHING;
+INSERT INTO infra_job (id, name, status, handler_name, handler_param, cron_expression, retry_count, retry_interval, monitor_timeout, creator, create_time, updater, update_time, deleted) VALUES (12906, 'PMS 知识库回收站清理 Job', 1, 'pmsKnowledgeRecycleCleanJob', '', '0 0 2 * * ?', 3, 60000, 0, 1, '2026-08-31 22:15:54', 1, '2026-08-31 22:15:54', 0) ON CONFLICT (id) DO NOTHING;

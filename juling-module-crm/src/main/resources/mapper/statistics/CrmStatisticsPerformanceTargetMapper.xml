@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lxjl.juling.module.crm.dal.mysql.statistics.CrmStatisticsPerformanceTargetMapper">
+
+    <resultMap id="CrmStatisticsPerformanceTargetActualResultMap"
+               type="com.lxjl.juling.module.crm.controller.admin.statistics.vo.performance.CrmStatisticsPerformanceTargetActualRespVO">
+        <result property="month" column="month"/>
+        <result property="currentPrice" column="current_price"/>
+    </resultMap>
+
+    <select id="selectContractActualByMonth"
+            resultMap="CrmStatisticsPerformanceTargetActualResultMap">
+        SELECT EXTRACT(MONTH FROM order_date) AS month,
+               COALESCE(SUM(total_price), 0) AS current_price
+          FROM crm_contract
+         WHERE deleted = 0
+           AND audit_status = ${@com.lxjl.juling.module.crm.enums.common.CrmAuditStatusEnum@APPROVE.status}
+           AND owner_user_id IN
+                <foreach collection="userIds" item="userId" open="(" close=")" separator=",">
+                    #{userId}
+                </foreach>
+           AND EXTRACT(YEAR FROM order_date) = #{year}
+         GROUP BY EXTRACT(MONTH FROM order_date)
+    </select>
+
+    <select id="selectReceivableActualByMonth"
+            resultMap="CrmStatisticsPerformanceTargetActualResultMap">
+        SELECT EXTRACT(MONTH FROM return_time) AS month,
+               COALESCE(SUM(price), 0) AS current_price
+          FROM crm_receivable
+         WHERE deleted = 0
+           AND audit_status = ${@com.lxjl.juling.module.crm.enums.common.CrmAuditStatusEnum@APPROVE.status}
+           AND owner_user_id IN
+                <foreach collection="userIds" item="userId" open="(" close=")" separator=",">
+                    #{userId}
+                </foreach>
+           AND EXTRACT(YEAR FROM return_time) = #{year}
+         GROUP BY EXTRACT(MONTH FROM return_time)
+    </select>
+
+</mapper>
+

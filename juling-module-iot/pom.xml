@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>juling</artifactId>
+        <groupId>com.lxjl.boot</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modules>
+        <module>juling-module-iot-biz</module>
+        <module>juling-module-iot-core</module>
+        <module>juling-module-iot-gateway</module>
+    </modules>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>juling-module-iot</artifactId>
+    <packaging>pom</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>
+        物联网模块
+                <!-- TODO 棱信矩灵：需要补充下说明！ -->
+    </description>
+
+</project>

@@ -1,0 +1,7 @@
+com.lxjl.juling.framework.apilog.config.JuLingApiLogAutoConfiguration
+com.lxjl.juling.framework.jackson.config.JuLingJacksonAutoConfiguration
+com.lxjl.juling.framework.swagger.config.JuLingSwaggerAutoConfiguration
+com.lxjl.juling.framework.web.config.JuLingWebAutoConfiguration
+com.lxjl.juling.framework.xss.config.JuLingXssAutoConfiguration
+com.lxjl.juling.framework.banner.config.JuLingBannerAutoConfiguration
+com.lxjl.juling.framework.encrypt.config.JuLingApiEncryptAutoConfiguration
