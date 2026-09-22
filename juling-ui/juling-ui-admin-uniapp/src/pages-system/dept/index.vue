@@ -25,10 +25,10 @@
           <!-- 第一行：名称、状态标签 -->
           <view class="flex items-center justify-between">
             <view class="flex items-center">
-              <view class="mr-16rpx h-48rpx w-48rpx flex items-center justify-center rounded-8rpx bg-[#1890ff]">
+              <view class="yd-bg-primary mr-16rpx h-48rpx w-48rpx flex items-center justify-center rounded-8rpx">
                 <wd-icon name="folder" size="20px" color="#fff" />
               </view>
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name }}
               </view>
             </view>
@@ -36,7 +36,7 @@
           </view>
           <!-- 第二行：负责人、子部门入口 -->
           <view class="mt-12rpx flex items-center justify-between pl-64rpx">
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               负责人：{{ getLeaderName(item.leaderUserId) }}
             </view>
             <view
@@ -44,7 +44,7 @@
               class="flex items-center"
               @click.stop="handleEnterChildren(item)"
             >
-              <text class="text-24rpx text-[#1890ff]">子部门 ({{ item.children.length }})</text>
+              <text class="yd-text-link text-24rpx">子部门 ({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>

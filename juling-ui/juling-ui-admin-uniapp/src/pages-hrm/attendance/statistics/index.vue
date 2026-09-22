@@ -32,44 +32,44 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.employeeName || '-' }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.jobNumber || '-' }} · {{ item.deptName || '-' }}
               </view>
             </view>
             <view
               class="shrink-0 rounded-8rpx px-12rpx py-4rpx text-22rpx"
-              :class="item.fullAttendance ? 'bg-[#f6ffed] text-[#52c41a]' : 'bg-[#fff7e6] text-[#fa8c16]'"
+              :class="item.fullAttendance ? 'yd-bg-success-soft yd-text-success' : 'yd-bg-warning-soft yd-text-warning'"
             >
               {{ item.fullAttendance ? '全勤' : '非全勤' }}
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">岗位：</text>{{ item.postName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">岗位：</text>{{ item.postName || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">应出勤：</text>{{ item.attendDays ?? 0 }} 天
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">实出勤：</text>{{ formatHrmDays(item.actualDays) }} 天
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">应出勤：</text>{{ item.attendDays ?? 0 }} 天
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">实出勤：</text>{{ formatHrmDays(item.actualDays) }} 天
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">迟到：</text>{{ item.lateCount ?? 0 }} 次 / {{ item.lateMinute ?? 0 }} 分
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">迟到：</text>{{ item.lateCount ?? 0 }} 次 / {{ item.lateMinute ?? 0 }} 分
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">早退：</text>{{ item.earlyCount ?? 0 }} 次 / {{ item.earlyMinute ?? 0 }} 分
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">早退：</text>{{ item.earlyCount ?? 0 }} 次 / {{ item.earlyMinute ?? 0 }} 分
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">旷工：</text>{{ formatHrmDays(item.absenteeismDays) }} 天
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">缺卡：</text>{{ item.misscardCount ?? 0 }} 次
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">旷工：</text>{{ formatHrmDays(item.absenteeismDays) }} 天
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">缺卡：</text>{{ item.misscardCount ?? 0 }} 次
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">请假：</text>{{ formatHrmDays(item.leaveDays) }} 天
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">请假：</text>{{ formatHrmDays(item.leaveDays) }} 天
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">考勤扣款：</text>{{ formatHrmMoney(item.attendanceDeductAmount) }} 元
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">考勤扣款：</text>{{ formatHrmMoney(item.attendanceDeductAmount) }} 元
           </view>
         </view>
       </view>

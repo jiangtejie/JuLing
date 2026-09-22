@@ -10,7 +10,7 @@
       <template #right>
         <text
           v-if="showAddFriend"
-          class="pr-8rpx text-28rpx text-[#333]"
+          class="yd-text-main pr-8rpx text-28rpx"
           @click="openFriendApply"
         >
           添加朋友
@@ -25,7 +25,7 @@
           <wd-icon name="arrow-left" size="38rpx" color="#333" @click="handleBack" />
           <text
             v-if="showAddFriend"
-            class="whitespace-nowrap text-26rpx text-[#333]"
+            class="yd-text-main whitespace-nowrap text-26rpx"
             @click="openFriendApply"
           >
             添加朋友

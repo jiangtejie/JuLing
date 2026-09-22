@@ -1,8 +1,8 @@
 <template>
   <view class="mb-20rpx rounded-12rpx bg-white">
     <view class="flex items-center justify-between px-24rpx py-16rpx">
-      <text class="text-28rpx text-[#333] font-semibold">执行器 {{ index + 1 }}</text>
-      <text class="text-26rpx text-[#fa4350]" @click="emit('remove')">删除</text>
+      <text class="yd-text-main text-28rpx font-semibold">执行器 {{ index + 1 }}</text>
+      <text class="yd-text-danger text-26rpx" @click="emit('remove')">删除</text>
     </view>
     <wd-cell-group border>
       <yd-form-picker
@@ -65,9 +65,9 @@
     </wd-cell-group>
 
     <!-- 参数提示 -->
-    <view v-if="isDeviceControl" class="border-t border-[#f2f3f5] px-24rpx py-20rpx">
+    <view v-if="isDeviceControl" class="yd-border-light border-t px-24rpx py-20rpx">
       <view class="mb-12rpx flex items-center justify-between">
-        <text class="text-26rpx text-[#666]">参数提示</text>
+        <text class="yd-text-sub text-26rpx">参数提示</text>
         <wd-button v-if="paramsHintList.length" size="small" type="primary" variant="plain" @click="fillParamsExample">
           填充示例
         </wd-button>
@@ -76,24 +76,24 @@
         <view
           v-for="param in paramsHintList"
           :key="param.identifier"
-          class="mb-10rpx rounded-8rpx bg-[#f7f8fa] px-16rpx py-12rpx"
+          class="yd-bg-subtle mb-10rpx rounded-8rpx px-16rpx py-12rpx"
         >
-          <view class="text-26rpx text-[#333]">
+          <view class="yd-text-main text-26rpx">
             {{ param.name || param.identifier }}
-            <text v-if="param.required" class="ml-8rpx text-[#fa4350]">必填</text>
+            <text v-if="param.required" class="yd-text-danger ml-8rpx">必填</text>
           </view>
-          <view class="mt-4rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-4rpx text-24rpx">
             {{ param.identifier }} / {{ param.dataType || '-' }}
           </view>
         </view>
-        <view class="rounded-8rpx bg-[#f7f8fa] px-16rpx py-12rpx text-24rpx text-[#666]">
+        <view class="yd-text-sub yd-bg-subtle rounded-8rpx px-16rpx py-12rpx text-24rpx">
           {{ paramsExampleText }}
         </view>
-        <view v-if="paramsJsonMessage" class="mt-10rpx text-24rpx" :class="paramsJsonError ? 'text-[#fa4350]' : 'text-[#07c160]'">
+        <view v-if="paramsJsonMessage" class="mt-10rpx text-24rpx" :class="paramsJsonError ? 'yd-text-danger' : 'yd-text-success'">
           {{ paramsJsonMessage }}
         </view>
       </view>
-      <view v-else class="text-24rpx text-[#999]">
+      <view v-else class="yd-text-hint text-24rpx">
         {{ paramsEmptyText }}
       </view>
     </view>

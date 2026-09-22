@@ -40,7 +40,7 @@
       <!-- 群成员 -->
       <wd-cell-group border class="mt-20rpx">
         <view class="flex items-center justify-between gap-16rpx px-24rpx py-20rpx">
-          <view class="text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-30rpx font-semibold">
             群成员（{{ filteredMembers.length }}）
           </view>
           <wd-radio-group v-model="memberScope" type="button" size="small">
@@ -52,7 +52,7 @@
             </wd-radio>
           </wd-radio-group>
         </view>
-        <view v-if="filteredMembers.length === 0" class="px-24rpx pb-24rpx text-26rpx text-[#999]">
+        <view v-if="filteredMembers.length === 0" class="yd-text-hint px-24rpx pb-24rpx text-26rpx">
           暂无成员
         </view>
         <view
@@ -69,20 +69,20 @@
               mode="aspectFill"
               round
             />
-            <view v-else class="h-64rpx w-64rpx flex items-center justify-center rounded-full bg-[#f0f2f5] text-22rpx text-[#bbb]">
+            <view v-else class="yd-bg-subtle yd-text-muted h-64rpx w-64rpx flex items-center justify-center rounded-full text-22rpx">
               {{ (member.displayUserName || member.nickname || '?').slice(0, 1) }}
             </view>
             <view class="min-w-0 flex-1">
-              <view class="line-clamp-1 text-28rpx text-[#333]">
+              <view class="yd-text-main line-clamp-1 text-28rpx">
                 {{ member.displayUserName || member.nickname || `用户 ${member.userId}` }}
               </view>
-              <view class="mt-2rpx text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-2rpx text-22rpx">
                 {{ member.nickname || `用户 ${member.userId}` }} · ID {{ member.userId }}
               </view>
             </view>
             <dict-tag v-if="member.role != null" :type="DICT_TYPE.IM_GROUP_MEMBER_ROLE" :value="member.role" />
           </view>
-          <view class="grid grid-cols-2 ml-80rpx mt-14rpx gap-x-20rpx gap-y-10rpx text-23rpx text-[#777]">
+          <view class="yd-text-sub grid grid-cols-2 ml-80rpx mt-14rpx gap-x-20rpx gap-y-10rpx text-23rpx">
             <view>
               状态：{{ member.quitTime || member.status === CommonStatusEnum.DISABLE ? '已退出' : '群内' }}
             </view>
@@ -240,7 +240,7 @@ async function handleDissolve() {
     toast.success('解散成功')
     uni.$emit('im:manager:group:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     processing.value = false
   }
 }

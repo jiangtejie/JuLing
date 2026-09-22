@@ -14,13 +14,13 @@
     <!-- 商品选择弹窗 -->
     <wd-popup
       v-model="pickerVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0; height: 70vh;"
       @close="pickerVisible = false"
     >
       <view class="h-70vh flex flex-col p-24rpx">
-        <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
           选择商品
         </view>
         <wd-search v-model="keyword" placeholder="搜索商品名称" hide-cancel @search="() => {}" />
@@ -28,23 +28,23 @@
           <view
             v-for="item in filteredSpuList"
             :key="item.id"
-            class="mb-12rpx flex items-center gap-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx"
+            class="yd-bg-subtle mb-12rpx flex items-center gap-16rpx rounded-8rpx p-16rpx"
             @click="handleSelect(item)"
           >
             <view v-if="item.picUrl" class="shrink-0">
               <wd-img :src="item.picUrl" width="80rpx" height="80rpx" radius="8rpx" mode="aspectFill" />
             </view>
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333]">
+              <view class="yd-text-main truncate text-28rpx">
                 {{ item.name || `商品 #${item.id}` }}
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 {{ formatDisplayMoney(item.price) }}
               </view>
             </view>
             <wd-icon v-if="item.id === modelValue" name="check" color="var(--wot-color-theme)" />
           </view>
-          <view v-if="!filteredSpuList.length" class="py-48rpx text-center text-26rpx text-[#999]">
+          <view v-if="!filteredSpuList.length" class="yd-text-hint py-48rpx text-center text-26rpx">
             暂无商品
           </view>
         </scroll-view>

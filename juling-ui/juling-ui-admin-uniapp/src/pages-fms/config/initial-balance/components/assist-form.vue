@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="bg-[#f5f5f5]">
+    <view class="yd-bg-page">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="visible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           添加辅助核算明细
         </view>
         <wd-button type="primary" size="small" :disabled="!canConfirm" @click="handleConfirm">
@@ -21,7 +21,7 @@
 
       <view class="p-24rpx">
         <!-- 所属科目 -->
-        <view class="mb-20rpx rounded-12rpx bg-white p-24rpx text-28rpx text-[#333] shadow-sm">
+        <view class="yd-text-main mb-20rpx rounded-12rpx bg-white p-24rpx text-28rpx shadow-sm">
           {{ subject?.subjectCode }} {{ subject?.subjectName }}
         </view>
 
@@ -32,9 +32,9 @@
           class="mb-20rpx flex items-center justify-between rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleOpen(config)"
         >
-          <text class="text-28rpx text-[#666]">{{ config.name }}</text>
+          <text class="yd-text-sub text-28rpx">{{ config.name }}</text>
           <view class="flex items-center gap-8rpx">
-            <text class="text-28rpx" :class="selections[config.auxiliaryTypeId] ? 'text-[#333]' : 'text-[#999]'">
+            <text class="text-28rpx" :class="selections[config.auxiliaryTypeId] ? 'yd-text-main' : 'yd-text-hint'">
               {{ selections[config.auxiliaryTypeId]?.name || `请选择${config.name}` }}
             </text>
             <wd-icon name="arrow-right" size="12px" color="#999" />

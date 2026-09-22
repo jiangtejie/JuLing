@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="公众号粉丝详情"
@@ -17,7 +17,7 @@
         <wd-cell title="昵称" :value="formData?.nickname || '-'" />
         <wd-cell title="备注" :value="formData?.remark || '-'" />
         <wd-cell title="用户标识">
-          <view class="break-all text-right text-26rpx text-[#666]">
+          <view class="yd-text-sub break-all text-right text-26rpx">
             {{ formData?.openid || '-' }}
           </view>
         </wd-cell>
@@ -53,7 +53,8 @@
 import type { Tag } from '@/api/mp/tag'
 import type { MpUser } from '@/api/mp/user'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getSimpleTagList } from '@/api/mp/tag'
 import { getUser } from '@/api/mp/user'
 import { useAccess } from '@/hooks/useAccess'
@@ -121,7 +122,7 @@ function handleEdit() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   loadTagList()
   getDetail()
 })

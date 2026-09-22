@@ -44,14 +44,14 @@
       >
         <!-- 分类标题 -->
         <view class="mb-16rpx flex items-center">
-          <text class="text-28rpx text-[#333] font-bold">{{ item.name }}</text>
+          <text class="yd-text-main text-28rpx font-bold">{{ item.name }}</text>
         </view>
         <!-- 流程列表 -->
         <view class="overflow-hidden rounded-16rpx bg-white">
           <view
             v-for="definition in groupedDefinitions[item.code]"
             :key="definition.id"
-            class="flex items-center border-b border-[#f5f5f5] p-24rpx last:border-b-0"
+            class="yd-border-light flex items-center border-b p-24rpx last:border-b-0"
             @click="handleSelect(definition)"
           >
             <wd-img
@@ -70,7 +70,7 @@
             >
               <text class="text-24rpx text-white font-bold">{{ getIconText(definition.name) }}</text>
             </view>
-            <text class="text-28rpx text-[#333]">{{ definition.name }}</text>
+            <text class="yd-text-main text-28rpx">{{ definition.name }}</text>
           </view>
         </view>
       </view>

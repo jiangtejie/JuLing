@@ -3,10 +3,10 @@
     <view
       v-for="(scope, index) in model"
       :key="index"
-      class="border-b border-[#f0f0f0] px-24rpx py-20rpx"
+      class="yd-border-light border-b px-24rpx py-20rpx"
     >
       <view class="mb-12rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-semibold">
+        <text class="yd-text-main text-28rpx font-semibold">
           考核范围 {{ index + 1 }}
         </text>
         <wd-button
@@ -76,7 +76,7 @@
         新增考核范围
       </wd-button>
     </view>
-    <view v-if="!model.length" class="px-24rpx py-24rpx text-28rpx text-[#999]">
+    <view v-if="!model.length" class="yd-text-hint px-24rpx py-24rpx text-28rpx">
       暂无考核范围，请新增
     </view>
   </view>

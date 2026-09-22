@@ -25,7 +25,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.companyName }}
             </view>
             <view class="flex flex-shrink-0 gap-8rpx">
@@ -37,18 +37,18 @@
               </wd-tag>
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">公司编码：</text>{{ item.companyCode || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">公司编码：</text>{{ item.companyCode || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">联系人：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">联系人：</text>
             {{ [item.contactName, item.mobile].filter(Boolean).join(' / ') || '-' }}
           </view>
-          <view v-if="item.initialized" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">启用期间：</text>{{ formatFmsStartTime(item.startTime) || '-' }}
+          <view v-if="item.initialized" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">启用期间：</text>{{ formatFmsStartTime(item.startTime) || '-' }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>
       </view>

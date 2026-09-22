@@ -14,7 +14,7 @@
     </view>
     <view :class="selectMode && canMultiSelect ? 'min-w-0 flex-1' : ''">
       <!-- 时间分隔 -->
-      <view v-if="showTime" class="mb-12rpx text-center text-22rpx text-[#aaa]">
+      <view v-if="showTime" class="yd-text-muted mb-12rpx text-center text-22rpx">
         {{ formatTimeTip(toTimestamp(message.sendTime)) }}
       </view>
       <!-- 私聊通话记录：保留一键重拨能力 -->
@@ -28,7 +28,7 @@
         </view>
         <view
           class="flex items-center gap-12rpx rounded-8rpx px-24rpx py-18rpx text-28rpx"
-          :class="isSelf ? 'bg-[#95ec69] text-[#222]' : 'bg-white text-[#333]'"
+          :class="isSelf ? 'bg-[#95ec69] yd-text-strong' : 'bg-white yd-text-main'"
           @click.stop="onRtcRedial"
         >
           <wd-icon name="phone" size="34rpx" />
@@ -36,7 +36,7 @@
         </view>
       </view>
       <!-- 系统提示（撤回 / 群通知 / 好友提示 / 群通话）：居中灰条 -->
-      <view v-else-if="isSystemTip" class="py-6rpx text-center text-22rpx text-[#999]">
+      <view v-else-if="isSystemTip" class="yd-text-hint py-6rpx text-center text-22rpx">
         <MessageTipSegments
           v-if="systemTipSegments.length"
           :segments="systemTipSegments"
@@ -58,7 +58,7 @@
           :class="isChannelMaterial ? 'items-center' : isSelf ? 'items-end' : 'items-start'"
         >
           <!-- 群聊对方昵称 -->
-          <view v-if="showSenderName" class="mb-8rpx text-22rpx text-[#999]">
+          <view v-if="showSenderName" class="yd-text-hint mb-8rpx text-22rpx">
             {{ senderName }}
           </view>
           <!-- 引用消息与气泡 -->
@@ -90,7 +90,7 @@
           <!-- 发送状态 -->
           <view
             v-if="statusText || showGroupReadStatus || isAtMe"
-            class="mt-8rpx text-22rpx text-[#bbb]"
+            class="yd-text-muted mt-8rpx text-22rpx"
             :class="isSelf ? 'text-right' : 'text-left'"
             @click="onStatusClick"
           >
@@ -102,7 +102,7 @@
               @receipt="onReceipt"
             />
             <text v-else-if="statusText">{{ statusText }}</text>
-            <text v-if="isAtMe" class="border border-[#fa5151] rounded-5rpx px-8rpx py-2rpx text-[#fa5151]">
+            <text v-if="isAtMe" class="yd-text-danger border border-[#fa5151] rounded-5rpx px-8rpx py-2rpx">
               @我
             </text>
           </view>

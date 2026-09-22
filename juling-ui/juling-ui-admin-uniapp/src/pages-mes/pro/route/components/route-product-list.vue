@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view v-if="showTitle || editable" class="flex items-center justify-between px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         <template v-if="showTitle">
           关联产品
         </template>
@@ -10,20 +10,20 @@
         关联产品
       </wd-button>
     </view>
-    <view v-if="loading" class="px-24rpx pb-24rpx text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint px-24rpx pb-24rpx text-26rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="px-24rpx pb-24rpx text-26rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint px-24rpx pb-24rpx text-26rpx">
       暂无关联产品
     </view>
     <view v-else class="px-24rpx pb-8rpx">
-      <view v-for="item in list" :key="item.id" class="mb-20rpx rounded-12rpx bg-[#f8fafc] p-20rpx">
+      <view v-for="item in list" :key="item.id" class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx">
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-30rpx font-semibold">
               {{ item.itemName || '-' }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               {{ item.itemCode || '-' }}
             </view>
           </view>
@@ -36,7 +36,7 @@
             </wd-button>
           </view>
         </view>
-        <view class="text-26rpx text-[#666] space-y-8rpx">
+        <view class="yd-text-sub text-26rpx space-y-8rpx">
           <view>规格型号：{{ item.specification || '-' }}</view>
           <view>单位：{{ item.unitName || '-' }}</view>
           <view>生产数量：{{ item.quantity ?? '-' }}</view>
@@ -64,8 +64,8 @@
 
   <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0; max-height: 86vh;">
     <view class="max-h-[86vh] flex flex-col bg-white">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-        <text class="text-32rpx text-[#333] font-semibold">{{ formTitle }}</text>
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+        <text class="yd-text-main text-32rpx font-semibold">{{ formTitle }}</text>
         <wd-icon name="close" size="36rpx" @click="formVisible = false" />
       </view>
       <scroll-view class="min-h-0 flex-1" scroll-y>

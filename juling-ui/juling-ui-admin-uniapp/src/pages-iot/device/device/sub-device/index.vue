@@ -23,7 +23,7 @@
     <!-- 子设备列表 -->
     <view class="min-h-0 flex-1 overflow-y-auto px-24rpx pb-24rpx">
       <wd-loading v-if="loading" />
-      <view v-else-if="list.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-else-if="list.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
         暂无子设备
       </view>
       <wd-checkbox-group v-else v-model="selectedIds">
@@ -39,19 +39,19 @@
               :name="item.id"
               @click.stop
             />
-            <view class="min-w-0 flex-1 text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-32rpx font-semibold">
               {{ item.deviceName || '-' }}
             </view>
             <dict-tag :type="DICT_TYPE.IOT_DEVICE_STATE" :value="item.state" />
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">备注名称：</text>{{ item.nickname || '-' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">备注名称：</text>{{ item.nickname || '-' }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">所属产品：</text>{{ item.productName || item.productId || '-' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">所属产品：</text>{{ item.productName || item.productId || '-' }}
           </view>
           <view class="flex items-center justify-between">
-            <text class="text-24rpx text-[#999]">{{ formatDateTime(item.onlineTime) || '-' }}</text>
+            <text class="yd-text-hint text-24rpx">{{ formatDateTime(item.onlineTime) || '-' }}</text>
             <wd-button
               v-if="hasAccessByCodes(['iot:device:update'])"
               size="small"
@@ -68,9 +68,9 @@
     </view>
 
     <!-- 绑定子设备弹窗 -->
-    <wd-popup v-model="bindVisible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="bindVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[80vh] p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           添加子设备（{{ bindTotal }}）
         </view>
         <view class="mb-24rpx">
@@ -105,14 +105,14 @@
           >
             <view class="pb-12rpx">
               <wd-checkbox-group v-model="bindSelectedIds">
-                <view v-for="item in bindList" :key="item.id" class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx">
+                <view v-for="item in bindList" :key="item.id" class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx">
                   <view class="mb-8rpx flex items-center gap-12rpx">
                     <wd-checkbox v-if="item.id" :name="item.id" />
-                    <view class="min-w-0 flex-1 text-28rpx text-[#333] font-medium">
+                    <view class="yd-text-main min-w-0 flex-1 text-28rpx font-medium">
                       {{ item.deviceName || '-' }}
                     </view>
                   </view>
-                  <view class="mb-12rpx text-24rpx text-[#666]">
+                  <view class="yd-text-sub mb-12rpx text-24rpx">
                     所属产品：{{ item.productName || item.productId || '-' }}
                   </view>
                   <wd-button size="small" type="primary" :loading="bindingId === item.id" @click="handleBind(item)">

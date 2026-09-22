@@ -33,40 +33,40 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
               <view class="mr-16rpx flex-1">
-                <view class="line-clamp-1 text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main line-clamp-1 text-32rpx font-semibold">
                   {{ item.processInstance?.name || '-' }}
                 </view>
-                <view class="mt-8rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-24rpx">
                   当前任务：{{ item.name }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.BPM_TASK_STATUS" :value="item.status" />
             </view>
             <view class="mb-12rpx flex items-center">
-              <view class="mr-8rpx h-48rpx w-48rpx flex items-center justify-center rounded-full bg-[#1890ff] text-20rpx text-white">
+              <view class="yd-bg-primary mr-8rpx h-48rpx w-48rpx flex items-center justify-center rounded-full text-20rpx text-white">
                 {{ item.processInstance?.startUser?.nickname?.[0] || '?' }}
               </view>
               <view class="flex-1">
-                <view class="text-28rpx text-[#333]">
+                <view class="yd-text-main text-28rpx">
                   发起人：{{ item.processInstance?.startUser?.nickname || '-' }}
                 </view>
-                <view class="text-24rpx text-[#999]">
+                <view class="yd-text-hint text-24rpx">
                   审批人：{{ item.assigneeUser?.nickname || '-' }}
                 </view>
               </view>
             </view>
             <view class="rounded-8rpx bg-[#f7f8f9] p-16rpx">
               <view class="mb-8rpx flex items-center justify-between text-26rpx">
-                <text class="text-[#999]">任务开始时间</text>
-                <text class="text-[#333]">{{ formatDateTime(item.createTime) }}</text>
+                <text class="yd-text-hint">任务开始时间</text>
+                <text class="yd-text-main">{{ formatDateTime(item.createTime) }}</text>
               </view>
               <view v-if="item.endTime" class="mb-8rpx flex items-center justify-between text-26rpx">
-                <text class="text-[#999]">任务结束时间</text>
-                <text class="text-[#333]">{{ formatDateTime(item.endTime) }}</text>
+                <text class="yd-text-hint">任务结束时间</text>
+                <text class="yd-text-main">{{ formatDateTime(item.endTime) }}</text>
               </view>
               <view v-if="item.reason" class="flex items-center justify-between text-26rpx">
-                <text class="text-[#999]">审批建议</text>
-                <text class="line-clamp-1 ml-16rpx flex-1 text-right text-[#333]">{{ item.reason }}</text>
+                <text class="yd-text-hint">审批建议</text>
+                <text class="yd-text-main line-clamp-1 ml-16rpx flex-1 text-right">{{ item.reason }}</text>
               </view>
             </view>
           </view>

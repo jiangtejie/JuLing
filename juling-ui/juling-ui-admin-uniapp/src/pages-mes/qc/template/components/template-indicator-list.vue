@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
-    <view v-if="showTitle" class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+    <view v-if="showTitle" class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+      <view class="yd-text-main text-30rpx font-semibold">
         检测指标项
       </view>
       <wd-button
@@ -14,40 +14,40 @@
         新增
       </wd-button>
     </view>
-    <view v-if="loading && list.length === 0" class="p-24rpx text-28rpx text-[#999]">
+    <view v-if="loading && list.length === 0" class="yd-text-hint p-24rpx text-28rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="p-24rpx text-28rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint p-24rpx text-28rpx">
       暂无检测指标项
     </view>
     <view v-else class="p-24rpx">
       <view
         v-for="item in list"
         :key="item.id"
-        class="mb-20rpx rounded-12rpx bg-[#f8f9fb] p-20rpx last:mb-0"
+        class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx last:mb-0"
       >
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-28rpx font-semibold">
               {{ item.indicatorName || '-' }}
             </view>
-            <view class="mt-6rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-6rpx truncate text-24rpx">
               {{ item.indicatorCode || '-' }}
             </view>
           </view>
           <dict-tag v-if="item.indicatorType != null" :type="DICT_TYPE.MES_INDICATOR_TYPE" :value="item.indicatorType" />
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">检测工具：</text>{{ item.indicatorTool || '-' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">检测工具：</text>{{ item.indicatorTool || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">检测方法：</text>{{ item.checkMethod || '-' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">检测方法：</text>{{ item.checkMethod || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">标准值：</text>{{ formatDisplayValue(item.standardValue) }} {{ item.unitMeasureName || '' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">标准值：</text>{{ formatDisplayValue(item.standardValue) }} {{ item.unitMeasureName || '' }}
         </view>
-        <view class="mb-16rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">误差范围：</text>{{ formatDisplayValue(item.thresholdMin) }} ~ {{ formatDisplayValue(item.thresholdMax) }}
+        <view class="yd-text-sub mb-16rpx text-26rpx">
+          <text class="yd-text-hint">误差范围：</text>{{ formatDisplayValue(item.thresholdMin) }} ~ {{ formatDisplayValue(item.thresholdMax) }}
         </view>
         <view v-if="hasAccessByCodes(['mes:qc-template:update'])" class="flex gap-16rpx">
           <wd-button class="flex-1" size="small" variant="plain" @click="handleEdit(item)">
@@ -59,14 +59,14 @@
         </view>
       </view>
     </view>
-    <view v-if="canLoadMore" class="border-t border-[#f5f5f5] px-24rpx py-20rpx text-center">
+    <view v-if="canLoadMore" class="yd-border-light border-t px-24rpx py-20rpx text-center">
       <wd-button size="small" type="primary" variant="plain" :loading="loading" @click="loadNextPage">
         {{ loadFailed ? '重新加载' : `加载更多（已加载 ${list.length} / 共 ${total} 条）` }}
       </wd-button>
     </view>
     <view
       v-else-if="list.length > 0"
-      class="border-t border-[#f5f5f5] px-24rpx py-20rpx text-center text-24rpx text-[#999]"
+      class="yd-text-hint yd-border-light border-t px-24rpx py-20rpx text-center text-24rpx"
     >
       已加载全部 {{ total }} 条
     </view>
@@ -78,12 +78,12 @@
       safe-area-inset-bottom
       custom-style="height: 88vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ editingId ? '编辑检测指标项' : '新增检测指标项' }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

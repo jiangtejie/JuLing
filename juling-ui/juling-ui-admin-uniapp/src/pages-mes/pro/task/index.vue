@@ -20,10 +20,10 @@
           <view class="p-24rpx" @click="handleDetail(item)">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
-                  <text v-if="item.parentId" class="mr-8rpx text-24rpx text-[#999]">子工单</text>{{ item.name || '-' }}
+                <view class="yd-text-main truncate text-32rpx font-semibold">
+                  <text v-if="item.parentId" class="yd-text-hint mr-8rpx text-24rpx">子工单</text>{{ item.name || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.code || '-' }}
                 </view>
               </view>
@@ -36,7 +36,7 @@
                 父工单 {{ item.parentCode }}
               </wd-tag>
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>产品：{{ item.productCode || '-' }} / {{ item.productName || '-' }}</view>
               <view>规格：{{ item.productSpecification || '-' }} / 单位：{{ item.unitMeasureName || '-' }}</view>
               <view>数量：{{ item.quantity ?? '-' }}，已排产：{{ item.quantityScheduled ?? 0 }}，已生产：{{ item.quantityProduced ?? 0 }}</view>

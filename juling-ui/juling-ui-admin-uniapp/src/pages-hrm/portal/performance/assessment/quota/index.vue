@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading && !detail.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !detail.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载指标
@@ -17,10 +17,10 @@
 
       <view v-else class="pb-160rpx">
         <view class="bg-white px-24rpx py-24rpx">
-          <view class="mb-8rpx text-34rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-34rpx font-semibold">
             {{ detail.employeeName || '-' }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mb-12rpx text-26rpx">
             {{ detail.name || '-' }}
           </view>
           <dict-tag
@@ -32,7 +32,7 @@
 
         <view
           v-if="detail.targetConfirmationResult === HrmPerformanceConfirmationResult.REJECT"
-          class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] px-24rpx py-20rpx text-26rpx text-[#fa8c16]"
+          class="yd-text-warning yd-bg-warning-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx"
         >
           目标已退回：{{ detail.targetConfirmationComment || '请调整后重新提交' }}
         </view>
@@ -44,12 +44,12 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 {{ group.name }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 维度权重 {{ group.weight }}% · 指标权重
-                <text :class="weightTotal(group) === 100 ? 'text-[#52c41a]' : 'text-[#ff4d4f]'">
+                <text :class="weightTotal(group) === 100 ? 'yd-text-success' : 'yd-text-danger'">
                   {{ weightTotal(group) }}%
                 </text>
               </view>
@@ -69,10 +69,10 @@
           <view
             v-for="(quota, index) in group.quotas"
             :key="quota.id || `${group.key}-${index}`"
-            class="mb-20rpx rounded-8rpx bg-[#f7f8fa] p-20rpx"
+            class="yd-bg-subtle mb-20rpx rounded-8rpx p-20rpx"
           >
             <view class="mb-12rpx flex items-center justify-between gap-12rpx">
-              <text class="text-26rpx text-[#333] font-semibold">
+              <text class="yd-text-main text-26rpx font-semibold">
                 指标 {{ index + 1 }}
               </text>
               <view class="flex items-center gap-12rpx">
@@ -91,7 +91,7 @@
               </view>
             </view>
             <view v-if="!quota.preset" class="mb-16rpx">
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 指标名称
               </view>
               <wd-input
@@ -101,11 +101,11 @@
                 :maxlength="255"
               />
             </view>
-            <view v-else class="mb-12rpx text-26rpx text-[#666]">
+            <view v-else class="yd-text-sub mb-12rpx text-26rpx">
               指标名称：{{ quota.name || '-' }}
             </view>
             <view v-if="!quota.preset" class="mb-16rpx">
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 指标说明
               </view>
               <wd-textarea
@@ -115,11 +115,11 @@
                 :maxlength="1000"
               />
             </view>
-            <view v-else class="mb-12rpx text-26rpx text-[#666]">
+            <view v-else class="yd-text-sub mb-12rpx text-26rpx">
               指标说明：{{ quota.description || '-' }}
             </view>
             <view v-if="!quota.preset" class="mb-16rpx">
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 考核标准
               </view>
               <wd-textarea
@@ -129,11 +129,11 @@
                 :maxlength="1000"
               />
             </view>
-            <view v-else class="mb-12rpx text-26rpx text-[#666]">
+            <view v-else class="yd-text-sub mb-12rpx text-26rpx">
               考核标准：{{ quota.standard || '-' }}
             </view>
             <view v-if="!quota.preset">
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 指标权重
               </view>
               <wd-input-number
@@ -144,13 +144,13 @@
                 allow-null
               />
             </view>
-            <view v-else class="text-26rpx text-[#666]">
+            <view v-else class="yd-text-sub text-26rpx">
               指标权重：{{ quota.weight || 0 }}%
             </view>
           </view>
         </view>
 
-        <view v-if="!dimensionGroups.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!dimensionGroups.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无可填写指标
         </view>
       </view>

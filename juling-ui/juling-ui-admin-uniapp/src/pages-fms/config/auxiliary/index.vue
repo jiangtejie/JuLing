@@ -30,7 +30,7 @@
             @click="handleItems(item)"
           >
             <view class="min-w-0 flex flex-1 items-center gap-12rpx">
-              <text class="truncate text-32rpx text-[#333] font-semibold">
+              <text class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.name }}
               </text>
               <wd-tag v-if="!item.systemPreset" type="warning" plain>
@@ -38,7 +38,7 @@
               </wd-tag>
             </view>
             <view
-              class="flex shrink-0 items-center gap-4rpx text-26rpx text-[#999]"
+              class="yd-text-hint flex shrink-0 items-center gap-4rpx text-26rpx"
               @click.stop="handleDetail(item)"
             >
               <text>详情</text>

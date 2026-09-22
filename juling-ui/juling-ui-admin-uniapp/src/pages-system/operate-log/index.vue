@@ -32,29 +32,29 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.type }} / {{ item.subType }}
               </view>
               <dict-tag :type="DICT_TYPE.USER_TYPE" :value="item.userType" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">操作人：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">操作人：</text>
               <text class="line-clamp-1">{{ item.userName }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">操作内容：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">操作内容：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.action }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">操作时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">操作时间：</text>
               <text class="line-clamp-1">{{ formatDateTime(item.createTime) }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">业务编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">业务编号：</text>
               <text class="line-clamp-1">{{ item.bizId }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">操作 IP：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">操作 IP：</text>
               <text class="line-clamp-1">{{ item.userIp }}</text>
             </view>
           </view>

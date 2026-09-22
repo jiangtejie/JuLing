@@ -37,18 +37,18 @@
         <!-- 会员概览 -->
         <view v-if="activeTab === 0" class="mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-20rpx flex items-center justify-between">
-            <text class="text-30rpx text-[#333] font-semibold">会员概览</text>
-            <text class="text-26rpx text-[#999]">客单价 ￥{{ atvText }}</text>
+            <text class="yd-text-main text-30rpx font-semibold">会员概览</text>
+            <text class="yd-text-hint text-26rpx">客单价 ￥{{ atvText }}</text>
           </view>
           <view class="mb-20rpx flex gap-16rpx">
             <view
               v-for="item in overviewItems"
               :key="item.label"
-              class="flex-1 rounded-12rpx bg-[#f7f8fa] px-16rpx py-20rpx"
+              class="yd-bg-subtle flex-1 rounded-12rpx px-16rpx py-20rpx"
             >
-              <text class="block text-24rpx text-[#999]">{{ item.label }}</text>
-              <text class="mt-8rpx block text-36rpx text-[#333] font-semibold">{{ item.value }}</text>
-              <text class="mt-4rpx block text-22rpx" :class="item.rate >= 0 ? 'text-[#f5222d]' : 'text-[#52c41a]'">
+              <text class="yd-text-hint block text-24rpx">{{ item.label }}</text>
+              <text class="yd-text-main mt-8rpx block text-36rpx font-semibold">{{ item.value }}</text>
+              <text class="mt-4rpx block text-22rpx" :class="item.rate >= 0 ? 'yd-text-danger' : 'yd-text-success'">
                 环比 {{ item.rate >= 0 ? '+' : '' }}{{ item.rate }}%
               </text>
             </view>
@@ -59,13 +59,13 @@
 
         <!-- 终端分布 + 性别比例 -->
         <view v-if="activeTab === 1" class="pt-24rpx">
-          <StatisticsCard :section="terminalSection" :rows="terminalRows" />
-          <StatisticsCard :section="sexSection" :rows="sexRows" />
+          <StatisticsCard :section="terminalSection" :rows="terminalRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
+          <StatisticsCard :section="sexSection" :rows="sexRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
 
         <!-- 地域分布（移动端以排行表呈现，不渲染地图） -->
         <view v-if="activeTab === 2" class="pt-24rpx">
-          <StatisticsCard :section="areaSection" :rows="areaRows" />
+          <StatisticsCard :section="areaSection" :rows="areaRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
       </view>
     </scroll-view>
@@ -112,6 +112,7 @@ const loading = ref(false) // 统计加载状态
 const activeTab = ref(0) // 当前分组：0 概览 / 1 终端性别 / 2 地域
 const summary = ref<Record<string, any>>({}) // 会员累计概览（累计值）
 const cache = reactive<Record<string, any>>({}) // 分组数据缓存：key=`分组@时间区间`
+const tabError = ref(false) // 当前分组的加载失败标记（与「确实没有数据」区分开）
 
 const times = computed(() => formatDateRange([filters.startTime, filters.endTime])) // 查询时间区间
 function tabCacheKey(tab: number) {
@@ -197,17 +198,29 @@ async function loadSummary() {
 async function loadTab(tab: number) {
   const key = tabCacheKey(tab)
   if (cache[key] !== undefined) {
+    tabError.value = false
     return
   }
+  // add by 棱信矩灵：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
+  tabError.value = false
   if (tab === 0) {
-    cache[key] = await getMemberAnalyse({ times: times.value }).catch(() => ({})) || {}
+    const analyse = await getMemberAnalyse({ times: times.value }).catch(() => undefined)
+    if (analyse === undefined) {
+      tabError.value = true
+      return
+    }
+    cache[key] = analyse || {}
     return
   }
   if (tab === 1) {
     const [terminalData, sexData] = await Promise.all([
-      getMemberTerminalStatisticsList().catch(() => []),
-      getMemberSexStatisticsList().catch(() => []),
+      getMemberTerminalStatisticsList().catch(() => undefined),
+      getMemberSexStatisticsList().catch(() => undefined),
     ])
+    if (terminalData === undefined || sexData === undefined) {
+      tabError.value = true
+      return
+    }
     // 终端/性别用字典标签，而非原始 code
     cache[key] = {
       terminal: normalizeRows(terminalData).map(item => ({
@@ -222,11 +235,26 @@ async function loadTab(tab: number) {
     return
   }
   // 地域支付金额由分转元
-  const areaData = await getMemberAreaStatisticsList().catch(() => [])
+  const areaData = await getMemberAreaStatisticsList().catch(() => undefined)
+  if (areaData === undefined) {
+    tabError.value = true
+    return
+  }
   cache[key] = normalizeRows(areaData).map(item => ({
     ...item,
     orderPayPrice: fenToYuan(item.orderPayPrice),
   }))
+}
+
+/** add by 棱信矩灵：加载失败后重试当前分组 */
+async function handleRetryTab() {
+  delete cache[tabCacheKey(activeTab.value)]
+  loading.value = true
+  try {
+    await loadTab(activeTab.value)
+  } finally {
+    loading.value = false
+  }
 }
 
 /** 切换分组 */

@@ -8,20 +8,20 @@
     />
 
     <!-- 空状态 -->
-    <view v-if="!loading && !detail" class="py-120rpx text-center text-28rpx text-[#999]">
+    <view v-if="!loading && !detail" class="yd-text-hint py-120rpx text-center text-28rpx">
       暂无当日考勤详情
     </view>
 
     <template v-else-if="detail">
       <!-- 摘要 -->
       <view class="bg-white px-24rpx py-24rpx">
-        <view class="mb-12rpx truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx truncate text-36rpx font-semibold">
           {{ detail.employeeName || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           {{ detail.jobNumber || '-' }} · {{ detail.deptName || '-' }} · {{ detail.postName || '-' }}
         </view>
-        <view class="mt-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mt-8rpx text-26rpx">
           {{ formatDate(detail.attendanceTime) || attendanceDate || '-' }}
         </view>
       </view>
@@ -44,10 +44,10 @@
       </wd-cell-group>
 
       <!-- 打卡记录 -->
-      <view class="mt-16rpx px-24rpx py-16rpx text-28rpx text-[#999]">
+      <view class="yd-text-hint mt-16rpx px-24rpx py-16rpx text-28rpx">
         打卡记录
       </view>
-      <view v-if="!(detail.clockList?.length)" class="py-48rpx text-center text-28rpx text-[#999]">
+      <view v-if="!(detail.clockList?.length)" class="yd-text-hint py-48rpx text-center text-28rpx">
         暂无打卡记录
       </view>
       <view v-else class="px-24rpx pb-48rpx">
@@ -62,21 +62,21 @@
               :type="DICT_TYPE.HRM_ATTENDANCE_CLOCK_TYPE"
               :value="clock.type"
             />
-            <text v-else class="text-28rpx text-[#333]">-</text>
+            <text v-else class="yd-text-main text-28rpx">-</text>
             <dict-tag
               v-if="clock.status != null"
               :type="DICT_TYPE.HRM_ATTENDANCE_CLOCK_STATUS"
               :value="clock.status"
             />
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">应打卡：</text>{{ formatDateTime(clock.attendanceTime) || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">应打卡：</text>{{ formatDateTime(clock.attendanceTime) || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">打卡时间：</text>{{ formatDateTime(clock.clockTime) || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">打卡时间：</text>{{ formatDateTime(clock.clockTime) || '-' }}
           </view>
-          <view v-if="clock.address" class="text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">地点：</text>{{ clock.address }}
+          <view v-if="clock.address" class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint mr-8rpx">地点：</text>{{ clock.address }}
           </view>
         </view>
       </view>

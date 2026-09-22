@@ -41,7 +41,7 @@
             @click="handleWorkItemDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 #{{ item.serialNumber }} {{ item.name }}
               </view>
               <view class="flex shrink-0 items-center gap-12rpx">
@@ -55,18 +55,18 @@
                 />
               </view>
             </view>
-            <view class="mb-12rpx flex items-center gap-24rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub mb-12rpx flex items-center gap-24rpx text-28rpx">
               <text>状态：{{ item.statusName }}</text>
               <text :style="{ color: getPriorityColor(item.priority) }">
                 优先级：{{ getPriorityName(item.priority) }}
               </text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">处理人：</text>{{ item.assigneeUserName || '未分配' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">处理人：</text>{{ item.assigneeUserName || '未分配' }}
             </view>
-            <view class="flex items-center justify-between text-28rpx text-[#666]">
+            <view class="yd-text-sub flex items-center justify-between text-28rpx">
               <text class="truncate">{{ item.projectName }}</text>
-              <text class="shrink-0 text-[#999]">截止 {{ formatDate(item.endTime) || '未设置' }}</text>
+              <text class="yd-text-hint shrink-0">截止 {{ formatDate(item.endTime) || '未设置' }}</text>
             </view>
           </view>
         </template>
@@ -80,18 +80,18 @@
             @click="handleIterationDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <wd-tag :type="item.status === PmsIterationStatus.ACTIVE ? 'primary' : item.status === PmsIterationStatus.COMPLETED ? 'success' : 'default'" plain>
                 {{ getIterationStatusName(item.status) }}
               </wd-tag>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">所属项目：</text>{{ item.projectName }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">所属项目：</text>{{ item.projectName }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">周期：</text>
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">周期：</text>
               {{ formatDate(item.startTime) || '?' }} ~ {{ formatDate(item.endTime) || '?' }}
             </view>
           </view>

@@ -42,38 +42,38 @@
                   round
                 />
                 <view>
-                  <view class="text-32rpx text-[#333] font-semibold">
+                  <view class="yd-text-main text-32rpx font-semibold">
                     {{ item.name }}
                   </view>
-                  <view class="mt-4rpx text-24rpx text-[#999]">
+                  <view class="yd-text-hint mt-4rpx text-24rpx">
                     等级 {{ item.level ?? '-' }}
                   </view>
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="grid grid-cols-3 gap-12rpx rounded-8rpx bg-[#f7f8fa] p-16rpx text-center">
+            <view class="yd-bg-subtle grid grid-cols-3 gap-12rpx rounded-8rpx p-16rpx text-center">
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ item.experience ?? 0 }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   升级经验
                 </view>
               </view>
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ item.discountPercent ?? 0 }}%
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   享受折扣
                 </view>
               </view>
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ formatDate(item.createTime) || '-' }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   创建时间
                 </view>
               </view>
@@ -126,7 +126,7 @@ function handleBack() {
 async function queryList() {
   try {
     const data = await getMemberLevelList(queryParams.value)
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

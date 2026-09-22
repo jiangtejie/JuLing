@@ -6,9 +6,9 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="visible = false"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="bg-white px-24rpx pb-8rpx pt-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           批量调整参保方案
         </view>
         <wd-form ref="formRef" :model="formData" :schema="formSchema">
@@ -24,7 +24,7 @@
       </view>
 
       <scroll-view scroll-y class="min-h-0 flex-1 p-24rpx">
-        <view v-if="!projectList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!projectList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           请先选择参保方案
         </view>
         <view
@@ -33,7 +33,7 @@
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.name || '-' }}
             </view>
             <dict-tag
@@ -43,7 +43,7 @@
             />
           </view>
           <view v-if="schemeType === HrmInsuranceSchemeType.PROPORTION">
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               缴纳基数
             </view>
             <wd-input-number
@@ -53,14 +53,14 @@
               :min="0"
               :step="1"
             />
-            <view class="mt-12rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-12rpx text-26rpx">
               公司比例：{{ formatHrmRate(item.corporateRate) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
+              <text class="yd-text-muted mx-8rpx">|</text>
               个人比例：{{ formatHrmRate(item.personalRate) }}
             </view>
           </view>
           <view v-else class="flex flex-col gap-12rpx">
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               公司金额
             </view>
             <wd-input-number
@@ -70,7 +70,7 @@
               :min="0"
               :step="1"
             />
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               个人金额
             </view>
             <wd-input-number

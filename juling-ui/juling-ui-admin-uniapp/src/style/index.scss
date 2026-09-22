@@ -16,6 +16,31 @@ page {
 
   // 修改按钮背景色
   // --wot-button-primary-bg-color: green;
+
+  // ==================== 语义色 token ====================
+  // add by 棱信矩灵：此前全站硬编码了 160+ 种颜色取值（text-[#333] 这类写法用了 8000 处），
+  // 主题不可控、也无法接入暗色模式。这里收敛成语义变量，页面改用下方具名类；
+  // 后续换肤或做暗色模式只需改这里（或在暗色媒体查询里覆盖这些变量）。
+  --yd-text-main: #333333; // 主要文字
+  --yd-text-sub: #666666; // 次要文字
+  --yd-text-hint: #999999; // 提示 / 占位文字
+  --yd-text-danger: #f5222d; // 危险 / 错误
+  --yd-text-success: #52c41a; // 成功
+  --yd-text-warning: #fa8c16; // 警告
+  --yd-text-link: #1677ff; // 链接 / 可点击文字
+  --yd-text-strong: #222222; // 标题 / 强调文字
+  --yd-text-muted: #bbbbbb; // 禁用 / 极浅文字
+  --yd-border-light: #f0f0f0; // 浅色分隔线
+  --yd-border-base: #e5e7eb; // 常规边框（比浅色分隔线深一档）
+  --yd-surface-page: #f5f5f5; // 页面底色
+  --yd-surface-subtle: #f7f8fa; // 浅灰分区底（比页面底色更浅）
+  --yd-bg-primary: #1677ff; // 品牌主色（实心填充）
+  --yd-bg-success: #52c41a; // 成功色（实心填充）
+  --yd-bg-danger: #f5222d; // 危险色（实心填充）
+  --yd-bg-info-soft: #e6f4ff; // 浅色状态底：信息
+  --yd-bg-success-soft: #f6ffed; // 浅色状态底：成功
+  --yd-bg-warning-soft: #fff7e6; // 浅色状态底：警告
+  --yd-bg-danger-soft: #fff1f0; // 浅色状态底：危险
 }
 
 /*
@@ -37,15 +62,84 @@ border-t-1
 
 // ==================== 全局公共样式 ====================
 
+// ==================== 语义色具名类 ====================
+// add by 棱信矩灵：配合上方 CSS 变量使用，替代 text-[#333] / text-[#666] / text-[#999] 等硬编码写法
+.yd-text-main {
+  color: var(--yd-text-main);
+}
+.yd-text-sub {
+  color: var(--yd-text-sub);
+}
+.yd-text-hint {
+  color: var(--yd-text-hint);
+}
+.yd-text-danger {
+  color: var(--yd-text-danger);
+}
+.yd-text-success {
+  color: var(--yd-text-success);
+}
+.yd-text-warning {
+  color: var(--yd-text-warning);
+}
+.yd-text-link {
+  color: var(--yd-text-link);
+}
+.yd-text-strong {
+  color: var(--yd-text-strong);
+}
+.yd-text-muted {
+  color: var(--yd-text-muted);
+}
+.yd-bg-page {
+  background-color: var(--yd-surface-page);
+}
+.yd-bg-subtle {
+  background-color: var(--yd-surface-subtle);
+}
+.yd-bg-primary {
+  background-color: var(--yd-bg-primary);
+}
+.yd-bg-success {
+  background-color: var(--yd-bg-success);
+}
+.yd-bg-danger {
+  background-color: var(--yd-bg-danger);
+}
+.yd-bg-info-soft {
+  background-color: var(--yd-bg-info-soft);
+}
+.yd-bg-success-soft {
+  background-color: var(--yd-bg-success-soft);
+}
+.yd-bg-warning-soft {
+  background-color: var(--yd-bg-warning-soft);
+}
+.yd-bg-danger-soft {
+  background-color: var(--yd-bg-danger-soft);
+}
+.yd-border-light {
+  border-color: var(--yd-border-light);
+}
+.yd-border-base {
+  border-color: var(--yd-border-base);
+}
+
 // 页面容器：灰色背景 + 最小全屏高度
 .yd-page-container {
   @apply min-h-screen;
-  background-color: #f5f5f5;
+  background-color: var(--yd-surface-page);
 }
 
 // 分页容器：配合 yd-page-container 与 z-paging 的 fixed=false 布局
 .yd-page-container-paging {
   @apply h-screen flex flex-col overflow-hidden;
+}
+
+// 详情页内容底部留白：为固定定位的 .yd-detail-footer 让位，避免末屏内容被永久遮挡
+// add by 棱信矩灵：此前各页自行用 h-160rpx/pb-xxx 零散处理，约一半页面漏加，这里收敛为具名类
+.yd-page-with-footer {
+  padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 }
 
 // ==================== 详情页底部操作按钮 ====================
@@ -58,6 +152,9 @@ border-t-1
   z-index: 10;
   background-color: #fff;
   padding: 24rpx;
+  // add by 棱信矩灵：兼容 iPhone 全面屏，避免主操作按钮落进 Home 指示条手势区
+  // 顶部导航统一写了 safe-area-inset-top，底部此前遗漏，此处统一补齐（覆盖全站 500+ 页面）
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 
   // 按钮容器
   &-actions {

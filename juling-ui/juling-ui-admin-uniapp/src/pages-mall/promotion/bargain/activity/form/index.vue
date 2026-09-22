@@ -12,7 +12,7 @@
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
         <view class="p-24rpx">
           <view class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
               活动信息
             </view>
             <wd-cell-group border>
@@ -52,7 +52,7 @@
 
           <!-- 活动商品（单 SKU） -->
           <view class="mb-160rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
               活动商品
             </view>
             <view class="p-24rpx">
@@ -193,7 +193,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:promotion-bargain-activity:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

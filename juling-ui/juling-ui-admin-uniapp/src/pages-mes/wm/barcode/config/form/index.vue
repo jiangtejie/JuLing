@@ -39,7 +39,7 @@
               placeholder="报表/打印专项维护"
             />
           </wd-form-item>
-          <view class="px-24rpx pb-20rpx text-24rpx text-[#999] leading-36rpx">
+          <view class="yd-text-hint px-24rpx pb-20rpx text-24rpx leading-36rpx">
             默认打印模板暂不在移动端选择；正式打印和模板维护归入报表/打印专项。
           </view>
           <yd-form-picker v-model="formData.status" label="状态" label-width="220rpx" prop="status" :dict-type="DICT_TYPE.COMMON_STATUS" placeholder="请选择状态" />
@@ -148,7 +148,7 @@ async function handleSubmit() {
     }
     uni.$emit('mes:wm:barcode:config:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

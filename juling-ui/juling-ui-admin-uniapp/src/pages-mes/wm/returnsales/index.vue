@@ -31,29 +31,29 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.code || '-' }}
                 </view>
-                <view class="mt-4rpx truncate text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx truncate text-24rpx">
                   {{ item.name || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_WM_RETURN_SALES_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">销售订单号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">销售订单号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.salesOrderCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">客户：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">客户：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.clientName || item.clientCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">退货原因：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">退货原因：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.returnReason || '-' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">退货日期：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">退货日期：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDate(item.returnDate) || '-' }}</text>
             </view>
           </view>

@@ -33,7 +33,7 @@
         </wd-cell-group>
 
         <view class="mx-24rpx mb-16rpx mt-24rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">规格信息</text>
+          <text class="yd-text-main text-30rpx font-semibold">规格信息</text>
           <wd-button size="small" type="primary" @click="handleAddSku">
             新增规格
           </wd-button>
@@ -44,7 +44,7 @@
           class="mx-24rpx mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
         >
           <view class="flex items-center justify-between border-b border-b-[#f5f5f5] px-24rpx py-20rpx">
-            <text class="text-28rpx text-[#333] font-semibold">规格 {{ index + 1 }}</text>
+            <text class="yd-text-main text-28rpx font-semibold">规格 {{ index + 1 }}</text>
             <wd-button size="small" type="danger" @click="handleDeleteSku(index)">
               删除
             </wd-button>
@@ -266,7 +266,7 @@ async function handleSubmit() {
     }
     uni.$emit('wms:item:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

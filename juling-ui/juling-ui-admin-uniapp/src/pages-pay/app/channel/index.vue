@@ -14,7 +14,7 @@
         :key="group.title"
         class="mb-32rpx"
       >
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           {{ group.title }}
         </view>
         <view
@@ -24,10 +24,10 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 {{ channel.name }}
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ channel.code }}
               </view>
             </view>
@@ -41,8 +41,8 @@
             </wd-tag>
           </view>
           <view class="flex items-center justify-between">
-            <view class="flex text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">渠道费率：</text>
+            <view class="yd-text-sub flex text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">渠道费率：</text>
               <text>{{ getChannel(channel.code)?.feeRate ?? 0 }}%</text>
             </view>
             <wd-button

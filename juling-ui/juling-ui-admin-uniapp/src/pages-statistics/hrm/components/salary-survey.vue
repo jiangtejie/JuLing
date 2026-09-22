@@ -1,20 +1,20 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+    <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
       上月薪资概况
     </view>
     <view class="grid grid-cols-2 gap-16rpx p-24rpx">
       <view
         v-for="item in surveyItems"
         :key="item.label"
-        class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-24rpx text-center"
+        class="yd-bg-subtle rounded-12rpx px-12rpx py-24rpx text-center"
         :class="canOpenSalary ? 'active:opacity-80' : 'opacity-80'"
         @click="goSalaryRecord"
       >
-        <view class="text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-36rpx font-semibold">
           {{ item.value }}
         </view>
-        <view class="mt-8rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-8rpx text-24rpx">
           {{ item.label }}
         </view>
       </view>

@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading && !detail.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !detail.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载指标确认
@@ -19,10 +19,10 @@
         <view class="bg-white px-24rpx py-24rpx">
           <view class="mb-8rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-34rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-34rpx font-semibold">
                 {{ detail.employeeName || '-' }}
               </view>
-              <view class="mt-8rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-26rpx">
                 {{ detail.name || '-' }}
               </view>
             </view>
@@ -39,7 +39,7 @@
         </wd-cell-group>
 
         <view class="mx-24rpx mt-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             绩效指标
           </view>
           <view
@@ -47,23 +47,23 @@
             :key="quota.id || `${quota.dimensionId}-${quota.name}`"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-8rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-8rpx text-28rpx font-semibold">
               {{ quota.dimensionName || '-' }} / {{ quota.name || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               说明：{{ quota.description || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               标准：{{ quota.standard || '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               权重：{{ quota.dimensionWeight || 0 }}% / {{ quota.weight || 0 }}%
             </view>
           </view>
         </view>
 
         <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
             确认意见
           </view>
           <wd-textarea

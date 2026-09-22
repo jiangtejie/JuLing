@@ -35,7 +35,7 @@
       </wd-form-item>
     </wd-cell-group>
 
-    <view class="mx-24rpx mt-16rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]">
+    <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-16rpx rounded-12rpx px-24rpx py-20rpx text-24rpx">
       总分 = 评分 × 维度权重 × 指标权重，再累加；维度权重合计须为 100%，不可编辑维度的指标权重合计须为 100%，可编辑维度不可超过 100%。
     </view>
 
@@ -43,8 +43,8 @@
     <view v-if="showDimensions" class="mt-24rpx">
       <view class="mb-16rpx flex items-center justify-between px-24rpx">
         <view>
-          <text class="text-30rpx text-[#333] font-semibold">考核维度</text>
-          <text class="ml-16rpx text-24rpx text-[#999]">
+          <text class="yd-text-main text-30rpx font-semibold">考核维度</text>
+          <text class="yd-text-hint ml-16rpx text-24rpx">
             权重合计：
             <text :class="dimensionWeightClass">
               {{ model.dimensions?.length ? `${dimensionWeightTotal}%` : '--' }}
@@ -63,7 +63,7 @@
 
       <view
         v-if="!model.dimensions?.length"
-        class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+        class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
       >
         暂无考核维度
       </view>
@@ -73,18 +73,18 @@
         :key="dimensionIndex"
         class="mx-24rpx mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
       >
-        <view class="border-b border-[#f0f0f0] px-24rpx py-20rpx">
+        <view class="yd-border-light border-b px-24rpx py-20rpx">
           <view class="mb-8rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
                 {{ dimension.name }}
               </view>
-              <view class="flex flex-wrap items-center gap-12rpx text-24rpx text-[#666]">
+              <view class="yd-text-sub flex flex-wrap items-center gap-12rpx text-24rpx">
                 <text>{{ formatHrmPerformanceQuotaType(dimension.quotaType) }}</text>
                 <text>权重 {{ dimension.weight || 0 }}%</text>
-                <text v-if="dimension.allowEdit" class="text-[#52c41a]">允许员工填写</text>
+                <text v-if="dimension.allowEdit" class="yd-text-success">允许员工填写</text>
               </view>
-              <view v-if="dimension.remark" class="mt-8rpx text-24rpx text-[#999]">
+              <view v-if="dimension.remark" class="yd-text-hint mt-8rpx text-24rpx">
                 {{ dimension.remark }}
               </view>
             </view>
@@ -101,9 +101,9 @@
 
         <view class="px-24rpx py-16rpx">
           <view class="mb-16rpx flex items-center justify-between">
-            <text class="text-24rpx text-[#999]">
+            <text class="yd-text-hint text-24rpx">
               指标权重合计：
-              <text :class="isHundred(getQuotaWeightTotal(dimension)) ? 'text-[#52c41a]' : 'text-[#ff4d4f]'">
+              <text :class="isHundred(getQuotaWeightTotal(dimension)) ? 'yd-text-success' : 'yd-text-danger'">
                 {{ getQuotaWeightTotal(dimension) }}%
               </text>
             </text>
@@ -118,17 +118,17 @@
 
           <view
             v-if="!dimension.quotas?.length"
-            class="py-24rpx text-center text-26rpx text-[#999]"
+            class="yd-text-hint py-24rpx text-center text-26rpx"
           >
             暂无考核指标
           </view>
           <view
             v-for="(quota, quotaIndex) in dimension.quotas"
             :key="quotaIndex"
-            class="mb-16rpx rounded-8rpx bg-[#f8f8f8] p-20rpx"
+            class="yd-bg-subtle mb-16rpx rounded-8rpx p-20rpx"
           >
             <view class="mb-8rpx flex items-start justify-between gap-12rpx">
-              <text class="min-w-0 flex-1 text-28rpx text-[#333] font-medium">
+              <text class="yd-text-main min-w-0 flex-1 text-28rpx font-medium">
                 {{ quota.name || '未命名指标' }}
               </text>
               <view v-if="!disabled" class="flex shrink-0 gap-8rpx">
@@ -150,13 +150,13 @@
                 </wd-button>
               </view>
             </view>
-            <view class="text-24rpx text-[#666]">
+            <view class="yd-text-sub text-24rpx">
               权重 {{ quota.weight || 0 }}% · {{ formatScoreType(quota.scoreType) }}
             </view>
-            <view v-if="quota.illustrate" class="mt-8rpx text-24rpx text-[#999]">
+            <view v-if="quota.illustrate" class="yd-text-hint mt-8rpx text-24rpx">
               说明：{{ quota.illustrate }}
             </view>
-            <view v-if="quota.standard" class="mt-8rpx text-24rpx text-[#999]">
+            <view v-if="quota.standard" class="yd-text-hint mt-8rpx text-24rpx">
               标准：{{ quota.standard }}
             </view>
           </view>
@@ -215,9 +215,9 @@ const upperLimitTypeColumns = [ // 评分上限类型选项
 const dimensionWeightTotal = computed(() => getDimensionWeightTotal(model.value.dimensions))
 const dimensionWeightClass = computed(() => {
   if (!model.value.dimensions?.length) {
-    return 'text-[#999]'
+    return 'yd-text-hint'
   }
-  return isHundred(dimensionWeightTotal.value) ? 'text-[#52c41a]' : 'text-[#ff4d4f]'
+  return isHundred(dimensionWeightTotal.value) ? 'yd-text-success' : 'yd-text-danger'
 })
 
 /** 校验考核配置 */

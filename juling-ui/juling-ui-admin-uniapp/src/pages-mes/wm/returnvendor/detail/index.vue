@@ -29,7 +29,7 @@
       </wd-cell-group>
       <ReturnVendorLineList v-if="currentId" :return-id="currentId" :vendor-id="formData?.vendorId" readonly />
       <view v-if="hasFooter" class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx">
-        <view class="mb-20rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-20rpx text-28rpx font-semibold">
           退货操作
         </view>
         <view class="flex flex-wrap gap-16rpx text-28rpx">
@@ -202,7 +202,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mes:wm:returnvendor:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

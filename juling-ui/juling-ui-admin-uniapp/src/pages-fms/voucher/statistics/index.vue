@@ -24,16 +24,16 @@
                 </view>
                 <view class="flex items-center gap-12rpx">
                   <view
-                    class="flex-1 rounded-12rpx bg-[#f7f8fa] p-24rpx text-28rpx"
-                    :class="queryParams.startMonth ? 'text-[#333]' : 'text-[#999]'"
+                    class="yd-bg-subtle flex-1 rounded-12rpx p-24rpx text-28rpx"
+                    :class="queryParams.startMonth ? 'yd-text-main' : 'yd-text-hint'"
                     @click="startMonthVisible = true"
                   >
                     {{ queryParams.startMonth || '开始期间' }}
                   </view>
-                  <text class="text-28rpx text-[#999]">至</text>
+                  <text class="yd-text-hint text-28rpx">至</text>
                   <view
-                    class="flex-1 rounded-12rpx bg-[#f7f8fa] p-24rpx text-28rpx"
-                    :class="queryParams.endMonth ? 'text-[#333]' : 'text-[#999]'"
+                    class="yd-bg-subtle flex-1 rounded-12rpx p-24rpx text-28rpx"
+                    :class="queryParams.endMonth ? 'yd-text-main' : 'yd-text-hint'"
                     @click="endMonthVisible = true"
                   >
                     {{ queryParams.endMonth || '结束期间' }}
@@ -67,7 +67,7 @@
                     placeholder="起始号"
                     clearable
                   />
-                  <text class="text-28rpx text-[#999]">至</text>
+                  <text class="yd-text-hint text-28rpx">至</text>
                   <wd-input
                     v-model.number="queryParams.maxVoucherNumber"
                     class="flex-1"
@@ -89,7 +89,7 @@
                     placeholder="最小级次"
                     clearable
                   />
-                  <text class="text-28rpx text-[#999]">至</text>
+                  <text class="yd-text-hint text-28rpx">至</text>
                   <wd-input
                     v-model.number="queryParams.maxLevel"
                     class="flex-1"
@@ -111,19 +111,19 @@
 
             <!-- 汇总结果 -->
             <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-              <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
                 {{ formatFmsPeriodLabel(queryParams.startMonth, queryParams.endMonth) }}
               </view>
-              <view class="text-26rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">借方总计：</text>{{ formatFmsAmount(totalDebitAmount) }}
-                <text class="mx-16rpx text-[#999]">贷方总计：</text>{{ formatFmsAmount(totalCreditAmount) }}
+              <view class="yd-text-sub text-26rpx">
+                <text class="yd-text-hint mr-8rpx">借方总计：</text>{{ formatFmsAmount(totalDebitAmount) }}
+                <text class="yd-text-hint mx-16rpx">贷方总计：</text>{{ formatFmsAmount(totalCreditAmount) }}
               </view>
             </view>
 
             <!-- 加载状态 -->
             <view
               v-if="loading && !list.length"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -138,23 +138,23 @@
               class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
             >
               <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                   {{ item.subjectCode }} {{ item.subjectName }}
                 </view>
                 <wd-tag type="primary" plain>
                   {{ item.level }} 级
                 </wd-tag>
               </view>
-              <view class="flex items-center justify-between text-26rpx text-[#666]">
-                <text><text class="mr-8rpx text-[#999]">借方：</text>{{ formatFmsAmount(item.debitAmount) }}</text>
-                <text><text class="mr-8rpx text-[#999]">贷方：</text>{{ formatFmsAmount(item.creditAmount) }}</text>
+              <view class="yd-text-sub flex items-center justify-between text-26rpx">
+                <text><text class="yd-text-hint mr-8rpx">借方：</text>{{ formatFmsAmount(item.debitAmount) }}</text>
+                <text><text class="yd-text-hint mr-8rpx">贷方：</text>{{ formatFmsAmount(item.creditAmount) }}</text>
               </view>
             </view>
 
             <!-- 空状态 -->
             <view
               v-if="!loading && !list.length"
-              class="rounded-12rpx bg-white py-64rpx text-center text-28rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-28rpx shadow-sm"
             >
               暂无凭证汇总数据
             </view>

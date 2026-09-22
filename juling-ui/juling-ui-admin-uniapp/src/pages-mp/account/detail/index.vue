@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="公众号账号详情"
@@ -16,7 +16,7 @@
         <wd-cell title="Token" :value="formData?.token || '-'" />
         <wd-cell title="加解密密钥" :value="formData?.aesKey || '-'" />
         <wd-cell title="服务器地址">
-          <view class="break-all text-right text-26rpx text-[#666]">
+          <view class="yd-text-sub break-all text-right text-26rpx">
             http://服务端地址/admin-api/mp/open/{{ formData?.appId || '-' }}
           </view>
         </wd-cell>
@@ -62,7 +62,8 @@
 import type { Account } from '@/api/mp/account'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import { clearAccountQuota, deleteAccount, generateAccountQrCode, getAccount } from '@/api/mp/account'
 import { useAccess } from '@/hooks/useAccess'
 import { delay, navigateBackPlus } from '@/utils'
@@ -136,7 +137,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mp:account:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }
@@ -186,7 +187,7 @@ async function handleClearQuota() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

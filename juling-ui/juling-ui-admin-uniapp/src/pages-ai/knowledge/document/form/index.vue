@@ -44,7 +44,7 @@
             class="mb-16rpx flex items-center gap-12rpx last:mb-0"
           >
             <wd-icon name="file" size="36rpx" color="#409eff" />
-            <text class="min-w-0 flex-1 break-all text-26rpx text-[#333]">
+            <text class="yd-text-main min-w-0 flex-1 break-all text-26rpx">
               {{ file.name }}
             </text>
           </view>
@@ -81,10 +81,10 @@
         <view class="mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-20rpx flex items-center justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-28rpx font-semibold">
                 {{ currentFile.name || '请选择文档' }}
               </view>
-              <view v-if="currentFile.segments" class="mt-6rpx text-22rpx text-[#999]">
+              <view v-if="currentFile.segments" class="yd-text-hint mt-6rpx text-22rpx">
                 共 {{ currentFile.segments.length }} 个分段
               </view>
             </view>
@@ -92,18 +92,18 @@
               预览分段
             </wd-button>
           </view>
-          <view v-if="!currentFile.segments?.length" class="py-60rpx text-center text-26rpx text-[#999]">
+          <view v-if="!currentFile.segments?.length" class="yd-text-hint py-60rpx text-center text-26rpx">
             暂无预览内容
           </view>
           <view
             v-for="(segment, index) in currentFile.segments"
             :key="index"
-            class="mb-20rpx rounded-12rpx bg-[#f8fafc] p-20rpx last:mb-0"
+            class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx last:mb-0"
           >
-            <view class="mb-10rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mb-10rpx text-22rpx">
               分段 {{ index + 1 }} · {{ segment.contentLength || 0 }} 字符 · {{ segment.tokens || 0 }} Token
             </view>
-            <view class="whitespace-pre-wrap break-all text-26rpx text-[#333] leading-42rpx">
+            <view class="yd-text-main whitespace-pre-wrap break-all text-26rpx leading-42rpx">
               {{ segment.content || '-' }}
             </view>
           </view>
@@ -128,7 +128,7 @@
         >
           <view class="mb-16rpx flex items-center gap-12rpx">
             <wd-icon name="file" size="36rpx" color="#409eff" />
-            <text class="min-w-0 flex-1 break-all text-26rpx text-[#333]">
+            <text class="yd-text-main min-w-0 flex-1 break-all text-26rpx">
               {{ file.name }}
             </text>
           </view>
@@ -136,7 +136,7 @@
             :percentage="file.progress || 0"
             :status="file.progress === 100 ? 'success' : undefined"
           />
-          <view class="mt-12rpx text-22rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx text-22rpx">
             分段数量：{{ file.count ?? '-' }}，已向量化：{{ file.embeddingCount ?? '-' }}
           </view>
         </view>

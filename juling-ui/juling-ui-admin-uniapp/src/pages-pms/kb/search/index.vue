@@ -32,9 +32,9 @@
           @click="handleDetail(item)"
         >
           <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.title }}
-              <text v-if="item.fileSize != null" class="text-24rpx text-[#999]">
+              <text v-if="item.fileSize != null" class="yd-text-hint text-24rpx">
                 （{{ formatKnowledgeFileSize(item.fileSize) }}）
               </text>
             </view>
@@ -43,12 +43,12 @@
           <!-- 摘要关键词高亮（对齐 PC <mark>，先剥 HTML 再消毒注入） -->
           <rich-text
             v-if="item.contentSummary"
-            class="line-clamp-2 mb-12rpx text-26rpx text-[#999]"
+            class="yd-text-hint line-clamp-2 mb-12rpx text-26rpx"
             :nodes="highlightSummary(item.contentSummary)"
           />
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text class="min-w-0 flex-1 truncate">{{ item.libraryName }} · {{ item.creatorUserName || '-' }}</text>
-            <text class="shrink-0 text-24rpx text-[#999]">{{ formatDateTime(item.updateTime) || '-' }}</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">{{ formatDateTime(item.updateTime) || '-' }}</text>
           </view>
         </view>
       </view>

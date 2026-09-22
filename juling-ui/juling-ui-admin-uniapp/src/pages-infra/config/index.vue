@@ -32,29 +32,29 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <dict-tag :type="DICT_TYPE.INFRA_CONFIG_TYPE" :value="item.type" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">参数分类：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">参数分类：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.category }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">参数键名：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">参数键名：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.key }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">参数键值：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">参数键值：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.value }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">是否可见：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">是否可见：</text>
               <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="item.visible" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">创建时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">创建时间：</text>
               <text>{{ formatDateTime(item.createTime) }}</text>
             </view>
           </view>

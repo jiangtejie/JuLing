@@ -20,10 +20,10 @@
       <view class="p-24rpx pb-200rpx">
         <!-- 文档信息 -->
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-8rpx text-36rpx text-[#333] font-semibold leading-48rpx">
+          <view class="yd-text-main mb-8rpx text-36rpx font-semibold leading-48rpx">
             {{ document.title }}
           </view>
-          <view class="flex items-center gap-12rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint flex items-center gap-12rpx text-24rpx">
             <text v-if="document.creatorUserName">{{ document.creatorUserName }} 创建于</text>
             <text>{{ formatDate(document.createTime) }}</text>
             <wd-tag :type="document.status === PmsKnowledgeDocumentStatus.NORMAL ? 'success' : 'default'" plain>
@@ -47,10 +47,10 @@
           <template v-if="document.type === PmsKnowledgeDocumentType.RICH_TEXT">
             <!-- 富文本消毒后渲染；纯文本（移动端自产）用 pre-wrap 保留换行 -->
             <rich-text v-if="document.content && isHtmlContent(document.content)" :nodes="sanitizeRichText(document.content)" />
-            <view v-else-if="document.content" class="whitespace-pre-wrap break-all text-28rpx text-[#333]">
+            <view v-else-if="document.content" class="yd-text-main whitespace-pre-wrap break-all text-28rpx">
               {{ document.content }}
             </view>
-            <view v-else class="text-28rpx text-[#999]">
+            <view v-else class="yd-text-hint text-28rpx">
               暂无内容
             </view>
           </template>
@@ -60,7 +60,7 @@
                 <wd-tag type="default" plain>
                   {{ document.fileType || '文件' }}
                 </wd-tag>
-                <text v-if="document.fileSize !== undefined" class="text-24rpx text-[#999]">
+                <text v-if="document.fileSize !== undefined" class="yd-text-hint text-24rpx">
                   {{ formatKnowledgeFileSize(document.fileSize) }}
                 </text>
               </view>
@@ -74,11 +74,11 @@
               >
                 下载文件
               </wd-button>
-              <view v-else class="mt-12rpx text-24rpx text-[#999]">
+              <view v-else class="yd-text-hint mt-12rpx text-24rpx">
                 当前角色仅可在线预览
               </view>
             </template>
-            <view v-else class="py-40rpx text-center text-28rpx text-[#999]">
+            <view v-else class="yd-text-hint py-40rpx text-center text-28rpx">
               文件未上传
             </view>
           </template>
@@ -92,20 +92,20 @@
               size="36rpx"
               :color="document.likeStatus ? '#1677ff' : '#999'"
             />
-            <text class="text-26rpx" :class="document.likeStatus ? 'text-[#1677ff]' : 'text-[#999]'">
+            <text class="text-26rpx" :class="document.likeStatus ? 'yd-text-link' : 'yd-text-hint'">
               {{ document.likeStatus ? '取消点赞' : '点赞' }}
             </text>
           </view>
-          <text v-if="likeSummary" class="text-24rpx text-[#999]">{{ likeSummary }}</text>
-          <view v-for="user in document.likeUsers.slice(0, 5)" :key="user.id" class="h-40rpx w-40rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#f7f8fa]">
+          <text v-if="likeSummary" class="yd-text-hint text-24rpx">{{ likeSummary }}</text>
+          <view v-for="user in document.likeUsers.slice(0, 5)" :key="user.id" class="yd-bg-subtle h-40rpx w-40rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full">
             <wd-img v-if="user.avatar" :src="user.avatar" width="40rpx" height="40rpx" radius="50%" />
-            <text v-else class="text-22rpx text-[#666]">{{ user.nickname?.slice(0, 1) || '-' }}</text>
+            <text v-else class="yd-text-sub text-22rpx">{{ user.nickname?.slice(0, 1) || '-' }}</text>
           </view>
         </view>
 
         <!-- 文档评论 -->
-        <view v-if="document.type === PmsKnowledgeDocumentType.RICH_TEXT" class="rounded-12rpx bg-[#f7f8fa] p-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view v-if="document.type === PmsKnowledgeDocumentType.RICH_TEXT" class="yd-bg-subtle rounded-12rpx p-24rpx">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             评论
           </view>
           <DocumentComment :document-id="document.id" />

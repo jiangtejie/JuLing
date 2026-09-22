@@ -1,18 +1,18 @@
 <template>
   <!-- 分享文档弹窗 -->
-  <wd-popup v-model="visible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         分享文档
       </view>
 
       <!-- 公开链接 -->
       <view class="mb-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-12rpx text-28rpx">
           公开链接
         </view>
-        <view v-if="share" class="rounded-8rpx bg-[#f7f8fa] p-20rpx">
-          <view class="mb-12rpx break-all text-26rpx text-[#333]">
+        <view v-if="share" class="yd-bg-subtle rounded-8rpx p-20rpx">
+          <view class="yd-text-main mb-12rpx break-all text-26rpx">
             {{ shareUrl }}
           </view>
           <wd-button size="small" variant="plain" @click="copyShareUrl">
@@ -21,19 +21,19 @@
           <!-- 分享二维码（H5 生成，对齐 PC） -->
           <view v-if="qrCodeDataUrl" class="mt-20rpx flex items-center gap-20rpx">
             <wd-img :src="qrCodeDataUrl" width="240rpx" height="240rpx" radius="8rpx" />
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               扫码即可查看当前文档
             </view>
           </view>
         </view>
-        <view v-else class="text-26rpx text-[#999]">
+        <view v-else class="yd-text-hint text-26rpx">
           开启后，任何获得链接的人都可以查看当前文档。
         </view>
       </view>
 
       <!-- 分享给成员 -->
       <view class="mb-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-12rpx text-28rpx">
           分享给成员
         </view>
         <UserFormPicker

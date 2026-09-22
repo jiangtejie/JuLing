@@ -34,10 +34,10 @@
       </wd-form>
 
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           缴费项目
         </view>
-        <view v-if="!projectList.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+        <view v-if="!projectList.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
           请先选择参保方案
         </view>
         <view
@@ -46,7 +46,7 @@
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.name || '-' }}
             </view>
             <dict-tag
@@ -65,9 +65,9 @@
                 :step="1"
               />
             </wd-cell>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               公司比例：{{ formatHrmRate(item.corporateRate) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
+              <text class="yd-text-muted mx-8rpx">|</text>
               个人比例：{{ formatHrmRate(item.personalRate) }}
             </view>
           </view>

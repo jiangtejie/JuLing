@@ -13,8 +13,8 @@
         <view
           v-for="item in sortedConversations"
           :key="item.id"
-          class="flex items-center gap-20rpx border-b border-[#f5f5f5] px-24rpx py-24rpx active:bg-[#f7f8fa]"
-          :class="item.adminPinned ? 'bg-[#f7f8fa]' : 'bg-white'"
+          class="yd-border-light flex items-center gap-20rpx border-b px-24rpx py-24rpx active:bg-[#f7f8fa]"
+          :class="item.adminPinned ? 'yd-bg-subtle' : 'bg-white'"
           @click="handleOpen(item)"
           @longpress="handleLongPress(item)"
         >
@@ -25,7 +25,7 @@
               :src="item.userAvatar"
               width="88rpx" height="88rpx" radius="44rpx" mode="aspectFill"
             />
-            <view v-else class="h-88rpx w-88rpx flex items-center justify-center rounded-full bg-[#e6f4ff]">
+            <view v-else class="yd-bg-info-soft h-88rpx w-88rpx flex items-center justify-center rounded-full">
               <wd-icon name="user" size="44rpx" color="#1677ff" />
             </view>
             <view
@@ -39,18 +39,18 @@
           <view class="min-w-0 flex-1">
             <view class="flex items-center justify-between gap-16rpx">
               <view class="min-w-0 flex items-center gap-8rpx">
-                <text v-if="item.adminPinned" class="shrink-0 rounded-4rpx bg-[#fff1f0] px-8rpx text-20rpx text-[#fa4350] leading-32rpx">
+                <text v-if="item.adminPinned" class="yd-bg-danger-soft yd-text-danger shrink-0 rounded-4rpx px-8rpx text-20rpx leading-32rpx">
                   置顶
                 </text>
-                <text class="truncate text-30rpx text-[#333] font-semibold">
+                <text class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.userNickname || `用户 ${item.userId}` }}
                 </text>
               </view>
-              <text class="shrink-0 text-22rpx text-[#999]">
+              <text class="yd-text-hint shrink-0 text-22rpx">
                 {{ formatChatTime(item.lastMessageTime) }}
               </text>
             </view>
-            <text class="line-clamp-1 mt-8rpx text-26rpx text-[#999]">
+            <text class="yd-text-hint line-clamp-1 mt-8rpx text-26rpx">
               {{ kefuLastMessagePreview(item.lastMessageContent, item.lastMessageContentType) }}
             </text>
           </view>

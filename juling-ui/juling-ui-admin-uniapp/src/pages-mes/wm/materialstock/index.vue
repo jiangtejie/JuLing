@@ -33,40 +33,40 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.itemCode || '-' }}
                 </view>
-                <view class="mt-4rpx truncate text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx truncate text-24rpx">
                   {{ item.itemName || '-' }}
                 </view>
               </view>
               <view
                 class="shrink-0 rounded-999rpx px-16rpx py-6rpx text-24rpx"
-                :class="item.frozen ? 'bg-[#fff1f0] text-[#f5222d]' : 'bg-[#f6ffed] text-[#52c41a]'"
+                :class="item.frozen ? 'yd-bg-danger-soft yd-text-danger' : 'yd-bg-success-soft yd-text-success'"
               >
                 {{ item.frozen ? '已冻结' : '可用' }}
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">规格：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">规格：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">在库数量：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">在库数量：</text>
               <text class="min-w-0 flex-1 truncate font-semibold">
                 {{ item.quantity ?? '-' }} {{ item.unitMeasureName || '' }}
               </text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">批次号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">批次号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.batchCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">库存位置：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">库存位置：</text>
               <text class="min-w-0 flex-1 truncate">{{ stockPlaceText(item) }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">入库日期：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">入库日期：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDate(item.receiptTime) || '-' }}</text>
             </view>
           </view>

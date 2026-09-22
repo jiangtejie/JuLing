@@ -7,8 +7,8 @@
     >
       <view class="mb-16rpx flex items-center justify-between px-24rpx">
         <view>
-          <text class="text-30rpx text-[#333] font-semibold">{{ section.label }}</text>
-          <text class="ml-16rpx text-24rpx text-[#999]">
+          <text class="yd-text-main text-30rpx font-semibold">{{ section.label }}</text>
+          <text class="yd-text-hint ml-16rpx text-24rpx">
             {{ section.projects.length ? `${section.projects.length} 项` : '--' }}
           </text>
         </view>
@@ -24,7 +24,7 @@
 
       <view
         v-if="!section.projects.length"
-        class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+        class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
       >
         暂无{{ section.label }}项目
       </view>
@@ -34,7 +34,7 @@
         :key="project.id || `${section.key}-${project.type}-${index}`"
         class="mx-24rpx mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
       >
-        <view class="flex items-start justify-between gap-16rpx border-b border-[#f0f0f0] px-24rpx py-20rpx">
+        <view class="yd-border-light flex items-start justify-between gap-16rpx border-b px-24rpx py-20rpx">
           <view class="min-w-0 flex-1">
             <wd-input
               v-if="isHrmInsuranceCustomProject(project.type) && !disabled"
@@ -43,7 +43,7 @@
               placeholder="请输入项目名称"
               :maxlength="64"
             />
-            <view v-else class="text-30rpx text-[#333] font-semibold">
+            <view v-else class="yd-text-main text-30rpx font-semibold">
               {{ formatHrmInsuranceProjectName(project) }}
             </view>
           </view>
@@ -125,12 +125,12 @@
         v-if="section.projects.length"
         class="mx-24rpx mb-8rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
-        <view class="text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-28rpx font-semibold">
           {{ section.label }}合计
         </view>
-        <view class="mt-12rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mt-12rpx text-26rpx">
           公司：{{ formatHrmMoney(section.corporateTotal) }}
-          <text class="mx-8rpx text-[#ddd]">|</text>
+          <text class="yd-text-muted mx-8rpx">|</text>
           个人：{{ formatHrmMoney(section.personalTotal) }}
         </view>
       </view>
@@ -146,7 +146,7 @@
       @close="addVisible = false"
     >
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           添加{{ currentSection?.label }}项目
         </view>
         <wd-checkbox-group v-model="checkedTypes">

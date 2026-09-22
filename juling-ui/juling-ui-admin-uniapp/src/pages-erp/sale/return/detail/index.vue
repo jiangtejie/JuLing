@@ -29,7 +29,7 @@
 
       <!-- 退货明细 -->
       <view v-if="items.length > 0" class="mt-24rpx">
-        <view class="px-24rpx py-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub px-24rpx py-16rpx text-28rpx">
           退货产品清单
         </view>
         <view class="px-24rpx">
@@ -38,59 +38,59 @@
             :key="index"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
               明细 {{ index + 1 }}
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">仓库：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">仓库：</text>
               <text class="min-w-0 flex-1">{{ item.warehouseName || '-' }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">产品：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">产品：</text>
               <text class="min-w-0 flex-1">{{ item.productName || '-' }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">条码：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">条码：</text>
               <text class="min-w-0 flex-1">{{ item.productBarCode || '-' }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">单位：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">单位：</text>
               <text class="min-w-0 flex-1">{{ item.productUnitName || '-' }}</text>
             </view>
-            <view v-if="item.outCount != null" class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">已出库：</text>
+            <view v-if="item.outCount != null" class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">已出库：</text>
               <text class="min-w-0 flex-1">{{ formatCount(item.outCount) }}</text>
             </view>
-            <view v-if="item.returnCount != null" class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">已退货：</text>
+            <view v-if="item.returnCount != null" class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">已退货：</text>
               <text class="min-w-0 flex-1">{{ formatCount(item.returnCount) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">数量：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">数量：</text>
               <text class="min-w-0 flex-1">{{ formatCount(item.count) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">产品单价：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">产品单价：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.productPrice) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">金额：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">金额：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.totalProductPrice) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">税率：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">税率：</text>
               <text class="min-w-0 flex-1">{{ formatPercent(item.taxPercent) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">税额：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">税额：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.taxPrice) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">含税金额：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">含税金额：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.totalPrice) }}</text>
             </view>
-            <view v-if="item.remark" class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+            <view v-if="item.remark" class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
               <text class="min-w-0 flex-1">{{ item.remark }}</text>
             </view>
           </view>

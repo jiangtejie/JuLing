@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="装修页面详情"
@@ -18,7 +18,7 @@
 
     <!-- 预览图 -->
     <view class="mt-24rpx bg-white p-24rpx">
-      <view class="mb-16rpx text-28rpx text-[#999]">
+      <view class="yd-text-hint mb-16rpx text-28rpx">
         预览图
       </view>
       <view v-if="formData.previewPicUrls?.length" class="flex flex-wrap gap-12rpx">
@@ -33,15 +33,15 @@
           enable-preview
         />
       </view>
-      <text v-else class="text-28rpx text-[#999]">-</text>
+      <text v-else class="yd-text-hint text-28rpx">-</text>
     </view>
 
     <!-- 装修属性 -->
     <view class="mt-24rpx bg-white p-24rpx">
-      <view class="mb-16rpx text-28rpx text-[#999]">
+      <view class="yd-text-hint mb-16rpx text-28rpx">
         装修属性
       </view>
-      <view class="whitespace-pre-wrap break-all rounded-8rpx bg-[#f7f7f7] p-16rpx text-24rpx text-[#666]">
+      <view class="yd-text-sub yd-bg-subtle whitespace-pre-wrap break-all rounded-8rpx p-16rpx text-24rpx">
         {{ formatJson(formData.property, '-') }}
       </view>
     </view>
@@ -128,7 +128,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mall:promotion-diy-page:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

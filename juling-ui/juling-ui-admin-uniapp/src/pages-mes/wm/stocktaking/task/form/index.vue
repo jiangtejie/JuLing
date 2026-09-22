@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -41,7 +41,7 @@
           />
           <wd-form-item title="盘点类型" title-width="220rpx" prop="type">
             <dict-tag v-if="formData.type != null" :type="DICT_TYPE.MES_WM_STOCK_TAKING_TYPE" :value="formData.type" />
-            <text v-else class="text-[#999]">选择方案后自动带出</text>
+            <text v-else class="yd-text-hint">选择方案后自动带出</text>
           </wd-form-item>
           <wd-form-item
             title="盘点日期"
@@ -316,7 +316,7 @@ async function handleExecute() {
     toast.success('执行盘点成功')
     uni.$emit('mes:wm:stocktaking:task:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

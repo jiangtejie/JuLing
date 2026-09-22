@@ -14,7 +14,7 @@
           <yd-form-picker v-model="formData.bizType" label="业务类型" label-width="220rpx" prop="bizType" :disabled="!!currentId" :columns="bizTypeOptions" placeholder="请选择业务类型" />
           <wd-form-item v-if="isWarehouseBizType && currentId" title="业务对象" title-width="220rpx" prop="bizId">
             <view
-              class="min-h-72rpx flex items-center rounded-8rpx bg-[#f7f8fa] px-20rpx text-28rpx text-[#333]"
+              class="yd-text-main yd-bg-subtle min-h-72rpx flex items-center rounded-8rpx px-20rpx text-28rpx"
             >
               <text class="min-w-0 flex-1 truncate">
                 {{ selectedBizText || '-' }}
@@ -75,7 +75,7 @@
             @click="openBizPicker"
           />
           <wd-form-item v-else title="业务对象" title-width="220rpx" prop="bizId">
-            <view class="rounded-8rpx bg-[#fff7e6] px-20rpx py-18rpx text-26rpx text-[#8a5a00] leading-38rpx">
+            <view class="yd-bg-warning-soft yd-text-warning rounded-8rpx px-20rpx py-18rpx text-26rpx leading-38rpx">
               {{ unsupportedTip }}
             </view>
           </wd-form-item>
@@ -627,7 +627,7 @@ async function handleSubmit() {
     }
     uni.$emit('mes:wm:barcode:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -35,7 +35,7 @@
         <wd-cell title="是否质检" :value="formData?.checkFlag ? '是' : '否'" />
       </wd-cell-group>
 
-      <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
         产品与数量
       </view>
       <wd-cell-group border>
@@ -53,7 +53,7 @@
         <wd-cell title="其他废品" :value="formatNumber(formData?.otherScrapQuantity)" />
       </wd-cell-group>
 
-      <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
         人员与备注
       </view>
       <wd-cell-group border>
@@ -242,7 +242,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mes:pro:feedback:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

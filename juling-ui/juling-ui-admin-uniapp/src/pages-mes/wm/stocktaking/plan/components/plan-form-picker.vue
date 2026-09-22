@@ -17,7 +17,7 @@
     center
   >
     <view class="min-w-0 flex flex-1 items-center justify-end gap-12rpx">
-      <view class="min-w-0 flex-1 truncate text-right text-28rpx" :class="displayValue ? 'text-[#333]' : 'text-[#999]'" @click="handleOpen">
+      <view class="min-w-0 flex-1 truncate text-right text-28rpx" :class="displayValue ? 'yd-text-main' : 'yd-text-hint'" @click="handleOpen">
         {{ displayValue || placeholder }}
       </view>
       <wd-button v-if="modelValue != null" size="small" variant="plain" :disabled="disabled" @click.stop="handleClear">

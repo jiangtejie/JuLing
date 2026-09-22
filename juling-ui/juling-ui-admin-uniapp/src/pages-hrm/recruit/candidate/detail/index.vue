@@ -10,7 +10,7 @@
     <!-- 头部摘要 -->
     <view v-if="formData.id" class="bg-white px-24rpx py-24rpx">
       <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
           {{ formData.name || '-' }}
         </view>
         <dict-tag
@@ -19,16 +19,16 @@
           :value="formData.status"
         />
       </view>
-      <view class="mb-8rpx text-26rpx text-[#999]">
+      <view class="yd-text-hint mb-8rpx text-26rpx">
         编号：{{ formData.id }}
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         {{ formData.postName || '-' }} · {{ formData.deptName || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         负责人：{{ formData.ownerEmployeeName || '-' }} · 渠道：{{ formData.channelName || '-' }}
       </view>
-      <view v-if="formData.interviewTime" class="mt-8rpx text-26rpx text-[#666]">
+      <view v-if="formData.interviewTime" class="yd-text-sub mt-8rpx text-26rpx">
         面试时间：{{ formatDateTime(formData.interviewTime) }}
       </view>
     </view>
@@ -88,7 +88,7 @@
 
     <!-- 材料附件 -->
     <view v-else-if="activeTab === 'materials'" class="p-24rpx pb-160rpx">
-      <view v-if="!(formData.resumeUrls || []).length" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="!(formData.resumeUrls || []).length" class="yd-text-hint py-80rpx text-center text-28rpx">
         暂无简历附件
       </view>
       <view
@@ -97,10 +97,10 @@
         class="mb-24rpx flex items-center justify-between rounded-12rpx bg-white p-24rpx shadow-sm"
         @click="openAttachment(url)"
       >
-        <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">
+        <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">
           {{ getFileNameFromUrl(url) || `简历附件 ${index + 1}` }}
         </text>
-        <text class="ml-16rpx shrink-0 text-28rpx text-[#1677ff]">
+        <text class="yd-text-link ml-16rpx shrink-0 text-28rpx">
           查看
         </text>
       </view>
@@ -108,7 +108,7 @@
 
     <!-- 面试记录 -->
     <view v-else-if="activeTab === 'interviews'" class="p-24rpx pb-160rpx">
-      <view v-if="!interviewList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="!interviewList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
         暂无面试记录
       </view>
       <view
@@ -117,7 +117,7 @@
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <text class="text-30rpx text-[#333] font-semibold">
+          <text class="yd-text-main text-30rpx font-semibold">
             第 {{ item.stageNumber ?? '-' }} 轮
           </text>
           <dict-tag
@@ -126,7 +126,7 @@
             :value="item.result"
           />
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           方式：
           <dict-tag
             v-if="item.type != null"
@@ -135,25 +135,25 @@
           />
           <text v-else>-</text>
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           主面试官：{{ item.interviewEmployeeName || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           其他面试官：{{ item.otherInterviewEmployeeNames?.join('、') || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           时间：{{ formatDateTime(item.interviewTime) || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           地址：{{ item.address || '-' }}
         </view>
-        <view v-if="item.evaluate" class="mb-8rpx text-26rpx text-[#666]">
+        <view v-if="item.evaluate" class="yd-text-sub mb-8rpx text-26rpx">
           评价：{{ item.evaluate }}
         </view>
-        <view v-if="item.cancelReason" class="mb-8rpx text-26rpx text-[#666]">
+        <view v-if="item.cancelReason" class="yd-text-sub mb-8rpx text-26rpx">
           取消原因：{{ item.cancelReason }}
         </view>
-        <view v-if="item.remark" class="text-26rpx text-[#666]">
+        <view v-if="item.remark" class="yd-text-sub text-26rpx">
           备注：{{ item.remark }}
         </view>
       </view>
@@ -409,7 +409,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('hrm:recruit:candidate:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

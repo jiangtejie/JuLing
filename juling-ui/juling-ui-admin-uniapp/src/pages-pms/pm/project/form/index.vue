@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -20,7 +20,7 @@
                 敏捷开发项目
               </wd-radio>
             </wd-radio-group>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               {{ projectTypeTip }}
             </view>
           </wd-form-item>
@@ -34,20 +34,20 @@
           </wd-form-item>
           <wd-form-item title="开始时间" title-width="220rpx" prop="startTime">
             <view class="flex items-center justify-end gap-12rpx" @click="startTimeVisible = true">
-              <text class="text-28rpx" :class="startTime === '' ? 'text-[#999]' : 'text-[#333]'">
+              <text class="text-28rpx" :class="startTime === '' ? 'yd-text-hint' : 'yd-text-main'">
                 {{ startTime === '' ? '请选择开始时间' : formatDateTime(startTime) }}
               </text>
-              <text v-if="startTime !== ''" class="shrink-0 text-26rpx text-[#1677ff]" @click.stop="startTime = ''">
+              <text v-if="startTime !== ''" class="yd-text-link shrink-0 text-26rpx" @click.stop="startTime = ''">
                 清空
               </text>
             </view>
           </wd-form-item>
           <wd-form-item title="截止时间" title-width="220rpx" prop="endTime">
             <view class="flex items-center justify-end gap-12rpx" @click="endTimeVisible = true">
-              <text class="text-28rpx" :class="endTime === '' ? 'text-[#999]' : 'text-[#333]'">
+              <text class="text-28rpx" :class="endTime === '' ? 'yd-text-hint' : 'yd-text-main'">
                 {{ endTime === '' ? '请选择截止时间' : formatDateTime(endTime) }}
               </text>
-              <text v-if="endTime !== ''" class="shrink-0 text-26rpx text-[#1677ff]" @click.stop="endTime = ''">
+              <text v-if="endTime !== ''" class="yd-text-link shrink-0 text-26rpx" @click.stop="endTime = ''">
                 清空
               </text>
             </view>
@@ -69,7 +69,7 @@
                 公开
               </wd-radio>
             </wd-radio-group>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               {{ formData.openStatus ? '公开：所有人可查看，只有项目成员可以编辑' : '私有：只有项目成员可以查看' }}
             </view>
           </wd-form-item>
@@ -194,7 +194,7 @@ async function handleSubmit() {
     }
     uni.$emit('pms:pm:project:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -13,28 +13,28 @@
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ formData.no || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 申请时间：{{ formatDateTime(formData.createTime) || '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.TRADE_AFTER_SALE_STATUS" :value="formData.status" />
           </view>
           <view class="grid grid-cols-2 gap-x-20rpx gap-y-12rpx text-26rpx">
-            <view><text class="text-[#999]">订单号：</text>{{ formData.orderNo || '-' }}</view>
-            <view><text class="text-[#999]">售后方式：</text>{{ getDictLabel(DICT_TYPE.TRADE_AFTER_SALE_WAY, formData.way) || '-' }}</view>
-            <view><text class="text-[#999]">售后类型：</text>{{ getDictLabel(DICT_TYPE.TRADE_AFTER_SALE_TYPE, formData.type) || '-' }}</view>
-            <view><text class="text-[#999]">退款金额：</text>{{ formatDisplayMoney(formData.refundPrice) }}</view>
+            <view><text class="yd-text-hint">订单号：</text>{{ formData.orderNo || '-' }}</view>
+            <view><text class="yd-text-hint">售后方式：</text>{{ getDictLabel(DICT_TYPE.TRADE_AFTER_SALE_WAY, formData.way) || '-' }}</view>
+            <view><text class="yd-text-hint">售后类型：</text>{{ getDictLabel(DICT_TYPE.TRADE_AFTER_SALE_TYPE, formData.type) || '-' }}</view>
+            <view><text class="yd-text-hint">退款金额：</text>{{ formatDisplayMoney(formData.refundPrice) }}</view>
           </view>
         </view>
 
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             售后商品
           </view>
-          <view class="flex gap-20rpx rounded-8rpx bg-[#f8f8f8] p-16rpx">
+          <view class="yd-bg-subtle flex gap-20rpx rounded-8rpx p-16rpx">
             <wd-img
               v-if="formData.picUrl"
               :src="formData.picUrl"
@@ -42,13 +42,13 @@
               enable-preview
             />
             <view class="min-w-0 flex-1">
-              <view class="line-clamp-2 text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-2 text-28rpx font-semibold">
                 {{ formData.spuName || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#777]">
+              <view class="yd-text-sub mt-8rpx text-24rpx">
                 数量：{{ formData.count || 0 }}
               </view>
-              <view v-if="formData.properties?.length" class="mt-8rpx text-22rpx text-[#999]">
+              <view v-if="formData.properties?.length" class="yd-text-hint mt-8rpx text-22rpx">
                 {{ formData.properties.map(prop => `${prop.propertyName}:${prop.valueName}`).join('；') }}
               </view>
             </view>
@@ -57,29 +57,29 @@
 
         <!-- 订单信息 -->
         <view v-if="formData.order" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             订单信息
           </view>
           <view class="text-26rpx space-y-10rpx">
             <view class="flex items-center">
-              <text class="text-[#999]">配送方式：</text>
+              <text class="yd-text-hint">配送方式：</text>
               <dict-tag :type="DICT_TYPE.TRADE_DELIVERY_TYPE" :value="formData.order.deliveryType" />
             </view>
-            <view><text class="text-[#999]">收货人：</text>{{ formData.order.receiverName || '-' }}</view>
-            <view><text class="text-[#999]">手机号：</text>{{ formData.order.receiverMobile || '-' }}</view>
-            <view><text class="text-[#999]">买家留言：</text>{{ formData.order.userRemark || '-' }}</view>
+            <view><text class="yd-text-hint">收货人：</text>{{ formData.order.receiverName || '-' }}</view>
+            <view><text class="yd-text-hint">手机号：</text>{{ formData.order.receiverMobile || '-' }}</view>
+            <view><text class="yd-text-hint">买家留言：</text>{{ formData.order.userRemark || '-' }}</view>
           </view>
         </view>
 
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             申请信息
           </view>
           <view class="text-26rpx space-y-10rpx">
-            <view><text class="text-[#999]">申请原因：</text>{{ formData.applyReason || '-' }}</view>
-            <view><text class="text-[#999]">补充描述：</text>{{ formData.applyDescription || '-' }}</view>
+            <view><text class="yd-text-hint">申请原因：</text>{{ formData.applyReason || '-' }}</view>
+            <view><text class="yd-text-hint">补充描述：</text>{{ formData.applyDescription || '-' }}</view>
             <view v-if="formData.applyPicUrls?.length">
-              <text class="text-[#999]">申请图片：</text>
+              <text class="yd-text-hint">申请图片：</text>
               <view class="mt-12rpx flex flex-wrap gap-12rpx">
                 <wd-img
                   v-for="url in formData.applyPicUrls"
@@ -94,21 +94,21 @@
         </view>
 
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             处理信息
           </view>
           <view class="text-26rpx space-y-10rpx">
-            <view><text class="text-[#999]">审核备注：</text>{{ formData.auditReason || '-' }}</view>
-            <view><text class="text-[#999]">审核时间：</text>{{ formatDateTime(formData.auditTime) || '-' }}</view>
-            <view><text class="text-[#999]">退货物流：</text>{{ formData.logisticsNo || '-' }}</view>
-            <view><text class="text-[#999]">收货时间：</text>{{ formatDateTime(formData.receiveTime) || '-' }}</view>
-            <view><text class="text-[#999]">退款时间：</text>{{ formatDateTime(formData.refundTime) || '-' }}</view>
+            <view><text class="yd-text-hint">审核备注：</text>{{ formData.auditReason || '-' }}</view>
+            <view><text class="yd-text-hint">审核时间：</text>{{ formatDateTime(formData.auditTime) || '-' }}</view>
+            <view><text class="yd-text-hint">退货物流：</text>{{ formData.logisticsNo || '-' }}</view>
+            <view><text class="yd-text-hint">收货时间：</text>{{ formatDateTime(formData.receiveTime) || '-' }}</view>
+            <view><text class="yd-text-hint">退款时间：</text>{{ formatDateTime(formData.refundTime) || '-' }}</view>
           </view>
         </view>
 
         <!-- 售后日志 -->
         <view v-if="formData.logs?.length" class="mb-160rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             售后日志
           </view>
           <view class="relative pl-8rpx">
@@ -124,10 +124,10 @@
                 {{ getUserTypeText(log.userType) }}
               </view>
               <view class="min-w-0 flex-1 pt-4rpx">
-                <view class="text-26rpx text-[#333]">
+                <view class="yd-text-main text-26rpx">
                   {{ log.content || '-' }}
                 </view>
-                <view class="mt-6rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-6rpx text-22rpx">
                   {{ formatDateTime(log.createTime) || '-' }}
                 </view>
               </view>
@@ -163,13 +163,13 @@
     <!-- 拒绝原因（拒绝售后 / 拒绝收货 共用） -->
     <wd-popup
       v-model="rejectVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0;"
       @close="rejectReason = ''"
     >
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           {{ rejectAction === 'refuse' ? '拒绝收货' : '拒绝售后' }}
         </view>
         <wd-textarea v-model="rejectReason" clearable :maxlength="500" :placeholder="rejectAction === 'refuse' ? '请输入拒绝收货原因' : '请输入拒绝原因'" />
@@ -190,7 +190,8 @@
 import type { TradeAfterSale } from '@/api/mall/trade/after-sale'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import {
   agreeTradeAfterSale,
   disagreeTradeAfterSale,
@@ -360,7 +361,7 @@ async function handleReject() {
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   await loadDetail()
 })
 </script>

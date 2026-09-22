@@ -2,7 +2,7 @@
   <!-- 报表期间筛选：报表周期 + 会计期间，变化后立即触发查询 -->
   <view class="rounded-12rpx bg-white px-24rpx py-20rpx shadow-sm">
     <view class="flex items-center justify-between">
-      <text class="text-28rpx text-[#666]">报表周期</text>
+      <text class="yd-text-sub text-28rpx">报表周期</text>
       <wd-radio-group v-model="periodType" type="button" @change="emitQuery">
         <wd-radio value="month">
           月报
@@ -13,9 +13,9 @@
       </wd-radio-group>
     </view>
     <view class="mt-20rpx flex items-center justify-between" @click="pickerVisible = true">
-      <text class="text-28rpx text-[#666]">会计期间</text>
+      <text class="yd-text-sub text-28rpx">会计期间</text>
       <view class="flex items-center gap-8rpx">
-        <text class="text-28rpx text-[#333]">{{ periodLabel || '请选择' }}</text>
+        <text class="yd-text-main text-28rpx">{{ periodLabel || '请选择' }}</text>
         <wd-icon name="arrow-right" size="28rpx" color="#999" />
       </view>
     </view>

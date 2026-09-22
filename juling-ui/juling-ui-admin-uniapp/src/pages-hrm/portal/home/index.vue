@@ -11,7 +11,7 @@
       <view class="p-24rpx space-y-24rpx">
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
           <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-            <text class="text-30rpx text-[#333] font-semibold">
+            <text class="yd-text-main text-30rpx font-semibold">
               员工工作台
             </text>
             <wd-button size="small" type="primary" :loading="loading" @click="refreshAll">
@@ -22,7 +22,7 @@
 
         <view
           v-if="loading && !employee"
-          class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+          class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
         >
           <wd-loading size="32rpx" />
           <view class="mt-12rpx">

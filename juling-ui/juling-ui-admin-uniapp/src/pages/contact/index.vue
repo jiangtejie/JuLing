@@ -19,14 +19,14 @@
         @click="handleEnterDept(item)"
       >
         <view class="flex items-center p-24rpx">
-          <view class="mr-16rpx h-80rpx w-80rpx flex items-center justify-center rounded-8rpx bg-[#1890ff]">
+          <view class="yd-bg-primary mr-16rpx h-80rpx w-80rpx flex items-center justify-center rounded-8rpx">
             <wd-icon name="folder" size="32px" color="#fff" />
           </view>
           <view class="flex-1">
-            <view class="text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main text-28rpx font-medium">
               {{ item.name }}
             </view>
-            <view v-if="item.children && item.children.length > 0" class="mt-8rpx text-24rpx text-[#999]">
+            <view v-if="item.children && item.children.length > 0" class="yd-text-hint mt-8rpx text-24rpx">
               {{ item.children.length }} 个子部门
             </view>
           </view>
@@ -37,7 +37,7 @@
       <!-- 用户列表 -->
       <view v-if="currentDeptList.length > 0 && currentUserList.length > 0" class="my-24rpx flex items-center">
         <view class="h-1rpx flex-1 bg-[#ddd]" />
-        <text class="mx-16rpx text-24rpx text-[#999]">部门成员</text>
+        <text class="yd-text-hint mx-16rpx text-24rpx">部门成员</text>
         <view class="h-1rpx flex-1 bg-[#ddd]" />
       </view>
       <view
@@ -52,12 +52,12 @@
           </view>
           <view
             v-else
-            class="mr-16rpx h-80rpx w-80rpx flex items-center justify-center rounded-full bg-[#1890ff] text-32rpx text-white"
+            class="yd-bg-primary mr-16rpx h-80rpx w-80rpx flex items-center justify-center rounded-full text-32rpx text-white"
           >
             {{ item.nickname?.charAt(0) || item.username?.charAt(0) }}
           </view>
           <view class="flex-1">
-            <view class="text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main text-28rpx font-medium">
               {{ item.nickname }}
             </view>
           </view>

@@ -4,7 +4,26 @@
   "displayName": "矩灵商城",
   "version": "2026.08",
   "description": "矩灵商城，一套代码，同时发行到iOS、Android、H5、微信小程序多个平台，请使用手机扫码快速体验强大功能",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
+    "dev": "node scripts/uni-cli.js",
+    "dev:h5": "node scripts/uni-cli.js",
+    "dev:mp-weixin": "node scripts/uni-cli.js -p mp-weixin",
+    "dev:mp-alipay": "node scripts/uni-cli.js -p mp-alipay",
+    "dev:mp-baidu": "node scripts/uni-cli.js -p mp-baidu",
+    "dev:mp-toutiao": "node scripts/uni-cli.js -p mp-toutiao",
+    "dev:app": "node scripts/uni-cli.js -p app",
+    "build": "node scripts/uni-cli.js build",
+    "build:h5": "node scripts/uni-cli.js build",
+    "build:mp-weixin": "node scripts/uni-cli.js build -p mp-weixin",
+    "build:mp-alipay": "node scripts/uni-cli.js build -p mp-alipay",
+    "build:mp-baidu": "node scripts/uni-cli.js build -p mp-baidu",
+    "build:mp-toutiao": "node scripts/uni-cli.js build -p mp-toutiao",
+    "build:app": "node scripts/uni-cli.js build -p app",
+    "uvm": "npx @dcloudio/uvm@latest",
     "prettier": "prettier --write  \"{pages,sheep}/**/*.{js,json,tsx,css,less,scss,vue,html,md}\""
   },
   "repository": "https://github.com/jiangtejie/JuLing",
@@ -88,17 +107,39 @@
     }
   },
   "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-4070620250821001",
+    "@dcloudio/uni-app-plus": "3.0.0-4070620250821001",
+    "@dcloudio/uni-components": "3.0.0-4070620250821001",
+    "@dcloudio/uni-h5": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-alipay": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-baidu": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-jd": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-kuaishou": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-lark": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-qq": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-toutiao": "3.0.0-4070620250821001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-4070620250821001",
+    "@dcloudio/uni-quickapp-webview": "3.0.0-4070620250821001",
     "dayjs": "^1.11.7",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "luch-request": "^3.0.8",
-    "pinia": "^2.0.33",
+    "pinia": "2.0.36",
     "pinia-plugin-persist-uni": "^1.2.0",
-    "vue": "^3.5.11",
+    "vue": "3.4.21",
     "weixin-js-sdk": "^1.6.0"
   },
   "devDependencies": {
+    "@dcloudio/types": "^3.4.8",
+    "@dcloudio/uni-automator": "3.0.0-4070620250821001",
+    "@dcloudio/uni-cli-shared": "3.0.0-4070620250821001",
+    "@dcloudio/uni-stacktracey": "3.0.0-4070620250821001",
+    "@dcloudio/uni-uts-v1": "3.0.0-4070620250821001",
+    "@dcloudio/vite-plugin-uni": "3.0.0-4070620250821001",
+    "@vue/runtime-core": "3.4.21",
     "prettier": "^2.8.7",
+    "sass": "1.77.8",
+    "vite": "5.2.8",
     "vconsole": "^3.15.0"
   }
 }

@@ -30,17 +30,17 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               {{ item.nickname || item.userId }}
             </view>
             <wd-tag :type="(item.point || 0) >= 0 ? 'success' : 'danger'" variant="plain">
               {{ (item.point || 0) > 0 ? `+${item.point}` : item.point }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-28rpx">
             第 {{ item.day || 0 }} 天
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

@@ -31,12 +31,12 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || `活动 #${item.id}` }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>起始价：{{ formatDisplayMoney(item.bargainFirstPrice) }}</text>
             <text>底价：{{ formatDisplayMoney(item.bargainMinPrice) }}</text>
           </view>

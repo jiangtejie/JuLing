@@ -28,7 +28,7 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.code || '-' }}
               </view>
               <view class="flex shrink-0 items-center gap-12rpx">
@@ -46,28 +46,28 @@
                 </wd-button>
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">物料名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">物料名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.name || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">单位：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">单位：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.unitMeasureName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">物料分类：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">物料分类：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.itemTypeName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">物料/产品：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">物料/产品：</text>
               <dict-tag v-if="item.itemOrProduct" :type="DICT_TYPE.MES_MD_ITEM_OR_PRODUCT" :value="item.itemOrProduct" />
               <text v-else>-</text>
             </view>
-            <view class="flex items-center justify-between text-24rpx text-[#999]">
+            <view class="yd-text-hint flex items-center justify-between text-24rpx">
               <view class="flex items-center gap-16rpx">
                 <view class="flex items-center">
                   <text class="mr-4rpx">安全库存：</text>

@@ -6,7 +6,7 @@
           <view class="h-48rpx w-48rpx flex items-center justify-center rounded-14rpx bg-[#615ced] text-22rpx text-white font-semibold">
             AI
           </view>
-          <text class="text-28rpx text-[#333] font-medium">当前文章</text>
+          <text class="yd-text-main text-28rpx font-medium">当前文章</text>
         </view>
         <wd-loading v-if="writing" size="30rpx" />
       </view>
@@ -22,10 +22,10 @@
       <view class="h-112rpx w-112rpx flex items-center justify-center rounded-32rpx bg-[#eeedff]">
         <wd-icon name="edit" size="54rpx" color="#615ced" />
       </view>
-      <view class="mt-28rpx text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mt-28rpx text-32rpx font-semibold">
         开始新的创作
       </view>
-      <view class="mt-14rpx text-25rpx text-[#999] leading-40rpx">
+      <view class="yd-text-hint mt-14rpx text-25rpx leading-40rpx">
         输入写作要求，生成结果将显示在这里
       </view>
     </view>

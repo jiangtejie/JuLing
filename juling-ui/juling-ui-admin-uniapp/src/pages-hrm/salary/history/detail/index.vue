@@ -10,45 +10,45 @@
     <!-- 工资表概览 -->
     <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
       <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
           {{ formatHrmYearMonth(record.year, record.month) }}
         </view>
-        <view class="shrink-0 text-26rpx text-[#999]">
+        <view class="yd-text-hint shrink-0 text-26rpx">
           计薪 {{ record.employeeCount ?? 0 }} 人
         </view>
       </view>
       <view class="grid grid-cols-2 gap-16rpx">
-        <view class="rounded-8rpx bg-[#f6ffed] px-16rpx py-16rpx">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-success-soft rounded-8rpx px-16rpx py-16rpx">
+          <view class="yd-text-hint text-24rpx">
             应发工资
           </view>
-          <view class="mt-8rpx text-30rpx text-[#52c41a] font-semibold">
+          <view class="yd-text-success mt-8rpx text-30rpx font-semibold">
             {{ formatHrmMoney(record.expectedPaySalary) }}
           </view>
         </view>
-        <view class="rounded-8rpx bg-[#e6f4ff] px-16rpx py-16rpx">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-info-soft rounded-8rpx px-16rpx py-16rpx">
+          <view class="yd-text-hint text-24rpx">
             实发工资
           </view>
-          <view class="mt-8rpx text-30rpx text-[#1677ff] font-semibold">
+          <view class="yd-text-link mt-8rpx text-30rpx font-semibold">
             {{ formatHrmMoney(record.realPaySalary) }}
           </view>
         </view>
       </view>
-      <view class="mt-16rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-16rpx text-26rpx">
         个人社保：{{ formatHrmMoney(record.personalInsuranceAmount) }}
-        <text class="mx-8rpx text-[#ddd]">|</text>
+        <text class="yd-text-muted mx-8rpx">|</text>
         个人公积金：{{ formatHrmMoney(record.personalProvidentFundAmount) }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         个人所得税：{{ formatHrmMoney(record.personalTax) }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         公司社保：{{ formatHrmMoney(record.corporateInsuranceAmount) }}
-        <text class="mx-8rpx text-[#ddd]">|</text>
+        <text class="yd-text-muted mx-8rpx">|</text>
         公司公积金：{{ formatHrmMoney(record.corporateProvidentFundAmount) }}
       </view>
-      <view class="mt-16rpx rounded-8rpx bg-[#e6f4ff] px-16rpx py-12rpx text-24rpx text-[#1677ff]">
+      <view class="yd-text-link yd-bg-info-soft mt-16rpx rounded-8rpx px-16rpx py-12rpx text-24rpx">
         历史工资表已归档，仅可查询。
       </view>
     </view>
@@ -79,26 +79,26 @@
           @click="handleEmployeeDetail(item)"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.employeeName || '-' }}
             </view>
-            <view class="shrink-0 text-28rpx text-[#1677ff] font-semibold">
+            <view class="yd-text-link shrink-0 text-28rpx font-semibold">
               {{ formatHrmMoney(item.realPaySalary) }}
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">工号：</text>{{ item.jobNumber || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">工号：</text>{{ item.jobNumber || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">部门：</text>{{ item.deptName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">部门：</text>{{ item.deptName || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">岗位：</text>{{ item.postName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">岗位：</text>{{ item.postName || '-' }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">应发：</text>{{ formatHrmMoney(item.expectedPaySalary) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">个税：</text>{{ formatHrmMoney(item.personalTax) }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">应发：</text>{{ formatHrmMoney(item.expectedPaySalary) }}
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">个税：</text>{{ formatHrmMoney(item.personalTax) }}
           </view>
         </view>
       </view>
@@ -110,7 +110,8 @@
 import type { SalaryMonthRecord } from '@/api/hrm/salary/month-record'
 import type { SalaryMonthEmployeeRecord } from '@/api/hrm/salary/month-record/employee'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getSalaryMonthRecord } from '@/api/hrm/salary/month-record'
 import { getSalaryMonthEmployeeRecordPage } from '@/api/hrm/salary/month-record/employee'
 import { HrmSalaryMonthStatus } from '@/pages-hrm/utils/constants'
@@ -211,7 +212,7 @@ function handleEmployeeDetail(item: SalaryMonthEmployeeRecord) {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

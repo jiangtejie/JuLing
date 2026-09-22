@@ -25,7 +25,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               #{{ item.id }} {{ item.name }}
             </view>
             <view class="flex shrink-0 items-center gap-12rpx">
@@ -41,11 +41,11 @@
           </view>
           <view class="mb-12rpx flex items-center gap-16rpx">
             <wd-progress class="flex-1" :percentage="item.progress || 0" hide-text />
-            <text class="shrink-0 text-24rpx text-[#999]">{{ item.progress ?? 0 }}%</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">{{ item.progress ?? 0 }}%</text>
           </view>
-          <view class="flex items-center justify-between text-28rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-28rpx">
             <text class="min-w-0 flex-1 truncate">负责人：{{ item.ownerUserName || '未设置' }}</text>
-            <text class="shrink-0 text-[#999]">
+            <text class="yd-text-hint shrink-0">
               {{ formatDate(item.startTime) || '?' }} ~ {{ formatDate(item.endTime) || '?' }}
             </text>
           </view>

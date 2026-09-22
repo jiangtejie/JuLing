@@ -17,11 +17,11 @@
         <view class="yd-search-form-label">
           点检方案
         </view>
-        <view class="min-h-72rpx flex items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx" @click="openPlanPicker">
-          <text v-if="selectedPlanText" class="min-w-0 flex-1 truncate text-[#333]">
+        <view class="yd-bg-subtle min-h-72rpx flex items-center gap-12rpx rounded-8rpx px-24rpx text-28rpx" @click="openPlanPicker">
+          <text v-if="selectedPlanText" class="yd-text-main min-w-0 flex-1 truncate">
             {{ selectedPlanText }}
           </text>
-          <text v-else class="min-w-0 flex-1 truncate text-[#999]">
+          <text v-else class="yd-text-hint min-w-0 flex-1 truncate">
             请选择点检方案
           </text>
           <wd-icon
@@ -37,11 +37,11 @@
         <view class="yd-search-form-label">
           设备
         </view>
-        <view class="min-h-72rpx flex items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx" @click="openMachineryPicker">
-          <text v-if="selectedMachineryText" class="min-w-0 flex-1 truncate text-[#333]">
+        <view class="yd-bg-subtle min-h-72rpx flex items-center gap-12rpx rounded-8rpx px-24rpx text-28rpx" @click="openMachineryPicker">
+          <text v-if="selectedMachineryText" class="yd-text-main min-w-0 flex-1 truncate">
             {{ selectedMachineryText }}
           </text>
-          <text v-else class="min-w-0 flex-1 truncate text-[#999]">
+          <text v-else class="yd-text-hint min-w-0 flex-1 truncate">
             请选择设备
           </text>
           <wd-icon

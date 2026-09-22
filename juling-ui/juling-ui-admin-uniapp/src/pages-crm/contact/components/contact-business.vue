@@ -1,8 +1,8 @@
 <template>
   <view class="mt-24rpx bg-white">
     <!-- 关联商机标题栏 -->
-    <view class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-20rpx">
-      <text class="text-30rpx text-[#333] font-semibold">关联商机</text>
+    <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+      <text class="yd-text-main text-30rpx font-semibold">关联商机</text>
       <view class="flex items-center gap-12rpx">
         <wd-button v-if="canCreate" size="small" type="primary" variant="plain" @click="handleCreate">
           新增商机
@@ -23,13 +23,13 @@
     <view
       v-for="business in list"
       :key="business.id"
-      class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-20rpx"
+      class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx"
     >
       <view class="min-w-0 flex-1">
-        <view class="line-clamp-1 text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main line-clamp-1 text-28rpx font-semibold">
           {{ business.name || '-' }}
         </view>
-        <view class="mt-6rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-6rpx text-24rpx">
           金额：{{ formatMoney(business.totalPrice) }}
           <text v-if="business.statusName" class="ml-16rpx">阶段：{{ business.statusName }}</text>
         </view>

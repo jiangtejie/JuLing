@@ -32,24 +32,24 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="line-clamp-1 mr-16rpx flex-1 text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-1 mr-16rpx flex-1 text-28rpx font-semibold">
                 {{ item.exceptionName || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.INFRA_API_ERROR_LOG_PROCESS_STATUS" :value="item.processStatus" />
             </view>
-            <view class="mb-12rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx flex-shrink-0 text-[#999]">请求：</text>
+            <view class="yd-text-sub mb-12rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx flex-shrink-0">请求：</text>
               <text class="line-clamp-2 break-all">{{ item.requestMethod }} {{ item.requestUrl }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">应用名：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">应用名：</text>
               <text>{{ item.applicationName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">用户编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">用户编号：</text>
               <text>{{ item.userId ?? '-' }}</text>
             </view>
-            <view class="flex items-center text-24rpx text-[#999]">
+            <view class="yd-text-hint flex items-center text-24rpx">
               <text>{{ formatDateTime(item.exceptionTime) }}</text>
             </view>
           </view>

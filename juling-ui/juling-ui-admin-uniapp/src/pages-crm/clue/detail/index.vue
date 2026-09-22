@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container" :class="{ 'yd-page-container-paging': isPagingTab }">
+  <view class="yd-page-container yd-page-with-footer" :class="{ 'yd-page-container-paging': isPagingTab }">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="线索详情"
@@ -261,7 +261,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('crm:clue:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

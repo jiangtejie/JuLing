@@ -32,23 +32,23 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 {{ item.model || '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.AI_MODEL_TYPE" :value="item.type" />
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             <view class="mb-8rpx">
               平台：<dict-tag :type="DICT_TYPE.AI_PLATFORM" :value="item.platform" />
             </view>
             <view class="mb-8rpx">
               状态：<dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view v-if="item.type === AiModelTypeEnum.CHAT" class="text-24rpx text-[#999]">
+            <view v-if="item.type === AiModelTypeEnum.CHAT" class="yd-text-hint text-24rpx">
               温度 {{ item.temperature ?? '-' }} / Token {{ item.maxTokens ?? '-' }} / 上下文 {{ item.maxContexts ?? '-' }}
             </view>
           </view>

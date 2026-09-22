@@ -31,35 +31,35 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.itemName || '-' }}
               </view>
               <text :class="getQuantityClass(item.quantity)" class="text-32rpx font-semibold">
                 {{ formatQuantity(item.quantity) || '0.00' }}
               </text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">规格：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">规格：</text>
               <text>{{ item.skuName || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">仓库：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">仓库：</text>
               <text>{{ item.warehouseName || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">变更：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">变更：</text>
               <text>{{ formatQuantity(item.beforeQuantity) || '0.00' }} -> {{ formatQuantity(item.afterQuantity) || '0.00' }}</text>
             </view>
-            <view class="grid grid-cols-3 mb-12rpx gap-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint grid grid-cols-3 mb-12rpx gap-12rpx text-24rpx">
               <text>数量 {{ formatQuantity(item.quantity) || '0.00' }}</text>
               <text>单价 {{ formatPrice(item.price) || '-' }}</text>
               <text>金额 {{ formatPrice(item.totalPrice) || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center gap-12rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub mb-12rpx flex items-center gap-12rpx text-28rpx">
               <dict-tag :type="DICT_TYPE.WMS_ORDER_TYPE" :value="item.orderType" />
               <text>{{ item.orderNo || '-' }}</text>
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               {{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>
@@ -123,7 +123,7 @@ function handleReset() {
 /** 获取数量颜色 */
 function getQuantityClass(quantity?: number) {
   if (!quantity) {
-    return 'text-[#666]'
+    return 'yd-text-sub'
   }
   return quantity > 0 ? 'text-green-600' : 'text-red-500'
 }

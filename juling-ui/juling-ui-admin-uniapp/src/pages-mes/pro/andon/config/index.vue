@@ -28,12 +28,12 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-32rpx font-semibold">
                 {{ item.reason || '-' }}
               </view>
               <dict-tag v-if="item.level != null" :type="DICT_TYPE.MES_PRO_ANDON_LEVEL" :value="item.level" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>处置角色：{{ item.handlerRoleName || '-' }}</view>
               <view>处置人：{{ item.handlerUserNickname || '-' }}</view>
               <view>备注：{{ item.remark || '-' }}</view>
@@ -42,7 +42,7 @@
           </view>
           <view
             v-if="hasAccessByCodes(['mes:pro-andon-config:update']) || hasAccessByCodes(['mes:pro-andon-config:delete'])"
-            class="flex gap-16rpx border-t border-[#f0f0f0] px-24rpx py-16rpx"
+            class="yd-border-light flex gap-16rpx border-t px-24rpx py-16rpx"
             @click.stop
           >
             <wd-button v-if="hasAccessByCodes(['mes:pro-andon-config:update'])" class="flex-1" size="small" type="warning" variant="plain" @click="handleEdit(item)">
@@ -66,12 +66,12 @@
       safe-area-inset-bottom
       custom-style="height: 82vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="handleCancelForm">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formData.id ? '编辑配置' : '新增配置' }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">
@@ -81,7 +81,7 @@
 
         <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
           <wd-form ref="formRef" :model="formData" :schema="formSchema">
-            <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
               呼叫规则
             </view>
             <wd-cell-group border>
@@ -121,7 +121,7 @@
               </wd-form-item>
             </wd-cell-group>
 
-            <view class="mx-24rpx mt-20rpx rounded-12rpx bg-[#fff7e6] p-20rpx text-24rpx text-[#ad6800]">
+            <view class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-20rpx rounded-12rpx p-20rpx text-24rpx">
               处置角色和处置人至少选择一个；保存前会再次确认，避免误维护安灯处置规则。
             </view>
           </wd-form>

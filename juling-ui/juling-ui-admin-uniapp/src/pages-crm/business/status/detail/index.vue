@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="商机状态组详情"
@@ -16,15 +16,15 @@
     <!-- 阶段设置（只读） -->
     <view class="mt-24rpx bg-white">
       <view class="px-24rpx py-20rpx">
-        <text class="text-30rpx text-[#333] font-semibold">阶段设置</text>
+        <text class="yd-text-main text-30rpx font-semibold">阶段设置</text>
       </view>
       <view
         v-for="(status, index) in formData.statuses || []"
         :key="index"
-        class="mx-24rpx mb-20rpx flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-24rpx"
+        class="yd-bg-subtle mx-24rpx mb-20rpx flex items-center justify-between rounded-12rpx p-24rpx"
       >
-        <text class="text-28rpx text-[#333]">{{ status.name || '-' }}</text>
-        <text class="text-28rpx text-[#999]">{{ status.percent ?? 0 }}%</text>
+        <text class="yd-text-main text-28rpx">{{ status.name || '-' }}</text>
+        <text class="yd-text-hint text-28rpx">{{ status.percent ?? 0 }}%</text>
       </view>
       <wd-empty v-if="!(formData.statuses && formData.statuses.length)" icon="content" tip="暂无阶段" />
     </view>
@@ -107,7 +107,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('crm:businessStatus:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

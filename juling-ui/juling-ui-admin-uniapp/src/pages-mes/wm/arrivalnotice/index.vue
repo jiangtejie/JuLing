@@ -31,33 +31,33 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.code || '-' }}
                 </view>
-                <view class="mt-4rpx truncate text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx truncate text-24rpx">
                   {{ item.name || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_WM_ARRIVAL_NOTICE_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">采购订单：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">采购订单：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.purchaseOrderCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">供应商：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">供应商：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.vendorName || item.vendorCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">联系人：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">联系人：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.contactName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">联系方式：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">联系方式：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.contactTelephone || '-' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">到货日期：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">到货日期：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDate(item.arrivalDate) || '-' }}</text>
             </view>
           </view>

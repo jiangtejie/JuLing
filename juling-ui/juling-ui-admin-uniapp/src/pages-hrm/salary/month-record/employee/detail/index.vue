@@ -10,10 +10,10 @@
     <!-- 详情内容 -->
     <view class="pb-160rpx">
       <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-12rpx truncate text-34rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx truncate text-34rpx font-semibold">
           {{ formData.employeeName || '-' }}
         </view>
-        <view class="text-26rpx text-[#999]">
+        <view class="yd-text-hint text-26rpx">
           {{ formData.postName || '-' }} · {{ formData.year || '-' }} 年 {{ formData.month || '-' }} 月
         </view>
       </view>
@@ -34,7 +34,7 @@
 
       <!-- 工资项 -->
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           工资项明细
         </view>
         <view
@@ -42,14 +42,14 @@
           :key="option.code"
           class="mb-16rpx flex items-center justify-between rounded-12rpx bg-white px-24rpx py-20rpx shadow-sm"
         >
-          <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">
+          <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">
             {{ option.name || `编码 ${option.code}` }}
           </text>
-          <text class="ml-16rpx shrink-0 text-28rpx text-[#333] font-semibold">
+          <text class="yd-text-main ml-16rpx shrink-0 text-28rpx font-semibold">
             {{ formatHrmMoney(option.value) }}
           </text>
         </view>
-        <view v-if="!displayOptions.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+        <view v-if="!displayOptions.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
           暂无工资项
         </view>
       </view>

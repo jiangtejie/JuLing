@@ -28,10 +28,10 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.spuName || `示例订单 #${item.id}` }}
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 订单编号：{{ item.id || '-' }}
               </view>
             </view>
@@ -40,32 +40,32 @@
             </view>
           </view>
 
-          <view class="mb-16rpx text-36rpx text-[#fa8c16] font-semibold">
+          <view class="yd-text-warning mb-16rpx text-36rpx font-semibold">
             {{ formatDisplayMoney(item.price) }}
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">用户编号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">用户编号：</text>
             <text>{{ item.userId || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
-          <view v-if="item.payOrderId" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">支付单号：</text>
+          <view v-if="item.payOrderId" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">支付单号：</text>
             <text>{{ item.payOrderId }}</text>
           </view>
-          <view v-if="item.payTime" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">支付时间：</text>
+          <view v-if="item.payTime" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">支付时间：</text>
             <text>{{ formatDateTime(item.payTime) }}</text>
           </view>
-          <view v-if="item.payRefundId || item.refundTime" class="mb-16rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">退款时间：</text>
+          <view v-if="item.payRefundId || item.refundTime" class="yd-text-sub mb-16rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">退款时间：</text>
             <text>{{ getRefundText(item) }}</text>
           </view>
-          <view v-if="item.refundPrice" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">退款金额：</text>
+          <view v-if="item.refundPrice" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">退款金额：</text>
             <text>{{ formatDisplayMoney(item.refundPrice) }}</text>
           </view>
 
@@ -112,7 +112,7 @@
     >
       <view class="p-32rpx">
         <view class="mb-24rpx flex items-center justify-between">
-          <text class="text-32rpx text-[#333] font-semibold">发起订单</text>
+          <text class="yd-text-main text-32rpx font-semibold">发起订单</text>
           <wd-icon name="close" size="20px" @click="createVisible = false" />
         </view>
 
@@ -211,9 +211,9 @@ function payStatusLabel(item: PayDemoOrder) {
 /** 支付状态标签样式 */
 function payStatusClass(item: PayDemoOrder) {
   if (item.refundPrice || item.payRefundId) {
-    return 'bg-[#fff1f0] text-[#fa4350]'
+    return 'yd-bg-danger-soft yd-text-danger'
   }
-  return item.payStatus ? 'bg-[#e6f4ff] text-[#1677ff]' : 'bg-[#f5f5f5] text-[#999]'
+  return item.payStatus ? 'yd-bg-info-soft yd-text-link' : 'yd-bg-page yd-text-hint'
 }
 
 /** 退款时间展示 */

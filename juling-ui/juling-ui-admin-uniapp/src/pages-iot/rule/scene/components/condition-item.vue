@@ -1,8 +1,8 @@
 <template>
-  <view class="mb-16rpx rounded-8rpx bg-[#f7f8fa]">
+  <view class="yd-bg-subtle mb-16rpx rounded-8rpx">
     <view class="flex items-center justify-between px-20rpx py-14rpx">
-      <text class="text-26rpx text-[#333] font-medium">条件 {{ index + 1 }}</text>
-      <text class="text-26rpx text-[#fa4350]" @click="emit('remove')">删除</text>
+      <text class="yd-text-main text-26rpx font-medium">条件 {{ index + 1 }}</text>
+      <text class="yd-text-danger text-26rpx" @click="emit('remove')">删除</text>
     </view>
     <wd-cell-group border>
       <yd-form-picker

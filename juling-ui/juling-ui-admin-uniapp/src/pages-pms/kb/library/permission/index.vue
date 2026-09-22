@@ -9,13 +9,13 @@
 
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx pb-200rpx">
-        <view class="mb-24rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mb-24rpx text-24rpx">
           子文件夹和子文档默认继承同一套权限；知识库创建人和管理员始终拥有管理权限。
         </view>
 
         <!-- 访问范围 -->
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-16rpx text-28rpx">
             访问范围
           </view>
           <wd-radio-group v-model="formData.openStatus" type="button">
@@ -38,7 +38,7 @@
 
         <!-- 协作者 -->
         <view class="mb-16rpx mt-32rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">协作者</text>
+          <text class="yd-text-main text-30rpx font-semibold">协作者</text>
           <wd-button size="small" type="primary" variant="plain" @click="handleAdd">
             添加协作者
           </wd-button>
@@ -50,7 +50,7 @@
         >
           <template v-if="item.ownerStatus">
             <view class="flex items-center justify-between">
-              <text class="text-28rpx text-[#333]">{{ item.userName || '-' }}</text>
+              <text class="yd-text-main text-28rpx">{{ item.userName || '-' }}</text>
               <wd-tag type="success" plain>
                 拥有者
               </wd-tag>
@@ -66,7 +66,7 @@
                   部门
                 </wd-radio>
               </wd-radio-group>
-              <text class="shrink-0 text-26rpx text-[#f5222d]" @click="memberList.splice(index, 1)">移除</text>
+              <text class="yd-text-danger shrink-0 text-26rpx" @click="memberList.splice(index, 1)">移除</text>
             </view>
             <view class="mb-12rpx">
               <!-- 私有知识库只可选择库内成员/部门 -->
@@ -134,7 +134,9 @@ import UserFormPicker from '@/components/system-select/user-form-picker.vue'
 import {
   PmsKnowledgeContentLevel,
 } from '@/pages-pms/kb/utils/constants'
-import { DICT_TYPE, getIntDictOptions } from '@/utils/constants'
+import { getIntDictOptions } from '@/hooks/useDict'
+// edit by 棱信矩灵：getIntDictOptions 由 @/hooks/useDict 导出，此前误从 @/utils/constants 导入，运行时会取到 undefined
+import { DICT_TYPE } from '@/utils/constants'
 import { navigateBackPlus } from '@/utils'
 
 interface EditableMember extends KnowledgeContentPermissionMember {

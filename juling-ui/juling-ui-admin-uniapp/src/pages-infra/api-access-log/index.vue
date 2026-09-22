@@ -32,7 +32,7 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">
                 {{ item.requestMethod }} {{ item.requestUrl }}
               </view>
               <view class="flex-shrink-0">
@@ -44,23 +44,23 @@
                 </wd-tag>
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">应用名：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">应用名：</text>
               <text>{{ item.applicationName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">用户编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">用户编号：</text>
               <text>{{ item.userId ?? '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">执行时长：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">执行时长：</text>
               <text>{{ item.duration != null ? `${item.duration} ms` : '-' }}</text>
             </view>
-            <view v-if="item.operateName" class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">操作名：</text>
+            <view v-if="item.operateName" class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">操作名：</text>
               <text class="line-clamp-1">{{ item.operateName }}</text>
             </view>
-            <view class="flex items-center text-24rpx text-[#999]">
+            <view class="yd-text-hint flex items-center text-24rpx">
               <text>{{ formatDateTime(item.beginTime) }}</text>
             </view>
           </view>

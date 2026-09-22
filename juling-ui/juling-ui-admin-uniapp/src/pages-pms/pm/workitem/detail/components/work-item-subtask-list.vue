@@ -3,7 +3,7 @@
     <!-- 快速创建 -->
     <view
       v-if="editable && !composing"
-      class="mb-24rpx rounded-12rpx bg-white p-24rpx text-26rpx text-[#999] shadow-sm"
+      class="yd-text-hint mb-24rpx rounded-12rpx bg-white p-24rpx text-26rpx shadow-sm"
       @click="composing = true"
     >
       添加子工作项…
@@ -22,12 +22,12 @@
         </wd-button>
       </view>
       <view class="mt-12rpx text-right">
-        <text class="text-26rpx text-[#999]" @click="composing = false">取消</text>
+        <text class="yd-text-hint text-26rpx" @click="composing = false">取消</text>
       </view>
     </view>
 
     <!-- 子工作项列表 -->
-    <view v-if="!subtaskList.length" class="py-60rpx text-center text-28rpx text-[#999]">
+    <view v-if="!subtaskList.length" class="yd-text-hint py-60rpx text-center text-28rpx">
       暂无子工作项
     </view>
     <view
@@ -43,18 +43,18 @@
         />
         <view v-if="editingId === item.id" class="min-w-0 flex flex-1 items-center gap-12rpx">
           <wd-input v-model="editingName" class="flex-1" :maxlength="100" />
-          <text class="shrink-0 text-26rpx text-[#1677ff]" @click="handleRename(item)">保存</text>
-          <text class="shrink-0 text-26rpx text-[#999]" @click="editingId = undefined">取消</text>
+          <text class="yd-text-link shrink-0 text-26rpx" @click="handleRename(item)">保存</text>
+          <text class="yd-text-hint shrink-0 text-26rpx" @click="editingId = undefined">取消</text>
         </view>
-        <text v-else class="min-w-0 flex-1 truncate text-28rpx text-[#333]">
+        <text v-else class="yd-text-main min-w-0 flex-1 truncate text-28rpx">
           {{ item.name }}
         </text>
       </view>
-      <view class="flex items-center justify-between pl-56rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub flex items-center justify-between pl-56rpx text-26rpx">
         <text>状态：{{ item.statusName || '-' }} · 负责人：{{ item.assigneeUserName || '未分配' }}</text>
         <view v-if="editable" class="flex shrink-0 gap-16rpx">
-          <text class="text-[#1677ff]" @click="startRename(item)">改名</text>
-          <text class="text-[#f5222d]" @click="handleRecycle(item)">删除</text>
+          <text class="yd-text-link" @click="startRename(item)">改名</text>
+          <text class="yd-text-danger" @click="handleRecycle(item)">删除</text>
         </view>
       </view>
     </view>

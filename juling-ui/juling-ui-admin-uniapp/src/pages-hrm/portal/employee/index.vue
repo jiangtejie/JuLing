@@ -11,7 +11,7 @@
       <!-- 头部摘要 -->
       <view v-if="employee.id" class="bg-white px-24rpx py-24rpx">
         <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-          <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
             {{ employee.name || '-' }}
           </view>
           <view class="flex shrink-0 flex-col items-end gap-8rpx">
@@ -27,10 +27,10 @@
             />
           </view>
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           {{ employee.deptName || '-' }} · {{ employee.postName || '-' }}
         </view>
-        <view class="mt-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mt-8rpx text-26rpx">
           工号：{{ employee.jobNumber || '-' }}
         </view>
         <view class="mt-16rpx flex justify-end">
@@ -47,7 +47,7 @@
         </wd-tabs>
       </view>
 
-      <view v-if="loading && !employee.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !employee.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载我的档案

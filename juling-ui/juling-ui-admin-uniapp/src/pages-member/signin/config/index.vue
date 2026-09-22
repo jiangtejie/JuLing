@@ -29,25 +29,25 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 第 {{ item.day }} 天
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="grid grid-cols-2 gap-12rpx rounded-8rpx bg-[#f7f8fa] p-16rpx text-center">
+            <view class="yd-bg-subtle grid grid-cols-2 gap-12rpx rounded-8rpx p-16rpx text-center">
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ item.point ?? 0 }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   奖励积分
                 </view>
               </view>
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ item.experience ?? 0 }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   奖励经验
                 </view>
               </view>
@@ -97,7 +97,7 @@ function handleBack() {
 async function queryList() {
   try {
     const data = await getMemberSignInConfigList()
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

@@ -105,7 +105,7 @@
               placeholder="最小级次"
               clearable
             />
-            <text class="text-28rpx text-[#999]">至</text>
+            <text class="yd-text-hint text-28rpx">至</text>
             <wd-input
               v-model.number="formData.maxLevel"
               class="flex-1"

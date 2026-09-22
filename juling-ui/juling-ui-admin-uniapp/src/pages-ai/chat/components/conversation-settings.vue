@@ -1,7 +1,7 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" custom-style="max-height: 86vh; overflow: auto; border-radius: 32rpx 32rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="max-height: 86vh; overflow: auto; border-radius: 32rpx 32rpx 0 0;">
     <view v-if="visible" class="bg-white">
-      <view class="border-b border-[#eee] p-28rpx text-32rpx font-semibold">
+      <view class="yd-border-base border-b p-28rpx text-32rpx font-semibold">
         对话设定
       </view>
       <view class="p-24rpx">

@@ -31,23 +31,23 @@
           @click="handleDetail(item)"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.userNickname || '匿名用户' }}
             </view>
             <wd-tag :type="item.visible ? 'success' : 'info'" plain>
               {{ item.visible ? '显示' : '隐藏' }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666] leading-relaxed">
+          <view class="yd-text-sub mb-12rpx text-28rpx leading-relaxed">
             {{ item.content || '-' }}
           </view>
-          <view class="mb-8rpx flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mb-8rpx flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx">
             <text>综合：{{ item.scores ?? '-' }}</text>
             <text>商品分：{{ item.descriptionScores ?? '-' }}</text>
             <text>服务分：{{ item.benefitScores ?? '-' }}</text>
             <text>{{ item.replyStatus ? '已回复' : '未回复' }}</text>
           </view>
-          <view class="flex items-center text-26rpx text-[#999]">
+          <view class="yd-text-hint flex items-center text-26rpx">
             <text class="mr-8rpx shrink-0">商品：</text>
             <text class="truncate">{{ item.spuName || '-' }}</text>
           </view>

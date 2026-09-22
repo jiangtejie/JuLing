@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="上传文件"
@@ -30,7 +30,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view class="p-24rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint p-24rpx text-24rpx">
         支持格式：{{ PmsKnowledgeUploadFileTypes.join('/') }}，大小不超过 {{ PmsKnowledgeUploadFileSize }}MB
       </view>
     </scroll-view>

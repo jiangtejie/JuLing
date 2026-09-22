@@ -10,7 +10,7 @@
       <!-- 表单内容 -->
       <scroll-view scroll-y class="min-h-0 flex-1">
         <view class="p-24rpx">
-          <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
             发送测试短信
           </view>
           <wd-form ref="sendFormRef" :model="sendFormData" :schema="sendFormSchema">
@@ -44,7 +44,7 @@
       </scroll-view>
 
       <!-- 底部操作 -->
-      <view class="border-t border-[#f0f0f0] bg-white p-24rpx">
+      <view class="yd-border-light border-t bg-white p-24rpx">
         <wd-button type="primary" block :loading="sendLoading" @click="handleSendSubmit">
           发送
         </wd-button>

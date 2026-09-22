@@ -1,11 +1,11 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         调拨物料
       </view>
       <view class="flex items-center gap-16rpx">
-        <view v-if="!readonly && stockMode" class="text-24rpx text-[#999]">
+        <view v-if="!readonly && stockMode" class="yd-text-hint text-24rpx">
           上架模式
         </view>
         <wd-button v-if="!readonly && !stockMode" size="small" type="primary" @click="openCreateLineForm">
@@ -13,10 +13,10 @@
         </wd-button>
       </view>
     </view>
-    <view v-if="loading" class="px-24rpx py-32rpx text-center text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint px-24rpx py-32rpx text-center text-26rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="px-24rpx py-32rpx text-center text-26rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint px-24rpx py-32rpx text-center text-26rpx">
       暂无调拨物料
     </view>
     <view v-else class="px-24rpx py-8rpx">
@@ -27,37 +27,37 @@
       >
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main truncate text-28rpx font-medium">
               {{ item.itemCode || `物料 #${item.itemId}` }}
             </view>
-            <view class="mt-4rpx truncate text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-4rpx truncate text-26rpx">
               {{ item.itemName || '-' }}
             </view>
           </view>
-          <view class="shrink-0 text-24rpx text-[#999]">
+          <view class="yd-text-hint shrink-0 text-24rpx">
             {{ item.unitMeasureName || '-' }}
           </view>
         </view>
-        <view class="mb-8rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+        <view class="yd-text-sub mb-8rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
         </view>
-        <view class="mb-8rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">转移数量：</text>
+        <view class="yd-text-sub mb-8rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">转移数量：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.quantity ?? '-' }}</text>
         </view>
-        <view class="mb-8rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">批次号：</text>
+        <view class="yd-text-sub mb-8rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">批次号：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.batchCode || '-' }}</text>
         </view>
-        <view class="mb-8rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">移出位置：</text>
+        <view class="yd-text-sub mb-8rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">移出位置：</text>
           <text class="min-w-0 flex-1 truncate">
             {{ item.fromWarehouseName || '-' }} / {{ item.fromLocationName || '-' }} / {{ item.fromAreaName || '-' }}
           </text>
         </view>
-        <view class="mb-16rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+        <view class="yd-text-sub mb-16rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.remark || '-' }}</text>
         </view>
         <view v-if="!readonly && !stockMode" class="mb-16rpx flex justify-end gap-16rpx">
@@ -69,13 +69,13 @@
           </wd-button>
         </view>
 
-        <view class="rounded-10rpx bg-[#fafafa] px-20rpx py-16rpx">
+        <view class="yd-bg-subtle rounded-10rpx px-20rpx py-16rpx">
           <view class="mb-12rpx flex items-center justify-between">
-            <view class="text-26rpx text-[#333] font-medium">
+            <view class="yd-text-main text-26rpx font-medium">
               上架明细
             </view>
             <view class="flex items-center gap-12rpx">
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 合计 {{ getDetailQuantityTotal(item.id) }} / {{ item.quantity ?? '-' }}
               </view>
               <wd-button v-if="stockMode" size="small" type="primary" @click.stop="openCreateDetailForm(item)">
@@ -83,7 +83,7 @@
               </wd-button>
             </view>
           </view>
-          <view v-if="getDetailList(item.id).length === 0" class="py-12rpx text-24rpx text-[#999]">
+          <view v-if="getDetailList(item.id).length === 0" class="yd-text-hint py-12rpx text-24rpx">
             暂无上架明细
           </view>
           <view
@@ -91,15 +91,15 @@
             :key="detail.id"
             class="border-t border-t-[#eee] py-12rpx first:border-t-0"
           >
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">移入位置：</text>
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint">移入位置：</text>
               {{ detail.toWarehouseName || '-' }} / {{ detail.toLocationName || '-' }} / {{ detail.toAreaName || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">上架数量：</text>{{ detail.quantity ?? '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint">上架数量：</text>{{ detail.quantity ?? '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">备注：</text>{{ detail.remark || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">备注：</text>{{ detail.remark || '-' }}
             </view>
             <view v-if="stockMode" class="mt-12rpx flex justify-end gap-16rpx">
               <wd-button size="small" type="warning" variant="plain" @click.stop="openUpdateDetailForm(item, detail)">
@@ -122,12 +122,12 @@
     safe-area-inset-bottom
     custom-style="height: 88vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="lineFormVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ lineFormTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="lineFormLoading" @click="handleSubmitLine">
@@ -189,12 +189,12 @@
     safe-area-inset-bottom
     custom-style="height: 78vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="detailFormVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ detailFormTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="detailFormLoading" @click="handleSubmitDetail">

@@ -40,19 +40,19 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="line-clamp-2 text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main line-clamp-2 text-30rpx font-semibold">
                   {{ item.prompt || `#${item.id}` }}
                 </view>
-                <view class="mt-8rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-22rpx">
                   {{ formatDateTime(item.createTime) }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.AI_IMAGE_STATUS" :value="item.status" />
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               用户：{{ getUserName(item.userId) }} / {{ item.platform || '-' }} / {{ item.model || '-' }}
             </view>
-            <view v-if="item.errorMessage" class="line-clamp-3 mt-12rpx text-24rpx text-[#f56c6c]">
+            <view v-if="item.errorMessage" class="yd-text-danger line-clamp-3 mt-12rpx text-24rpx">
               {{ item.errorMessage }}
             </view>
           </view>

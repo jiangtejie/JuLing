@@ -30,23 +30,23 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="flex items-center justify-between">
-            <text class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">{{ item.groupName || `群 ${item.groupId}` }}</text>
+            <text class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">{{ item.groupName || `群 ${item.groupId}` }}</text>
             <dict-tag :type="DICT_TYPE.IM_GROUP_REQUEST_HANDLE_RESULT" :value="item.handleResult" />
           </view>
-          <view class="mt-10rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-10rpx text-26rpx">
             申请人：{{ item.userNickname || `用户 ${item.userId}` }}
           </view>
-          <view class="mt-6rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mt-6rpx text-26rpx">
             邀请人：{{ item.inviterUserId ? (item.inviterNickname || `用户 ${item.inviterUserId}`) : '主动申请' }}
             <text v-if="item.addSource != null" class="ml-16rpx">来源：{{ getDictLabel(DICT_TYPE.IM_GROUP_ADD_SOURCE, item.addSource) }}</text>
           </view>
-          <view v-if="item.applyContent" class="line-clamp-2 mt-6rpx text-26rpx text-[#666]">
+          <view v-if="item.applyContent" class="yd-text-sub line-clamp-2 mt-6rpx text-26rpx">
             申请理由：{{ item.applyContent }}
           </view>
-          <view v-if="item.handleContent" class="mt-6rpx text-24rpx text-[#999]">
+          <view v-if="item.handleContent" class="yd-text-hint mt-6rpx text-24rpx">
             处理理由：{{ item.handleContent }}
           </view>
-          <view class="mt-12rpx flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx flex items-center justify-between text-24rpx">
             <text>申请 {{ formatDateTime(item.createTime) }}</text>
             <text v-if="item.handleTime">处理 {{ formatDateTime(item.handleTime) }}</text>
           </view>

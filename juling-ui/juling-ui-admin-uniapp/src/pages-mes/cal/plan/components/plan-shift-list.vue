@@ -2,7 +2,7 @@
   <view class="mt-24rpx bg-white">
     <!-- 班次标题 -->
     <view v-if="showTitle" class="flex items-center justify-between px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         班次
       </view>
       <wd-button v-if="editable" size="small" type="primary" @click="openForm()">
@@ -13,17 +13,17 @@
     <!-- 班次列表 -->
     <view class="px-24rpx pb-8rpx">
       <wd-loading v-if="loading" />
-      <view v-else-if="list.length === 0" class="py-48rpx text-center text-26rpx text-[#999]">
+      <view v-else-if="list.length === 0" class="yd-text-hint py-48rpx text-center text-26rpx">
         暂无班次
       </view>
       <template v-else>
-        <view v-for="item in list" :key="item.id" class="mb-20rpx rounded-12rpx bg-[#f8fafc] p-20rpx">
+        <view v-for="item in list" :key="item.id" class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx">
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-30rpx font-semibold">
                 {{ item.sort }}. {{ item.name }}
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 {{ item.startTime }} - {{ item.endTime }}
               </view>
             </view>
@@ -36,7 +36,7 @@
               </wd-button>
             </view>
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             备注：{{ item.remark || '-' }}
           </view>
         </view>
@@ -46,8 +46,8 @@
     <!-- 班次弹层 -->
     <wd-popup v-model="formVisible" position="bottom" :safe-area-inset-bottom="true">
       <view class="max-h-[86vh] flex flex-col bg-white">
-        <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-          <text class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+          <text class="yd-text-main text-32rpx font-semibold">
             {{ formData.id ? '编辑班次' : '添加班次' }}
           </text>
           <wd-icon name="close" size="36rpx" @click="formVisible = false" />

@@ -5,12 +5,12 @@
 
     <!-- 加载状态 -->
     <view v-if="loading" class="absolute inset-0 flex items-center justify-center">
-      <text class="text-26rpx text-[#999]">加载中...</text>
+      <text class="yd-text-hint text-26rpx">加载中...</text>
     </view>
 
     <!-- 空状态 -->
     <view v-else-if="empty" class="absolute inset-0 flex items-center justify-center">
-      <text class="text-26rpx text-[#999]">暂无统计数据</text>
+      <text class="yd-text-hint text-26rpx">暂无统计数据</text>
     </view>
   </view>
 </template>

@@ -2,7 +2,7 @@
   <view class="min-h-0 flex flex-1 flex-col">
     <!-- 跟进记录（独立模块内由底部操作触发新增时隐藏头部） -->
     <view v-if="!embedded" class="mb-16rpx flex items-center justify-between px-24rpx">
-      <text class="text-30rpx text-[#333] font-semibold">跟进记录</text>
+      <text class="yd-text-main text-30rpx font-semibold">跟进记录</text>
       <wd-button size="small" type="primary" @click="openAdd">
         写跟进
       </wd-button>
@@ -26,18 +26,18 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
               {{ item.creatorName || item.creator || '-' }}
             </view>
             <dict-tag v-if="item.type !== undefined" :type="DICT_TYPE.CRM_FOLLOW_UP_TYPE" :value="item.type" />
           </view>
-          <view class="mb-12rpx whitespace-pre-wrap text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx whitespace-pre-wrap text-28rpx">
             {{ item.content || '-' }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mb-12rpx text-26rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
-          <view v-if="item.nextTime" class="mb-12rpx text-26rpx text-[#999]">
+          <view v-if="item.nextTime" class="yd-text-hint mb-12rpx text-26rpx">
             下次联系：{{ formatDateTime(item.nextTime) }}
           </view>
           <view v-if="item.picUrls?.length" class="mb-12rpx flex flex-wrap gap-12rpx">
@@ -56,17 +56,17 @@
             <view
               v-for="url in item.fileUrls"
               :key="url"
-              class="mb-8rpx flex items-center justify-between gap-16rpx rounded-8rpx bg-[#f7f8fa] px-16rpx py-12rpx text-26rpx"
+              class="yd-bg-subtle mb-8rpx flex items-center justify-between gap-16rpx rounded-8rpx px-16rpx py-12rpx text-26rpx"
               @click="openAttachment(url)"
             >
-              <text class="min-w-0 flex-1 truncate text-[#333]">{{ getFileNameFromUrl(url) }}</text>
+              <text class="yd-text-main min-w-0 flex-1 truncate">{{ getFileNameFromUrl(url) }}</text>
               <text class="shrink-0 text-primary">查看</text>
             </view>
           </view>
-          <view v-if="item.contacts?.length" class="mb-12rpx text-26rpx text-[#999]">
+          <view v-if="item.contacts?.length" class="yd-text-hint mb-12rpx text-26rpx">
             关联联系人：{{ item.contacts.map(contact => contact.name).join('、') }}
           </view>
-          <view v-if="item.businesses?.length" class="mb-12rpx text-26rpx text-[#999]">
+          <view v-if="item.businesses?.length" class="yd-text-hint mb-12rpx text-26rpx">
             关联商机：{{ item.businesses.map(business => business.name).join('、') }}
           </view>
           <view class="flex justify-end">

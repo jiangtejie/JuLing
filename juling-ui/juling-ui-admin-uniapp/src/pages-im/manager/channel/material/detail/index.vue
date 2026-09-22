@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="素材详情"
@@ -35,10 +35,10 @@
 
       <!-- 站内正文 -->
       <view v-if="formData?.type === ImChannelMaterialType.CONTENT && formData?.content" class="mt-20rpx bg-white p-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-28rpx">
           正文
         </view>
-        <view class="text-28rpx text-[#333] leading-44rpx">
+        <view class="yd-text-main text-28rpx leading-44rpx">
           {{ formData.content }}
         </view>
       </view>
@@ -138,7 +138,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('im:manager:channel-material:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

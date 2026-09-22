@@ -12,12 +12,12 @@
         <view v-for="item in list" :key="item.id" class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm" @click="handleDetail(item)">
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="item.codeFlag" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>编码：{{ item.code || '-' }}</view>
               <view>保养维护：<dict-tag v-if="item.codeFlag && item.maintenType != null" :type="DICT_TYPE.MES_TM_MAINTEN_TYPE" :value="item.maintenType" /><text v-else>-</text></view>
               <view>保养周期：{{ formatMaintenPeriod(item) }}</view>

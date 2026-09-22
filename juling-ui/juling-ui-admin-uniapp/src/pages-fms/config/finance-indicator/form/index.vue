@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -48,7 +48,7 @@
               :maxlength="2000"
               show-word-limit
             />
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               支持报表行次公式（L1+L2-L3）或报表科目公式 JSON
             </view>
           </wd-form-item>
@@ -168,7 +168,7 @@ async function handleSubmit() {
     }
     uni.$emit('fms:config:finance-indicator:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

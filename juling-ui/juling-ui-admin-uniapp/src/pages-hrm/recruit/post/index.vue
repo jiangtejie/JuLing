@@ -42,7 +42,7 @@
         >
           <view class="min-w-0" @click.stop="handleDetail(item)">
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.postName || '-' }}
               </view>
               <dict-tag
@@ -51,11 +51,11 @@
                 :value="item.status"
               />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">用人部门：</text>{{ item.deptName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">用人部门：</text>{{ item.deptName || '-' }}
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">工作性质：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">工作性质：</text>
               <dict-tag
                 v-if="item.jobNature != null"
                 :type="DICT_TYPE.HRM_RECRUIT_JOB_NATURE"
@@ -63,17 +63,17 @@
               />
               <text v-else>-</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">工作城市：</text>{{ item.areaName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">工作城市：</text>{{ item.areaName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">招聘进度：</text>{{ formatRecruitPostProgress(item) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">招聘进度：</text>{{ formatRecruitPostProgress(item) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">薪资：</text>{{ formatRecruitPostSalary(item) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">薪资：</text>{{ formatRecruitPostSalary(item) }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">负责人：</text>{{ item.ownerEmployeeName || '-' }}
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">负责人：</text>{{ item.ownerEmployeeName || '-' }}
             </view>
           </view>
         </view>

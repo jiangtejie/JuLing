@@ -7,7 +7,7 @@
     >
       <!-- 分录标题与删除 -->
       <view class="mb-20rpx flex items-center justify-between gap-16rpx">
-        <text class="text-28rpx text-[#333] font-semibold">分录 {{ index + 1 }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">分录 {{ index + 1 }}</text>
         <wd-button
           v-if="items.length > 1"
           size="small"
@@ -44,12 +44,12 @@
       <view
         v-for="(auxiliaryTypeId, auxiliaryIndex) in getSubjectAuxiliaryTypeIds(entry)"
         :key="auxiliaryTypeId"
-        class="mt-20rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx"
+        class="yd-bg-subtle mt-20rpx flex items-center justify-between rounded-8rpx p-16rpx"
         @click="handleOpenAuxiliary(index, auxiliaryTypeId, auxiliaryIndex)"
       >
-        <text class="text-26rpx text-[#666]">{{ getAuxiliaryTypeName(entry, auxiliaryIndex) }}</text>
+        <text class="yd-text-sub text-26rpx">{{ getAuxiliaryTypeName(entry, auxiliaryIndex) }}</text>
         <view class="flex items-center gap-8rpx">
-          <text class="text-26rpx" :class="getEntryAuxiliary(entry, auxiliaryTypeId)?.name ? 'text-[#333]' : 'text-[#999]'">
+          <text class="text-26rpx" :class="getEntryAuxiliary(entry, auxiliaryTypeId)?.name ? 'yd-text-main' : 'yd-text-hint'">
             {{ getEntryAuxiliary(entry, auxiliaryTypeId)?.name || '请选择' }}
           </text>
           <wd-icon name="arrow-right" size="12px" color="#999" />
@@ -57,8 +57,8 @@
       </view>
 
       <!-- 借方金额 -->
-      <view class="mt-20rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-        <text class="text-26rpx text-[#666]">借方金额</text>
+      <view class="yd-bg-subtle mt-20rpx flex items-center justify-between rounded-8rpx p-16rpx">
+        <text class="yd-text-sub text-26rpx">借方金额</text>
         <wd-input-number
           v-model="entry.debitAmount"
           allow-null
@@ -68,8 +68,8 @@
       </view>
 
       <!-- 贷方金额 -->
-      <view class="mt-20rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-        <text class="text-26rpx text-[#666]">贷方金额</text>
+      <view class="yd-bg-subtle mt-20rpx flex items-center justify-between rounded-8rpx p-16rpx">
+        <text class="yd-text-sub text-26rpx">贷方金额</text>
         <wd-input-number
           v-model="entry.creditAmount"
           allow-null

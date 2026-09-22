@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 82vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择库存物资
         </view>
         <wd-button size="small" type="primary" :disabled="selectedList.length === 0" @click="handleConfirm">
@@ -58,34 +58,34 @@
             <view class="p-24rpx">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
                 <view class="min-w-0 flex-1">
-                  <view class="truncate text-28rpx text-[#333] font-medium">
+                  <view class="yd-text-main truncate text-28rpx font-medium">
                     {{ item.itemCode || '-' }}
                   </view>
-                  <view class="mt-4rpx truncate text-26rpx text-[#666]">
+                  <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                     {{ item.itemName || '-' }}
                   </view>
                 </view>
                 <view
                   class="shrink-0 rounded-999rpx px-16rpx py-6rpx text-24rpx"
-                  :class="isSelected(item) ? 'bg-[#e6f4ff] text-[#1677ff]' : 'bg-[#f5f5f5] text-[#999]'"
+                  :class="isSelected(item) ? 'yd-bg-info-soft yd-text-link' : 'yd-bg-page yd-text-hint'"
                 >
                   {{ isSelected(item) ? '已选' : '选择' }}
                 </view>
               </view>
-              <view class="mb-8rpx flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+              <view class="yd-text-sub mb-8rpx flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
               </view>
-              <view class="mb-8rpx flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">批次号：</text>
+              <view class="yd-text-sub mb-8rpx flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">批次号：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.batchCode || '-' }}</text>
               </view>
-              <view class="mb-8rpx flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">在库数量：</text>
+              <view class="yd-text-sub mb-8rpx flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">在库数量：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.quantity ?? '-' }} {{ item.unitMeasureName || '' }}</text>
               </view>
-              <view class="flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">库存位置：</text>
+              <view class="yd-text-sub flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">库存位置：</text>
                 <text class="min-w-0 flex-1 truncate">{{ getStockPlaceText(item) }}</text>
               </view>
             </view>

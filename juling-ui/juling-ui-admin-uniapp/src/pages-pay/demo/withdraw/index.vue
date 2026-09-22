@@ -28,10 +28,10 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.subject || `示例提现 #${item.id}` }}
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 提现单编号：{{ item.id || '-' }}
               </view>
             </view>
@@ -40,35 +40,35 @@
             </wd-tag>
           </view>
 
-          <view class="mb-16rpx text-36rpx text-[#fa8c16] font-semibold">
+          <view class="yd-text-warning mb-16rpx text-36rpx font-semibold">
             {{ formatDisplayMoney(item.price) }}
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">提现类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">提现类型：</text>
             <text>{{ getWithdrawTypeText(item.type) }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">收款人：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">收款人：</text>
             <text>{{ item.userName || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">收款账号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">收款账号：</text>
             <text class="min-w-0 flex-1 break-all">{{ item.userAccount || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">转账单号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">转账单号：</text>
             <text>{{ item.payTransferId || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">转账渠道：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">转账渠道：</text>
             <dict-tag :type="DICT_TYPE.PAY_CHANNEL_CODE" :value="item.transferChannelCode" />
           </view>
-          <view class="mb-16rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">转账时间：</text>
+          <view class="yd-text-sub mb-16rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">转账时间：</text>
             <text>{{ formatDateTime(item.transferTime) || '-' }}</text>
           </view>
-          <view v-if="item.transferErrorMsg" class="mb-16rpx text-28rpx text-[#f5222d]">
+          <view v-if="item.transferErrorMsg" class="yd-text-danger mb-16rpx text-28rpx">
             {{ item.transferErrorMsg }}
           </view>
 
@@ -104,7 +104,7 @@
     >
       <view class="p-32rpx">
         <view class="mb-24rpx flex items-center justify-between">
-          <text class="text-32rpx text-[#333] font-semibold">创建示例提现单</text>
+          <text class="yd-text-main text-32rpx font-semibold">创建示例提现单</text>
           <wd-icon name="close" size="20px" @click="createVisible = false" />
         </view>
 

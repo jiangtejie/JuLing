@@ -36,10 +36,10 @@
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-16rpx">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.employeeName || '-' }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.jobNumber || '-' }} · {{ item.deptName || '-' }} · {{ item.postName || '-' }}
               </view>
             </view>
@@ -47,11 +47,11 @@
               <view
                 v-for="day in getOverviewDays(item)"
                 :key="day.date"
-                class="mr-12rpx w-160rpx inline-flex flex-col border border-[#f0f0f0] rounded-8rpx border-solid px-12rpx py-12rpx align-top"
-                :class="day.overview ? 'bg-[#fafafa]' : 'bg-[#fff]'"
+                class="yd-border-light mr-12rpx w-160rpx inline-flex flex-col border rounded-8rpx border-solid px-12rpx py-12rpx align-top"
+                :class="day.overview ? 'yd-bg-subtle' : 'bg-[#fff]'"
                 @click="handleDailyDetail(item, day.date, day.overview)"
               >
-                <view class="mb-8rpx text-center text-22rpx text-[#999]">
+                <view class="yd-text-hint mb-8rpx text-center text-22rpx">
                   {{ day.day }} · {{ day.week }}
                 </view>
                 <template v-if="day.overview">
@@ -61,7 +61,7 @@
                     class="mb-4rpx text-20rpx leading-28rpx"
                   >
                     <template v-if="overviewItem.type">
-                      <view class="text-[#999]">
+                      <view class="yd-text-hint">
                         {{ overviewItem.type }} {{ overviewItem.time || '-' }}
                       </view>
                       <view :class="getOverviewTextClass(overviewItem.status)">
@@ -77,7 +77,7 @@
                     </view>
                   </view>
                 </template>
-                <view v-else class="py-8rpx text-center text-22rpx text-[#ccc]">
+                <view v-else class="yd-text-muted py-8rpx text-center text-22rpx">
                   -
                 </view>
               </view>
@@ -111,10 +111,10 @@
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.employeeName || '-' }}
                 </view>
-                <view class="mt-8rpx truncate text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                   {{ item.jobNumber || '-' }} · {{ item.deptName || '-' }}
                 </view>
               </view>
@@ -124,8 +124,8 @@
                 :value="item.status"
               />
             </view>
-            <view class="mb-12rpx flex items-center gap-12rpx text-28rpx text-[#666]">
-              <text class="text-[#999]">打卡类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center gap-12rpx text-28rpx">
+              <text class="yd-text-hint">打卡类型：</text>
               <dict-tag
                 v-if="item.type != null"
                 :type="DICT_TYPE.HRM_ATTENDANCE_CLOCK_TYPE"
@@ -133,14 +133,14 @@
               />
               <text v-else>-</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">应打卡：</text>{{ formatDateTime(item.attendanceTime) || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">应打卡：</text>{{ formatDateTime(item.attendanceTime) || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">打卡时间：</text>{{ formatDateTime(item.clockTime) || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">打卡时间：</text>{{ formatDateTime(item.clockTime) || '-' }}
             </view>
-            <view class="mb-12rpx flex items-center gap-12rpx text-28rpx text-[#666]">
-              <text class="text-[#999]">来源：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center gap-12rpx text-28rpx">
+              <text class="yd-text-hint">来源：</text>
               <dict-tag
                 v-if="item.sourceType != null"
                 :type="DICT_TYPE.HRM_ATTENDANCE_CLOCK_SOURCE"
@@ -148,12 +148,12 @@
               />
               <text v-else>-</text>
             </view>
-            <view v-if="item.address" class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">地点：</text>
+            <view v-if="item.address" class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">地点：</text>
               <text class="line-clamp-1">{{ item.address }}</text>
             </view>
-            <view v-if="item.remark" class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">备注：</text>
+            <view v-if="item.remark" class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">备注：</text>
               <text class="line-clamp-1">{{ item.remark }}</text>
             </view>
           </view>
@@ -269,18 +269,18 @@ function getOverviewDays(item: AttendanceMonthDailyOverview) {
 /** 概况文字颜色 */
 function getOverviewTextClass(value?: string) {
   if (!value || value === '休息' || value === '未排班') {
-    return 'text-[#999]'
+    return 'yd-text-hint'
   }
   if (value.includes('旷工') || value.includes('缺卡')) {
-    return 'text-[#f5222d]'
+    return 'yd-text-danger'
   }
   if (value.includes('迟到') || value.includes('早退')) {
-    return 'text-[#fa8c16]'
+    return 'yd-text-warning'
   }
   if (value.includes('正常')) {
-    return 'text-[#52c41a]'
+    return 'yd-text-success'
   }
-  return 'text-[#1677ff]'
+  return 'yd-text-link'
 }
 
 /** 打开每日考勤详情 */

@@ -29,7 +29,7 @@
         <wd-cell title="备注" :value="formData?.remark || '-'" />
       </wd-cell-group>
 
-      <view v-if="routeProcessList.length === 0 && !loading" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#8a5a00]">
+      <view v-if="routeProcessList.length === 0 && !loading" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx">
         当前产品未配置工艺路线，需先在工艺路线中维护产品工序后才能排产。
       </view>
 
@@ -179,7 +179,7 @@ async function handleFinish() {
     toast.success('工单已完成')
     uni.$emit('mes:pro:task:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     finishing.value = false
   }
 }

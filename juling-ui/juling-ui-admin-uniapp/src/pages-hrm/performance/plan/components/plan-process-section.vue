@@ -1,6 +1,6 @@
 <template>
   <wd-cell-group border title="流程设置">
-    <view class="px-24rpx py-16rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main px-24rpx py-16rpx text-28rpx font-semibold">
       考核评分流程
     </view>
     <ReviewStageList

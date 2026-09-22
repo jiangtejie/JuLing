@@ -21,12 +21,12 @@
 
     <!-- 薪资项列表 -->
     <view class="p-24rpx pb-160rpx">
-      <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
         加载中...
       </view>
       <view
         v-else-if="activeList.length === 0"
-        class="rounded-12rpx bg-white py-80rpx text-center text-28rpx text-[#999] shadow-sm"
+        class="yd-text-hint rounded-12rpx bg-white py-80rpx text-center text-28rpx shadow-sm"
       >
         暂无薪资项
       </view>
@@ -36,17 +36,17 @@
         class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
       >
         <!-- 分类 -->
-        <view class="flex items-center justify-between gap-16rpx border-b border-[#f0f0f0] px-24rpx py-24rpx">
+        <view class="yd-border-light flex items-center justify-between gap-16rpx border-b px-24rpx py-24rpx">
           <view class="min-w-0 flex-1">
             <view class="flex items-center gap-12rpx">
-              <text class="truncate text-30rpx text-[#333] font-semibold">
+              <text class="yd-text-main truncate text-30rpx font-semibold">
                 {{ category.name }}
               </text>
-              <view class="shrink-0 rounded-6rpx bg-[#f5f5f5] px-12rpx py-4rpx text-22rpx text-[#999]">
+              <view class="yd-bg-page yd-text-hint shrink-0 rounded-6rpx px-12rpx py-4rpx text-22rpx">
                 分类
               </view>
             </view>
-            <view v-if="category.remark" class="mt-8rpx text-24rpx text-[#999]">
+            <view v-if="category.remark" class="yd-text-hint mt-8rpx text-24rpx">
               {{ category.remark }}
             </view>
           </view>
@@ -55,7 +55,7 @@
             class="flex shrink-0 items-center gap-12rpx"
             @click.stop
           >
-            <text class="text-24rpx text-[#999]">启用</text>
+            <text class="yd-text-hint text-24rpx">启用</text>
             <wd-switch
               :model-value="category.enabled"
               :disabled="!hasAccessByCodes(['hrm:salary:option:update']) || switchingId === category.id"
@@ -68,9 +68,9 @@
         <!-- 分类操作：添加薪资项 -->
         <view
           v-if="activeTab === 'enterprise' && isOptionalCategory(category) && category.enabled"
-          class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-16rpx"
+          class="yd-border-light flex items-center justify-between border-b px-24rpx py-16rpx"
         >
-          <text class="text-24rpx text-[#999]">
+          <text class="yd-text-hint text-24rpx">
             {{ (category.children || []).length }} 个薪资项
           </text>
           <wd-button
@@ -88,22 +88,22 @@
         <view
           v-for="item in (category.children || [])"
           :key="item.id"
-          class="border-b border-[#f5f5f5] px-24rpx py-20rpx last:border-b-0"
+          class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
               <view class="flex flex-wrap items-center gap-12rpx">
-                <text class="text-28rpx text-[#333] font-medium">
+                <text class="yd-text-main text-28rpx font-medium">
                   {{ item.name }}
                 </text>
                 <view
                   class="rounded-6rpx px-12rpx py-4rpx text-22rpx"
-                  :class="item.templateId ? 'bg-[#fff7e6] text-[#fa8c16]' : 'bg-[#e6f4ff] text-[#1677ff]'"
+                  :class="item.templateId ? 'yd-bg-warning-soft yd-text-warning' : 'yd-bg-info-soft yd-text-link'"
                 >
                   {{ item.templateId ? '标准项' : '自定义项' }}
                 </view>
               </view>
-              <view v-if="item.remark" class="mt-8rpx text-24rpx text-[#999]">
+              <view v-if="item.remark" class="yd-text-hint mt-8rpx text-24rpx">
                 {{ item.remark }}
               </view>
             </view>
@@ -118,13 +118,13 @@
               删除
             </wd-button>
           </view>
-          <view class="flex flex-wrap items-center gap-16rpx text-24rpx text-[#666]">
+          <view class="yd-text-sub flex flex-wrap items-center gap-16rpx text-24rpx">
             <view class="flex items-center gap-8rpx">
-              <text class="text-[#999]">加减：</text>
+              <text class="yd-text-hint">加减：</text>
               <text>{{ formatHrmSalaryOptionType(item.type) }}</text>
             </view>
             <view class="flex items-center gap-8rpx">
-              <text class="text-[#999]">计税：</text>
+              <text class="yd-text-hint">计税：</text>
               <dict-tag
                 :type="DICT_TYPE.HRM_SALARY_YES_NO"
                 :value="item.taxEnabled ? 1 : 0"
@@ -135,7 +135,7 @@
               class="ml-auto flex items-center gap-12rpx"
               @click.stop
             >
-              <text class="text-[#999]">显示</text>
+              <text class="yd-text-hint">显示</text>
               <wd-switch
                 :model-value="item.visible"
                 :disabled="!hasAccessByCodes(['hrm:salary:option:update']) || switchingId === item.id"
@@ -148,7 +148,7 @@
 
         <view
           v-if="!(category.children || []).length"
-          class="px-24rpx py-32rpx text-center text-24rpx text-[#999]"
+          class="yd-text-hint px-24rpx py-32rpx text-center text-24rpx"
         >
           {{ activeTab === 'enterprise' && !category.enabled ? '分类未启用' : '暂无薪资项' }}
         </view>

@@ -2,8 +2,8 @@
   <view>
     <view class="mb-16rpx flex items-center justify-between px-24rpx">
       <view>
-        <text class="text-30rpx text-[#333] font-semibold">结果等级</text>
-        <text class="ml-16rpx text-24rpx text-[#999]">
+        <text class="yd-text-main text-30rpx font-semibold">结果等级</text>
+        <text class="yd-text-hint ml-16rpx text-24rpx">
           {{ levels.length ? `${levels.length} 个` : '--' }}
         </text>
       </view>
@@ -17,13 +17,13 @@
       </wd-button>
     </view>
 
-    <view class="mx-24rpx mb-16rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]">
+    <view class="yd-text-link yd-bg-info-soft mx-24rpx mb-16rpx rounded-12rpx px-24rpx py-20rpx text-24rpx">
       分数区间须从 0 到 100 连续且不重叠；绩效系数不小于 0，分数和系数最多保留两位小数。
     </view>
 
     <view
       v-if="!levels.length"
-      class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+      class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
     >
       暂无结果等级
     </view>
@@ -35,13 +35,13 @@
     >
       <view class="flex items-start justify-between gap-16rpx px-24rpx py-20rpx">
         <view class="min-w-0 flex-1">
-          <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
             {{ level.name || '-' }}
           </view>
-          <view class="text-24rpx text-[#666]">
+          <view class="yd-text-sub text-24rpx">
             分数 {{ level.minScore }} ~ {{ level.maxScore }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#666]">
+          <view class="yd-text-sub mt-8rpx text-24rpx">
             绩效系数 {{ level.coefficient }}
           </view>
         </view>

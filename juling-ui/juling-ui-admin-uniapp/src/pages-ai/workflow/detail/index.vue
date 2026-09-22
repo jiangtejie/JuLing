@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="工作流详情"
@@ -19,7 +19,7 @@
         </wd-cell>
         <wd-cell title="备注" :value="formData?.remark || '-'" />
         <wd-cell title="编排 JSON">
-          <view class="whitespace-pre-wrap break-all text-26rpx text-[#666]">
+          <view class="yd-text-sub whitespace-pre-wrap break-all text-26rpx">
             {{ formatGraph(formData?.graph) }}
           </view>
         </wd-cell>
@@ -144,7 +144,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('ai:workflow:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

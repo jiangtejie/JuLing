@@ -10,16 +10,16 @@
     <!-- 表单区域 -->
     <view class="pb-160rpx">
       <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-8rpx truncate text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-8rpx truncate text-32rpx font-semibold">
           {{ formData.employeeName || '-' }}
         </view>
-        <view class="text-26rpx text-[#999]">
+        <view class="yd-text-hint text-26rpx">
           {{ formData.jobNumber || '-' }} · {{ formData.deptName || '-' }}
         </view>
       </view>
 
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           可编辑工资项
         </view>
         <view
@@ -27,7 +27,7 @@
           :key="option.code"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-12rpx text-28rpx text-[#333]">
+          <view class="yd-text-main mb-12rpx text-28rpx">
             {{ option.name }}
           </view>
           <wd-input-number
@@ -39,7 +39,7 @@
             @update:model-value="(value) => updateOptionValue(option.code, value)"
           />
         </view>
-        <view v-if="!editableOptions.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+        <view v-if="!editableOptions.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
           暂无可编辑工资项
         </view>
       </view>

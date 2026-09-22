@@ -2,17 +2,17 @@
   <view
     class="flex shrink-0 items-center justify-around border-t border-t-[#eee] bg-white py-24rpx pb-[calc(24rpx+env(safe-area-inset-bottom))]"
   >
-    <text class="text-28rpx text-[#666]" @click="multiSelect.exit()">取消</text>
+    <text class="yd-text-sub text-28rpx" @click="multiSelect.exit()">取消</text>
     <text
       class="text-28rpx"
-      :class="selectedCount ? 'text-[#1677ff]' : 'text-[#ccc]'"
+      :class="selectedCount ? 'yd-text-link' : 'yd-text-muted'"
       @click="handleForward"
     >
       转发{{ selectedCount ? `(${selectedCount})` : '' }}
     </text>
     <text
       class="text-28rpx"
-      :class="selectedCount ? 'text-[#fa5151]' : 'text-[#ccc]'"
+      :class="selectedCount ? 'yd-text-danger' : 'yd-text-muted'"
       @click="handleDelete"
     >
       删除

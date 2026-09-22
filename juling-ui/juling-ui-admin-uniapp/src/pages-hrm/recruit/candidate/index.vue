@@ -50,7 +50,7 @@
             </view>
             <view class="min-w-0 flex-1" @click.stop="handleDetail(item)">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <dict-tag
@@ -61,33 +61,33 @@
               </view>
               <view
                 v-if="item.status === HrmRecruitCandidateStatus.INTERVIEW && item.interviewResult && item.interviewResult !== HrmRecruitInterviewResult.UNFINISHED"
-                class="mb-12rpx text-24rpx text-[#999]"
+                class="yd-text-hint mb-12rpx text-24rpx"
               >
                 面试{{ getDictLabel(DICT_TYPE.HRM_RECRUIT_INTERVIEW_RESULT, item.interviewResult) }}
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">职位：</text>{{ item.postName || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">职位：</text>{{ item.postName || '-' }}
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">部门：</text>{{ item.deptName || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">部门：</text>{{ item.deptName || '-' }}
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">手机：</text>{{ item.mobile || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">手机：</text>{{ item.mobile || '-' }}
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">负责人：</text>{{ item.ownerEmployeeName || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">负责人：</text>{{ item.ownerEmployeeName || '-' }}
               </view>
-              <view class="text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">渠道：</text>{{ item.channelName || '-' }}
+              <view class="yd-text-sub text-28rpx">
+                <text class="yd-text-hint mr-8rpx">渠道：</text>{{ item.channelName || '-' }}
               </view>
             </view>
           </view>
           <view
             v-if="getPrimaryAction(item)"
-            class="mt-16rpx border-t border-[#f0f0f0] pt-16rpx"
+            class="yd-border-light mt-16rpx border-t pt-16rpx"
             @click.stop="handlePrimaryAction(getPrimaryAction(item)!.command, item)"
           >
-            <text class="text-28rpx text-[#1677ff]">
+            <text class="yd-text-link text-28rpx">
               {{ getPrimaryAction(item)!.label }}
             </text>
           </view>

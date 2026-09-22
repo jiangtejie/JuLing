@@ -2,7 +2,7 @@
   <!-- 指标图表：趋势折线图 + 结构饼图 -->
   <view class="space-y-24rpx">
     <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-      <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
         {{ metricDetail ? `${metricDetail.name}变化趋势（单位：元）` : '财务指标趋势（单位：元）' }}
       </view>
       <view class="p-24rpx">
@@ -16,7 +16,7 @@
     </view>
 
     <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-      <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
         {{ metricDetail ? `${currentMonthText} ${metricDetail.name}结构分析（单位：元）` : '本期指标结构（单位：元）' }}
       </view>
       <view class="p-24rpx">

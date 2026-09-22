@@ -9,7 +9,7 @@
 
     <!-- 空状态 -->
     <view v-if="!pageLoading && !record.id" class="flex flex-1 flex-col items-center justify-center px-48rpx">
-      <view class="mb-24rpx text-30rpx text-[#999]">
+      <view class="yd-text-hint mb-24rpx text-30rpx">
         暂无月度工资表
       </view>
       <wd-button
@@ -27,10 +27,10 @@
       <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-32rpx font-semibold">
               {{ record.title || '月度工资表' }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               计薪周期：{{ formatHrmDateRange(record.startTime, record.endTime) }}
             </view>
           </view>
@@ -41,36 +41,36 @@
           />
         </view>
         <view class="grid grid-cols-2 gap-16rpx">
-          <view class="rounded-8rpx bg-[#f6ffed] px-16rpx py-16rpx">
-            <view class="text-24rpx text-[#999]">
+          <view class="yd-bg-success-soft rounded-8rpx px-16rpx py-16rpx">
+            <view class="yd-text-hint text-24rpx">
               计薪人数
             </view>
-            <view class="mt-8rpx text-32rpx text-[#52c41a] font-semibold">
+            <view class="yd-text-success mt-8rpx text-32rpx font-semibold">
               {{ record.employeeCount ?? 0 }}
             </view>
           </view>
-          <view class="rounded-8rpx bg-[#e6f4ff] px-16rpx py-16rpx">
-            <view class="text-24rpx text-[#999]">
+          <view class="yd-bg-info-soft rounded-8rpx px-16rpx py-16rpx">
+            <view class="yd-text-hint text-24rpx">
               实发工资
             </view>
-            <view class="mt-8rpx text-32rpx text-[#1677ff] font-semibold">
+            <view class="yd-text-link mt-8rpx text-32rpx font-semibold">
               {{ formatHrmMoney(record.realPaySalary) }}
             </view>
           </view>
         </view>
-        <view class="mt-16rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mt-16rpx text-26rpx">
           应发：{{ formatHrmMoney(record.expectedPaySalary) }}
-          <text class="mx-8rpx text-[#ddd]">|</text>
+          <text class="yd-text-muted mx-8rpx">|</text>
           个税：{{ formatHrmMoney(record.personalTax) }}
         </view>
-        <view class="mt-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mt-8rpx text-26rpx">
           个人社保：{{ formatHrmMoney(record.personalInsuranceAmount) }}
-          <text class="mx-8rpx text-[#ddd]">|</text>
+          <text class="yd-text-muted mx-8rpx">|</text>
           个人公积金：{{ formatHrmMoney(record.personalProvidentFundAmount) }}
         </view>
         <view
           v-if="isArchived"
-          class="mt-16rpx rounded-8rpx bg-[#e6f4ff] px-16rpx py-12rpx text-24rpx text-[#1677ff]"
+          class="yd-text-link yd-bg-info-soft mt-16rpx rounded-8rpx px-16rpx py-12rpx text-24rpx"
         >
           当前工资表已归档，仅可查询。
         </view>
@@ -116,31 +116,31 @@
             @click="handleEmployeeDetail(item)"
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.employeeName || '-' }}
               </view>
-              <view class="shrink-0 text-28rpx text-[#1677ff] font-semibold">
+              <view class="yd-text-link shrink-0 text-28rpx font-semibold">
                 {{ formatHrmMoney(item.realPaySalary) }}
               </view>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">工号：</text>{{ item.jobNumber || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">工号：</text>{{ item.jobNumber || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">部门：</text>{{ item.deptName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">部门：</text>{{ item.deptName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">岗位：</text>{{ item.postName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">岗位：</text>{{ item.postName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">计薪天数：</text>{{ formatHrmDays(item.needWorkDay) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
-              <text class="mr-8rpx text-[#999]">实际：</text>{{ formatHrmDays(item.actualWorkDay) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">计薪天数：</text>{{ formatHrmDays(item.needWorkDay) }}
+              <text class="yd-text-muted mx-8rpx">|</text>
+              <text class="yd-text-hint mr-8rpx">实际：</text>{{ formatHrmDays(item.actualWorkDay) }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">应发：</text>{{ formatHrmMoney(item.expectedPaySalary) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
-              <text class="mr-8rpx text-[#999]">个税：</text>{{ formatHrmMoney(item.personalTax) }}
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">应发：</text>{{ formatHrmMoney(item.expectedPaySalary) }}
+              <text class="yd-text-muted mx-8rpx">|</text>
+              <text class="yd-text-hint mr-8rpx">个税：</text>{{ formatHrmMoney(item.personalTax) }}
             </view>
           </view>
         </view>

@@ -22,7 +22,7 @@
 
         <!-- 收款明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">销售出库、退货单</text>
+          <text class="yd-text-main text-28rpx font-semibold">销售出库、退货单</text>
           <view class="flex gap-12rpx">
             <wd-button size="small" type="primary" variant="plain" @click="itemEditorRef?.openSaleOutPicker()">
               销售出库
@@ -38,7 +38,7 @@
 
         <!-- 收款信息 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">收款信息</text>
+          <text class="yd-text-main text-28rpx font-semibold">收款信息</text>
         </view>
         <wd-cell-group border>
           <AccountFormPicker v-model="formData.accountId" label="收款账户" label-width="220rpx" prop="accountId" placeholder="请选择收款账户" :auto-default="!props.id" />
@@ -161,7 +161,7 @@ async function handleSubmit() {
     }
     uni.$emit('erp:finance-receipt:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

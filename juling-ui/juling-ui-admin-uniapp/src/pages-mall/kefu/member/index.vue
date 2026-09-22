@@ -21,14 +21,14 @@
       <view class="p-24rpx">
         <view class="mb-24rpx flex items-center gap-20rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <wd-img v-if="member.avatar" :src="member.avatar" width="112rpx" height="112rpx" radius="56rpx" mode="aspectFill" />
-          <view v-else class="h-112rpx w-112rpx flex items-center justify-center rounded-full bg-[#e6f4ff]">
+          <view v-else class="yd-bg-info-soft h-112rpx w-112rpx flex items-center justify-center rounded-full">
             <wd-icon name="user" size="56rpx" color="#1677ff" />
           </view>
           <view class="min-w-0 flex-1">
-            <view class="truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-32rpx font-semibold">
               {{ member.nickname || '-' }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               编号：{{ member.id ?? '-' }}
             </view>
           </view>
@@ -54,7 +54,7 @@
         </view>
 
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
             账户信息
           </view>
           <wd-cell-group border>
@@ -86,15 +86,15 @@
           class="mb-20rpx flex items-center gap-16rpx rounded-12rpx bg-white p-20rpx shadow-sm"
         >
           <wd-img v-if="row.picUrl" :src="row.picUrl" width="120rpx" height="120rpx" radius="8rpx" mode="aspectFill" />
-          <view v-else class="h-120rpx w-120rpx rounded-8rpx bg-[#f5f5f5]" />
+          <view v-else class="yd-bg-page h-120rpx w-120rpx rounded-8rpx" />
           <view class="min-w-0 flex-1">
-            <view class="line-clamp-2 text-28rpx text-[#333]">
+            <view class="yd-text-main line-clamp-2 text-28rpx">
               {{ row.spuName || `商品 #${row.spuId}` }}
             </view>
             <view class="mt-8rpx text-26rpx text-[#ff3000]">
               ￥{{ row.price }}
             </view>
-            <view class="mt-8rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-22rpx">
               浏览时间：{{ formatDate(row.createTime, 'YYYY-MM-DD HH:mm') }}
             </view>
           </view>
@@ -120,7 +120,7 @@
           class="mb-20rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">
               {{ order.no || '-' }}
             </text>
             <dict-tag v-if="order.status != null" :type="DICT_TYPE.TRADE_ORDER_STATUS" :value="order.status" />
@@ -132,15 +132,15 @@
           >
             <wd-img v-if="orderItem.picUrl" :src="orderItem.picUrl" width="88rpx" height="88rpx" radius="8rpx" mode="aspectFill" />
             <view class="min-w-0 flex-1">
-              <view class="line-clamp-1 text-26rpx text-[#333]">
+              <view class="yd-text-main line-clamp-1 text-26rpx">
                 {{ orderItem.spuName || '-' }}
               </view>
-              <view class="mt-4rpx text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-22rpx">
                 x{{ orderItem.count || 0 }}
               </view>
             </view>
           </view>
-          <view class="mt-12rpx flex items-center justify-between border-t border-[#f5f5f5] pt-12rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint yd-border-light mt-12rpx flex items-center justify-between border-t pt-12rpx text-24rpx">
             <text>{{ formatDate(order.createTime, 'YYYY-MM-DD HH:mm') }}</text>
             <text>共 {{ order.productCount || 0 }} 件 实付 <text class="text-[#ff3000]">￥{{ fenToYuan(order.payPrice).toFixed(2) }}</text></text>
           </view>

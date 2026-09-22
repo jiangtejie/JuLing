@@ -33,10 +33,10 @@
 
       <!-- 字段定义 -->
       <view class="mt-20rpx flex items-center justify-between px-24rpx py-16rpx">
-        <text class="text-28rpx text-[#999]">字段定义（{{ columns.length }}）</text>
+        <text class="yd-text-hint text-28rpx">字段定义（{{ columns.length }}）</text>
         <text
           v-if="hasAccessByCodes(['infra:codegen:update'])"
-          class="text-26rpx text-[#1677ff]"
+          class="yd-text-link text-26rpx"
           @click="handleColumns"
         >
           编辑字段
@@ -50,25 +50,25 @@
         >
           <view class="p-24rpx">
             <view class="mb-12rpx flex items-center justify-between">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ col.javaField }}
-                <text class="ml-8rpx text-24rpx text-[#999] font-normal">{{ col.columnName }}</text>
+                <text class="yd-text-hint ml-8rpx text-24rpx font-normal">{{ col.columnName }}</text>
               </view>
               <wd-tag v-if="col.primaryKey" custom-class="ml-16rpx shrink-0" type="warning" plain>
                 主键
               </wd-tag>
             </view>
-            <view v-if="col.columnComment" class="mb-12rpx text-26rpx text-[#666]">
+            <view v-if="col.columnComment" class="yd-text-sub mb-12rpx text-26rpx">
               {{ col.columnComment }}
             </view>
-            <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">Java 类型：</text>
+            <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">Java 类型：</text>
               <text class="min-w-0 flex-1 truncate">{{ col.javaType }}</text>
-              <text class="mx-8rpx shrink-0 text-[#999]">DB：</text>
+              <text class="yd-text-hint mx-8rpx shrink-0">DB：</text>
               <text class="shrink-0">{{ col.dataType }}</text>
             </view>
-            <view v-if="col.dictType" class="mb-8rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">字典：</text>
+            <view v-if="col.dictType" class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">字典：</text>
               <text class="min-w-0 flex-1 truncate">{{ col.dictType }}</text>
             </view>
             <view class="mt-12rpx flex flex-wrap gap-12rpx">
@@ -217,7 +217,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('infra:codegen:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

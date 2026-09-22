@@ -8,7 +8,7 @@
         </view>
         <view v-for="item in list" :key="item.id" class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.bomItemCode || '-' }}
             </view>
             <dict-tag
@@ -17,7 +17,7 @@
               :value="item.itemOrProduct"
             />
           </view>
-          <view class="text-26rpx text-[#666] space-y-8rpx">
+          <view class="yd-text-sub text-26rpx space-y-8rpx">
             <view>名称：{{ item.bomItemName || '-' }}</view>
             <view>规格：{{ item.bomItemSpecification || '-' }}</view>
             <view>单位：{{ item.unitMeasureName || '-' }}</view>
@@ -63,7 +63,7 @@
     <!-- 编辑弹层 -->
     <wd-popup v-model="editVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="bg-white px-24rpx pb-40rpx pt-32rpx">
-        <view class="mb-32rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-32rpx text-center text-32rpx font-semibold">
           编辑 BOM
         </view>
         <wd-cell-group border>
@@ -73,13 +73,13 @@
           <wd-cell title="单位" :value="editForm.unitMeasureName || '-'" />
         </wd-cell-group>
         <view class="mt-24rpx">
-          <view class="mb-16rpx text-28rpx text-[#333]">
+          <view class="yd-text-main mb-16rpx text-28rpx">
             用量比例
           </view>
           <wd-input-number v-model="editForm.quantity" :min="0" :precision="4" :step="0.1" />
         </view>
         <view class="mt-24rpx">
-          <view class="mb-16rpx text-28rpx text-[#333]">
+          <view class="yd-text-main mb-16rpx text-28rpx">
             备注
           </view>
           <wd-textarea v-model="editForm.remark" placeholder="请输入备注" :maxlength="200" show-word-limit clearable />

@@ -24,15 +24,15 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <wd-tag type="default" plain>
               {{ formatProjectTypeShort(item.type) }}
             </wd-tag>
           </view>
-          <view class="mb-16rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">归档时间：</text>{{ formatDateTime(item.archiveTime) || '-' }}
+          <view class="yd-text-sub mb-16rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">归档时间：</text>{{ formatDateTime(item.archiveTime) || '-' }}
           </view>
           <view v-if="item.adminStatus && hasAccessByCodes(['pms:pm:project:update'])" class="flex justify-end">
             <wd-button size="small" variant="plain" @click="handleRestore(item)">

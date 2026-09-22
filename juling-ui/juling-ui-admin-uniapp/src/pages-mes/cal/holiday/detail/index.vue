@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar title="假期详情" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
 

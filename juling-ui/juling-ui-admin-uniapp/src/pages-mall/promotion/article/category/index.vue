@@ -36,19 +36,19 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <dict-tag v-if="item.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view class="text-26rpx text-[#999]">
+              <view class="yd-text-hint text-26rpx">
                 排序：{{ item.sort ?? '-' }}
               </view>
             </view>
           </view>
 
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

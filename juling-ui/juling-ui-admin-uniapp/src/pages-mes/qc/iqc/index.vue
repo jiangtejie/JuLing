@@ -28,51 +28,51 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.code || '-' }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.name || '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.MES_ORDER_STATUS" :value="item.status" />
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">供应商：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">供应商：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.vendorNickname || '-' }}</text>
           </view>
-          <view v-if="item.vendorBatch" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">供应商批次：</text>
+          <view v-if="item.vendorBatch" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">供应商批次：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.vendorBatch }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">产品物料：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">产品物料：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.itemCode || '-' }} / {{ item.itemName || '-' }}</text>
           </view>
-          <view v-if="item.itemSpecification || item.unitName" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">规格单位：</text>
+          <view v-if="item.itemSpecification || item.unitName" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">规格单位：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.itemSpecification || '-' }} / {{ item.unitName || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">数量：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">数量：</text>
             <text class="min-w-0 flex-1 truncate">
               接收 {{ item.receivedQuantity ?? '-' }}，检测 {{ item.checkQuantity ?? '-' }}，不合格 {{ item.unqualifiedQuantity ?? '-' }}
             </text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">检测结果：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">检测结果：</text>
             <dict-tag v-if="item.checkResult != null" :type="DICT_TYPE.MES_QC_CHECK_RESULT" :value="item.checkResult" />
             <text v-else>-</text>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">来料日期：</text>{{ formatDateTime(item.receiveDate) || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">来料日期：</text>{{ formatDateTime(item.receiveDate) || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">检测日期：</text>{{ formatDateTime(item.inspectDate) || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">检测日期：</text>{{ formatDateTime(item.inspectDate) || '-' }}
           </view>
-          <view v-if="item.inspectorNickname" class="mb-16rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">检测人员：</text>{{ item.inspectorNickname }}
+          <view v-if="item.inspectorNickname" class="yd-text-sub mb-16rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">检测人员：</text>{{ item.inspectorNickname }}
           </view>
         </view>
       </view>

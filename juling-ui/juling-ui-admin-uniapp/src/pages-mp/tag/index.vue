@@ -37,14 +37,14 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <wd-tag plain>
               {{ item.count || 0 }} 粉丝
             </wd-tag>
           </view>
-          <view class="mb-20rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-20rpx text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view class="flex gap-16rpx">

@@ -25,6 +25,8 @@ import { FRIEND_REQUEST_PAGE_SIZE } from '@/pages-im/utils/config'
 import { getDb, initDb, StorageKeys } from '@/pages-im/utils/db'
 import { runIncrementalPull } from '@/pages-im/utils/pull'
 import { getFriendDisplayName } from '@/pages-im/utils/user'
+// edit by 棱信矩灵：addTime/handleTime 等是 LocalDateTime 字符串，new Date(字符串) 在 iOS/JSCore 上返回 NaN
+import { toTimestamp } from '@/utils/date'
 import { useUserStore } from '@/store/user'
 import {
   CommonStatusEnum,
@@ -738,8 +740,8 @@ function convertFriend(friend: ImFriendRespVO): Friend {
     pinned: !!friend.pinned,
     blocked: !!friend.blocked,
     status: friend.status,
-    addTime: friend.addTime ? new Date(friend.addTime).getTime() : undefined,
-    deleteTime: friend.deleteTime ? new Date(friend.deleteTime).getTime() : undefined,
+    addTime: friend.addTime ? toTimestamp(friend.addTime) : undefined,
+    deleteTime: friend.deleteTime ? toTimestamp(friend.deleteTime) : undefined,
   }
 }
 
@@ -753,8 +755,8 @@ function convertFriendRequest(request: ImFriendRequestRespVO): FriendRequest {
     applyContent: request.applyContent,
     handleContent: request.handleContent,
     addSource: request.addSource,
-    handleTime: request.handleTime ? new Date(request.handleTime).getTime() : undefined,
-    createTime: request.createTime ? new Date(request.createTime).getTime() : 0,
+    handleTime: request.handleTime ? toTimestamp(request.handleTime) : undefined,
+    createTime: request.createTime ? toTimestamp(request.createTime) : 0,
     fromNickname: request.fromNickname,
     fromAvatar: request.fromAvatar,
     toNickname: request.toNickname,

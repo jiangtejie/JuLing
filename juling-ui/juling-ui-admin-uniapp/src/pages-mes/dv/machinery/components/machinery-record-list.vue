@@ -1,13 +1,13 @@
 <template>
   <view class="mt-24rpx">
-    <view class="px-24rpx pb-16rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main px-24rpx pb-16rpx text-28rpx font-semibold">
       设备关联记录
     </view>
 
     <!-- 点检记录 -->
     <view class="mx-24rpx mb-20rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-        <view class="text-28rpx text-[#333] font-semibold">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+        <view class="yd-text-main text-28rpx font-semibold">
           点检记录
         </view>
         <wd-tag type="primary" plain>
@@ -24,15 +24,15 @@
         <view
           v-for="item in checkRecords"
           :key="item.id"
-          class="border-b border-[#f5f5f5] px-24rpx py-20rpx last:border-b-0"
+          class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0"
         >
           <view class="mb-10rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-medium">
               {{ item.planCode || '-' }} / {{ item.planName || '-' }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_DV_CHECK_RECORD_STATUS" :value="item.status" />
           </view>
-          <view class="text-24rpx text-[#666] space-y-6rpx">
+          <view class="yd-text-sub text-24rpx space-y-6rpx">
             <view>点检时间：{{ formatDateTime(item.checkTime) || '-' }}</view>
             <view>点检人：{{ item.nickname || '-' }}</view>
             <view>频率：{{ formatCycle(item.planCycleCount, item.planCycleType) }}</view>
@@ -43,8 +43,8 @@
 
     <!-- 保养记录 -->
     <view class="mx-24rpx mb-20rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-        <view class="text-28rpx text-[#333] font-semibold">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+        <view class="yd-text-main text-28rpx font-semibold">
           保养记录
         </view>
         <wd-tag type="warning" plain>
@@ -61,15 +61,15 @@
         <view
           v-for="item in maintenRecords"
           :key="item.id"
-          class="border-b border-[#f5f5f5] px-24rpx py-20rpx last:border-b-0"
+          class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0"
         >
           <view class="mb-10rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-medium">
               {{ item.planCode || '-' }} / {{ item.planName || '-' }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_MAINTEN_RECORD_STATUS" :value="item.status" />
           </view>
-          <view class="text-24rpx text-[#666] space-y-6rpx">
+          <view class="yd-text-sub text-24rpx space-y-6rpx">
             <view>保养时间：{{ formatDateTime(item.maintenTime) || '-' }}</view>
             <view>保养人：{{ item.nickname || '-' }}</view>
             <view>频率：{{ formatCycle(item.planCycleCount, item.planCycleType) }}</view>
@@ -80,8 +80,8 @@
 
     <!-- 维修记录 -->
     <view class="mx-24rpx mb-20rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-        <view class="text-28rpx text-[#333] font-semibold">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+        <view class="yd-text-main text-28rpx font-semibold">
           维修记录
         </view>
         <wd-tag type="danger" plain>
@@ -98,15 +98,15 @@
         <view
           v-for="item in repairRecords"
           :key="item.id"
-          class="border-b border-[#f5f5f5] px-24rpx py-20rpx last:border-b-0"
+          class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0"
         >
           <view class="mb-10rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-medium">
               {{ item.code || '-' }} / {{ item.name || '-' }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_DV_REPAIR_STATUS" :value="item.status" />
           </view>
-          <view class="text-24rpx text-[#666] space-y-6rpx">
+          <view class="yd-text-sub text-24rpx space-y-6rpx">
             <view>报修日期：{{ formatDateTime(item.requireDate) || '-' }}</view>
             <view>维修完成：{{ formatDateTime(item.finishDate) || '-' }}</view>
             <view>维修人：{{ item.acceptedUserNickname || '-' }}</view>

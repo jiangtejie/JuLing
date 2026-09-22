@@ -32,35 +32,35 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.contentFormat || '-' }}
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">条码格式：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">条码格式：</text>
               <dict-tag v-if="item.format != null" :type="DICT_TYPE.MES_WM_BARCODE_FORMAT" :value="item.format" />
               <text v-else>-</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">业务类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">业务类型：</text>
               <dict-tag v-if="item.bizType != null" :type="DICT_TYPE.MES_WM_BARCODE_BIZ_TYPE" :value="item.bizType" />
               <text v-else>-</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">内容格式：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">内容格式：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.contentFormat || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">内容样例：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">内容样例：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.contentExample || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">默认打印模板：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">默认打印模板：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.defaultTemplate || '报表/打印专项维护' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">自动生成：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">自动生成：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.autoGenerateFlag ? '是' : '否' }}</text>
             </view>
           </view>

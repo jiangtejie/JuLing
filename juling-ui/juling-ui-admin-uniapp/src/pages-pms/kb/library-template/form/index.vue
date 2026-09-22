@@ -50,7 +50,7 @@
       <!-- 模板文档 -->
       <view class="mt-24rpx bg-white p-24rpx">
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">模板文档（{{ formData.documents.length }}）</text>
+          <text class="yd-text-main text-30rpx font-semibold">模板文档（{{ formData.documents.length }}）</text>
           <wd-button size="small" type="primary" variant="plain" @click="handleAddDocument">
             新增文档
           </wd-button>
@@ -58,12 +58,12 @@
         <view
           v-for="(doc, index) in formData.documents"
           :key="index"
-          class="mb-16rpx flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-20rpx"
+          class="yd-bg-subtle mb-16rpx flex items-center justify-between rounded-12rpx p-20rpx"
         >
-          <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ index + 1 }}. {{ doc.title }}</text>
+          <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ index + 1 }}. {{ doc.title }}</text>
           <view class="flex shrink-0 gap-16rpx">
-            <text class="text-26rpx text-[#1677ff]" @click="handleEditDocument(index)">编辑</text>
-            <text class="text-26rpx text-[#f5222d]" @click="handleRemoveDocument(index)">删除</text>
+            <text class="yd-text-link text-26rpx" @click="handleEditDocument(index)">编辑</text>
+            <text class="yd-text-danger text-26rpx" @click="handleRemoveDocument(index)">删除</text>
           </view>
         </view>
         <wd-empty v-if="!formData.documents.length" description="请至少添加一篇模板文档" />
@@ -78,9 +78,9 @@
     </view>
 
     <!-- 模板文档编辑弹窗 -->
-    <wd-popup v-model="documentVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="documentVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           编辑模板文档
         </view>
         <wd-cell-group border>
@@ -89,7 +89,7 @@
           </wd-cell>
         </wd-cell-group>
         <view class="mt-24rpx">
-          <view class="mb-12rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-28rpx">
             文档内容
           </view>
           <wd-textarea
@@ -247,7 +247,7 @@ async function handleSubmit() {
     }
     uni.$emit('pms:kb:library-template:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -28,26 +28,26 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <dict-tag v-if="item.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view class="text-26rpx text-[#666]">
+              <view class="yd-text-sub text-26rpx">
                 排序：{{ item.sort ?? '-' }}
               </view>
             </view>
           </view>
 
           <!-- 子分类 / 查看商品 入口 -->
-          <view class="mt-16rpx flex items-center justify-end gap-32rpx border-t border-[#f0f0f0] pt-16rpx">
+          <view class="yd-border-light mt-16rpx flex items-center justify-end gap-32rpx border-t pt-16rpx">
             <view v-if="item.children?.length" class="flex items-center" @click.stop="handleEnterChildren(item)">
-              <text class="text-26rpx text-[#1890ff]">子分类 ({{ item.children.length }})</text>
+              <text class="yd-text-link text-26rpx">子分类 ({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
             <!-- 只有叶子分类（无子分类）才有商品 -->
             <view v-else class="flex items-center" @click.stop="handleViewSpu(item)">
-              <text class="text-26rpx text-[#1890ff]">查看商品</text>
+              <text class="yd-text-link text-26rpx">查看商品</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>

@@ -1,8 +1,8 @@
 <template>
   <!-- 文件夹表单弹窗 -->
-  <wd-popup v-model="visible" position="bottom" root-portal>
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal>
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ formData.id ? '编辑文件夹' : '新建文件夹' }}
       </view>
       <wd-input

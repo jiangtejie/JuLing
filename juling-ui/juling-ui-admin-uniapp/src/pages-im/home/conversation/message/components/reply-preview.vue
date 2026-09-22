@@ -1,6 +1,6 @@
 <template>
   <view
-    class="min-w-0 flex items-center gap-12rpx rounded-8rpx bg-black/5 px-16rpx py-10rpx text-24rpx text-[#666] leading-34rpx"
+    class="yd-text-sub min-w-0 flex items-center gap-12rpx rounded-8rpx bg-black/5 px-16rpx py-10rpx text-24rpx leading-34rpx"
     :class="[
       mirrored ? 'flex-row-reverse text-right' : '',
       clickable && !recalled ? 'active:bg-black/10' : '',

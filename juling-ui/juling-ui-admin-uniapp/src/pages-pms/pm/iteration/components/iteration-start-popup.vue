@@ -1,8 +1,8 @@
 <template>
   <!-- 开始迭代弹窗 -->
-  <wd-popup v-model="visible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         开始迭代
       </view>
       <wd-cell-group border>

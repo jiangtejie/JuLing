@@ -2,53 +2,53 @@
   <view class="p-24rpx pb-160rpx">
     <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
       <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-        <text class="text-30rpx text-[#333] font-semibold">
+        <text class="yd-text-main text-30rpx font-semibold">
           工资卡信息
         </text>
         <view class="flex shrink-0 gap-24rpx">
           <text
             v-if="hasAccessByCodes(['hrm:employee:update'])"
-            class="text-28rpx text-[#1677ff]"
+            class="yd-text-link text-28rpx"
             @click="openForm"
           >
             编辑
           </text>
           <text
             v-if="salaryCard?.id && hasAccessByCodes(['hrm:employee:update'])"
-            class="text-28rpx text-[#f5222d]"
+            class="yd-text-danger text-28rpx"
             @click="handleDelete"
           >
             删除
           </text>
         </view>
       </view>
-      <view v-if="!salaryCard?.id" class="py-20rpx text-center text-28rpx text-[#999]">
+      <view v-if="!salaryCard?.id" class="yd-text-hint py-20rpx text-center text-28rpx">
         暂无工资卡信息
       </view>
       <template v-else>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           银行卡号：{{ salaryCard.bankCardNumber || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           开户地区：{{ salaryCard.bankAreaName || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           银行名称：{{ salaryCard.bankName || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           开户支行：{{ salaryCard.bankBranchName || '-' }}
         </view>
       </template>
     </view>
 
     <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
-      <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
         社保公积金账号
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         个人社保账号：{{ socialSecurityNumber || '-' }}
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         个人公积金账号：{{ accumulationFundNumber || '-' }}
       </view>
     </view>

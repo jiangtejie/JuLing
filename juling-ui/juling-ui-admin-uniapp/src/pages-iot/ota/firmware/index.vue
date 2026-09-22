@@ -27,26 +27,26 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
-            <view class="shrink-0 text-24rpx text-[#999]">
+            <view class="yd-text-hint shrink-0 text-24rpx">
               #{{ item.id }}
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">版本号：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">版本号：</text>
             {{ item.version || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">所属产品：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">所属产品：</text>
             {{ item.productName || item.productId || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">文件大小：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">文件大小：</text>
             {{ formatFileSize(item.fileSize) }}
           </view>
-          <view class="mb-16rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-16rpx text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view class="flex justify-end">

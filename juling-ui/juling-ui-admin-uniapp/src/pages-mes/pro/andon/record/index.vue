@@ -39,10 +39,10 @@
           <view class="p-24rpx" @click="handleDetail(item)">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.reason || '-' }}
                 </view>
-                <view class="mt-6rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-6rpx text-24rpx">
                   {{ item.workstationCode || '-' }} / {{ item.workstationName || '-' }}
                 </view>
               </view>
@@ -54,7 +54,7 @@
                 {{ item.workOrderCode }}
               </wd-tag>
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>工序：{{ item.processName || '-' }}</view>
               <view>发起人：{{ item.userNickname || '-' }}</view>
               <view>发起时间：{{ formatDateTime(item.createTime) || '-' }}</view>

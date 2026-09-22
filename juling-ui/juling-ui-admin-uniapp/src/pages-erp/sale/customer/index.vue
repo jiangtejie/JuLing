@@ -32,25 +32,25 @@
           <view>
             <view class="p-24rpx">
               <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view v-if="item.contact" class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">联系人：</text>{{ item.contact }}
+              <view v-if="item.contact" class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">联系人：</text>{{ item.contact }}
               </view>
-              <view v-if="item.mobile" class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">手机：</text>{{ item.mobile }}
+              <view v-if="item.mobile" class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">手机：</text>{{ item.mobile }}
               </view>
-              <view v-if="item.telephone" class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">电话：</text>{{ item.telephone }}
+              <view v-if="item.telephone" class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">电话：</text>{{ item.telephone }}
               </view>
-              <view v-if="item.email" class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">邮箱：</text>{{ item.email }}
+              <view v-if="item.email" class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">邮箱：</text>{{ item.email }}
               </view>
-              <view v-if="item.remark" class="text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">备注：</text>
+              <view v-if="item.remark" class="yd-text-sub text-28rpx">
+                <text class="yd-text-hint mr-8rpx">备注：</text>
                 <text class="line-clamp-1">{{ item.remark }}</text>
               </view>
             </view>

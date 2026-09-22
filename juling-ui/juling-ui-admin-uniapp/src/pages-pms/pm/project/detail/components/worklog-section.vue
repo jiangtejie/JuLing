@@ -21,14 +21,14 @@
     </view>
 
     <!-- 工时汇总 -->
-    <view class="mx-24rpx mt-24rpx rounded-12rpx bg-[#e6f4ff] p-20rpx text-28rpx text-[#1677ff]">
+    <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-28rpx">
       当前范围累计登记 {{ report.totalHours }} 小时
     </view>
 
     <!-- 工时报表 -->
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx pb-200rpx">
-        <view v-if="!report.groups.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!report.groups.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           当前范围暂无工时记录
         </view>
         <view
@@ -37,26 +37,26 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <text class="text-30rpx text-[#333] font-semibold">{{ group.iterationName }}</text>
-            <text class="text-28rpx text-[#1677ff]">共 {{ group.totalHours }} 小时</text>
+            <text class="yd-text-main text-30rpx font-semibold">{{ group.iterationName }}</text>
+            <text class="yd-text-link text-28rpx">共 {{ group.totalHours }} 小时</text>
           </view>
           <view
             v-for="item in group.items"
             :key="item.workItemId"
-            class="border-t border-[#f0f0f0] py-16rpx first:border-t-0"
+            class="yd-border-light border-t py-16rpx first:border-t-0"
           >
             <view class="flex items-center justify-between gap-16rpx" @click="toggleItem(item.workItemId)">
-              <text class="min-w-0 flex-1 truncate text-28rpx text-[#1677ff]" @click.stop="handleWorkItemDetail(item.workItemId)">
+              <text class="yd-text-link min-w-0 flex-1 truncate text-28rpx" @click.stop="handleWorkItemDetail(item.workItemId)">
                 #{{ item.serialNumber }} {{ item.name }}
               </text>
-              <text class="shrink-0 text-26rpx text-[#666]">{{ item.totalHours }} 小时</text>
+              <text class="yd-text-sub shrink-0 text-26rpx">{{ item.totalHours }} 小时</text>
             </view>
             <!-- 每日工时明细 -->
-            <view v-if="expandedIds.has(item.workItemId)" class="mt-12rpx rounded-8rpx bg-[#f7f8fa] p-16rpx">
+            <view v-if="expandedIds.has(item.workItemId)" class="yd-bg-subtle mt-12rpx rounded-8rpx p-16rpx">
               <view
                 v-for="date in report.dates"
                 :key="date"
-                class="flex justify-between py-6rpx text-24rpx text-[#666]"
+                class="yd-text-sub flex justify-between py-6rpx text-24rpx"
               >
                 <text>{{ formatDateWithWeekday(date) }}</text>
                 <text>{{ item.dailyHours[date] || '-' }}</text>

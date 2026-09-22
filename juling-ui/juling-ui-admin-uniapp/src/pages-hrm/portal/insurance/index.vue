@@ -37,7 +37,7 @@
             @click="handleDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ formatHrmYearMonth(item.year, item.month) }}
               </view>
               <dict-tag
@@ -46,26 +46,26 @@
                 :value="item.schemeType"
               />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">参保方案：</text>{{ item.schemeName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">参保方案：</text>{{ item.schemeName || '-' }}
             </view>
-            <view v-if="item.schemeCity" class="mb-12rpx text-26rpx text-[#999]">
+            <view v-if="item.schemeCity" class="yd-text-hint mb-12rpx text-26rpx">
               {{ item.schemeCity }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">个人社保：</text>{{ formatHrmMoney(item.personalInsuranceAmount) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">个人社保：</text>{{ formatHrmMoney(item.personalInsuranceAmount) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">公司社保：</text>{{ formatHrmMoney(item.corporateInsuranceAmount) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">公司社保：</text>{{ formatHrmMoney(item.corporateInsuranceAmount) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">个人公积金：</text>{{ formatHrmMoney(item.personalProvidentFundAmount) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">个人公积金：</text>{{ formatHrmMoney(item.personalProvidentFundAmount) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">公司公积金：</text>{{ formatHrmMoney(item.corporateProvidentFundAmount) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">公司公积金：</text>{{ formatHrmMoney(item.corporateProvidentFundAmount) }}
             </view>
-            <view class="text-28rpx text-[#1677ff] font-semibold">
-              <text class="mr-8rpx text-[#999] font-normal">合计：</text>{{ formatHrmMoney(recordTotal(item)) }}
+            <view class="yd-text-link text-28rpx font-semibold">
+              <text class="yd-text-hint mr-8rpx font-normal">合计：</text>{{ formatHrmMoney(recordTotal(item)) }}
             </view>
           </view>
         </view>
@@ -122,7 +122,7 @@ function recordTotal(record: PortalInsuranceRecord) {
 /** 按年份过滤列表 */
 function loadRecords() {
   list.value = allRecords.value.filter(record => record.year === queryYear.value)
-  pagingRef.value?.completeByTotal(list.value, list.value.length)
+  pagingRef.value?.completeByNoMore(list.value, true)
 }
 
 /** 查询社保记录列表 */

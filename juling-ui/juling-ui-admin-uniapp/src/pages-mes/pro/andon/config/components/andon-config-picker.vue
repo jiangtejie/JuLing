@@ -5,7 +5,7 @@
     safe-area-inset-bottom
     custom-style="height: 78vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <view class="flex items-center gap-12rpx">
           <wd-button variant="plain" size="small" @click="handleCancel">
@@ -15,7 +15,7 @@
             清空
           </wd-button>
         </view>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择呼叫原因
         </view>
         <wd-button size="small" type="primary" :disabled="!canConfirm" @click="handleConfirm">
@@ -37,12 +37,12 @@
             @click="handleSelect(item)"
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.reason || '-' }}
               </view>
               <dict-tag v-if="item.level != null" :type="DICT_TYPE.MES_PRO_ANDON_LEVEL" :value="item.level" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-26rpx space-y-6rpx">
               <view>处置角色：{{ item.handlerRoleName || '-' }}</view>
               <view>处置人：{{ item.handlerUserNickname || '-' }}</view>
               <view v-if="item.remark">

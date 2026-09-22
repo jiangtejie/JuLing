@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view v-if="!activityList.length" class="py-60rpx text-center text-28rpx text-[#999]">
+    <view v-if="!activityList.length" class="yd-text-hint py-60rpx text-center text-28rpx">
       暂无动态
     </view>
     <view
@@ -8,7 +8,7 @@
       :key="activity.id"
       class="mb-16rpx flex gap-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
-      <view class="h-48rpx w-48rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1677ff] text-24rpx text-white">
+      <view class="yd-bg-primary h-48rpx w-48rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full text-24rpx text-white">
         <wd-img
           v-if="activity.operatorUserAvatar"
           :src="activity.operatorUserAvatar"
@@ -20,10 +20,10 @@
       </view>
       <view class="min-w-0 flex-1">
         <view class="mb-4rpx flex items-center gap-12rpx">
-          <text class="text-28rpx text-[#333] font-semibold">{{ activity.operatorUserName || '-' }}</text>
-          <text class="text-24rpx text-[#999]">{{ formatDateTime(activity.createTime) }}</text>
+          <text class="yd-text-main text-28rpx font-semibold">{{ activity.operatorUserName || '-' }}</text>
+          <text class="yd-text-hint text-24rpx">{{ formatDateTime(activity.createTime) }}</text>
         </view>
-        <view class="text-28rpx text-[#666]">
+        <view class="yd-text-sub text-28rpx">
           {{ activity.content }}
         </view>
       </view>

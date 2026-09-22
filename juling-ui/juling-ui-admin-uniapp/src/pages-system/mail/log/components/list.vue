@@ -25,21 +25,21 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.templateTitle }}
               </view>
               <dict-tag :type="DICT_TYPE.SYSTEM_MAIL_SEND_STATUS" :value="item.sendStatus" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">发送邮箱：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">发送邮箱：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.fromMail }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">收件人：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">收件人：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatMails(item.toMails) }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">发送时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">发送时间：</text>
               <text>{{ formatDateTime(item.sendTime) }}</text>
             </view>
           </view>

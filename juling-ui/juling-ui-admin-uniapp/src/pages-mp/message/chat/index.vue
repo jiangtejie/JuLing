@@ -20,15 +20,15 @@
         />
         <view
           v-else
-          class="h-72rpx w-72rpx flex items-center justify-center rounded-full bg-[#07c160] text-28rpx text-white"
+          class="yd-bg-success h-72rpx w-72rpx flex items-center justify-center rounded-full text-28rpx text-white"
         >
           {{ (userInfo.nickname || '粉')?.charAt(0) }}
         </view>
         <view class="min-w-0 flex-1">
-          <view class="truncate text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main truncate text-30rpx font-semibold">
             {{ userInfo.nickname || '微信用户' }}
           </view>
-          <view class="truncate text-24rpx text-[#999]">
+          <view class="yd-text-hint truncate text-24rpx">
             {{ userInfo.openid || routeOpenid || '-' }}
           </view>
         </view>
@@ -57,7 +57,7 @@
           :style="cellStyle"
           class="mb-24rpx"
         >
-          <view class="mb-8rpx text-center text-22rpx text-[#999]">
+          <view class="yd-text-hint mb-8rpx text-center text-22rpx">
             {{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view
@@ -66,13 +66,13 @@
           >
             <view
               class="h-64rpx w-64rpx flex shrink-0 items-center justify-center rounded-full text-24rpx text-white"
-              :class="item.sendFrom === 2 ? 'bg-[#1890ff]' : 'bg-[#07c160]'"
+              :class="item.sendFrom === 2 ? 'yd-bg-primary' : 'yd-bg-success'"
             >
               {{ item.sendFrom === 2 ? '号' : '粉' }}
             </view>
             <view
               class="max-w-[560rpx] rounded-12rpx px-20rpx py-16rpx text-28rpx shadow-sm"
-              :class="item.sendFrom === 2 ? 'bg-[#dff5d8] text-[#1f1f1f]' : 'bg-white text-[#333]'"
+              :class="item.sendFrom === 2 ? 'bg-[#dff5d8] text-[#1f1f1f]' : 'bg-white yd-text-main'"
             >
               <ReplyContent
                 :type="item.type"
@@ -101,7 +101,7 @@
 
       <!-- 发送区域 -->
       <template #bottom>
-        <view class="shrink-0 border-t border-[#eee] bg-white px-24rpx py-20rpx pb-[calc(20rpx+env(safe-area-inset-bottom))]">
+        <view class="yd-border-base shrink-0 border-t bg-white px-24rpx py-20rpx pb-[calc(20rpx+env(safe-area-inset-bottom))]">
           <view class="mb-16rpx flex items-center gap-16rpx">
             <wd-button size="small" variant="plain" @click="sendTypePickerVisible = true">
               <view class="flex items-center gap-4rpx">
@@ -148,7 +148,7 @@
                 移除
               </wd-button>
             </view>
-            <view v-else class="text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint text-26rpx">
               请「本地上传」或从「素材库」选择图片
             </view>
           </template>
@@ -161,7 +161,7 @@
                 移除
               </wd-button>
             </view>
-            <view v-else class="text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint text-26rpx">
               请「本地上传」或从「素材库」选择语音
             </view>
           </template>
@@ -169,7 +169,7 @@
           <!-- 视频 -->
           <template v-else-if="sendForm.type === 'video'">
             <MediaPreview v-if="sendForm.url" type="video" :url="sendForm.url" />
-            <view v-else class="text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint text-26rpx">
               请「本地上传」或从「素材库」选择视频
             </view>
             <view class="h-12rpx" />
@@ -185,7 +185,7 @@
               :articles="sendForm.articles"
               @article-click="article => openUrl(article.url)"
             />
-            <view v-else class="text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint text-26rpx">
               请从「素材库」选择图文（最多发送 1 条）
             </view>
             <view v-if="sendForm.articles.length" class="mt-12rpx text-right">
@@ -203,7 +203,7 @@
                 移除缩略图
               </wd-button>
             </view>
-            <view v-else class="mb-12rpx text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint mb-12rpx text-26rpx">
               请「本地上传」或「选缩略图」回填音乐封面
             </view>
             <wd-input v-model="sendForm.title" clearable placeholder="请输入标题" />

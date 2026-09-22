@@ -1,11 +1,11 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+    <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
       团队概况
     </view>
     <view class="p-24rpx space-y-24rpx">
       <view v-for="chart in charts" :key="chart.title">
-        <view class="mb-8rpx text-center text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-center text-26rpx">
           {{ chart.title }}
         </view>
         <YdChart

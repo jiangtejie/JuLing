@@ -33,7 +33,7 @@
   </template>
   <!-- 枚举型：枚举项列表 -->
   <view v-else-if="isEnum" class="bg-white px-32rpx py-20rpx">
-    <view class="mb-12rpx text-26rpx text-[#999]">
+    <view class="yd-text-hint mb-12rpx text-26rpx">
       枚举项（参数值 + 描述）
     </view>
     <view v-for="(item, index) in targetData.dataSpecsList" :key="index" class="mb-16rpx flex items-center gap-12rpx">
@@ -47,7 +47,7 @@
   </view>
   <!-- 时间型：提示 -->
   <wd-form-item v-else-if="isDate" title="时间格式" :title-width="titleWidth">
-    <text class="text-26rpx text-[#999]">String 类型 UTC 毫秒时间戳</text>
+    <text class="yd-text-hint text-26rpx">String 类型 UTC 毫秒时间戳</text>
   </wd-form-item>
 </template>
 

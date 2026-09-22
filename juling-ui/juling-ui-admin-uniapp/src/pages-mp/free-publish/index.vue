@@ -31,7 +31,7 @@
         >
           <NewsCard :articles="getArticles(item)" @article-click="article => openUrl(article.url)" />
           <view class="p-24rpx">
-            <view class="mb-20rpx break-all text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-20rpx break-all text-24rpx">
               Article ID：{{ item.articleId || '-' }}
             </view>
             <wd-button

@@ -28,43 +28,43 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.code || '-' }}
               </view>
-              <view class="shrink-0 text-24rpx text-[#999]">
+              <view class="yd-text-hint shrink-0 text-24rpx">
                 #{{ item.id }}
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">产品物料编码：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">产品物料编码：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.itemCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">产品物料名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">产品物料名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.itemName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.itemSpecification || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">单位：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">单位：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.unitName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">供应商编码：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">供应商编码：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.vendorCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">供应商名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">供应商名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.vendorName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">客户名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">客户名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.clientName || '-' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">订单编号：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">订单编号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.purchaseOrderCode || item.salesOrderCode || '-' }}</text>
             </view>
           </view>

@@ -1,8 +1,8 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;" @close="handleClose">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;" @close="handleClose">
     <view class="p-32rpx">
       <view class="mb-24rpx flex items-center justify-between">
-        <text class="text-32rpx text-[#333] font-semibold">修改用户余额</text>
+        <text class="yd-text-main text-32rpx font-semibold">修改用户余额</text>
         <wd-icon name="close" size="20px" @click="handleClose" />
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
@@ -13,7 +13,7 @@
           <wd-input v-model="formData.nickname" disabled />
         </wd-form-item>
         <wd-form-item title="变动前余额" title-width="210rpx">
-          <text>{{ formatAmount(formData.balance) }}</text>
+          <text>{{ formatDisplayMoney(formData.balance) }}</text>
         </wd-form-item>
         <wd-form-item title="变动类型" title-width="210rpx" prop="changeType" center>
           <wd-radio-group v-model="formData.changeType" type="button">
@@ -29,7 +29,7 @@
           <wd-input-number v-model="formData.changeBalance" :min="0" :step="0.01" :precision="2" />
         </wd-form-item>
         <wd-form-item title="变动后余额" title-width="210rpx">
-          <text>{{ formatAmount(balanceResult) }}</text>
+          <text>{{ formatDisplayMoney(balanceResult) }}</text>
         </wd-form-item>
       </wd-form>
       <view class="mt-32rpx">
@@ -45,6 +45,7 @@
 import type { FormInstance } from '@wot-ui/ui/components/wd-form/types'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, ref, watch } from 'vue'
+import { formatDisplayMoney } from '@/utils/format'
 import { getMemberUser } from '@/api/member/user'
 import { getPayWallet, updatePayWalletBalance } from '@/api/pay/wallet/balance'
 import { createFormSchema } from '@/utils/wot'
@@ -87,11 +88,6 @@ const formRef = ref<FormInstance>() // 表单组件引用
 /** 金额元转分 */
 function yuanToFen(value?: number | string) {
   return Math.round(Number(value || 0) * 100)
-}
-
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
 }
 
 /** 关闭弹窗 */

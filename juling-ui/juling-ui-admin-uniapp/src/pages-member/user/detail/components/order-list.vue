@@ -24,30 +24,30 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.no || `订单 ${item.id}` }}
             </view>
             <dict-tag :type="DICT_TYPE.TRADE_ORDER_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">支付金额：</text>
-            <text>{{ formatAmount(item.payPrice) }}</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">支付金额：</text>
+            <text>{{ formatDisplayMoney(item.payPrice) }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">商品数量：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">商品数量：</text>
             <text>{{ item.productCount ?? '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">配送方式：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">配送方式：</text>
             <dict-tag :type="DICT_TYPE.TRADE_DELIVERY_TYPE" :value="item.deliveryType" />
           </view>
-          <view v-if="item.items?.length" class="mb-12rpx text-26rpx text-[#666]">
+          <view v-if="item.items?.length" class="yd-text-sub mb-12rpx text-26rpx">
             {{ item.items.map(goods => goods.spuName).filter(Boolean).join('、') }}
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ formatDateTime(item.createTime) || '-' }}
           </view>
-          <view class="mt-16rpx text-right text-24rpx text-[#1890ff]">
+          <view class="yd-text-link mt-16rpx text-right text-24rpx">
             查看详情
           </view>
         </view>
@@ -62,6 +62,7 @@ import { ref, watch } from 'vue'
 import { getTradeOrderPage } from '@/api/mall/trade/order'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDateTime } from '@/utils/date'
+import { formatDisplayMoney } from '@/utils/format'
 import OrderSearchForm from './order-search-form.vue'
 
 const props = defineProps<{
@@ -71,11 +72,6 @@ const props = defineProps<{
 const list = ref<TradeOrder[]>([]) // 列表数据
 const pagingRef = ref<ZPagingRef<TradeOrder>>() // 分页组件引用
 const queryParams = ref<Record<string, any>>({}) // 查询参数
-
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
-}
 
 /** 查询订单记录 */
 async function queryList(pageNo: number, pageSize: number) {

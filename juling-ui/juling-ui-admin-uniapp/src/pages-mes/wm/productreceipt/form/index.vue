@@ -45,17 +45,17 @@
           />
           <WorkOrderFormPicker v-model="formData.workOrderId" label="生产工单" label-width="200rpx" prop="workOrderId" placeholder="请选择生产工单" :disabled="isHeaderReadonly" @change="handleWorkOrderChange" />
           <wd-form-item title="产品物料" title-width="200rpx">
-            <view class="text-28rpx text-[#333]">
+            <view class="yd-text-main text-28rpx">
               {{ selectedProductText || '-' }}
             </view>
           </wd-form-item>
           <wd-form-item title="规格型号" title-width="200rpx">
-            <view class="text-28rpx text-[#333]">
+            <view class="yd-text-main text-28rpx">
               {{ formData.specification || '-' }}
             </view>
           </wd-form-item>
           <wd-form-item title="计量单位" title-width="200rpx">
-            <view class="text-28rpx text-[#333]">
+            <view class="yd-text-main text-28rpx">
               {{ formData.unitMeasureName || '-' }}
             </view>
           </wd-form-item>
@@ -305,7 +305,7 @@ async function handleSubmitReceipt() {
     toast.success('提交成功')
     uni.$emit('mes:wm:productreceipt:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     submitLoading.value = false
   }
 }
@@ -336,7 +336,7 @@ async function handleStockReceipt() {
     toast.success('上架成功')
     uni.$emit('mes:wm:productreceipt:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     stockLoading.value = false
   }
 }
@@ -360,7 +360,7 @@ async function handleFinishReceipt() {
     toast.success('入库成功')
     uni.$emit('mes:wm:productreceipt:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     finishLoading.value = false
   }
 }

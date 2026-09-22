@@ -1,7 +1,7 @@
 <template>
-  <view class="shrink-0 border-t border-t-[#ddd] bg-[#f7f7f7] px-12rpx py-16rpx pb-[calc(16rpx+env(safe-area-inset-bottom))]">
+  <view class="yd-bg-subtle shrink-0 border-t border-t-[#ddd] px-12rpx py-16rpx pb-[calc(16rpx+env(safe-area-inset-bottom))]">
     <!-- 禁言 / 退群 / 封禁提示 -->
-    <view v-if="disabledTip" class="py-20rpx text-center text-27rpx text-[#999]">
+    <view v-if="disabledTip" class="yd-text-hint py-20rpx text-center text-27rpx">
       {{ disabledTip }}
     </view>
     <template v-else>
@@ -31,7 +31,7 @@
         >
           <view class="h-48rpx w-48rpx flex items-center justify-center border-3rpx border-[#333] rounded-full border-solid">
             <view
-              class="h-32rpx w-32rpx text-[#333]"
+              class="yd-text-main h-32rpx w-32rpx"
               :class="voiceMode ? 'i-carbon-keyboard' : 'i-carbon-volume-up-filled'"
             />
           </view>
@@ -57,14 +57,14 @@
           <VoiceRecorder v-show="voiceMode" @send="handleSendVoice" />
         </view>
         <view class="h-75rpx w-48rpx flex shrink-0 items-center justify-center" @click="faceVisible = true">
-          <view class="i-carbon-face-satisfied h-48rpx w-48rpx text-[#333]" />
+          <view class="i-carbon-face-satisfied yd-text-main h-48rpx w-48rpx" />
         </view>
         <view
           v-if="voiceMode || !inputContent.trim()"
           class="h-75rpx w-48rpx flex shrink-0 items-center justify-center"
           @click="moreVisible = true"
         >
-          <view class="i-carbon-add-alt h-48rpx w-48rpx text-[#333]" />
+          <view class="i-carbon-add-alt yd-text-main h-48rpx w-48rpx" />
         </view>
         <wd-button v-else class="shrink-0" type="primary" size="small" @click="handleSendText()">
           发送
@@ -73,7 +73,7 @@
 
       <!-- 更多发送方式 -->
       <wd-popup v-model="moreVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
-        <view class="grid grid-cols-4 gap-x-18rpx gap-y-30rpx bg-[#f5f5f5] p-28rpx pb-[calc(32rpx+env(safe-area-inset-bottom))]">
+        <view class="yd-bg-page grid grid-cols-4 gap-x-18rpx gap-y-30rpx p-28rpx pb-[calc(32rpx+env(safe-area-inset-bottom))]">
           <view class="im-tool-item" @click="handleSendImage(['album'])">
             <view class="im-tool-icon">
               <wd-icon name="image" size="52rpx" color="#555" />

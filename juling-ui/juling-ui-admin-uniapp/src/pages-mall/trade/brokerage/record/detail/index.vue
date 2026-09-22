@@ -35,7 +35,8 @@
 <script lang="ts" setup>
 import type { TradeBrokerageRecord } from '@/api/mall/trade/brokerage/record'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getTradeBrokerageRecord } from '@/api/mall/trade/brokerage/record'
 import { formatDisplayMoney } from '@/utils/format'
 import { navigateBackPlus } from '@/utils'
@@ -73,7 +74,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

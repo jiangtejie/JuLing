@@ -32,29 +32,29 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <dict-tag :type="DICT_TYPE.INFRA_JOB_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">处理器名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">处理器名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.handlerName }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">处理器参数：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">处理器参数：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.handlerParam || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">CRON 表达式：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">CRON 表达式：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.cronExpression }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">创建时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">创建时间：</text>
               <text>{{ formatDateTime(item.createTime) }}</text>
             </view>
             <!-- 查看日志按钮 -->
-            <view class="flex justify-end -mt-8">
+            <view class="flex justify-end -mt-8rpx">
               <wd-button size="small" type="info" @click.stop="handleViewLog(item)">
                 调度日志
               </wd-button>

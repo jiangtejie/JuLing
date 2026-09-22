@@ -3,15 +3,15 @@
     <view class="flex items-center gap-16rpx px-20rpx py-18rpx">
       <ImAvatar :src="card.avatar" :name="card.name" :round="false" size="80rpx" />
       <view class="min-w-0 flex-1">
-        <view class="truncate text-30rpx text-[#333]">
+        <view class="yd-text-main truncate text-30rpx">
           {{ card.name }}
         </view>
-        <view v-if="isGroup" class="mt-6rpx text-22rpx text-[#999]">
+        <view v-if="isGroup" class="yd-text-hint mt-6rpx text-22rpx">
           {{ card.memberCount ? `${card.memberCount} 人群聊` : '群聊' }}
         </view>
       </view>
     </view>
-    <view class="border-t border-t-[#f2f3f5] px-20rpx py-10rpx text-22rpx text-[#999]">
+    <view class="yd-text-hint border-t border-t-[#f2f3f5] px-20rpx py-10rpx text-22rpx">
       {{ isGroup ? '群名片' : '个人名片' }}
     </view>
   </view>

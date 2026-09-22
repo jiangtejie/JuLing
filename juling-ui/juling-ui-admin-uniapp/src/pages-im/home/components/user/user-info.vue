@@ -1,5 +1,5 @@
 <template>
-  <view v-if="user" class="min-h-full bg-[#ededed]">
+  <view v-if="user" class="yd-bg-subtle min-h-full">
     <!-- 用户资料 -->
     <view class="flex items-center gap-28rpx bg-white px-32rpx py-44rpx">
       <ImAvatar :src="user.avatar" :name="user.nickname" :round="false" size="128rpx" />
@@ -8,13 +8,13 @@
           <text class="line-clamp-1 min-w-0 text-40rpx text-[#1f1f1f] font-medium">{{ resolvedDisplayName }}</text>
           <dict-tag v-if="user.sex != null" :type="DICT_TYPE.SYSTEM_USER_SEX" :value="user.sex" />
         </view>
-        <view class="mt-12rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mt-12rpx text-26rpx">
           账号：{{ user.id ?? '-' }}
         </view>
-        <view v-if="friend?.displayName" class="mt-6rpx text-26rpx text-[#999]">
+        <view v-if="friend?.displayName" class="yd-text-hint mt-6rpx text-26rpx">
           昵称：{{ user.nickname || '-' }}
         </view>
-        <view class="mt-6rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mt-6rpx text-26rpx">
           部门：{{ user.deptName || '-' }}
         </view>
       </view>
@@ -37,11 +37,11 @@
 
     <!-- 主操作 -->
     <view v-if="relation !== 'self'" class="mt-20rpx bg-white">
-      <view v-if="relation === 'friend'" class="flex items-center justify-center gap-12rpx py-30rpx text-32rpx text-[#576b95]" @click="emit('chat', user)">
+      <view v-if="relation === 'friend'" class="yd-text-link flex items-center justify-center gap-12rpx py-30rpx text-32rpx" @click="emit('chat', user)">
         <wd-icon name="message" size="40rpx" />
         发消息
       </view>
-      <view v-else class="flex items-center justify-center gap-12rpx py-30rpx text-32rpx text-[#576b95]" @click="emitAddFriend">
+      <view v-else class="yd-text-link flex items-center justify-center gap-12rpx py-30rpx text-32rpx" @click="emitAddFriend">
         <wd-icon name="plus" size="40rpx" />
         添加朋友
       </view>
@@ -49,7 +49,7 @@
 
     <!-- 删除好友 -->
     <view v-if="relation === 'friend'" class="mt-20rpx bg-white">
-      <view class="py-30rpx text-center text-32rpx text-[#fa5151]" @click="handleDelete">
+      <view class="yd-text-danger py-30rpx text-center text-32rpx" @click="handleDelete">
         删除好友
       </view>
     </view>

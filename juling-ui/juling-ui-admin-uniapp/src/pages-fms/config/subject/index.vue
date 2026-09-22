@@ -66,7 +66,7 @@
           <view class="p-24rpx" @click="handleDetail(item)">
             <!-- 第一行：编码名称、状态标签 -->
             <view class="flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.code }} {{ item.name }}
               </view>
               <wd-tag :type="item.status === FmsSubjectStatus.ENABLED ? 'success' : 'danger'" plain>
@@ -74,12 +74,12 @@
               </wd-tag>
             </view>
             <!-- 第二行：类别、余额方向 -->
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               类别：{{ getCategoryLabel(item) }} · 余额方向：{{ getDirectionLabel(item) }}
             </view>
             <!-- 第三行：辅助核算、子科目入口 -->
             <view class="mt-12rpx flex items-center justify-between">
-              <view class="min-w-0 flex-1 truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint min-w-0 flex-1 truncate text-24rpx">
                 辅助核算：{{ item.auxiliaryTypeNames?.length ? item.auxiliaryTypeNames.join('、') : '无' }}
               </view>
               <view
@@ -87,7 +87,7 @@
                 class="flex flex-shrink-0 items-center"
                 @click.stop="handleEnterChildren(item)"
               >
-                <text class="text-24rpx text-[#1890ff]">子科目 ({{ item.children.length }})</text>
+                <text class="yd-text-link text-24rpx">子科目 ({{ item.children.length }})</text>
                 <wd-icon name="arrow-right" size="12px" color="#1890ff" />
               </view>
             </view>

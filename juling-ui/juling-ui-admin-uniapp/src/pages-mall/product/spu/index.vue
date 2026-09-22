@@ -47,15 +47,15 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <dict-tag v-if="item.status != null" :type="DICT_TYPE.PRODUCT_SPU_STATUS" :value="item.status" />
               </view>
-              <view class="mb-12rpx text-34rpx text-[#fa8c16] font-semibold">
+              <view class="yd-text-warning mb-12rpx text-34rpx font-semibold">
                 {{ formatDisplayMoney(item.price) }}
               </view>
-              <view class="flex items-center gap-24rpx text-26rpx text-[#666]">
+              <view class="yd-text-sub flex items-center gap-24rpx text-26rpx">
                 <text>库存：{{ item.stock ?? '-' }}</text>
                 <text>销量：{{ item.salesCount ?? '-' }}</text>
               </view>

@@ -28,12 +28,12 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view
               class="shrink-0 rounded-6rpx px-12rpx py-4rpx text-22rpx"
-              :class="item.defaultStatus ? 'bg-[#f6ffed] text-[#52c41a]' : 'bg-[#f5f5f5] text-[#999]'"
+              :class="item.defaultStatus ? 'yd-bg-success-soft yd-text-success' : 'yd-bg-page yd-text-hint'"
             >
               {{ item.defaultStatus ? '默认' : '非默认' }}
             </view>
@@ -42,14 +42,14 @@
             <view
               v-for="option in (item.options || [])"
               :key="option.code"
-              class="rounded-6rpx bg-[#e6f4ff] px-12rpx py-4rpx text-22rpx text-[#1677ff]"
+              class="yd-text-link yd-bg-info-soft rounded-6rpx px-12rpx py-4rpx text-22rpx"
             >
               {{ option.name }}
             </view>
-            <text v-if="!(item.options || []).length" class="text-28rpx text-[#999]">暂无调薪项</text>
+            <text v-if="!(item.options || []).length" class="yd-text-hint text-28rpx">暂无调薪项</text>
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>
       </view>
@@ -95,7 +95,7 @@ function handleBack() {
 async function queryList() {
   try {
     const data = await getSalaryChangeTemplateList()
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

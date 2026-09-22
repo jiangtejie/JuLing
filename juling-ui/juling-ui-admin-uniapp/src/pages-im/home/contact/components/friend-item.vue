@@ -4,10 +4,10 @@
       <ImAvatar :src="friend.avatar" :name="friend.nickname" size="84rpx" :round="false" />
     </view>
     <view class="min-w-0 flex-1 border-b border-b-[#f2f3f5] py-16rpx">
-      <view class="line-clamp-1 text-30rpx text-[#222] font-medium">
+      <view class="yd-text-strong line-clamp-1 text-30rpx font-medium">
         {{ friend.displayName || friend.nickname }}
       </view>
-      <view class="line-clamp-1 mt-4rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint line-clamp-1 mt-4rpx text-24rpx">
         昵称：{{ friend.nickname || '-' }}
       </view>
     </view>

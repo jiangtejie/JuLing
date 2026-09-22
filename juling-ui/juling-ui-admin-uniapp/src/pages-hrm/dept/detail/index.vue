@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container" :class="{ 'yd-page-container-paging': activeTab === 'employees' }">
+  <view class="yd-page-container yd-page-with-footer" :class="{ 'yd-page-container-paging': activeTab === 'employees' }">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="组织详情"
@@ -10,45 +10,45 @@
     <!-- 头部摘要 -->
     <view class="bg-white px-24rpx py-24rpx">
       <view class="mb-8rpx flex items-center gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-bold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-bold">
           {{ formData.name || '-' }}
         </view>
         <dict-tag v-if="formData.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="formData.status" />
       </view>
-      <view class="mb-16rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint mb-16rpx text-24rpx">
         部门编号：{{ formData.id || '-' }}
       </view>
       <view class="grid grid-cols-3 gap-16rpx">
-        <view class="rounded-12rpx bg-[#f5f5f5] px-16rpx py-16rpx text-center">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-page rounded-12rpx px-16rpx py-16rpx text-center">
+          <view class="yd-text-hint text-24rpx">
             在职员工
           </view>
-          <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
             {{ statistics.activeCount }}
           </view>
         </view>
-        <view class="rounded-12rpx bg-[#f5f5f5] px-16rpx py-16rpx text-center">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-page rounded-12rpx px-16rpx py-16rpx text-center">
+          <view class="yd-text-hint text-24rpx">
             全职员工
           </view>
-          <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
             {{ statistics.fullTimeCount }}
           </view>
         </view>
-        <view class="rounded-12rpx bg-[#f5f5f5] px-16rpx py-16rpx text-center">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-page rounded-12rpx px-16rpx py-16rpx text-center">
+          <view class="yd-text-hint text-24rpx">
             非全职人数
           </view>
-          <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
             {{ statistics.nonFullTimeCount }}
           </view>
         </view>
       </view>
-      <view class="mt-16rpx text-26rpx text-[#666]">
-        <text class="mr-8rpx text-[#999]">上级部门：</text>{{ parentDeptName || '-' }}
+      <view class="yd-text-sub mt-16rpx text-26rpx">
+        <text class="yd-text-hint mr-8rpx">上级部门：</text>{{ parentDeptName || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
-        <text class="mr-8rpx text-[#999]">部门负责人：</text>{{ leaderUserName || '-' }}
+      <view class="yd-text-sub mt-8rpx text-26rpx">
+        <text class="yd-text-hint mr-8rpx">部门负责人：</text>{{ leaderUserName || '-' }}
       </view>
     </view>
 

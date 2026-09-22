@@ -32,19 +32,19 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="line-clamp-2 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-2 text-30rpx font-semibold">
                 {{ item.prompt || `#${item.id}` }}
               </view>
-              <view class="mt-8rpx text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-22rpx">
                 {{ formatDateTime(item.createTime) }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.AI_WRITE_TYPE" :value="item.type" />
           </view>
-          <view class="line-clamp-4 text-26rpx text-[#666]">
+          <view class="yd-text-sub line-clamp-4 text-26rpx">
             {{ item.generatedContent || item.errorMessage || '-' }}
           </view>
-          <view class="mt-12rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx text-24rpx">
             用户：{{ getUserName(item.userId) }} / {{ item.platform || '-' }} / {{ item.model || '-' }}
           </view>
         </view>

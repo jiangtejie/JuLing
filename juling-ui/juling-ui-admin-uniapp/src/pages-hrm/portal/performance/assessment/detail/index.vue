@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading && !detail.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !detail.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载绩效详情
@@ -19,7 +19,7 @@
         <!-- 头部摘要 -->
         <view class="bg-white px-24rpx py-24rpx">
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
               {{ detail.name || '-' }}
             </view>
             <dict-tag
@@ -29,19 +29,19 @@
             />
           </view>
           <view class="grid grid-cols-2 mt-16rpx gap-16rpx">
-            <view class="rounded-8rpx bg-[#e6f4ff] px-16rpx py-16rpx">
-              <view class="text-24rpx text-[#999]">
+            <view class="yd-bg-info-soft rounded-8rpx px-16rpx py-16rpx">
+              <view class="yd-text-hint text-24rpx">
                 绩效得分
               </view>
-              <view class="mt-8rpx text-32rpx text-[#1677ff] font-semibold">
+              <view class="yd-text-link mt-8rpx text-32rpx font-semibold">
                 {{ formatHrmScore(detail.score) }}
               </view>
             </view>
-            <view class="rounded-8rpx bg-[#f6ffed] px-16rpx py-16rpx">
-              <view class="text-24rpx text-[#999]">
+            <view class="yd-bg-success-soft rounded-8rpx px-16rpx py-16rpx">
+              <view class="yd-text-hint text-24rpx">
                 考核结果
               </view>
-              <view class="mt-8rpx text-28rpx text-[#52c41a] font-semibold">
+              <view class="yd-text-success mt-8rpx text-28rpx font-semibold">
                 {{ detail.resultLevel || '-' }}
                 <text v-if="detail.coefficient != null" class="text-22rpx font-normal">
                   （系数 {{ detail.coefficient }}）
@@ -88,13 +88,13 @@
             </wd-cell-group>
 
             <view v-if="detail.appealFileUrls?.length" class="mx-24rpx mt-24rpx">
-              <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
                 申诉附件
               </view>
               <view
                 v-for="url in detail.appealFileUrls"
                 :key="url"
-                class="mb-12rpx text-28rpx text-[#1677ff]"
+                class="yd-text-link mb-12rpx text-28rpx"
                 @click="openAttachment(url)"
               >
                 {{ getFileNameFromUrl(url) }}
@@ -102,7 +102,7 @@
             </view>
 
             <view v-if="detail.quotas?.length" class="mx-24rpx mt-24rpx">
-              <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
                 绩效指标
               </view>
               <view
@@ -110,20 +110,20 @@
                 :key="quota.id || `${quota.dimensionId}-${quota.name}`"
                 class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
               >
-                <view class="mb-8rpx text-28rpx text-[#333] font-semibold">
+                <view class="yd-text-main mb-8rpx text-28rpx font-semibold">
                   {{ quota.dimensionName || '-' }} / {{ quota.name || '-' }}
                 </view>
-                <view class="mb-8rpx text-26rpx text-[#666]">
+                <view class="yd-text-sub mb-8rpx text-26rpx">
                   标准：{{ quota.standard || '-' }}
                 </view>
-                <view class="text-26rpx text-[#666]">
+                <view class="yd-text-sub text-26rpx">
                   权重：{{ quota.weight || 0 }}% · 最终得分：{{ formatHrmScore(quota.finalScore) }}
                 </view>
               </view>
             </view>
 
             <view v-if="detail.reviewStages?.length" class="mx-24rpx mt-24rpx">
-              <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
                 评分流程
               </view>
               <view
@@ -131,16 +131,16 @@
                 :key="stage.id"
                 class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
               >
-                <view class="mb-8rpx text-28rpx text-[#333] font-semibold">
+                <view class="yd-text-main mb-8rpx text-28rpx font-semibold">
                   {{ stage.name || '-' }}
                 </view>
-                <view class="mb-8rpx text-26rpx text-[#666]">
+                <view class="yd-text-sub mb-8rpx text-26rpx">
                   评分人：{{ stage.handlerName || '-' }} · 权重：{{ stage.weight || 0 }}%
                 </view>
-                <view class="mb-8rpx text-26rpx text-[#666]">
+                <view class="yd-text-sub mb-8rpx text-26rpx">
                   阶段得分：{{ formatHrmScore(stage.score) }}
                 </view>
-                <view class="text-26rpx text-[#666]">
+                <view class="yd-text-sub text-26rpx">
                   评语：{{ stage.comment || '-' }}
                 </view>
               </view>
@@ -155,21 +155,21 @@
               class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
             >
               <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-                <text class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+                <text class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
                   {{ record.title || '-' }}
                 </text>
-                <text class="shrink-0 text-24rpx text-[#999]">
+                <text class="yd-text-hint shrink-0 text-24rpx">
                   {{ formatDateTime(record.operateTime) || '-' }}
                 </text>
               </view>
-              <view class="mb-8rpx text-26rpx text-[#666]">
+              <view class="yd-text-sub mb-8rpx text-26rpx">
                 操作人：{{ record.operatorName || '-' }}
               </view>
-              <view class="whitespace-pre-wrap break-words text-26rpx text-[#666]">
+              <view class="yd-text-sub whitespace-pre-wrap break-words text-26rpx">
                 {{ record.content || '-' }}
               </view>
             </view>
-            <view v-if="!recordList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+            <view v-if="!recordList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
               暂无流程记录
             </view>
           </view>

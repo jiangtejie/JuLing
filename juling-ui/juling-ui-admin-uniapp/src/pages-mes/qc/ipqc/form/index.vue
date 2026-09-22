@@ -396,8 +396,11 @@ async function handleSubmit() {
       toast.success('新增成功')
     }
     uni.$emit('mes:qc:ipqc:reload')
+    // add by 棱信矩灵：待检任务列表（qc/pendinginspect）监听了本事件但此前无人派发，
+    // 导致从这里建单后返回，该待检项仍留在列表里，用户会以为没提交成功而重复建单
+    uni.$emit('mes:qc:pendinginspect:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -32,24 +32,24 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 {{ item.embeddingModel || '默认向量模型' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             <view class="line-clamp-2 mb-8rpx">
               {{ item.description || '-' }}
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               TopK {{ item.topK ?? '-' }} / 相似度 {{ item.similarityThreshold ?? '-' }}
             </view>
           </view>
-          <view class="mt-20rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-20rpx text-24rpx">
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

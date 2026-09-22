@@ -9,7 +9,7 @@
 
     <!-- 详情内容 -->
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
-      <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
         呼叫信息
       </view>
       <wd-cell-group border>
@@ -31,7 +31,7 @@
         </wd-cell>
       </wd-cell-group>
 
-      <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
         处置信息
       </view>
       <wd-cell-group border>
@@ -145,7 +145,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mes:pro:andon:record:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

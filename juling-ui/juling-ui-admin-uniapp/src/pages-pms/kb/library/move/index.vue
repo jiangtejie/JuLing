@@ -28,9 +28,9 @@
     </view>
 
     <!-- 目标位置选择 -->
-    <wd-popup v-model="targetVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="targetVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="flex flex-col" :style="{ maxHeight: '70vh' }">
-        <view class="p-32rpx pb-16rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main p-32rpx pb-16rpx text-center text-32rpx font-semibold">
           选择目标位置
         </view>
         <scroll-view scroll-y class="min-h-0 flex-1 px-32rpx">
@@ -47,7 +47,7 @@
               size="32rpx"
               :color="option.kind === 'document' ? '#1677ff' : '#fa8c16'"
             />
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ option.label }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ option.label }}</text>
             <wd-icon v-if="formData.targetKey === option.value" name="check" size="32rpx" color="#1677ff" />
           </view>
           <wd-empty v-if="!targetOptions.length" description="暂无可移动位置" />

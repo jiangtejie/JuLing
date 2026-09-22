@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="库存冻结状态"
@@ -21,10 +21,10 @@
       </wd-cell-group>
 
       <view class="mt-24rpx rounded-12rpx bg-white p-24rpx">
-        <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
           冻结设置
         </view>
-        <view class="mb-20rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mb-20rpx text-26rpx">
           冻结后该库存记录不可参与出库事务；解冻后恢复可用。
         </view>
         <wd-cell title="是否冻结" center>
@@ -124,7 +124,7 @@ async function handleSubmit() {
     toast.success(`${actionText}成功`)
     uni.$emit('mes:wm:materialstock:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

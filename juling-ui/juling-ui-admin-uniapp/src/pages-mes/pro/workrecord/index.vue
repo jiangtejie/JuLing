@@ -32,16 +32,16 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.workstationName || '-' }}
                 </view>
-                <view class="mt-6rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-6rpx text-24rpx">
                   {{ item.workstationCode || '-' }} / #{{ item.id }}
                 </view>
               </view>
               <dict-tag v-if="item.type != null" :type="DICT_TYPE.MES_PRO_WORK_RECORD_TYPE" :value="item.type" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>用户：{{ item.userNickname || '-' }}</view>
               <view>操作时间：{{ formatDateTime(item.createTime) || '-' }}</view>
               <view v-if="item.remark">

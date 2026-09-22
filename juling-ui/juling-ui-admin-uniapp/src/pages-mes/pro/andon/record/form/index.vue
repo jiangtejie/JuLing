@@ -10,7 +10,7 @@
     <!-- 表单区域 -->
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
-        <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
           呼叫信息
         </view>
         <wd-cell-group border>
@@ -71,7 +71,7 @@
         </wd-cell-group>
 
         <template v-if="isUpdateMode">
-          <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
             处置信息
           </view>
           <wd-cell-group border>
@@ -87,7 +87,7 @@
           </wd-cell-group>
         </template>
 
-        <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
           备注
         </view>
         <wd-cell-group border>
@@ -287,7 +287,7 @@ async function handleCreate() {
     toast.success('新增成功')
     uni.$emit('mes:pro:andon:record:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }
@@ -304,7 +304,7 @@ async function handleSave() {
     toast.success('保存成功')
     uni.$emit('mes:pro:andon:record:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }
@@ -335,7 +335,7 @@ async function handleFinish() {
     toast.success('处置成功')
     uni.$emit('mes:pro:andon:record:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

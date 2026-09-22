@@ -32,20 +32,20 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 {{ item.apiKey ? `${String(item.apiKey).slice(0, 8)}...` : '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             <view class="mb-8rpx">
               平台：<dict-tag :type="DICT_TYPE.AI_PLATFORM" :value="item.platform" />
             </view>
-            <view class="line-clamp-1 text-24rpx text-[#999]">
+            <view class="yd-text-hint line-clamp-1 text-24rpx">
               {{ item.url || '默认 API 地址' }}
             </view>
           </view>

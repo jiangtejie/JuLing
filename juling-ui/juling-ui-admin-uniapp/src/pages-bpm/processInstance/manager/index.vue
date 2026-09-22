@@ -33,40 +33,40 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
               <view class="mr-16rpx flex-1">
-                <view class="line-clamp-1 text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main line-clamp-1 text-32rpx font-semibold">
                   {{ item.name }}
                 </view>
-                <view class="mt-8rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-24rpx">
                   {{ item.categoryName || '-' }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.BPM_PROCESS_INSTANCE_STATUS" :value="item.status" />
             </view>
             <view class="mb-12rpx flex items-center">
-              <view class="mr-8rpx h-48rpx w-48rpx flex items-center justify-center rounded-full bg-[#1890ff] text-20rpx text-white">
+              <view class="yd-bg-primary mr-8rpx h-48rpx w-48rpx flex items-center justify-center rounded-full text-20rpx text-white">
                 {{ item.startUser?.nickname?.[0] || '?' }}
               </view>
               <view class="flex-1">
-                <view class="text-28rpx text-[#333]">
+                <view class="yd-text-main text-28rpx">
                   {{ item.startUser?.nickname || '-' }}
                 </view>
-                <view class="text-24rpx text-[#999]">
+                <view class="yd-text-hint text-24rpx">
                   {{ item.startUser?.deptName || '-' }}
                 </view>
               </view>
             </view>
             <view class="mb-12rpx rounded-8rpx bg-[#f7f8f9] p-16rpx">
               <view class="mb-8rpx flex items-center justify-between text-26rpx">
-                <text class="text-[#999]">发起时间</text>
-                <text class="text-[#333]">{{ formatDateTime(item.startTime) }}</text>
+                <text class="yd-text-hint">发起时间</text>
+                <text class="yd-text-main">{{ formatDateTime(item.startTime) }}</text>
               </view>
               <view v-if="item.endTime" class="flex items-center justify-between text-26rpx">
-                <text class="text-[#999]">结束时间</text>
-                <text class="text-[#333]">{{ formatDateTime(item.endTime) }}</text>
+                <text class="yd-text-hint">结束时间</text>
+                <text class="yd-text-main">{{ formatDateTime(item.endTime) }}</text>
               </view>
             </view>
             <view v-if="item.tasks && item.tasks.length > 0" class="mb-12rpx">
-              <view class="mb-8rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-26rpx">
                 当前审批任务
               </view>
               <view class="flex flex-wrap gap-8rpx">
@@ -83,7 +83,7 @@
             </view>
             <view
               v-if="item.status === BpmProcessInstanceStatus.RUNNING"
-              class="flex items-center justify-end border-t border-[#f0f0f0] -mt-8"
+              class="yd-border-light flex items-center justify-end border-t -mt-8rpx"
             >
               <wd-button
                 v-if="hasAccessByCodes(['bpm:process-instance:cancel-by-admin'])"

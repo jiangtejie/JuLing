@@ -4,10 +4,10 @@
       <!-- 月份切换 -->
       <view class="bg-white px-24rpx py-20rpx">
         <view
-          class="min-h-72rpx flex items-center justify-between rounded-8rpx bg-[#f7f8fa] px-24rpx"
+          class="yd-bg-subtle min-h-72rpx flex items-center justify-between rounded-8rpx px-24rpx"
           @click="monthVisible = true"
         >
-          <text class="text-30rpx text-[#333] font-semibold">
+          <text class="yd-text-main text-30rpx font-semibold">
             {{ monthText }}
           </text>
           <wd-icon name="arrow-down" size="28rpx" color="#666" />
@@ -34,10 +34,10 @@
           :panel-height="378"
         />
         <view
-          class="mt-16rpx flex items-center justify-center gap-32rpx text-22rpx text-[#999]"
+          class="yd-text-hint mt-16rpx flex items-center justify-center gap-32rpx text-22rpx"
         >
           <view class="flex items-center gap-8rpx">
-            <view class="h-10rpx w-10rpx rounded-full bg-[#52c41a]" />
+            <view class="yd-bg-success h-10rpx w-10rpx rounded-full" />
             正常
           </view>
           <view class="flex items-center gap-8rpx">
@@ -53,23 +53,23 @@
 
       <!-- 选日详情 -->
       <view class="mx-24rpx mt-20rpx rounded-16rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           {{ selectedDateText }} 打卡详情
         </view>
         <view
           v-if="loading"
-          class="py-40rpx text-center text-26rpx text-[#999]"
+          class="yd-text-hint py-40rpx text-center text-26rpx"
         >
           加载中
         </view>
         <view
           v-else-if="!selectedDayDetail"
-          class="py-40rpx text-center text-26rpx text-[#999]"
+          class="yd-text-hint py-40rpx text-center text-26rpx"
         >
           暂无当日明细
         </view>
         <template v-else>
-          <view class="mb-16rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-16rpx text-26rpx">
             {{
               selectedDayDetail.shiftName
                 || (selectedDayDetail.scheduled === false ? "休息" : "-")
@@ -78,7 +78,7 @@
           </view>
           <view
             v-if="!selectedDayDetail.clockList?.length"
-            class="py-24rpx text-center text-26rpx text-[#999]"
+            class="yd-text-hint py-24rpx text-center text-26rpx"
           >
             暂无打卡记录
           </view>
@@ -88,7 +88,7 @@
             class="mb-16rpx flex items-center justify-between gap-16rpx border-b border-b-[#f5f5f5] pb-16rpx last:mb-0 last:border-b-0 last:pb-0"
           >
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 {{
                   clock.type === HrmAttendanceClockType.OFF_DUTY
                     ? "下班"
@@ -96,7 +96,7 @@
                 }}
                 {{ formatDate(clock.clockTime, "HH:mm:ss") || "--:--" }}
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ clock.address || "无定位信息" }}
               </view>
             </view>
@@ -111,67 +111,67 @@
 
       <!-- 月汇总 -->
       <view class="mx-24rpx mt-20rpx rounded-16rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           {{ String(yearMonth.month).padStart(2, "0") }}月汇总
         </view>
         <view class="grid grid-cols-3 gap-16rpx">
           <view
-            class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-20rpx text-center"
+            class="yd-bg-subtle rounded-12rpx px-12rpx py-20rpx text-center"
           >
-            <view class="text-22rpx text-[#999]">
+            <view class="yd-text-hint text-22rpx">
               应出勤(天)
             </view>
-            <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
               {{ monthDetail?.summary?.attendDays ?? 0 }}
             </view>
           </view>
           <view
-            class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-20rpx text-center"
+            class="yd-bg-subtle rounded-12rpx px-12rpx py-20rpx text-center"
           >
-            <view class="text-22rpx text-[#999]">
+            <view class="yd-text-hint text-22rpx">
               实出勤(天)
             </view>
-            <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
               {{ formatHrmDays(monthDetail?.summary?.actualDays) }}
             </view>
           </view>
           <view
-            class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-20rpx text-center"
+            class="yd-bg-subtle rounded-12rpx px-12rpx py-20rpx text-center"
           >
-            <view class="text-22rpx text-[#999]">
+            <view class="yd-text-hint text-22rpx">
               迟到(次)
             </view>
-            <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
               {{ monthDetail?.summary?.lateCount ?? 0 }}
             </view>
           </view>
           <view
-            class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-20rpx text-center"
+            class="yd-bg-subtle rounded-12rpx px-12rpx py-20rpx text-center"
           >
-            <view class="text-22rpx text-[#999]">
+            <view class="yd-text-hint text-22rpx">
               早退(次)
             </view>
-            <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
               {{ monthDetail?.summary?.earlyCount ?? 0 }}
             </view>
           </view>
           <view
-            class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-20rpx text-center"
+            class="yd-bg-subtle rounded-12rpx px-12rpx py-20rpx text-center"
           >
-            <view class="text-22rpx text-[#999]">
+            <view class="yd-text-hint text-22rpx">
               缺卡(次)
             </view>
-            <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
               {{ monthDetail?.summary?.misscardCount ?? 0 }}
             </view>
           </view>
           <view
-            class="rounded-12rpx bg-[#f7f8fa] px-12rpx py-20rpx text-center"
+            class="yd-bg-subtle rounded-12rpx px-12rpx py-20rpx text-center"
           >
-            <view class="text-22rpx text-[#999]">
+            <view class="yd-text-hint text-22rpx">
               请假(天)
             </view>
-            <view class="mt-8rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mt-8rpx text-32rpx font-semibold">
               {{ formatHrmDays(monthDetail?.summary?.leaveDays) }}
             </view>
           </view>

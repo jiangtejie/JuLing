@@ -2,7 +2,7 @@
   <view class="w-full">
     <view v-for="(item, index) in items" :key="index" class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm">
       <view class="mb-16rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-semibold">退货明细 {{ index + 1 }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">退货明细 {{ index + 1 }}</text>
         <wd-button v-if="!disabled && items.length > 1" size="small" type="danger" variant="plain" @click="handleRemove(index)">
           删除
         </wd-button>
@@ -19,39 +19,39 @@
       />
 
       <view class="grid grid-cols-2 mb-20rpx gap-16rpx">
-        <view class="col-span-2 rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">产品</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle col-span-2 rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">产品</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ item.productName || '-' }}
           </text>
         </view>
-        <view class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">库存</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">库存</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ formatCount(item.stockCount) }}
           </text>
         </view>
-        <view class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">单位</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">单位</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ item.productUnitName || '-' }}
           </text>
         </view>
-        <view class="col-span-2 rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">条码</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle col-span-2 rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">条码</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ item.productBarCode || '-' }}
           </text>
         </view>
-        <view v-if="item.inCount != null" class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">已入库</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view v-if="item.inCount != null" class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">已入库</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ formatCount(item.inCount) }}
           </text>
         </view>
-        <view v-if="item.returnCount != null" class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">已退货</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view v-if="item.returnCount != null" class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">已退货</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ formatCount(item.returnCount) }}
           </text>
         </view>
@@ -67,21 +67,21 @@
         <wd-input-number v-model="item.taxPercent" :min="0" :precision="2" :disabled="disabled" />
       </wd-form-item>
       <view class="grid grid-cols-2 mb-20rpx gap-16rpx">
-        <view class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">金额</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">金额</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ formatMoney(item.totalProductPrice) }}
           </text>
         </view>
-        <view class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">税额</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">税额</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ formatMoney(item.taxPrice) }}
           </text>
         </view>
-        <view class="col-span-2 rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">含税金额</text>
-          <text class="mt-8rpx block break-all text-28rpx text-[#333] font-semibold">
+        <view class="yd-bg-subtle col-span-2 rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">含税金额</text>
+          <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ formatMoney(item.totalPrice) }}
           </text>
         </view>

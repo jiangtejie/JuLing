@@ -27,22 +27,22 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view class="shrink-0">
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
           </view>
-          <view class="mb-12rpx flex text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">设备数量：</text>
+          <view class="yd-text-sub mb-12rpx flex text-28rpx">
+            <text class="yd-text-hint mr-8rpx">设备数量：</text>
             {{ item.deviceCount || 0 }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">描述：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">描述：</text>
             {{ item.description || '-' }}
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

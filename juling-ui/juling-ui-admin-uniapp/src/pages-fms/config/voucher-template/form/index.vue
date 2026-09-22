@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -28,7 +28,7 @@
 
         <!-- 模板分录 -->
         <view class="p-24rpx">
-          <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
             模板分录
           </view>
           <TemplateEntryForm
@@ -172,7 +172,7 @@ async function handleSubmit() {
     }
     uni.$emit('fms:config:voucher-template:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

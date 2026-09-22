@@ -14,18 +14,18 @@
 
         <!-- 运营数据：待办与商品概况，点击下钻至对应列表 -->
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <text class="mb-20rpx block text-30rpx text-[#333] font-semibold">运营数据</text>
+          <text class="yd-text-main mb-20rpx block text-30rpx font-semibold">运营数据</text>
           <view class="grid grid-cols-2 gap-20rpx">
             <view
               v-for="item in operationCards"
               :key="item.key"
-              class="rounded-8rpx bg-[#f7f8fa] px-20rpx py-18rpx"
+              class="yd-bg-subtle rounded-8rpx px-20rpx py-18rpx"
               @click="handleOpen(item.route)"
             >
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 {{ item.label }}
               </view>
-              <view class="mt-8rpx text-34rpx text-[#333] font-semibold">
+              <view class="yd-text-main mt-8rpx text-34rpx font-semibold">
                 {{ item.value }}
               </view>
             </view>
@@ -58,18 +58,18 @@
         <!-- 会员概览 -->
         <view v-if="activeTab === 0" class="mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-20rpx flex items-center justify-between">
-            <text class="text-30rpx text-[#333] font-semibold">会员概览</text>
-            <text class="text-26rpx text-[#999]">客单价 ￥{{ atvText }}</text>
+            <text class="yd-text-main text-30rpx font-semibold">会员概览</text>
+            <text class="yd-text-hint text-26rpx">客单价 ￥{{ atvText }}</text>
           </view>
           <view class="mb-20rpx flex gap-16rpx">
             <view
               v-for="item in overviewItems"
               :key="item.label"
-              class="flex-1 rounded-12rpx bg-[#f7f8fa] px-16rpx py-20rpx"
+              class="yd-bg-subtle flex-1 rounded-12rpx px-16rpx py-20rpx"
             >
-              <text class="block text-24rpx text-[#999]">{{ item.label }}</text>
-              <text class="mt-8rpx block text-36rpx text-[#333] font-semibold">{{ item.value }}</text>
-              <text class="mt-4rpx block text-22rpx" :class="item.rate >= 0 ? 'text-[#f5222d]' : 'text-[#52c41a]'">
+              <text class="yd-text-hint block text-24rpx">{{ item.label }}</text>
+              <text class="yd-text-main mt-8rpx block text-36rpx font-semibold">{{ item.value }}</text>
+              <text class="mt-4rpx block text-22rpx" :class="item.rate >= 0 ? 'yd-text-danger' : 'yd-text-success'">
                 环比 {{ item.rate >= 0 ? '+' : '' }}{{ item.rate }}%
               </text>
             </view>
@@ -80,17 +80,17 @@
 
         <!-- 会员终端 -->
         <view v-if="activeTab === 1" class="pt-24rpx">
-          <StatisticsCard :section="terminalSection" :rows="terminalRows" />
+          <StatisticsCard :section="terminalSection" :rows="terminalRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
 
         <!-- 交易量趋势 -->
         <view v-if="activeTab === 2" class="pt-24rpx">
-          <StatisticsCard :section="trendSection" :rows="trendRows" />
+          <StatisticsCard :section="trendSection" :rows="trendRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
 
         <!-- 用户统计 -->
         <view v-if="activeTab === 3" class="pt-24rpx">
-          <StatisticsCard :section="registerSection" :rows="registerRows" />
+          <StatisticsCard :section="registerSection" :rows="registerRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
 
         <view class="h-40rpx" />
@@ -144,6 +144,7 @@ const activeTab = ref(0) // 当前分组：0 会员概览 / 1 会员终端 / 2 �
 const orderComparison = ref<Record<string, any>>({ value: {}, reference: {} }) // 交易对照（今日 vs 昨日）
 const userComparison = ref<Record<string, any>>({ value: {}, reference: {} }) // 会员对照（今日 vs 昨日）
 const cache = reactive<Record<string, any>>({}) // 分组数据缓存：key=`分组@时间区间`
+const tabError = ref(false) // 当前分组的加载失败标记（与「确实没有数据」区分开）
 
 const times = computed(() => formatDateRange([filters.startTime, filters.endTime])) // 查询时间区间
 function tabCacheKey(tab: number) {
@@ -289,18 +290,32 @@ async function loadBase() {
   }
 }
 
-/** 加载指定分组数据（按时间区间缓存，命中则跳过） */
+/** 加载指定分组数据（按时间区间缓存，命中则跳过；加载失败不写缓存，便于切回时重试） */
 async function loadTab(tab: number) {
   const key = tabCacheKey(tab)
   if (cache[key] !== undefined) {
+    tabError.value = false
     return
   }
+  // add by 棱信矩灵：此前失败会把空对象/空数组写进缓存，而命中缓存即 return，
+  // 导致一次网络抖动后该分组永久显示「暂无统计数据」，切走再切回也不会重新请求。
+  // 现改为：失败不写缓存 + 置错误态，由 StatisticsCard 展示「加载失败 / 重新加载」。
+  tabError.value = false
   if (tab === 0) {
-    cache[key] = await getMemberAnalyse({ times: times.value }).catch(() => ({})) || {}
+    const analyse = await getMemberAnalyse({ times: times.value }).catch(() => undefined)
+    if (analyse === undefined) {
+      tabError.value = true
+      return
+    }
+    cache[key] = analyse || {}
     return
   }
   if (tab === 1) {
-    const terminalData = await getMemberTerminalStatisticsList().catch(() => [])
+    const terminalData = await getMemberTerminalStatisticsList().catch(() => undefined)
+    if (terminalData === undefined) {
+      tabError.value = true
+      return
+    }
     // 终端用字典标签
     cache[key] = normalizeRows(terminalData).map(item => ({
       ...item,
@@ -309,7 +324,11 @@ async function loadTab(tab: number) {
     return
   }
   if (tab === 2) {
-    const trendList = await getTradeStatisticsList({ times: times.value }).catch(() => [])
+    const trendList = await getTradeStatisticsList({ times: times.value }).catch(() => undefined)
+    if (trendList === undefined) {
+      tabError.value = true
+      return
+    }
     // 明细金额由分转元，避免折线图金额 ×100
     cache[key] = normalizeRows(trendList).map(item => ({
       ...item,
@@ -320,7 +339,11 @@ async function loadTab(tab: number) {
     }))
     return
   }
-  const registerList = await getMemberRegisterCountList({ times: times.value }).catch(() => [])
+  const registerList = await getMemberRegisterCountList({ times: times.value }).catch(() => undefined)
+  if (registerList === undefined) {
+    tabError.value = true
+    return
+  }
   cache[key] = normalizeRows(registerList)
 }
 
@@ -330,6 +353,17 @@ async function handleTabChange({ index }: { index: number }) {
   loading.value = true
   try {
     await loadTab(index)
+  } finally {
+    loading.value = false
+  }
+}
+
+/** add by 棱信矩灵：加载失败后重试当前分组（失败时未写缓存，这里再兜底清一次） */
+async function handleRetryTab() {
+  delete cache[tabCacheKey(activeTab.value)]
+  loading.value = true
+  try {
+    await loadTab(activeTab.value)
   } finally {
     loading.value = false
   }

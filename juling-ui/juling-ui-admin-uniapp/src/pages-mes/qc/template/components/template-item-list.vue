@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
-    <view v-if="showTitle" class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+    <view v-if="showTitle" class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+      <view class="yd-text-main text-30rpx font-semibold">
         产品关联
       </view>
       <wd-button
@@ -14,37 +14,37 @@
         新增
       </wd-button>
     </view>
-    <view v-if="loading && list.length === 0" class="p-24rpx text-28rpx text-[#999]">
+    <view v-if="loading && list.length === 0" class="yd-text-hint p-24rpx text-28rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="p-24rpx text-28rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint p-24rpx text-28rpx">
       暂无产品关联
     </view>
     <view v-else class="p-24rpx">
       <view
         v-for="item in list"
         :key="item.id"
-        class="mb-20rpx rounded-12rpx bg-[#f8f9fb] p-20rpx last:mb-0"
+        class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx last:mb-0"
       >
         <view class="mb-12rpx">
-          <view class="truncate text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main truncate text-28rpx font-semibold">
             {{ item.itemName || '-' }}
           </view>
-          <view class="mt-6rpx truncate text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-6rpx truncate text-24rpx">
             {{ item.itemCode || '-' }}
           </view>
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">规格型号：</text>{{ item.specification || '-' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">规格型号：</text>{{ item.specification || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">最低检测数：</text>{{ formatDisplayValue(item.quantityCheck) }} {{ item.unitMeasureName || '' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">最低检测数：</text>{{ formatDisplayValue(item.quantityCheck) }} {{ item.unitMeasureName || '' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">最大不合格数：</text>{{ formatQuantityUnqualified(item.quantityUnqualified) }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">最大不合格数：</text>{{ formatQuantityUnqualified(item.quantityUnqualified) }}
         </view>
-        <view class="mb-16rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">缺陷率：</text>致命 {{ formatDisplayPercent(item.criticalRate) }} / 严重 {{ formatDisplayPercent(item.majorRate) }} / 轻微 {{ formatDisplayPercent(item.minorRate) }}
+        <view class="yd-text-sub mb-16rpx text-26rpx">
+          <text class="yd-text-hint">缺陷率：</text>致命 {{ formatDisplayPercent(item.criticalRate) }} / 严重 {{ formatDisplayPercent(item.majorRate) }} / 轻微 {{ formatDisplayPercent(item.minorRate) }}
         </view>
         <view v-if="hasAccessByCodes(['mes:qc-template:update'])" class="flex gap-16rpx">
           <wd-button class="flex-1" size="small" variant="plain" @click="handleEdit(item)">
@@ -56,14 +56,14 @@
         </view>
       </view>
     </view>
-    <view v-if="canLoadMore" class="border-t border-[#f5f5f5] px-24rpx py-20rpx text-center">
+    <view v-if="canLoadMore" class="yd-border-light border-t px-24rpx py-20rpx text-center">
       <wd-button size="small" type="primary" variant="plain" :loading="loading" @click="loadNextPage">
         {{ loadFailed ? '重新加载' : `加载更多（已加载 ${list.length} / 共 ${total} 条）` }}
       </wd-button>
     </view>
     <view
       v-else-if="list.length > 0"
-      class="border-t border-[#f5f5f5] px-24rpx py-20rpx text-center text-24rpx text-[#999]"
+      class="yd-text-hint yd-border-light border-t px-24rpx py-20rpx text-center text-24rpx"
     >
       已加载全部 {{ total }} 条
     </view>
@@ -75,12 +75,12 @@
       safe-area-inset-bottom
       custom-style="height: 84vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ editingId ? '编辑产品关联' : '新增产品关联' }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

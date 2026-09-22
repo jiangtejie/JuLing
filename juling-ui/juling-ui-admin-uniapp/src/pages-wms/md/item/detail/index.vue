@@ -20,7 +20,7 @@
       </wd-cell-group>
 
       <!-- 规格列表 -->
-      <view class="mx-24rpx mb-16rpx mt-24rpx text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main mx-24rpx mb-16rpx mt-24rpx text-30rpx font-semibold">
         规格信息
       </view>
       <view
@@ -28,7 +28,7 @@
         :key="sku.id || sku.code"
         class="mx-24rpx mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
       >
-        <view class="border-b border-b-[#f5f5f5] px-24rpx py-20rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main border-b border-b-[#f5f5f5] px-24rpx py-20rpx text-28rpx font-semibold">
           {{ sku.name || '-' }}
         </view>
         <wd-cell-group border>
@@ -67,7 +67,8 @@
 import type { Item } from '@/api/wms/md/item'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { deleteItem, getItem } from '@/api/wms/md/item'
 import { useAccess } from '@/hooks/useAccess'
 import { formatDimensionText, formatPrice, formatWeight } from '@/pages-wms/utils/format'
@@ -131,13 +132,13 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('wms:item:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

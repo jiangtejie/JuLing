@@ -14,14 +14,14 @@
     <template v-if="fmsStore.accountSet">
       <!-- 表单区域 -->
       <view class="p-24rpx pb-160rpx">
-        <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
           加载中...
         </view>
         <template v-else>
           <!-- 缺少财务参数提示 -->
           <view
             v-if="!financeParameter"
-            class="rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]"
+            class="yd-text-link yd-bg-info-soft rounded-12rpx px-24rpx py-20rpx text-24rpx"
           >
             {{ accountSetInfo?.initialized ? '当前账套缺少财务参数，请检查初始化数据' : '当前账套尚未初始化，请先完成账套初始化' }}
           </view>
@@ -77,7 +77,7 @@
                         :max="FMS_SUBJECT_CODE_LENGTH_MAX"
                         :precision="0"
                       />
-                      <text v-if="index < formData.subjectCodeRules.length - 1" class="text-28rpx text-[#999]">
+                      <text v-if="index < formData.subjectCodeRules.length - 1" class="yd-text-hint text-28rpx">
                         -
                       </text>
                     </template>

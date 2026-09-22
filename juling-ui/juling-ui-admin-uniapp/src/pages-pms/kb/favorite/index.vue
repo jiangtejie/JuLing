@@ -32,7 +32,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view class="flex shrink-0 items-center gap-12rpx">
@@ -42,19 +42,19 @@
               <wd-icon name="star-fill" size="36rpx" color="#fa8c16" @click.stop="handleCancelFavorite(item)" />
             </view>
           </view>
-          <view v-if="item.description" class="mb-8rpx truncate text-26rpx text-[#999]">
+          <view v-if="item.description" class="yd-text-hint mb-8rpx truncate text-26rpx">
             {{ item.description }}
           </view>
-          <view v-if="item.fileType || item.fileSize != null" class="mb-8rpx text-24rpx text-[#999]">
+          <view v-if="item.fileType || item.fileSize != null" class="yd-text-hint mb-8rpx text-24rpx">
             <text v-if="item.fileType">{{ item.fileType.toUpperCase() }}</text>
             <text v-if="item.fileType && item.fileSize != null"> · </text>
             <text v-if="item.fileSize != null">{{ formatKnowledgeFileSize(item.fileSize) }}</text>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text class="min-w-0 flex-1 truncate">{{ item.libraryName }}</text>
-            <text class="shrink-0 text-24rpx text-[#999]">关注于 {{ formatDateTime(item.createTime) || '-' }}</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">关注于 {{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
-          <view class="mt-4rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-4rpx text-24rpx">
             内容更新于 {{ formatDateTime(item.targetUpdateTime) || '-' }}
           </view>
         </view>

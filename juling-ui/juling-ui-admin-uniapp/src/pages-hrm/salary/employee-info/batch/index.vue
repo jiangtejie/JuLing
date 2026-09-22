@@ -74,13 +74,13 @@
 
       <view
         v-if="isPendingChange"
-        class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] px-24rpx py-20rpx text-26rpx text-[#d48806]"
+        class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx"
       >
         批量调整将在生效日期前保持待生效，不会提前修改所选员工的薪资档案。
       </view>
 
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           调薪项
         </view>
         <view
@@ -88,13 +88,13 @@
           :key="item.code"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-28rpx text-[#333] font-medium">
+          <view class="yd-text-main mb-8rpx text-28rpx font-medium">
             {{ item.name || '-' }}
           </view>
-          <view class="mb-16rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-16rpx text-24rpx">
             编码：{{ item.code ?? '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             {{ formData.type === HrmSalaryBatchAdjustType.PERCENT ? '调薪比例（%）' : '调薪金额（元）' }}
           </view>
           <wd-input-number
@@ -105,7 +105,7 @@
             :max="formData.type === HrmSalaryBatchAdjustType.PERCENT ? 9999.99 : 9999999.99"
           />
         </view>
-        <view v-if="!formData.salaryOptions.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+        <view v-if="!formData.salaryOptions.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
           暂无可调薪项
         </view>
       </view>

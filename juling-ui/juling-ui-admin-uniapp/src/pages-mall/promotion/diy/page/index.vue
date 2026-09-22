@@ -35,17 +35,17 @@
               <wd-img :src="item.previewPicUrls[0]" width="112rpx" height="112rpx" radius="8rpx" mode="aspectFill" />
             </view>
             <view class="min-w-0 flex-1">
-              <view class="mb-8rpx min-w-0 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-8rpx min-w-0 truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="truncate text-26rpx text-[#999]">
+              <view class="yd-text-hint truncate text-26rpx">
                 {{ item.remark || `模板编号：${item.templateId ?? '-'}` }}
               </view>
             </view>
           </view>
 
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

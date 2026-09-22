@@ -1,8 +1,8 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;" @close="handleClose">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;" @close="handleClose">
     <view class="p-32rpx">
       <view class="mb-24rpx flex items-center justify-between">
-        <text class="text-32rpx text-[#333] font-semibold">重置密码</text>
+        <text class="yd-text-main text-32rpx font-semibold">重置密码</text>
         <wd-icon name="close" size="20px" @click="handleClose" />
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">

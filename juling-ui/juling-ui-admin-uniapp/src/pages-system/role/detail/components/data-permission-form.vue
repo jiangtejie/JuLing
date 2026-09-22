@@ -8,7 +8,7 @@
   >
     <view class="p-32rpx">
       <view class="mb-24rpx flex items-center justify-between">
-        <text class="text-32rpx text-[#333] font-semibold">数据权限</text>
+        <text class="yd-text-main text-32rpx font-semibold">数据权限</text>
         <wd-icon name="close" size="20px" @click="handleClose" />
       </view>
 

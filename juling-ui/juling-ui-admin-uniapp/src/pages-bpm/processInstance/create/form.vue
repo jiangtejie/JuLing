@@ -10,7 +10,7 @@
     <!-- 表单加载状态 -->
     <view v-if="loading" class="py-100rpx text-center">
       <wd-loading size="40rpx" />
-      <view class="mt-24rpx text-26rpx text-[#999]">
+      <view class="yd-text-hint mt-24rpx text-26rpx">
         加载表单中...
       </view>
     </view>
@@ -32,7 +32,7 @@
       <view class="mx-24rpx mt-24rpx rounded-16rpx bg-white">
         <view class="p-24rpx">
           <view class="mb-16rpx flex items-center justify-between">
-            <text class="text-28rpx text-[#333] font-bold">流程预览</text>
+            <text class="yd-text-main text-28rpx font-bold">流程预览</text>
             <wd-loading v-if="processTimeLineLoading" size="32rpx" />
           </view>
 
@@ -45,7 +45,7 @@
 
           <!-- 无流程预览数据 -->
           <view v-else-if="!processTimeLineLoading" class="py-40rpx text-center">
-            <text class="text-24rpx text-[#999]">暂无流程预览数据</text>
+            <text class="yd-text-hint text-24rpx">暂无流程预览数据</text>
           </view>
         </view>
       </view>

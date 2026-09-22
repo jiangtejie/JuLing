@@ -3,19 +3,19 @@
   <view>
     <template v-if="isVideo">
       <video v-if="url" :src="url" class="w-full rounded-12rpx" style="height: 360rpx" object-fit="contain" />
-      <text v-else class="text-26rpx text-[#999]">暂无视频</text>
+      <text v-else class="yd-text-hint text-26rpx">暂无视频</text>
     </template>
     <template v-else>
       <view
         v-if="url"
-        class="inline-flex items-center rounded-full bg-[#f5f5f5] px-24rpx py-12rpx active:opacity-70"
+        class="yd-bg-page inline-flex items-center rounded-full px-24rpx py-12rpx active:opacity-70"
         @click="handleVoiceTap"
       >
-        <text class="text-26rpx" :class="playable ? 'text-[#576b95]' : 'text-[#999]'">
+        <text class="text-26rpx" :class="playable ? 'yd-text-link' : 'yd-text-hint'">
           {{ voiceLabel }}
         </text>
       </view>
-      <text v-else class="text-26rpx text-[#999]">暂无语音</text>
+      <text v-else class="yd-text-hint text-26rpx">暂无语音</text>
     </template>
   </view>
 </template>

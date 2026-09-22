@@ -8,7 +8,7 @@
     @close="visible = false"
   >
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
@@ -57,7 +57,7 @@
           />
         </wd-cell-group>
       </wd-form>
-      <view class="mt-16rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint mt-16rpx text-24rpx">
         移动端请手动填写经纬度；范围单位为米。
       </view>
       <view class="mt-32rpx">

@@ -16,7 +16,7 @@
       </template>
       <template #title>
         <view class="max-w-400rpx flex items-center justify-center" @click="conversationVisible = true">
-          <text class="truncate text-32rpx text-[#333] font-semibold">
+          <text class="yd-text-main truncate text-32rpx font-semibold">
             {{ activeConversation?.title || 'AI 助手' }}
           </text>
         </view>

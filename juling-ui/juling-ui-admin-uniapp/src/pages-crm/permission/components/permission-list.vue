@@ -2,7 +2,7 @@
   <view :class="embedded ? '' : 'mt-24rpx'">
     <!-- 团队成员（嵌入模式由外层底部操作触发新增/退出） -->
     <view v-if="!embedded" class="mb-16rpx flex items-center justify-between px-24rpx">
-      <text class="text-30rpx text-[#333] font-semibold">团队成员</text>
+      <text class="yd-text-main text-30rpx font-semibold">团队成员</text>
       <view class="flex gap-12rpx">
         <wd-button v-if="canQuitTeam" size="small" type="danger" variant="plain" @click="handleQuit">
           退出
@@ -19,18 +19,18 @@
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <text class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+          <text class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
             {{ item.nickname || '-' }}
           </text>
           <dict-tag :type="DICT_TYPE.CRM_PERMISSION_LEVEL" :value="item.level" />
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           部门：{{ item.deptName || '-' }}
         </view>
-        <view class="mb-12rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-12rpx text-26rpx">
           岗位：{{ item.postNames?.length ? item.postNames.join('、') : '-' }}
         </view>
-        <view class="mb-16rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-26rpx">
           加入时间：{{ formatDateTime(item.createTime) || '-' }}
         </view>
         <view v-if="showAction && validateOwnerUser && item.level !== PermissionLevelEnum.OWNER" class="flex justify-end gap-12rpx">
@@ -49,7 +49,7 @@
         </view>
       </view>
       <wd-empty v-if="!loading && list.length === 0" icon="content" tip="暂无团队成员" />
-      <view v-if="loading" class="p-24rpx text-center text-28rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint p-24rpx text-center text-28rpx">
         加载中...
       </view>
     </view>
@@ -62,8 +62,8 @@
       custom-style="border-radius: 24rpx 24rpx 0 0;"
     >
       <view class="max-h-[80vh] overflow-y-auto bg-white pb-32rpx">
-        <view class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-24rpx">
-          <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-24rpx">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formMode === 'create' ? '新增团队成员' : '编辑团队成员' }}
           </view>
           <wd-icon name="close" size="36rpx" @click="formVisible = false" />

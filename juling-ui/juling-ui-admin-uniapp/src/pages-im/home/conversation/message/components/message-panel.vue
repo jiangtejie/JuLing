@@ -33,7 +33,7 @@
     >
       <wd-icon name="exclamation-circle" size="32rpx" color="#d48806" />
       <text class="min-w-0 flex-1 text-26rpx text-[#8f5b00]">对方还不是你的朋友</text>
-      <text class="text-26rpx text-[#576b95]" @click="openFriendProfile">添加朋友</text>
+      <text class="yd-text-link text-26rpx" @click="openFriendProfile">添加朋友</text>
     </view>
 
     <!-- 群聊置顶与通话横幅 -->
@@ -61,7 +61,7 @@
       v-model="messageList"
       use-chat-record-mode
       :fixed="false"
-      class="min-h-0 flex-1 bg-[#ededed]"
+      class="yd-bg-subtle min-h-0 flex-1"
       :default-page-size="MESSAGE_CHAT_PAGE_SIZE"
       bg-color="#ededed"
       bottom-bg-color="#fff"
@@ -149,14 +149,14 @@
     <view class="fixed bottom-190rpx right-24rpx z-20 flex flex-col items-end gap-16rpx">
       <view
         v-if="mentionPromptVisible"
-        class="rounded-full bg-white px-24rpx py-14rpx text-25rpx text-[#fa5151] shadow-lg"
+        class="yd-text-danger rounded-full bg-white px-24rpx py-14rpx text-25rpx shadow-lg"
         @click="locateMentionMessage"
       >
         有人@我
       </view>
       <view
         v-if="newMessageCount > 0"
-        class="rounded-full bg-white px-24rpx py-14rpx text-25rpx text-[#576b95] shadow-lg"
+        class="yd-text-link rounded-full bg-white px-24rpx py-14rpx text-25rpx shadow-lg"
         @click="backToLatest"
       >
         {{ newMessageCount }} 条新消息

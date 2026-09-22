@@ -3,7 +3,7 @@
     <view class="p-24rpx pb-60rpx">
       <!-- 项目基础字段 -->
       <view class="mb-16rpx flex items-center justify-between">
-        <text class="text-30rpx text-[#333] font-semibold">项目基本信息</text>
+        <text class="yd-text-main text-30rpx font-semibold">项目基本信息</text>
         <wd-button
           v-if="project.adminStatus && editable && hasAccessByCodes(['pms:pm:project:update'])"
           size="small" type="primary"
@@ -25,10 +25,10 @@
         <view class="mt-32rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 归档项目
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 归档后项目只允许查看，不能继续维护项目中的迭代和工作项。
               </view>
             </view>
@@ -39,10 +39,10 @@
           <wd-divider />
           <view class="mt-16rpx flex items-center justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 移入回收站
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 项目进入回收站后不可访问；只有项目拥有者可以在回收站彻底删除。
               </view>
             </view>

@@ -1,5 +1,5 @@
 <template>
-  <view class="h-full flex flex-col bg-[#f5f5f5]">
+  <view class="yd-bg-page h-full flex flex-col">
     <!-- 搜索 -->
     <view class="conversation-search-wrap">
       <wd-search

@@ -28,7 +28,7 @@
               <view class="mr-16rpx h-48rpx w-48rpx flex items-center justify-center rounded-8rpx" :class="getTypeIconBg(item.type)">
                 <wd-icon :name="getTypeIcon(item.type)" size="20px" color="#fff" />
               </view>
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name }}
               </view>
             </view>
@@ -36,7 +36,7 @@
           </view>
           <!-- 第二行：类型描述、子菜单入口 -->
           <view class="mt-12rpx flex items-center justify-between pl-64rpx">
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               {{ getTypeDesc(item) }}
             </view>
             <view
@@ -44,7 +44,7 @@
               class="flex items-center"
               @click.stop="handleEnterChildren(item)"
             >
-              <text class="text-24rpx text-[#1890ff]">子菜单 ({{ item.children.length }})</text>
+              <text class="yd-text-link text-24rpx">子菜单 ({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>
@@ -127,13 +127,13 @@ function getTypeIcon(type: number): string {
 function getTypeIconBg(type: number): string {
   switch (type) {
     case SystemMenuTypeEnum.DIR:
-      return 'bg-[#1890ff]'
+      return 'yd-bg-primary'
     case SystemMenuTypeEnum.MENU:
-      return 'bg-[#52c41a]'
+      return 'yd-bg-success'
     case SystemMenuTypeEnum.BUTTON:
       return 'bg-[#faad14]'
     default:
-      return 'bg-[#1890ff]'
+      return 'yd-bg-primary'
   }
 }
 

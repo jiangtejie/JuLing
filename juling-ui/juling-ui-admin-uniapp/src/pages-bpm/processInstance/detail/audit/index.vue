@@ -26,8 +26,8 @@
           <!-- 下一个节点的审批人 -->
           <view v-if="isApprove && nextAssigneesActivityNode.length > 0" class="p-24rpx">
             <view class="mb-16rpx flex items-center">
-              <text class="mr-8rpx text-[#f56c6c]">*</text>
-              <text class="text-28rpx text-[#333]">下一个节点的审批人</text>
+              <text class="yd-text-danger mr-8rpx">*</text>
+              <text class="yd-text-main text-28rpx">下一个节点的审批人</text>
             </view>
             <ProcessInstanceTimeline
               :activity-nodes="nextAssigneesActivityNode"
@@ -37,10 +37,10 @@
             />
           </view>
           <!-- 签名 -->
-          <view v-if="isApprove && taskInfo?.signEnable" class="border-b border-[#eee] p-24rpx">
+          <view v-if="isApprove && taskInfo?.signEnable" class="yd-border-base border-b p-24rpx">
             <view class="mb-16rpx flex items-center">
-              <text class="mr-8rpx text-[#f56c6c]">*</text>
-              <text class="text-28rpx text-[#333]">签名</text>
+              <text class="yd-text-danger mr-8rpx">*</text>
+              <text class="yd-text-main text-28rpx">签名</text>
             </view>
             <view class="flex items-center gap-16rpx">
               <wd-button type="primary" size="small" @click="openSignatureModal">
@@ -97,10 +97,10 @@
     </view>
 
     <!-- 签名弹窗 -->
-    <wd-popup v-model="showSignatureModal" position="bottom" custom-style="height: 60vh;">
+    <wd-popup v-model="showSignatureModal" position="bottom" safe-area-inset-bottom custom-style="height: 60vh;">
       <view class="h-full flex flex-col">
-        <view class="flex items-center justify-between border-b border-[#eee] p-24rpx">
-          <text class="text-32rpx text-[#333] font-bold">手写签名</text>
+        <view class="yd-border-base flex items-center justify-between border-b p-24rpx">
+          <text class="yd-text-main text-32rpx font-bold">手写签名</text>
           <wd-icon name="close" size="40rpx" @click="showSignatureModal = false" />
         </view>
         <view class="flex-1 p-24rpx">
@@ -538,7 +538,7 @@ async function handleSubmit() {
     uni.$emit('bpm:processInstance:reload')
     uni.$emit('bpm:task:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

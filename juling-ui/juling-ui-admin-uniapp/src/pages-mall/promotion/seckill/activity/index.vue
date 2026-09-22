@@ -31,19 +31,19 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || `活动 #${item.id}` }}
             </view>
             <view class="flex shrink-0 items-center gap-12rpx">
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
-              <text class="text-26rpx text-[#fa8c16]">{{ seckillPriceText(item) }}</text>
+              <text class="yd-text-warning text-26rpx">{{ seckillPriceText(item) }}</text>
             </view>
           </view>
-          <view class="text-26rpx text-[#666]">
-            <text class="text-[#999]">开始时间：</text>{{ formatDateTime(item.startTime) || '-' }}
+          <view class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint">开始时间：</text>{{ formatDateTime(item.startTime) || '-' }}
           </view>
-          <view class="mt-4rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">结束时间：</text>{{ formatDateTime(item.endTime) || '-' }}
+          <view class="yd-text-sub mt-4rpx text-26rpx">
+            <text class="yd-text-hint">结束时间：</text>{{ formatDateTime(item.endTime) || '-' }}
           </view>
         </view>
       </view>

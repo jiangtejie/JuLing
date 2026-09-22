@@ -5,20 +5,20 @@
     root-portal
     custom-style="border-radius: 24rpx 24rpx 0 0;"
   >
-    <view v-if="card" class="bg-[#f5f5f5] pb-[calc(24rpx+env(safe-area-inset-bottom))]">
+    <view v-if="card" class="yd-bg-page pb-[calc(24rpx+env(safe-area-inset-bottom))]">
       <!-- 顶部标题 -->
       <view class="flex items-center justify-between bg-white px-28rpx py-22rpx">
-        <text class="text-32rpx text-[#333] font-semibold">群聊资料</text>
+        <text class="yd-text-main text-32rpx font-semibold">群聊资料</text>
         <wd-icon name="close" size="34rpx" color="#999" @click="visible = false" />
       </view>
 
       <!-- 群资料摘要 -->
       <view class="flex flex-col items-center bg-white px-32rpx pb-38rpx pt-24rpx">
         <ImAvatar :src="card.avatar" :name="card.name" :round="false" size="128rpx" />
-        <text class="mt-20rpx max-w-full truncate text-36rpx text-[#222] font-medium">
+        <text class="yd-text-strong mt-20rpx max-w-full truncate text-36rpx font-medium">
           {{ card.name || '群聊' }}
         </text>
-        <text class="mt-10rpx text-25rpx text-[#999]">
+        <text class="yd-text-hint mt-10rpx text-25rpx">
           {{ card.memberCount ? `${card.memberCount} 位成员` : '群聊' }}
         </text>
       </view>
@@ -33,7 +33,7 @@
         <wd-button v-if="canApply" type="primary" block @click="handleApply">
           申请加入群聊
         </wd-button>
-        <view v-else class="py-20rpx text-center text-26rpx text-[#999]">
+        <view v-else class="yd-text-hint py-20rpx text-center text-26rpx">
           该群聊当前不可加入
         </view>
       </view>

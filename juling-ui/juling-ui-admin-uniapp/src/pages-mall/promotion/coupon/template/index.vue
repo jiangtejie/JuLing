@@ -31,16 +31,16 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || `优惠券模板 #${item.id}` }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
 
-          <view class="mb-12rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mb-12rpx text-26rpx">
             领取 {{ item.takeCount || 0 }} / 使用 {{ item.useCount || 0 }}
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>发放：{{ item.totalCount === -1 ? '不限' : (item.totalCount ?? '-') }}</text>
             <text>门槛：{{ formatDisplayMoney(item.usePrice) }}</text>
           </view>

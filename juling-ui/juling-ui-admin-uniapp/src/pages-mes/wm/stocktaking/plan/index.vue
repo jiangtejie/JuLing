@@ -31,31 +31,31 @@
           <view class="p-24rpx" @click="handleDetail(item)">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.code || '-' }}
                 </view>
-                <view class="mt-6rpx truncate text-26rpx text-[#666]">
+                <view class="yd-text-sub mt-6rpx truncate text-26rpx">
                   {{ item.name || '-' }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">盘点类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">盘点类型：</text>
               <dict-tag :type="DICT_TYPE.MES_WM_STOCK_TAKING_TYPE" :value="item.type" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">计划时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">计划时间：</text>
               <text class="min-w-0 flex-1 truncate">{{ getPlanTimeText(item) }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">盲盘：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">盲盘：</text>
               <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="String(Boolean(item.blindFlag))" />
-              <text class="mx-16rpx text-[#ddd]">|</text>
-              <text class="mr-8rpx shrink-0 text-[#999]">冻结库存：</text>
+              <text class="yd-text-muted mx-16rpx">|</text>
+              <text class="yd-text-hint mr-8rpx shrink-0">冻结库存：</text>
               <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="String(Boolean(item.frozen))" />
             </view>
-            <view class="text-26rpx text-[#999]">
+            <view class="yd-text-hint text-26rpx">
               创建时间：{{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>

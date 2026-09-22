@@ -20,7 +20,7 @@
 
         <!-- 盘点明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">盘点产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">盘点产品清单</text>
           <wd-button size="small" type="primary" variant="plain" @click="itemEditorRef?.handleAdd()">
             添加
           </wd-button>
@@ -31,7 +31,7 @@
 
         <!-- 合计信息 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">合计信息</text>
+          <text class="yd-text-main text-28rpx font-semibold">合计信息</text>
         </view>
         <wd-cell-group border>
           <wd-cell title="盈亏数量" :value="formatCount(formData.totalCount)" />
@@ -158,7 +158,7 @@ async function handleSubmit() {
     }
     uni.$emit('erp:stock-check:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

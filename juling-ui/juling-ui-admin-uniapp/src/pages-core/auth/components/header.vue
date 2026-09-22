@@ -1,7 +1,7 @@
 <template>
   <view class="header flex flex-col items-center pb-60rpx pt-120rpx">
     <wd-img class="mb-24rpx" src="/static/logo.svg" width="160rpx" height="160rpx" mode="aspectFit" />
-    <view class="text-44rpx text-[#1890ff] font-bold">
+    <view class="yd-text-link text-44rpx font-bold">
       {{ title }}
     </view>
   </view>

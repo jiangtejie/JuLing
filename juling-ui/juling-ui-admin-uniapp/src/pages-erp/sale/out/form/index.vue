@@ -31,7 +31,7 @@
 
         <!-- 出库明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">出库产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">出库产品清单</text>
         </view>
         <view class="px-24rpx">
           <OutItemForm ref="itemEditorRef" v-model="formData.items" :warehouse-options="warehouseOptions" />
@@ -39,7 +39,7 @@
 
         <!-- 结算信息 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">结算信息</text>
+          <text class="yd-text-main text-28rpx font-semibold">结算信息</text>
         </view>
         <wd-cell-group border>
           <wd-form-item title="优惠率(%)" title-width="220rpx" prop="discountPercent" center>
@@ -218,7 +218,7 @@ async function handleSubmit() {
     }
     uni.$emit('erp:sale-out:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

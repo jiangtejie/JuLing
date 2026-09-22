@@ -1,37 +1,37 @@
 <template>
   <view v-if="hasAccessByCodes(['hrm:insurance:employee-info:query'])" class="rounded-12rpx bg-white p-24rpx shadow-sm">
     <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-      <text class="text-30rpx text-[#333] font-semibold">
+      <text class="yd-text-main text-30rpx font-semibold">
         社保资料
       </text>
       <text
         v-if="hasAccessByCodes(['hrm:insurance:employee-info:update'])"
-        class="text-28rpx text-[#1677ff]"
+        class="yd-text-link text-28rpx"
         @click="openForm"
       >
         编辑
       </text>
     </view>
-    <view v-if="loading" class="py-20rpx text-center text-28rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint py-20rpx text-center text-28rpx">
       加载中...
     </view>
     <template v-else>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         社保编号：{{ insuranceInfo?.socialSecurityNumber || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         公积金编号：{{ insuranceInfo?.accumulationFundNumber || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         社保起始月：{{ formatHrmMonth(insuranceInfo?.socialSecurityStartMonth) }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         参保方案：{{ insuranceInfo?.schemeName || insuranceInfo?.schemeId || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         本地首次缴纳社保：{{ formatHrmYesNo(insuranceInfo?.firstSocialSecurity) }}
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         本地首次缴纳公积金：{{ formatHrmYesNo(insuranceInfo?.firstAccumulationFund) }}
       </view>
     </template>

@@ -31,12 +31,12 @@
         <text class="conversation-time">{{ formatConversationTime(conversation.lastSendTime) }}</text>
       </view>
       <view class="mt-7rpx flex items-center gap-8rpx">
-        <view class="line-clamp-1 min-w-0 flex-1 text-27rpx text-[#999]">
-          <text v-if="groupRequestText" class="text-[#fa5151]">{{ groupRequestText }} </text>
-          <text v-if="hasDraft" class="text-[#fa5151]">[草稿] </text>
+        <view class="yd-text-hint line-clamp-1 min-w-0 flex-1 text-27rpx">
+          <text v-if="groupRequestText" class="yd-text-danger">{{ groupRequestText }} </text>
+          <text v-if="hasDraft" class="yd-text-danger">[草稿] </text>
           <template v-else>
-            <text v-if="conversation.atMe" class="text-[#fa5151]">[有人@我] </text>
-            <text v-else-if="conversation.atAll" class="text-[#fa5151]">[@全体成员] </text>
+            <text v-if="conversation.atMe" class="yd-text-danger">[有人@我] </text>
+            <text v-else-if="conversation.atAll" class="yd-text-danger">[@全体成员] </text>
             <text v-if="mutedUnreadText">{{ mutedUnreadText }} </text>
             <text v-if="lastSenderText">{{ lastSenderText }}: </text>
           </template>

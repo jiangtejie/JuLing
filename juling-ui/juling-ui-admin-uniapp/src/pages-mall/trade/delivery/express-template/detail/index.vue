@@ -43,15 +43,15 @@
     <!-- 区域计费明细弹窗 -->
     <wd-popup v-model="regionPopupVisible" position="bottom" round safe-area-inset-bottom>
       <view class="max-h-[70vh] overflow-y-auto p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ regionPopupTitle }}
         </view>
         <view v-if="regionPopupItems.length" class="flex flex-col gap-16rpx">
-          <view v-for="(item, index) in regionPopupItems" :key="index" class="rounded-12rpx bg-[#f7f8fa] p-20rpx">
-            <view class="mb-8rpx text-28rpx text-[#333]">
+          <view v-for="(item, index) in regionPopupItems" :key="index" class="yd-bg-subtle rounded-12rpx p-20rpx">
+            <view class="yd-text-main mb-8rpx text-28rpx">
               {{ item.areaText }}
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               {{ item.ruleText }}
             </view>
           </view>
@@ -164,7 +164,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mall:delivery-express-template:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

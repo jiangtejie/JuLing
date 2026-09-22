@@ -2,14 +2,14 @@
   <view class="bg-white px-24rpx py-16rpx">
     <scroll-view scroll-x class="whitespace-nowrap">
       <view class="inline-flex items-center">
-        <view class="flex items-center text-28rpx text-[#1890ff]" @click="handleClick(-1)">
+        <view class="yd-text-link flex items-center text-28rpx" @click="handleClick(-1)">
           <text>全部分类</text>
         </view>
         <template v-for="(item, index) in breadcrumbList" :key="item.id">
           <wd-icon name="arrow-right" size="12px" color="#999" custom-class="mx-8rpx" />
           <view
             class="flex items-center text-28rpx"
-            :class="index < breadcrumbList.length - 1 ? 'text-[#1890ff]' : 'text-[#333]'"
+            :class="index < breadcrumbList.length - 1 ? 'yd-text-link' : 'yd-text-main'"
             @click="handleClick(index)"
           >
             <text>{{ item.name }}</text>

@@ -1,10 +1,10 @@
 <template>
   <view class="min-h-0 flex flex-1 flex-col bg-white">
     <view class="flex items-center border-b border-b-[#f0f0f0] px-24rpx py-20rpx" :class="showTitle ? 'justify-between' : 'justify-end'">
-      <view v-if="showTitle" class="text-30rpx text-[#333] font-semibold">
+      <view v-if="showTitle" class="yd-text-main text-30rpx font-semibold">
         物料清单
       </view>
-      <view class="text-24rpx text-[#999]">
+      <view class="yd-text-hint text-24rpx">
         共 {{ total }} 条
       </view>
     </view>
@@ -30,27 +30,27 @@
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-28rpx font-medium">
                 {{ item.itemCode || `物料 #${item.itemId}` }}
               </view>
-              <view class="mt-4rpx truncate text-26rpx text-[#666]">
+              <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                 {{ item.itemName || '-' }}
               </view>
             </view>
-            <view class="shrink-0 text-24rpx text-[#999]">
+            <view class="yd-text-hint shrink-0 text-24rpx">
               {{ item.unitMeasureName || '-' }}
             </view>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">入库数量：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">入库数量：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.receivedQuantity ?? '-' }}</text>
           </view>
-          <view class="flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">批次号：</text>
+          <view class="yd-text-sub flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">批次号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.batchCode || '-' }}</text>
           </view>
         </view>

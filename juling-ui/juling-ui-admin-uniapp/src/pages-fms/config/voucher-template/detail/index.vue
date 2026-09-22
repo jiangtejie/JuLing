@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="凭证模板详情"
@@ -16,7 +16,7 @@
 
       <!-- 模板分录 -->
       <view class="mt-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
           模板分录
         </view>
         <view
@@ -24,42 +24,42 @@
           :key="index"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
             分录 {{ index + 1 }}
           </view>
           <view class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">摘要</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">{{ entry.digest || '-' }}</text>
+            <text class="yd-text-hint flex-shrink-0">摘要</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">{{ entry.digest || '-' }}</text>
           </view>
           <view class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">会计科目</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">{{ getSubjectLabel(entry.subjectId) }}</text>
+            <text class="yd-text-hint flex-shrink-0">会计科目</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">{{ getSubjectLabel(entry.subjectId) }}</text>
           </view>
           <view v-if="entry.auxiliaries?.length" class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">辅助核算</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">
+            <text class="yd-text-hint flex-shrink-0">辅助核算</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">
               {{ entry.auxiliaries.map(item => item.name).join('、') }}
             </text>
           </view>
           <view class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">借方金额</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">
+            <text class="yd-text-hint flex-shrink-0">借方金额</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">
               {{ entry.debitAmount != null ? formatFmsAmount(entry.debitAmount) : '-' }}
             </text>
           </view>
           <view class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">贷方金额</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">
+            <text class="yd-text-hint flex-shrink-0">贷方金额</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">
               {{ entry.creditAmount != null ? formatFmsAmount(entry.creditAmount) : '-' }}
             </text>
           </view>
           <view v-if="entry.quantity != null" class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">数量</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">{{ formatFmsQuantity(entry.quantity) }}</text>
+            <text class="yd-text-hint flex-shrink-0">数量</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">{{ formatFmsQuantity(entry.quantity) }}</text>
           </view>
           <view v-if="entry.unitPrice != null" class="flex items-center justify-between gap-16rpx py-8rpx text-26rpx">
-            <text class="flex-shrink-0 text-[#999]">单价</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">{{ formatFmsAmount(entry.unitPrice) }}</text>
+            <text class="yd-text-hint flex-shrink-0">单价</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">{{ formatFmsAmount(entry.unitPrice) }}</text>
           </view>
         </view>
       </view>
@@ -80,6 +80,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onShow } from '@dcloudio/uni-app'
 import type { Subject } from '@/api/fms/config/subject'
 import type { VoucherTemplate } from '@/api/fms/config/voucher-template'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
@@ -172,13 +173,13 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('fms:config:voucher-template:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   await fmsStore.loadAccountSetList()
   await getDetail()
 })

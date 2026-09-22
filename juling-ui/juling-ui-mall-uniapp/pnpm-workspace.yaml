@@ -1,0 +1,17 @@
+# pnpm 10+ 的配置入口：.npmrc 与 package.json 的 "pnpm" 字段已不再读取以下设置
+# 参考 https://pnpm.io/settings
+
+# 关闭这些依赖的 install 脚本：
+# - esbuild：二进制由 optionalDependencies(@esbuild/win32-x64) 提供，install.js 只是联网兜底，
+#            在镜像网络下会长时间卡住，且非必需
+# - core-js / vue-demi：分别只是打印提示、切换 vue2/vue3 入口，本项目固定 Vue3，无需执行
+allowBuilds:
+  core-js: false
+  esbuild: false
+  vue-demi: false
+
+# uni-app CLI 需要「扁平」的 node_modules（npm 风格），否则部分编译器子包解析不到
+shamefullyHoist: true
+
+# 关闭「运行脚本前先校验依赖」，避免每次 dev/build 都触发一次 pnpm install
+verifyDepsBeforeRun: false

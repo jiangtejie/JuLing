@@ -17,38 +17,38 @@
           <view>
             <view class="p-24rpx">
               <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.no || '保存后自动生成' }}
                 </view>
                 <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="item.status" />
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">客户：</text>{{ item.customerName || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">客户：</text>{{ item.customerName || '-' }}
               </view>
-              <view v-if="item.productNames" class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">产品：</text>
+              <view v-if="item.productNames" class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">产品：</text>
                 <text class="line-clamp-1">{{ item.productNames }}</text>
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">退货时间：</text>{{ formatDateTime(item.returnTime) || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">退货时间：</text>{{ formatDateTime(item.returnTime) || '-' }}
               </view>
-              <view v-if="item.orderNo" class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">关联订单：</text>{{ item.orderNo }}
+              <view v-if="item.orderNo" class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">关联订单：</text>{{ item.orderNo }}
               </view>
-              <view class="mb-12rpx flex text-28rpx text-[#666]">
+              <view class="yd-text-sub mb-12rpx flex text-28rpx">
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">总数量：</text>{{ formatCount(item.totalCount) }}
+                  <text class="yd-text-hint mr-8rpx">总数量：</text>{{ formatCount(item.totalCount) }}
                 </view>
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">应退：</text>{{ formatMoney(item.totalPrice) }}
+                  <text class="yd-text-hint mr-8rpx">应退：</text>{{ formatMoney(item.totalPrice) }}
                 </view>
               </view>
-              <view class="flex text-28rpx text-[#666]">
+              <view class="yd-text-sub flex text-28rpx">
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">已退：</text>{{ formatMoney(item.refundPrice) }}
+                  <text class="yd-text-hint mr-8rpx">已退：</text>{{ formatMoney(item.refundPrice) }}
                 </view>
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">未退：</text>{{ formatMoney(getUnrefundedPrice(item)) }}
+                  <text class="yd-text-hint mr-8rpx">未退：</text>{{ formatMoney(getUnrefundedPrice(item)) }}
                 </view>
               </view>
             </view>

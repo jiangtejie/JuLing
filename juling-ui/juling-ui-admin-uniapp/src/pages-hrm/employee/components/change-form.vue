@@ -1,10 +1,10 @@
 <template>
   <wd-popup v-model="visible" position="bottom" closable safe-area-inset-bottom @close="visible = false">
     <view class="px-32rpx pb-32rpx pt-24rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
-      <view class="mb-24rpx rounded-12rpx bg-[#f7f8fa] p-24rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub yd-bg-subtle mb-24rpx rounded-12rpx p-24rpx text-26rpx">
         <view>员工：{{ employee?.name || '-' }}</view>
         <view class="mt-8rpx">
           岗位：{{ employee?.postName || '-' }}

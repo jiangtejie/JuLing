@@ -7,14 +7,14 @@
     >
       <view class="min-w-0 flex items-center gap-12rpx">
         <wd-icon name="organization" size="32rpx" color="#1677ff" />
-        <text class="max-w-320rpx overflow-hidden text-ellipsis whitespace-nowrap text-28rpx text-[#333]">
+        <text class="yd-text-main max-w-320rpx overflow-hidden text-ellipsis whitespace-nowrap text-28rpx">
           {{ fmsStore.accountSet?.companyName || '请选择账套' }}
         </text>
-        <text v-if="currentMonthText" class="flex-shrink-0 text-24rpx text-[#999]">
+        <text v-if="currentMonthText" class="yd-text-hint flex-shrink-0 text-24rpx">
           {{ currentMonthText }}
         </text>
       </view>
-      <view class="flex flex-shrink-0 items-center gap-8rpx text-26rpx text-[#1677ff]">
+      <view class="yd-text-link flex flex-shrink-0 items-center gap-8rpx text-26rpx">
         <text>切换</text>
         <wd-icon name="arrow-down" size="24rpx" color="#1677ff" />
       </view>

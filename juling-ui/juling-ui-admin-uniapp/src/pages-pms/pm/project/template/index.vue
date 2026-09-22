@@ -28,23 +28,23 @@
           @click="handleEdit(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">项目类型：</text>{{ formatProjectType(item.projectType) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">项目类型：</text>{{ formatProjectType(item.projectType) }}
           </view>
           <view class="mb-12rpx flex flex-wrap items-center gap-8rpx">
-            <text class="text-28rpx text-[#999]">事项类型：</text>
+            <text class="yd-text-hint text-28rpx">事项类型：</text>
             <wd-tag v-for="type in item.itemTypes" :key="type" type="primary" plain>
               {{ getWorkItemTypeName(type) }}
             </wd-tag>
           </view>
-          <view class="flex items-center justify-between text-28rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-28rpx">
             <text>状态 {{ item.statuses.length }} · 看板列 {{ item.boards.length }}</text>
-            <text class="shrink-0 text-[#999]">{{ formatDateTime(item.createTime) || '-' }}</text>
+            <text class="yd-text-hint shrink-0">{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
           <view class="mt-16rpx flex justify-end gap-16rpx">
             <wd-button

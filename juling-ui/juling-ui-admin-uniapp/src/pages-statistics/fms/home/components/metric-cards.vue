@@ -2,10 +2,10 @@
   <!-- 财务指标卡片：横向滚动，点击选中指标联动图表 -->
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <text class="text-30rpx text-[#333] font-semibold">
+      <text class="yd-text-main text-30rpx font-semibold">
         财务指标
       </text>
-      <text class="text-24rpx text-[#999]">
+      <text class="yd-text-hint text-24rpx">
         {{ home?.currentMonth }} 当期数据
       </text>
     </view>
@@ -17,7 +17,7 @@
           class="w-300rpx flex-shrink-0 border rounded-12rpx px-20rpx py-24rpx"
           :class="selectedMetricKey === metric.key
             ? 'border-[#1677ff] bg-[#e6f0ff]'
-            : 'border-[#f0f0f0] bg-[#f7f8fa]'"
+            : 'yd-border-light yd-bg-subtle'"
           @click="emit('select', metric)"
         >
           <view class="flex items-center gap-8rpx">
@@ -25,11 +25,11 @@
               class="h-24rpx w-8rpx flex-shrink-0 rounded-4rpx"
               :style="{ backgroundColor: FMS_HOME_METRIC_COLORS[index % FMS_HOME_METRIC_COLORS.length] }"
             />
-            <text class="min-w-0 truncate text-26rpx text-[#666]">
+            <text class="yd-text-sub min-w-0 truncate text-26rpx">
               {{ metric.name }}
             </text>
           </view>
-          <view class="mt-12rpx truncate text-36rpx text-[#333] font-semibold">
+          <view class="yd-text-main mt-12rpx truncate text-36rpx font-semibold">
             {{ formatFmsAmount(metric.amount) }}
           </view>
         </view>

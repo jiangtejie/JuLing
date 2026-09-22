@@ -1,18 +1,18 @@
 <template>
   <view class="p-24rpx pb-8rpx">
     <view class="mb-16rpx flex items-center justify-between">
-      <text class="text-28rpx text-[#333] font-semibold">
+      <text class="yd-text-main text-28rpx font-semibold">
         教育经历
       </text>
       <text
         v-if="hasAccessByCodes(['hrm:employee:update'])"
-        class="text-28rpx text-[#1677ff]"
+        class="yd-text-link text-28rpx"
         @click="openForm()"
       >
         新增
       </text>
     </view>
-    <view v-if="!list.length" class="py-40rpx text-center text-28rpx text-[#999]">
+    <view v-if="!list.length" class="yd-text-hint py-40rpx text-center text-28rpx">
       暂无教育经历
     </view>
     <view
@@ -21,7 +21,7 @@
       class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-        <text class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+        <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
           {{ item.graduateSchool || '-' }}
         </text>
         <dict-tag
@@ -30,32 +30,32 @@
           :value="item.education"
         />
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         专业：{{ item.major || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         起止：{{ formatDate(item.admissionTime) || '-' }} ~ {{ formatDate(item.graduationTime) || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         教学方式：{{ formatEmployeeTeachingMethod(item.teachingMethods) }}
       </view>
-      <view class="mb-16rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-16rpx text-26rpx">
         第一学历：{{ item.firstDegree ? '是' : '否' }}
       </view>
       <view
         v-if="hasAccessByCodes(['hrm:employee:update']) || hasAccessByCodes(['hrm:employee:delete'])"
-        class="flex gap-32rpx border-t border-[#f0f0f0] pt-16rpx"
+        class="yd-border-light flex gap-32rpx border-t pt-16rpx"
       >
         <text
           v-if="hasAccessByCodes(['hrm:employee:update'])"
-          class="text-28rpx text-[#1677ff]"
+          class="yd-text-link text-28rpx"
           @click="openForm(item)"
         >
           编辑
         </text>
         <text
           v-if="hasAccessByCodes(['hrm:employee:delete'])"
-          class="text-28rpx text-[#f5222d]"
+          class="yd-text-danger text-28rpx"
           @click="handleDelete(item)"
         >
           删除

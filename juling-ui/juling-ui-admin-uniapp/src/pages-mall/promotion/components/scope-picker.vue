@@ -20,13 +20,13 @@
     <!-- 多选弹窗 -->
     <wd-popup
       v-model="visible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0; height: 70vh;"
       @close="visible = false"
     >
       <view class="h-70vh flex flex-col p-24rpx">
-        <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
           选择{{ scopeLabel }}
         </view>
         <wd-search v-model="keyword" :placeholder="`搜索${scopeLabel}名称`" hide-cancel @search="() => {}" />
@@ -36,12 +36,12 @@
               v-for="item in filteredOptions"
               :key="item.id"
               :name="item.id"
-              class="border-b border-[#f5f5f5] py-16rpx"
+              class="yd-border-light border-b py-16rpx"
             >
               {{ item.name }}
             </wd-checkbox>
           </wd-checkbox-group>
-          <view v-if="!filteredOptions.length" class="py-48rpx text-center text-26rpx text-[#999]">
+          <view v-if="!filteredOptions.length" class="yd-text-hint py-48rpx text-center text-26rpx">
             暂无{{ scopeLabel }}
           </view>
         </scroll-view>

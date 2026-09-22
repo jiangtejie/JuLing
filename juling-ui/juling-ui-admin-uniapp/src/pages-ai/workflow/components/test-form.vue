@@ -1,7 +1,7 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" custom-style="max-height: 78vh; overflow: auto;" @close="handleClose">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="max-height: 78vh; overflow: auto;" @close="handleClose">
     <view class="bg-white">
-      <view class="border-b border-[#eee] p-28rpx text-32rpx font-semibold">
+      <view class="yd-border-base border-b p-28rpx text-32rpx font-semibold">
         测试工作流
       </view>
       <view class="p-24rpx">
@@ -18,7 +18,7 @@
             />
           </wd-cell>
           <wd-cell title="测试结果">
-            <view class="min-h-160rpx whitespace-pre-wrap text-26rpx text-[#666]">
+            <view class="yd-text-sub min-h-160rpx whitespace-pre-wrap text-26rpx">
               {{ result || '暂无结果' }}
             </view>
           </wd-cell>

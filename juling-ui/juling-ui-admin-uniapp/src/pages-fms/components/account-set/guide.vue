@@ -6,10 +6,10 @@
     :close-on-click-modal="false"
   >
     <view class="w-600rpx flex flex-col items-center px-48rpx py-56rpx">
-      <view class="text-34rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-34rpx font-semibold">
         {{ title }}
       </view>
-      <view class="mt-24rpx text-center text-28rpx text-[#666] leading-44rpx">
+      <view class="yd-text-sub mt-24rpx text-center text-28rpx leading-44rpx">
         {{ description }}
       </view>
       <view class="mt-48rpx w-full flex flex-col gap-24rpx">

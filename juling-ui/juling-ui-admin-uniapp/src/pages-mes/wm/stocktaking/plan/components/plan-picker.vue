@@ -6,13 +6,13 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="handleClose"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择盘点方案
         </view>
         <wd-button size="small" type="primary" :disabled="!selected" @click="handleConfirm">
@@ -57,16 +57,16 @@
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.code || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.type != null" :type="DICT_TYPE.MES_WM_STOCK_TAKING_TYPE" :value="item.type" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-26rpx space-y-6rpx">
               <view>计划开始：{{ formatDateTime(item.startTime) || '-' }}</view>
               <view>计划结束：{{ formatDateTime(item.endTime) || '-' }}</view>
             </view>

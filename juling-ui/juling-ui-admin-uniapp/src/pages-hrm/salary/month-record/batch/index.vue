@@ -8,7 +8,7 @@
     />
 
     <!-- 说明 -->
-    <view class="mx-24rpx mt-16rpx rounded-8rpx bg-[#e6f4ff] px-16rpx py-12rpx text-24rpx text-[#1677ff]">
+    <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-16rpx rounded-8rpx px-16rpx py-12rpx text-24rpx">
       仅可编辑非系统计算项。点击员工进入编辑，保存后返回本页。
     </view>
 
@@ -33,20 +33,20 @@
           @click="handleEdit(item)"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.employeeName || '-' }}
             </view>
-            <text class="shrink-0 text-28rpx text-[#1677ff]">
+            <text class="yd-text-link shrink-0 text-28rpx">
               编辑
             </text>
           </view>
-          <view class="mb-8rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-28rpx">
             工号：{{ item.jobNumber || '-' }}
           </view>
-          <view class="mb-8rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-28rpx">
             部门：{{ item.deptName || '-' }}
           </view>
-          <view class="text-28rpx text-[#666]">
+          <view class="yd-text-sub text-28rpx">
             实发：{{ formatHrmMoney(item.realPaySalary) }}
           </view>
         </view>
@@ -104,7 +104,7 @@ async function queryList() {
       deptId: props.deptId != null && props.deptId !== '' ? Number(props.deptId) : undefined,
     })
     list.value = data
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

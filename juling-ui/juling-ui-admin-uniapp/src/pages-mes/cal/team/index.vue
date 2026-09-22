@@ -26,16 +26,16 @@
           <view class="p-24rpx" @click="handleDetail(item)">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.code || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.calendarType != null" :type="DICT_TYPE.MES_CAL_CALENDAR_TYPE" :value="item.calendarType" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view v-if="item.remark">
                 备注：{{ item.remark }}
               </view>

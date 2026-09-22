@@ -6,12 +6,12 @@
       <!-- 左侧操作按钮 -->
       <view v-for="(action, idx) in leftOperations" :key="idx" class="mr-32rpx w-60rpx flex flex-col items-center" @click="handleOperation(action.operationType)">
         <wd-icon :name="action.iconName" size="40rpx" color="#1890ff" />
-        <text class="mt-4rpx text-22rpx text-[#333]">{{ action.displayName }}</text>
+        <text class="yd-text-main mt-4rpx text-22rpx">{{ action.displayName }}</text>
       </view>
       <!-- 更多操作按钮 -->
       <view v-if="moreOperations.length > 0" class="mr-32rpx w-60rpx flex flex-col items-center" @click="handleShowMore">
         <wd-icon name="more" size="40rpx" color="#1890ff" />
-        <text class="mt-4rpx text-22rpx text-[#333]">更多</text>
+        <text class="yd-text-main mt-4rpx text-22rpx">更多</text>
       </view>
       <!-- 更多操作 ActionSheet -->
       <wd-action-sheet v-if="moreOperations.length > 0" v-model="showMoreActions" :actions="moreOperations" title="请选择操作" @select="handleMoreAction" />
@@ -49,7 +49,7 @@
   <!-- 评论弹窗 -->
   <wd-popup v-model="commentVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
     <view class="p-24rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         评论
       </view>
       <wd-textarea

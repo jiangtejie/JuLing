@@ -2,13 +2,13 @@
   <view class="mx-24rpx mt-24rpx rounded-16rpx bg-white">
     <view class="p-24rpx">
       <view class="mb-24rpx flex items-center">
-        <text class="text-28rpx text-[#333] font-bold">流程评论</text>
-        <text class="ml-12rpx text-24rpx text-[#999]">共 {{ comments.length }} 条</text>
+        <text class="yd-text-main text-28rpx font-bold">流程评论</text>
+        <text class="yd-text-hint ml-12rpx text-24rpx">共 {{ comments.length }} 条</text>
         <wd-loading v-if="commentLoading" class="ml-auto" size="28rpx" />
       </view>
 
       <view v-if="!commentLoading && comments.length === 0" class="py-40rpx text-center">
-        <text class="text-24rpx text-[#999]">暂无评论</text>
+        <text class="yd-text-hint text-24rpx">暂无评论</text>
       </view>
 
       <view v-else class="pl-8rpx">
@@ -29,7 +29,7 @@
           </view>
           <view class="min-w-0 flex-1">
             <view class="flex items-center gap-12rpx">
-              <view class="h-56rpx w-56rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#f2f3f5] text-24rpx text-[#666]">
+              <view class="yd-text-sub yd-bg-subtle h-56rpx w-56rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full text-24rpx">
                 <image
                   v-if="comment.user?.avatar"
                   :src="comment.user.avatar"
@@ -38,15 +38,15 @@
                 />
                 <text v-else>{{ getUserInitial(comment.user) }}</text>
               </view>
-              <text class="shrink-0 text-26rpx text-[#333] font-semibold">{{ comment.user?.nickname || '系统' }}</text>
+              <text class="yd-text-main shrink-0 text-26rpx font-semibold">{{ comment.user?.nickname || '系统' }}</text>
               <dict-tag :type="DICT_TYPE.BPM_COMMENT_TYPE" :value="comment.type" />
             </view>
             <view v-if="comment.task?.name" class="mt-12rpx max-w-full inline-flex items-center border border-[#d9ecff] rounded-8rpx bg-[#ecf5ff] px-12rpx py-6rpx">
               <text class="mr-8rpx text-22rpx text-[#409eff]">任务</text>
-              <text class="truncate text-24rpx text-[#333] font-semibold">{{ comment.task.name }}</text>
+              <text class="yd-text-main truncate text-24rpx font-semibold">{{ comment.task.name }}</text>
             </view>
-            <text class="mt-10rpx block text-22rpx text-[#999]">{{ formatDateTime(comment.createTime) }}</text>
-            <view class="mt-12rpx rounded-8rpx bg-[#f7f8fa] px-20rpx py-16rpx">
+            <text class="yd-text-hint mt-10rpx block text-22rpx">{{ formatDateTime(comment.createTime) }}</text>
+            <view class="yd-bg-subtle mt-12rpx rounded-8rpx px-20rpx py-16rpx">
               <text class="whitespace-pre-wrap break-words text-26rpx text-[#606266] leading-40rpx">{{ comment.message }}</text>
             </view>
           </view>

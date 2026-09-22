@@ -13,71 +13,71 @@
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ formData.no || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 下单时间：{{ formatDateTime(formData.createTime) || '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.TRADE_ORDER_STATUS" :value="formData.status" />
           </view>
           <view class="grid grid-cols-2 gap-x-20rpx gap-y-12rpx text-26rpx">
-            <view><text class="text-[#999]">买家：</text>{{ formData.user?.nickname || '-' }}</view>
-            <view><text class="text-[#999]">来源：</text>{{ getDictLabel(DICT_TYPE.TERMINAL, formData.terminal) || '-' }}</view>
-            <view><text class="text-[#999]">类型：</text>{{ getDictLabel(DICT_TYPE.TRADE_ORDER_TYPE, formData.type) || '-' }}</view>
-            <view><text class="text-[#999]">支付：</text>{{ formData.payStatus ? '已支付' : '未支付' }}</view>
+            <view><text class="yd-text-hint">买家：</text>{{ formData.user?.nickname || '-' }}</view>
+            <view><text class="yd-text-hint">来源：</text>{{ getDictLabel(DICT_TYPE.TERMINAL, formData.terminal) || '-' }}</view>
+            <view><text class="yd-text-hint">类型：</text>{{ getDictLabel(DICT_TYPE.TRADE_ORDER_TYPE, formData.type) || '-' }}</view>
+            <view><text class="yd-text-hint">支付：</text>{{ formData.payStatus ? '已支付' : '未支付' }}</view>
             <view v-if="formData.brokerageUser">
-              <text class="text-[#999]">推广用户：</text>{{ formData.brokerageUser.nickname || '-' }}
+              <text class="yd-text-hint">推广用户：</text>{{ formData.brokerageUser.nickname || '-' }}
             </view>
             <view v-if="formData.payOrderId">
-              <text class="text-[#999]">支付单号：</text>{{ formData.payOrderId }}
+              <text class="yd-text-hint">支付单号：</text>{{ formData.payOrderId }}
             </view>
           </view>
         </view>
 
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             金额信息
           </view>
           <view class="grid grid-cols-2 gap-x-20rpx gap-y-12rpx text-26rpx">
-            <view><text class="text-[#999]">商品原价：</text>{{ formatDisplayMoney(formData.totalPrice) }}</view>
-            <view><text class="text-[#999]">运费：</text>{{ formatDisplayMoney(formData.deliveryPrice) }}</view>
-            <view><text class="text-[#999]">优惠金额：</text>{{ formatDisplayMoney(formData.discountPrice) }}</view>
-            <view><text class="text-[#999]">优惠券：</text>{{ formatDisplayMoney(formData.couponPrice) }}</view>
-            <view><text class="text-[#999]">积分抵扣：</text>{{ formatDisplayMoney(formData.pointPrice) }}</view>
-            <view><text class="text-[#999]">VIP 优惠：</text>{{ formatDisplayMoney(formData.vipPrice) }}</view>
-            <view><text class="text-[#999]">订单调价：</text>{{ formatDisplayMoney(formData.adjustPrice) }}</view>
-            <view class="text-[#fa4350] font-semibold">
+            <view><text class="yd-text-hint">商品原价：</text>{{ formatDisplayMoney(formData.totalPrice) }}</view>
+            <view><text class="yd-text-hint">运费：</text>{{ formatDisplayMoney(formData.deliveryPrice) }}</view>
+            <view><text class="yd-text-hint">优惠金额：</text>{{ formatDisplayMoney(formData.discountPrice) }}</view>
+            <view><text class="yd-text-hint">优惠券：</text>{{ formatDisplayMoney(formData.couponPrice) }}</view>
+            <view><text class="yd-text-hint">积分抵扣：</text>{{ formatDisplayMoney(formData.pointPrice) }}</view>
+            <view><text class="yd-text-hint">VIP 优惠：</text>{{ formatDisplayMoney(formData.vipPrice) }}</view>
+            <view><text class="yd-text-hint">订单调价：</text>{{ formatDisplayMoney(formData.adjustPrice) }}</view>
+            <view class="yd-text-danger font-semibold">
               <text>实付：</text>{{ formatDisplayMoney(formData.payPrice) }}
             </view>
           </view>
         </view>
 
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             收货与配送
           </view>
-          <view class="text-26rpx text-[#333] space-y-10rpx">
-            <view><text class="text-[#999]">配送方式：</text>{{ getDictLabel(DICT_TYPE.TRADE_DELIVERY_TYPE, formData.deliveryType) || '-' }}</view>
+          <view class="yd-text-main text-26rpx space-y-10rpx">
+            <view><text class="yd-text-hint">配送方式：</text>{{ getDictLabel(DICT_TYPE.TRADE_DELIVERY_TYPE, formData.deliveryType) || '-' }}</view>
             <view v-if="formData.deliveryType === DeliveryTypeEnum.PICK_UP">
-              <text class="text-[#999]">自提门店：</text>{{ pickUpStoreName || '-' }}
+              <text class="yd-text-hint">自提门店：</text>{{ pickUpStoreName || '-' }}
             </view>
             <view v-if="formData.deliveryTime">
-              <text class="text-[#999]">发货时间：</text>{{ formatDateTime(formData.deliveryTime) }}
+              <text class="yd-text-hint">发货时间：</text>{{ formatDateTime(formData.deliveryTime) }}
             </view>
-            <view><text class="text-[#999]">收件人：</text>{{ formData.receiverName || '-' }}</view>
-            <view><text class="text-[#999]">联系电话：</text>{{ formData.receiverMobile || '-' }}</view>
-            <view><text class="text-[#999]">收货地址：</text>{{ formData.receiverAreaName || '' }} {{ formData.receiverDetailAddress || '' }}</view>
+            <view><text class="yd-text-hint">收件人：</text>{{ formData.receiverName || '-' }}</view>
+            <view><text class="yd-text-hint">联系电话：</text>{{ formData.receiverMobile || '-' }}</view>
+            <view><text class="yd-text-hint">收货地址：</text>{{ formData.receiverAreaName || '' }} {{ formData.receiverDetailAddress || '' }}</view>
             <view v-if="formData.pickUpVerifyCode">
-              <text class="text-[#999]">核销码：</text>{{ formData.pickUpVerifyCode }}
+              <text class="yd-text-hint">核销码：</text>{{ formData.pickUpVerifyCode }}
             </view>
             <view v-if="formData.logisticsNo">
-              <text class="text-[#999]">物流单号：</text>{{ formData.logisticsNo }}
+              <text class="yd-text-hint">物流单号：</text>{{ formData.logisticsNo }}
             </view>
             <view v-if="expressTracks.length">
-              <text class="text-[#999]">物流轨迹：</text>
-              <view class="mt-8rpx rounded-8rpx bg-[#f8f8f8] p-16rpx">
+              <text class="yd-text-hint">物流轨迹：</text>
+              <view class="yd-bg-subtle mt-8rpx rounded-8rpx p-16rpx">
                 <view v-for="(item, index) in expressTracks" :key="index" class="mb-8rpx last:mb-0">
                   {{ item.time || item.createTime || '' }} {{ item.content || item.context || '' }}
                 </view>
@@ -87,13 +87,13 @@
         </view>
 
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             商品明细
           </view>
           <view
             v-for="item in formData.items || []"
             :key="item.id"
-            class="mb-16rpx flex gap-20rpx rounded-8rpx bg-[#f8f8f8] p-16rpx last:mb-0"
+            class="yd-bg-subtle mb-16rpx flex gap-20rpx rounded-8rpx p-16rpx last:mb-0"
           >
             <wd-img
               v-if="item.picUrl"
@@ -102,13 +102,13 @@
               enable-preview
             />
             <view class="min-w-0 flex-1">
-              <view class="line-clamp-2 text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-2 text-28rpx font-semibold">
                 {{ item.spuName || '-' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#777]">
+              <view class="yd-text-sub mt-8rpx text-24rpx">
                 x{{ item.count || 0 }} / {{ formatDisplayMoney(item.payPrice) }}
               </view>
-              <view v-if="item.properties?.length" class="mt-8rpx text-22rpx text-[#999]">
+              <view v-if="item.properties?.length" class="yd-text-hint mt-8rpx text-22rpx">
                 {{ item.properties.map(prop => `${prop.propertyName}:${prop.valueName}`).join('；') }}
               </view>
             </view>
@@ -116,17 +116,17 @@
         </view>
 
         <view class="mb-160rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             备注与日志
           </view>
-          <view class="mb-16rpx rounded-8rpx bg-[#f8f8f8] p-16rpx text-26rpx">
-            <view><text class="text-[#999]">买家留言：</text>{{ formData.userRemark || '-' }}</view>
+          <view class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx text-26rpx">
+            <view><text class="yd-text-hint">买家留言：</text>{{ formData.userRemark || '-' }}</view>
             <view class="mt-8rpx">
-              <text class="text-[#999]">商家备注：</text>{{ formData.remark || '-' }}
+              <text class="yd-text-hint">商家备注：</text>{{ formData.remark || '-' }}
             </view>
           </view>
-          <view v-for="(log, index) in formData.logs || []" :key="index" class="mb-12rpx text-24rpx text-[#666] last:mb-0">
-            <text class="text-[#999]">{{ formatDateTime(log.createTime) || '-' }}</text>
+          <view v-for="(log, index) in formData.logs || []" :key="index" class="yd-text-sub mb-12rpx text-24rpx last:mb-0">
+            <text class="yd-text-hint">{{ formatDateTime(log.createTime) || '-' }}</text>
             <text class="ml-12rpx">{{ log.content || '-' }}</text>
           </view>
         </view>
@@ -157,9 +157,9 @@
     </view>
 
     <!-- 修改备注 -->
-    <wd-popup v-model="remarkVisible" position="bottom" closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="remarkVisible = false">
+    <wd-popup v-model="remarkVisible" position="bottom" safe-area-inset-bottom closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="remarkVisible = false">
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           修改备注
         </view>
         <wd-textarea v-model="remarkForm.remark" clearable :maxlength="2000" placeholder="请输入商家备注" />
@@ -175,16 +175,16 @@
     </wd-popup>
 
     <!-- 订单改价 -->
-    <wd-popup v-model="priceVisible" position="bottom" closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="priceVisible = false">
+    <wd-popup v-model="priceVisible" position="bottom" safe-area-inset-bottom closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="priceVisible = false">
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           订单改价
         </view>
         <view class="mb-12rpx flex items-center gap-16rpx">
-          <text class="shrink-0 text-28rpx text-[#666]">订单调价</text>
+          <text class="yd-text-sub shrink-0 text-28rpx">订单调价</text>
           <wd-input-number v-model="priceForm.adjustPrice" :min="-999999" :step="0.01" :precision="2" />
         </view>
-        <view class="text-24rpx text-[#999]">
+        <view class="yd-text-hint text-24rpx">
           正数加价，负数减价（单位：元）
         </view>
         <view class="mt-24rpx flex gap-20rpx">
@@ -199,19 +199,19 @@
     </wd-popup>
 
     <!-- 订单发货 -->
-    <wd-popup v-model="deliveryVisible" position="bottom" closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="deliveryVisible = false">
+    <wd-popup v-model="deliveryVisible" position="bottom" safe-area-inset-bottom closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="deliveryVisible = false">
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           订单发货
         </view>
         <view class="mb-16rpx flex items-center gap-16rpx">
-          <text class="w-160rpx shrink-0 text-28rpx text-[#666]">快递公司</text>
+          <text class="yd-text-sub w-160rpx shrink-0 text-28rpx">快递公司</text>
           <view class="min-w-0 flex-1" @click="expressPickerVisible = true">
             <wd-input :model-value="expressName" readonly placeholder="请选择快递公司" />
           </view>
         </view>
         <view class="flex items-center gap-16rpx">
-          <text class="w-160rpx shrink-0 text-28rpx text-[#666]">快递单号</text>
+          <text class="yd-text-sub w-160rpx shrink-0 text-28rpx">快递单号</text>
           <wd-input v-model="deliveryForm.logisticsNo" class="min-w-0 flex-1" clearable placeholder="请输入快递单号" />
         </view>
         <view class="mt-24rpx flex gap-20rpx">
@@ -236,9 +236,9 @@
     />
 
     <!-- 修改地址 -->
-    <wd-popup v-model="addressVisible" position="bottom" closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="addressVisible = false">
+    <wd-popup v-model="addressVisible" position="bottom" safe-area-inset-bottom closable custom-style="border-radius: 24rpx 24rpx 0 0;" @close="addressVisible = false">
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           修改地址
         </view>
         <wd-form :model="addressForm">
@@ -279,7 +279,8 @@ import type { TradeOrder } from '@/api/mall/trade/order'
 import type { DeliveryExpress } from '@/api/mall/trade/delivery/express'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, reactive, ref } from 'vue'
 import {
   deliveryTradeOrder,
   getTradeOrder,
@@ -468,7 +469,7 @@ async function handlePickUp() {
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   await Promise.all([
     loadDetail(),
     getAreaTree().then((list) => {

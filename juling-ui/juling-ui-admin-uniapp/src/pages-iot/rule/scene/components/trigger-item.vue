@@ -1,8 +1,8 @@
 <template>
   <view class="mb-20rpx rounded-12rpx bg-white">
     <view class="flex items-center justify-between px-24rpx py-16rpx">
-      <text class="text-28rpx text-[#333] font-semibold">触发器 {{ index + 1 }}</text>
-      <text class="text-26rpx text-[#fa4350]" @click="emit('remove')">删除</text>
+      <text class="yd-text-main text-28rpx font-semibold">触发器 {{ index + 1 }}</text>
+      <text class="yd-text-danger text-26rpx" @click="emit('remove')">删除</text>
     </view>
     <wd-cell-group border>
       <yd-form-picker

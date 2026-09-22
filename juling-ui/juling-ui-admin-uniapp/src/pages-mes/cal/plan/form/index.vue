@@ -35,12 +35,12 @@
         </wd-cell-group>
       </wd-form>
 
-      <view v-if="props.id" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-20rpx text-26rpx text-[#8a5a00]">
+      <view v-if="props.id" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-26rpx">
         新增排班计划会自动生成默认班次。确认计划前，请检查班次和班组数量；确认后不可再编辑。
       </view>
       <PlanShiftList v-if="props.id" :plan-id="Number(props.id)" :editable="isPrepare" />
       <PlanTeamList v-if="props.id" :plan-id="Number(props.id)" :editable="isPrepare" />
-      <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-20rpx text-26rpx text-[#8a5a00]">
+      <view v-else class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-26rpx">
         保存排班计划后，可继续维护班次和班组。
       </view>
       <view class="h-180rpx" />
@@ -175,7 +175,7 @@ async function handleSubmit() {
     }
     uni.$emit('mes:cal:plan:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }
@@ -210,7 +210,7 @@ async function handleConfirm() {
     toast.success('确认成功')
     uni.$emit('mes:cal:plan:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     confirmLoading.value = false
   }
 }

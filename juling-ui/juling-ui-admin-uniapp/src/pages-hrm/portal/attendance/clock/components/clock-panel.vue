@@ -7,7 +7,7 @@
         class="mx-24rpx mt-24rpx flex items-center gap-20rpx rounded-16rpx bg-white p-24rpx shadow-sm"
       >
         <view
-          class="h-88rpx w-88rpx shrink-0 overflow-hidden rounded-full bg-[#f0f2f5]"
+          class="yd-bg-subtle h-88rpx w-88rpx shrink-0 overflow-hidden rounded-full"
         >
           <wd-img
             v-if="employee.avatar"
@@ -19,16 +19,16 @@
           />
           <view
             v-else
-            class="h-full w-full flex items-center justify-center text-32rpx text-[#1677ff] font-semibold"
+            class="yd-text-link h-full w-full flex items-center justify-center text-32rpx font-semibold"
           >
             {{ (employee.name || "?").slice(0, 1) }}
           </view>
         </view>
         <view class="min-w-0 flex-1">
-          <view class="truncate text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main truncate text-30rpx font-semibold">
             {{ employee.name || "-" }}
           </view>
-          <view class="mt-8rpx truncate text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx truncate text-24rpx">
             {{ employee.deptName || "未设置部门" }} ·
             {{ employee.postName || "未设置岗位" }}
           </view>
@@ -40,17 +40,17 @@
         class="mx-24rpx mt-20rpx rounded-16rpx bg-white px-24rpx py-20rpx shadow-sm"
       >
         <view class="flex items-center justify-between gap-16rpx">
-          <text class="text-26rpx text-[#999]"> 考勤组 </text>
+          <text class="yd-text-hint text-26rpx"> 考勤组 </text>
           <text
-            class="min-w-0 flex-1 truncate text-right text-28rpx text-[#333]"
+            class="yd-text-main min-w-0 flex-1 truncate text-right text-28rpx"
           >
             {{ clockDetail?.groupName || "-" }}
           </text>
         </view>
         <view class="flex items-center justify-between gap-16rpx">
-          <text class="mt-16rpx text-26rpx text-[#999]"> 今日班次 </text>
+          <text class="yd-text-hint mt-16rpx text-26rpx"> 今日班次 </text>
           <text
-            class="mt-16rpx min-w-0 flex-1 text-right text-28rpx text-[#333]"
+            class="yd-text-main mt-16rpx min-w-0 flex-1 text-right text-28rpx"
           >
             {{
               clockDetail?.shiftTitle || (clockDetail?.restDay ? "休息" : "-")
@@ -67,10 +67,10 @@
           <wd-icon name="wifi" size="32rpx" color="#1677ff" />
           <view class="min-w-0 flex-1">
             <template v-if="clockDetail?.openWifiCard">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 {{ attendanceWifiText }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999] leading-36rpx">
+              <view class="yd-text-hint mt-8rpx text-24rpx leading-36rpx">
                 <template v-if="wifiLoading">
                   正在读取当前 WiFi…
                 </template>
@@ -86,10 +86,10 @@
               </view>
             </template>
             <template v-else>
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 未启用 WiFi 打卡
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999] leading-36rpx">
+              <view class="yd-text-hint mt-8rpx text-24rpx leading-36rpx">
                 当前考勤组未要求连接指定 WiFi
               </view>
             </template>
@@ -109,22 +109,22 @@
           <wd-icon name="location" size="32rpx" color="#1677ff" />
           <view class="min-w-0 flex-1">
             <template v-if="clockDetail?.openPointCard">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 {{
                   clockDetail.points?.[0]?.name
                     ? `考勤地点：${clockDetail.points[0].name}`
                     : "已启用定位打卡"
                 }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999] leading-36rpx">
+              <view class="yd-text-hint mt-8rpx text-24rpx leading-36rpx">
                 {{ attendanceLocationText }}
               </view>
             </template>
             <template v-else>
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 未启用定位打卡
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999] leading-36rpx">
+              <view class="yd-text-hint mt-8rpx text-24rpx leading-36rpx">
                 当前考勤组未要求获取位置
               </view>
             </template>
@@ -157,7 +157,7 @@
           </text>
         </view>
         <view
-          class="mt-24rpx px-48rpx text-center text-24rpx text-[#999] leading-36rpx"
+          class="yd-text-hint mt-24rpx px-48rpx text-center text-24rpx leading-36rpx"
         >
           <template v-if="clockDetail?.openPointCard">
             {{ attendanceLocationText }}
@@ -173,12 +173,12 @@
 
       <!-- 当日打卡详情 -->
       <view class="mx-24rpx mt-48rpx rounded-16rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-20rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-20rpx text-30rpx font-semibold">
           打卡详情
         </view>
         <view
           v-if="!clockDetail?.timeline?.length"
-          class="py-40rpx text-center text-26rpx text-[#999]"
+          class="yd-text-hint py-40rpx text-center text-26rpx"
         >
           {{ clockDetail?.restDay ? "今日休息，无需打卡" : "暂无打卡安排" }}
         </view>
@@ -197,7 +197,7 @@
                 item.missCard
                   ? 'bg-[#ff4d4f]'
                   : item.clockTime
-                    ? 'bg-[#52c41a]'
+                    ? 'yd-bg-success'
                     : 'bg-[#d9d9d9]'
               "
             />
@@ -208,7 +208,7 @@
           </view>
           <view class="min-w-0 flex-1">
             <view class="flex items-center justify-between gap-16rpx">
-              <text class="text-28rpx text-[#333] font-medium">
+              <text class="yd-text-main text-28rpx font-medium">
                 {{
                   item.type === HrmAttendanceClockType.OFF_DUTY
                     ? "下班打卡"
@@ -217,7 +217,7 @@
               </text>
               <text
                 class="text-26rpx"
-                :class="item.missCard ? 'text-[#ff4d4f]' : 'text-[#333]'"
+                :class="item.missCard ? 'yd-text-danger' : 'yd-text-main'"
               >
                 {{
                   item.missCard
@@ -226,7 +226,7 @@
                 }}
               </text>
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               应打 {{ formatDate(item.attendanceTime, "HH:mm") || "--:--" }}
               <text
                 v-if="item.status != null && !item.missCard"
@@ -241,7 +241,7 @@
                 }}
               </text>
             </view>
-            <view v-if="item.address" class="mt-6rpx text-24rpx text-[#999]">
+            <view v-if="item.address" class="yd-text-hint mt-6rpx text-24rpx">
               {{ item.address }}
             </view>
           </view>

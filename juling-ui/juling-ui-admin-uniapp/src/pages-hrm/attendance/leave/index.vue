@@ -32,10 +32,10 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.employeeName || '-' }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.jobNumber || '-' }} · {{ item.deptName || '-' }}
               </view>
             </view>
@@ -45,8 +45,8 @@
               :value="item.approvalStatus"
             />
           </view>
-          <view class="mb-12rpx flex items-center gap-12rpx text-28rpx text-[#666]">
-            <text class="text-[#999]">请假类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center gap-12rpx text-28rpx">
+            <text class="yd-text-hint">请假类型：</text>
             <dict-tag
               v-if="item.type"
               :type="DICT_TYPE.HRM_ATTENDANCE_LEAVE_TYPE"
@@ -54,21 +54,21 @@
             />
             <text v-else>-</text>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">开始时间：</text>{{ formatDateTime(item.startTime) || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">开始时间：</text>{{ formatDateTime(item.startTime) || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">结束时间：</text>{{ formatDateTime(item.endTime) || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">结束时间：</text>{{ formatDateTime(item.endTime) || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">请假天数：</text>{{ item.day != null ? `${item.day} 天` : '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">请假天数：</text>{{ item.day != null ? `${item.day} 天` : '-' }}
           </view>
-          <view v-if="item.reason" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">事由：</text>
+          <view v-if="item.reason" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">事由：</text>
             <text class="line-clamp-1">{{ item.reason }}</text>
           </view>
-          <view v-if="item.remark" class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">备注：</text>
+          <view v-if="item.remark" class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">备注：</text>
             <text class="line-clamp-1">{{ item.remark }}</text>
           </view>
         </view>

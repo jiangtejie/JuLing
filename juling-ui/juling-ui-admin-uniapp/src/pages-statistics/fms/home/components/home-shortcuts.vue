@@ -2,10 +2,10 @@
   <!-- 常用功能：按权限和账套可写状态过滤 -->
   <view v-if="visibleShortcuts.length > 0" class="overflow-hidden rounded-12rpx bg-white shadow-sm">
     <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         常用功能
       </view>
-      <view class="mt-4rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint mt-4rpx text-24rpx">
         快速进入日常财务工作
       </view>
     </view>
@@ -26,7 +26,7 @@
             :color="FMS_HOME_METRIC_COLORS[index % FMS_HOME_METRIC_COLORS.length]"
           />
         </view>
-        <text class="text-24rpx text-[#333]">
+        <text class="yd-text-main text-24rpx">
           {{ shortcut.name }}
         </text>
       </view>

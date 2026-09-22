@@ -33,7 +33,7 @@
 
     <!-- 回调日志 -->
     <view v-if="formData.logs?.length" class="mt-24rpx">
-      <view class="px-24rpx pb-16rpx text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main px-24rpx pb-16rpx text-30rpx font-semibold">
         回调日志
       </view>
       <view
@@ -42,16 +42,16 @@
         class="mx-24rpx mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <text class="text-28rpx text-[#333] font-semibold">日志编号：{{ log.id }}</text>
+          <text class="yd-text-main text-28rpx font-semibold">日志编号：{{ log.id }}</text>
           <dict-tag :type="DICT_TYPE.PAY_NOTIFY_STATUS" :value="log.status" />
         </view>
-        <view class="mb-12rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-12rpx text-28rpx">
           通知次数：{{ log.notifyTimes ?? '-' }}
         </view>
-        <view class="mb-12rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-12rpx text-28rpx">
           通知时间：{{ formatDateTime(log.createTime) || '-' }}
         </view>
-        <view class="break-all text-28rpx text-[#666]">
+        <view class="yd-text-sub break-all text-28rpx">
           响应结果：{{ log.response || '-' }}
         </view>
       </view>
@@ -62,7 +62,8 @@
 <script lang="ts" setup>
 import type { PayNotifyTask } from '@/api/pay/notify'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getPayNotifyTaskDetail } from '@/api/pay/notify'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
@@ -99,7 +100,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

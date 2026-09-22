@@ -2,19 +2,19 @@
   <view class="relative z-2 pb-[calc(72rpx+env(safe-area-inset-bottom))]">
     <view class="mb-56rpx flex flex-wrap justify-center gap-x-40rpx gap-y-28rpx px-32rpx">
       <view class="flex flex-col items-center gap-14rpx" @click="emit('toggle-mic')">
-        <view class="rtc-call-tool" :class="micEnabled ? 'bg-white/20' : 'bg-white text-[#222]'">
+        <view class="rtc-call-tool" :class="micEnabled ? 'bg-white/20' : 'bg-white yd-text-strong'">
           <wd-icon name="mic" size="44rpx" :color="micEnabled ? '#fff' : '#222'" />
         </view>
         <text class="text-24rpx text-white">{{ micEnabled ? '静音' : '取消静音' }}</text>
       </view>
       <view v-if="isVideo || isGroup" class="flex flex-col items-center gap-14rpx" @click="emit('toggle-camera')">
-        <view class="rtc-call-tool" :class="cameraEnabled ? 'bg-white/20' : 'bg-white text-[#222]'">
+        <view class="rtc-call-tool" :class="cameraEnabled ? 'bg-white/20' : 'bg-white yd-text-strong'">
           <wd-icon name="camera" size="44rpx" :color="cameraEnabled ? '#fff' : '#222'" />
         </view>
         <text class="text-24rpx text-white">{{ cameraEnabled ? '关闭摄像头' : '打开摄像头' }}</text>
       </view>
       <view class="flex flex-col items-center gap-14rpx" @click="emit('toggle-speaker')">
-        <view class="rtc-call-tool" :class="speakerEnabled ? 'bg-white/20' : 'bg-white text-[#222]'">
+        <view class="rtc-call-tool" :class="speakerEnabled ? 'bg-white/20' : 'bg-white yd-text-strong'">
           <wd-icon name="sound-fill" size="44rpx" :color="speakerEnabled ? '#fff' : '#222'" />
         </view>
         <text class="text-24rpx text-white">扬声器</text>
@@ -35,7 +35,7 @@
         class="flex flex-col items-center gap-14rpx"
         @click="emit('toggle-screen-share')"
       >
-        <view class="rtc-call-tool" :class="screenShareEnabled ? 'bg-white text-[#222]' : 'bg-white/20'">
+        <view class="rtc-call-tool" :class="screenShareEnabled ? 'bg-white yd-text-strong' : 'bg-white/20'">
           <wd-icon name="desktop" size="44rpx" :color="screenShareEnabled ? '#222' : '#fff'" />
         </view>
         <text class="text-24rpx text-white">{{ screenShareEnabled ? '停止共享' : '共享屏幕' }}</text>
@@ -43,7 +43,7 @@
       <!-- #endif -->
     </view>
     <view class="flex flex-col items-center gap-18rpx" @click="emit('hangup')">
-      <view class="rtc-call-action bg-[#fa5151]">
+      <view class="rtc-call-action yd-bg-danger">
         <wd-icon name="close" size="52rpx" color="#fff" />
       </view>
       <text class="text-26rpx text-white">{{ stage === ImRtcCallStage.INVITING ? '取消' : '挂断' }}</text>

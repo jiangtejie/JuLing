@@ -31,7 +31,7 @@
             <!-- 加载状态 -->
             <view
               v-if="loading"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -47,16 +47,16 @@
                 :style="{ marginLeft: `${item.depth * 32}rpx` }"
               >
                 <!-- 科目标题 -->
-                <view class="mb-16rpx truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main mb-16rpx truncate text-30rpx font-semibold">
                   {{ item.node.subjectCode }} {{ item.node.subjectName }}
-                  <text v-if="item.node.quantityUnit" class="text-24rpx text-[#999] font-normal">
+                  <text v-if="item.node.quantityUnit" class="yd-text-hint text-24rpx font-normal">
                     （{{ item.node.quantityUnit }}）
                   </text>
                 </view>
                 <!-- 数量与金额 -->
                 <view class="flex items-center justify-between gap-12rpx py-6rpx text-26rpx">
-                  <text class="flex-shrink-0 text-[#999]">期初余额</text>
-                  <text class="text-[#333]">
+                  <text class="yd-text-hint flex-shrink-0">期初余额</text>
+                  <text class="yd-text-main">
                     {{ item.node.openingBalanceDirection || '-' }}
                     数量 {{ formatFmsQuantity(item.node.openingQuantity, item.node.quantityAccounting) }}
                     单价 {{ formatFmsMoney(item.node.openingUnitPrice) }}
@@ -64,36 +64,36 @@
                   </text>
                 </view>
                 <view class="flex items-center justify-between gap-12rpx py-6rpx text-26rpx">
-                  <text class="flex-shrink-0 text-[#999]">本期借方</text>
-                  <text class="text-[#333]">
+                  <text class="yd-text-hint flex-shrink-0">本期借方</text>
+                  <text class="yd-text-main">
                     数量 {{ formatFmsQuantity(item.node.periodDebitQuantity, item.node.quantityAccounting) }}
                     金额 {{ formatFmsMoney(item.node.periodDebitAmount) }}
                   </text>
                 </view>
                 <view class="flex items-center justify-between gap-12rpx py-6rpx text-26rpx">
-                  <text class="flex-shrink-0 text-[#999]">本期贷方</text>
-                  <text class="text-[#333]">
+                  <text class="yd-text-hint flex-shrink-0">本期贷方</text>
+                  <text class="yd-text-main">
                     数量 {{ formatFmsQuantity(item.node.periodCreditQuantity, item.node.quantityAccounting) }}
                     金额 {{ formatFmsMoney(item.node.periodCreditAmount) }}
                   </text>
                 </view>
                 <view class="flex items-center justify-between gap-12rpx py-6rpx text-26rpx">
-                  <text class="flex-shrink-0 text-[#999]">累计借方</text>
-                  <text class="text-[#333]">
+                  <text class="yd-text-hint flex-shrink-0">累计借方</text>
+                  <text class="yd-text-main">
                     数量 {{ formatFmsQuantity(item.node.yearDebitQuantity, item.node.quantityAccounting) }}
                     金额 {{ formatFmsMoney(item.node.yearDebitAmount) }}
                   </text>
                 </view>
                 <view class="flex items-center justify-between gap-12rpx py-6rpx text-26rpx">
-                  <text class="flex-shrink-0 text-[#999]">累计贷方</text>
-                  <text class="text-[#333]">
+                  <text class="yd-text-hint flex-shrink-0">累计贷方</text>
+                  <text class="yd-text-main">
                     数量 {{ formatFmsQuantity(item.node.yearCreditQuantity, item.node.quantityAccounting) }}
                     金额 {{ formatFmsMoney(item.node.yearCreditAmount) }}
                   </text>
                 </view>
                 <view class="flex items-center justify-between gap-12rpx py-6rpx text-26rpx">
-                  <text class="flex-shrink-0 text-[#999]">期末余额</text>
-                  <text class="text-[#333]">
+                  <text class="yd-text-hint flex-shrink-0">期末余额</text>
+                  <text class="yd-text-main">
                     {{ item.node.endingBalanceDirection || '-' }}
                     数量 {{ formatFmsQuantity(item.node.endingQuantity, item.node.quantityAccounting) }}
                     单价 {{ formatFmsMoney(item.node.endingUnitPrice) }}

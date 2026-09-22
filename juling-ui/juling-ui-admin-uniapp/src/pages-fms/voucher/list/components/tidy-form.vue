@@ -1,15 +1,15 @@
 <template>
   <!-- 整理凭证弹窗 -->
-  <wd-popup v-model="visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         整理凭证
       </view>
 
       <view class="mb-24rpx flex items-center justify-between" @click="monthVisible = true">
-        <text class="text-28rpx text-[#666]">整理范围</text>
+        <text class="yd-text-sub text-28rpx">整理范围</text>
         <view class="flex items-center gap-8rpx">
-          <text class="text-28rpx text-[#333]">{{ formData.month || '请选择月份' }}</text>
+          <text class="yd-text-main text-28rpx">{{ formData.month || '请选择月份' }}</text>
           <wd-icon name="arrow-right" size="28rpx" color="#999" />
         </view>
       </view>
@@ -22,19 +22,19 @@
       />
 
       <view class="mb-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-16rpx text-28rpx">
           凭证字
         </view>
         <VoucherWordRadioGroup v-model="formData.voucherWordId" />
       </view>
 
       <view class="mb-24rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#666]">起始编号</text>
+        <text class="yd-text-sub text-28rpx">起始编号</text>
         <wd-input-number v-model="formData.startNumber" :min="1" :precision="0" />
       </view>
 
       <view class="mb-32rpx">
-        <view class="mb-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-16rpx text-28rpx">
           整理方式
         </view>
         <wd-radio-group v-model="formData.type">
@@ -55,6 +55,7 @@
 
 <script lang="ts" setup>
 import type { VoucherTidyReq } from '@/api/fms/voucher'
+import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { tidyVoucher } from '@/api/fms/voucher'
 import VoucherWordRadioGroup from '@/pages-fms/config/voucher-word/components/voucher-word-radio-group.vue'
@@ -67,6 +68,7 @@ const emit = defineEmits<{
 }>()
 
 const toast = useToast()
+const dialog = useDialog()
 const fmsStore = useFmsStore()
 const visible = ref(false) // 弹窗显隐
 const formLoading = ref(false) // 表单提交状态
@@ -112,6 +114,15 @@ async function handleSubmit() {
   }
   if (!formData.value.voucherWordId) {
     toast.warning('请选择凭证字')
+    return
+  }
+  // add by 棱信矩灵：整理会重排整期（含已审核）凭证号且不可撤销，补二次确认
+  try {
+    await dialog.confirm({
+      title: '提示',
+      msg: '整理将重排所选期间的全部凭证号（含已审核凭证）且不可撤销，是否继续？',
+    })
+  } catch {
     return
   }
   formLoading.value = true

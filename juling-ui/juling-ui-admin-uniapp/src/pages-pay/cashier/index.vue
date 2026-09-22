@@ -10,38 +10,38 @@
     <!-- 支付信息 -->
     <view class="p-24rpx">
       <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-20rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-20rpx text-32rpx font-semibold">
           支付信息
         </view>
-        <view class="mb-12rpx flex text-28rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">支付单号：</text>
+        <view class="yd-text-sub mb-12rpx flex text-28rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">支付单号：</text>
           <text>{{ payOrder.id || '-' }}</text>
         </view>
-        <view class="mb-12rpx flex text-28rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">商品标题：</text>
+        <view class="yd-text-sub mb-12rpx flex text-28rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">商品标题：</text>
           <text class="min-w-0 flex-1 break-all">{{ payOrder.subject || '-' }}</text>
         </view>
-        <view class="mb-12rpx flex text-28rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">商品内容：</text>
+        <view class="yd-text-sub mb-12rpx flex text-28rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">商品内容：</text>
           <text class="min-w-0 flex-1 break-all">{{ payOrder.body || '-' }}</text>
         </view>
-        <view class="mb-12rpx flex text-28rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">支付金额：</text>
-          <text class="text-[#fa8c16] font-semibold">{{ formatDisplayMoney(payOrder.price) }}</text>
+        <view class="yd-text-sub mb-12rpx flex text-28rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">支付金额：</text>
+          <text class="yd-text-warning font-semibold">{{ formatDisplayMoney(payOrder.price) }}</text>
         </view>
-        <view class="mb-12rpx flex text-28rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+        <view class="yd-text-sub mb-12rpx flex text-28rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
           <text>{{ formatDateTime(payOrder.createTime) || '-' }}</text>
         </view>
-        <view class="flex text-28rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">过期时间：</text>
+        <view class="yd-text-sub flex text-28rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">过期时间：</text>
           <text>{{ formatDateTime(payOrder.expireTime) || '-' }}</text>
         </view>
       </view>
 
       <!-- 支付渠道 -->
       <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
-        <view class="mb-20rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-20rpx text-32rpx font-semibold">
           选择支付方式
         </view>
 
@@ -50,7 +50,7 @@
           :key="group.title"
           class="mb-24rpx last:mb-0"
         >
-          <view class="mb-16rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-16rpx text-28rpx">
             {{ group.title }}
           </view>
           <view class="grid grid-cols-2 gap-16rpx">
@@ -59,6 +59,7 @@
               :key="channel.code"
               type="primary" variant="plain"
               :loading="submitLoading && currentChannelCode === channel.code"
+              :disabled="submitLoading"
               @click="submit(channel.code)"
             >
               {{ channel.name }}
@@ -76,10 +77,10 @@
       @close="qrCode.visible = false"
     >
       <view class="p-32rpx">
-        <view class="mb-20rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-20rpx text-center text-32rpx font-semibold">
           {{ qrCode.title }}
         </view>
-        <view class="mb-24rpx break-all rounded-8rpx bg-[#f7f8fa] p-20rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub yd-bg-subtle mb-24rpx break-all rounded-8rpx p-20rpx text-26rpx">
           {{ qrCode.url }}
         </view>
         <wd-button type="primary" block @click="copyText(qrCode.url)">
@@ -97,7 +98,7 @@
     >
       <view class="p-32rpx">
         <view class="mb-24rpx flex items-center justify-between">
-          <text class="text-32rpx text-[#333] font-semibold">{{ barCode.title }}</text>
+          <text class="yd-text-main text-32rpx font-semibold">{{ barCode.title }}</text>
           <wd-icon name="close" size="20px" @click="barCode.visible = false" />
         </view>
         <wd-input v-model="barCode.value" clearable placeholder="请输入条形码" />
@@ -254,6 +255,11 @@ function submit(channelCode: string) {
 
 /** 执行支付提交 */
 async function submit0(channelCode: string) {
+  // add by 棱信矩灵：资金类操作防重。此前 loading 只作用于当前渠道按钮，
+  // 在一个渠道请求在途时点击另一个渠道会并发发出两笔 submitPayOrder
+  if (submitLoading.value) {
+    return
+  }
   submitLoading.value = true
   currentChannelCode.value = channelCode
   try {

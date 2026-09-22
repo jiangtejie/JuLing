@@ -42,7 +42,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
             <dict-tag
@@ -51,7 +51,7 @@
               :value="item.entryStatus"
             />
           </view>
-          <view class="mb-12rpx flex items-center gap-12rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx flex items-center gap-12rpx text-28rpx">
             <dict-tag
               v-if="item.status != null"
               :type="DICT_TYPE.HRM_EMPLOYEE_STATUS"
@@ -63,20 +63,20 @@
               :value="item.type"
             />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">工号：</text>{{ item.jobNumber || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">工号：</text>{{ item.jobNumber || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">手机：</text>{{ item.mobile || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">手机：</text>{{ item.mobile || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">部门：</text>{{ item.deptName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">部门：</text>{{ item.deptName || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">岗位：</text>{{ item.postName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">岗位：</text>{{ item.postName || '-' }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">入职时间：</text>{{ formatDateTime(item.entryTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">入职时间：</text>{{ formatDateTime(item.entryTime) || '-' }}
           </view>
         </view>
       </view>

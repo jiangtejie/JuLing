@@ -3,10 +3,10 @@
     <view
       v-for="(stage, index) in model"
       :key="index"
-      class="border-b border-[#f0f0f0] px-24rpx py-20rpx"
+      class="yd-border-light border-b px-24rpx py-20rpx"
     >
       <view class="mb-12rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-semibold">节点 {{ index + 1 }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">节点 {{ index + 1 }}</text>
         <wd-button
           v-if="!disabled && model.length > 1"
           size="small"

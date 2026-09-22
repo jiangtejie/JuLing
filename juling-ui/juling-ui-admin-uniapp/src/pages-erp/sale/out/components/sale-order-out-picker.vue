@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="visible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择可出库订单
         </view>
         <wd-button size="small" type="primary" :disabled="!currentOrder" @click="handleConfirm">
@@ -56,27 +56,27 @@
             @click="handleSelect(item)"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.no || '-' }}
               </view>
               <wd-icon v-if="currentOrder?.id === item.id" name="check" size="18px" color="#1677ff" />
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">客户：</text>{{ item.customerName || '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">客户：</text>{{ item.customerName || '-' }}
             </view>
-            <view v-if="item.productNames" class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">产品：</text>
+            <view v-if="item.productNames" class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">产品：</text>
               <text class="line-clamp-1">{{ item.productNames }}</text>
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">订单时间：</text>{{ formatDateTime(item.orderTime) || '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">订单时间：</text>{{ formatDateTime(item.orderTime) || '-' }}
             </view>
-            <view class="flex text-26rpx text-[#666]">
+            <view class="yd-text-sub flex text-26rpx">
               <view class="flex-1">
-                <text class="mr-8rpx text-[#999]">总数量：</text>{{ formatCount(item.totalCount) }}
+                <text class="yd-text-hint mr-8rpx">总数量：</text>{{ formatCount(item.totalCount) }}
               </view>
               <view class="flex-1">
-                <text class="mr-8rpx text-[#999]">已出库：</text>{{ formatCount(item.outCount) }}
+                <text class="yd-text-hint mr-8rpx">已出库：</text>{{ formatCount(item.outCount) }}
               </view>
             </view>
           </view>

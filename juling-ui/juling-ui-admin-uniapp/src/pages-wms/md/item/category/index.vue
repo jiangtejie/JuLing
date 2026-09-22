@@ -31,24 +31,24 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="min-w-0 flex-1 text-32rpx text-[#333] font-semibold" :style="{ paddingLeft: `${item.depth * 32}rpx` }">
+              <view class="yd-text-main min-w-0 flex-1 text-32rpx font-semibold" :style="{ paddingLeft: `${item.depth * 32}rpx` }">
                 {{ item.name || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">分类编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">分类编号：</text>
               <text>{{ item.code || '-' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">上级分类：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">上级分类：</text>
               <text>{{ getCategoryName(item.parentId) }}</text>
             </view>
-            <view class="grid grid-cols-2 mt-12rpx gap-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint grid grid-cols-2 mt-12rpx gap-12rpx text-24rpx">
               <text>排序：{{ item.sort ?? 0 }}</text>
               <text>子分类：{{ getChildrenCount(item.id) }}</text>
             </view>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               创建时间：{{ formatDateTime(item.createTime) || '-' }}
             </view>
             <view
@@ -113,7 +113,7 @@ async function queryList() {
     const data = await getItemCategoryList(queryParams.value)
     categoryList.value = data
     list.value = flattenCategoryTree(handleTree<ItemCategoryTreeItem>(data, 'id', 'parentId'))
-    pagingRef.value?.completeByTotal(list.value, list.value.length)
+    pagingRef.value?.completeByNoMore(list.value, true)
   } catch {
     pagingRef.value?.complete(false)
   }

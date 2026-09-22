@@ -32,30 +32,30 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 钱包 #{{ item.id }}
               </view>
-              <view v-if="item.userId != null" class="mt-6rpx truncate text-24rpx text-[#999]">
+              <view v-if="item.userId != null" class="yd-text-hint mt-6rpx truncate text-24rpx">
                 用户编号：{{ item.userId }}
               </view>
             </view>
             <dict-tag v-if="item.userType != null" :type="DICT_TYPE.USER_TYPE" :value="item.userType" />
           </view>
 
-          <view class="mb-16rpx text-36rpx text-[#fa8c16] font-semibold">
+          <view class="yd-text-warning mb-16rpx text-36rpx font-semibold">
             {{ formatDisplayMoney(item.balance) }}
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">累计充值：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">累计充值：</text>
             <text>{{ formatDisplayMoney(item.totalRecharge) }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">累计支出：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">累计支出：</text>
             <text>{{ formatDisplayMoney(item.totalExpense) }}</text>
           </view>
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

@@ -31,37 +31,37 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.code || '-' }}
                 </view>
-                <view class="mt-4rpx truncate text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx truncate text-24rpx">
                   {{ item.name || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_DV_REPAIR_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">设备编码：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">设备编码：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.machineryCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">设备名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">设备名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.machineryName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">报修日期：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">报修日期：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDateTime(item.requireDate) || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">维修完成：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">维修完成：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDateTime(item.finishDate) || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">维修人员：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">维修人员：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.acceptedUserNickname || '-' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">维修结果：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">维修结果：</text>
               <dict-tag v-if="item.result != null" :type="DICT_TYPE.MES_DV_REPAIR_RESULT" :value="item.result" />
               <text v-else>-</text>
             </view>

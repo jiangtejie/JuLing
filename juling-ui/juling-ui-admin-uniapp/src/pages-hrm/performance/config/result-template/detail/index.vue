@@ -19,12 +19,12 @@
 
       <!-- 结果等级列表 -->
       <view class="mt-24rpx px-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           结果等级
         </view>
         <view
           v-if="!formData.levels?.length"
-          class="rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+          class="yd-text-hint rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
         >
           暂无结果等级
         </view>
@@ -34,13 +34,13 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
         >
           <view class="px-24rpx py-20rpx">
-            <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
               {{ level.name || '-' }}
             </view>
-            <view class="text-24rpx text-[#666]">
+            <view class="yd-text-sub text-24rpx">
               分数 {{ level.minScore }} ~ {{ level.maxScore }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#666]">
+            <view class="yd-text-sub mt-8rpx text-24rpx">
               绩效系数 {{ level.coefficient }}
             </view>
           </view>

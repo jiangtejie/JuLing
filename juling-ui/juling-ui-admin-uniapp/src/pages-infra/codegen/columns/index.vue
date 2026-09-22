@@ -16,13 +16,13 @@
           @click="openColumn(index)"
         >
           <view class="mb-12rpx flex items-center justify-between">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ col.javaField }}
-              <text class="ml-8rpx text-24rpx text-[#999] font-normal">{{ col.columnName }}</text>
+              <text class="yd-text-hint ml-8rpx text-24rpx font-normal">{{ col.columnName }}</text>
             </view>
             <wd-icon name="arrow-right" size="14px" color="#ccc" />
           </view>
-          <view v-if="col.columnComment" class="mb-12rpx text-26rpx text-[#666]">
+          <view v-if="col.columnComment" class="yd-text-sub mb-12rpx text-26rpx">
             {{ col.columnComment }}
           </view>
           <view class="flex flex-wrap gap-12rpx">
@@ -38,7 +38,7 @@
             <wd-tag v-if="col.listOperation" custom-class="!mr-0" type="primary" plain>
               查询
             </wd-tag>
-            <text v-if="!hasOperation(col)" class="text-24rpx text-[#bbb]">未启用任何操作</text>
+            <text v-if="!hasOperation(col)" class="yd-text-muted text-24rpx">未启用任何操作</text>
           </view>
         </view>
       </view>
@@ -52,9 +52,9 @@
     </view>
 
     <!-- 字段编辑弹层 -->
-    <wd-popup v-model="popup.visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="popup.visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[80vh] flex flex-col">
-        <view class="border-b border-[#f0f0f0] px-32rpx py-28rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light yd-text-main border-b px-32rpx py-28rpx text-center text-32rpx font-semibold">
           {{ popup.form.javaField || '字段配置' }}
         </view>
         <scroll-view scroll-y class="min-h-0 flex-1">
@@ -202,7 +202,7 @@ async function handleSubmit() {
     toast.success('保存成功')
     uni.$emit('infra:codegen:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     saving.value = false
   }
 }

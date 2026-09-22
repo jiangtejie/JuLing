@@ -38,19 +38,19 @@
           :key="item.id"
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view v-if="currentType === MpAutoReplyTypeEnum.MESSAGE" class="mb-12rpx text-28rpx text-[#666]">
+          <view v-if="currentType === MpAutoReplyTypeEnum.MESSAGE" class="yd-text-sub mb-12rpx text-28rpx">
             请求类型：<dict-tag :type="DICT_TYPE.MP_MESSAGE_TYPE" :value="item.requestMessageType" />
           </view>
-          <view v-if="currentType === MpAutoReplyTypeEnum.KEYWORD" class="mb-12rpx text-28rpx text-[#666]">
+          <view v-if="currentType === MpAutoReplyTypeEnum.KEYWORD" class="yd-text-sub mb-12rpx text-28rpx">
             关键词：{{ item.requestKeyword || '-' }}
           </view>
-          <view v-if="currentType === MpAutoReplyTypeEnum.KEYWORD" class="mb-12rpx text-28rpx text-[#666]">
+          <view v-if="currentType === MpAutoReplyTypeEnum.KEYWORD" class="yd-text-sub mb-12rpx text-28rpx">
             匹配类型：<dict-tag :type="DICT_TYPE.MP_AUTO_REPLY_REQUEST_MATCH" :value="item.requestMatch" />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-28rpx">
             回复类型：<dict-tag :type="DICT_TYPE.MP_MESSAGE_TYPE" :value="item.responseMessageType" />
           </view>
-          <view class="mb-20rpx rounded-8rpx bg-[#f8f8f8] p-20rpx text-28rpx text-[#333]">
+          <view class="yd-text-main yd-bg-subtle mb-20rpx rounded-8rpx p-20rpx text-28rpx">
             <ReplyContent
               :type="item.responseMessageType"
               :content="item.responseContent"
@@ -63,7 +63,7 @@
               :hq-music-url="item.responseHqMusicUrl"
             />
           </view>
-          <view class="mb-20rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-20rpx text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view class="flex gap-16rpx">

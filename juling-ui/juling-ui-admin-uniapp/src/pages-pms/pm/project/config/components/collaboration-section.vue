@@ -7,7 +7,7 @@
         class="mb-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-8rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">{{ item.name }}</text>
+          <text class="yd-text-main text-30rpx font-semibold">{{ item.name }}</text>
           <wd-button
             v-if="hasAccessByCodes(['pms:pm:work-item:update'])"
             size="small" type="primary" variant="plain"
@@ -16,10 +16,10 @@
             状态设置
           </wd-button>
         </view>
-        <view class="text-24rpx text-[#999]">
+        <view class="yd-text-hint text-24rpx">
           适用项目：{{ item.projectTypeName }}
         </view>
-        <view class="mt-8rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-8rpx text-24rpx">
           {{ item.description }}
         </view>
       </view>

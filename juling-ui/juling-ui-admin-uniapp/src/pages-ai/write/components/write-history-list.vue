@@ -20,12 +20,12 @@
       >
         <view class="mb-12rpx flex items-center justify-between">
           <dict-tag :type="DICT_TYPE.AI_WRITE_TYPE" :value="item.type" />
-          <text class="text-22rpx text-[#999]">{{ formatDateTime(item.createTime) }}</text>
+          <text class="yd-text-hint text-22rpx">{{ formatDateTime(item.createTime) }}</text>
         </view>
-        <view class="line-clamp-2 text-28rpx text-[#333]">
+        <view class="yd-text-main line-clamp-2 text-28rpx">
           {{ item.prompt || '-' }}
         </view>
-        <view class="line-clamp-3 mt-12rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub line-clamp-3 mt-12rpx text-26rpx">
           {{ item.generatedContent || item.errorMessage || '-' }}
         </view>
       </view>

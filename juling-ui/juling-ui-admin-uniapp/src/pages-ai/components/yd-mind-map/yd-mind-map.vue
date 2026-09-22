@@ -31,7 +31,7 @@
       </view>
     </view>
   </scroll-view>
-  <view v-else class="py-48rpx text-center text-26rpx text-[#999]">
+  <view v-else class="yd-text-hint py-48rpx text-center text-26rpx">
     暂未识别到思维导图结构
   </view>
 </template>

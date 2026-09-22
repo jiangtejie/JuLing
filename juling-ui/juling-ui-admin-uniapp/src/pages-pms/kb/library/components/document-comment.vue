@@ -4,7 +4,7 @@
     <view class="mb-24rpx">
       <view
         v-if="!composing"
-        class="rounded-12rpx bg-white p-24rpx text-26rpx text-[#999] shadow-sm"
+        class="yd-text-hint rounded-12rpx bg-white p-24rpx text-26rpx shadow-sm"
         @click="composing = true"
       >
         写下你的评论…
@@ -29,7 +29,7 @@
     </view>
 
     <!-- 评论列表 -->
-    <view v-if="!comments.length" class="py-60rpx text-center text-28rpx text-[#999]">
+    <view v-if="!comments.length" class="yd-text-hint py-60rpx text-center text-28rpx">
       暂无评论
     </view>
     <view
@@ -38,43 +38,43 @@
       class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-8rpx flex items-center gap-12rpx">
-        <view class="h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-full bg-[#1677ff] text-24rpx text-white">
+        <view class="yd-bg-primary h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-full text-24rpx text-white">
           {{ comment.userName?.slice(0, 1) || '-' }}
         </view>
-        <text class="text-28rpx text-[#333] font-semibold">{{ comment.userName || '-' }}</text>
-        <text class="text-24rpx text-[#999]">{{ formatDateTime(comment.createTime) }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">{{ comment.userName || '-' }}</text>
+        <text class="yd-text-hint text-24rpx">{{ formatDateTime(comment.createTime) }}</text>
       </view>
-      <view class="whitespace-pre-wrap break-all text-28rpx text-[#333]">
+      <view class="yd-text-main whitespace-pre-wrap break-all text-28rpx">
         {{ comment.content }}
       </view>
       <view class="mt-12rpx flex items-center gap-24rpx">
-        <text v-if="comment.userId === loginUserId" class="text-26rpx text-[#f5222d]" @click="handleDelete(comment)">
+        <text v-if="comment.userId === loginUserId" class="yd-text-danger text-26rpx" @click="handleDelete(comment)">
           删除
         </text>
-        <text class="text-26rpx text-[#1677ff]" @click="startReply(comment, comment)">回复</text>
+        <text class="yd-text-link text-26rpx" @click="startReply(comment, comment)">回复</text>
       </view>
 
       <!-- 评论回复 -->
       <view
         v-for="reply in comment.children"
         :key="reply.id"
-        class="mt-16rpx rounded-8rpx bg-[#f7f8fa] p-20rpx"
+        class="yd-bg-subtle mt-16rpx rounded-8rpx p-20rpx"
       >
         <view class="mb-4rpx flex items-center gap-12rpx">
-          <text class="text-26rpx text-[#333] font-semibold">{{ reply.userName || '-' }}</text>
-          <text class="text-24rpx text-[#999]">{{ formatDateTime(reply.createTime) }}</text>
+          <text class="yd-text-main text-26rpx font-semibold">{{ reply.userName || '-' }}</text>
+          <text class="yd-text-hint text-24rpx">{{ formatDateTime(reply.createTime) }}</text>
         </view>
-        <view v-if="reply.replyUserName" class="mb-4rpx text-24rpx text-[#999]">
+        <view v-if="reply.replyUserName" class="yd-text-hint mb-4rpx text-24rpx">
           回复 @{{ reply.replyUserName }}
         </view>
-        <view class="whitespace-pre-wrap break-all text-28rpx text-[#333]">
+        <view class="yd-text-main whitespace-pre-wrap break-all text-28rpx">
           {{ reply.content }}
         </view>
         <view class="mt-8rpx flex items-center gap-24rpx">
-          <text v-if="reply.userId === loginUserId" class="text-26rpx text-[#f5222d]" @click="handleDelete(reply)">
+          <text v-if="reply.userId === loginUserId" class="yd-text-danger text-26rpx" @click="handleDelete(reply)">
             删除
           </text>
-          <text class="text-26rpx text-[#1677ff]" @click="startReply(comment, reply)">回复</text>
+          <text class="yd-text-link text-26rpx" @click="startReply(comment, reply)">回复</text>
         </view>
       </view>
 

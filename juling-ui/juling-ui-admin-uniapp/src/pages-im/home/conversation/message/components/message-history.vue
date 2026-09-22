@@ -9,14 +9,14 @@
             v-for="item in filterTabs"
             :key="item.value"
             class="rounded-full px-24rpx py-10rpx text-25rpx"
-            :class="messageType === item.value && (!activeDate && !selectedMemberId) ? 'bg-[#07c160] text-white' : 'bg-[#f5f5f5] text-[#666]'"
+            :class="messageType === item.value && (!activeDate && !selectedMemberId) ? 'yd-bg-success text-white' : 'yd-bg-page yd-text-sub'"
             @click="setMessageType(item.value)"
           >
             {{ item.label }}
           </view>
           <view
             class="rounded-full px-24rpx py-10rpx text-25rpx"
-            :class="activeDate ? 'bg-[#07c160] text-white' : 'bg-[#f5f5f5] text-[#666]'"
+            :class="activeDate ? 'yd-bg-success text-white' : 'yd-bg-page yd-text-sub'"
             @click="dateVisible = true"
           >
             {{ activeDate ? formatDate(activeDate) : '日期' }}
@@ -24,7 +24,7 @@
           <view
             v-if="conversationType === ImConversationType.GROUP"
             class="rounded-full px-24rpx py-10rpx text-25rpx"
-            :class="selectedMemberId ? 'bg-[#07c160] text-white' : 'bg-[#f5f5f5] text-[#666]'"
+            :class="selectedMemberId ? 'yd-bg-success text-white' : 'yd-bg-page yd-text-sub'"
             @click="memberVisible = true"
           >
             {{ selectedMemberName || '群成员' }}
@@ -38,7 +38,7 @@
       ref="pagingRef"
       v-model="list"
       :fixed="false"
-      class="min-h-0 flex-1 bg-[#f5f5f5]"
+      class="yd-bg-page min-h-0 flex-1"
       :default-page-size="PAGE_SIZE"
       :inside-more="false"
       :to-bottom-loading-more-enabled="false"
@@ -51,10 +51,10 @@
           class="border-b border-b-[#eee] bg-white px-32rpx py-24rpx text-center active:bg-[#f5f5f5]"
           @click="locateMessage(item)"
         >
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ getHistorySummary(item) }}
           </view>
-          <view class="mt-8rpx text-21rpx text-[#bbb]">
+          <view class="yd-text-muted mt-8rpx text-21rpx">
             {{ formatHistoryTime(item.sendTime) }}
           </view>
         </view>
@@ -66,12 +66,12 @@
           <ImAvatar :src="getSenderAvatar(item)" :name="getSenderRealName(item)" :round="false" size="76rpx" />
           <view class="min-w-0 flex-1">
             <view class="flex items-center justify-between gap-16rpx">
-              <text class="truncate text-27rpx text-[#333]">{{ getSenderName(item) }}</text>
-              <text class="shrink-0 text-22rpx text-[#aaa]">
+              <text class="yd-text-main truncate text-27rpx">{{ getSenderName(item) }}</text>
+              <text class="yd-text-muted shrink-0 text-22rpx">
                 {{ formatHistoryTime(item.sendTime) }}
               </text>
             </view>
-            <view class="line-clamp-2 mt-8rpx text-26rpx text-[#777] leading-38rpx">
+            <view class="yd-text-sub line-clamp-2 mt-8rpx text-26rpx leading-38rpx">
               {{ getHistorySummary(item) || '[消息]' }}
             </view>
           </view>
@@ -79,12 +79,12 @@
       </template>
 
       <template #loadingMoreDefault>
-        <view v-if="!serverNoMore" class="py-28rpx text-center text-25rpx text-[#576b95]" @click="loadMore">
+        <view v-if="!serverNoMore" class="yd-text-link py-28rpx text-center text-25rpx" @click="loadMore">
           加载更多聊天记录
         </view>
       </template>
       <template #loadingMoreFail>
-        <view class="py-28rpx text-center text-25rpx text-[#fa5151]" @click="loadMore">
+        <view class="yd-text-danger py-28rpx text-center text-25rpx" @click="loadMore">
           加载失败，点击重试
         </view>
       </template>
@@ -100,11 +100,11 @@
     />
 
     <!-- 群成员筛选 -->
-    <wd-popup v-model="memberVisible" root-portal position="bottom" custom-style="height: 70vh; border-radius: 24rpx 24rpx 0 0;">
-      <view class="h-full flex flex-col overflow-hidden bg-[#f5f5f5]">
+    <wd-popup v-model="memberVisible" root-portal position="bottom" safe-area-inset-bottom custom-style="height: 70vh; border-radius: 24rpx 24rpx 0 0;">
+      <view class="yd-bg-page h-full flex flex-col overflow-hidden">
         <view class="shrink-0 bg-white px-24rpx pb-16rpx pt-20rpx">
           <view class="flex items-center justify-between pb-12rpx">
-            <text class="text-30rpx text-[#333] font-semibold">选择群成员</text>
+            <text class="yd-text-main text-30rpx font-semibold">选择群成员</text>
             <wd-icon name="close" size="36rpx" color="#999" @click="memberVisible = false" />
           </view>
           <wd-search v-model="memberKeyword" placeholder="搜索群成员" hide-cancel />
@@ -117,7 +117,7 @@
             @click="selectMember(member)"
           >
             <ImAvatar :src="member.avatar" :name="member.nickname" size="72rpx" />
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ getMemberDisplayName(member) }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ getMemberDisplayName(member) }}</text>
           </view>
           <wd-empty v-if="filteredMembers.length === 0" icon="search" tip="没有匹配的群成员" />
         </scroll-view>

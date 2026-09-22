@@ -25,21 +25,21 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.nickname || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.SYSTEM_SOCIAL_TYPE" :value="item.type" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">社交 openid：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">社交 openid：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.openid }}</text>
             </view>
-            <view v-if="item.avatar" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">头像：</text>
+            <view v-if="item.avatar" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">头像：</text>
               <wd-img :src="item.avatar" width="60rpx" height="60rpx" mode="aspectFill" round enable-preview />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">创建时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">创建时间：</text>
               <text>{{ formatDateTime(item.createTime) }}</text>
             </view>
           </view>

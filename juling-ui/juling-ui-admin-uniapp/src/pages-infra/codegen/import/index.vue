@@ -20,10 +20,10 @@
 
     <!-- 可导入的表（多选；已导入的会被后端过滤） -->
     <scroll-view class="min-h-0 flex-1" scroll-y>
-      <view v-if="loading" class="py-80rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-80rpx text-center text-26rpx">
         加载中...
       </view>
-      <view v-else-if="!tables.length" class="py-80rpx text-center text-26rpx text-[#999]">
+      <view v-else-if="!tables.length" class="yd-text-hint py-80rpx text-center text-26rpx">
         暂无可导入的表
       </view>
       <view v-else class="p-24rpx">
@@ -35,10 +35,10 @@
           @click="toggle(t.name)"
         >
           <view class="min-w-0 flex-1">
-            <view class="truncate text-30rpx" :class="selected.includes(t.name) ? 'text-[#1677ff] font-medium' : 'text-[#333]'">
+            <view class="truncate text-30rpx" :class="selected.includes(t.name) ? 'yd-text-link font-medium' : 'yd-text-main'">
               {{ t.name }}
             </view>
-            <view class="mt-4rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx truncate text-24rpx">
               {{ t.comment || '-' }}
             </view>
           </view>
@@ -131,7 +131,7 @@ async function handleImport() {
     toast.success('导入成功')
     uni.$emit('infra:codegen:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     importing.value = false
   }
 }

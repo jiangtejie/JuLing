@@ -31,50 +31,50 @@
           @click="handleDetail(item)"
         >
           <view class="p-24rpx">
-            <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">商品编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">商品编号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.code || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">分类：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">分类：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.categoryName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">品牌：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">品牌：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.brandName || '-' }}</text>
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">单位：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">单位：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.unit || '-' }}</text>
             </view>
-            <view v-if="item.skus?.length" class="mt-18rpx rounded-8rpx bg-[#f8fafc] p-16rpx">
-              <view class="mb-12rpx flex items-center justify-between text-24rpx text-[#999]">
+            <view v-if="item.skus?.length" class="yd-bg-subtle mt-18rpx rounded-8rpx p-16rpx">
+              <view class="yd-text-hint mb-12rpx flex items-center justify-between text-24rpx">
                 <text>规格 {{ item.skus.length }} 个</text>
                 <text>创建时间：{{ formatDateTime(item.createTime) || '-' }}</text>
               </view>
               <view
                 v-for="sku in getPreviewSkus(item)"
                 :key="sku.id || sku.code || sku.name"
-                class="border-t border-[#eef2f7] py-12rpx first:border-t-0 first:pt-0 last:pb-0"
+                class="yd-border-light border-t py-12rpx first:border-t-0 first:pt-0 last:pb-0"
               >
                 <view class="mb-8rpx flex items-center justify-between gap-12rpx text-26rpx">
-                  <text class="min-w-0 flex-1 truncate text-[#333]">{{ sku.name || '默认规格' }}</text>
-                  <text class="shrink-0 text-[#999]">{{ sku.code || '-' }}</text>
+                  <text class="yd-text-main min-w-0 flex-1 truncate">{{ sku.name || '默认规格' }}</text>
+                  <text class="yd-text-hint shrink-0">{{ sku.code || '-' }}</text>
                 </view>
-                <view class="grid grid-cols-2 gap-y-6rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint grid grid-cols-2 gap-y-6rpx text-22rpx">
                   <text>成本：{{ formatPrice(sku.costPrice) || '-' }}</text>
                   <text>销售：{{ formatPrice(sku.sellingPrice) || '-' }}</text>
                   <text>净重：{{ formatWeight(sku.netWeight) || '-' }}</text>
                   <text>毛重：{{ formatWeight(sku.grossWeight) || '-' }}</text>
                 </view>
-                <view v-if="formatDimensionText(sku.length, sku.width, sku.height)" class="mt-6rpx text-22rpx text-[#999]">
+                <view v-if="formatDimensionText(sku.length, sku.width, sku.height)" class="yd-text-hint mt-6rpx text-22rpx">
                   长宽高：{{ formatDimensionText(sku.length, sku.width, sku.height) }}
                 </view>
               </view>
-              <view v-if="item.skus.length > previewSkuLimit" class="mt-12rpx text-22rpx text-[#999]">
+              <view v-if="item.skus.length > previewSkuLimit" class="yd-text-hint mt-12rpx text-22rpx">
                 还有 {{ item.skus.length - previewSkuLimit }} 个规格，进入详情查看
               </view>
             </view>

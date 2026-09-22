@@ -9,13 +9,13 @@
 
     <!-- 表单区域 -->
     <view class="pb-160rpx">
-      <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
         加载中...
       </view>
       <template v-else>
         <view
           v-if="initialized"
-          class="mx-24rpx mt-24rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]"
+          class="yd-text-link yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-24rpx"
         >
           计薪初始化已完成，仅可调整对应社保自然月。
         </view>

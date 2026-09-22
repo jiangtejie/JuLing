@@ -18,50 +18,50 @@
 
       <!-- 触发器 -->
       <view class="mt-20rpx px-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
           触发器（满足任一即触发）
         </view>
         <view v-for="(trigger, index) in formData?.triggers" :key="index" class="mb-16rpx rounded-12rpx bg-white p-24rpx">
-          <view class="mb-8rpx text-28rpx text-[#333]">
+          <view class="yd-text-main mb-8rpx text-28rpx">
             {{ index + 1 }}. {{ getTriggerTypeLabel(trigger.type) }}
           </view>
-          <view v-if="trigger.type === IotRuleSceneTriggerTypeEnum.TIMER" class="text-26rpx text-[#666]">
+          <view v-if="trigger.type === IotRuleSceneTriggerTypeEnum.TIMER" class="yd-text-sub text-26rpx">
             CRON：{{ trigger.cronExpression || '-' }}
           </view>
           <template v-else>
-            <view v-if="trigger.identifier" class="text-26rpx text-[#666]">
+            <view v-if="trigger.identifier" class="yd-text-sub text-26rpx">
               监控项：{{ trigger.identifier }}
             </view>
-            <view v-if="trigger.operator" class="text-26rpx text-[#666]">
+            <view v-if="trigger.operator" class="yd-text-sub text-26rpx">
               条件：{{ operatorLabel(trigger.operator) }} {{ trigger.value ?? '' }}
             </view>
           </template>
         </view>
-        <view v-if="!formData?.triggers?.length" class="text-26rpx text-[#999]">
+        <view v-if="!formData?.triggers?.length" class="yd-text-hint text-26rpx">
           暂无触发器
         </view>
       </view>
 
       <!-- 执行器 -->
       <view class="mt-20rpx px-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
           执行器
         </view>
         <view v-for="(action, index) in formData?.actions" :key="index" class="mb-16rpx rounded-12rpx bg-white p-24rpx">
-          <view class="mb-8rpx text-28rpx text-[#333]">
+          <view class="yd-text-main mb-8rpx text-28rpx">
             {{ index + 1 }}. {{ getActionTypeLabel(action.type) }}
           </view>
-          <view v-if="action.identifier" class="text-26rpx text-[#666]">
+          <view v-if="action.identifier" class="yd-text-sub text-26rpx">
             监控项：{{ action.identifier }}
           </view>
-          <view v-if="action.params" class="break-all text-26rpx text-[#666]">
+          <view v-if="action.params" class="yd-text-sub break-all text-26rpx">
             参数：{{ action.params }}
           </view>
-          <view v-if="action.alertConfigId" class="text-26rpx text-[#666]">
+          <view v-if="action.alertConfigId" class="yd-text-sub text-26rpx">
             告警配置：{{ alertConfigLabel(action.alertConfigId) }}
           </view>
         </view>
-        <view v-if="!formData?.actions?.length" class="text-26rpx text-[#999]">
+        <view v-if="!formData?.actions?.length" class="yd-text-hint text-26rpx">
           暂无执行器
         </view>
       </view>
@@ -208,7 +208,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('iot:scene-rule:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

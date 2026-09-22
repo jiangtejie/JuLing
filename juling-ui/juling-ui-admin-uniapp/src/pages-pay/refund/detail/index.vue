@@ -32,10 +32,10 @@
       <wd-cell title="成功时间" :value="formatDateTime(formData.successTime) || '-'" />
       <wd-cell title="创建时间" :value="formatDateTime(formData.createTime) || '-'" />
       <wd-cell title="通知地址">
-        <text class="break-all text-right text-[#333]">{{ formData.notifyUrl || '-' }}</text>
+        <text class="yd-text-main break-all text-right">{{ formData.notifyUrl || '-' }}</text>
       </wd-cell>
       <wd-cell title="回调内容">
-        <text class="break-all text-right text-[#333]">{{ formData.channelNotifyData || '-' }}</text>
+        <text class="yd-text-main break-all text-right">{{ formData.channelNotifyData || '-' }}</text>
       </wd-cell>
     </wd-cell-group>
   </view>
@@ -44,7 +44,8 @@
 <script lang="ts" setup>
 import type { PayRefund } from '@/api/pay/refund'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getPayRefund } from '@/api/pay/refund'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
@@ -82,7 +83,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

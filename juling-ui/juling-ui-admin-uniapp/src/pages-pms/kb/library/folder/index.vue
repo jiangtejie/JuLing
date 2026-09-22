@@ -19,18 +19,18 @@
 
     <!-- 文件夹信息 -->
     <view v-if="folder" class="bg-white p-24rpx">
-      <view class="text-26rpx text-[#999]">
+      <view class="yd-text-hint text-26rpx">
         创建于 {{ formatDate(folder.createTime) || '-' }} · 子文件夹 {{ folder.childFolderCount ?? 0 }} 个 · 文档 {{ folder.documentCount ?? 0 }} 篇
       </view>
     </view>
 
     <!-- 文件夹直属内容 -->
-    <view class="px-24rpx py-16rpx text-28rpx text-[#666] font-semibold">
+    <view class="yd-text-sub px-24rpx py-16rpx text-28rpx font-semibold">
       文件夹内容
     </view>
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="px-24rpx pb-200rpx">
-        <view v-if="!children.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!children.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           该文件夹暂无内容
         </view>
         <view
@@ -45,8 +45,8 @@
             :color="node.kind === 'folder' ? '#fa8c16' : '#1677ff'"
             class="shrink-0"
           />
-          <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ node.label }}</text>
-          <text class="shrink-0 text-24rpx text-[#999]">{{ getKnowledgeTreeNodeTypeName(node) }}</text>
+          <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ node.label }}</text>
+          <text class="yd-text-hint shrink-0 text-24rpx">{{ getKnowledgeTreeNodeTypeName(node) }}</text>
           <wd-icon
             name="more-vertical" size="32rpx" color="#999"
             class="shrink-0"

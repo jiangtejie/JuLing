@@ -65,13 +65,13 @@
     <!-- 驳回弹窗 -->
     <wd-popup
       v-model="rejectVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0;"
       @close="rejectVisible = false"
     >
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           驳回申请
         </view>
         <wd-textarea v-model="auditReason" clearable :maxlength="200" placeholder="请输入驳回原因" />
@@ -92,7 +92,8 @@
 import type { TradeBrokerageWithdraw } from '@/api/mall/trade/brokerage/withdraw'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import {
   approveTradeBrokerageWithdraw,
   getTradeBrokerageWithdraw,
@@ -179,7 +180,7 @@ async function handleReject() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

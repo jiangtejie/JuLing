@@ -12,7 +12,7 @@
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
         <view class="p-24rpx">
           <view class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
               活动信息
             </view>
             <wd-cell-group border>
@@ -30,7 +30,7 @@
           </view>
 
           <view class="mb-160rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
               优惠商品
             </view>
             <view class="p-24rpx">
@@ -43,11 +43,11 @@
               >
                 <template #sku="{ row }">
                   <view class="flex items-center gap-12rpx py-8rpx">
-                    <text class="w-160rpx shrink-0 text-26rpx text-[#666]">优惠金额(元)</text>
+                    <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">优惠金额(元)</text>
                     <wd-input-number v-model="row.discountPrice" :min="0" :step="0.01" :precision="2" />
                   </view>
                   <view class="flex items-center gap-12rpx py-8rpx">
-                    <text class="w-160rpx shrink-0 text-26rpx text-[#666]">折扣百分比(%)</text>
+                    <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">折扣百分比(%)</text>
                     <wd-input-number v-model="row.discountPercent" :min="0" :max="99.99" :step="0.01" :precision="2" />
                   </view>
                 </template>
@@ -194,7 +194,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:promotion-discount-activity:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

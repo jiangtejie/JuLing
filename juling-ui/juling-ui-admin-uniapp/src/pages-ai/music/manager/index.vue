@@ -34,19 +34,19 @@
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.title || '未命名音乐' }}
                 </view>
-                <view class="mt-8rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-22rpx">
                   {{ formatDateTime(item.createTime) }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.AI_MUSIC_STATUS" :value="item.status" />
             </view>
-            <view class="line-clamp-2 text-26rpx text-[#666]">
+            <view class="yd-text-sub line-clamp-2 text-26rpx">
               {{ item.prompt || item.gptDescriptionPrompt || '-' }}
             </view>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               用户：{{ getUserName(item.userId) }} / {{ item.platform || '-' }} / {{ item.model || '-' }}
             </view>
           </view>

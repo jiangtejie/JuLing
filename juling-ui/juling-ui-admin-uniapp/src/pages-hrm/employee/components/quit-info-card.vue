@@ -1,33 +1,33 @@
 <template>
   <view v-if="quitInfo?.id" class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
     <view class="mb-16rpx flex items-center justify-between">
-      <text class="text-30rpx text-[#333] font-semibold">
+      <text class="yd-text-main text-30rpx font-semibold">
         离职信息
       </text>
       <text
         v-if="editable && hasAccessByCodes(['hrm:employee:update'])"
-        class="text-28rpx text-[#1677ff]"
+        class="yd-text-link text-28rpx"
         @click="emit('edit')"
       >
         修改
       </text>
     </view>
-    <view class="mb-8rpx text-26rpx text-[#666]">
+    <view class="yd-text-sub mb-8rpx text-26rpx">
       计划离职：{{ formatDateTime(quitInfo.planQuitTime) || '-' }}
     </view>
-    <view class="mb-8rpx text-26rpx text-[#666]">
+    <view class="yd-text-sub mb-8rpx text-26rpx">
       申请离职：{{ formatDateTime(quitInfo.applyQuitTime) || '-' }}
     </view>
-    <view class="mb-8rpx text-26rpx text-[#666]">
+    <view class="yd-text-sub mb-8rpx text-26rpx">
       薪资结算：{{ formatDateTime(quitInfo.salarySettlementTime) || '-' }}
     </view>
-    <view class="mb-8rpx text-26rpx text-[#666]">
+    <view class="yd-text-sub mb-8rpx text-26rpx">
       离职类型：{{ formatEmployeeQuitType(quitInfo.type) }}
     </view>
-    <view class="mb-8rpx text-26rpx text-[#666]">
+    <view class="yd-text-sub mb-8rpx text-26rpx">
       离职原因：{{ formatEmployeeQuitReason(quitInfo.reason) }}
     </view>
-    <view v-if="quitInfo.remark" class="text-26rpx text-[#666]">
+    <view v-if="quitInfo.remark" class="yd-text-sub text-26rpx">
       备注：{{ quitInfo.remark }}
     </view>
   </view>

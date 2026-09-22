@@ -1,5 +1,5 @@
 <template>
-  <view v-if="messages.length" class="relative z-1 shrink-0 bg-[#ededed] px-20rpx py-12rpx">
+  <view v-if="messages.length" class="yd-bg-subtle relative z-1 shrink-0 px-20rpx py-12rpx">
     <!-- 折叠状态：展示最新一条置顶消息 -->
     <view
       v-if="!expanded"
@@ -7,21 +7,21 @@
       @click="handleTopClick"
     >
       <view class="i-carbon-pin-filled h-32rpx w-32rpx shrink-0 text-[#f5b800]" />
-      <text class="max-w-180rpx shrink-0 truncate text-26rpx text-[#666]">
+      <text class="yd-text-sub max-w-180rpx shrink-0 truncate text-26rpx">
         {{ getSenderName(latestMessage) }}：
       </text>
-      <text class="line-clamp-1 min-w-0 flex-1 text-26rpx text-[#333]">
+      <text class="yd-text-main line-clamp-1 min-w-0 flex-1 text-26rpx">
         {{ getPreview(latestMessage) }}
       </text>
       <text
         v-if="canManage && messages.length === 1"
-        class="shrink-0 text-25rpx text-[#576b95]"
+        class="yd-text-link shrink-0 text-25rpx"
         @click.stop="handleRemove(latestMessage)"
       >
         移除
       </text>
       <template v-else-if="messages.length > 1">
-        <text class="shrink-0 text-24rpx text-[#888]">共 {{ messages.length }} 条</text>
+        <text class="yd-text-sub shrink-0 text-24rpx">共 {{ messages.length }} 条</text>
         <wd-icon name="arrow-down" size="24rpx" color="#999" />
       </template>
     </view>
@@ -29,7 +29,7 @@
     <!-- 展开状态：从聊天顶部覆盖展示全部置顶消息 -->
     <view
       v-else
-      class="absolute left-0 right-0 top-0 z-30 bg-[#ededed] px-20rpx pb-16rpx pt-12rpx shadow-[0_12rpx_24rpx_rgba(0,0,0,0.12)]"
+      class="yd-bg-subtle absolute left-0 right-0 top-0 z-30 px-20rpx pb-16rpx pt-12rpx shadow-[0_12rpx_24rpx_rgba(0,0,0,0.12)]"
     >
       <scroll-view scroll-y class="max-h-520rpx">
         <view
@@ -39,15 +39,15 @@
           @click="handleLocate(message)"
         >
           <view class="i-carbon-pin-filled h-32rpx w-32rpx shrink-0 text-[#f5b800]" />
-          <text class="max-w-180rpx shrink-0 truncate text-26rpx text-[#666]">
+          <text class="yd-text-sub max-w-180rpx shrink-0 truncate text-26rpx">
             {{ getSenderName(message) }}：
           </text>
-          <text class="line-clamp-1 min-w-0 flex-1 text-26rpx text-[#333]">
+          <text class="yd-text-main line-clamp-1 min-w-0 flex-1 text-26rpx">
             {{ getPreview(message) }}
           </text>
           <text
             v-if="canManage"
-            class="shrink-0 text-25rpx text-[#576b95]"
+            class="yd-text-link shrink-0 text-25rpx"
             @click.stop="handleRemove(message)"
           >
             移除

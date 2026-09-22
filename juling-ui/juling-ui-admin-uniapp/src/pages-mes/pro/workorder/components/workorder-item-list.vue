@@ -1,33 +1,33 @@
 <template>
   <view class="mx-24rpx mt-24rpx">
     <view v-if="showTitle" class="mb-16rpx flex items-center justify-between">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         物料需求
       </view>
       <wd-tag type="primary" plain>
         {{ list.length }} 条
       </wd-tag>
     </view>
-    <view v-if="loading" class="rounded-12rpx bg-white py-40rpx text-center text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint rounded-12rpx bg-white py-40rpx text-center text-26rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="rounded-12rpx bg-white py-40rpx text-center text-26rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint rounded-12rpx bg-white py-40rpx text-center text-26rpx">
       暂无物料需求
     </view>
     <view v-else>
       <view v-for="item in list" :key="item.id || item.itemId" class="mb-16rpx rounded-12rpx bg-white p-20rpx shadow-sm">
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-28rpx font-semibold">
               {{ item.itemName || '-' }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               {{ item.itemCode || '-' }}
             </view>
           </view>
           <dict-tag v-if="item.itemOrProduct" :type="DICT_TYPE.MES_MD_ITEM_OR_PRODUCT" :value="item.itemOrProduct" />
         </view>
-        <view class="text-24rpx text-[#666] space-y-6rpx">
+        <view class="yd-text-sub text-24rpx space-y-6rpx">
           <view>规格型号：{{ item.itemSpecification || '-' }}</view>
           <view>单位：{{ item.unitMeasureName || '-' }}</view>
           <view>需求数量：{{ item.quantity ?? '-' }}</view>

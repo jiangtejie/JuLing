@@ -41,7 +41,8 @@
 <script lang="ts" setup>
 import type { OperateLog } from '@/api/system/operate-log'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getOperateLog } from '@/api/system/operate-log'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
@@ -80,7 +81,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

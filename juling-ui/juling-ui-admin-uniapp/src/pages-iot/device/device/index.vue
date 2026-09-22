@@ -12,25 +12,25 @@
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.deviceName }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.nickname || '未设置备注' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.IOT_DEVICE_STATE" :value="item.state" />
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">所属产品：</text>{{ productLabel(item) }}
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">所属产品：</text>{{ productLabel(item) }}
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">设备类型：</text><dict-tag :type="DICT_TYPE.IOT_PRODUCT_DEVICE_TYPE" :value="item.deviceType" />
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">设备类型：</text><dict-tag :type="DICT_TYPE.IOT_PRODUCT_DEVICE_TYPE" :value="item.deviceType" />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">固件版本：</text>{{ item.firmwareVersion || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">固件版本：</text>{{ item.firmwareVersion || '-' }}
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

@@ -9,7 +9,7 @@
 
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view class="mes-home p-24rpx">
-        <view v-if="loading && !loaded" class="rounded-8rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm">
+        <view v-if="loading && !loaded" class="yd-text-hint rounded-8rpx bg-white py-64rpx text-center text-26rpx shadow-sm">
           <wd-loading size="32rpx" />
           <view class="mt-12rpx">
             正在加载生产统计
@@ -22,7 +22,7 @@
             <view
               v-for="item in kpiCards"
               :key="item.key"
-              class="border border-[#e5e7eb] rounded-8rpx bg-white p-28rpx shadow-sm"
+              class="yd-border-base border rounded-8rpx bg-white p-28rpx shadow-sm"
               @click="handleNavigate(item.url)"
             >
               <view class="flex items-center gap-18rpx">
@@ -61,12 +61,12 @@
 
           <!-- 趋势分析 -->
           <view v-if="activeTab === MES_HOME_TAB.TREND" class="mes-tab-grid mt-24rpx">
-            <view class="overflow-hidden border border-[#e5e7eb] rounded-8rpx bg-white shadow-sm">
+            <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
               <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-28rpx py-24rpx">
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   生产趋势
                 </view>
-                <view class="flex shrink-0 border border-[#dcdfe6] rounded-8rpx bg-white">
+                <view class="yd-border-base flex shrink-0 border rounded-8rpx bg-white">
                   <view
                     v-for="item in trendDayOptions"
                     :key="item.value"
@@ -87,8 +87,8 @@
               </view>
             </view>
 
-            <view class="overflow-hidden border border-[#e5e7eb] rounded-8rpx bg-white shadow-sm">
-              <view class="border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
+              <view class="yd-text-main border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx font-semibold">
                 工单状态分布
               </view>
               <view class="p-24rpx">
@@ -103,8 +103,8 @@
 
           <!-- 待办异常 -->
           <view v-else-if="activeTab === MES_HOME_TAB.ALERT" class="mt-24rpx">
-            <view class="overflow-hidden border border-[#e5e7eb] rounded-8rpx bg-white shadow-sm">
-              <view class="border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
+              <view class="yd-text-main border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx font-semibold">
                 待办与异常
               </view>
               <view class="px-24rpx py-12rpx">
@@ -121,10 +121,10 @@
                     <wd-icon :name="item.icon" size="38rpx" :color="item.color" />
                   </view>
                   <view class="min-w-0 flex-1">
-                    <view class="text-28rpx text-[#333] font-medium">
+                    <view class="yd-text-main text-28rpx font-medium">
                       {{ item.label }}
                     </view>
-                    <view class="line-clamp-1 mt-6rpx text-24rpx text-[#999]">
+                    <view class="yd-text-hint line-clamp-1 mt-6rpx text-24rpx">
                       {{ item.desc }}
                     </view>
                   </view>
@@ -138,8 +138,8 @@
 
           <!-- 快捷入口 -->
           <view v-else class="mt-24rpx">
-            <view class="overflow-hidden border border-[#e5e7eb] rounded-8rpx bg-white shadow-sm">
-              <view class="border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
+              <view class="yd-text-main border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx font-semibold">
                 快捷入口
               </view>
               <view v-if="accessibleShortcuts.length > 0" class="mes-shortcut-grid p-32rpx">
@@ -160,14 +160,14 @@
                   </text>
                 </view>
               </view>
-              <view v-else class="px-24rpx py-48rpx text-center text-26rpx text-[#999]">
+              <view v-else class="yd-text-hint px-24rpx py-48rpx text-center text-26rpx">
                 暂无可用入口
               </view>
             </view>
           </view>
         </template>
 
-        <view v-if="loadError" class="mt-24rpx border border-[#fa8c16] rounded-8rpx bg-[#fff7e6] px-24rpx py-16rpx text-24rpx text-[#fa8c16]">
+        <view v-if="loadError" class="yd-text-warning yd-bg-warning-soft mt-24rpx border border-[#fa8c16] rounded-8rpx px-24rpx py-16rpx text-24rpx">
           统计数据加载失败，已保留默认值，模块入口仍可继续使用
         </view>
       </view>

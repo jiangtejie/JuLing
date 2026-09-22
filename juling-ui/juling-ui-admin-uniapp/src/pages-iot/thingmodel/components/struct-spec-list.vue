@@ -1,27 +1,27 @@
 <template>
   <view class="bg-white px-32rpx py-20rpx">
-    <view class="mb-12rpx text-26rpx text-[#999]">
+    <view class="yd-text-hint mb-12rpx text-26rpx">
       JSON 对象字段
     </view>
-    <view v-if="list.length === 0" class="mb-16rpx text-26rpx text-[#999]">
+    <view v-if="list.length === 0" class="yd-text-hint mb-16rpx text-26rpx">
       暂无字段
     </view>
     <view
       v-for="(item, index) in list"
       :key="item.identifier || index"
-      class="mb-16rpx flex items-center justify-between rounded-8rpx bg-[#f7f8fa] px-20rpx py-16rpx"
+      class="yd-bg-subtle mb-16rpx flex items-center justify-between rounded-8rpx px-20rpx py-16rpx"
     >
       <view class="min-w-0 flex-1">
-        <view class="truncate text-28rpx text-[#333]">
+        <view class="yd-text-main truncate text-28rpx">
           {{ item.name || item.identifier || '-' }}
         </view>
-        <view class="mt-4rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-4rpx text-24rpx">
           {{ item.identifier || '-' }} / {{ item.childDataType || '-' }}
         </view>
       </view>
       <view class="ml-16rpx flex shrink-0 gap-20rpx">
-        <text class="text-26rpx text-[#2f54eb]" @click="openForm(item, index)">编辑</text>
-        <text class="text-26rpx text-[#fa4350]" @click="removeField(index)">删除</text>
+        <text class="yd-text-link text-26rpx" @click="openForm(item, index)">编辑</text>
+        <text class="yd-text-danger text-26rpx" @click="removeField(index)">删除</text>
       </view>
     </view>
     <wd-button size="small" type="primary" variant="plain" @click="openForm()">
@@ -29,9 +29,9 @@
     </wd-button>
 
     <!-- 字段表单弹窗 -->
-    <wd-popup v-model="visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[80vh] overflow-y-auto p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ editIndex >= 0 ? '编辑字段' : '新增字段' }}
         </view>
         <wd-form ref="formRef" :model="form" :schema="formSchema">

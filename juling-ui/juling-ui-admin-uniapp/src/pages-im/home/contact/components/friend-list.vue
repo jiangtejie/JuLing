@@ -21,24 +21,24 @@
           <view class="h-84rpx w-84rpx flex items-center justify-center rounded-12rpx bg-[#fa8c16]">
             <wd-icon name="user-add" size="44rpx" color="#fff" />
           </view>
-          <view class="flex-1 border-b border-b-[#f2f3f5] py-10rpx text-30rpx text-[#222]">
+          <view class="yd-text-strong flex-1 border-b border-b-[#f2f3f5] py-10rpx text-30rpx">
             新的朋友
           </view>
         </view>
 
         <!-- 群聊入口（非搜索态） -->
         <view v-if="!keyword" class="flex items-center gap-20rpx px-24rpx py-20rpx active:bg-[#f5f5f5]" @click="goGroupList">
-          <view class="h-84rpx w-84rpx flex items-center justify-center rounded-12rpx bg-[#07c160]">
+          <view class="yd-bg-success h-84rpx w-84rpx flex items-center justify-center rounded-12rpx">
             <wd-icon name="user-group" size="44rpx" color="#fff" />
           </view>
-          <view class="flex-1 border-b border-b-[#f2f3f5] py-10rpx text-30rpx text-[#222]">
+          <view class="yd-text-strong flex-1 border-b border-b-[#f2f3f5] py-10rpx text-30rpx">
             群聊
           </view>
         </view>
 
         <!-- 分组好友列表 -->
         <template v-for="group in displayGroups" :key="group.letter || 'all'">
-          <view v-if="group.letter" :id="`fl-${group.letter}`" class="bg-[#f7f8fa] px-24rpx py-8rpx text-24rpx text-[#999]">
+          <view v-if="group.letter" :id="`fl-${group.letter}`" class="yd-text-hint yd-bg-subtle px-24rpx py-8rpx text-24rpx">
             {{ group.letter }}
           </view>
           <FriendItem

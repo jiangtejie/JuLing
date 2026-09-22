@@ -66,7 +66,7 @@
               </wd-form-item>
             </wd-cell-group>
             <view class="px-24rpx py-20rpx">
-              <view class="mb-16rpx text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main mb-16rpx text-28rpx font-medium">
                 SKU 规格与价格
               </view>
               <SkuEditor
@@ -315,7 +315,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:product-spu:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

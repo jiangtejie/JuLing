@@ -30,24 +30,24 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="flex items-center justify-between">
-            <view class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">
               {{ item.fromNickname || `用户 ${item.fromUserId}` }}
-              <text class="mx-8rpx text-[#bbb]">→</text>
+              <text class="yd-text-muted mx-8rpx">→</text>
               {{ item.toNickname || `用户 ${item.toUserId}` }}
             </view>
             <dict-tag :type="DICT_TYPE.IM_FRIEND_REQUEST_HANDLE_RESULT" :value="item.handleResult" />
           </view>
-          <view v-if="item.applyContent" class="line-clamp-2 mt-10rpx text-26rpx text-[#666]">
+          <view v-if="item.applyContent" class="yd-text-sub line-clamp-2 mt-10rpx text-26rpx">
             申请理由：{{ item.applyContent }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             <text v-if="item.addSource != null">来源：{{ getDictLabel(DICT_TYPE.IM_FRIEND_ADD_SOURCE, item.addSource) }}</text>
             <text v-if="item.displayName" class="ml-16rpx">备注：{{ item.displayName }}</text>
           </view>
-          <view v-if="item.handleContent" class="mt-8rpx text-24rpx text-[#999]">
+          <view v-if="item.handleContent" class="yd-text-hint mt-8rpx text-24rpx">
             处理理由：{{ item.handleContent }}
           </view>
-          <view class="mt-12rpx flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx flex items-center justify-between text-24rpx">
             <text>申请 {{ formatDateTime(item.createTime) }}</text>
             <text v-if="item.handleTime">处理 {{ formatDateTime(item.handleTime) }}</text>
           </view>

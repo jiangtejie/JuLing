@@ -14,22 +14,22 @@
         <view class="mb-24rpx flex items-center">
           <view
             class="mr-16rpx h-20rpx w-20rpx rounded-full"
-            :class="isConnected ? 'bg-[#07c160]' : 'bg-[#fa5151]'"
+            :class="isConnected ? 'yd-bg-success' : 'yd-bg-danger'"
           />
-          <text class="text-32rpx text-[#333] font-semibold">连接管理</text>
+          <text class="yd-text-main text-32rpx font-semibold">连接管理</text>
         </view>
         <!-- 连接状态 -->
-        <view class="mb-24rpx flex items-center rounded-12rpx bg-[#f7f8fa] p-24rpx">
-          <text class="mr-16rpx text-28rpx text-[#666]">连接状态:</text>
+        <view class="yd-bg-subtle mb-24rpx flex items-center rounded-12rpx p-24rpx">
+          <text class="yd-text-sub mr-16rpx text-28rpx">连接状态:</text>
           <wd-tag :type="isConnected ? 'success' : 'danger'">
             {{ statusText }}
           </wd-tag>
         </view>
         <!-- 服务地址 -->
         <view class="mb-24rpx">
-          <text class="mb-12rpx block text-26rpx text-[#999]">服务地址</text>
-          <view class="rounded-12rpx bg-[#f7f8fa] p-24rpx">
-            <text class="break-all text-26rpx text-[#666]">{{ serverUrl }}</text>
+          <text class="yd-text-hint mb-12rpx block text-26rpx">服务地址</text>
+          <view class="yd-bg-subtle rounded-12rpx p-24rpx">
+            <text class="yd-text-sub break-all text-26rpx">{{ serverUrl }}</text>
           </view>
         </view>
         <!-- 连接按钮 -->
@@ -48,16 +48,16 @@
       <view class="p-32rpx">
         <view class="mb-24rpx flex items-center">
           <wd-icon name="message" size="36rpx" color="#1989fa" class="mr-12rpx" />
-          <text class="text-32rpx text-[#333] font-semibold">发送消息</text>
+          <text class="yd-text-main text-32rpx font-semibold">发送消息</text>
         </view>
         <!-- 接收人选择 -->
         <view class="mb-24rpx">
-          <text class="mb-12rpx block text-26rpx text-[#999]">接收人</text>
+          <text class="yd-text-hint mb-12rpx block text-26rpx">接收人</text>
           <view
-            class="flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-24rpx"
+            class="yd-bg-subtle flex items-center justify-between rounded-12rpx p-24rpx"
             @click="isConnected && (pickerVisible.sendUserId = true)"
           >
-            <text class="text-28rpx" :class="isConnected ? 'text-[#333]' : 'text-[#c8c9cc]'">
+            <text class="text-28rpx" :class="isConnected ? 'yd-text-main' : 'text-[#c8c9cc]'">
               {{ selectedUserLabel }}
             </text>
             <wd-icon name="arrow-down" size="32rpx" :color="isConnected ? '#666' : '#c8c9cc'" />
@@ -71,7 +71,7 @@
         </view>
         <!-- 消息内容 -->
         <view class="mb-24rpx">
-          <text class="mb-12rpx block text-26rpx text-[#999]">消息内容</text>
+          <text class="yd-text-hint mb-12rpx block text-26rpx">消息内容</text>
           <wd-textarea
             v-model="sendText"
             placeholder="请输入要发送的消息..."
@@ -102,7 +102,7 @@
         <view class="mb-24rpx flex items-center justify-between">
           <view class="flex items-center">
             <wd-icon name="list" size="36rpx" color="#1989fa" class="mr-12rpx" />
-            <text class="text-32rpx text-[#333] font-semibold">消息记录</text>
+            <text class="yd-text-main text-32rpx font-semibold">消息记录</text>
             <wd-tag v-if="messageList.length > 0" type="primary" variant="plain" class="ml-16rpx">
               {{ messageList.length }} 条
             </wd-tag>
@@ -121,7 +121,7 @@
         <!-- 消息列表 -->
         <scroll-view
           scroll-y
-          class="message-list rounded-12rpx bg-[#f7f8fa]"
+          class="message-list yd-bg-subtle rounded-12rpx"
           :style="{ height: '600rpx' }"
         >
           <view v-if="messageList.length === 0" class="h-full flex flex-col items-center justify-center">
@@ -140,10 +140,10 @@
                     class="mr-12rpx h-16rpx w-16rpx rounded-full"
                     :style="{ backgroundColor: getMessageBadgeColor(msg.type) }"
                   />
-                  <text class="text-26rpx text-[#666] font-medium">
+                  <text class="yd-text-sub text-26rpx font-medium">
                     {{ getMessageTypeText(msg.type) }}
                   </text>
-                  <text v-if="msg.userId" class="ml-16rpx text-24rpx text-[#999]">
+                  <text v-if="msg.userId" class="yd-text-hint ml-16rpx text-24rpx">
                     用户 ID: {{ msg.userId }}
                   </text>
                 </view>
@@ -151,7 +151,7 @@
                   {{ formatDateTime(msg.time) }}
                 </text>
               </view>
-              <view class="break-words text-28rpx text-[#333]">
+              <view class="yd-text-main break-words text-28rpx">
                 {{ msg.text }}
               </view>
             </view>

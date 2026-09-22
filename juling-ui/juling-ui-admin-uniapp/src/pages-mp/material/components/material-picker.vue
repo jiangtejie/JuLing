@@ -1,9 +1,9 @@
 <!-- 素材选择弹层：按 type（图片 / 语音 / 视频 / 图文）从素材库 / 草稿 / 已发布分页选择素材 -->
 <template>
   <wd-popup v-model="innerVisible" position="bottom" safe-area-inset-bottom>
-    <view class="h-[80vh] bg-[#f5f5f5]">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] bg-white px-24rpx py-20rpx">
-        <view class="text-32rpx text-[#333] font-semibold">
+    <view class="yd-bg-page h-[80vh]">
+      <view class="yd-border-light flex items-center justify-between border-b bg-white px-24rpx py-20rpx">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择{{ typeLabel }}
         </view>
         <wd-button size="small" variant="plain" @click="innerVisible = false">
@@ -39,18 +39,18 @@
                 radius="8rpx"
                 mode="aspectFit"
               />
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 {{ item.name || item.mediaId || '图片素材' }}
               </view>
             </template>
             <template v-else>
-              <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
                 {{ item.title || item.name || item.mediaId || typeLabel }}
               </view>
-              <view v-if="item.introduction" class="mb-12rpx text-26rpx text-[#666]">
+              <view v-if="item.introduction" class="yd-text-sub mb-12rpx text-26rpx">
                 {{ item.introduction }}
               </view>
-              <view class="break-all text-24rpx text-[#999]">
+              <view class="yd-text-hint break-all text-24rpx">
                 {{ item.url || '-' }}
               </view>
             </template>

@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="思维导图详情"
@@ -23,11 +23,11 @@
         </view>
 
         <view class="mt-24rpx rounded-16rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-20rpx text-30rpx text-[#222] font-semibold">
+          <view class="yd-text-strong mb-20rpx text-30rpx font-semibold">
             思维导图
           </view>
           <YdMindMap v-if="formData?.generatedContent" :content="formData.generatedContent" />
-          <view v-else class="py-40rpx text-center text-26rpx text-[#999]">
+          <view v-else class="yd-text-hint py-40rpx text-center text-26rpx">
             {{ formData?.errorMessage || '暂无生成内容' }}
           </view>
         </view>
@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onShow } from '@dcloudio/uni-app'
 import type { MindMap } from '@/api/ai/mindmap'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
@@ -108,11 +109,11 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('ai:mind-map:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }
 
 /** 初始化 */
-onMounted(getDetail)
+onShow(getDetail)
 </script>

@@ -8,7 +8,7 @@
     @close="visible = false"
   >
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
@@ -38,7 +38,7 @@
                 :max="100"
                 :precision="2"
               />
-              <text class="text-28rpx text-[#999]">%</text>
+              <text class="yd-text-hint text-28rpx">%</text>
             </view>
           </wd-form-item>
           <wd-form-item title="备注" prop="remark" title-width="180rpx" vertical>
@@ -55,7 +55,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view class="mt-16rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint mt-16rpx text-24rpx">
         勾选后，员工在制定指标时可以为当前考核维度添加指标
       </view>
       <view class="mt-32rpx">

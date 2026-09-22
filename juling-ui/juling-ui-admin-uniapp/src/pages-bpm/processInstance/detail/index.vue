@@ -21,22 +21,22 @@
       <view class="p-24rpx">
         <!-- 标题 -->
         <view class="mb-16rpx pr-160rpx">
-          <text class="text-32rpx text-[#333] font-bold">{{ processInstance?.name }}</text>
+          <text class="yd-text-main text-32rpx font-bold">{{ processInstance?.name }}</text>
         </view>
         <!-- 发起人信息 -->
         <view class="flex items-center">
-          <view class="mr-12rpx h-64rpx w-64rpx flex items-center justify-center rounded-full bg-[#1890ff] text-white">
+          <view class="yd-bg-primary mr-12rpx h-64rpx w-64rpx flex items-center justify-center rounded-full text-white">
             {{ processInstance?.startUser?.nickname?.[0] || '?' }}
           </view>
           <view>
-            <text class="text-28rpx text-[#333]">{{ processInstance?.startUser?.nickname }}</text>
-            <text v-if="processInstance?.startUser?.deptName" class="ml-8rpx text-24rpx text-[#999]">
+            <text class="yd-text-main text-28rpx">{{ processInstance?.startUser?.nickname }}</text>
+            <text v-if="processInstance?.startUser?.deptName" class="yd-text-hint ml-8rpx text-24rpx">
               {{ processInstance?.startUser?.deptName }}
             </text>
           </view>
         </view>
         <!-- 提交时间 -->
-        <view class="mt-16rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-16rpx text-24rpx">
           提交于 {{ formatDateTime(processInstance?.startTime) }}
         </view>
       </view>
@@ -65,7 +65,7 @@
     <view v-show="tabType === 'progress'" class="mx-24rpx mt-24rpx rounded-16rpx bg-white">
       <view class="p-24rpx">
         <view class="mb-16rpx flex">
-          <text class="text-28rpx text-[#333] font-bold">审批进度</text>
+          <text class="yd-text-main text-28rpx font-bold">审批进度</text>
         </view>
         <!-- 流程时间线 -->
         <ProcessInstanceTimeline :activity-nodes="activityNodes" />
@@ -80,8 +80,8 @@
       <view class="p-24rpx">
         <view class="flex items-center justify-between">
           <view class="flex items-center">
-            <text class="text-28rpx text-[#333] font-bold">流程图</text>
-            <text class="ml-12rpx rounded-6rpx bg-[#fff7e6] px-10rpx py-2rpx text-20rpx text-[#fa8c16]">PC</text>
+            <text class="yd-text-main text-28rpx font-bold">流程图</text>
+            <text class="yd-text-warning yd-bg-warning-soft ml-12rpx rounded-6rpx px-10rpx py-2rpx text-20rpx">PC</text>
           </view>
           <wd-button
             icon="printer"
@@ -94,7 +94,7 @@
             打印
           </wd-button>
         </view>
-        <text class="mt-16rpx block text-24rpx text-[#999] leading-36rpx">仅 PC 支持预览，请前往 PC 端查看 BPMN 或简易流程图。</text>
+        <text class="yd-text-hint mt-16rpx block text-24rpx leading-36rpx">仅 PC 支持预览，请前往 PC 端查看 BPMN 或简易流程图。</text>
       </view>
     </view>
 

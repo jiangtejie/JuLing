@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="积分商城详情"
@@ -20,7 +20,7 @@
 
         <!-- 积分商品 -->
         <view v-if="formData.products?.length" class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
             兑换商品
           </view>
           <view class="p-16rpx">
@@ -141,7 +141,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mall:promotion-point-activity:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

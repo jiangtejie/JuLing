@@ -1,10 +1,10 @@
 <template>
   <wd-popup v-model="visible" position="bottom" closable safe-area-inset-bottom @close="visible = false">
     <view class="px-32rpx pb-32rpx pt-24rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
-      <view class="mb-24rpx rounded-12rpx bg-[#f7f8fa] p-24rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub yd-bg-subtle mb-24rpx rounded-12rpx p-24rpx text-26rpx">
         <view>员工：{{ employee?.name || '-' }}</view>
         <view class="mt-8rpx">
           岗位：{{ employee?.postName || '-' }}
@@ -103,6 +103,7 @@
 <script lang="ts" setup>
 import type { Employee, EmployeeQuitReq } from '@/api/hrm/employee'
 import { computed, ref } from 'vue'
+import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { quitEmployee } from '@/api/hrm/employee'
 import { getEmployeeQuitInfo } from '@/api/hrm/employee/quit-info'
@@ -120,6 +121,7 @@ const emit = defineEmits<{
 }>()
 
 const toast = useToast()
+const dialog = useDialog()
 const visible = ref(false) // 弹窗显示
 const formLoading = ref(false) // 提交状态
 const employee = ref<Employee>() // 当前员工
@@ -215,6 +217,15 @@ async function handleSubmit() {
     : undefined
   const { valid } = await formRef.value.validate()
   if (!valid) {
+    return
+  }
+  // add by 棱信矩灵：离职会写入计划离职时间与薪资结算日期，直接影响工资与社保核算，补二次确认
+  try {
+    await dialog.confirm({
+      title: '提示',
+      msg: '确认提交离职信息？该操作会影响工资与社保核算，误操作需走「取消离职」才能回退。',
+    })
+  } catch {
     return
   }
   formLoading.value = true

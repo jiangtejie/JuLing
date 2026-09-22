@@ -1,7 +1,7 @@
 <template>
   <view class="mx-24rpx mt-24rpx">
     <view class="mb-16rpx flex items-center justify-between">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         工序记录（{{ total }}）
       </view>
       <wd-button v-if="editable" size="small" type="primary" variant="plain" @click="openForm()">
@@ -28,10 +28,10 @@
           <view class="p-20rpx">
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-28rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-28rpx font-semibold">
                   {{ item.processName || '未选择工序' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   序号 {{ item.sort ?? '-' }}，{{ item.processCode || '-' }}
                 </view>
               </view>
@@ -44,7 +44,7 @@
                 </wd-button>
               </view>
             </view>
-            <view class="text-24rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-24rpx space-y-6rpx">
               <view>进入：{{ formatDateTime(item.inputTime) || '-' }}</view>
               <view>出工序：{{ formatDateTime(item.outputTime) || '-' }}</view>
               <view>数量：投入 {{ item.inputQuantity ?? '-' }}，产出 {{ item.outputQuantity ?? '-' }}，不良 {{ item.unqualifiedQuantity ?? '-' }}</view>
@@ -66,12 +66,12 @@
       safe-area-inset-bottom
       custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formTitle }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

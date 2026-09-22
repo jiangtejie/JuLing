@@ -44,7 +44,7 @@
 
       <!-- 凭证分录规则 -->
       <view class="mt-24rpx">
-        <view class="mb-16rpx px-8rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx px-8rpx text-30rpx font-semibold">
           凭证分录规则
         </view>
         <view
@@ -53,21 +53,21 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">
               {{ rule.digest || '-' }}
             </view>
             <wd-tag :type="rule.direction === FmsDebitCreditDirection.DEBIT ? 'primary' : 'warning'" plain>
               {{ rule.direction === FmsDebitCreditDirection.DEBIT ? '借' : '贷' }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">科目：</text>{{ formatSubject(rule.subjectId, rule.subjectCode) || '-' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">科目：</text>{{ formatSubject(rule.subjectId, rule.subjectCode) || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">金额比例：</text>{{ rule.amountRatio }}%
+          <view class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint mr-8rpx">金额比例：</text>{{ rule.amountRatio }}%
           </view>
         </view>
-        <view v-if="!formData.subjects?.length" class="py-48rpx text-center text-26rpx text-[#999]">
+        <view v-if="!formData.subjects?.length" class="yd-text-hint py-48rpx text-center text-26rpx">
           暂无分录规则
         </view>
       </view>
@@ -76,6 +76,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onShow } from '@dcloudio/uni-app'
 import type { ClosingScheme } from '@/api/fms/closing/scheme'
 import type { Subject } from '@/api/fms/config/subject'
 import type { VoucherWord } from '@/api/fms/config/voucher-word'
@@ -180,7 +181,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   await fmsStore.loadAccountSetList()
   await getDetail()
 })

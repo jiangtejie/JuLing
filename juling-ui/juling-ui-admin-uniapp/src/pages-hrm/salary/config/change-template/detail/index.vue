@@ -21,7 +21,7 @@
 
       <!-- 调薪项 -->
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           调薪项
         </view>
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
@@ -29,12 +29,12 @@
             <view
               v-for="option in formData.options"
               :key="option.code"
-              class="rounded-6rpx bg-[#e6f4ff] px-12rpx py-4rpx text-22rpx text-[#1677ff]"
+              class="yd-text-link yd-bg-info-soft rounded-6rpx px-12rpx py-4rpx text-22rpx"
             >
               {{ option.name }}
             </view>
           </view>
-          <view v-else class="py-24rpx text-center text-28rpx text-[#999]">
+          <view v-else class="yd-text-hint py-24rpx text-center text-28rpx">
             暂无调薪项
           </view>
         </view>

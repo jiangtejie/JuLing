@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container" :class="{ 'yd-page-container-paging': isPagingTab }">
+  <view class="yd-page-container yd-page-with-footer" :class="{ 'yd-page-container-paging': isPagingTab }">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="合同详情"
@@ -44,42 +44,42 @@
       <!-- 产品清单（只读） -->
       <view class="mt-24rpx bg-white">
         <view class="flex items-center justify-between px-24rpx py-20rpx">
-          <text class="text-30rpx text-[#333] font-semibold">产品清单</text>
+          <text class="yd-text-main text-30rpx font-semibold">产品清单</text>
         </view>
-        <view v-for="(row, index) in products" :key="index" class="mx-24rpx mb-20rpx rounded-12rpx bg-[#f7f8fa] p-24rpx">
-          <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+        <view v-for="(row, index) in products" :key="index" class="yd-bg-subtle mx-24rpx mb-20rpx rounded-12rpx p-24rpx">
+          <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
             {{ row.productName || '-' }}
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">产品编码：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">产品编码：</text>
             <text class="line-clamp-1">{{ row.productNo || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">产品单位：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">产品单位：</text>
             <text class="line-clamp-1">{{ getDictLabel(DICT_TYPE.CRM_PRODUCT_UNIT, row.productUnit) || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">产品价格：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">产品价格：</text>
             <text class="line-clamp-1">{{ formatMoney(row.productPrice) }}</text>
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">数量：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">数量：</text>
             <text class="line-clamp-1">{{ row.count ?? '-' }}</text>
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">合同价：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">合同价：</text>
             <text class="line-clamp-1">{{ formatMoney(row.contractPrice) }}</text>
           </view>
-          <view class="flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">合计：</text>
+          <view class="yd-text-sub flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">合计：</text>
             <text class="line-clamp-1">{{ formatMoney(row.totalPrice) }}</text>
           </view>
         </view>
         <wd-empty v-if="products.length === 0" icon="content" tip="暂无产品" />
-        <view v-else class="border-t border-[#f5f5f5] px-24rpx py-20rpx">
+        <view v-else class="yd-border-light border-t px-24rpx py-20rpx">
           <view class="flex items-center justify-between text-28rpx">
-            <text class="text-[#999]">产品总金额</text>
-            <text class="text-[#333]">{{ formatMoney(totalProductPrice) }}</text>
+            <text class="yd-text-hint">产品总金额</text>
+            <text class="yd-text-main">{{ formatMoney(totalProductPrice) }}</text>
           </view>
         </view>
       </view>
@@ -336,7 +336,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('crm:contract:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

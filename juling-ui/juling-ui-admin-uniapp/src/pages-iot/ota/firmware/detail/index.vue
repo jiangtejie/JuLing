@@ -11,14 +11,14 @@
         <wd-cell title="所属产品" :value="formData?.productName || String(formData?.productId || '-')" />
         <wd-cell title="版本号" :value="formData?.version || '-'" />
         <wd-cell title="文件地址">
-          <view class="break-all text-right text-26rpx text-[#666]">
+          <view class="yd-text-sub break-all text-right text-26rpx">
             {{ formData?.fileUrl || '-' }}
           </view>
         </wd-cell>
         <wd-cell title="文件大小" :value="formatFileSize(formData?.fileSize)" />
         <wd-cell title="签名算法" :value="formData?.fileDigestAlgorithm || '-'" />
         <wd-cell title="签名结果">
-          <view class="break-all text-right text-26rpx text-[#666]">
+          <view class="yd-text-sub break-all text-right text-26rpx">
             {{ formData?.fileDigestValue || '-' }}
           </view>
         </wd-cell>
@@ -31,10 +31,10 @@
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="flex items-start justify-between gap-16rpx">
             <view>
-              <view class="text-26rpx text-[#999]">
+              <view class="yd-text-hint text-26rpx">
                 升级设备总数
               </view>
-              <view class="mt-8rpx text-52rpx text-[#1677ff] font-semibold leading-none">
+              <view class="yd-text-link mt-8rpx text-52rpx font-semibold leading-none">
                 {{ statisticsTotal }}
               </view>
             </view>
@@ -45,7 +45,7 @@
 
           <view
             v-if="statisticsTotal === 0"
-            class="mt-24rpx rounded-8rpx bg-[#f7f8fa] px-20rpx py-18rpx text-26rpx text-[#999]"
+            class="yd-text-hint yd-bg-subtle mt-24rpx rounded-8rpx px-20rpx py-18rpx text-26rpx"
           >
             暂无升级设备
           </view>
@@ -53,12 +53,12 @@
             <view
               v-for="item in mainStatisticsCards"
               :key="item.key"
-              class="rounded-8rpx bg-[#f7f8fa] px-16rpx py-18rpx"
+              class="yd-bg-subtle rounded-8rpx px-16rpx py-18rpx"
             >
               <view class="text-34rpx font-semibold" :class="item.color">
                 {{ item.count }}
               </view>
-              <view class="mt-6rpx text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-22rpx">
                 {{ item.label }}
               </view>
             </view>
@@ -66,13 +66,13 @@
 
           <view
             v-if="statisticsTotal > 0"
-            class="grid grid-cols-3 mt-20rpx gap-12rpx border-t border-[#f0f0f0] pt-20rpx"
+            class="yd-border-light grid grid-cols-3 mt-20rpx gap-12rpx border-t pt-20rpx"
           >
             <view v-for="item in minorStatisticsCards" :key="item.key" class="min-w-0 text-center">
               <view class="text-28rpx font-semibold" :class="item.color">
                 {{ item.count }}
               </view>
-              <view class="mt-4rpx truncate text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx truncate text-22rpx">
                 {{ item.label }}
               </view>
             </view>
@@ -154,12 +154,12 @@ const minorStatisticsStatuses: number[] = [ // 次要升级状态
   IoTOtaTaskRecordStatusEnum.CANCELED.value,
 ]
 const statisticsStatusColors: Record<number, string> = { // 升级状态数字颜色
-  [IoTOtaTaskRecordStatusEnum.PENDING.value]: 'text-[#999]',
-  [IoTOtaTaskRecordStatusEnum.PUSHED.value]: 'text-[#4d80f0]',
+  [IoTOtaTaskRecordStatusEnum.PENDING.value]: 'yd-text-hint',
+  [IoTOtaTaskRecordStatusEnum.PUSHED.value]: 'yd-text-link',
   [IoTOtaTaskRecordStatusEnum.UPGRADING.value]: 'text-[#f59e0b]',
   [IoTOtaTaskRecordStatusEnum.SUCCESS.value]: 'text-[#16a34a]',
   [IoTOtaTaskRecordStatusEnum.FAILURE.value]: 'text-[#ef4444]',
-  [IoTOtaTaskRecordStatusEnum.CANCELED.value]: 'text-[#999]',
+  [IoTOtaTaskRecordStatusEnum.CANCELED.value]: 'yd-text-hint',
 }
 const statisticsCards = computed(() => { // 升级状态统计卡片
   const dictOptions = getIntDictOptions(DICT_TYPE.IOT_OTA_TASK_RECORD_STATUS)
@@ -169,7 +169,7 @@ const statisticsCards = computed(() => { // 升级状态统计卡片
       key: status.value,
       label: dict?.label || status.label,
       count: getStatisticsCount(status.value),
-      color: statisticsStatusColors[status.value] || 'text-[#333]',
+      color: statisticsStatusColors[status.value] || 'yd-text-main',
     }
   })
 })
@@ -265,7 +265,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('iot:ota-firmware:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

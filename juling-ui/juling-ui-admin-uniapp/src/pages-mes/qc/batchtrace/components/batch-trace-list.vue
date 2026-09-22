@@ -1,35 +1,35 @@
 <template>
   <view>
-    <view v-if="loading" class="py-24rpx text-28rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint py-24rpx text-28rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="py-24rpx text-28rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint py-24rpx text-28rpx">
       {{ direction === 'forward' ? '暂无向前追溯数据' : '暂无向后追溯数据' }}
     </view>
     <view v-else>
       <view
         v-for="item in list"
         :key="item.id"
-        class="mb-20rpx rounded-12rpx bg-[#f8f9fb] p-20rpx last:mb-0"
+        class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx last:mb-0"
       >
         <view class="mb-10rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-28rpx font-semibold">
               {{ item.code || '-' }}
             </view>
-            <view class="mt-6rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-6rpx truncate text-24rpx">
               生产工单：{{ item.workOrderCode || '-' }}
             </view>
           </view>
           <dict-tag v-if="item.qualityStatus != null" :type="DICT_TYPE.MES_WM_QUALITY_STATUS" :value="item.qualityStatus" />
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">物料：</text>{{ item.itemCode || '-' }} / {{ item.itemName || '-' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">物料：</text>{{ item.itemCode || '-' }} / {{ item.itemName || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
-          <text class="text-[#999]">规格单位：</text>{{ item.itemSpecification || '-' }} / {{ item.unitName || '-' }}
+        <view class="yd-text-sub mb-8rpx text-26rpx">
+          <text class="yd-text-hint">规格单位：</text>{{ item.itemSpecification || '-' }} / {{ item.unitName || '-' }}
         </view>
-        <view class="text-24rpx text-[#999]">
+        <view class="yd-text-hint text-24rpx">
           生产批号：{{ item.lotNumber || '-' }}
         </view>
       </view>

@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="mx-24rpx mt-24rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-26rpx text-[#1677ff] leading-40rpx">
+    <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx leading-40rpx">
       {{ employeeReminder }}
     </view>
 
@@ -49,11 +49,11 @@
       <wd-cell v-if="isVisible('address')" title="户籍地址" :value="employee.address || '-'" />
     </wd-cell-group>
 
-    <view class="mt-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main mt-24rpx px-24rpx text-28rpx font-semibold">
       教育经历
     </view>
     <view class="p-24rpx pb-8rpx">
-      <view v-if="!educationExperienceList.length" class="py-40rpx text-center text-28rpx text-[#999]">
+      <view v-if="!educationExperienceList.length" class="yd-text-hint py-40rpx text-center text-28rpx">
         暂无数据
       </view>
       <view
@@ -62,7 +62,7 @@
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <text class="text-30rpx text-[#333] font-semibold">
+          <text class="yd-text-main text-30rpx font-semibold">
             {{ item.graduateSchool || '-' }}
           </text>
           <dict-tag
@@ -71,20 +71,20 @@
             :value="item.education"
           />
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           专业：{{ item.major || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           {{ formatHrmDate(item.admissionTime) }} 至 {{ formatHrmDate(item.graduationTime) }}
         </view>
       </view>
     </view>
 
-    <view class="px-24rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main px-24rpx text-28rpx font-semibold">
       工作经历
     </view>
     <view class="p-24rpx pb-8rpx">
-      <view v-if="!workExperienceList.length" class="py-40rpx text-center text-28rpx text-[#999]">
+      <view v-if="!workExperienceList.length" class="yd-text-hint py-40rpx text-center text-28rpx">
         暂无数据
       </view>
       <view
@@ -92,26 +92,26 @@
         :key="item.id"
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
-        <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
           {{ item.workUnit || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           职务：{{ item.postName || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           {{ formatHrmDate(item.startTime) }} 至 {{ formatHrmDate(item.endTime) }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           离职原因：{{ item.reason || '-' }}
         </view>
       </view>
     </view>
 
-    <view class="px-24rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main px-24rpx text-28rpx font-semibold">
       证书/证件
     </view>
     <view class="p-24rpx pb-8rpx">
-      <view v-if="!certificateList.length" class="py-40rpx text-center text-28rpx text-[#999]">
+      <view v-if="!certificateList.length" class="yd-text-hint py-40rpx text-center text-28rpx">
         暂无数据
       </view>
       <view
@@ -119,29 +119,29 @@
         :key="item.id"
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
-        <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
           {{ item.name || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           级别：{{ item.level || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           证书编号：{{ item.no || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           发证机构：{{ item.issuingAuthority || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           发证日期：{{ formatHrmDate(item.issuingTime) }}
         </view>
       </view>
     </view>
 
-    <view class="px-24rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main px-24rpx text-28rpx font-semibold">
       培训经历
     </view>
     <view class="p-24rpx pb-8rpx">
-      <view v-if="!trainingExperienceList.length" class="py-40rpx text-center text-28rpx text-[#999]">
+      <view v-if="!trainingExperienceList.length" class="yd-text-hint py-40rpx text-center text-28rpx">
         暂无数据
       </view>
       <view
@@ -149,29 +149,29 @@
         :key="item.id"
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
-        <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
           {{ item.course || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           培训机构：{{ item.organizationName || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           {{ formatHrmDate(item.startTime) }} 至 {{ formatHrmDate(item.endTime) }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           培训成绩：{{ item.result || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           培训证书：{{ item.certificateName || '-' }}
         </view>
       </view>
     </view>
 
-    <view class="px-24rpx text-28rpx text-[#333] font-semibold">
+    <view class="yd-text-main px-24rpx text-28rpx font-semibold">
       联系人
     </view>
     <view class="p-24rpx pb-32rpx">
-      <view v-if="!contactList.length" class="py-40rpx text-center text-28rpx text-[#999]">
+      <view v-if="!contactList.length" class="yd-text-hint py-40rpx text-center text-28rpx">
         暂无数据
       </view>
       <view
@@ -179,19 +179,19 @@
         :key="item.id"
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
-        <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
           {{ item.name || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           关系：{{ item.relation || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           联系电话：{{ item.phone || '-' }}
         </view>
-        <view class="mb-8rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-8rpx text-26rpx">
           工作单位：{{ item.workUnit || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           联系地址：{{ item.address || '-' }}
         </view>
       </view>

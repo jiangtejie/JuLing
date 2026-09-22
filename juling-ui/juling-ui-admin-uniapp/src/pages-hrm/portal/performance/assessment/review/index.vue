@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading && !detail.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !detail.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载评分信息
@@ -19,10 +19,10 @@
         <view class="bg-white px-24rpx py-24rpx">
           <view class="mb-8rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-34rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-34rpx font-semibold">
                 {{ detail.employeeName || '-' }}
               </view>
-              <view class="mt-8rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-26rpx">
                 {{ detail.name || '-' }}
               </view>
             </view>
@@ -30,7 +30,7 @@
               <wd-tag type="warning" plain>
                 {{ currentStage?.name || '待评分' }}
               </wd-tag>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 权重 {{ currentStage?.weight || 0 }}%
               </view>
             </view>
@@ -38,19 +38,19 @@
         </view>
 
         <view v-if="detail.reviewStages?.length" class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
             评分流程
           </view>
           <view
             v-for="stage in detail.reviewStages"
             :key="stage.id"
-            class="mb-16rpx flex items-center justify-between gap-16rpx border-b border-[#f0f0f0] pb-16rpx last:mb-0 last:border-b-0 last:pb-0"
+            class="yd-border-light mb-16rpx flex items-center justify-between gap-16rpx border-b pb-16rpx last:mb-0 last:border-b-0 last:pb-0"
           >
             <view class="min-w-0 flex-1">
-              <view class="text-26rpx text-[#333]">
+              <view class="yd-text-main text-26rpx">
                 {{ stage.name || '-' }}
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 {{ stage.handlerName || '-' }} · {{ stage.weight || 0 }}%
               </view>
             </view>
@@ -60,7 +60,7 @@
                 :type="DICT_TYPE.HRM_PERFORMANCE_ASSESSMENT_STAGE_STATUS"
                 :value="stage.status"
               />
-              <view class="mt-4rpx text-26rpx text-[#666]">
+              <view class="yd-text-sub mt-4rpx text-26rpx">
                 {{ formatHrmScore(stage.score) }}
               </view>
             </view>
@@ -69,7 +69,7 @@
 
         <view
           v-if="currentStage?.rejectReason"
-          class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] px-24rpx py-20rpx text-26rpx text-[#fa8c16]"
+          class="yd-text-warning yd-bg-warning-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx"
         >
           评分被驳回：{{ currentStage.rejectReason }}
         </view>
@@ -79,35 +79,35 @@
           class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <text class="text-26rpx text-[#999]">
+            <text class="yd-text-hint text-26rpx">
               本阶段试算
             </text>
-            <text class="text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main text-28rpx font-semibold">
               {{ formatHrmScore(scorePreview.stageScore) }} 分
-              <text v-if="scorePreview.stageResultLevel" class="ml-8rpx text-24rpx text-[#1677ff]">
+              <text v-if="scorePreview.stageResultLevel" class="yd-text-link ml-8rpx text-24rpx">
                 {{ scorePreview.stageResultLevel }}
               </text>
             </text>
           </view>
           <view class="flex items-center justify-between gap-16rpx">
-            <text class="text-26rpx text-[#999]">
+            <text class="yd-text-hint text-26rpx">
               当前累计分
             </text>
-            <text class="text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main text-28rpx font-semibold">
               {{ formatHrmScore(scorePreview.cumulativeScore) }} 分
-              <text v-if="scorePreview.cumulativeResultLevel" class="ml-8rpx text-24rpx text-[#52c41a]">
+              <text v-if="scorePreview.cumulativeResultLevel" class="yd-text-success ml-8rpx text-24rpx">
                 {{ scorePreview.cumulativeResultLevel }}
               </text>
             </text>
           </view>
         </view>
 
-        <view class="mx-24rpx mt-24rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]">
+        <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-24rpx">
           单项评分范围为 0～{{ detail.upperLimitScore ?? '-' }} 分，最多保留两位小数；总分按评分、维度权重和指标权重计算。
         </view>
 
         <view class="mx-24rpx mt-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             指标评分
           </view>
           <view
@@ -115,14 +115,14 @@
             :key="quota.id || `${quota.dimensionId}-${quota.name}`"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
               {{ quota.dimensionName || '-' }} / {{ quota.name || '-' }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-12rpx text-26rpx">
               目标值：{{ quota.targetValue || '-' }}
             </view>
             <view class="mb-16rpx">
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 实际值
               </view>
               <wd-input
@@ -133,7 +133,7 @@
               />
             </view>
             <view class="mb-16rpx">
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 评分
               </view>
               <wd-input-number
@@ -146,7 +146,7 @@
               />
             </view>
             <view>
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 评语
               </view>
               <wd-textarea
@@ -160,7 +160,7 @@
         </view>
 
         <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
             {{ currentStage?.raterType === HrmPerformanceRaterType.SELF ? '自评说明' : '评分说明' }}
           </view>
           <wd-textarea

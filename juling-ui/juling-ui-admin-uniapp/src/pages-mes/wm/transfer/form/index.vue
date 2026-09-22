@@ -89,7 +89,7 @@
         :stock-mode="isStock"
       />
       <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
           调拨物料
         </view>
         <view class="text-26rpx text-[#8c8c8c] leading-40rpx">
@@ -97,13 +97,13 @@
         </view>
       </view>
 
-      <view v-if="isConfirm" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-24rpx text-26rpx text-[#389e0d] leading-42rpx">
+      <view v-if="isConfirm" class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">
         到货确认后将进入待上架状态；H5 验证仅打开确认框并取消，不确认真实状态流转。
       </view>
-      <view v-if="isStock" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#d46b08] leading-42rpx">
+      <view v-if="isStock" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">
         执行上架前需维护完整上架明细；H5 验证仅打开确认框并取消，不确认真实上架。
       </view>
-      <view v-if="isFinish" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-24rpx text-26rpx text-[#389e0d] leading-42rpx">
+      <view v-if="isFinish" class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">
         执行转移会更新库存台账；H5 验证仅打开确认框并取消，不确认真实转移。
       </view>
       <view class="h-180rpx" />

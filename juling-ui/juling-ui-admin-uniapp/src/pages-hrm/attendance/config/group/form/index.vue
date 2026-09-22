@@ -49,14 +49,14 @@
         <!-- 班次 -->
         <view class="mt-24rpx">
           <view class="mb-16rpx flex items-center justify-between px-24rpx">
-            <text class="text-30rpx text-[#333] font-semibold">班次</text>
+            <text class="yd-text-main text-30rpx font-semibold">班次</text>
             <wd-button size="small" type="primary" @click="openShiftForm()">
               新增班次
             </wd-button>
           </view>
           <view
             v-if="!formData.shifts?.length"
-            class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+            class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
           >
             请至少新增一个班次
           </view>
@@ -66,7 +66,7 @@
             class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
                 {{ formatHrmAttendanceWeeks(shift.weeks) }}
               </view>
               <view class="flex shrink-0 gap-8rpx">
@@ -78,10 +78,10 @@
                 </wd-button>
               </view>
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               {{ shift.startTime }} - {{ shift.endTime }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               打卡 {{ shift.clockInStartTime }}-{{ shift.clockInEndTime }} /
               {{ shift.clockOutStartTime }}-{{ shift.clockOutEndTime }}
             </view>
@@ -91,14 +91,14 @@
         <!-- 特殊日期 -->
         <view class="mt-8rpx">
           <view class="mb-16rpx flex items-center justify-between px-24rpx">
-            <text class="text-30rpx text-[#333] font-semibold">特殊日期</text>
+            <text class="yd-text-main text-30rpx font-semibold">特殊日期</text>
             <wd-button size="small" type="primary" @click="openSpecialDateForm()">
               添加日期
             </wd-button>
           </view>
           <view
             v-if="!formData.specialDates?.length"
-            class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+            class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
           >
             暂无特殊日期
           </view>
@@ -108,7 +108,7 @@
             class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
                 {{ formatDate(specialDate.date) || '-' }}
               </view>
               <view class="flex shrink-0 gap-8rpx">
@@ -120,7 +120,7 @@
                 </wd-button>
               </view>
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               {{ formatHrmAttendanceSpecialDate(specialDate, formData.shifts) }}
             </view>
           </view>
@@ -138,14 +138,14 @@
 
         <view v-if="formData.openPointCard" class="mt-24rpx">
           <view class="mb-16rpx flex items-center justify-between px-24rpx">
-            <text class="text-30rpx text-[#333] font-semibold">打卡地点</text>
+            <text class="yd-text-main text-30rpx font-semibold">打卡地点</text>
             <wd-button size="small" type="primary" @click="openPointForm()">
               新增地点
             </wd-button>
           </view>
           <view
             v-if="!formData.points?.length"
-            class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+            class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
           >
             请新增打卡地点
           </view>
@@ -155,7 +155,7 @@
             class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
                 {{ point.name || '-' }}
               </view>
               <view class="flex shrink-0 gap-8rpx">
@@ -167,10 +167,10 @@
                 </wd-button>
               </view>
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               {{ point.address || '-' }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               {{ point.longitude }}, {{ point.latitude }} · {{ point.radius }} 米
             </view>
           </view>
@@ -178,14 +178,14 @@
 
         <view v-if="formData.openWifiCard" class="mt-24rpx">
           <view class="mb-16rpx flex items-center justify-between px-24rpx">
-            <text class="text-30rpx text-[#333] font-semibold">打卡 WiFi</text>
+            <text class="yd-text-main text-30rpx font-semibold">打卡 WiFi</text>
             <wd-button size="small" type="primary" @click="openWifiForm()">
               新增 WiFi
             </wd-button>
           </view>
           <view
             v-if="!formData.wifis?.length"
-            class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+            class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
           >
             请新增打卡 WiFi
           </view>
@@ -195,7 +195,7 @@
             class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-8rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
                 {{ wifi.ssid || '-' }}
               </view>
               <view class="flex shrink-0 gap-8rpx">
@@ -207,7 +207,7 @@
                 </wd-button>
               </view>
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               {{ wifi.mac || '-' }}
             </view>
           </view>
@@ -215,7 +215,7 @@
 
         <!-- 扣款规则 -->
         <wd-cell-group border title="扣款规则" class="mt-24rpx">
-          <view class="mx-24rpx mb-16rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-16rpx text-24rpx text-[#1677ff]">
+          <view class="yd-text-link yd-bg-info-soft mx-24rpx mb-16rpx rounded-12rpx px-24rpx py-16rpx text-24rpx">
             扣款金额单位：按分钟为元/分钟，按次数为元/次，每月固定为元/月，旷工按元/天。
           </view>
           <yd-form-picker
@@ -234,7 +234,7 @@
                 :min="0"
                 :precision="2"
               />
-              <text class="shrink-0 text-26rpx text-[#666]">
+              <text class="yd-text-sub shrink-0 text-26rpx">
                 元/{{ formatHrmAttendanceDeductUnit(formData.deductRule.lateMethod) }}
               </text>
             </view>
@@ -255,7 +255,7 @@
                 :min="0"
                 :precision="2"
               />
-              <text class="shrink-0 text-26rpx text-[#666]">
+              <text class="yd-text-sub shrink-0 text-26rpx">
                 元/{{ formatHrmAttendanceDeductUnit(formData.deductRule.earlyMethod) }}
               </text>
             </view>
@@ -276,7 +276,7 @@
                 :min="0"
                 :precision="2"
               />
-              <text class="shrink-0 text-26rpx text-[#666]">元/天</text>
+              <text class="yd-text-sub shrink-0 text-26rpx">元/天</text>
             </view>
           </wd-form-item>
           <yd-form-picker
@@ -295,7 +295,7 @@
                 :min="0"
                 :precision="2"
               />
-              <text class="shrink-0 text-26rpx text-[#666]">元/次</text>
+              <text class="yd-text-sub shrink-0 text-26rpx">元/次</text>
             </view>
           </wd-form-item>
         </wd-cell-group>
@@ -616,7 +616,7 @@ async function handleSubmit() {
     }
     uni.$emit('hrm:attendance:group:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

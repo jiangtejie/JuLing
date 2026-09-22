@@ -12,10 +12,10 @@
       <view class="bg-white px-24rpx py-20rpx">
         <view class="mb-16rpx flex items-center gap-16rpx">
           <view
-            class="min-h-72rpx min-w-0 flex flex-1 items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx"
+            class="yd-bg-subtle min-h-72rpx min-w-0 flex flex-1 items-center gap-12rpx rounded-8rpx px-24rpx text-28rpx"
             @click="monthVisible = true"
           >
-            <text class="min-w-0 flex-1 truncate text-[#333]">
+            <text class="yd-text-main min-w-0 flex-1 truncate">
               {{ monthText }}
             </text>
             <wd-icon name="arrow-right" size="32rpx" color="#666" />
@@ -29,7 +29,7 @@
             @confirm="handleMonthChange"
           />
         </view>
-        <view class="mb-16rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-24rpx">
           考勤周期（{{ attendanceCycle }}）
         </view>
         <view class="flex gap-16rpx">
@@ -62,14 +62,14 @@
           :key="item.label"
           class="rounded-12rpx bg-white px-16rpx py-20rpx shadow-sm"
         >
-          <view class="mb-8rpx text-22rpx text-[#999]">
+          <view class="yd-text-hint mb-8rpx text-22rpx">
             {{ item.label }}
           </view>
           <view class="flex items-baseline gap-4rpx">
-            <text class="text-32rpx text-[#333] font-semibold">
+            <text class="yd-text-main text-32rpx font-semibold">
               {{ item.value }}
             </text>
-            <text class="text-22rpx text-[#999]">
+            <text class="yd-text-hint text-22rpx">
               {{ item.unit }}
             </text>
           </view>
@@ -83,7 +83,7 @@
         </wd-tabs>
       </view>
 
-      <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           加载中
@@ -120,15 +120,15 @@
               :key="item.value"
               class="mr-16rpx inline-flex rounded-full px-24rpx py-10rpx text-24rpx"
               :class="dailyStatusFilter === item.value
-                ? 'bg-[#1677ff] text-white'
-                : 'bg-[#f5f5f5] text-[#666]'"
+                ? 'yd-bg-primary text-white'
+                : 'yd-bg-page yd-text-sub'"
               @click="dailyStatusFilter = item.value"
             >
               {{ item.label }}
             </view>
           </scroll-view>
         </view>
-        <view v-if="filteredDailyDetails.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="filteredDailyDetails.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无每日明细
         </view>
         <view v-else class="p-24rpx">
@@ -139,7 +139,7 @@
             :class="getDailyBorderClass(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
                 {{ formatDate(item.attendanceTime) || '-' }}
               </view>
               <view
@@ -150,13 +150,13 @@
                 {{ item.attendanceResult }}
               </view>
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">班次：</text>{{ item.shiftName || '未排班' }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">班次：</text>{{ item.shiftName || '未排班' }}
             </view>
             <view
               v-for="clock in item.clockList || []"
               :key="clock.id || `${clock.type}-${clock.clockTime}`"
-              class="mb-8rpx flex items-center gap-12rpx text-26rpx text-[#666]"
+              class="yd-text-sub mb-8rpx flex items-center gap-12rpx text-26rpx"
             >
               <dict-tag
                 v-if="clock.type != null"
@@ -174,11 +174,11 @@
             </view>
             <view
               v-if="item.scheduled !== false && !(item.clockList || []).length"
-              class="mt-8rpx text-center text-24rpx text-[#999]"
+              class="yd-text-hint mt-8rpx text-center text-24rpx"
             >
               暂无打卡
             </view>
-            <view v-if="Number(item.leaveDays || 0) > 0" class="mt-8rpx text-26rpx text-[#1677ff]">
+            <view v-if="Number(item.leaveDays || 0) > 0" class="yd-text-link mt-8rpx text-26rpx">
               请假 {{ formatHrmDays(item.leaveDays) }} 天
             </view>
           </view>
@@ -187,10 +187,10 @@
 
       <!-- 我的请假申请 -->
       <view v-else class="pb-48rpx">
-        <view v-if="leaveLoading" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="leaveLoading" class="yd-text-hint py-80rpx text-center text-28rpx">
           <wd-loading size="32rpx" />
         </view>
-        <view v-else-if="leaveList.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-else-if="leaveList.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无请假申请
         </view>
         <view v-else class="p-24rpx">
@@ -205,24 +205,24 @@
                 :type="DICT_TYPE.HRM_ATTENDANCE_LEAVE_TYPE"
                 :value="item.type"
               />
-              <text v-else class="text-28rpx text-[#333]">-</text>
+              <text v-else class="yd-text-main text-28rpx">-</text>
               <dict-tag
                 v-if="item.approvalStatus != null"
                 :type="DICT_TYPE.BPM_PROCESS_INSTANCE_STATUS"
                 :value="item.approvalStatus"
               />
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">开始：</text>{{ formatDateTime(item.startTime) || '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">开始：</text>{{ formatDateTime(item.startTime) || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">结束：</text>{{ formatDateTime(item.endTime) || '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">结束：</text>{{ formatDateTime(item.endTime) || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">天数：</text>{{ formatHrmDays(item.day) }} 天
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">天数：</text>{{ formatHrmDays(item.day) }} 天
             </view>
-            <view v-if="item.reason" class="mb-16rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">事由：</text>{{ item.reason }}
+            <view v-if="item.reason" class="yd-text-sub mb-16rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">事由：</text>{{ item.reason }}
             </view>
             <view class="flex gap-16rpx">
               <wd-button
@@ -373,15 +373,15 @@ function getDailyBorderClass(detail?: AttendanceDailyDetail) {
 /** 获得考勤结果样式 */
 function getAttendanceResultClass(result?: string) {
   if (result === '正常') {
-    return 'bg-[#f6ffed] text-[#52c41a]'
+    return 'yd-bg-success-soft yd-text-success'
   }
   if (result?.includes('旷工')) {
-    return 'bg-[#fff1f0] text-[#f5222d]'
+    return 'yd-bg-danger-soft yd-text-danger'
   }
   if (result?.includes('缺卡') || result?.includes('迟到') || result?.includes('早退')) {
-    return 'bg-[#fff7e6] text-[#fa8c16]'
+    return 'yd-bg-warning-soft yd-text-warning'
   }
-  return 'bg-[#f5f5f5] text-[#666]'
+  return 'yd-bg-page yd-text-sub'
 }
 
 /** 加载月度考勤详情 */

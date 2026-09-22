@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="账套授权"
@@ -8,7 +8,7 @@
     />
 
     <!-- 权限级别说明 -->
-    <view class="m-24rpx rounded-12rpx bg-[#e6f4ff] p-24rpx text-26rpx text-[#1677ff] leading-40rpx">
+    <view class="yd-text-link yd-bg-info-soft m-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
       查看者可以查看账套数据，会计可以维护账套数据，主管可以管理账套及成员
     </view>
 
@@ -20,7 +20,7 @@
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-          <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
             {{ member.nickname || `用户 #${member.userId}` }}
           </view>
           <view class="flex flex-shrink-0 gap-8rpx">
@@ -30,11 +30,11 @@
             <dict-tag v-if="member.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="member.status" />
           </view>
         </view>
-        <view class="mb-12rpx text-28rpx text-[#666]">
-          <text class="mr-8rpx text-[#999]">部门：</text>{{ member.deptName || '-' }}
+        <view class="yd-text-sub mb-12rpx text-28rpx">
+          <text class="yd-text-hint mr-8rpx">部门：</text>{{ member.deptName || '-' }}
         </view>
-        <view class="mb-16rpx text-28rpx text-[#666]">
-          <text class="mr-8rpx text-[#999]">手机号码：</text>{{ member.mobile || '-' }}
+        <view class="yd-text-sub mb-16rpx text-28rpx">
+          <text class="yd-text-hint mr-8rpx">手机号码：</text>{{ member.mobile || '-' }}
         </view>
         <view class="flex items-center justify-between gap-16rpx">
           <wd-radio-group
@@ -71,7 +71,7 @@
         disabled-text="已在账套中"
         @confirm="handleAddConfirm"
       >
-        <view class="mb-24rpx flex items-center justify-center rounded-12rpx bg-white p-24rpx text-28rpx text-[#1677ff] shadow-sm">
+        <view class="yd-text-link mb-24rpx flex items-center justify-center rounded-12rpx bg-white p-24rpx text-28rpx shadow-sm">
           + 添加成员
         </view>
       </UserPicker>
@@ -173,7 +173,7 @@ async function handleSubmit() {
     await fmsStore.loadAccountSetList(true)
     uni.$emit('fms:config:account-set:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

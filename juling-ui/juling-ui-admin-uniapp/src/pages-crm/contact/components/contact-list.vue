@@ -28,18 +28,18 @@
       <view class="p-24rpx pb-160rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
             <wd-tag v-if="item.master" type="primary" variant="plain">
               关键决策人
             </wd-tag>
           </view>
-          <view v-if="item.mobile" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">手机：</text>{{ item.mobile }}
+          <view v-if="item.mobile" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">手机：</text>{{ item.mobile }}
           </view>
-          <view v-if="item.ownerUserName" class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">负责人：</text>{{ item.ownerUserName }}
+          <view v-if="item.ownerUserName" class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">负责人：</text>{{ item.ownerUserName }}
           </view>
           <view v-if="props.businessId && canRemoveBusinessContact" class="mt-16rpx flex justify-end">
             <wd-button

@@ -32,28 +32,28 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.no || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.WMS_ORDER_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center gap-12rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub mb-12rpx flex items-center gap-12rpx text-28rpx">
               <dict-tag :type="DICT_TYPE.WMS_RECEIPT_ORDER_TYPE" :value="item.type" />
               <text>{{ formatDate(item.orderTime) || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">业务单号：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">业务单号：</text>
               <text>{{ item.bizOrderNo || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">仓库：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">仓库：</text>
               <text>{{ item.warehouseName || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">供应商：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">供应商：</text>
               <text>{{ item.merchantName || '-' }}</text>
             </view>
-            <view class="flex items-center justify-between text-28rpx text-[#666]">
+            <view class="yd-text-sub flex items-center justify-between text-28rpx">
               <text>数量：{{ formatQuantity(item.totalQuantity) || '0.00' }}</text>
               <text>金额：{{ formatPrice(item.totalPrice) || '0.00' }}</text>
             </view>

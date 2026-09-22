@@ -19,14 +19,14 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <text class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
               {{ item.action || '-' }}
             </text>
-            <text class="shrink-0 text-26rpx text-[#999]">
+            <text class="yd-text-hint shrink-0 text-26rpx">
               {{ formatDateTime(item.createTime) || '-' }}
             </text>
           </view>
-          <view class="flex items-center text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center text-26rpx">
             <text>操作人：{{ item.userName || '-' }}</text>
             <dict-tag
               v-if="item.userType != null"

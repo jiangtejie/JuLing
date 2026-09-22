@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view v-if="showTitle || editable" class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         <template v-if="showTitle">
           装箱清单
         </template>
@@ -24,7 +24,7 @@
       empty-view-text="暂无装箱明细"
       @query="queryList"
     >
-      <view class="bg-[#f5f5f5] px-24rpx py-8rpx">
+      <view class="yd-bg-page px-24rpx py-8rpx">
         <view
           v-for="item in list"
           :key="item.id || item.itemId"
@@ -33,31 +33,31 @@
           <view class="p-24rpx">
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.itemCode || `明细 #${item.id}` }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.itemName || '-' }}
                 </view>
               </view>
-              <view class="shrink-0 text-26rpx text-[#1677ff]">
+              <view class="yd-text-link shrink-0 text-26rpx">
                 {{ item.quantity ?? '-' }} {{ item.unitMeasureName || '' }}
               </view>
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">规格：</text>{{ item.specification || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">规格：</text>{{ item.specification || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">生产工单：</text>{{ item.workOrderCode || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">生产工单：</text>{{ item.workOrderCode || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">批次号：</text>{{ item.batchCode || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">批次号：</text>{{ item.batchCode || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">有效期：</text>{{ formatDateTime(item.expireDate) || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">有效期：</text>{{ formatDateTime(item.expireDate) || '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">备注：</text>{{ item.remark || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">备注：</text>{{ item.remark || '-' }}
             </view>
           </view>
           <view v-if="editable" class="flex justify-end gap-16rpx px-24rpx pb-24rpx">
@@ -80,12 +80,12 @@
     safe-area-inset-bottom
     custom-style="height: 88vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="lineFormVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ lineFormTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="lineFormLoading" @click="handleSubmitLine">

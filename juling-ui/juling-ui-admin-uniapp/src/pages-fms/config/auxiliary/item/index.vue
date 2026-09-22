@@ -56,27 +56,27 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">编码：</text>{{ item.code }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">编码：</text>{{ item.code }}
           </view>
           <template v-if="isInventory">
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">规格：</text>{{ item.specification || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">规格：</text>{{ item.specification || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">单位：</text>{{ item.unit || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">单位：</text>{{ item.unit || '-' }}
             </view>
           </template>
-          <view v-if="item.remark" class="mb-12rpx truncate text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">备注：</text>{{ item.remark }}
+          <view v-if="item.remark" class="yd-text-sub mb-12rpx truncate text-28rpx">
+            <text class="yd-text-hint mr-8rpx">备注：</text>{{ item.remark }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>
       </view>

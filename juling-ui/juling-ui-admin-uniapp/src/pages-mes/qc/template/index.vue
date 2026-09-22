@@ -28,17 +28,17 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.code || '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx flex items-start text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">检测种类：</text>
+          <view class="yd-text-sub mb-12rpx flex items-start text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">检测种类：</text>
             <view class="min-w-0 flex-1">
               <template v-if="item.types?.length">
                 <dict-tag
@@ -52,11 +52,11 @@
               <text v-else>-</text>
             </view>
           </view>
-          <view v-if="item.remark" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">备注：</text>{{ item.remark }}
+          <view v-if="item.remark" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">备注：</text>{{ item.remark }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>
       </view>

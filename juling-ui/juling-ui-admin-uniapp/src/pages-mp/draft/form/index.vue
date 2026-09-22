@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -10,7 +10,7 @@
     <!-- 图文列表 -->
     <view class="bg-white px-24rpx py-20rpx">
       <view class="mb-16rpx flex items-center justify-between">
-        <view class="text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-28rpx font-semibold">
           图文列表
         </view>
         <wd-button v-if="isCreating && articles.length < 8" size="small" type="primary" @click="handleAddArticle">
@@ -22,19 +22,19 @@
           v-for="(article, index) in articles"
           :key="index"
           class="border rounded-8rpx px-20rpx py-16rpx"
-          :class="activeIndex === index ? 'border-[#1890ff] bg-[#f0f7ff]' : 'border-[#eee] bg-white'"
+          :class="activeIndex === index ? 'border-[#1890ff] bg-[#f0f7ff]' : 'yd-border-base bg-white'"
           @click="handleSwitchArticle(index)"
         >
           <view class="flex items-center gap-16rpx">
             <view
               class="h-40rpx w-40rpx flex shrink-0 items-center justify-center rounded-full text-24rpx"
-              :class="activeIndex === index ? 'bg-[#1890ff] text-white' : 'bg-[#f5f5f5] text-[#666]'"
+              :class="activeIndex === index ? 'yd-bg-primary text-white' : 'yd-bg-page yd-text-sub'"
             >
               {{ index + 1 }}
             </view>
             <view
               class="min-w-0 flex-1 truncate text-26rpx"
-              :class="activeIndex === index ? 'text-[#1890ff] font-medium' : 'text-[#333]'"
+              :class="activeIndex === index ? 'yd-text-link font-medium' : 'yd-text-main'"
             >
               {{ article.title || '未命名图文' }}
             </view>
@@ -268,7 +268,7 @@ async function handleSubmit() {
     }
     uni.$emit('mp:draft:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

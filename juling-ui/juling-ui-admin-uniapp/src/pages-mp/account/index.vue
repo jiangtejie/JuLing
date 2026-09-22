@@ -32,22 +32,22 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <wd-tag v-if="item.qrCodeUrl" type="success" plain>
                 已生成二维码
               </wd-tag>
             </view>
-            <view class="mb-12rpx flex text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">微信号：</text>
+            <view class="yd-text-sub mb-12rpx flex text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">微信号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.account || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">AppID：</text>
+            <view class="yd-text-sub mb-12rpx flex text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">AppID：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.appId || '-' }}</text>
             </view>
-            <view class="break-all text-24rpx text-[#999]">
+            <view class="yd-text-hint break-all text-24rpx">
               服务器地址：http://服务端地址/admin-api/mp/open/{{ item.appId || '-' }}
             </view>
           </view>

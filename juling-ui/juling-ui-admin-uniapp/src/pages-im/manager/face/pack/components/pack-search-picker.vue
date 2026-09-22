@@ -4,8 +4,8 @@
     <view class="yd-search-form-label">
       {{ label }}
     </view>
-    <view class="min-h-72rpx flex items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx" @click="handleOpen">
-      <text class="min-w-0 flex-1 truncate" :class="displayValue ? 'text-[#333]' : 'text-[#999]'">
+    <view class="yd-bg-subtle min-h-72rpx flex items-center gap-12rpx rounded-8rpx px-24rpx text-28rpx" @click="handleOpen">
+      <text class="min-w-0 flex-1 truncate" :class="displayValue ? 'yd-text-main' : 'yd-text-hint'">
         {{ displayValue || placeholder }}
       </text>
       <wd-icon

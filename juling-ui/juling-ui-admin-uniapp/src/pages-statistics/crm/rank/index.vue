@@ -29,7 +29,7 @@
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx">
         <view class="mb-24rpx flex items-center justify-between">
-          <view class="text-26rpx text-[#999]">
+          <view class="yd-text-hint text-26rpx">
             {{ periodText }}
           </view>
           <wd-button size="small" type="primary" variant="plain" :loading="!!loadingMap[activeSection.title]" @click="loadData">

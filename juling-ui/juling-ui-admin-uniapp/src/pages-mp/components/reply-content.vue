@@ -10,16 +10,16 @@
 
     <view v-else-if="type === 'voice'">
       <MediaPreview type="voice" :url="mediaUrl" :format="format" />
-      <view v-if="recognition" class="mt-8rpx text-24rpx text-[#999]">
+      <view v-if="recognition" class="yd-text-hint mt-8rpx text-24rpx">
         {{ recognition }}
       </view>
     </view>
 
     <view v-else-if="type === 'video' || type === 'shortvideo'">
-      <view v-if="title" class="mb-8rpx text-28rpx text-[#333]">
+      <view v-if="title" class="yd-text-main mb-8rpx text-28rpx">
         {{ title }}
       </view>
-      <view v-if="description" class="mb-8rpx text-24rpx text-[#999]">
+      <view v-if="description" class="yd-text-hint mb-8rpx text-24rpx">
         {{ description }}
       </view>
       <MediaPreview type="video" :url="mediaUrl" />
@@ -39,25 +39,25 @@
         radius="8rpx"
         mode="aspectFill"
       />
-      <view class="text-28rpx text-[#333]">
+      <view class="yd-text-main text-28rpx">
         {{ title || '音乐消息' }}
       </view>
-      <view v-if="description" class="mt-8rpx text-24rpx text-[#999]">
+      <view v-if="description" class="yd-text-hint mt-8rpx text-24rpx">
         {{ description }}
       </view>
-      <view v-if="musicUrl || hqMusicUrl" class="mt-8rpx text-24rpx text-[#576b95]">
+      <view v-if="musicUrl || hqMusicUrl" class="yd-text-link mt-8rpx text-24rpx">
         点击播放音乐 ›
       </view>
     </view>
 
     <view v-else-if="type === 'link'" class="active:opacity-70" @click="openUrl(url)">
-      <view class="text-28rpx text-[#333]">
+      <view class="yd-text-main text-28rpx">
         {{ title || url || '-' }}
       </view>
-      <view v-if="description" class="mt-8rpx text-24rpx text-[#999]">
+      <view v-if="description" class="yd-text-hint mt-8rpx text-24rpx">
         {{ description }}
       </view>
-      <view v-if="url" class="mt-8rpx text-24rpx text-[#576b95]">
+      <view v-if="url" class="yd-text-link mt-8rpx text-24rpx">
         点击打开链接 ›
       </view>
     </view>
@@ -73,10 +73,10 @@
         :scale="scale || 16"
         @tap="handleOpenLocation"
       />
-      <view v-if="label" class="mt-8rpx text-26rpx text-[#333]">
+      <view v-if="label" class="yd-text-main mt-8rpx text-26rpx">
         {{ label }}
       </view>
-      <view v-if="hasLocation" class="mt-8rpx text-24rpx text-[#576b95]" @click="handleOpenLocation">
+      <view v-if="hasLocation" class="yd-text-link mt-8rpx text-24rpx" @click="handleOpenLocation">
         在地图中查看 ›
       </view>
       <text v-else-if="!label">-</text>
@@ -86,7 +86,7 @@
       <wd-tag :type="eventTagType">
         {{ eventLabel }}
       </wd-tag>
-      <text v-if="eventKey" class="text-24rpx text-[#999]">
+      <text v-if="eventKey" class="yd-text-hint text-24rpx">
         {{ eventKey }}
       </text>
     </view>

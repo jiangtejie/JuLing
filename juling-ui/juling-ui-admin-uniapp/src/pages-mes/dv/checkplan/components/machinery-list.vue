@@ -1,17 +1,17 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view v-if="showTitle" class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         设备清单
       </view>
       <wd-button v-if="!readonly" size="small" type="primary" variant="plain" @click="openCreateForm">
         添加设备
       </wd-button>
     </view>
-    <view v-if="loading" class="px-24rpx py-32rpx text-center text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint px-24rpx py-32rpx text-center text-26rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="px-24rpx py-32rpx text-center text-26rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint px-24rpx py-32rpx text-center text-26rpx">
       暂无关联设备
     </view>
     <view v-else class="px-24rpx py-8rpx">
@@ -21,23 +21,23 @@
         class="border-b border-b-[#f5f5f5] py-20rpx last:border-b-0"
       >
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-medium">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-medium">
             {{ item.machineryName || item.machineryCode || '-' }}
           </view>
-          <view class="shrink-0 text-24rpx text-[#999]">
+          <view class="yd-text-hint shrink-0 text-24rpx">
             {{ item.machineryCode || '-' }}
           </view>
         </view>
-        <view class="mb-8rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">品牌：</text>
+        <view class="yd-text-sub mb-8rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">品牌：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.machineryBrand || '-' }}</text>
         </view>
-        <view class="mb-8rpx flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+        <view class="yd-text-sub mb-8rpx flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.machinerySpecification || '-' }}</text>
         </view>
-        <view class="flex text-26rpx text-[#666]">
-          <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+        <view class="yd-text-sub flex text-26rpx">
+          <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
           <text class="min-w-0 flex-1 truncate">{{ item.remark || '-' }}</text>
         </view>
         <view v-if="!readonly" class="mt-16rpx flex justify-end">
@@ -56,12 +56,12 @@
     :custom-style="getTopPopupStyle()"
     :modal-style="getTopPopupModalStyle()"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="formVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           添加设备
         </view>
         <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

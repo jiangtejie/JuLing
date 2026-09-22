@@ -64,7 +64,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view v-if="props.id" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-18rpx text-26rpx text-[#0958d9]">
+      <view v-if="props.id" class="yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-18rpx text-26rpx text-[#0958d9]">
         草稿方案可维护关联设备和保养项目；保存关联会立即写入，请谨慎操作。
       </view>
       <MachineryList v-if="props.id" :plan-id="Number(props.id)" />
@@ -193,7 +193,7 @@ async function handleSubmit() {
     }
     uni.$emit('mes:dv:checkplan:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

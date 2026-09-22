@@ -11,7 +11,7 @@
     <view class="pb-160rpx">
       <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <view class="min-w-0 flex-1 truncate text-34rpx text-[#333] font-semibold">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-34rpx font-semibold">
             {{ formData.employeeName || '-' }}
           </view>
           <dict-tag
@@ -20,7 +20,7 @@
             :value="formData.status"
           />
         </view>
-        <view class="text-26rpx text-[#999]">
+        <view class="yd-text-hint text-26rpx">
           {{ formData.postName || '-' }} · {{ formData.year || '-' }} 年 {{ formData.month || '-' }} 月
         </view>
       </view>
@@ -57,7 +57,7 @@
 
       <!-- 缴费项目 -->
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           缴费项目
         </view>
         <view
@@ -65,42 +65,42 @@
           :key="item.schemeProjectId || index"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
             {{ formatHrmInsuranceProjectName(item) }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             缴纳基数：{{ formatHrmMoney(item.baseAmount) }}
           </view>
           <view
             v-if="formData.schemeType === HrmInsuranceSchemeType.PROPORTION"
-            class="mb-8rpx text-26rpx text-[#666]"
+            class="yd-text-sub mb-8rpx text-26rpx"
           >
             企业比例：{{ formatHrmRate(item.corporateRate) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             个人比例：{{ formatHrmRate(item.personalRate) }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             个人缴纳：{{ formatHrmMoney(item.personalAmount) }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             企业缴纳：{{ formatHrmMoney(item.corporateAmount) }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             合计缴费：{{ formatHrmMoney(item.totalAmount) }}
           </view>
         </view>
-        <view v-if="!projects.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+        <view v-if="!projects.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
           暂无缴费项目
         </view>
         <view v-else class="rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-28rpx font-semibold">
             缴费总价
           </view>
-          <view class="mt-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-12rpx text-26rpx">
             个人：{{ formatHrmMoney(projectSummary.personalAmount) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             企业：{{ formatHrmMoney(projectSummary.corporateAmount) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             合计：{{ formatHrmMoney(projectSummary.totalAmount) }}
           </view>
         </view>

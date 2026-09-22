@@ -19,7 +19,7 @@
         :color="node.kind === 'folder' ? '#fa8c16' : '#1677ff'"
         class="shrink-0"
       />
-      <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ node.label }}</text>
+      <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ node.label }}</text>
       <wd-icon
         v-if="showMore"
         name="more-vertical" size="32rpx" color="#999"

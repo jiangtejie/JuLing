@@ -39,18 +39,18 @@
               radius="12rpx"
               mode="aspectFill"
             />
-            <view v-else class="h-120rpx w-120rpx flex items-center justify-center rounded-12rpx bg-[#f0f2f5] text-24rpx text-[#bbb]">
+            <view v-else class="yd-bg-subtle yd-text-muted h-120rpx w-120rpx flex items-center justify-center rounded-12rpx text-24rpx">
               无封面
             </view>
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between">
-                <text class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">{{ item.title || '-' }}</text>
+                <text class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">{{ item.title || '-' }}</text>
                 <dict-tag :type="DICT_TYPE.IM_CHANNEL_MATERIAL_TYPE" :value="item.type" />
               </view>
-              <view class="mt-10rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-10rpx text-26rpx">
                 频道：{{ item.channelName || '-' }}
               </view>
-              <view v-if="item.summary" class="line-clamp-2 mt-6rpx text-26rpx text-[#999]">
+              <view v-if="item.summary" class="yd-text-hint line-clamp-2 mt-6rpx text-26rpx">
                 {{ item.summary }}
               </view>
             </view>

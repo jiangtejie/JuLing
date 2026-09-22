@@ -33,20 +33,20 @@
             />
             <view
               v-else
-              class="h-88rpx w-88rpx flex shrink-0 items-center justify-center rounded-full bg-[#1890ff] text-34rpx text-white"
+              class="yd-bg-primary h-88rpx w-88rpx flex shrink-0 items-center justify-center rounded-full text-34rpx text-white"
             >
               {{ (item.nickname || '推').charAt(0) }}
             </view>
             <view class="min-w-0 flex-1">
               <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                   {{ item.nickname || `用户 ${item.id}` }}
                 </view>
                 <wd-tag type="primary" variant="plain">
                   {{ item.bindUserId === Number(props.bindUserId) ? '一级' : '二级' }}
                 </wd-tag>
               </view>
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 绑定时间：{{ formatDateTime(item.bindUserTime) || '-' }}
               </view>
             </view>

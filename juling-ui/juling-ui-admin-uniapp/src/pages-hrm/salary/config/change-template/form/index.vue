@@ -40,14 +40,14 @@
 
       <!-- 已选调薪项预览 -->
       <view v-if="formData.options.length" class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-28rpx">
           已选 {{ formData.options.length }} 项
         </view>
         <view class="flex flex-wrap gap-12rpx">
           <view
             v-for="option in formData.options"
             :key="option.code"
-            class="rounded-6rpx bg-[#e6f4ff] px-12rpx py-4rpx text-22rpx text-[#1677ff]"
+            class="yd-text-link yd-bg-info-soft rounded-6rpx px-12rpx py-4rpx text-22rpx"
           >
             {{ option.name }}
           </view>
@@ -179,7 +179,7 @@ async function handleSubmit() {
     }
     uni.$emit('hrm:salary:change-template:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -9,7 +9,7 @@
     @close="visible = false"
   >
     <view class="h-full flex flex-col overflow-hidden">
-      <view class="shrink-0 p-32rpx pb-16rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main shrink-0 p-32rpx pb-16rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
       <scroll-view scroll-y class="min-h-0 flex-1">
@@ -27,7 +27,7 @@
                   </wd-checkbox>
                 </wd-checkbox-group>
               </wd-form-item>
-              <view class="mx-24rpx mb-16rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-16rpx text-24rpx text-[#1677ff]">
+              <view class="yd-text-link yd-bg-info-soft mx-24rpx mb-16rpx rounded-12rpx px-24rpx py-16rpx text-24rpx">
                 打卡窗口需覆盖对应上下班时间；结束早于开始按次日计算。
               </view>
               <wd-form-item
@@ -110,7 +110,7 @@
           </wd-form>
         </view>
       </scroll-view>
-      <view class="shrink-0 border-t border-[#eee] p-24rpx">
+      <view class="yd-border-base shrink-0 border-t p-24rpx">
         <wd-button type="primary" block @click="handleConfirm">
           确定
         </wd-button>

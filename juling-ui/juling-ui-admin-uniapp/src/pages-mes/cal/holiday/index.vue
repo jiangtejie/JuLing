@@ -9,20 +9,20 @@
         <wd-button size="small" variant="plain" @click="changeMonth(-1)">
           上月
         </wd-button>
-        <view class="text-34rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-34rpx font-semibold">
           {{ currentMonthText }}
         </view>
         <wd-button size="small" variant="plain" @click="changeMonth(1)">
           下月
         </wd-button>
       </view>
-      <view class="mt-16rpx flex items-center justify-center gap-24rpx text-24rpx text-[#666]">
+      <view class="yd-text-sub mt-16rpx flex items-center justify-center gap-24rpx text-24rpx">
         <view class="flex items-center gap-8rpx">
-          <text class="h-18rpx w-18rpx rounded-full bg-[#52c41a]" />
+          <text class="yd-bg-success h-18rpx w-18rpx rounded-full" />
           <text>休息日</text>
         </view>
         <view class="flex items-center gap-8rpx">
-          <text class="h-18rpx w-18rpx rounded-full bg-[#1677ff]" />
+          <text class="yd-bg-primary h-18rpx w-18rpx rounded-full" />
           <text>工作日</text>
         </view>
         <view class="flex items-center gap-8rpx">
@@ -35,11 +35,11 @@
     <!-- 日历视图 -->
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view class="m-24rpx overflow-hidden rounded-16rpx bg-white shadow-sm">
-        <view class="grid grid-cols-7 border-b border-[#f2f3f5]">
+        <view class="yd-border-light grid grid-cols-7 border-b">
           <view
             v-for="week in weekLabels"
             :key="week"
-            class="py-18rpx text-center text-24rpx text-[#999]"
+            class="yd-text-hint py-18rpx text-center text-24rpx"
           >
             {{ week }}
           </view>
@@ -48,16 +48,16 @@
           <view
             v-for="day in calendarDays"
             :key="day.date"
-            class="min-h-128rpx border-b border-r border-[#f2f3f5] p-10rpx"
-            :class="day.isCurrentMonth ? 'bg-white' : 'bg-[#fafafa]'"
+            class="yd-border-light min-h-128rpx border-b border-r p-10rpx"
+            :class="day.isCurrentMonth ? 'bg-white' : 'yd-bg-subtle'"
             @click="handleDayClick(day)"
           >
             <view class="flex items-start justify-between gap-6rpx">
               <text
                 class="text-28rpx font-semibold"
                 :class="[
-                  day.isCurrentMonth ? 'text-[#333]' : 'text-[#c8c9cc]',
-                  day.isWeekend && day.isCurrentMonth ? 'text-[#f56c6c]' : '',
+                  day.isCurrentMonth ? 'yd-text-main' : 'text-[#c8c9cc]',
+                  day.isWeekend && day.isCurrentMonth ? 'yd-text-danger' : '',
                 ]"
               >
                 {{ day.dayOfMonth }}
@@ -65,15 +65,15 @@
               <text
                 v-if="day.isCurrentMonth"
                 class="rounded-6rpx px-8rpx py-2rpx text-20rpx text-white"
-                :class="isHoliday(day.date) ? 'bg-[#52c41a]' : 'bg-[#1677ff]'"
+                :class="isHoliday(day.date) ? 'yd-bg-success' : 'yd-bg-primary'"
               >
                 {{ isHoliday(day.date) ? '休' : '班' }}
               </text>
             </view>
-            <view v-if="day.isToday" class="mt-8rpx text-22rpx text-[#1677ff]">
+            <view v-if="day.isToday" class="yd-text-link mt-8rpx text-22rpx">
               今天
             </view>
-            <view v-if="day.isCurrentMonth && holidayMap[day.date]?.remark" class="line-clamp-2 mt-8rpx text-22rpx text-[#666]">
+            <view v-if="day.isCurrentMonth && holidayMap[day.date]?.remark" class="yd-text-sub line-clamp-2 mt-8rpx text-22rpx">
               {{ holidayMap[day.date]?.remark }}
             </view>
           </view>
@@ -84,8 +84,8 @@
     <!-- 假期设置弹层 -->
     <wd-popup v-model="formVisible" position="bottom" :safe-area-inset-bottom="true">
       <view class="max-h-[80vh] flex flex-col bg-white">
-        <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-          <text class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+          <text class="yd-text-main text-32rpx font-semibold">
             假期设置
           </text>
           <wd-icon name="close" size="36rpx" @click="formVisible = false" />

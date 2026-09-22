@@ -25,24 +25,24 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="line-clamp-1 text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-1 text-32rpx font-semibold">
                 {{ item.name || item.path }}
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">文件路径：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">文件路径：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.path }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">文件类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">文件类型：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.type }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">文件大小：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">文件大小：</text>
               <text>{{ formatFileSize(item.size) }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">上传时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">上传时间：</text>
               <text>{{ formatDateTime(item.createTime) }}</text>
             </view>
             <view v-if="item.type && item.type.includes('image')" class="mb-12rpx">

@@ -31,7 +31,7 @@
       </wd-cell-group>
 
       <!-- 商品明细 -->
-      <view class="mx-24rpx mb-16rpx mt-24rpx text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main mx-24rpx mb-16rpx mt-24rpx text-30rpx font-semibold">
         商品明细
       </view>
       <view
@@ -40,10 +40,10 @@
         class="mx-24rpx mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
       >
         <view class="border-b border-b-[#f5f5f5] px-24rpx py-20rpx">
-          <view class="text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-28rpx font-semibold">
             {{ detail.itemName || '-' }}
           </view>
-          <view class="mt-4rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-4rpx text-24rpx">
             {{ detail.skuName || '-' }}
           </view>
         </view>
@@ -90,7 +90,8 @@ import type { ReceiptOrder } from '@/api/wms/order/receipt'
 import type { ReceiptOrderDetail } from '@/api/wms/order/receipt/detail'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import {
   cancelReceiptOrder,
   completeReceiptOrder,
@@ -185,7 +186,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('wms:receipt-order:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }
@@ -251,7 +252,7 @@ async function handleCancel() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

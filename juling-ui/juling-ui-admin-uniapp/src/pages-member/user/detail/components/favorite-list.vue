@@ -29,20 +29,20 @@
           />
           <view class="min-w-0 flex-1">
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.name || `商品 ${item.spuId || '-'}` }}
               </view>
               <dict-tag :type="DICT_TYPE.PRODUCT_SPU_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">商品售价：</text>
-              <text>{{ formatAmount(item.price) }}</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">商品售价：</text>
+              <text>{{ formatDisplayMoney(item.price) }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">销量：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+              <text class="yd-text-hint mr-8rpx">销量：</text>
               <text>{{ item.salesCount ?? 0 }}</text>
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               {{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>
@@ -58,6 +58,7 @@ import { ref, watch } from 'vue'
 import { getProductFavoritePage } from '@/api/mall/product/favorite'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDateTime } from '@/utils/date'
+import { formatDisplayMoney } from '@/utils/format'
 
 const props = defineProps<{
   userId?: number | any
@@ -65,11 +66,6 @@ const props = defineProps<{
 
 const list = ref<ProductFavorite[]>([]) // 列表数据
 const pagingRef = ref<ZPagingRef<ProductFavorite>>() // 分页组件引用
-
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
-}
 
 /** 查询收藏记录 */
 async function queryList(pageNo: number, pageSize: number) {

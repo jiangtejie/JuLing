@@ -1,6 +1,6 @@
 <template>
-  <view v-if="documents.length" class="mt-20rpx rounded-20rpx bg-[#f5f5f5] px-22rpx py-18rpx">
-    <view class="mb-12rpx flex items-center gap-8rpx text-25rpx text-[#333] font-medium">
+  <view v-if="documents.length" class="yd-bg-page mt-20rpx rounded-20rpx px-22rpx py-18rpx">
+    <view class="yd-text-main mb-12rpx flex items-center gap-8rpx text-25rpx font-medium">
       <wd-icon name="file" size="28rpx" color="#1677ff" />
       <text>知识引用</text>
     </view>
@@ -8,23 +8,23 @@
       <view
         v-for="document in documents"
         :key="document.id"
-        class="rounded-14rpx bg-white px-16rpx py-12rpx text-24rpx text-[#333]"
+        class="yd-text-main rounded-14rpx bg-white px-16rpx py-12rpx text-24rpx"
         @click="handleOpen(document)"
       >
         {{ document.title }}
-        <text class="ml-6rpx text-21rpx text-[#999]">{{ document.segments.length }} 条</text>
+        <text class="yd-text-hint ml-6rpx text-21rpx">{{ document.segments.length }} 条</text>
       </view>
     </view>
 
     <wd-popup
       v-model="visible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       root-portal
       custom-style="height: 66vh; border-radius: 24rpx 24rpx 0 0;"
     >
       <view class="h-full flex flex-col overflow-hidden bg-white">
-        <view class="flex shrink-0 items-center justify-between border-b border-[#eee] px-28rpx py-24rpx">
-          <view class="min-w-0 flex-1 truncate text-31rpx text-[#333] font-semibold">
+        <view class="yd-border-base flex shrink-0 items-center justify-between border-b px-28rpx py-24rpx">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-31rpx font-semibold">
             {{ selectedDocument?.title }}
           </view>
           <wd-icon name="close" size="36rpx" color="#666" @click="visible = false" />
@@ -33,12 +33,12 @@
           <view
             v-for="segment in selectedDocument?.segments"
             :key="segment.id"
-            class="border-b border-[#eee] py-22rpx last:border-b-0"
+            class="yd-border-base border-b py-22rpx last:border-b-0"
           >
-            <view class="mb-12rpx inline-flex rounded-8rpx bg-[#f5f5f5] px-12rpx py-6rpx text-21rpx text-[#666]">
+            <view class="yd-bg-page yd-text-sub mb-12rpx inline-flex rounded-8rpx px-12rpx py-6rpx text-21rpx">
               分段 {{ segment.id }}
             </view>
-            <view class="whitespace-pre-wrap text-27rpx text-[#333] leading-44rpx">
+            <view class="yd-text-main whitespace-pre-wrap text-27rpx leading-44rpx">
               {{ segment.content || '-' }}
             </view>
           </view>

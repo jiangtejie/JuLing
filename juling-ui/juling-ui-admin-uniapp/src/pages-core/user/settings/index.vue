@@ -45,9 +45,9 @@
     <!-- 底部协议和版权 -->
     <view class="mt-80rpx flex flex-col items-center">
       <view class="mb-40rpx flex items-center text-26rpx">
-        <text class="text-[#1890ff]" @click="handleGoAgreement">《用户协议》</text>
+        <text class="yd-text-link" @click="handleGoAgreement">《用户协议》</text>
         <text class="text-gray-500">与</text>
-        <text class="text-[#1890ff]" @click="handleGoPrivacy">《隐私协议》</text>
+        <text class="yd-text-link" @click="handleGoPrivacy">《隐私协议》</text>
       </view>
       <text class="mb-10rpx text-24rpx text-gray-400">
         Copyright © 2026 棱信矩灵 All Rights Reserved.

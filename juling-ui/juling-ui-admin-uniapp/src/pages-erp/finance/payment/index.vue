@@ -28,31 +28,31 @@
           <view>
             <view class="p-24rpx">
               <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.no || '保存后自动生成' }}
                 </view>
                 <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="item.status" />
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">供应商：</text>{{ item.supplierName || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">供应商：</text>{{ item.supplierName || '-' }}
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">付款时间：</text>{{ formatDateTime(item.paymentTime) || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">付款时间：</text>{{ formatDateTime(item.paymentTime) || '-' }}
               </view>
-              <view class="mb-12rpx flex text-28rpx text-[#666]">
+              <view class="yd-text-sub mb-12rpx flex text-28rpx">
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">财务：</text>{{ item.financeUserName || '-' }}
+                  <text class="yd-text-hint mr-8rpx">财务：</text>{{ item.financeUserName || '-' }}
                 </view>
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">账户：</text>{{ item.accountName || '-' }}
+                  <text class="yd-text-hint mr-8rpx">账户：</text>{{ item.accountName || '-' }}
                 </view>
               </view>
-              <view class="flex text-28rpx text-[#666]">
+              <view class="yd-text-sub flex text-28rpx">
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">合计：</text>{{ formatMoney(item.totalPrice) }}
+                  <text class="yd-text-hint mr-8rpx">合计：</text>{{ formatMoney(item.totalPrice) }}
                 </view>
                 <view class="flex-1">
-                  <text class="mr-8rpx text-[#999]">实付：</text>{{ formatMoney(item.paymentPrice) }}
+                  <text class="yd-text-hint mr-8rpx">实付：</text>{{ formatMoney(item.paymentPrice) }}
                 </view>
               </view>
             </view>

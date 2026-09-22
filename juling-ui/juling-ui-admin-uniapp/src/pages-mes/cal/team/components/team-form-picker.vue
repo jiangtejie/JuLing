@@ -14,7 +14,7 @@
     @confirm="handleConfirm"
     @clear="handleClear"
   />
-  <view v-if="loaded && options.length === 0 && emptyText" class="mt-16rpx text-24rpx text-[#999]">
+  <view v-if="loaded && options.length === 0 && emptyText" class="yd-text-hint mt-16rpx text-24rpx">
     {{ emptyText }}
   </view>
 </template>

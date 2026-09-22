@@ -6,17 +6,17 @@
     scroll-with-animation
   >
     <view v-if="messages.length === 0" class="px-32rpx pb-48rpx pt-120rpx">
-      <view class="text-52rpx text-[#333] font-semibold leading-68rpx">
+      <view class="yd-text-main text-52rpx font-semibold leading-68rpx">
         Hi，今天想聊点什么？
       </view>
-      <view class="mt-16rpx text-27rpx text-[#999] leading-42rpx">
+      <view class="yd-text-hint mt-16rpx text-27rpx leading-42rpx">
         {{ activeConversation ? '有问题尽管问，我会认真帮你梳理。' : '选择一个对话，或者直接开始新的聊天。' }}
       </view>
       <view class="mt-48rpx flex flex-col gap-18rpx">
         <view
           v-for="item in suggestions"
           :key="item"
-          class="rounded-28rpx bg-white px-28rpx py-24rpx text-28rpx text-[#333] shadow-[0_8rpx_32rpx_rgba(0,0,0,0.04)]"
+          class="yd-text-main rounded-28rpx bg-white px-28rpx py-24rpx text-28rpx shadow-[0_8rpx_32rpx_rgba(0,0,0,0.04)]"
           @click="emit('suggestion', item)"
         >
           {{ item }}
@@ -40,14 +40,14 @@
             radius="14rpx"
             mode="aspectFill"
           />
-          <view v-else class="h-44rpx w-44rpx flex items-center justify-center rounded-14rpx bg-[#1677ff] text-24rpx text-white font-semibold">
+          <view v-else class="yd-bg-primary h-44rpx w-44rpx flex items-center justify-center rounded-14rpx text-24rpx text-white font-semibold">
             AI
           </view>
-          <text class="text-26rpx text-[#333] font-medium">{{ props.activeConversation?.title || 'AI 助手' }}</text>
+          <text class="yd-text-main text-26rpx font-medium">{{ props.activeConversation?.title || 'AI 助手' }}</text>
         </view>
         <view
-          class="text-29rpx text-[#333] leading-48rpx"
-          :class="message.type === 'user' ? 'max-w-[88%] rounded-[32rpx_32rpx_8rpx_32rpx] bg-[#e6f4ff] px-26rpx py-20rpx' : 'w-full'"
+          class="yd-text-main text-29rpx leading-48rpx"
+          :class="message.type === 'user' ? 'max-w-[88%] rounded-[32rpx_32rpx_8rpx_32rpx] yd-bg-info-soft px-26rpx py-20rpx' : 'w-full'"
         >
           <ReasoningContent
             v-if="message.reasoningContent"
@@ -73,7 +73,7 @@
           <KnowledgeReference :segments="message.segments" />
           <WebSearchReference :pages="message.webSearchPages" />
         </view>
-        <view class="mt-12rpx flex items-center gap-16rpx text-22rpx text-[#999]">
+        <view class="yd-text-hint mt-12rpx flex items-center gap-16rpx text-22rpx">
           <text v-if="message.createTime">{{ formatMessageTime(message.createTime) }}</text>
           <wd-icon name="more" size="32rpx" color="#999" @click="emit('messageMore', message)" />
         </view>

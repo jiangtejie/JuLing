@@ -23,7 +23,7 @@
       >
         <view
           class="min-h-72rpx flex items-center justify-end text-28rpx"
-          :class="model.paidForMonth ? 'text-[#333]' : 'text-[#999]'"
+          :class="model.paidForMonth ? 'yd-text-main' : 'yd-text-hint'"
           @click="!disabled && (paidMonthVisible = true)"
         >
           {{ model.paidForMonth || '请选择计薪月份' }}

@@ -3,10 +3,10 @@
     <view v-if="content || generating" class="p-28rpx">
       <view class="mb-20rpx flex items-center justify-between">
         <view class="flex items-center gap-12rpx">
-          <view class="h-48rpx w-48rpx flex items-center justify-center rounded-14rpx bg-[#52c41a]">
+          <view class="yd-bg-success h-48rpx w-48rpx flex items-center justify-center rounded-14rpx">
             <wd-icon name="share-alt" size="28rpx" color="#fff" />
           </view>
-          <text class="text-28rpx text-[#333] font-medium">当前思维导图</text>
+          <text class="yd-text-main text-28rpx font-medium">当前思维导图</text>
         </view>
         <wd-loading v-if="generating" size="30rpx" />
       </view>
@@ -17,10 +17,10 @@
       <view class="h-112rpx w-112rpx flex items-center justify-center rounded-32rpx bg-[#f0f9eb]">
         <wd-icon name="share-alt" size="54rpx" color="#52c41a" />
       </view>
-      <view class="mt-28rpx text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mt-28rpx text-32rpx font-semibold">
         生成一张思维导图
       </view>
-      <view class="mt-14rpx text-25rpx text-[#999] leading-40rpx">
+      <view class="yd-text-hint mt-14rpx text-25rpx leading-40rpx">
         输入一个主题，AI 将帮你梳理结构
       </view>
     </view>

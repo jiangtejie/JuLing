@@ -1,14 +1,14 @@
 <!-- 活动商品展示：促销活动详情复用，按 SPU 分组渲染商品图/名与每个 SKU 的规格、原价、库存及活动配置（只读，对标 spu-sku-editor 的展示部分） -->
 <template>
   <view>
-    <view v-if="loading" class="py-32rpx text-center text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint py-32rpx text-center text-26rpx">
       加载商品中...
     </view>
     <template v-else>
       <view
         v-for="group in groups"
         :key="group.spuId"
-        class="mb-16rpx overflow-hidden rounded-8rpx bg-[#f7f8fa]"
+        class="yd-bg-subtle mb-16rpx overflow-hidden rounded-8rpx"
       >
         <!-- SPU 头部 -->
         <view class="flex items-center gap-16rpx p-16rpx">
@@ -16,10 +16,10 @@
             <wd-img :src="group.picUrl" width="96rpx" height="96rpx" radius="8rpx" mode="aspectFill" />
           </view>
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main truncate text-28rpx font-medium">
               {{ group.spuName || `商品 #${group.spuId}` }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               商品编号：{{ group.spuId }}
             </view>
           </view>
@@ -29,17 +29,17 @@
         <view
           v-for="(row, index) in group.rows"
           :key="row.skuId ?? index"
-          class="border-t border-[#eee] p-16rpx"
+          class="yd-border-base border-t p-16rpx"
         >
           <view class="mb-12rpx flex items-center gap-12rpx">
             <view v-if="row.picUrl" class="shrink-0">
               <wd-img :src="row.picUrl" width="72rpx" height="72rpx" radius="8rpx" mode="aspectFill" />
             </view>
             <view class="min-w-0 flex-1">
-              <view class="truncate text-26rpx text-[#333]">
+              <view class="yd-text-main truncate text-26rpx">
                 {{ row.skuName || `SKU #${row.skuId}` }}
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 原价 {{ formatDisplayMoney(row.marketPrice ?? row.price) }} / 库存 {{ row.stock ?? '-' }}
               </view>
             </view>
@@ -48,15 +48,15 @@
           <view v-if="fields.length" class="flex flex-wrap gap-x-24rpx gap-y-8rpx text-26rpx">
             <template v-for="field in fields" :key="field.label">
               <view v-if="!field.show || field.show(row.product)" class="flex items-center gap-6rpx">
-                <text class="text-[#999]">{{ field.label }}：</text>
-                <text class="text-[#333]">{{ formatField(field, row.product) }}</text>
+                <text class="yd-text-hint">{{ field.label }}：</text>
+                <text class="yd-text-main">{{ formatField(field, row.product) }}</text>
               </view>
             </template>
           </view>
         </view>
       </view>
 
-      <view v-if="!groups.length" class="py-32rpx text-center text-26rpx text-[#999]">
+      <view v-if="!groups.length" class="yd-text-hint py-32rpx text-center text-26rpx">
         暂无商品
       </view>
     </template>

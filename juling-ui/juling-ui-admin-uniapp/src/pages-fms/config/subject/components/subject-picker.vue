@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="visible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择科目
         </view>
         <view class="w-96rpx" />
@@ -40,11 +40,11 @@
       <!-- 面包屑导航 -->
       <view
         v-if="!isSearching && parentStack.length > 0"
-        class="flex items-center border-t border-[#eee] border-t-solid bg-white px-24rpx py-16rpx"
+        class="yd-border-base flex items-center border-t border-t-solid bg-white px-24rpx py-16rpx"
         @click="handleBackParent"
       >
         <wd-icon name="arrow-left" size="14px" color="#1890ff" />
-        <text class="ml-8rpx text-26rpx text-[#1890ff]">返回上级（{{ backTargetName }}）</text>
+        <text class="yd-text-link ml-8rpx text-26rpx">返回上级（{{ backTargetName }}）</text>
       </view>
 
       <!-- 科目列表 -->
@@ -58,10 +58,10 @@
           >
             <view class="flex items-center justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.code }} {{ item.name }}
                 </view>
-                <view v-if="item.auxiliaryTypeNames?.length" class="mt-8rpx truncate text-24rpx text-[#999]">
+                <view v-if="item.auxiliaryTypeNames?.length" class="yd-text-hint mt-8rpx truncate text-24rpx">
                   辅助核算：{{ item.auxiliaryTypeNames.join('、') }}
                 </view>
               </view>
@@ -76,7 +76,7 @@
                 class="flex flex-shrink-0 items-center"
                 @click.stop="handleEnterChildren(item)"
               >
-                <text class="text-24rpx text-[#1890ff]">子科目 ({{ getChildCount(item) }})</text>
+                <text class="yd-text-link text-24rpx">子科目 ({{ getChildCount(item) }})</text>
                 <wd-icon name="arrow-right" size="12px" color="#1890ff" />
               </view>
             </view>

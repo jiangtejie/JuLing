@@ -2,7 +2,7 @@
   <view class="mt-24rpx">
     <!-- 标题操作 -->
     <view v-if="showTitle || editable" class="mb-16rpx flex items-center justify-between">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         <template v-if="showTitle">
           子箱
         </template>
@@ -36,26 +36,26 @@
           <view class="p-24rpx">
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.code || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ formatDateTime(item.packageDate) || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_WM_PACKAGE_STATUS" :value="item.status" />
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">客户：</text>{{ getClientText(item) }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">客户：</text>{{ getClientText(item) }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">尺寸：</text>{{ getSizeText(item) }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">尺寸：</text>{{ getSizeText(item) }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">重量：</text>{{ getWeightText(item) }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">重量：</text>{{ getWeightText(item) }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">检查员：</text>{{ item.inspectorName || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">检查员：</text>{{ item.inspectorName || '-' }}
             </view>
           </view>
           <view v-if="editable" class="flex justify-end gap-16rpx px-24rpx pb-24rpx">

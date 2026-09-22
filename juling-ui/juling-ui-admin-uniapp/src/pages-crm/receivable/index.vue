@@ -33,7 +33,7 @@
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.no || '-' }}
             </view>
             <view class="flex flex-wrap justify-end gap-8rpx">
@@ -41,14 +41,14 @@
               <dict-tag v-if="item.returnType !== undefined && item.returnType !== null" :type="DICT_TYPE.CRM_RECEIVABLE_RETURN_TYPE" :value="item.returnType" />
             </view>
           </view>
-          <view v-if="item.customerName" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">客户：</text>{{ item.customerName }}
+          <view v-if="item.customerName" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">客户：</text>{{ item.customerName }}
           </view>
-          <view v-if="item.price !== undefined && item.price !== null" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">金额：</text>{{ formatMoney(item.price) }}
+          <view v-if="item.price !== undefined && item.price !== null" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">金额：</text>{{ formatMoney(item.price) }}
           </view>
-          <view v-if="item.returnTime" class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">日期：</text>{{ formatDate(item.returnTime) }}
+          <view v-if="item.returnTime" class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">日期：</text>{{ formatDate(item.returnTime) }}
           </view>
         </view>
       </view>

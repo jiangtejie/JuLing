@@ -1,8 +1,8 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" root-portal custom-style="height: 50vh; border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="height: 50vh; border-radius: 24rpx 24rpx 0 0;">
     <view class="h-full flex flex-col bg-white">
       <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择表情
         </view>
         <wd-button size="small" variant="plain" @click="visible = false">
@@ -33,7 +33,7 @@
         <view v-else class="grid grid-cols-5 gap-20rpx p-24rpx">
           <view
             v-if="activeTab === 'user'"
-            class="h-104rpx flex items-center justify-center border border-[#ddd] rounded-12rpx border-dashed"
+            class="yd-border-base h-104rpx flex items-center justify-center border rounded-12rpx border-dashed"
             @click="handleUpload"
           >
             <wd-icon name="plus" size="48rpx" color="#999" />
@@ -41,7 +41,7 @@
           <view
             v-for="item in currentItems"
             :key="`${activeTab}-${item.id}`"
-            class="h-104rpx flex items-center justify-center rounded-12rpx bg-[#f7f8fa]"
+            class="yd-bg-subtle h-104rpx flex items-center justify-center rounded-12rpx"
             @click="emit('select', item)"
             @longpress="handleDelete(item)"
           >

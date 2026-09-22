@@ -1,6 +1,6 @@
 <template>
   <view class="h-full min-h-0 flex flex-col">
-    <scroll-view class="min-h-0 flex-1 bg-[#ededed]" scroll-y>
+    <scroll-view class="yd-bg-subtle min-h-0 flex-1" scroll-y>
       <!-- 群成员九宫格 -->
       <ConversationGroupMemberSection
         :members="currentMembers"

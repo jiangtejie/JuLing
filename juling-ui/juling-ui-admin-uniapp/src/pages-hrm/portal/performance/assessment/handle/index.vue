@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading && !detail.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !detail.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载处理信息
@@ -31,13 +31,13 @@
             <wd-cell title="申诉时间" :value="formatDateTime(detail.appealSubmitTime) || '-'" />
           </wd-cell-group>
           <view v-if="detail.appealFileUrls?.length" class="mx-24rpx mt-24rpx">
-            <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
               申诉附件
             </view>
             <view
               v-for="url in detail.appealFileUrls"
               :key="url"
-              class="mb-12rpx text-28rpx text-[#1677ff]"
+              class="yd-text-link mb-12rpx text-28rpx"
               @click="openAttachment(url)"
             >
               {{ getFileNameFromUrl(url) }}
@@ -46,7 +46,7 @@
         </template>
 
         <view class="mx-24rpx mt-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             绩效指标
           </view>
           <view
@@ -54,23 +54,23 @@
             :key="quota.id || `${quota.dimensionId}-${quota.name}`"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-8rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-8rpx text-28rpx font-semibold">
               {{ quota.dimensionName || '-' }} / {{ quota.name || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               目标：{{ quota.targetValue || '-' }} · 实际：{{ quota.actualValue || '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               最终分：{{ formatHrmScore(quota.finalScore) }}
             </view>
           </view>
         </view>
 
         <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
             {{ isAppealMode ? '申诉评分节点' : '退回评分节点' }}
           </view>
-          <view v-if="isAppealMode" class="mb-16rpx text-26rpx text-[#666]">
+          <view v-if="isAppealMode" class="yd-text-sub mb-16rpx text-26rpx">
             {{ appealReviewStageNames || '-' }}
           </view>
           <wd-checkbox-group v-else v-model="reviewStageIds">
@@ -87,7 +87,7 @@
             </wd-checkbox>
           </wd-checkbox-group>
 
-          <view class="mb-16rpx mt-24rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx mt-24rpx text-28rpx font-semibold">
             处理意见
           </view>
           <wd-textarea

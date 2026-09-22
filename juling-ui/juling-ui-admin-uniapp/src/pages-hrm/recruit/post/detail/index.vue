@@ -10,7 +10,7 @@
     <!-- 头部摘要 -->
     <view v-if="formData.id" class="bg-white px-24rpx py-24rpx">
       <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
           {{ formData.postName || '-' }}
         </view>
         <dict-tag
@@ -19,13 +19,13 @@
           :value="formData.status"
         />
       </view>
-      <view class="mb-8rpx text-26rpx text-[#999]">
+      <view class="yd-text-hint mb-8rpx text-26rpx">
         职位编号：{{ formData.id }}
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         {{ formData.deptName || '-' }} · {{ formData.areaName || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         负责人：{{ formData.ownerEmployeeName || '-' }} · 进度：{{ formatRecruitPostProgress(formData) }}
       </view>
     </view>
@@ -101,7 +101,7 @@
         <wd-cell title="创建时间" :value="formatDateTime(formData.createTime) || '-'" />
       </wd-cell-group>
       <wd-cell-group border title="职位描述">
-        <view class="whitespace-pre-wrap break-words px-24rpx py-24rpx text-28rpx text-[#333]">
+        <view class="yd-text-main whitespace-pre-wrap break-words px-24rpx py-24rpx text-28rpx">
           {{ formData.description || '-' }}
         </view>
       </wd-cell-group>

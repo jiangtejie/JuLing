@@ -31,17 +31,17 @@
           @click="handleDetail(item)"
         >
           <view class="flex items-center justify-between">
-            <view class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">
               {{ item.inviterNickname || `用户 ${item.inviterUserId}` }} 发起
             </view>
             <dict-tag :type="DICT_TYPE.IM_RTC_CALL_STATUS" :value="item.status" />
           </view>
-          <view class="mt-10rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mt-10rpx text-26rpx">
             {{ getDictLabel(DICT_TYPE.IM_RTC_CALL_CONVERSATION_TYPE, item.conversationType) }}
             · {{ getDictLabel(DICT_TYPE.IM_RTC_CALL_MEDIA_TYPE, item.mediaType) }}
             <text v-if="item.groupName"> · {{ item.groupName }}</text>
           </view>
-          <view class="mt-12rpx flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx flex items-center justify-between text-24rpx">
             <text>{{ formatDateTime(item.startTime) }}</text>
             <text>时长 {{ formatCallDuration(item.acceptTime, item.endTime) }}</text>
           </view>

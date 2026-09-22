@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -86,12 +86,17 @@ async function getDetail() {
 
 /** 提交表单 */
 async function handleSubmit() {
-  const { valid } = await formRef.value.validate()
-  if (!valid) {
+  // add by 棱信矩灵：防重，理由同 im/manager/channel/message/send —— delay(handleBack) 的 500ms 内按钮会重新可点
+  if (formLoading.value) {
     return
   }
   formLoading.value = true
   try {
+    const { valid } = await formRef.value.validate()
+    if (!valid) {
+      formLoading.value = false
+      return
+    }
     if (props.id) {
       await updateManagerSensitiveWord(formData.value)
       toast.success('修改成功')
@@ -100,8 +105,9 @@ async function handleSubmit() {
       toast.success('新增成功')
     }
     uni.$emit('im:manager:sensitive-word:reload')
+    // 成功分支不复位 formLoading，保持按钮禁用直到页面返回
     delay(handleBack)
-  } finally {
+  } catch {
     formLoading.value = false
   }
 }

@@ -20,18 +20,18 @@
               v-for="item in categories"
               :key="item.id"
               class="rounded-8rpx px-24rpx py-12rpx text-26rpx"
-              :class="item.id === currentCategory?.id ? 'bg-[#1677ff] text-white' : 'bg-[#f5f5f5] text-[#666]'"
+              :class="item.id === currentCategory?.id ? 'yd-bg-primary text-white' : 'yd-bg-page yd-text-sub'"
               @click="handleCategoryChange(item)"
             >
               {{ item.name }}（{{ getCategoryTemplateCount(item.id) }}）
             </view>
-            <view v-if="!loading && categories.length === 0" class="py-12rpx text-26rpx text-[#999]">
+            <view v-if="!loading && categories.length === 0" class="yd-text-hint py-12rpx text-26rpx">
               暂无模板分类
             </view>
           </view>
         </scroll-view>
         <view v-if="canManageCategory" class="flex-shrink-0 px-24rpx" @click="openCategoryManage">
-          <text class="text-26rpx text-[#1677ff]">管理分类</text>
+          <text class="yd-text-link text-26rpx">管理分类</text>
         </view>
       </view>
 
@@ -44,14 +44,14 @@
           @click="handleDetail(item)"
         >
           <view class="flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <wd-tag type="primary" plain>
               {{ item.entries.length }} 条分录
             </wd-tag>
           </view>
-          <view class="mt-12rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx text-24rpx">
             模板分类：{{ item.categoryName || '-' }}
           </view>
         </view>

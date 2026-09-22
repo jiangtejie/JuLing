@@ -11,7 +11,7 @@
     <!-- 刷新工具栏 -->
     <view class="mx-24rpx mt-16rpx flex justify-end">
       <view class="flex items-center gap-8rpx rounded-12rpx bg-white px-20rpx py-12rpx">
-        <text class="text-24rpx text-[#666]">定时刷新</text>
+        <text class="yd-text-sub text-24rpx">定时刷新</text>
         <wd-switch v-model="autoRefresh" size="20px" />
       </view>
     </view>
@@ -77,23 +77,23 @@
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id || item.requestId" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
               {{ getDeviceMessageMethodLabel(item.method) || item.method || '-' }}
             </view>
-            <view class="shrink-0 rounded-6rpx px-12rpx py-4rpx text-24rpx" :class="item.upstream ? 'bg-[#e6f4ff] text-[#1677ff]' : 'bg-[#f6ffed] text-[#52c41a]'">
+            <view class="shrink-0 rounded-6rpx px-12rpx py-4rpx text-24rpx" :class="item.upstream ? 'yd-bg-info-soft yd-text-link' : 'yd-bg-success-soft yd-text-success'">
               {{ item.upstream ? '上行' : '下行' }}
             </view>
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">请求编号：</text>{{ item.requestId || '-' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">请求编号：</text>{{ item.requestId || '-' }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">是否回复：</text>{{ item.reply ? '是' : '否' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">是否回复：</text>{{ item.reply ? '是' : '否' }}
           </view>
-          <view class="mb-12rpx break-all rounded-8rpx bg-[#f7f8fa] p-16rpx text-24rpx text-[#666]">
+          <view class="yd-text-sub yd-bg-subtle mb-12rpx break-all rounded-8rpx p-16rpx text-24rpx">
             {{ formatPayload(item) }}
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ formatDateTime(item.ts || item.reportTime) || '-' }}
           </view>
         </view>

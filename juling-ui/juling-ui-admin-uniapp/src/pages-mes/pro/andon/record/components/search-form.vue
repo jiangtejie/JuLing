@@ -17,11 +17,11 @@
         <view class="yd-search-form-label">
           工作站
         </view>
-        <view class="min-h-72rpx flex items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx" @click="openWorkstationPicker">
-          <text v-if="selectedWorkstationText" class="min-w-0 flex-1 truncate text-[#333]">
+        <view class="yd-bg-subtle min-h-72rpx flex items-center gap-12rpx rounded-8rpx px-24rpx text-28rpx" @click="openWorkstationPicker">
+          <text v-if="selectedWorkstationText" class="yd-text-main min-w-0 flex-1 truncate">
             {{ selectedWorkstationText }}
           </text>
-          <text v-else class="min-w-0 flex-1 truncate text-[#999]">
+          <text v-else class="yd-text-hint min-w-0 flex-1 truncate">
             请选择工作站
           </text>
           <wd-icon

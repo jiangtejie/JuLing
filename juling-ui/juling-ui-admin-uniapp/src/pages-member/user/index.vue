@@ -13,7 +13,7 @@
     <!-- 批量操作 -->
     <view v-if="hasCouponSendAccess" class="bg-white px-24rpx py-16rpx">
       <view class="flex items-center justify-between gap-16rpx">
-        <text v-if="selectMode" class="text-26rpx text-[#666]">
+        <text v-if="selectMode" class="yd-text-sub text-26rpx">
           已选 {{ selectedIds.length }} 人
         </text>
         <view v-else />
@@ -48,8 +48,8 @@
               <view class="min-w-0 flex flex-1 items-center gap-16rpx">
                 <view
                   v-if="selectMode"
-                  class="h-44rpx w-44rpx flex shrink-0 items-center justify-center border border-[#dcdfe6] rounded-full text-24rpx"
-                  :class="isSelected(item) ? 'border-[#1890ff] bg-[#1890ff] text-white' : 'bg-white text-transparent'"
+                  class="yd-border-base h-44rpx w-44rpx flex shrink-0 items-center justify-center border rounded-full text-24rpx"
+                  :class="isSelected(item) ? 'border-[#1890ff] yd-bg-primary text-white' : 'bg-white text-transparent'"
                   @click.stop="toggleSelect(item)"
                 >
                   ✓
@@ -64,49 +64,49 @@
                 />
                 <view
                   v-else
-                  class="h-88rpx w-88rpx flex shrink-0 items-center justify-center rounded-full bg-[#1890ff] text-34rpx text-white"
+                  class="yd-bg-primary h-88rpx w-88rpx flex shrink-0 items-center justify-center rounded-full text-34rpx text-white"
                 >
                   {{ (item.nickname || item.mobile || '会').charAt(0) }}
                 </view>
                 <view class="min-w-0 flex-1">
-                  <view class="truncate text-32rpx text-[#333] font-semibold">
+                  <view class="yd-text-main truncate text-32rpx font-semibold">
                     {{ item.nickname || item.name || item.mobile || '-' }}
                   </view>
-                  <view class="mt-4rpx text-24rpx text-[#999]">
+                  <view class="yd-text-hint mt-4rpx text-24rpx">
                     {{ item.mobile || '未绑定手机号' }}
                   </view>
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="grid grid-cols-3 mb-16rpx gap-12rpx rounded-8rpx bg-[#f7f8fa] p-16rpx text-center">
+            <view class="yd-bg-subtle grid grid-cols-3 mb-16rpx gap-12rpx rounded-8rpx p-16rpx text-center">
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ item.point ?? 0 }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   当前积分
                 </view>
               </view>
               <view>
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ item.experience ?? 0 }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   成长值
                 </view>
               </view>
               <view>
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.levelName || '-' }}
                 </view>
-                <view class="mt-4rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-22rpx">
                   等级
                 </view>
               </view>
             </view>
-            <view v-if="item.groupName" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">分组：</text>
+            <view v-if="item.groupName" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">分组：</text>
               <text>{{ item.groupName }}</text>
             </view>
             <view v-if="item.tagNames?.length" class="mb-12rpx flex flex-wrap items-center gap-8rpx">
@@ -114,7 +114,7 @@
                 {{ tag }}
               </wd-tag>
             </view>
-            <view class="flex items-center justify-between text-24rpx text-[#999]">
+            <view class="yd-text-hint flex items-center justify-between text-24rpx">
               <text>注册：{{ formatDateTime(item.createTime) || '-' }}</text>
               <text>登录：{{ formatDateTime(item.loginDate) || '-' }}</text>
             </view>

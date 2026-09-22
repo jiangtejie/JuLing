@@ -49,14 +49,14 @@
             <wd-form-item title="附单据" title-width="220rpx" prop="attachmentCount" center>
               <view class="flex items-center justify-end gap-12rpx">
                 <wd-input-number v-model="formData.attachmentCount" :min="0" :precision="0" :disabled="readOnly" />
-                <text class="text-28rpx text-[#666]">张</text>
+                <text class="yd-text-sub text-28rpx">张</text>
               </view>
             </wd-form-item>
           </wd-cell-group>
 
           <!-- 凭证分录 -->
           <view class="flex items-center justify-between px-24rpx py-16rpx">
-            <text class="text-28rpx text-[#333] font-semibold">凭证分录</text>
+            <text class="yd-text-main text-28rpx font-semibold">凭证分录</text>
             <view v-if="!props.id && !readOnly" class="flex gap-16rpx">
               <wd-button size="small" variant="plain" @click="handleOpenTemplateApply">
                 套用模板
@@ -112,12 +112,12 @@
         safe-area-inset-bottom
         custom-style="height: 70vh; border-radius: 24rpx 24rpx 0 0;"
       >
-        <view class="h-full flex flex-col bg-[#f5f5f5]">
+        <view class="yd-bg-page h-full flex flex-col">
           <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
             <wd-button variant="plain" size="small" @click="templateSelectVisible = false">
               取消
             </wd-button>
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               套用模板
             </view>
             <view class="w-96rpx" />
@@ -130,10 +130,10 @@
                 class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
                 @click="handleApplyTemplate(template)"
               >
-                <view class="text-28rpx text-[#333]">
+                <view class="yd-text-main text-28rpx">
                   {{ template.name }}
                 </view>
-                <view class="mt-8rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-24rpx">
                   {{ template.categoryName || '未分类' }}
                 </view>
               </view>
@@ -148,17 +148,17 @@
       <!-- 保存为模板弹窗 -->
       <wd-popup v-model="templateSaveVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
         <view class="p-32rpx">
-          <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
             保存为模板
           </view>
           <view class="mb-24rpx">
-            <view class="mb-16rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub mb-16rpx text-28rpx">
               模板名称
             </view>
             <wd-input v-model="templateForm.name" clearable placeholder="请输入模板名称" :maxlength="255" />
           </view>
           <view class="mb-32rpx">
-            <view class="mb-16rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub mb-16rpx text-28rpx">
               模板分类
             </view>
             <wd-radio-group v-model="templateForm.categoryId" type="button">
@@ -422,7 +422,7 @@ async function handleSubmit() {
     }
     uni.$emit('fms:voucher:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

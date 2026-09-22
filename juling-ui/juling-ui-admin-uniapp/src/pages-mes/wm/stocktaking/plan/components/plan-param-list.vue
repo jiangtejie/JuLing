@@ -3,10 +3,10 @@
     <!-- 标题 -->
     <view class="mb-16rpx flex items-center justify-between">
       <view>
-        <view class="text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-30rpx font-semibold">
           盘点参数
         </view>
-        <view class="mt-4rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-4rpx text-24rpx">
           {{ total }} 条
         </view>
       </view>
@@ -45,18 +45,18 @@
             <view class="min-w-0 flex-1">
               <dict-tag v-if="item.type != null" :type="DICT_TYPE.MES_WM_STOCK_TAKING_PLAN_PARAM_TYPE" :value="item.type" />
             </view>
-            <view class="shrink-0 text-24rpx text-[#999]">
+            <view class="yd-text-hint shrink-0 text-24rpx">
               #{{ item.id }}
             </view>
           </view>
-          <view class="mb-10rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">条件值编码：</text>{{ item.valueCode || '-' }}
+          <view class="yd-text-sub mb-10rpx text-26rpx">
+            <text class="yd-text-hint">条件值编码：</text>{{ item.valueCode || '-' }}
           </view>
-          <view class="mb-10rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">条件值名称：</text>{{ item.valueName || '-' }}
+          <view class="yd-text-sub mb-10rpx text-26rpx">
+            <text class="yd-text-hint">条件值名称：</text>{{ item.valueName || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
-            <text class="text-[#999]">备注：</text>{{ item.remark || '-' }}
+          <view class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint">备注：</text>{{ item.remark || '-' }}
           </view>
           <view v-if="!readonly" class="mt-16rpx flex justify-end gap-16rpx">
             <wd-button size="small" type="warning" variant="plain" @click.stop="openUpdateForm(item)">
@@ -77,12 +77,12 @@
       safe-area-inset-bottom
       custom-style="height: 88vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formTitle }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

@@ -25,21 +25,21 @@
     />
     <!-- 文件 -->
     <view v-else-if="type === ImMessageType.FILE && filePayload" class="w-420rpx" @click="handleFile">
-      <view class="truncate text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main truncate text-30rpx font-semibold">
         {{ filePayload.name || '文件' }}
       </view>
-      <view class="mt-8rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint mt-8rpx text-24rpx">
         {{ formatFileSize(filePayload.size) }}
       </view>
       <view v-if="isUploading" class="mt-12rpx">
         <view class="h-6rpx overflow-hidden rounded-full bg-[#e5e6eb]">
-          <view class="h-full bg-[#07c160]" :style="{ width: `${normalizedUploadProgress}%` }" />
+          <view class="yd-bg-success h-full" :style="{ width: `${normalizedUploadProgress}%` }" />
         </view>
-        <view class="mt-6rpx text-22rpx text-[#999]">
+        <view class="yd-text-hint mt-6rpx text-22rpx">
           上传中 {{ normalizedUploadProgress }}%
         </view>
       </view>
-      <view class="mt-12rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx text-[#999]">
+      <view class="yd-text-hint mt-12rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx">
         {{ filePayload.url ? '点击查看文件' : '上传失败，请重新选择文件' }}
       </view>
     </view>
@@ -49,7 +49,7 @@
       class="min-w-160rpx flex items-center gap-14rpx"
       @click="playVoice"
     >
-      <wd-icon :name="voicePlaying ? 'sound-fill' : 'sound'" size="38rpx" custom-class="text-[#576b95]" />
+      <wd-icon :name="voicePlaying ? 'sound-fill' : 'sound'" size="38rpx" custom-class="yd-text-link" />
       <text>{{ audioPayload.duration || 0 }}″</text>
     </view>
     <!-- 视频 -->
@@ -73,15 +73,15 @@
     />
     <!-- 合并转发 -->
     <view v-else-if="type === ImMessageType.MERGE && mergePayload" class="w-400rpx" @click="emit('open-merge', content)">
-      <view class="text-28rpx text-[#333] font-medium">
+      <view class="yd-text-main text-28rpx font-medium">
         {{ mergePayload.title || '聊天记录' }}
       </view>
-      <view class="mt-8rpx text-24rpx text-[#999] leading-34rpx">
+      <view class="yd-text-hint mt-8rpx text-24rpx leading-34rpx">
         <view v-for="(line, index) in mergePreview" :key="index" class="truncate">
           {{ line }}
         </view>
       </view>
-      <view class="mt-12rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx text-[#999]">
+      <view class="yd-text-hint mt-12rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx">
         聊天记录
       </view>
     </view>
@@ -99,7 +99,7 @@
       @mention-click="emit('mention-click', $event)"
     />
     <!-- 未知消息类型 -->
-    <text v-else class="text-24rpx text-[#999]">{{ summary || '[不支持的内容类型]' }}</text>
+    <text v-else class="yd-text-hint text-24rpx">{{ summary || '[不支持的内容类型]' }}</text>
   </view>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <text class="text-30rpx text-[#333] font-semibold">
+      <text class="yd-text-main text-30rpx font-semibold">
         日历
       </text>
       <wd-button
@@ -20,7 +20,7 @@
         <wd-button size="small" variant="plain" @click="changeMonth(-1)">
           上月
         </wd-button>
-        <view class="text-34rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-34rpx font-semibold">
           {{ currentMonthText }}
         </view>
         <wd-button size="small" variant="plain" @click="changeMonth(1)">
@@ -31,27 +31,27 @@
 
     <!-- 日历视图 -->
     <view class="px-24rpx pb-24rpx">
-      <view class="overflow-hidden border border-[#e5e7eb] rounded-12rpx">
-        <view class="grid grid-cols-7 border-b border-[#e5e7eb]">
+      <view class="yd-border-base overflow-hidden border rounded-12rpx">
+        <view class="yd-border-base grid grid-cols-7 border-b">
           <view
             v-for="week in weekLabels"
             :key="week"
-            class="border-r border-[#e5e7eb] py-12rpx text-center text-24rpx text-[#999] last:border-r-0"
+            class="yd-text-hint yd-border-base border-r py-12rpx text-center text-24rpx last:border-r-0"
           >
             {{ week }}
           </view>
         </view>
 
-        <view v-if="loading" class="py-80rpx text-center text-26rpx text-[#999]">
+        <view v-if="loading" class="yd-text-hint py-80rpx text-center text-26rpx">
           加载中...
         </view>
         <view v-else class="grid grid-cols-7">
           <view
             v-for="day in calendarDays"
             :key="day.date"
-            class="min-h-96rpx border-b border-r border-[#e5e7eb] px-8rpx py-8rpx last:border-r-0"
+            class="yd-border-base min-h-96rpx border-b border-r px-8rpx py-8rpx last:border-r-0"
             :class="[
-              day.isCurrentMonth ? 'bg-white' : 'bg-[#fafafa]',
+              day.isCurrentMonth ? 'bg-white' : 'yd-bg-subtle',
               day.date === selectedDate ? 'bg-[#e8f3ff]' : '',
             ]"
             @click="selectDate(day.date)"
@@ -60,18 +60,18 @@
               <text
                 class="text-26rpx font-semibold leading-32rpx"
                 :class="[
-                  day.isCurrentMonth ? 'text-[#333]' : 'text-[#c8c9cc]',
-                  day.isWeekend && day.isCurrentMonth ? 'text-[#f56c6c]' : '',
+                  day.isCurrentMonth ? 'yd-text-main' : 'text-[#c8c9cc]',
+                  day.isWeekend && day.isCurrentMonth ? 'yd-text-danger' : '',
                 ]"
               >
                 {{ day.dayOfMonth }}
               </text>
               <view
                 v-if="calendarDateSet.has(day.date)"
-                class="mt-8rpx h-10rpx w-10rpx rounded-full bg-[#1677ff]"
+                class="yd-bg-primary mt-8rpx h-10rpx w-10rpx rounded-full"
               />
             </view>
-            <view v-if="day.isToday" class="mt-2rpx text-20rpx text-[#1677ff] leading-24rpx">
+            <view v-if="day.isToday" class="yd-text-link mt-2rpx text-20rpx leading-24rpx">
               今天
             </view>
           </view>
@@ -80,21 +80,21 @@
 
       <!-- 选中日期摘要 -->
       <view class="mt-24rpx flex items-center rounded-12rpx bg-[#e8f3ff] px-24rpx py-20rpx">
-        <view class="mr-20rpx text-48rpx text-[#333] font-semibold leading-none">
+        <view class="yd-text-main mr-20rpx text-48rpx font-semibold leading-none">
           {{ selectedDayText }}
         </view>
         <view>
-          <view class="text-28rpx text-[#333]">
+          <view class="yd-text-main text-28rpx">
             {{ selectedWeekdayText }}
           </view>
-          <view class="mt-4rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-4rpx text-24rpx">
             {{ selectedDate }}
           </view>
         </view>
       </view>
 
       <!-- 当天事项 -->
-      <view class="mt-24rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main mt-24rpx text-28rpx font-semibold">
         当天事项
       </view>
       <view class="mt-12rpx min-h-160rpx">
@@ -108,13 +108,13 @@
           </wd-tag>
           <text
             v-if="shouldShowItemTime(item)"
-            class="shrink-0 text-22rpx text-[#999]"
+            class="yd-text-hint shrink-0 text-22rpx"
           >
             {{ formatDate(item.eventTime, 'HH:mm') }}
           </text>
           <text
             class="min-w-0 flex-1 truncate text-26rpx"
-            :class="canOpenItem(item) ? 'text-[#1677ff]' : 'text-[#333]'"
+            :class="canOpenItem(item) ? 'yd-text-link' : 'yd-text-main'"
             @click="handleItemClick(item)"
           >
             {{ item.content }}
@@ -138,7 +138,7 @@
         >
           查看更多事项
         </wd-button>
-        <view v-if="!loading && dayItems.length === 0" class="py-40rpx text-center text-26rpx text-[#999]">
+        <view v-if="!loading && dayItems.length === 0" class="yd-text-hint py-40rpx text-center text-26rpx">
           暂无数据
         </view>
       </view>

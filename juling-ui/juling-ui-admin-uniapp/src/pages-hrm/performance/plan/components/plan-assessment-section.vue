@@ -17,7 +17,7 @@
       :disabled="disabled"
       :show-dimensions="true"
     />
-    <view v-else class="px-24rpx py-32rpx text-center text-28rpx text-[#999]">
+    <view v-else class="yd-text-hint px-24rpx py-32rpx text-center text-28rpx">
       请先选择考核指标模板
     </view>
     <yd-form-picker

@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         入库物料
       </view>
       <wd-button v-if="!readonly" size="small" type="primary" @click="openCreateForm">
@@ -30,52 +30,52 @@
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-28rpx font-medium">
                 {{ item.itemCode || `物料 #${item.itemId}` }}
               </view>
-              <view class="mt-4rpx truncate text-26rpx text-[#666]">
+              <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                 {{ item.itemName || '-' }}
               </view>
             </view>
-            <view class="shrink-0 text-24rpx text-[#999]">
+            <view class="yd-text-hint shrink-0 text-24rpx">
               {{ item.unitMeasureName || '-' }}
             </view>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">批次号：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">批次号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.batchCode || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">入库数量：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">入库数量：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.quantity ?? '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">生产日期：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">生产日期：</text>
             <text class="min-w-0 flex-1 truncate">{{ formatDate(item.productionDate) || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">有效期：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">有效期：</text>
             <text class="min-w-0 flex-1 truncate">{{ formatDate(item.expireDate) || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">生产批号：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">生产批号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.lotNumber || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">需要质检：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">需要质检：</text>
             <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="String(Boolean(item.iqcCheckFlag))" />
           </view>
-          <view class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">质量状态：</text>
+          <view class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">质量状态：</text>
             <dict-tag v-if="item.qualityStatus != null" :type="DICT_TYPE.MES_WM_QUALITY_STATUS" :value="item.qualityStatus" />
             <text v-else>-</text>
           </view>
-          <view class="flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+          <view class="yd-text-sub flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.remark || '-' }}</text>
           </view>
           <view v-if="!readonly" class="mt-16rpx flex justify-end gap-16rpx">
@@ -87,19 +87,19 @@
             </wd-button>
           </view>
 
-          <view class="mt-16rpx rounded-12rpx bg-[#f8fafc] p-16rpx">
+          <view class="yd-bg-subtle mt-16rpx rounded-12rpx p-16rpx">
             <view class="mb-12rpx flex items-center justify-between">
-              <view class="text-26rpx text-[#333] font-medium">
+              <view class="yd-text-main text-26rpx font-medium">
                 上架明细
               </view>
               <wd-button v-if="stockMode" size="small" type="primary" @click.stop="openCreateDetailForm(item)">
                 添加上架
               </wd-button>
             </view>
-            <view v-if="isDetailLoading(item.id)" class="py-12rpx text-24rpx text-[#999]">
+            <view v-if="isDetailLoading(item.id)" class="yd-text-hint py-12rpx text-24rpx">
               加载中...
             </view>
-            <view v-else-if="getDetailList(item.id).length === 0" class="py-12rpx text-24rpx text-[#999]">
+            <view v-else-if="getDetailList(item.id).length === 0" class="yd-text-hint py-12rpx text-24rpx">
               暂无上架明细
             </view>
             <view
@@ -108,13 +108,13 @@
               :key="detail.id"
               class="mb-12rpx rounded-8rpx bg-white p-16rpx last:mb-0"
             >
-              <view class="mb-8rpx text-26rpx text-[#333]">
+              <view class="yd-text-main mb-8rpx text-26rpx">
                 {{ detail.warehouseName || '-' }} / {{ detail.locationName || '-' }} / {{ detail.areaName || '-' }}
               </view>
-              <view class="mb-8rpx text-24rpx text-[#666]">
+              <view class="yd-text-sub mb-8rpx text-24rpx">
                 上架数量：{{ detail.quantity ?? '-' }}
               </view>
-              <view v-if="detail.remark" class="text-24rpx text-[#666]">
+              <view v-if="detail.remark" class="yd-text-sub text-24rpx">
                 备注：{{ detail.remark }}
               </view>
               <view v-if="stockMode" class="mt-12rpx flex justify-end gap-16rpx">
@@ -139,12 +139,12 @@
     safe-area-inset-bottom
     custom-style="height: 88vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="formVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ formTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">
@@ -214,12 +214,12 @@
     safe-area-inset-bottom
     custom-style="height: 78vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="detailFormVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ detailFormTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="detailFormLoading" @click="handleSubmitDetail">

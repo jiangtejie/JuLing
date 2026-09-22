@@ -5,12 +5,12 @@
     safe-area-inset-bottom
     custom-style="height: 82vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           商品选择
         </view>
         <wd-button size="small" type="primary" :disabled="selectedCount === 0" @click="handleConfirm">
@@ -58,10 +58,10 @@
             <view class="p-24rpx">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
                 <view class="min-w-0 flex-1">
-                  <view class="truncate text-28rpx text-[#333] font-medium">
+                  <view class="yd-text-main truncate text-28rpx font-medium">
                     {{ item.itemName || '-' }}
                   </view>
-                  <view class="mt-4rpx truncate text-26rpx text-[#666]">
+                  <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                     {{ item.name || '-' }}
                   </view>
                 </view>
@@ -72,20 +72,20 @@
                   {{ getSelectTagText(item) }}
                 </view>
               </view>
-              <view class="mb-8rpx flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">商品编号：</text>
+              <view class="yd-text-sub mb-8rpx flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">商品编号：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.itemCode || '-' }}</text>
               </view>
-              <view class="mb-8rpx flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">规格编号：</text>
+              <view class="yd-text-sub mb-8rpx flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">规格编号：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.code || '-' }}</text>
               </view>
-              <view class="mb-8rpx flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">条码：</text>
+              <view class="yd-text-sub mb-8rpx flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">条码：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.barCode || '-' }}</text>
               </view>
-              <view class="flex text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">品牌：</text>
+              <view class="yd-text-sub flex text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">品牌：</text>
                 <text class="min-w-0 flex-1 truncate">{{ item.brandName || '-' }}</text>
               </view>
             </view>
@@ -189,9 +189,9 @@ function getSelectTagText(item: ItemSku) {
 /** 选择标签样式 */
 function getSelectTagClass(item: ItemSku) {
   if (isDisabled(item)) {
-    return 'bg-[#f5f5f5] text-[#bbb]'
+    return 'yd-bg-page yd-text-muted'
   }
-  return isSelected(item) ? 'bg-[#e6f4ff] text-[#1677ff]' : 'bg-[#f5f5f5] text-[#999]'
+  return isSelected(item) ? 'yd-bg-info-soft yd-text-link' : 'yd-bg-page yd-text-hint'
 }
 
 /** 切换选择 */

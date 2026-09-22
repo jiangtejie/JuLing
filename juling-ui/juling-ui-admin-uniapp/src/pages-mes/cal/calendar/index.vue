@@ -10,7 +10,7 @@
           v-for="tab in tabs"
           :key="tab.key"
           class="rounded-10rpx py-12rpx text-center text-26rpx"
-          :class="activeTab === tab.key ? 'bg-white text-[#1677ff] font-semibold shadow-sm' : 'text-[#666]'"
+          :class="activeTab === tab.key ? 'bg-white yd-text-link font-semibold shadow-sm' : 'yd-text-sub'"
           @click="handleTabChange(tab.key)"
         >
           {{ tab.title }}
@@ -60,14 +60,14 @@
         <wd-button size="small" variant="plain" @click="changeMonth(-1)">
           上月
         </wd-button>
-        <view class="text-34rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-34rpx font-semibold">
           {{ currentMonthText }}
         </view>
         <wd-button size="small" variant="plain" @click="changeMonth(1)">
           下月
         </wd-button>
       </view>
-      <view class="mt-12rpx flex flex-wrap items-center justify-center gap-x-18rpx gap-y-8rpx text-22rpx text-[#666]">
+      <view class="yd-text-sub mt-12rpx flex flex-wrap items-center justify-center gap-x-18rpx gap-y-8rpx text-22rpx">
         <view class="flex items-center gap-8rpx">
           <text class="h-14rpx w-14rpx rounded-4rpx bg-[#95d475]" />
           <text>白班</text>
@@ -81,7 +81,7 @@
           <text>中班/夜班</text>
         </view>
         <view class="flex items-center gap-8rpx">
-          <text class="h-14rpx w-14rpx rounded-4rpx bg-[#52c41a]" />
+          <text class="yd-bg-success h-14rpx w-14rpx rounded-4rpx" />
           <text>节假日</text>
         </view>
       </view>
@@ -91,31 +91,31 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view class="px-24rpx py-18rpx">
         <view class="mx-auto max-w-760rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="grid grid-cols-7 border-b border-[#e5e7eb]">
+          <view class="yd-border-base grid grid-cols-7 border-b">
             <view
               v-for="week in weekLabels"
               :key="week"
-              class="border-r border-[#e5e7eb] py-12rpx text-center text-24rpx text-[#999] last:border-r-0"
+              class="yd-text-hint yd-border-base border-r py-12rpx text-center text-24rpx last:border-r-0"
             >
               {{ week }}
             </view>
           </view>
-          <view v-if="loading" class="py-80rpx text-center text-26rpx text-[#999]">
+          <view v-if="loading" class="yd-text-hint py-80rpx text-center text-26rpx">
             加载中...
           </view>
           <view v-else class="grid grid-cols-7">
             <view
               v-for="day in calendarDays"
               :key="day.date"
-              class="min-h-112rpx border-b border-r border-[#e5e7eb] px-8rpx py-8rpx last:border-r-0"
-              :class="day.isCurrentMonth ? 'bg-white' : 'bg-[#fafafa]'"
+              class="yd-border-base min-h-112rpx border-b border-r px-8rpx py-8rpx last:border-r-0"
+              :class="day.isCurrentMonth ? 'bg-white' : 'yd-bg-subtle'"
             >
               <view class="flex items-start justify-between gap-4rpx">
                 <text
                   class="text-26rpx font-semibold leading-32rpx"
                   :class="[
-                    day.isCurrentMonth ? 'text-[#333]' : 'text-[#c8c9cc]',
-                    day.isWeekend && day.isCurrentMonth ? 'text-[#f56c6c]' : '',
+                    day.isCurrentMonth ? 'yd-text-main' : 'text-[#c8c9cc]',
+                    day.isWeekend && day.isCurrentMonth ? 'yd-text-danger' : '',
                   ]"
                 >
                   {{ day.dayOfMonth }}
@@ -123,12 +123,12 @@
                 <text
                   v-if="day.isCurrentMonth"
                   class="rounded-6rpx px-6rpx py-1rpx text-18rpx text-white leading-24rpx"
-                  :class="isHoliday(day.date) ? 'bg-[#52c41a]' : 'bg-[#1677ff]'"
+                  :class="isHoliday(day.date) ? 'yd-bg-success' : 'yd-bg-primary'"
                 >
                   {{ isHoliday(day.date) ? '休' : '班' }}
                 </text>
               </view>
-              <view v-if="day.isToday" class="mt-2rpx text-20rpx text-[#1677ff] leading-24rpx">
+              <view v-if="day.isToday" class="yd-text-link mt-2rpx text-20rpx leading-24rpx">
                 今天
               </view>
               <view v-if="day.isCurrentMonth && !isHoliday(day.date)" class="mt-4rpx">
@@ -140,7 +140,7 @@
                   {{ getShiftSummary(day.date) }}
                 </view>
               </view>
-              <view v-if="day.isCurrentMonth && isHoliday(day.date)" class="mt-4rpx truncate text-20rpx text-[#52c41a] leading-24rpx">
+              <view v-if="day.isCurrentMonth && isHoliday(day.date)" class="yd-text-success mt-4rpx truncate text-20rpx leading-24rpx">
                 节假日
               </view>
             </view>

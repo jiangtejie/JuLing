@@ -73,13 +73,13 @@
 
       <view
         v-if="isPendingChange"
-        class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] px-24rpx py-20rpx text-26rpx text-[#d48806]"
+        class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx"
       >
         该调整将在生效日期前保持待生效，当前薪资档案不会提前变化
       </view>
 
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           薪资明细
         </view>
         <view
@@ -87,13 +87,13 @@
           :key="row.code"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-28rpx text-[#333] font-medium">
+          <view class="yd-text-main mb-8rpx text-28rpx font-medium">
             {{ row.name || '-' }}
           </view>
-          <view class="mb-16rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-16rpx text-24rpx">
             编码：{{ row.code ?? '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             试用期工资
           </view>
           <wd-input-number
@@ -103,7 +103,7 @@
             :min="0"
             :max="100000000"
           />
-          <view class="mb-8rpx mt-16rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx mt-16rpx text-26rpx">
             转正后工资
           </view>
           <wd-input-number
@@ -114,7 +114,7 @@
             :max="100000000"
           />
         </view>
-        <view v-if="!salaryOptionRows.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+        <view v-if="!salaryOptionRows.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
           暂无薪资项，请先选择调薪模板
         </view>
       </view>

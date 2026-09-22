@@ -1,7 +1,7 @@
 <template>
   <view class="mx-24rpx mt-24rpx">
     <view v-if="showTitle" class="mb-16rpx flex items-center justify-between">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         工单 BOM
       </view>
       <view class="flex items-center gap-12rpx">
@@ -37,16 +37,16 @@
       <view v-for="item in list" :key="item.id || item.itemId" class="mb-16rpx rounded-12rpx bg-white p-20rpx shadow-sm">
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-28rpx font-semibold">
               {{ item.itemName || '-' }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               {{ item.itemCode || '-' }}
             </view>
           </view>
           <dict-tag v-if="item.itemOrProduct" :type="DICT_TYPE.MES_MD_ITEM_OR_PRODUCT" :value="item.itemOrProduct" />
         </view>
-        <view class="text-24rpx text-[#666] space-y-6rpx">
+        <view class="yd-text-sub text-24rpx space-y-6rpx">
           <view>规格型号：{{ item.itemSpecification || '-' }}</view>
           <view>单位：{{ item.unitMeasureName || '-' }}</view>
           <view>预计使用量：{{ item.quantity ?? '-' }}</view>
@@ -103,12 +103,12 @@
       safe-area-inset-bottom
       custom-style="height: 68vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formData.id ? '编辑 BOM 物料' : '添加 BOM 物料' }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

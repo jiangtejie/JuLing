@@ -1,7 +1,7 @@
 <template>
   <wd-popup v-model="visible" position="bottom" closable safe-area-inset-bottom @close="handleClose">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         新增备忘
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">

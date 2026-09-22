@@ -27,26 +27,26 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="mb-16rpx truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx truncate text-32rpx font-semibold">
             {{ item.name }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">参保城市：</text>{{ item.areaName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">参保城市：</text>{{ item.areaName || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">个人社保：</text>{{ formatHrmMoney(item.personalInsuranceAmount) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">公司社保：</text>{{ formatHrmMoney(item.corporateInsuranceAmount) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">个人社保：</text>{{ formatHrmMoney(item.personalInsuranceAmount) }}
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">公司社保：</text>{{ formatHrmMoney(item.corporateInsuranceAmount) }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">个人公积金：</text>{{ formatHrmMoney(item.personalProvidentFundAmount) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">公司公积金：</text>{{ formatHrmMoney(item.corporateProvidentFundAmount) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">个人公积金：</text>{{ formatHrmMoney(item.personalProvidentFundAmount) }}
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">公司公积金：</text>{{ formatHrmMoney(item.corporateProvidentFundAmount) }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">使用人数：</text>{{ item.useCount ?? 0 }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">历史月记录：</text>{{ item.monthRecordCount ?? 0 }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">使用人数：</text>{{ item.useCount ?? 0 }}
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">历史月记录：</text>{{ item.monthRecordCount ?? 0 }}
           </view>
         </view>
       </view>
@@ -92,7 +92,7 @@ function handleBack() {
 async function queryList() {
   try {
     const data = await getInsuranceSchemeList()
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

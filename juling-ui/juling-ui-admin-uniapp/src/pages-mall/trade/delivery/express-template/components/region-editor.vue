@@ -3,11 +3,11 @@
     <view
       v-for="(rule, index) in rules"
       :key="index"
-      class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx"
+      class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx"
     >
       <view class="mb-12rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-medium">区域 {{ index + 1 }}</text>
-        <text class="text-26rpx text-[#fa4350]" @click="handleRemove(index)">删除</text>
+        <text class="yd-text-main text-28rpx font-medium">区域 {{ index + 1 }}</text>
+        <text class="yd-text-danger text-26rpx" @click="handleRemove(index)">删除</text>
       </view>
 
       <!-- 配送区域（多选地区树） -->
@@ -26,19 +26,19 @@
       <!-- 计费区域字段 -->
       <template v-if="mode === 'charge'">
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-180rpx shrink-0 text-26rpx text-[#666]">首{{ unitLabel }}</text>
+          <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">首{{ unitLabel }}</text>
           <wd-input-number v-model="rule.startCount" :min="0" :step="countStep" :precision="countPrecision" @change="emitChange" />
         </view>
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-180rpx shrink-0 text-26rpx text-[#666]">运费(元)</text>
+          <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">运费(元)</text>
           <wd-input-number v-model="rule.startPrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
         </view>
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-180rpx shrink-0 text-26rpx text-[#666]">续{{ unitLabel }}</text>
+          <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">续{{ unitLabel }}</text>
           <wd-input-number v-model="rule.extraCount" :min="0" :step="countStep" :precision="countPrecision" @change="emitChange" />
         </view>
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-180rpx shrink-0 text-26rpx text-[#666]">续费(元)</text>
+          <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">续费(元)</text>
           <wd-input-number v-model="rule.extraPrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
         </view>
       </template>
@@ -46,11 +46,11 @@
       <!-- 包邮区域字段 -->
       <template v-else>
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-180rpx shrink-0 text-26rpx text-[#666]">包邮{{ unitLabel }}</text>
+          <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">包邮{{ unitLabel }}</text>
           <wd-input-number v-model="rule.freeCount" :min="0" :step="countStep" :precision="countPrecision" @change="emitChange" />
         </view>
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-180rpx shrink-0 text-26rpx text-[#666]">包邮金额(元)</text>
+          <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">包邮金额(元)</text>
           <wd-input-number v-model="rule.freePrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
         </view>
       </template>

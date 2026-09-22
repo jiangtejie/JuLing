@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="分段详情"
@@ -15,7 +15,7 @@
         <wd-cell title="文档编号" :value="formData?.documentId || '-'" />
         <wd-cell title="向量编号" :value="formData?.vectorId || '-'" />
         <wd-cell title="分段内容">
-          <view class="whitespace-pre-wrap break-all text-26rpx text-[#666] leading-42rpx">
+          <view class="yd-text-sub whitespace-pre-wrap break-all text-26rpx leading-42rpx">
             {{ formData?.content || '-' }}
           </view>
         </wd-cell>
@@ -159,7 +159,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('ai:knowledge-segment:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

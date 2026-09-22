@@ -36,16 +36,16 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <dict-tag v-if="item.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view class="mb-8rpx truncate text-26rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx truncate text-26rpx">
                 {{ item.description || '暂无品牌描述' }}
               </view>
-              <view class="flex items-center text-26rpx text-[#666]">
-                <text class="mr-8rpx shrink-0 text-[#999]">排序：</text>
+              <view class="yd-text-sub flex items-center text-26rpx">
+                <text class="yd-text-hint mr-8rpx shrink-0">排序：</text>
                 <text>{{ item.sort ?? '-' }}</text>
               </view>
             </view>

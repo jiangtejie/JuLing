@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载申诉信息

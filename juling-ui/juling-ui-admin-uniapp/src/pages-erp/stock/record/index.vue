@@ -12,28 +12,28 @@
         <view v-for="item in list" :key="item.id" class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm" @click="handleDetail(item)">
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.productName || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.ERP_STOCK_RECORD_BIZ_TYPE" :value="item.bizType" />
             </view>
-            <view class="grid grid-cols-2 mb-12rpx gap-12rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub grid grid-cols-2 mb-12rpx gap-12rpx text-28rpx">
               <view>
-                <text class="text-[#999]">分类：</text>{{ item.categoryName || '-' }}
+                <text class="yd-text-hint">分类：</text>{{ item.categoryName || '-' }}
               </view>
               <view>
-                <text class="text-[#999]">单位：</text>{{ item.unitName || '-' }}
+                <text class="yd-text-hint">单位：</text>{{ item.unitName || '-' }}
               </view>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">仓库：</text>{{ item.warehouseName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">仓库：</text>{{ item.warehouseName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">业务单号：</text>{{ item.bizNo || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">业务单号：</text>{{ item.bizNo || '-' }}
             </view>
-            <view class="grid grid-cols-2 mb-16rpx gap-12rpx rounded-12rpx bg-[#f8fafc] p-16rpx text-center">
+            <view class="yd-bg-subtle grid grid-cols-2 mb-16rpx gap-12rpx rounded-12rpx p-16rpx text-center">
               <view>
-                <view class="text-22rpx text-[#999]">
+                <view class="yd-text-hint text-22rpx">
                   出入库数量
                 </view>
                 <view class="mt-4rpx text-30rpx font-semibold" :class="getCountClass(item.count)">
@@ -41,15 +41,15 @@
                 </view>
               </view>
               <view>
-                <view class="text-22rpx text-[#999]">
+                <view class="yd-text-hint text-22rpx">
                   库存量
                 </view>
-                <view class="mt-4rpx text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main mt-4rpx text-30rpx font-semibold">
                   {{ formatCount(item.totalCount) }}
                 </view>
               </view>
             </view>
-            <view class="flex items-center justify-between text-24rpx text-[#999]">
+            <view class="yd-text-hint flex items-center justify-between text-24rpx">
               <text>{{ formatDateTime(item.createTime) || '-' }}</text>
               <text>操作人：{{ item.creatorName || '-' }}</text>
             </view>
@@ -95,7 +95,7 @@ function getCountClass(value?: any) {
   if (count < 0) {
     return 'text-[#dc2626]'
   }
-  return 'text-[#333]'
+  return 'yd-text-main'
 }
 
 /** 查询库存明细列表 */

@@ -37,15 +37,15 @@
             <wd-img v-if="item.headImageUrl" :src="item.headImageUrl" width="80rpx" height="80rpx" mode="aspectFill" round />
             <view
               v-else
-              class="h-80rpx w-80rpx flex items-center justify-center rounded-full bg-[#1890ff] text-32rpx text-white"
+              class="yd-bg-primary h-80rpx w-80rpx flex items-center justify-center rounded-full text-32rpx text-white"
             >
               {{ (item.nickname || '粉')?.charAt(0) }}
             </view>
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.nickname || '微信用户' }}
               </view>
-              <view class="truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint truncate text-24rpx">
                 {{ item.openid || '-' }}
               </view>
             </view>
@@ -58,7 +58,7 @@
               {{ getTagName(tagId) }}
             </wd-tag>
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             订阅时间：{{ formatDateTime(item.subscribeTime) || '-' }}
           </view>
         </view>

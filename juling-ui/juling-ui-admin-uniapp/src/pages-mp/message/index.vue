@@ -34,10 +34,10 @@
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-30rpx font-semibold">
                 {{ item.openid || '-' }}
               </view>
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 {{ formatDateTime(item.createTime) || '-' }}
               </view>
             </view>
@@ -48,7 +48,7 @@
               </wd-tag>
             </view>
           </view>
-          <view class="mb-20rpx rounded-8rpx bg-[#f8f8f8] p-20rpx text-28rpx text-[#333]">
+          <view class="yd-text-main yd-bg-subtle mb-20rpx rounded-8rpx p-20rpx text-28rpx">
             <ReplyContent
               :type="item.type"
               :content="item.content"

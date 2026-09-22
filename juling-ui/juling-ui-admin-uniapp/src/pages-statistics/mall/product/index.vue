@@ -26,7 +26,7 @@
 
         <!-- 商品概况 -->
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <text class="mb-20rpx block text-30rpx text-[#333] font-semibold">商品概况</text>
+          <text class="yd-text-main mb-20rpx block text-30rpx font-semibold">商品概况</text>
           <SummaryGrid :items="summaryItems" reference-label="较前一周期" />
         </view>
 
@@ -36,10 +36,10 @@
           <wd-tab title="商品排行" />
         </wd-tabs>
         <view v-if="activeTab === 0" class="pt-24rpx">
-          <StatisticsCard :section="trendSection" :rows="trendRows" />
+          <StatisticsCard :section="trendSection" :rows="trendRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
         <view v-if="activeTab === 1" class="pt-24rpx">
-          <StatisticsCard rank :section="rankSection" :rows="rankRows" />
+          <StatisticsCard rank :section="rankSection" :rows="rankRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
       </view>
     </scroll-view>
@@ -80,6 +80,7 @@ const filters = reactive({
 const loading = ref(false) // 统计加载状态
 const activeTab = ref(0) // 当前分组：0 趋势 / 1 排行
 const cache = reactive<Record<string, any>>({}) // 数据缓存：key=`分组@时间区间`
+const tabError = ref(false) // 当前分组的加载失败标记（与「确实没有数据」区分开）
 
 const times = computed(() => formatDateRange([filters.startTime, filters.endTime])) // 查询时间区间
 function cacheKey(name: string | number) {
@@ -152,7 +153,11 @@ function handleBack() {
 /** 加载商品概况 */
 async function loadSummary() {
   const key = cacheKey('summary')
-  const data = await getProductStatisticsAnalyse({ times: times.value }).catch(() => ({ value: {}, reference: {} }))
+  // add by 棱信矩灵：失败不写缓存，避免一次网络抖动后概况永久为空
+  const data = await getProductStatisticsAnalyse({ times: times.value }).catch(() => undefined)
+  if (data === undefined) {
+    return
+  }
   cache[key] = data || { value: {}, reference: {} }
 }
 
@@ -160,11 +165,18 @@ async function loadSummary() {
 async function loadTab(tab: number) {
   const key = cacheKey(tab)
   if (cache[key] !== undefined) {
+    tabError.value = false
     return
   }
+  // add by 棱信矩灵：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
+  tabError.value = false
   // 明细金额由分转元，避免金额 ×100
   if (tab === 0) {
-    const listData = await getProductStatisticsList({ times: times.value }).catch(() => [])
+    const listData = await getProductStatisticsList({ times: times.value }).catch(() => undefined)
+    if (listData === undefined) {
+      tabError.value = true
+      return
+    }
     cache[key] = normalizeRows(listData).map(item => ({
       ...item,
       orderPayPrice: fenToYuan(item.orderPayPrice),
@@ -172,11 +184,26 @@ async function loadTab(tab: number) {
     }))
     return
   }
-  const rankData = await getProductStatisticsRankPage({ pageNo: 1, pageSize: 20, times: times.value }).catch(() => ({ list: [] }))
+  const rankData = await getProductStatisticsRankPage({ pageNo: 1, pageSize: 20, times: times.value }).catch(() => undefined)
+  if (rankData === undefined) {
+    tabError.value = true
+    return
+  }
   cache[key] = normalizeRows(rankData?.list).map(item => ({
     ...item,
     orderPayPrice: fenToYuan(item.orderPayPrice),
   }))
+}
+
+/** add by 棱信矩灵：加载失败后重试当前分组 */
+async function handleRetryTab() {
+  delete cache[cacheKey(activeTab.value)]
+  loading.value = true
+  try {
+    await loadTab(activeTab.value)
+  } finally {
+    loading.value = false
+  }
 }
 
 /** 切换分组 */

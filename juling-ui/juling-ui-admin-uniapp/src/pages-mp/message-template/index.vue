@@ -20,10 +20,10 @@
     <!-- 模板列表 -->
     <scroll-view class="min-h-0 flex-1" scroll-y>
       <view class="p-24rpx">
-        <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
           加载中...
         </view>
-        <view v-else-if="list.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-else-if="list.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无消息模板数据
         </view>
         <view
@@ -31,22 +31,22 @@
           :key="item.id"
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
             {{ item.title || '-' }}
           </view>
-          <view class="mb-12rpx break-all text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx break-all text-26rpx">
             模板 ID：{{ item.templateId || '-' }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-26rpx">
             行业：{{ item.primaryIndustry || '-' }} / {{ item.deputyIndustry || '-' }}
           </view>
-          <view class="mb-12rpx whitespace-pre-wrap text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx whitespace-pre-wrap text-26rpx">
             {{ normalizeEscapedNewlines(item.content || '-') }}
           </view>
-          <view class="mb-12rpx whitespace-pre-wrap text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx whitespace-pre-wrap text-26rpx">
             示例：{{ normalizeEscapedNewlines(item.example || '-') }}
           </view>
-          <view class="mb-20rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-20rpx text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view class="flex gap-16rpx">

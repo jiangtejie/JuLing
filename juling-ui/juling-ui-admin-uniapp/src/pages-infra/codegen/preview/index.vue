@@ -14,7 +14,7 @@
         @click="filePickerVisible = true"
       >
         <wd-icon name="file" size="32rpx" color="#1677ff" />
-        <text class="mx-12rpx min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ currentFileName || '请选择文件' }}</text>
+        <text class="yd-text-main mx-12rpx min-w-0 flex-1 truncate text-28rpx">{{ currentFileName || '请选择文件' }}</text>
         <wd-icon name="arrow-down" size="28rpx" color="#999" />
       </view>
       <wd-button size="small" variant="plain" :disabled="!current" @click="handleCopy">
@@ -30,29 +30,29 @@
     >
       <text class="code-text" :user-select="true" :selectable="true">{{ current.code }}</text>
     </scroll-view>
-    <view v-else class="flex flex-1 items-center justify-center text-28rpx text-[#999]">
+    <view v-else class="yd-text-hint flex flex-1 items-center justify-center text-28rpx">
       {{ loading ? '加载中...' : '暂无预览代码' }}
     </view>
 
     <!-- 文件列表弹窗 -->
-    <wd-popup v-model="filePickerVisible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="filePickerVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[60vh] flex flex-col">
-        <view class="border-b border-[#f0f0f0] border-solid px-32rpx py-28rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light yd-text-main border-b border-solid px-32rpx py-28rpx text-32rpx font-semibold">
           选择文件（{{ files.length }}）
         </view>
         <scroll-view scroll-y class="min-h-0 flex-1">
           <view
             v-for="(file, index) in files"
             :key="file.filePath"
-            class="flex items-center border-b border-[#f5f5f5] border-solid px-32rpx py-24rpx"
+            class="yd-border-light flex items-center border-b border-solid px-32rpx py-24rpx"
             :class="index === activeIndex ? 'bg-[#eef4ff]' : ''"
             @click="selectFile(index)"
           >
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx" :class="index === activeIndex ? 'text-[#1677ff] font-medium' : 'text-[#333]'">
+              <view class="truncate text-28rpx" :class="index === activeIndex ? 'yd-text-link font-medium' : 'yd-text-main'">
                 {{ baseName(file.filePath) }}
               </view>
-              <view class="mt-4rpx truncate text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx truncate text-22rpx">
                 {{ file.filePath }}
               </view>
             </view>

@@ -35,67 +35,67 @@
           />
           <view
             v-else
-            class="h-112rpx w-112rpx flex items-center justify-center rounded-full bg-[#1890ff] text-40rpx text-white"
+            class="yd-bg-primary h-112rpx w-112rpx flex items-center justify-center rounded-full text-40rpx text-white"
           >
             {{ (formData?.nickname || formData?.mobile || '会').charAt(0) }}
           </view>
           <view class="min-w-0 flex-1">
-            <view class="truncate text-36rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-36rpx font-semibold">
               {{ formData?.nickname || formData?.name || '-' }}
             </view>
-            <view class="mt-8rpx text-26rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-26rpx">
               {{ formData?.mobile || '未绑定手机号' }}
             </view>
           </view>
           <dict-tag v-if="formData?.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="formData?.status" />
-          <text v-else class="text-26rpx text-[#999]">-</text>
+          <text v-else class="yd-text-hint text-26rpx">-</text>
         </view>
-        <view class="grid grid-cols-3 gap-12rpx rounded-8rpx bg-[#f7f8fa] p-16rpx text-center">
+        <view class="yd-bg-subtle grid grid-cols-3 gap-12rpx rounded-8rpx p-16rpx text-center">
           <view>
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               {{ formData?.point ?? 0 }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               当前积分
             </view>
           </view>
           <view>
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               {{ formData?.totalPoint ?? 0 }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               总积分
             </view>
           </view>
           <view>
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               {{ formData?.experience ?? 0 }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               成长值
             </view>
           </view>
           <view>
-            <view class="break-all text-28rpx text-[#333] font-semibold">
-              {{ formatAmount(walletData?.balance) }}
+            <view class="yd-text-main break-all text-28rpx font-semibold">
+              {{ formatDisplayMoney(walletData?.balance) }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               当前余额
             </view>
           </view>
           <view>
-            <view class="break-all text-28rpx text-[#333] font-semibold">
-              {{ formatAmount(walletData?.totalExpense) }}
+            <view class="yd-text-main break-all text-28rpx font-semibold">
+              {{ formatDisplayMoney(walletData?.totalExpense) }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               支出金额
             </view>
           </view>
           <view>
-            <view class="break-all text-28rpx text-[#333] font-semibold">
-              {{ formatAmount(walletData?.totalRecharge) }}
+            <view class="yd-text-main break-all text-28rpx font-semibold">
+              {{ formatDisplayMoney(walletData?.totalRecharge) }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               充值金额
             </view>
           </view>
@@ -177,6 +177,7 @@ import { useAccess } from '@/hooks/useAccess'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDate, formatDateTime } from '@/utils/date'
+import { formatDisplayMoney } from '@/utils/format'
 import AddressList from './components/address-list.vue'
 import AfterSaleList from './components/after-sale-list.vue'
 import BalanceList from './components/balance-list.vue'
@@ -249,11 +250,6 @@ const hasMoreActions = computed(() => moreActions.value.length > 0) // 是否显
 
 /** 切换详情分类时记录已加载分类，实现懒加载 */
 watch(activeTab, value => loadedTabs.value.add(value))
-
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
-}
 
 /** 返回上一页 */
 function handleBack() {

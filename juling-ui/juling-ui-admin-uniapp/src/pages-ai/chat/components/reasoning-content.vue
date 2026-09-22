@@ -1,7 +1,7 @@
 <template>
   <view class="mb-18rpx">
     <view
-      class="inline-flex items-center gap-8rpx py-8rpx text-23rpx text-[#777]"
+      class="yd-text-sub inline-flex items-center gap-8rpx py-8rpx text-23rpx"
       @click="expanded = !expanded"
     >
       <text>{{ inProgress ? '深度思考中' : '已深度思考' }}</text>
@@ -15,7 +15,7 @@
     <view class="h-1rpx bg-[#eee]" />
     <view
       v-if="expanded"
-      class="px-2rpx pb-8rpx pt-18rpx text-[#666]"
+      class="yd-text-sub px-2rpx pb-8rpx pt-18rpx"
     >
       <YdMarkdown :content="content" />
     </view>

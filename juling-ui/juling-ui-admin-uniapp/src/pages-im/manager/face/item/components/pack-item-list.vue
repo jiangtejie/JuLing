@@ -2,7 +2,7 @@
   <view>
     <!-- 表情列表标题 -->
     <view class="mt-20rpx flex items-center justify-between px-24rpx py-16rpx">
-      <text class="text-28rpx text-[#333] font-semibold">表情列表（{{ total }}）</text>
+      <text class="yd-text-main text-28rpx font-semibold">表情列表（{{ total }}）</text>
       <wd-button
         v-if="hasAccessByCodes(['im:manager:face-pack-item:create'])"
         size="small"
@@ -44,10 +44,10 @@
             mode="aspectFit"
           />
           <view class="min-w-0 flex-1">
-            <view class="line-clamp-1 text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main line-clamp-1 text-28rpx font-semibold">
               {{ item.name || '未命名' }}
             </view>
-            <view class="mt-6rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-6rpx text-24rpx">
               {{ item.width }} × {{ item.height }} · 排序 {{ item.sort ?? 0 }}
             </view>
           </view>

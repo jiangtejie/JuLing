@@ -1,9 +1,9 @@
 <template>
   <!-- 标签管理弹窗 -->
-  <wd-popup v-model="visible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
     <view class="flex flex-col" :style="{ maxHeight: '80vh' }">
       <view class="flex items-center justify-between p-32rpx pb-16rpx">
-        <text class="text-32rpx text-[#333] font-semibold">工作项标签管理</text>
+        <text class="yd-text-main text-32rpx font-semibold">工作项标签管理</text>
         <wd-button size="small" type="primary" variant="plain" @click="handleAdd">
           新增标签
         </wd-button>
@@ -13,7 +13,7 @@
         <view
           v-for="item in list"
           :key="item.id"
-          class="mb-20rpx flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-20rpx"
+          class="yd-bg-subtle mb-20rpx flex items-center justify-between rounded-12rpx p-20rpx"
         >
           <wd-tag :custom-style="getColorTagStyle(item.color)">
             {{ item.name }}
@@ -39,7 +39,7 @@
   <!-- 标签表单弹窗 -->
   <wd-popup v-model="formVisible" position="center" root-portal custom-style="width: 640rpx; border-radius: 16rpx;">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ formData.id ? '编辑标签' : '新增标签' }}
       </view>
       <wd-cell-group border>
@@ -48,7 +48,7 @@
         </wd-cell>
       </wd-cell-group>
       <view class="mt-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-16rpx text-28rpx">
           标签颜色
         </view>
         <view class="mb-16rpx flex flex-wrap gap-16rpx">

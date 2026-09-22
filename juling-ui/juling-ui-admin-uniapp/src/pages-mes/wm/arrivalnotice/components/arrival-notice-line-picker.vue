@@ -6,13 +6,13 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="handleClose"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           到货通知单行
         </view>
         <wd-button size="small" type="primary" :disabled="!selectedLine" @click="handleConfirm">
@@ -43,29 +43,29 @@
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.itemCode || `物料 #${item.itemId}` }}
                 </view>
-                <view class="mt-4rpx truncate text-26rpx text-[#666]">
+                <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                   {{ item.itemName || '-' }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="String(item.iqcCheckFlag)" />
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">规格：</text>{{ item.specification || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">规格：</text>{{ item.specification || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">单位：</text>{{ item.unitMeasureName || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">单位：</text>{{ item.unitMeasureName || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">到货数量：</text>{{ item.arrivalQuantity ?? '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">到货数量：</text>{{ item.arrivalQuantity ?? '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">合格数量：</text>{{ item.qualifiedQuantity ?? '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">合格数量：</text>{{ item.qualifiedQuantity ?? '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">检验单号：</text>{{ item.iqcCode || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">检验单号：</text>{{ item.iqcCode || '-' }}
             </view>
           </view>
         </view>

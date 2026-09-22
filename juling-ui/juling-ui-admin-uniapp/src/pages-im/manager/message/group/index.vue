@@ -35,18 +35,18 @@
           @click="handleDetail(item)"
         >
           <view class="flex items-center justify-between">
-            <view class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">
               {{ item.groupName || `群 ${item.groupId}` }}
             </view>
             <dict-tag :type="DICT_TYPE.IM_CONTENT_TYPE" :value="item.type" />
           </view>
-          <view class="mt-8rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-26rpx">
             发送人：{{ item.senderNickname || `用户 ${item.senderId}` }}
           </view>
-          <view class="line-clamp-2 mt-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub line-clamp-2 mt-8rpx text-26rpx">
             {{ getMessageSummary(item.type, item.content) }}
           </view>
-          <view class="mt-12rpx flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx flex items-center justify-between text-24rpx">
             <text>{{ formatDateTime(item.sendTime) }}</text>
             <text>{{ getDictLabel(DICT_TYPE.IM_MESSAGE_STATUS, item.status) }}</text>
           </view>

@@ -41,7 +41,7 @@
     <!-- 检测指标项 -->
     <scroll-view v-if="tabType === 'indicators'" class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <TemplateIndicatorList v-if="formData.id" :template-id="formData.id" :show-title="false" />
-      <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-20rpx text-24rpx text-[#389e0d]">
+      <view v-else class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-24rpx">
         请先保存质检方案主表；保存后可维护检测指标项。
       </view>
       <view class="h-160rpx" />
@@ -50,7 +50,7 @@
     <!-- 产品关联 -->
     <scroll-view v-if="tabType === 'items'" class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <TemplateItemList v-if="formData.id" :template-id="formData.id" :show-title="false" />
-      <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-20rpx text-24rpx text-[#389e0d]">
+      <view v-else class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-24rpx">
         请先保存质检方案主表；保存后可维护产品关联。
       </view>
       <view class="h-160rpx" />
@@ -160,7 +160,7 @@ async function handleSubmit() {
     }
     uni.$emit('mes:qc:template:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

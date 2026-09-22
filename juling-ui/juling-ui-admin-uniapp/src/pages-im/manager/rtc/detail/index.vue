@@ -37,10 +37,10 @@
 
       <!-- 参与者 -->
       <wd-cell-group border class="mt-20rpx">
-        <view class="px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main px-24rpx py-20rpx text-30rpx font-semibold">
           参与者（{{ participants.length }}）
         </view>
-        <view v-if="participants.length === 0" class="px-24rpx pb-24rpx text-26rpx text-[#999]">
+        <view v-if="participants.length === 0" class="yd-text-hint px-24rpx pb-24rpx text-26rpx">
           暂无参与者
         </view>
         <view
@@ -49,10 +49,10 @@
           class="flex items-center justify-between border-t border-t-[#f2f3f5] px-24rpx py-16rpx"
         >
           <view class="min-w-0 flex-1">
-            <view class="line-clamp-1 text-28rpx text-[#333]">
+            <view class="yd-text-main line-clamp-1 text-28rpx">
               {{ member.userNickname || `用户 ${member.userId}` }}
             </view>
-            <view class="mt-4rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-22rpx">
               接通 {{ formatDateTime(member.acceptTime) || '-' }}
             </view>
           </view>
@@ -68,7 +68,8 @@
 
 <script lang="ts" setup>
 import type { ImManagerRtcCallVO, ImManagerRtcParticipantVO } from '@/api/im/manager/rtc'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getManagerRtcCall, getManagerRtcCallParticipantList } from '@/api/im/manager/rtc'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
@@ -109,7 +110,7 @@ async function getDetail() {
 }
 
 /** 初始化通话记录详情 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

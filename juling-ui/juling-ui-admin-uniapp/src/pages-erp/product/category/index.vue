@@ -29,11 +29,11 @@
                   <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#13c2c2]">
                     <wd-icon name="folder" size="20px" color="#fff" />
                   </view>
-                  <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                  <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                     {{ item.name || '-' }}
                   </view>
                 </view>
-                <view class="text-26rpx text-[#666] space-y-8rpx">
+                <view class="yd-text-sub text-26rpx space-y-8rpx">
                   <view>分类编码：{{ item.code || '-' }}</view>
                   <view>排序：{{ item.sort ?? '-' }}</view>
                   <view class="flex items-center">

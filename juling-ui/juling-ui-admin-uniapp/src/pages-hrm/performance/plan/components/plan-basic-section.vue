@@ -28,7 +28,7 @@
       >
         <view
           class="min-h-72rpx flex items-center justify-end text-28rpx"
-          :class="model.cycle ? 'text-[#333]' : 'text-[#999]'"
+          :class="model.cycle ? 'yd-text-main' : 'yd-text-hint'"
           @click="!disabled && (monthVisible = true)"
         >
           {{ model.cycle || '请选择月份' }}
@@ -38,7 +38,7 @@
         <wd-form-item title="考核年份" title-width="200rpx" prop="cycle">
           <view
             class="min-h-72rpx flex items-center justify-end text-28rpx"
-            :class="model.cycle ? 'text-[#333]' : 'text-[#999]'"
+            :class="model.cycle ? 'yd-text-main' : 'yd-text-hint'"
             @click="!disabled && (yearVisible = true)"
           >
             {{ model.cycle || '请选择年份' }}
@@ -62,7 +62,7 @@
       >
         <view
           class="min-h-72rpx flex items-center justify-end text-28rpx"
-          :class="model.cycle ? 'text-[#333]' : 'text-[#999]'"
+          :class="model.cycle ? 'yd-text-main' : 'yd-text-hint'"
           @click="!disabled && (yearVisible = true)"
         >
           {{ model.cycle || '请选择年份' }}
@@ -72,7 +72,7 @@
         <wd-form-item title="开始日期" title-width="200rpx" prop="cycle">
           <view
             class="min-h-72rpx flex items-center justify-end text-28rpx"
-            :class="customDateRange[0] ? 'text-[#333]' : 'text-[#999]'"
+            :class="customDateRange[0] ? 'yd-text-main' : 'yd-text-hint'"
             @click="!disabled && (startDateVisible = true)"
           >
             {{ customDateRange[0] || '请选择开始日期' }}
@@ -81,7 +81,7 @@
         <wd-form-item title="结束日期" title-width="200rpx" prop="cycle">
           <view
             class="min-h-72rpx flex items-center justify-end text-28rpx"
-            :class="customDateRange[1] ? 'text-[#333]' : 'text-[#999]'"
+            :class="customDateRange[1] ? 'yd-text-main' : 'yd-text-hint'"
             @click="!disabled && (endDateVisible = true)"
           >
             {{ customDateRange[1] || '请选择结束日期' }}

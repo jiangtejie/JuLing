@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="淘汰原因"
@@ -9,12 +9,12 @@
 
     <!-- 原因列表 -->
     <view class="p-24rpx">
-      <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
         加载中...
       </view>
       <view
         v-else-if="reasonList.length === 0"
-        class="rounded-12rpx bg-white py-80rpx text-center text-28rpx text-[#999] shadow-sm"
+        class="yd-text-hint rounded-12rpx bg-white py-80rpx text-center text-28rpx shadow-sm"
       >
         暂无淘汰原因
       </view>
@@ -24,7 +24,7 @@
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-28rpx text-[#999]">序号 {{ index + 1 }}</text>
+          <text class="yd-text-hint text-28rpx">序号 {{ index + 1 }}</text>
           <wd-button
             v-if="hasAccessByCodes(['hrm:recruit:config:update'])"
             size="small"

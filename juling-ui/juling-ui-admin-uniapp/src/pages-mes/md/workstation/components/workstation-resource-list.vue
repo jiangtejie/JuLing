@@ -3,8 +3,8 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <!-- 设备资源 -->
       <view v-if="shouldShow('machine')" class="mx-24rpx mt-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-        <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-          <view class="text-30rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+          <view class="yd-text-main text-30rpx font-semibold">
             设备资源
           </view>
           <view class="flex items-center gap-12rpx">
@@ -20,11 +20,11 @@
           <wd-loading />
         </view>
         <template v-else>
-          <view v-for="item in machineList" :key="item.id" class="border-b border-[#f7f7f7] px-24rpx py-20rpx last:border-b-0">
-            <view class="mb-8rpx text-28rpx text-[#333] font-medium">
+          <view v-for="item in machineList" :key="item.id" class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0">
+            <view class="yd-text-main mb-8rpx text-28rpx font-medium">
               {{ item.machineryName || '-' }}
             </view>
-            <view class="text-26rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-26rpx space-y-6rpx">
               <view>设备编码：{{ item.machineryCode || '-' }}</view>
               <view>数量：{{ item.quantity ?? '-' }}</view>
               <view v-if="item.remark">
@@ -45,8 +45,8 @@
 
       <!-- 工装夹具 -->
       <view v-if="shouldShow('tool')" class="mx-24rpx mt-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-        <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-          <view class="text-30rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+          <view class="yd-text-main text-30rpx font-semibold">
             工装夹具
           </view>
           <view class="flex items-center gap-12rpx">
@@ -62,11 +62,11 @@
           <wd-loading />
         </view>
         <template v-else>
-          <view v-for="item in toolList" :key="item.id" class="border-b border-[#f7f7f7] px-24rpx py-20rpx last:border-b-0">
-            <view class="mb-8rpx text-28rpx text-[#333] font-medium">
+          <view v-for="item in toolList" :key="item.id" class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0">
+            <view class="yd-text-main mb-8rpx text-28rpx font-medium">
               {{ item.toolTypeName || '-' }}
             </view>
-            <view class="text-26rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-26rpx space-y-6rpx">
               <view>工具类型编号：{{ item.toolTypeId || '-' }}</view>
               <view>数量：{{ item.quantity ?? '-' }}</view>
               <view v-if="item.remark">
@@ -90,8 +90,8 @@
 
       <!-- 人力资源 -->
       <view v-if="shouldShow('worker')" class="mx-24rpx mt-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-        <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-          <view class="text-30rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+          <view class="yd-text-main text-30rpx font-semibold">
             人力资源
           </view>
           <view class="flex items-center gap-12rpx">
@@ -107,11 +107,11 @@
           <wd-loading />
         </view>
         <template v-else>
-          <view v-for="item in workerList" :key="item.id" class="border-b border-[#f7f7f7] px-24rpx py-20rpx last:border-b-0">
-            <view class="mb-8rpx text-28rpx text-[#333] font-medium">
+          <view v-for="item in workerList" :key="item.id" class="yd-border-light border-b px-24rpx py-20rpx last:border-b-0">
+            <view class="yd-text-main mb-8rpx text-28rpx font-medium">
               {{ item.postName || '-' }}
             </view>
-            <view class="text-26rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-26rpx space-y-6rpx">
               <view>岗位编号：{{ item.postId || '-' }}</view>
               <view>数量：{{ item.quantity ?? '-' }}</view>
               <view v-if="item.remark">
@@ -151,12 +151,12 @@
       safe-area-inset-bottom
       custom-style="height: 68vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formTitle }}
           </view>
           <wd-button size="small" type="primary" :loading="saving" @click="handleSubmit">

@@ -18,7 +18,7 @@
       <view
         v-for="(row, index) in visibleRows"
         :key="index"
-        class="border-t border-[#f5f5f5] py-16rpx"
+        class="yd-border-light border-t py-16rpx"
       >
         <template v-if="section.columns?.length">
           <view
@@ -26,8 +26,8 @@
             :key="column.prop"
             class="mb-8rpx flex items-center justify-between gap-16rpx text-28rpx"
           >
-            <text class="shrink-0 text-[#999]">{{ column.label }}</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">{{ formatColumnValue(row, column) }}</text>
+            <text class="yd-text-hint shrink-0">{{ column.label }}</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">{{ formatColumnValue(row, column) }}</text>
           </view>
         </template>
         <template v-else>
@@ -36,8 +36,8 @@
             :key="entry.label"
             class="mb-8rpx flex items-center justify-between gap-16rpx text-28rpx"
           >
-            <text class="shrink-0 text-[#999]">{{ entry.label }}</text>
-            <text class="min-w-0 flex-1 text-right text-[#333]">{{ entry.value }}</text>
+            <text class="yd-text-hint shrink-0">{{ entry.label }}</text>
+            <text class="yd-text-main min-w-0 flex-1 text-right">{{ entry.value }}</text>
           </view>
         </template>
       </view>
@@ -45,7 +45,7 @@
       <!-- 展开更多 / 收起：超过默认展示行数时出现 -->
       <view
         v-if="rows.length > DEFAULT_VISIBLE_ROWS"
-        class="border-t border-[#f5f5f5] pt-16rpx text-center text-26rpx text-[--wot-color-theme]"
+        class="yd-border-light border-t pt-16rpx text-center text-26rpx text-[--wot-color-theme]"
         @click="expanded = !expanded"
       >
         {{ expanded ? '收起' : `展开更多（共 ${rows.length} 条）` }}
@@ -53,10 +53,19 @@
       <!-- 数据量过大时仅展示前 MAX_VISIBLE_ROWS 条 -->
       <view
         v-if="rows.length > MAX_VISIBLE_ROWS"
-        class="pt-8rpx text-center text-24rpx text-[#bbb]"
+        class="yd-text-muted pt-8rpx text-center text-24rpx"
       >
         仅展示前 {{ MAX_VISIBLE_ROWS }} 条
       </view>
+    </view>
+    <!-- add by 棱信矩灵：区分「加载中 / 加载失败 / 确实没有数据」三种状态 -->
+    <!-- 此前请求失败与加载中都会被渲染成「暂无统计数据」，用户无法区分，且没有重试入口 -->
+    <view v-else-if="loading" class="flex justify-center py-40rpx">
+      <wd-loading />
+    </view>
+    <view v-else-if="error" class="py-40rpx text-center">
+      <text class="yd-text-hint text-28rpx">加载失败</text>
+      <text class="ml-16rpx text-28rpx text-[--wot-color-theme]" @click="emit('retry')">重新加载</text>
     </view>
     <wd-empty v-else icon="content" tip="暂无统计数据" />
   </Card>
@@ -83,10 +92,18 @@ const props = withDefaults(defineProps<{
   rank?: boolean
   rows?: Record<string, any>[]
   section: StatisticsSection
+  loading?: boolean // 加载中（不传则维持原有行为）
+  error?: boolean // 加载失败（不传则维持原有行为）
 }>(), {
   rank: false,
   rows: () => [],
+  loading: false,
+  error: false,
 })
+
+const emit = defineEmits<{
+  retry: [] // 加载失败时点击「重新加载」
+}>()
 
 const expanded = ref(false) // 展开状态
 

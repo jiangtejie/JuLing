@@ -32,16 +32,16 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.remark || '-' }}</text>
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               创建时间：{{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>

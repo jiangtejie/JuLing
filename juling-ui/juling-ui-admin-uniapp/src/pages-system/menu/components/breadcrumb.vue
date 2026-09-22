@@ -3,9 +3,9 @@
     <scroll-view scroll-x class="whitespace-nowrap">
       <view class="inline-flex items-center text-28rpx">
         <template v-for="(item, index) in breadcrumbItems" :key="item.id">
-          <text v-if="index > 0" class="mx-8rpx text-[#999]">/</text>
+          <text v-if="index > 0" class="yd-text-hint mx-8rpx">/</text>
           <text
-            :class="index === breadcrumbItems.length - 1 ? 'text-[#333]' : 'text-[#1890ff]'"
+            :class="index === breadcrumbItems.length - 1 ? 'yd-text-main' : 'yd-text-link'"
             @click="handleClick(index)"
           >
             {{ item.name }}

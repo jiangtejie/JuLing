@@ -8,18 +8,18 @@
     />
 
     <view v-if="visible" class="flex flex-1 flex-col items-center justify-center px-48rpx">
-      <view class="text-36rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-36rpx font-semibold">
         当前账号尚未开通员工端
       </view>
-      <view class="mt-24rpx text-center text-28rpx text-[#666] leading-44rpx">
+      <view class="yd-text-sub mt-24rpx text-center text-28rpx leading-44rpx">
         {{ description }}
       </view>
 
       <view class="mt-48rpx w-full overflow-hidden rounded-12rpx bg-white p-32rpx shadow-sm">
-        <view class="mb-24rpx text-center text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-30rpx font-semibold">
           完成员工端开通
         </view>
-        <view class="text-26rpx text-[#666] leading-40rpx space-y-20rpx">
+        <view class="yd-text-sub text-26rpx leading-40rpx space-y-20rpx">
           <view>1. 进入员工档案</view>
           <view>2. 新增并绑定当前后台账号</view>
           <view>3. 保存员工档案后即可进入员工端</view>

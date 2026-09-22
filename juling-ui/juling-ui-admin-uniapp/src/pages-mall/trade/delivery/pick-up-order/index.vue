@@ -38,22 +38,22 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.no || '-' }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.TRADE_ORDER_STATUS" :value="item.status" />
           </view>
 
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">实付金额：</text>
-            <text class="text-[#fa8c16] font-semibold">{{ formatDisplayMoney(item.payPrice) }}</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">实付金额：</text>
+            <text class="yd-text-warning font-semibold">{{ formatDisplayMoney(item.payPrice) }}</text>
           </view>
-          <view class="mt-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">核销码：</text>
+          <view class="yd-text-sub mt-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">核销码：</text>
             <text class="truncate">{{ item.pickUpVerifyCode || '-' }}</text>
           </view>
-          <view class="mt-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub mt-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>
@@ -63,13 +63,13 @@
     <!-- 核销码核销弹窗 -->
     <wd-popup
       v-model="verifyVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0;"
       @close="closeVerifyPopup"
     >
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           核销码核销
         </view>
         <!-- 录入态：输入核销码查订单 -->

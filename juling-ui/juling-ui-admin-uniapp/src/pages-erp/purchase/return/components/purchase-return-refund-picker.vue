@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="visible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择采购退货（仅展示可退款）
         </view>
         <wd-button size="small" type="primary" :disabled="selectedRows.length === 0" @click="handleConfirm">
@@ -56,27 +56,27 @@
             @click="toggleSelect(item)"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.no || '-' }}
               </view>
-              <text v-if="isSelected(item)" class="shrink-0 text-24rpx text-[#1677ff]">已选择</text>
+              <text v-if="isSelected(item)" class="yd-text-link shrink-0 text-24rpx">已选择</text>
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">供应商：</text>{{ item.supplierName || '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">供应商：</text>{{ item.supplierName || '-' }}
             </view>
-            <view v-if="item.productNames" class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">产品：</text>
+            <view v-if="item.productNames" class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">产品：</text>
               <text class="line-clamp-1">{{ item.productNames }}</text>
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">退货时间：</text>{{ formatDateTime(item.returnTime) || '-' }}
+            <view class="yd-text-sub mb-8rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">退货时间：</text>{{ formatDateTime(item.returnTime) || '-' }}
             </view>
-            <view class="flex text-26rpx text-[#666]">
+            <view class="yd-text-sub flex text-26rpx">
               <view class="flex-1">
-                <text class="mr-8rpx text-[#999]">应退金额：</text>{{ formatMoney(item.totalPrice) }}
+                <text class="yd-text-hint mr-8rpx">应退金额：</text>{{ formatMoney(item.totalPrice) }}
               </view>
               <view class="flex-1">
-                <text class="mr-8rpx text-[#999]">已退金额：</text>{{ formatMoney(item.refundPrice) }}
+                <text class="yd-text-hint mr-8rpx">已退金额：</text>{{ formatMoney(item.refundPrice) }}
               </view>
             </view>
           </view>

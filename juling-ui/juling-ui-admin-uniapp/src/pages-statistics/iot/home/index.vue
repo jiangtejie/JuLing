@@ -9,10 +9,10 @@
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
           <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
             <view>
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 IoT 首页
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 设备概览 / 消息趋势 / 设备地图
               </view>
             </view>
@@ -20,7 +20,7 @@
               刷新
             </wd-button>
           </view>
-          <view v-if="activeLoadError" class="border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx text-[#fa8c16]">
+          <view v-if="activeLoadError" class="yd-text-warning border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx">
             部分统计数据加载失败，请稍后刷新
           </view>
         </view>
@@ -36,10 +36,10 @@
           <view class="grid grid-cols-2 gap-16rpx">
             <Card v-for="item in summaryCards" :key="item.key">
               <view class="flex items-center justify-between">
-                <text class="text-26rpx text-[#999]">{{ item.label }}</text>
-                <text class="text-22rpx text-[#52c41a]">今日 +{{ formatNumber(item.todayCount) }}</text>
+                <text class="yd-text-hint text-26rpx">{{ item.label }}</text>
+                <text class="yd-text-success text-22rpx">今日 +{{ formatNumber(item.todayCount) }}</text>
               </view>
-              <view class="mt-16rpx text-42rpx text-[#333] font-semibold leading-none">
+              <view class="yd-text-main mt-16rpx text-42rpx font-semibold leading-none">
                 <wd-loading v-if="summaryLoading" size="28rpx" />
                 <text v-else>{{ formatNumber(item.value) }}</text>
               </view>
@@ -55,19 +55,19 @@
               <view
                 v-for="item in statusItems"
                 :key="item.state"
-                class="border-b border-[#f5f5f5] py-18rpx last:border-b-0"
+                class="yd-border-light border-b py-18rpx last:border-b-0"
               >
                 <view class="mb-12rpx flex items-center justify-between">
                   <view class="flex items-center gap-10rpx">
                     <view class="h-16rpx w-16rpx rounded-full" :style="{ backgroundColor: item.color }" />
-                    <text class="text-28rpx text-[#666]">{{ item.label }}</text>
+                    <text class="yd-text-sub text-28rpx">{{ item.label }}</text>
                   </view>
-                  <text class="text-28rpx text-[#333] font-semibold">{{ formatNumber(item.count) }} 台</text>
+                  <text class="yd-text-main text-28rpx font-semibold">{{ formatNumber(item.count) }} 台</text>
                 </view>
-                <view class="h-12rpx overflow-hidden rounded-full bg-[#f0f2f5]">
+                <view class="yd-bg-subtle h-12rpx overflow-hidden rounded-full">
                   <view class="h-full rounded-full" :style="{ width: `${item.percent}%`, backgroundColor: item.color }" />
                 </view>
-                <view class="mt-8rpx text-right text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-right text-22rpx">
                   占比 {{ item.percent }}%
                 </view>
               </view>
@@ -92,11 +92,11 @@
               <view
                 v-for="item in categoryRows"
                 :key="item.name"
-                class="border-t border-[#f5f5f5] py-16rpx"
+                class="yd-border-light border-t py-16rpx"
               >
                 <view class="flex items-center justify-between gap-16rpx text-28rpx">
-                  <text class="min-w-0 flex-1 truncate text-[#666]">{{ item.name }}</text>
-                  <text class="shrink-0 text-[#333] font-semibold">{{ formatNumber(item.count) }} 台</text>
+                  <text class="yd-text-sub min-w-0 flex-1 truncate">{{ item.name }}</text>
+                  <text class="yd-text-main shrink-0 font-semibold">{{ formatNumber(item.count) }} 台</text>
                 </view>
               </view>
             </view>
@@ -105,7 +105,7 @@
 
         <!-- 消息趋势 -->
         <Card v-if="activeTab === IOT_HOME_TAB.MESSAGE" title="设备消息趋势">
-          <view class="mb-20rpx rounded-8rpx bg-[#f7f8fa] p-8rpx">
+          <view class="yd-bg-subtle mb-20rpx rounded-8rpx p-8rpx">
             <wd-form-item
               title="开始日期"
               title-width="160rpx"
@@ -145,17 +145,17 @@
               @confirm="handleIntervalConfirm"
             />
           </view>
-          <view class="mb-20rpx text-24rpx text-[#999]">
-            <text class="text-24rpx text-[#999]">{{ periodText }}</text>
+          <view class="yd-text-hint mb-20rpx text-24rpx">
+            <text class="yd-text-hint text-24rpx">{{ periodText }}</text>
           </view>
           <view class="grid grid-cols-2 mb-16rpx gap-16rpx">
-            <view class="rounded-8rpx bg-[#f7f8fa] px-20rpx py-16rpx">
-              <text class="block text-24rpx text-[#999]">上行消息</text>
-              <text class="mt-8rpx block text-32rpx text-[#1677ff] font-semibold">{{ formatNumber(messageTotal.upstream) }}</text>
+            <view class="yd-bg-subtle rounded-8rpx px-20rpx py-16rpx">
+              <text class="yd-text-hint block text-24rpx">上行消息</text>
+              <text class="yd-text-link mt-8rpx block text-32rpx font-semibold">{{ formatNumber(messageTotal.upstream) }}</text>
             </view>
-            <view class="rounded-8rpx bg-[#f7f8fa] px-20rpx py-16rpx">
-              <text class="block text-24rpx text-[#999]">下行消息</text>
-              <text class="mt-8rpx block text-32rpx text-[#52c41a] font-semibold">{{ formatNumber(messageTotal.downstream) }}</text>
+            <view class="yd-bg-subtle rounded-8rpx px-20rpx py-16rpx">
+              <text class="yd-text-hint block text-24rpx">下行消息</text>
+              <text class="yd-text-success mt-8rpx block text-32rpx font-semibold">{{ formatNumber(messageTotal.downstream) }}</text>
             </view>
           </view>
           <YdChart
@@ -176,7 +176,7 @@
           <view class="mb-20rpx flex flex-wrap gap-16rpx">
             <view v-for="item in stateOptions" :key="item.value" class="flex items-center gap-8rpx">
               <view class="h-14rpx w-14rpx rounded-full" :style="{ backgroundColor: getStateColor(Number(item.value)) }" />
-              <text class="text-24rpx text-[#999]">{{ item.label }}</text>
+              <text class="yd-text-hint text-24rpx">{{ item.label }}</text>
             </view>
           </view>
           <view v-if="deviceLoading" class="flex justify-center py-48rpx">
@@ -186,36 +186,36 @@
             <wd-empty icon="content" tip="暂无设备位置数据" />
           </view>
           <view v-else>
-            <view class="relative h-360rpx overflow-hidden rounded-12rpx bg-[#f7f8fa]">
+            <view class="yd-bg-subtle relative h-360rpx overflow-hidden rounded-12rpx">
               <view :id="MAP_CONTAINER_ID" class="h-full w-full" />
-              <view v-if="mapLoading" class="absolute inset-0 flex items-center justify-center bg-[#f7f8fa]">
+              <view v-if="mapLoading" class="yd-bg-subtle absolute inset-0 flex items-center justify-center">
                 <wd-loading size="32rpx" />
               </view>
-              <view v-else-if="mapLoadError" class="absolute inset-0 flex flex-col items-center justify-center bg-[#f7f8fa] px-24rpx text-center">
-                <text class="text-28rpx text-[#666]">{{ mapLoadError }}</text>
-                <text class="mt-12rpx text-24rpx text-[#999]">下方展示设备位置明细</text>
+              <view v-else-if="mapLoadError" class="yd-bg-subtle absolute inset-0 flex flex-col items-center justify-center px-24rpx text-center">
+                <text class="yd-text-sub text-28rpx">{{ mapLoadError }}</text>
+                <text class="yd-text-hint mt-12rpx text-24rpx">下方展示设备位置明细</text>
               </view>
             </view>
             <view class="mt-20rpx">
               <view
                 v-for="item in visibleDeviceLocations"
                 :key="item.markerId"
-                class="border-t border-[#f5f5f5] py-16rpx"
+                class="yd-border-light border-t py-16rpx"
                 @click="handleDeviceDetail(item.id)"
               >
                 <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-                  <text class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">
+                  <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">
                     {{ getDeviceTitle(item) }}
                   </text>
                   <dict-tag v-if="item.state != null" :type="DICT_TYPE.IOT_DEVICE_STATE" :value="item.state" />
                 </view>
-                <view class="text-24rpx text-[#999]">
+                <view class="yd-text-hint text-24rpx">
                   {{ item.productName || '-' }} | {{ item.longitude }}, {{ item.latitude }}
                 </view>
               </view>
               <view
                 v-if="deviceLocationList.length > visibleDeviceLocations.length"
-                class="border-t border-[#f5f5f5] pt-16rpx text-center text-26rpx text-[--wot-color-theme]"
+                class="yd-border-light border-t pt-16rpx text-center text-26rpx text-[--wot-color-theme]"
                 @click="handleDeviceList"
               >
                 查看全部设备

@@ -18,7 +18,7 @@
       <template #left>
         <view class="flex items-center gap-24rpx pl-4rpx">
           <wd-icon name="arrow-left" size="38rpx" color="#333" @click="handleBack" />
-          <text v-if="showTsl" class="text-28rpx text-[#333]" @click="handleTsl">TSL</text>
+          <text v-if="showTsl" class="yd-text-main text-28rpx" @click="handleTsl">TSL</text>
         </view>
       </template>
     </wd-navbar>
@@ -43,20 +43,20 @@
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view class="shrink-0">
               <dict-tag :type="DICT_TYPE.IOT_THING_MODEL_TYPE" :value="item.type" />
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">标识符：</text>{{ item.identifier || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">标识符：</text>{{ item.identifier || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">数据类型：</text>{{ getThingModelDataTypeLabel(item) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">数据类型：</text>{{ getThingModelDataTypeLabel(item) }}
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ item.description || '暂无描述' }}
           </view>
         </view>
@@ -73,13 +73,13 @@
     />
 
     <!-- 物模型 TSL 弹窗 -->
-    <wd-popup v-model="tslVisible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="tslVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[80vh] p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           物模型 TSL
         </view>
         <scroll-view scroll-y class="max-h-[60vh]">
-          <text class="break-all text-24rpx text-[#666]">{{ tslJson }}</text>
+          <text class="yd-text-sub break-all text-24rpx">{{ tslJson }}</text>
         </scroll-view>
         <wd-button class="mt-24rpx" block @click="tslVisible = false">
           关闭

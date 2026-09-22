@@ -8,7 +8,7 @@
     @close="visible = false"
   >
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
@@ -48,7 +48,7 @@
                 :max="100"
                 :precision="2"
               />
-              <text class="text-28rpx text-[#999]">%</text>
+              <text class="yd-text-hint text-28rpx">%</text>
             </view>
           </wd-form-item>
           <yd-form-picker

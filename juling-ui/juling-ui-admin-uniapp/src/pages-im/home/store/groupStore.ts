@@ -19,6 +19,8 @@ import type { Group, GroupDO, GroupMember, GroupMemberDO, Message } from '../typ
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getGroupDisplayName } from '@/pages-im/utils/user'
+// edit by 棱信矩灵：sendTime 是 LocalDateTime 字符串，new Date(字符串) 在 iOS/JSCore 上返回 NaN
+import { toTimestamp } from '@/utils/date'
 import {
   CommonStatusEnum,
   ImConversationType,
@@ -779,7 +781,7 @@ export const useGroupStore = defineStore('imGroupStore', () => {
       targetId: message.groupId || groupId,
       selfSend: message.senderId === currentUserId,
       status: ImMessageStatus.NORMAL,
-      sendTime: new Date(message.sendTime).getTime(),
+      sendTime: toTimestamp(message.sendTime),
       atUserIds: message.atUserIds || [],
       receiverUserIds: message.receiverUserIds || [],
     }
@@ -1167,7 +1169,7 @@ function convertGroupMessage(message: ImGroupMessageRespVO, currentUserId: numbe
     type: message.type,
     content: message.content,
     status: message.status,
-    sendTime: new Date(message.sendTime).getTime(),
+    sendTime: toTimestamp(message.sendTime),
     senderId: message.senderId,
     targetId: message.groupId,
     selfSend: !!currentUserId && message.senderId === currentUserId,

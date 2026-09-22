@@ -1,18 +1,18 @@
 <template>
   <view class="p-24rpx pb-160rpx">
     <view class="mb-16rpx flex items-center justify-between">
-      <text class="text-28rpx text-[#333] font-semibold">
+      <text class="yd-text-main text-28rpx font-semibold">
         合同信息
       </text>
       <text
         v-if="hasAccessByCodes(['hrm:employee:update'])"
-        class="text-28rpx text-[#1677ff]"
+        class="yd-text-link text-28rpx"
         @click="openForm()"
       >
         新增
       </text>
     </view>
-    <view v-if="!list.length" class="py-40rpx text-center text-28rpx text-[#999]">
+    <view v-if="!list.length" class="yd-text-hint py-40rpx text-center text-28rpx">
       暂无合同信息
     </view>
     <view
@@ -21,29 +21,29 @@
       class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-        <text class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+        <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
           {{ item.no || '-' }}
         </text>
-        <text class="shrink-0 text-26rpx text-[#666]">
+        <text class="yd-text-sub shrink-0 text-26rpx">
           {{ formatEmployeeContractStatus(item.status) }}
         </text>
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         类型：{{ formatEmployeeContractType(item.type) }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         期限：{{ item.term != null ? `${item.term} 年` : '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         起止：{{ formatDate(item.startTime) || '-' }} ~ {{ formatDate(item.endTime) || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         签约公司：{{ item.signCompany || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         签订日期：{{ formatDate(item.signTime) || '-' }}
       </view>
-      <view v-if="item.remark" class="mb-8rpx text-26rpx text-[#666]">
+      <view v-if="item.remark" class="yd-text-sub mb-8rpx text-26rpx">
         备注：{{ item.remark }}
       </view>
       <view
@@ -53,7 +53,7 @@
         <view
           v-for="(url, index) in item.fileUrls"
           :key="`${url}-${index}`"
-          class="mb-8rpx text-26rpx text-[#1677ff]"
+          class="yd-text-link mb-8rpx text-26rpx"
           @click="openAttachment(url)"
         >
           {{ getFileNameFromUrl(url) || `附件 ${index + 1}` }}
@@ -61,18 +61,18 @@
       </view>
       <view
         v-if="hasAccessByCodes(['hrm:employee:update']) || hasAccessByCodes(['hrm:employee:delete'])"
-        class="flex gap-32rpx border-t border-[#f0f0f0] pt-16rpx"
+        class="yd-border-light flex gap-32rpx border-t pt-16rpx"
       >
         <text
           v-if="hasAccessByCodes(['hrm:employee:update'])"
-          class="text-28rpx text-[#1677ff]"
+          class="yd-text-link text-28rpx"
           @click="openForm(item)"
         >
           编辑
         </text>
         <text
           v-if="hasAccessByCodes(['hrm:employee:delete'])"
-          class="text-28rpx text-[#f5222d]"
+          class="yd-text-danger text-28rpx"
           @click="handleDelete(item)"
         >
           删除

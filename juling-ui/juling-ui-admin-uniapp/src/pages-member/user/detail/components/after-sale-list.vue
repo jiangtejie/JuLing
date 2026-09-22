@@ -24,30 +24,30 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.no || `售后 ${item.id}` }}
             </view>
             <dict-tag :type="DICT_TYPE.TRADE_AFTER_SALE_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-26rpx">
             {{ item.spuName || '-' }}
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">订单编号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">订单编号：</text>
             <text>{{ item.orderNo || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">退款金额：</text>
-            <text>{{ formatAmount(item.refundPrice) }}</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">退款金额：</text>
+            <text>{{ formatDisplayMoney(item.refundPrice) }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">售后方式：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">售后方式：</text>
             <dict-tag :type="DICT_TYPE.TRADE_AFTER_SALE_WAY" :value="item.way" />
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ formatDateTime(item.createTime) || '-' }}
           </view>
-          <view class="mt-16rpx text-right text-24rpx text-[#1890ff]">
+          <view class="yd-text-link mt-16rpx text-right text-24rpx">
             处理退款
           </view>
         </view>
@@ -62,6 +62,7 @@ import { ref, watch } from 'vue'
 import { getTradeAfterSalePage } from '@/api/mall/trade/after-sale'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDateTime } from '@/utils/date'
+import { formatDisplayMoney } from '@/utils/format'
 import AfterSaleSearchForm from './after-sale-search-form.vue'
 
 const props = defineProps<{
@@ -71,11 +72,6 @@ const props = defineProps<{
 const list = ref<TradeAfterSale[]>([]) // 列表数据
 const pagingRef = ref<ZPagingRef<TradeAfterSale>>() // 分页组件引用
 const queryParams = ref<Record<string, any>>({}) // 查询参数
-
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
-}
 
 /** 查询售后记录 */
 async function queryList(pageNo: number, pageSize: number) {

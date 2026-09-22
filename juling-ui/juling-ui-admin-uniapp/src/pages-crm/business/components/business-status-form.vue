@@ -6,8 +6,8 @@
     custom-style="border-radius: 24rpx 24rpx 0 0;"
   >
     <view class="max-h-[80vh] overflow-y-auto bg-white pb-32rpx">
-      <view class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-24rpx">
-        <view class="text-32rpx text-[#333] font-semibold">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-24rpx">
+        <view class="yd-text-main text-32rpx font-semibold">
           变更商机状态
         </view>
         <wd-icon name="close" size="36rpx" @click="visible = false" />

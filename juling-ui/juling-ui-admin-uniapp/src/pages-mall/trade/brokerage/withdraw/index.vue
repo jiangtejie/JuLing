@@ -31,22 +31,22 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.userNickname || `提现 #${item.id}` }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.BROKERAGE_WITHDRAW_STATUS" :value="item.status" />
           </view>
 
-          <view class="mb-12rpx text-34rpx text-[#fa8c16] font-semibold">
+          <view class="yd-text-warning mb-12rpx text-34rpx font-semibold">
             {{ formatDisplayMoney(item.price) }}
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">提现类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">提现类型：</text>
             <dict-tag v-if="item.type != null" :type="DICT_TYPE.BROKERAGE_WITHDRAW_TYPE" :value="item.type" />
             <text v-else>-</text>
           </view>
-          <view class="flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">手续费：</text>
+          <view class="yd-text-sub flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">手续费：</text>
             <text>{{ formatDisplayMoney(item.feePrice) }}</text>
           </view>
         </view>

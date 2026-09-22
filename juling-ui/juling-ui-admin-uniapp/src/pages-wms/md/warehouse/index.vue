@@ -32,20 +32,20 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <text class="text-24rpx text-[#999]">#{{ item.sort ?? 0 }}</text>
+              <text class="yd-text-hint text-24rpx">#{{ item.sort ?? 0 }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">仓库编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">仓库编号：</text>
               <text>{{ item.code || '-' }}</text>
             </view>
-            <view v-if="item.remark" class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">备注：</text>
+            <view v-if="item.remark" class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">备注：</text>
               <text class="line-clamp-1">{{ item.remark }}</text>
             </view>
-            <view class="mt-12rpx flex items-center text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx flex items-center text-24rpx">
               <text>创建时间：{{ formatDateTime(item.createTime) || '-' }}</text>
             </view>
           </view>

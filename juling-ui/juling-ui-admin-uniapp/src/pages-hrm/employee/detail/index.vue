@@ -10,7 +10,7 @@
     <!-- 头部摘要 -->
     <view v-if="formData.id" class="bg-white px-24rpx py-24rpx">
       <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
           {{ formData.name || '-' }}
         </view>
         <view class="flex shrink-0 flex-col items-end gap-8rpx">
@@ -26,16 +26,16 @@
           />
         </view>
       </view>
-      <view class="mb-8rpx text-26rpx text-[#999]">
+      <view class="yd-text-hint mb-8rpx text-26rpx">
         员工编号：{{ formData.id }}
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         {{ formData.deptName || '-' }} · {{ formData.postName || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         工号：{{ formData.jobNumber || '-' }} · 手机：{{ formData.mobile || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         直属上级：{{ formData.leaderEmployeeName || '-' }}
       </view>
     </view>
@@ -90,7 +90,7 @@
         <wd-cell title="司龄起算时间" :value="formatDateTime(formData.companyAgeStartTime) || '-'" />
         <wd-cell title="司龄" :value="formData.companyAge != null ? `${formData.companyAge} 年` : '-'" />
       </wd-cell-group>
-      <view class="mt-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main mt-24rpx px-24rpx text-28rpx font-semibold">
         异动记录
       </view>
       <ChangeRecordList ref="changeRecordListRef" :employee-id="Number(props.id)" />

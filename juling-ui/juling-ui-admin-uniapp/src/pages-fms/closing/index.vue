@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="期末结账"
@@ -16,14 +16,14 @@
         <!-- 当前会计期间 -->
         <view class="mx-24rpx mb-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="flex items-center justify-between">
-            <view class="text-34rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-34rpx font-semibold">
               {{ monthLabel }}
             </view>
             <wd-tag v-if="overview" :type="overview.closed ? 'success' : 'info'" plain>
               {{ overview.closed ? '已结账' : '未结账' }}
             </wd-tag>
           </view>
-          <view v-if="overview" class="mt-12rpx text-26rpx text-[#999]">
+          <view v-if="overview" class="yd-text-hint mt-12rpx text-26rpx">
             本期共录入凭证 {{ overview.voucherCount || 0 }} 张
           </view>
         </view>
@@ -31,7 +31,7 @@
         <!-- 结账概况加载失败 -->
         <view
           v-if="overviewLoadFailed"
-          class="mx-24rpx mb-24rpx rounded-12rpx bg-white py-48rpx text-center text-26rpx text-[#999] shadow-sm"
+          class="yd-text-hint mx-24rpx mb-24rpx rounded-12rpx bg-white py-48rpx text-center text-26rpx shadow-sm"
         >
           <view>结账概况加载失败</view>
           <wd-button class="mt-16rpx" size="small" type="primary" plain @click="reload">
@@ -41,16 +41,16 @@
 
         <!-- 结账检查 -->
         <view v-else-if="overview" class="mx-24rpx mb-24rpx rounded-12rpx bg-white shadow-sm">
-          <view class="border-0 border-b border-[#f0f0f0] border-solid px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-border-light yd-text-main border-0 border-b border-solid px-24rpx py-20rpx text-30rpx font-semibold">
             结账检查
           </view>
           <!-- 凭证审核 -->
-          <view class="flex items-center justify-between border-0 border-b border-[#f0f0f0] border-solid px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-0 border-b border-solid px-24rpx py-20rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 凭证审核
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ overview.pendingVoucherCount }} 张待审核
               </view>
             </view>
@@ -62,12 +62,12 @@
             </wd-tag>
           </view>
           <!-- 初始余额 -->
-          <view class="flex items-center justify-between border-0 border-b border-[#f0f0f0] border-solid px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-0 border-b border-solid px-24rpx py-20rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 初始余额
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ overview.initialBalanceBalanced ? '试算平衡' : '试算不平衡' }}
               </view>
             </view>
@@ -76,12 +76,12 @@
             </wd-tag>
           </view>
           <!-- 凭证编号 -->
-          <view class="flex items-center justify-between border-0 border-b border-[#f0f0f0] border-solid px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-0 border-b border-solid px-24rpx py-20rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 凭证编号
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ overview.voucherNumberContinuous ? '编号连续' : '存在断号' }}
               </view>
             </view>
@@ -90,12 +90,12 @@
             </wd-tag>
           </view>
           <!-- 损益结转 -->
-          <view class="flex items-center justify-between border-0 border-b border-[#f0f0f0] border-solid px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-0 border-b border-solid px-24rpx py-20rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 损益结转
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ formatFmsAmount(overview.profitLossBalance) }}
               </view>
             </view>
@@ -107,12 +107,12 @@
             </wd-tag>
           </view>
           <!-- 利润表检查 -->
-          <view class="flex items-center justify-between border-0 border-b border-[#f0f0f0] border-solid px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-0 border-b border-solid px-24rpx py-20rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 利润表检查
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 {{ overview.incomeStatementUnmappedSubjectCount
                   ? `${overview.incomeStatementUnmappedSubjectCount} 个科目未纳入公式`
                   : overview.incomeStatementBalanced ? '勾稽平衡' : '勾稽不平衡' }}
@@ -128,10 +128,10 @@
           <!-- 资产负债平衡 -->
           <view class="flex items-center justify-between px-24rpx py-20rpx">
             <view class="min-w-0 flex-1">
-              <view class="text-28rpx text-[#333]">
+              <view class="yd-text-main text-28rpx">
                 资产负债平衡
               </view>
-              <view class="mt-6rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-24rpx">
                 差额 {{ formatFmsAmount(overview.balanceSheetDifference) }}
               </view>
             </view>
@@ -152,10 +152,10 @@
           @click="handleSchemeList"
         >
           <view>
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               结账方案
             </view>
-            <view class="mt-6rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-6rpx text-24rpx">
               查看期末结转方案与分录规则
             </view>
           </view>

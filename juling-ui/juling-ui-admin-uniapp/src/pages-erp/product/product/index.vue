@@ -32,47 +32,47 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view v-if="item.barCode" class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">条码：</text>{{ item.barCode }}
+            <view v-if="item.barCode" class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">条码：</text>{{ item.barCode }}
             </view>
-            <view v-if="item.standard" class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">规格：</text>{{ item.standard }}
+            <view v-if="item.standard" class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">规格：</text>{{ item.standard }}
             </view>
-            <view class="grid grid-cols-2 mb-12rpx gap-12rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub grid grid-cols-2 mb-12rpx gap-12rpx text-28rpx">
               <view>
-                <text class="text-[#999]">分类：</text>{{ item.categoryName || '-' }}
+                <text class="yd-text-hint">分类：</text>{{ item.categoryName || '-' }}
               </view>
               <view>
-                <text class="text-[#999]">单位：</text>{{ item.unitName || '-' }}
+                <text class="yd-text-hint">单位：</text>{{ item.unitName || '-' }}
               </view>
             </view>
-            <view class="grid grid-cols-3 gap-12rpx rounded-12rpx bg-[#f8fafc] p-16rpx text-center">
+            <view class="yd-bg-subtle grid grid-cols-3 gap-12rpx rounded-12rpx p-16rpx text-center">
               <view>
-                <view class="text-22rpx text-[#999]">
+                <view class="yd-text-hint text-22rpx">
                   采购价
                 </view>
-                <view class="mt-4rpx text-26rpx text-[#333]">
+                <view class="yd-text-main mt-4rpx text-26rpx">
                   {{ formatMoney(item.purchasePrice) }}
                 </view>
               </view>
               <view>
-                <view class="text-22rpx text-[#999]">
+                <view class="yd-text-hint text-22rpx">
                   销售价
                 </view>
-                <view class="mt-4rpx text-26rpx text-[#333]">
+                <view class="yd-text-main mt-4rpx text-26rpx">
                   {{ formatMoney(item.salePrice) }}
                 </view>
               </view>
               <view>
-                <view class="text-22rpx text-[#999]">
+                <view class="yd-text-hint text-22rpx">
                   最低价
                 </view>
-                <view class="mt-4rpx text-26rpx text-[#333]">
+                <view class="yd-text-main mt-4rpx text-26rpx">
                   {{ formatMoney(item.minPrice) }}
                 </view>
               </view>

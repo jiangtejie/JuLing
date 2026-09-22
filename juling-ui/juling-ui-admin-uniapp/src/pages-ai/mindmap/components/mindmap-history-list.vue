@@ -19,12 +19,12 @@
         @click="handleOpen(item)"
       >
         <view class="mb-12rpx flex items-center justify-between">
-          <view class="text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-28rpx font-semibold">
             {{ item.prompt || '未命名导图' }}
           </view>
-          <text class="text-22rpx text-[#999]">{{ formatDateTime(item.createTime) }}</text>
+          <text class="yd-text-hint text-22rpx">{{ formatDateTime(item.createTime) }}</text>
         </view>
-        <view class="line-clamp-4 text-26rpx text-[#666]">
+        <view class="yd-text-sub line-clamp-4 text-26rpx">
           {{ item.generatedContent || item.errorMessage || '-' }}
         </view>
       </view>

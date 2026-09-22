@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar :title="getTitle" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
 
@@ -30,7 +30,7 @@
 
         <view class="mt-24rpx px-24rpx">
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               数据源
             </view>
             <wd-button size="small" type="primary" @click="handleAddSource">
@@ -38,13 +38,13 @@
             </wd-button>
           </view>
 
-          <view v-if="sourceConfigs.length === 0" class="rounded-12rpx bg-white py-56rpx text-center text-28rpx text-[#999]">
+          <view v-if="sourceConfigs.length === 0" class="yd-text-hint rounded-12rpx bg-white py-56rpx text-center text-28rpx">
             暂无数据源配置
           </view>
 
           <view v-for="(item, index) in sourceConfigs" :key="index" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-28rpx font-semibold">
                 数据源 {{ index + 1 }}
               </view>
               <wd-button size="small" type="danger" variant="plain" @click="handleDeleteSource(index)">
@@ -300,7 +300,7 @@ async function handleSubmit() {
     }
     uni.$emit('iot:data-rule:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

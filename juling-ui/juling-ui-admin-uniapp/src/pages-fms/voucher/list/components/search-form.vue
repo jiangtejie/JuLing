@@ -49,7 +49,7 @@
             placeholder="最小金额"
             clearable
           />
-          <text class="text-28rpx text-[#999]">至</text>
+          <text class="yd-text-hint text-28rpx">至</text>
           <wd-input
             v-model.number="formData.maxAmount"
             class="flex-1"

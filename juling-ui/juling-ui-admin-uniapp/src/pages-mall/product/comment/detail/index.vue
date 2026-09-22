@@ -68,13 +68,13 @@
     <!-- 商家回复弹窗 -->
     <wd-popup
       v-model="replyVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0;"
       @close="handleCloseReply"
     >
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           商家回复
         </view>
         <wd-form ref="replyFormRef" :model="replyForm" :schema="replySchema">

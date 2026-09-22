@@ -40,17 +40,17 @@
               radius="12rpx"
               mode="aspectFill"
             />
-            <view v-else class="h-120rpx w-120rpx flex items-center justify-center rounded-12rpx bg-[#f0f2f5] text-24rpx text-[#bbb]">
+            <view v-else class="yd-bg-subtle yd-text-muted h-120rpx w-120rpx flex items-center justify-center rounded-12rpx text-24rpx">
               无封面
             </view>
             <view class="min-w-0 flex-1">
-              <view class="line-clamp-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-1 text-30rpx font-semibold">
                 {{ item.materialTitle || '-' }}
               </view>
-              <view class="mt-10rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-10rpx text-26rpx">
                 频道：{{ item.channelName || '-' }}
               </view>
-              <view class="mt-6rpx flex items-center justify-between text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx flex items-center justify-between text-24rpx">
                 <text>接收：{{ getReceiverText(item) }}</text>
                 <text>{{ formatDateTime(item.sendTime) }}</text>
               </view>

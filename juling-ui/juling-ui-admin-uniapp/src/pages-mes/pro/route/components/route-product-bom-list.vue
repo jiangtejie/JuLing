@@ -1,7 +1,7 @@
 <template>
   <view class="mt-20rpx rounded-12rpx bg-[#fff7ed] p-20rpx">
     <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-      <view class="text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-28rpx font-semibold">
         产品 BOM 配置
       </view>
       <wd-button v-if="editable" size="small" type="primary" variant="plain" :disabled="!activeProcessId" @click="openForm('create')">
@@ -14,30 +14,30 @@
         v-for="process in processList"
         :key="process.processId"
         class="shrink-0 rounded-999rpx px-20rpx py-10rpx text-24rpx"
-        :class="activeProcessId === process.processId ? 'bg-[#1677ff] text-white' : 'bg-white text-[#666]'"
+        :class="activeProcessId === process.processId ? 'yd-bg-primary text-white' : 'bg-white yd-text-sub'"
         @click="handleProcessChange(process.processId)"
       >
         {{ process.processName || process.processCode || process.processId }}
       </view>
     </view>
-    <view v-else class="py-16rpx text-26rpx text-[#999]">
+    <view v-else class="yd-text-hint py-16rpx text-26rpx">
       请先配置路线工序，再维护产品 BOM。
     </view>
 
-    <view v-if="loading" class="py-16rpx text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint py-16rpx text-26rpx">
       加载中...
     </view>
-    <view v-else-if="activeProcessId && bomList.length === 0" class="py-16rpx text-26rpx text-[#999]">
+    <view v-else-if="activeProcessId && bomList.length === 0" class="yd-text-hint py-16rpx text-26rpx">
       当前工序暂无 BOM 物料
     </view>
     <view v-else class="space-y-12rpx">
       <view v-for="bom in bomList" :key="bom.id" class="rounded-12rpx bg-white p-16rpx">
         <view class="mb-8rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-28rpx font-semibold">
               {{ bom.itemName || '-' }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               {{ bom.itemCode || '-' }}
             </view>
           </view>
@@ -50,7 +50,7 @@
             </wd-button>
           </view>
         </view>
-        <view class="text-24rpx text-[#666] space-y-6rpx">
+        <view class="yd-text-sub text-24rpx space-y-6rpx">
           <view>规格型号：{{ bom.specification || '-' }}</view>
           <view>单位：{{ bom.unitName || '-' }}</view>
           <view>用料比例：{{ formatDecimalValue(bom.quantity, 4, { trimTrailingZeros: true }) }}</view>
@@ -64,8 +64,8 @@
 
   <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0; max-height: 82vh;">
     <view class="max-h-[82vh] flex flex-col bg-white">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-        <text class="text-32rpx text-[#333] font-semibold">{{ formTitle }}</text>
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+        <text class="yd-text-main text-32rpx font-semibold">{{ formTitle }}</text>
         <wd-icon name="close" size="36rpx" @click="formVisible = false" />
       </view>
       <scroll-view class="min-h-0 flex-1" scroll-y>

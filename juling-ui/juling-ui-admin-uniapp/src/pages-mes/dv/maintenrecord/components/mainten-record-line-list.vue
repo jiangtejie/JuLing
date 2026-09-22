@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         保养项目明细
       </view>
       <wd-button
@@ -37,29 +37,29 @@
           class="border-b border-b-[#f5f5f5] py-20rpx last:border-b-0"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-medium">
               {{ item.subjectName || item.subjectCode || '-' }}
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_MAINTEN_STATUS" :value="item.status" />
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">项目编码：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">项目编码：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.subjectCode || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">项目内容：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">项目内容：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.subjectContent || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">标准：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">标准：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.subjectStandard || '-' }}</text>
           </view>
-          <view v-if="item.result" class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">异常描述：</text>
+          <view v-if="item.result" class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">异常描述：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.result }}</text>
           </view>
-          <view class="flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+          <view class="yd-text-sub flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.remark || '-' }}</text>
           </view>
           <view v-if="!readonly" class="mt-16rpx flex gap-16rpx">
@@ -82,12 +82,12 @@
     :custom-style="getTopPopupStyle()"
     :modal-style="getTopPopupModalStyle()"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="formVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ formTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmit">

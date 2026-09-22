@@ -13,16 +13,16 @@
           <view class="p-24rpx" @click="handleDetail(item)">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.code || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.workOrderCode || '-' }} / {{ item.workOrderName || '-' }}
                 </view>
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_PRO_WORK_ORDER_STATUS" :value="item.status" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>批次号：{{ item.batchCode || '-' }}</view>
               <view>产品：{{ item.itemCode || '-' }} / {{ item.itemName || '-' }}</view>
               <view>规格：{{ item.specification || '-' }} / 单位：{{ item.unitMeasureName || '-' }}</view>

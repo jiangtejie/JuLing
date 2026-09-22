@@ -5,11 +5,11 @@
     safe-area-inset-bottom
     custom-style="height: 70vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <view class="w-96rpx" />
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           凭证模板分类
         </view>
         <wd-button variant="plain" size="small" @click="visible = false">
@@ -58,7 +58,7 @@
             class="mb-20rpx flex items-center justify-between gap-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
             @click="handleEdit(item)"
           >
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ item.name }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ item.name }}</text>
             <wd-icon name="arrow-right" size="28rpx" color="#999" />
           </view>
 

@@ -4,8 +4,8 @@
     <view class="yd-search-form-label">
       {{ label }}
     </view>
-    <view class="min-h-72rpx flex items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx" @click="open">
-      <text class="min-w-0 flex-1 truncate" :class="displayValue ? 'text-[#333]' : 'text-[#999]'">
+    <view class="yd-bg-subtle min-h-72rpx flex items-center gap-12rpx rounded-8rpx px-24rpx text-28rpx" @click="open">
+      <text class="min-w-0 flex-1 truncate" :class="displayValue ? 'yd-text-main' : 'yd-text-hint'">
         {{ displayValue || placeholder }}
       </text>
       <wd-icon
@@ -19,13 +19,13 @@
     </view>
 
     <!-- 群聊选择弹窗 -->
-    <wd-popup v-model="visible" position="bottom" root-portal custom-style="height: 76vh; border-radius: 24rpx 24rpx 0 0;">
-      <view class="h-full flex flex-col overflow-hidden bg-[#f5f5f5]">
+    <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="height: 76vh; border-radius: 24rpx 24rpx 0 0;">
+      <view class="yd-bg-page h-full flex flex-col overflow-hidden">
         <!-- 弹窗标题栏 -->
         <view class="flex items-center justify-between bg-white px-28rpx py-24rpx">
-          <text class="text-28rpx text-[#666]" @click="visible = false">取消</text>
-          <text class="text-32rpx text-[#222] font-medium">选择群聊</text>
-          <text class="text-28rpx text-[#07c160]" @click="handleConfirm">确定</text>
+          <text class="yd-text-sub text-28rpx" @click="visible = false">取消</text>
+          <text class="yd-text-strong text-32rpx font-medium">选择群聊</text>
+          <text class="yd-text-success text-28rpx" @click="handleConfirm">确定</text>
         </view>
         <!-- 群聊搜索栏 -->
         <view class="bg-white px-20rpx pb-16rpx">
@@ -49,14 +49,14 @@
               @click="selected = item"
             >
               <wd-img v-if="item.avatar" :src="item.avatar" width="72rpx" height="72rpx" radius="10rpx" />
-              <view v-else class="h-72rpx w-72rpx flex items-center justify-center rounded-10rpx bg-[#e8eaed] text-24rpx text-[#999]">
+              <view v-else class="yd-text-hint h-72rpx w-72rpx flex items-center justify-center rounded-10rpx bg-[#e8eaed] text-24rpx">
                 群
               </view>
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#222]">
+                <view class="yd-text-strong truncate text-30rpx">
                   {{ item.name }}
                 </view>
-                <view class="mt-6rpx text-23rpx text-[#999]">
+                <view class="yd-text-hint mt-6rpx text-23rpx">
                   {{ item.memberCount ?? 0 }} 人 · 群号 {{ item.id }}
                 </view>
               </view>

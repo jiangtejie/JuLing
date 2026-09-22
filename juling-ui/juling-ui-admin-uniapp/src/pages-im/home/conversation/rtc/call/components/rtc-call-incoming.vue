@@ -5,7 +5,7 @@
       :class="rejectDisabled ? 'pointer-events-none opacity-60' : ''"
       @click="emit('reject')"
     >
-      <view class="rtc-call-action bg-[#fa5151]">
+      <view class="rtc-call-action yd-bg-danger">
         <wd-icon name="close" size="52rpx" color="#fff" />
       </view>
       <text class="text-26rpx text-white">拒绝</text>
@@ -15,7 +15,7 @@
       :class="acceptDisabled ? 'pointer-events-none opacity-60' : ''"
       @click="emit('accept')"
     >
-      <view class="rtc-call-action bg-[#07c160]">
+      <view class="rtc-call-action yd-bg-success">
         <wd-icon name="phone" size="52rpx" color="#fff" />
       </view>
       <text class="text-26rpx text-white">接听</text>

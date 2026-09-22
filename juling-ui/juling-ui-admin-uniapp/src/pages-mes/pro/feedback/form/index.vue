@@ -51,7 +51,7 @@
           </wd-cell>
         </wd-cell-group>
 
-        <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
           报工数量
         </view>
         <wd-cell-group border>
@@ -85,7 +85,7 @@
           </template>
         </wd-cell-group>
 
-        <view class="my-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main my-24rpx px-24rpx text-28rpx font-semibold">
           人员与备注
         </view>
         <wd-cell-group border>
@@ -427,7 +427,7 @@ async function handleSubmit() {
     toast.success('报工单已提交')
     uni.$emit('mes:pro:feedback:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }
@@ -449,7 +449,7 @@ async function handleApprove() {
     toast.success(finished ? '报工单已审批完成' : '报工成功，请等待质量检验完成')
     uni.$emit('mes:pro:feedback:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }
@@ -471,7 +471,7 @@ async function handleReject() {
     toast.success('报工单已驳回')
     uni.$emit('mes:pro:feedback:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

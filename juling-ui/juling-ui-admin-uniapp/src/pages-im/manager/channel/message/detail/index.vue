@@ -35,13 +35,13 @@
 
       <!-- 接收用户 -->
       <view v-if="formData?.receiverUserIds?.length" class="mt-20rpx bg-white p-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-28rpx">
           接收用户
         </view>
         <view
           v-for="userId in formData.receiverUserIds"
           :key="userId"
-          class="mb-16rpx flex items-center gap-20rpx rounded-12rpx bg-[#f7f8fa] p-20rpx last:mb-0"
+          class="yd-bg-subtle mb-16rpx flex items-center gap-20rpx rounded-12rpx p-20rpx last:mb-0"
         >
           <wd-img
             v-if="userMap.get(userId)?.avatar"
@@ -52,10 +52,10 @@
             mode="aspectFill"
           />
           <view class="min-w-0 flex-1">
-            <view class="line-clamp-1 text-28rpx text-[#333]">
+            <view class="yd-text-main line-clamp-1 text-28rpx">
               {{ userMap.get(userId)?.nickname || `用户 ${userId}` }}
             </view>
-            <view class="mt-6rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-6rpx text-24rpx">
               编号：{{ userId }}
             </view>
           </view>
@@ -64,10 +64,10 @@
 
       <!-- 消息内容 -->
       <view class="mt-20rpx bg-white p-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-28rpx">
           消息内容
         </view>
-        <view v-if="formData" class="inline-block max-w-full rounded-12rpx bg-[#f7f8fa] p-20rpx text-28rpx text-[#333]">
+        <view v-if="formData" class="yd-text-main yd-bg-subtle inline-block max-w-full rounded-12rpx p-20rpx text-28rpx">
           <MessageContent
             :type="formData.type"
             :content="formData.content"
@@ -78,10 +78,10 @@
 
       <!-- 原始内容 -->
       <view class="mt-20rpx bg-white p-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mb-16rpx text-28rpx">
           原始内容
         </view>
-        <text selectable class="whitespace-pre-wrap break-all text-24rpx text-[#666] leading-36rpx">{{ formatJson(formData?.content, '-') }}</text>
+        <text selectable class="yd-text-sub whitespace-pre-wrap break-all text-24rpx leading-36rpx">{{ formatJson(formData?.content, '-') }}</text>
       </view>
     </view>
   </view>
@@ -91,7 +91,8 @@
 import type { ImManagerChannelMessageVO } from '@/api/im/manager/channel/message'
 import type { User } from '@/api/system/user'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import { getManagerChannelMessage } from '@/api/im/manager/channel/message'
 import { getSimpleUserList } from '@/api/system/user'
 import MessageContent from '@/pages-im/home/components/message-content.vue'
@@ -143,7 +144,7 @@ async function getDetail() {
 }
 
 /** 初始化频道消息详情 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

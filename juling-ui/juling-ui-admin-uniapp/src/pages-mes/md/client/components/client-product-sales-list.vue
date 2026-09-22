@@ -1,10 +1,10 @@
 <template>
   <view class="min-h-0 flex flex-1 flex-col bg-white">
     <view class="flex items-center border-b border-b-[#f0f0f0] px-24rpx py-20rpx" :class="showTitle ? 'justify-between' : 'justify-end'">
-      <view v-if="showTitle" class="text-30rpx text-[#333] font-semibold">
+      <view v-if="showTitle" class="yd-text-main text-30rpx font-semibold">
         销售出库记录
       </view>
-      <view class="text-24rpx text-[#999]">
+      <view class="yd-text-hint text-24rpx">
         共 {{ total }} 条
       </view>
     </view>
@@ -30,26 +30,26 @@
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-28rpx font-medium">
                 {{ item.code || `出库单 #${item.id}` }}
               </view>
-              <view class="mt-4rpx truncate text-26rpx text-[#666]">
+              <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                 {{ item.name || '-' }}
               </view>
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_WM_PRODUCT_SALES_STATUS" :value="item.status" />
-            <text v-else class="shrink-0 text-24rpx text-[#999]">-</text>
+            <text v-else class="yd-text-hint shrink-0 text-24rpx">-</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">销售订单：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">销售订单：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.salesOrderCode || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">出库日期：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">出库日期：</text>
             <text class="min-w-0 flex-1 truncate">{{ formatDate(item.salesDate) || '-' }}</text>
           </view>
-          <view class="flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text class="min-w-0 flex-1 truncate">{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

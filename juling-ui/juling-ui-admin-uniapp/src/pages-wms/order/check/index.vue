@@ -32,24 +32,24 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.no || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.WMS_ORDER_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">仓库：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">仓库：</text>
               <text>{{ item.warehouseName || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">单据日期：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">单据日期：</text>
               <text>{{ formatDate(item.orderTime) || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center justify-between text-28rpx text-[#666]">
+            <view class="yd-text-sub mb-12rpx flex items-center justify-between text-28rpx">
               <text>总金额：{{ formatPrice(item.totalPrice) || '0.00' }}</text>
               <text>实际金额：{{ formatPrice(item.actualPrice) || '0.00' }}</text>
             </view>
-            <view class="flex items-center justify-between text-28rpx text-[#666]">
+            <view class="yd-text-sub flex items-center justify-between text-28rpx">
               <text>盈亏数：<text :class="getLossClass(item.totalQuantity)">{{ formatQuantity(item.totalQuantity) || '0.00' }}</text></text>
               <text>盈亏额：<text :class="getLossClass(getDifferencePrice(item))">{{ formatPrice(getDifferencePrice(item)) || '0.00' }}</text></text>
             </view>

@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="h-full bg-[#ededed]" scroll-y>
+  <scroll-view class="yd-bg-subtle h-full" scroll-y>
     <!-- 会话设置 -->
     <view class="mt-20rpx">
       <wd-cell-group border>

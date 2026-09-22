@@ -1,14 +1,21 @@
 import dayjs from 'dayjs'
+import { toTimestamp as parseTimestamp } from '@/utils/date'
 
 const WEEKDAY_NAMES_FULL = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'] // 会话时间星期文案
 const WEEKDAY_NAMES_SHORT = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'] // 消息时间星期文案
 
-/** 时间值转毫秒 */
+/**
+ * 时间值转毫秒
+ *
+ * edit by 棱信矩灵：原实现用 new Date(time) 解析，而后端 sendTime 是 LocalDateTime 字符串
+ * （'YYYY-MM-DD HH:mm:ss'），iOS/JSCore 上会返回 NaN → 0，导致消息时间分隔条消失、
+ * 撤回按钮的 2 分钟判断恒 false 而永不出现。改用 @/utils/date 的 toTimestamp（已做 '-'→'/' 兼容）。
+ */
 export function toTimestamp(time?: number | string) {
   if (!time) {
     return 0
   }
-  const timestamp = typeof time === 'number' ? time : new Date(time).getTime()
+  const timestamp = parseTimestamp(time)
   return Number.isNaN(timestamp) ? 0 : timestamp
 }
 

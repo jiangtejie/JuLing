@@ -60,7 +60,7 @@
     <view class="mx-24rpx mb-120rpx mt-24rpx rounded-16rpx bg-white">
       <view class="p-24rpx">
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-28rpx text-[#333] font-bold">流程预览</text>
+          <text class="yd-text-main text-28rpx font-bold">流程预览</text>
           <wd-loading v-if="processTimeLineLoading" size="32rpx" />
         </view>
 
@@ -74,7 +74,7 @@
 
         <!-- 无流程数据提示 -->
         <view v-else-if="!processTimeLineLoading" class="py-40rpx text-center">
-          <text class="text-24rpx text-[#999]">暂无流程预览数据</text>
+          <text class="yd-text-hint text-24rpx">暂无流程预览数据</text>
         </view>
       </view>
     </view>

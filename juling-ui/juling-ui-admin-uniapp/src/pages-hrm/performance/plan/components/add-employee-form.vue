@@ -6,9 +6,9 @@
     custom-style="height: 80vh; border-radius: 24rpx 24rpx 0 0;"
     @close="visible = false"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="bg-white px-24rpx pb-16rpx pt-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           添加参评员工
         </view>
         <wd-input v-model="keyword" placeholder="搜索姓名/工号/手机号" clearable />
@@ -16,10 +16,10 @@
 
       <view class="min-h-0 flex-1 overflow-hidden">
         <scroll-view scroll-y class="h-full p-24rpx">
-          <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+          <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
             加载中...
           </view>
-          <view v-else-if="!filteredList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+          <view v-else-if="!filteredList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
             暂无可添加员工
           </view>
           <view
@@ -31,10 +31,10 @@
           >
             <wd-checkbox :model-value="isSelected(item.id)" />
             <view class="min-w-0 flex-1">
-              <view class="truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-30rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="mt-10rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-10rpx truncate text-24rpx">
                 {{ item.deptName || '-' }} · {{ item.jobNumber || '-' }} · {{ item.mobile || '-' }}
               </view>
             </view>

@@ -6,13 +6,13 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="handleClose"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ title }}
         </view>
         <wd-button size="small" type="primary" :disabled="!selectedNotice" @click="handleConfirm">
@@ -57,22 +57,22 @@
             @click="selectedNotice = item"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.code || '-' }}
               </view>
               <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_WM_ARRIVAL_NOTICE_STATUS" :value="item.status" />
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">名称：</text>{{ item.name || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">名称：</text>{{ item.name || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">采购订单：</text>{{ item.purchaseOrderCode || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">采购订单：</text>{{ item.purchaseOrderCode || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">供应商：</text>{{ item.vendorName || item.vendorCode || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">供应商：</text>{{ item.vendorName || item.vendorCode || '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">到货日期：</text>{{ formatDate(item.arrivalDate) || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">到货日期：</text>{{ formatDate(item.arrivalDate) || '-' }}
             </view>
           </view>
         </view>

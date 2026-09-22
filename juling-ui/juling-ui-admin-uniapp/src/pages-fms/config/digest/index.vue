@@ -29,11 +29,11 @@
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
             @click="handleDetail(item)"
           >
-            <view class="mb-12rpx text-32rpx text-[#333] leading-normal">
+            <view class="yd-text-main mb-12rpx text-32rpx leading-normal">
               {{ item.content }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">创建时间：</text>{{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>
         </view>

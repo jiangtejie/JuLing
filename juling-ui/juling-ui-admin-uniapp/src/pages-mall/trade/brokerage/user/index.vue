@@ -36,7 +36,7 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between gap-16rpx">
-                <text class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <text class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.nickname || `用户 #${item.id}` }}
                 </text>
                 <!-- 推广资格开关（有权限时可直接切换） -->
@@ -51,17 +51,17 @@
                   </wd-tag>
                 </view>
               </view>
-              <view class="mt-6rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-26rpx">
                 推广员：{{ item.bindUserId ?? '无' }}
               </view>
             </view>
           </view>
-          <view class="mb-12rpx flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx flex items-center justify-between text-26rpx">
             <text>推广人数：{{ item.brokerageUserCount ?? 0 }}</text>
             <text>推广订单：{{ item.brokerageOrderCount ?? 0 }}</text>
             <text>已提现：{{ formatDisplayMoney(item.withdrawPrice) }}</text>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>可用佣金：{{ formatDisplayMoney(item.price) }}</text>
             <text>冻结佣金：{{ formatDisplayMoney(item.frozenPrice) }}</text>
           </view>

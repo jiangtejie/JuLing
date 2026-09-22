@@ -5,7 +5,7 @@
     safe-area-inset-bottom
     custom-style="height: 80vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <view class="flex items-center gap-12rpx">
@@ -16,7 +16,7 @@
             清空
           </wd-button>
         </view>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择工作站
         </view>
         <wd-button size="small" type="primary" :disabled="!selected" @click="handleConfirm">
@@ -61,16 +61,16 @@
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.code || '-' }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="text-26rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-26rpx space-y-6rpx">
               <view>车间：{{ item.workshopName || '-' }}</view>
               <view>工序：{{ item.processName || '-' }}</view>
               <view>地点：{{ item.address || '-' }}</view>

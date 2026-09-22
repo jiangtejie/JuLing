@@ -1,7 +1,7 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" closable custom-style="border-radius: 16rpx 16rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom closable custom-style="border-radius: 16rpx 16rpx 0 0;">
     <view class="p-24rpx">
-      <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
         发送测试邮件
       </view>
       <wd-form ref="sendFormRef" :model="sendFormData" :schema="sendFormSchema">

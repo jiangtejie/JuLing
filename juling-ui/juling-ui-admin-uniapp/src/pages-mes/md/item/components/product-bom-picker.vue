@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 78vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 头部 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ title }}
         </view>
         <wd-button size="small" type="primary" :disabled="!selectedBom" @click="handleConfirm">
@@ -21,10 +21,10 @@
 
       <!-- 列表 -->
       <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
-        <view v-if="loading" class="p-24rpx text-28rpx text-[#999]">
+        <view v-if="loading" class="yd-text-hint p-24rpx text-28rpx">
           加载中...
         </view>
-        <view v-else-if="list.length === 0" class="p-24rpx text-28rpx text-[#999]">
+        <view v-else-if="list.length === 0" class="yd-text-hint p-24rpx text-28rpx">
           当前产品暂无可添加 BOM 物料
         </view>
         <view v-else class="p-24rpx">
@@ -37,16 +37,16 @@
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-28rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-28rpx font-semibold">
                   {{ bom.bomItemName || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ bom.bomItemCode || '-' }}
                 </view>
               </view>
               <dict-tag v-if="bom.itemOrProduct" :type="DICT_TYPE.MES_MD_ITEM_OR_PRODUCT" :value="bom.itemOrProduct" />
             </view>
-            <view class="text-24rpx text-[#666] space-y-6rpx">
+            <view class="yd-text-sub text-24rpx space-y-6rpx">
               <view>规格型号：{{ bom.bomItemSpecification || '-' }}</view>
               <view>单位：{{ bom.unitMeasureName || '-' }}</view>
               <view>默认用量：{{ bom.quantity ?? '-' }}</view>

@@ -41,25 +41,25 @@
 
         <!-- 召回结果 -->
         <view class="mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             召回结果
           </view>
-          <view v-if="retrievalSegments.length === 0" class="py-60rpx text-center text-26rpx text-[#999]">
+          <view v-if="retrievalSegments.length === 0" class="yd-text-hint py-60rpx text-center text-26rpx">
             暂无召回结果
           </view>
           <view
             v-for="segment in retrievalSegments"
             :key="segment.id"
-            class="mb-20rpx rounded-12rpx bg-[#f8fafc] p-20rpx"
+            class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx"
           >
-            <view class="mb-12rpx flex items-center justify-between text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-12rpx flex items-center justify-between text-24rpx">
               <text>分段 {{ segment.id }} · {{ segment.tokens ?? 0 }} Token · {{ segment.contentLength ?? 0 }} 字符</text>
               <text v-if="segment.score !== undefined">score: {{ segment.score }}</text>
             </view>
-            <view class="whitespace-pre-wrap text-26rpx text-[#333] leading-42rpx">
+            <view class="yd-text-main whitespace-pre-wrap text-26rpx leading-42rpx">
               {{ segment.content || '-' }}
             </view>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               {{ segment.documentName || '未知文档' }}
             </view>
           </view>

@@ -24,7 +24,7 @@
             <!-- 加载状态 -->
             <view
               v-if="loading"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">

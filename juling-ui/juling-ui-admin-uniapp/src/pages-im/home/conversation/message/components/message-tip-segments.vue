@@ -1,7 +1,7 @@
 <template>
   <template v-for="(segment, index) in segments" :key="index">
     <text
-      :class="segment.type !== 'text' ? 'text-[#576b95]' : ''"
+      :class="segment.type !== 'text' ? 'yd-text-link' : ''"
       :selectable="selectable"
       @tap.stop="handleSegmentTap(segment)"
     >

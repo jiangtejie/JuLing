@@ -11,10 +11,10 @@
         class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         @click="handleEntry(item.url)"
       >
-        <view class="mb-12rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-32rpx font-semibold">
           {{ item.title }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           {{ item.description }}
         </view>
       </view>

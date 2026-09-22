@@ -42,12 +42,12 @@
 
       <!-- 考核维度列表 -->
       <view class="mt-24rpx px-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           考核维度
         </view>
         <view
           v-if="!formData.dimensions?.length"
-          class="rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+          class="yd-text-hint rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
         >
           暂无考核维度
         </view>
@@ -56,41 +56,41 @@
           :key="dimensionIndex"
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
         >
-          <view class="border-b border-[#f0f0f0] px-24rpx py-20rpx">
-            <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-border-light border-b px-24rpx py-20rpx">
+            <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
               {{ dimension.name || '-' }}
             </view>
-            <view class="flex flex-wrap items-center gap-12rpx text-24rpx text-[#666]">
+            <view class="yd-text-sub flex flex-wrap items-center gap-12rpx text-24rpx">
               <text>{{ formatHrmPerformanceQuotaType(dimension.quotaType) }}</text>
               <text>权重 {{ dimension.weight || 0 }}%</text>
-              <text v-if="dimension.allowEdit" class="text-[#52c41a]">允许员工填写</text>
+              <text v-if="dimension.allowEdit" class="yd-text-success">允许员工填写</text>
             </view>
-            <view v-if="dimension.remark" class="mt-8rpx text-24rpx text-[#999]">
+            <view v-if="dimension.remark" class="yd-text-hint mt-8rpx text-24rpx">
               {{ dimension.remark }}
             </view>
           </view>
           <view class="px-24rpx py-16rpx">
             <view
               v-if="!dimension.quotas?.length"
-              class="py-24rpx text-center text-26rpx text-[#999]"
+              class="yd-text-hint py-24rpx text-center text-26rpx"
             >
               暂无考核指标
             </view>
             <view
               v-for="(quota, quotaIndex) in dimension.quotas"
               :key="quotaIndex"
-              class="mb-16rpx rounded-8rpx bg-[#f8f8f8] p-20rpx last:mb-0"
+              class="yd-bg-subtle mb-16rpx rounded-8rpx p-20rpx last:mb-0"
             >
-              <view class="mb-8rpx text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main mb-8rpx text-28rpx font-medium">
                 {{ quota.name || '-' }}
               </view>
-              <view class="text-24rpx text-[#666]">
+              <view class="yd-text-sub text-24rpx">
                 权重 {{ quota.weight || 0 }}% · {{ formatScoreType(quota.scoreType) }}
               </view>
-              <view v-if="quota.illustrate" class="mt-8rpx text-24rpx text-[#999]">
+              <view v-if="quota.illustrate" class="yd-text-hint mt-8rpx text-24rpx">
                 说明：{{ quota.illustrate }}
               </view>
-              <view v-if="quota.standard" class="mt-8rpx text-24rpx text-[#999]">
+              <view v-if="quota.standard" class="yd-text-hint mt-8rpx text-24rpx">
                 标准：{{ quota.standard }}
               </view>
             </view>

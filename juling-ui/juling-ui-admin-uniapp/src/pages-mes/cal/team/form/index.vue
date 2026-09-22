@@ -27,7 +27,7 @@
       </wd-form>
 
       <TeamMemberList v-if="props.id" :team-id="Number(props.id)" editable />
-      <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-20rpx text-26rpx text-[#8a5a00]">
+      <view v-else class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-26rpx">
         新增班组保存后，可在编辑页维护班组成员。
       </view>
       <view class="h-160rpx" />
@@ -127,7 +127,7 @@ async function handleSubmit() {
     }
     uni.$emit('mes:cal:team:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

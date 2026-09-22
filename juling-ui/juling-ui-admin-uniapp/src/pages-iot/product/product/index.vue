@@ -18,28 +18,28 @@
               </view>
               <view class="min-w-0 flex-1">
                 <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-                  <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                  <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                     {{ item.name }}
                   </view>
                   <dict-tag :type="DICT_TYPE.IOT_PRODUCT_STATUS" :value="item.status" />
                 </view>
-                <view class="truncate text-24rpx text-[#999]">
+                <view class="yd-text-hint truncate text-24rpx">
                   {{ item.productKey }}
                 </view>
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">产品分类：</text>{{ item.categoryName || '-' }}
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">产品分类：</text>{{ item.categoryName || '-' }}
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">设备类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">设备类型：</text>
               <dict-tag :type="DICT_TYPE.IOT_PRODUCT_DEVICE_TYPE" :value="item.deviceType" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">接入协议：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">接入协议：</text>
               <dict-tag :type="DICT_TYPE.IOT_PROTOCOL_TYPE" :value="item.protocolType" />
             </view>
-            <view class="text-right text-24rpx text-[#999]">
+            <view class="yd-text-hint text-right text-24rpx">
               {{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>

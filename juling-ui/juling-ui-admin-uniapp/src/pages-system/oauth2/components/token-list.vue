@@ -24,35 +24,35 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-28rpx font-semibold">
                 用户编号: {{ item.userId }}
               </view>
               <dict-tag :type="DICT_TYPE.USER_TYPE" :value="item.userType" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">访问令牌：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">访问令牌：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.accessToken }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">刷新令牌：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">刷新令牌：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.refreshToken }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">客户端编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">客户端编号：</text>
               <text>{{ item.clientId }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">过期时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">过期时间：</text>
               <text>{{ formatDateTime(item.expiresTime) }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">创建时间：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">创建时间：</text>
               <text>{{ formatDateTime(item.createTime) }}</text>
             </view>
             <!-- 删除按钮 -->
             <view
               v-if="hasAccessByCodes(['system:oauth2-token:delete'])"
-              class="flex justify-end -mt-8"
+              class="flex justify-end -mt-8rpx"
             >
               <wd-button size="small" type="danger" @click="handleDelete(item)">
                 强退

@@ -11,10 +11,10 @@
     <view v-if="detail.id" class="bg-white px-24rpx py-24rpx">
       <view class="mb-12rpx flex items-start justify-between gap-16rpx">
         <view class="min-w-0 flex-1">
-          <view class="truncate text-36rpx text-[#333] font-semibold">
+          <view class="yd-text-main truncate text-36rpx font-semibold">
             {{ detail.name || '-' }}
           </view>
-          <view class="mt-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-8rpx text-26rpx">
             {{ detail.employeeName || '-' }} · {{ detail.jobNumber || '-' }}
           </view>
         </view>
@@ -25,19 +25,19 @@
         />
       </view>
       <view class="grid grid-cols-2 mt-16rpx gap-16rpx">
-        <view class="rounded-8rpx bg-[#e6f4ff] px-16rpx py-16rpx">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-info-soft rounded-8rpx px-16rpx py-16rpx">
+          <view class="yd-text-hint text-24rpx">
             绩效得分
           </view>
-          <view class="mt-8rpx text-32rpx text-[#1677ff] font-semibold">
+          <view class="yd-text-link mt-8rpx text-32rpx font-semibold">
             {{ detail.score ?? '-' }}
           </view>
         </view>
-        <view class="rounded-8rpx bg-[#f6ffed] px-16rpx py-16rpx">
-          <view class="text-24rpx text-[#999]">
+        <view class="yd-bg-success-soft rounded-8rpx px-16rpx py-16rpx">
+          <view class="yd-text-hint text-24rpx">
             考核结果
           </view>
-          <view class="mt-8rpx text-28rpx text-[#52c41a] font-semibold">
+          <view class="yd-text-success mt-8rpx text-28rpx font-semibold">
             {{ detail.resultLevel || '-' }}
             <text v-if="detail.coefficient != null" class="text-22rpx font-normal">
               （系数 {{ detail.coefficient }}）
@@ -90,23 +90,23 @@
           :key="row.key"
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-28rpx font-semibold">
             {{ row.dimensionName || '-' }} / {{ row.quotaName || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             目标：{{ row.targetValue || '-' }} · 实际：{{ row.actualValue || '-' }} · 权重：{{ row.weight ?? 0 }}%
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             评分人：{{ row.raterName || '-' }} · 评分：{{ row.score ?? '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             评语：{{ row.comment || '-' }}
           </view>
-          <view v-if="row.standard" class="mt-8rpx text-24rpx text-[#999]">
+          <view v-if="row.standard" class="yd-text-hint mt-8rpx text-24rpx">
             标准：{{ row.standard }}
           </view>
         </view>
-        <view v-if="!scoreRows.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!scoreRows.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无评分明细
         </view>
         <wd-cell-group v-if="hasAssessmentComment" border title="考核评语" class="mt-8rpx">
@@ -125,7 +125,7 @@
           :class="index === activeStage ? 'ring-2 ring-[#1677ff]' : ''"
         >
           <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-            <text class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
               {{ stage.name || '-' }}
             </text>
             <dict-tag
@@ -134,11 +134,11 @@
               :value="stage.status"
             />
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             处理人：{{ stage.handlerName || '系统' }}
           </view>
         </view>
-        <view v-if="!stageList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!stageList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无考核流程
         </view>
       </view>
@@ -151,21 +151,21 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-            <text class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
               {{ record.title || '-' }}
             </text>
-            <text class="shrink-0 text-24rpx text-[#999]">
+            <text class="yd-text-hint shrink-0 text-24rpx">
               {{ formatDateTime(record.operateTime) || '-' }}
             </text>
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             操作人：{{ record.operatorName || '-' }}
           </view>
-          <view class="whitespace-pre-wrap break-words text-26rpx text-[#666]">
+          <view class="yd-text-sub whitespace-pre-wrap break-words text-26rpx">
             {{ record.content || '-' }}
           </view>
         </view>
-        <view v-if="!processRecordList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!processRecordList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无考核记录
         </view>
       </view>
@@ -191,7 +191,8 @@ import type {
 } from '@/api/hrm/performance/assessment'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import {
   deletePerformanceArchiveRecords,
   getPerformanceAssessment,
@@ -370,7 +371,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

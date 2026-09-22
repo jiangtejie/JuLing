@@ -50,7 +50,7 @@
             @click="handleDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.voucherWordName || '-' }}-{{ item.voucherNumber }}
               </view>
               <wd-tag v-if="item.closingGenerated" type="info" plain>
@@ -63,25 +63,25 @@
                 待审核
               </wd-tag>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">凭证日期：</text>{{ formatDate(item.voucherTime) || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">凭证日期：</text>{{ formatDate(item.voucherTime) || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">合计金额：</text>{{ formatFmsAmount(item.total) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">合计金额：</text>{{ formatFmsAmount(item.total) }}
             </view>
             <view
               v-for="entry in (item.entries || []).slice(0, 2)"
               :key="entry.id"
-              class="mb-12rpx truncate text-28rpx text-[#666]"
+              class="yd-text-sub mb-12rpx truncate text-28rpx"
             >
-              <text class="mr-8rpx text-[#999]">摘要：</text>{{ entry.digest || '-' }}
+              <text class="yd-text-hint mr-8rpx">摘要：</text>{{ entry.digest || '-' }}
             </view>
-            <view v-if="(item.entries || []).length > 2" class="mb-12rpx text-24rpx text-[#999]">
+            <view v-if="(item.entries || []).length > 2" class="yd-text-hint mb-12rpx text-24rpx">
               共 {{ (item.entries || []).length }} 条分录
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">制单人：</text>{{ item.creatorUserName || '-' }}
-              <text class="mx-16rpx text-[#999]">附件：</text>{{ item.attachmentUrls?.length || 0 }}
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">制单人：</text>{{ item.creatorUserName || '-' }}
+              <text class="yd-text-hint mx-16rpx">附件：</text>{{ item.attachmentUrls?.length || 0 }}
             </view>
           </view>
         </view>

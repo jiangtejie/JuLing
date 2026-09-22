@@ -12,23 +12,23 @@
         <view v-for="item in list" :key="item.id" class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm" @click="handleDetail(item)">
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.productName || '-' }}
               </view>
-              <view class="rounded-full bg-[#f1f5f9] px-16rpx py-6rpx text-24rpx text-[#475569]">
+              <view class="yd-bg-subtle rounded-full px-16rpx py-6rpx text-24rpx text-[#475569]">
                 {{ item.unitName || '-' }}
               </view>
             </view>
-            <view class="grid grid-cols-2 mb-12rpx gap-12rpx text-28rpx text-[#666]">
+            <view class="yd-text-sub grid grid-cols-2 mb-12rpx gap-12rpx text-28rpx">
               <view>
-                <text class="text-[#999]">分类：</text>{{ item.categoryName || '-' }}
+                <text class="yd-text-hint">分类：</text>{{ item.categoryName || '-' }}
               </view>
               <view>
-                <text class="text-[#999]">仓库：</text>{{ item.warehouseName || '-' }}
+                <text class="yd-text-hint">仓库：</text>{{ item.warehouseName || '-' }}
               </view>
             </view>
-            <view class="rounded-12rpx bg-[#f8fafc] p-20rpx text-center">
-              <view class="text-22rpx text-[#999]">
+            <view class="yd-bg-subtle rounded-12rpx p-20rpx text-center">
+              <view class="yd-text-hint text-22rpx">
                 当前库存
               </view>
               <view class="mt-6rpx text-40rpx text-[#9254de] font-semibold">

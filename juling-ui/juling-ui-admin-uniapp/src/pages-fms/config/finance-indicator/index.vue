@@ -30,22 +30,22 @@
             @click="handleDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">指标编码：</text>{{ item.code }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">指标编码：</text>{{ item.code }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">取数报表：</text>{{ getDictLabel(DICT_TYPE.FMS_FINANCE_INDICATOR_TYPE, item.type) || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">取数报表：</text>{{ getDictLabel(DICT_TYPE.FMS_FINANCE_INDICATOR_TYPE, item.type) || '-' }}
             </view>
-            <view class="mb-12rpx truncate text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">指标公式：</text>{{ item.formula }}
+            <view class="yd-text-sub mb-12rpx truncate text-28rpx">
+              <text class="yd-text-hint mr-8rpx">指标公式：</text>{{ item.formula }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">展示顺序：</text>{{ item.sort }}
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">展示顺序：</text>{{ item.sort }}
             </view>
           </view>
         </view>

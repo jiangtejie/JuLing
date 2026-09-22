@@ -3,14 +3,14 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view v-if="loading" class="py-100rpx text-center">
         <wd-loading />
-        <view class="mt-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mt-16rpx text-28rpx">
           加载中...
         </view>
       </view>
 
       <template v-else>
         <!-- 通用属性 -->
-        <view class="px-24rpx pb-16rpx pt-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main px-24rpx pb-16rpx pt-24rpx text-28rpx font-semibold">
           通用属性
         </view>
         <view class="px-24rpx pb-24rpx">
@@ -32,7 +32,7 @@
 
         <!-- 物料专属属性 -->
         <template v-if="isItem">
-          <view class="px-24rpx pb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main px-24rpx pb-16rpx text-28rpx font-semibold">
             物料专属属性
           </view>
           <view class="px-24rpx pb-24rpx">
@@ -73,7 +73,7 @@
 
         <!-- 产品专属属性 -->
         <template v-if="isProduct">
-          <view class="px-24rpx pb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main px-24rpx pb-16rpx text-28rpx font-semibold">
             产品专属属性
           </view>
           <view class="px-24rpx pb-24rpx">

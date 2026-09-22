@@ -31,24 +31,24 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ formatHrmYearMonth(item.year, item.month) }}
             </view>
-            <view class="shrink-0 text-26rpx text-[#999]">
+            <view class="yd-text-hint shrink-0 text-26rpx">
               已查看 {{ item.readCount ?? 0 }}
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建人：</text>{{ item.creatorName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建人：</text>{{ item.creatorName || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">发放时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">发放时间：</text>{{ formatDateTime(item.createTime) || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">工资表总人数：</text>{{ item.employeeCount ?? 0 }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">工资表总人数：</text>{{ item.employeeCount ?? 0 }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">发放人数：</text>{{ item.sendEmployeeCount ?? 0 }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">发放人数：</text>{{ item.sendEmployeeCount ?? 0 }}
           </view>
         </view>
       </view>

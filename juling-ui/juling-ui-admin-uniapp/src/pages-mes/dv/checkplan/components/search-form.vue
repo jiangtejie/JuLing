@@ -1,7 +1,7 @@
 <template>
   <!-- 搜索框入口 -->
   <view class="bg-white px-24rpx py-16rpx" @click="openSearch">
-    <view class="flex items-center rounded-36rpx bg-[#f5f5f5] px-24rpx py-14rpx text-28rpx text-[#999]">
+    <view class="yd-bg-page yd-text-hint flex items-center rounded-36rpx px-24rpx py-14rpx text-28rpx">
       <wd-icon name="search-line" size="32rpx" />
       <text class="ml-12rpx min-w-0 flex-1 truncate">
         {{ placeholder }}

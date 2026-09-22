@@ -3,7 +3,7 @@
     <view class="rounded-16rpx bg-[#f6f9ff] p-24rpx">
       <view class="mb-12rpx flex items-start justify-between gap-16rpx">
         <view class="min-w-0 flex-1">
-          <view class="text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-30rpx font-semibold">
             {{ isClockIn ? '当前已上工' : '当前未上工' }}
           </view>
           <view class="mt-8rpx text-24rpx text-[#667085]">

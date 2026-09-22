@@ -41,14 +41,14 @@
       <!-- 第一行：节点名称、时间 -->
       <view class="mb-8rpx flex items-center justify-between">
         <view class="flex items-center">
-          <text class="text-28rpx text-[#333] font-bold">{{ activity.name }}</text>
-          <text v-if="activity.status === BpmTaskStatusEnum.SKIP" class="ml-8rpx text-24rpx text-[#999]">
+          <text class="yd-text-main text-28rpx font-bold">{{ activity.name }}</text>
+          <text v-if="activity.status === BpmTaskStatusEnum.SKIP" class="yd-text-hint ml-8rpx text-24rpx">
             【跳过】
           </text>
         </view>
         <text
           v-if="activity.status !== BpmTaskStatusEnum.NOT_START && getApprovalNodeTime(activity)"
-          class="text-22rpx text-[#999]"
+          class="yd-text-hint text-22rpx"
         >
           {{ getApprovalNodeTime(activity) }}
         </text>
@@ -81,9 +81,9 @@
           <view
             v-for="(user, userIndex) in customApproveUsers[activity.id]"
             :key="user.id || userIndex"
-            class="mb-8rpx mr-16rpx flex items-center rounded-32rpx bg-[#f5f5f5] pr-16rpx"
+            class="yd-bg-page mb-8rpx mr-16rpx flex items-center rounded-32rpx pr-16rpx"
           >
-            <view class="mr-8rpx h-48rpx w-48rpx flex items-center justify-center overflow-hidden rounded-full bg-[#1890ff] text-24rpx text-white">
+            <view class="yd-bg-primary mr-8rpx h-48rpx w-48rpx flex items-center justify-center overflow-hidden rounded-full text-24rpx text-white">
               <wd-img
                 v-if="shouldShowAvatar(user)"
                 :src="user.avatar"
@@ -95,7 +95,7 @@
               />
               <text v-else>{{ getUserInitial(user) }}</text>
             </view>
-            <text class="text-24rpx text-[#333]">{{ user.nickname }}</text>
+            <text class="yd-text-main text-24rpx">{{ user.nickname }}</text>
           </view>
         </view>
       </view>
@@ -112,7 +112,7 @@
             <!-- 审批人信息 -->
             <view v-if="task.assigneeUser || task.ownerUser" class="mb-8rpx flex items-center">
               <view class="relative mr-8rpx h-48rpx w-48rpx">
-                <view class="h-48rpx w-48rpx flex items-center justify-center overflow-hidden rounded-full bg-[#1890ff] text-24rpx text-white">
+                <view class="yd-bg-primary h-48rpx w-48rpx flex items-center justify-center overflow-hidden rounded-full text-24rpx text-white">
                   <wd-img
                     v-if="shouldShowAvatar(getTaskUser(task))"
                     :src="getTaskUser(task)?.avatar"
@@ -142,12 +142,12 @@
               <view class="flex-1">
                 <view class="flex items-center justify-between">
                   <view class="flex items-center">
-                    <text class="text-26rpx text-[#333]">
+                    <text class="yd-text-main text-26rpx">
                       {{ task.assigneeUser?.nickname || task.ownerUser?.nickname }}
                     </text>
                     <text
                       v-if="task.assigneeUser?.deptName || task.ownerUser?.deptName"
-                      class="ml-8rpx text-22rpx text-[#999]"
+                      class="yd-text-hint ml-8rpx text-22rpx"
                     >
                       {{ task.assigneeUser?.deptName || task.ownerUser?.deptName }}
                     </text>
@@ -164,10 +164,10 @@
             <!-- 审批意见 -->
             <view
               v-if="shouldShowTaskEvidence(task, activity.nodeType, index)"
-              class="mt-8rpx rounded-8rpx bg-[#f5f5f5] p-16rpx"
+              class="yd-bg-page mt-8rpx rounded-8rpx p-16rpx"
             >
               <view v-if="task.reason">
-                <text class="text-24rpx text-[#666]">
+                <text class="yd-text-sub text-24rpx">
                   {{ getTaskEvidenceReasonLabel(activity.nodeType) }}：{{ task.reason }}
                 </text>
               </view>
@@ -188,7 +188,7 @@
                   />
                   <view v-else class="max-w-520rpx flex items-center rounded-8rpx bg-white px-12rpx py-8rpx">
                     <wd-icon name="file" size="28rpx" color="#666" />
-                    <text class="ml-8rpx truncate text-24rpx text-[#666]">
+                    <text class="yd-text-sub ml-8rpx truncate text-24rpx">
                       {{ getFileNameFromUrl(attachment) }}
                     </text>
                   </view>
@@ -198,7 +198,7 @@
                 v-if="shouldShowTaskSignature(task, activity.nodeType)"
                 class="mt-12rpx flex items-center"
               >
-                <text class="text-24rpx text-[#666]">签名：</text>
+                <text class="yd-text-sub text-24rpx">签名：</text>
                 <wd-img
                   :src="task.signPicUrl"
                   width="288rpx"
@@ -221,7 +221,7 @@
             class="mb-8rpx flex items-center"
           >
             <view class="relative mr-8rpx h-48rpx w-48rpx">
-              <view class="h-48rpx w-48rpx flex items-center justify-center overflow-hidden rounded-full bg-[#1890ff] text-24rpx text-white">
+              <view class="yd-bg-primary h-48rpx w-48rpx flex items-center justify-center overflow-hidden rounded-full text-24rpx text-white">
                 <wd-img
                   v-if="shouldShowAvatar(user)"
                   :src="user.avatar"
@@ -245,8 +245,8 @@
             </view>
 
             <view class="flex-1">
-              <text class="text-26rpx text-[#333]">{{ user.nickname }}</text>
-              <text v-if="user.deptName" class="ml-8rpx text-22rpx text-[#999]">
+              <text class="yd-text-main text-26rpx">{{ user.nickname }}</text>
+              <text v-if="user.deptName" class="yd-text-hint ml-8rpx text-22rpx">
                 {{ user.deptName }}
               </text>
             </view>
@@ -459,7 +459,7 @@ function getStatusTextClass(status: number) {
     [BpmTaskStatusEnum.CANCEL]: 'text-[#cccccc]',
     [BpmTaskStatusEnum.RETURN]: 'text-[#f46b6c]',
   }
-  return colorMap[status] || 'text-[#666]'
+  return colorMap[status] || 'yd-text-sub'
 }
 
 /** 获取状态文本 */

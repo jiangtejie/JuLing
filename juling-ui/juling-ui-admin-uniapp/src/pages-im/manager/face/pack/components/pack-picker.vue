@@ -7,13 +7,13 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="handleClose"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ title }}
         </view>
         <wd-button size="small" type="primary" :disabled="!tempSelected" @click="handleConfirm">
@@ -64,18 +64,18 @@
                 radius="12rpx"
                 mode="aspectFill"
               />
-              <view v-else class="h-80rpx w-80rpx flex items-center justify-center rounded-12rpx bg-[#f0f0f0] text-24rpx text-[#bbb]">
+              <view v-else class="yd-text-muted h-80rpx w-80rpx flex items-center justify-center rounded-12rpx bg-[#f0f0f0] text-24rpx">
                 无
               </view>
             </view>
             <view class="min-w-0 flex-1">
               <view class="mb-10rpx flex items-center justify-between gap-16rpx">
-                <text class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+                <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                   {{ item.name || '-' }}
                 </text>
                 <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 排序：{{ item.sort ?? 0 }}
               </view>
             </view>

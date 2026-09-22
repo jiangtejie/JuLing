@@ -3,9 +3,9 @@
     <!-- 工时汇总 -->
     <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
       <view class="mb-16rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#666]">预估：{{ formatWorkHours(summary.estimatedHours) }}</text>
-        <text class="text-28rpx text-[#666]">已登记：{{ formatWorkHours(summary.actualHours) }}</text>
-        <text class="text-28rpx text-[#666]">剩余：{{ formatWorkHours(summary.remainingHours) }}</text>
+        <text class="yd-text-sub text-28rpx">预估：{{ formatWorkHours(summary.estimatedHours) }}</text>
+        <text class="yd-text-sub text-28rpx">已登记：{{ formatWorkHours(summary.actualHours) }}</text>
+        <text class="yd-text-sub text-28rpx">剩余：{{ formatWorkHours(summary.remainingHours) }}</text>
       </view>
       <wd-button
         v-if="editable && hasAccessByCodes(['pms:pm:work-item:update'])"
@@ -17,7 +17,7 @@
     </view>
 
     <!-- 工时列表 -->
-    <view v-if="!summary.records.length" class="py-60rpx text-center text-28rpx text-[#999]">
+    <view v-if="!summary.records.length" class="yd-text-hint py-60rpx text-center text-28rpx">
       暂无工时记录
     </view>
     <view
@@ -26,29 +26,29 @@
       class="mb-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-8rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-semibold">
+        <text class="yd-text-main text-28rpx font-semibold">
           投入 {{ formatWorkHours(item.actualHours) }} · 剩余 {{ formatWorkHours(item.remainingHours) }}
         </text>
         <text
           v-if="editable && hasAccessByCodes(['pms:pm:work-item:update'])"
-          class="shrink-0 text-26rpx text-[#1677ff]"
+          class="yd-text-link shrink-0 text-26rpx"
           @click="handleEdit(item)"
         >
           编辑
         </text>
       </view>
-      <view v-if="item.description" class="mb-8rpx text-26rpx text-[#666]">
+      <view v-if="item.description" class="yd-text-sub mb-8rpx text-26rpx">
         {{ item.description }}
       </view>
-      <view class="text-24rpx text-[#999]">
+      <view class="yd-text-hint text-24rpx">
         {{ item.creatorUserName || '-' }} 登记于 {{ formatDateTime(item.createTime) }}
       </view>
     </view>
 
     <!-- 工时登记表单 -->
-    <wd-popup v-model="formVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ formData.id ? '编辑工时' : '登记工时' }}
         </view>
         <wd-cell-group border>

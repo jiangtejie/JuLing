@@ -5,11 +5,11 @@
     safe-area-inset-bottom
     custom-style="border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="bg-[#f5f5f5]">
+    <view class="yd-bg-page">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <view class="w-96rpx" />
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           试算平衡
         </view>
         <wd-button variant="plain" size="small" @click="visible = false">
@@ -20,17 +20,17 @@
       <view class="p-24rpx">
         <!-- 平衡结果 -->
         <view class="mb-24rpx rounded-12rpx bg-white p-32rpx text-center shadow-sm">
-          <view class="text-32rpx font-semibold" :class="result?.balanced ? 'text-[#34a853]' : 'text-[#fa8c16]'">
+          <view class="text-32rpx font-semibold" :class="result?.balanced ? 'text-[#34a853]' : 'yd-text-warning'">
             {{ result?.balanced ? '期初余额试算平衡' : '期初余额试算不平衡' }}
           </view>
-          <view class="mt-12rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx text-26rpx">
             {{ result?.balanced ? '借贷金额相等，可以开始记账' : '请检查期初余额和累计发生额' }}
           </view>
         </view>
 
         <!-- 试算明细 -->
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="flex py-12rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint flex py-12rpx text-26rpx">
             <text class="min-w-0 flex-1">项目</text>
             <text class="w-170rpx text-right">借方</text>
             <text class="w-170rpx text-right">贷方</text>
@@ -39,7 +39,7 @@
           <view
             v-for="row in rows"
             :key="row.name"
-            class="flex border-t border-[#f0f0f0] border-t-solid py-16rpx text-26rpx text-[#333]"
+            class="yd-border-light yd-text-main flex border-t border-t-solid py-16rpx text-26rpx"
           >
             <text class="min-w-0 flex-1">{{ row.name }}</text>
             <text class="w-170rpx text-right">{{ row.debitAmount }}</text>

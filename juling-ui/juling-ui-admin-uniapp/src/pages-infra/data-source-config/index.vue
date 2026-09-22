@@ -17,27 +17,27 @@
       >
         <view class="p-24rpx">
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               {{ item.name }}
             </view>
-            <view v-if="item.id === 0" class="rounded-4rpx bg-[#e6f7ff] px-12rpx py-4rpx text-24rpx text-[#1890ff]">
+            <view v-if="item.id === 0" class="yd-text-link rounded-4rpx bg-[#e6f7ff] px-12rpx py-4rpx text-24rpx">
               主数据源
             </view>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">主键编号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">主键编号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.id }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">数据源连接：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">数据源连接：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.url }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">用户名：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">用户名：</text>
             <text>{{ item.username }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建时间：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) }}</text>
           </view>
         </view>

@@ -8,7 +8,7 @@
     @close="visible = false"
   >
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ title }}
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">

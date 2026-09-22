@@ -5,7 +5,7 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view v-if="loading" class="py-100rpx text-center">
         <wd-loading />
-        <view class="mt-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mt-16rpx text-28rpx">
           加载中...
         </view>
       </view>
@@ -24,12 +24,12 @@
         </view>
 
         <!-- 联动提示 -->
-        <view class="mx-24rpx mb-24rpx rounded-12rpx bg-[#fff7e6] px-24rpx py-16rpx text-24rpx text-[#ad6800]">
+        <view class="yd-bg-warning-soft yd-text-warning mx-24rpx mb-24rpx rounded-12rpx px-24rpx py-16rpx text-24rpx">
           启用批次管理的物料，至少配置一个批次属性后才能启用。
         </view>
 
         <!-- 通用属性 -->
-        <view class="px-24rpx pb-16rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main px-24rpx pb-16rpx text-28rpx font-semibold">
           通用属性
         </view>
         <view class="px-24rpx pb-24rpx">
@@ -51,7 +51,7 @@
 
         <!-- ITEM 物料专属 -->
         <template v-if="isItem">
-          <view class="px-24rpx pb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main px-24rpx pb-16rpx text-28rpx font-semibold">
             物料专属属性
           </view>
           <view class="px-24rpx pb-24rpx">
@@ -92,7 +92,7 @@
 
         <!-- PRODUCT 产品专属 -->
         <template v-if="isProduct">
-          <view class="px-24rpx pb-16rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main px-24rpx pb-16rpx text-28rpx font-semibold">
             产品专属属性
           </view>
           <view class="px-24rpx pb-24rpx">

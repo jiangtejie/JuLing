@@ -58,20 +58,20 @@
 
       <view v-else-if="showPropertyPanel">
         <!-- 属性调试 -->
-        <view v-if="propertyList.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="propertyList.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无物模型属性
         </view>
         <view v-else>
           <view v-for="item in propertyList" :key="item.identifier" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
                 {{ item.name || item.identifier }}
               </view>
-              <view class="shrink-0 rounded-6rpx bg-[#f0f5ff] px-12rpx py-4rpx text-24rpx text-[#2f54eb]">
+              <view class="yd-bg-info-soft yd-text-link shrink-0 rounded-6rpx px-12rpx py-4rpx text-24rpx">
                 {{ getThingModelDataType(item) || '-' }}
               </view>
             </view>
-            <view class="mb-16rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-16rpx text-24rpx">
               标识符：{{ item.identifier || '-' }}
             </view>
             <wd-input
@@ -86,15 +86,15 @@
 
       <view v-else-if="upstreamMethod === IotDeviceMessageMethodEnum.EVENT_POST.method && tabType === 'upstream'">
         <!-- 事件上报 -->
-        <view v-if="eventList.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="eventList.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无物模型事件
         </view>
         <view v-else>
           <view v-for="item in eventList" :key="item.identifier" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-            <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
               {{ item.name || item.identifier }}
             </view>
-            <view class="mb-16rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-16rpx text-24rpx">
               标识符：{{ item.identifier || '-' }}
             </view>
             <wd-textarea
@@ -114,7 +114,7 @@
       <view v-else-if="upstreamMethod === IotDeviceMessageMethodEnum.STATE_UPDATE.method && tabType === 'upstream'">
         <!-- 状态变更 -->
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-24rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-24rpx text-28rpx">
             模拟设备上线或离线状态变更。
           </view>
           <view class="flex gap-16rpx">
@@ -130,15 +130,15 @@
 
       <view v-else>
         <!-- 服务调用 -->
-        <view v-if="serviceList.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="serviceList.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无物模型服务
         </view>
         <view v-else>
           <view v-for="item in serviceList" :key="item.identifier" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-            <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
               {{ item.name || item.identifier }}
             </view>
-            <view class="mb-16rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-16rpx text-24rpx">
               标识符：{{ item.identifier || '-' }}
             </view>
             <wd-textarea

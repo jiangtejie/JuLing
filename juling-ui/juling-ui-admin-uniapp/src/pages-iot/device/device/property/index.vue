@@ -22,7 +22,7 @@
       <!-- 刷新工具栏 -->
       <view class="mx-24rpx mt-16rpx flex justify-end">
         <view class="flex items-center gap-8rpx rounded-12rpx bg-white px-20rpx py-12rpx">
-          <text class="text-24rpx text-[#666]">定时刷新</text>
+          <text class="yd-text-sub text-24rpx">定时刷新</text>
           <wd-switch v-model="autoRefresh" size="20px" />
         </view>
       </view>
@@ -56,27 +56,27 @@
       <!-- 属性列表 -->
       <view class="min-h-0 flex-1 overflow-y-auto p-24rpx">
         <wd-loading v-if="loading" />
-        <view v-else-if="list.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-else-if="list.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无物模型属性数据
         </view>
         <view v-else>
           <view v-for="item in list" :key="item.identifier" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 break-all text-32rpx text-[#333] font-semibold leading-40rpx">
+              <view class="yd-text-main min-w-0 flex-1 break-all text-32rpx font-semibold leading-40rpx">
                 {{ item.name || item.identifier }}
               </view>
-              <view class="shrink-0 rounded-6rpx bg-[#f0f5ff] px-12rpx py-4rpx text-24rpx text-[#2f54eb]">
+              <view class="yd-bg-info-soft yd-text-link shrink-0 rounded-6rpx px-12rpx py-4rpx text-24rpx">
                 {{ item.dataType || '-' }}
               </view>
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">标识符：</text>{{ item.identifier || '-' }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">标识符：</text>{{ item.identifier || '-' }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">属性值：</text><text class="break-all">{{ formatValueWithUnit(item) }}</text>
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">属性值：</text><text class="break-all">{{ formatValueWithUnit(item) }}</text>
             </view>
-            <view class="mb-16rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">更新时间：</text>{{ formatDateTime(item.updateTime) || '-' }}
+            <view class="yd-text-sub mb-16rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">更新时间：</text>{{ formatDateTime(item.updateTime) || '-' }}
             </view>
             <view class="flex justify-end">
               <wd-button size="small" type="primary" variant="plain" @click="handleHistory(item)">
@@ -108,20 +108,20 @@
         <view class="p-24rpx">
           <view v-for="(item, index) in eventList" :key="index" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 break-all text-32rpx text-[#333] font-semibold leading-40rpx">
+              <view class="yd-text-main min-w-0 flex-1 break-all text-32rpx font-semibold leading-40rpx">
                 {{ getEventName(item.request?.identifier) }}
               </view>
-              <view class="shrink-0 rounded-6rpx bg-[#f0f5ff] px-12rpx py-4rpx text-24rpx text-[#2f54eb]">
+              <view class="yd-bg-info-soft yd-text-link shrink-0 rounded-6rpx px-12rpx py-4rpx text-24rpx">
                 {{ getEventType(item.request?.identifier) }}
               </view>
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">标识符：</text>{{ item.request?.identifier || '-' }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">标识符：</text>{{ item.request?.identifier || '-' }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">输入参数：</text><text class="break-all">{{ parseParams(item.request?.params) }}</text>
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">输入参数：</text><text class="break-all">{{ parseParams(item.request?.params) }}</text>
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               <text class="mr-8rpx">上报时间：</text>{{ formatDateTime(item.request?.reportTime) || '-' }}
             </view>
           </view>
@@ -149,26 +149,26 @@
         <view class="p-24rpx">
           <view v-for="(item, index) in serviceList" :key="index" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 break-all text-32rpx text-[#333] font-semibold leading-40rpx">
+              <view class="yd-text-main min-w-0 flex-1 break-all text-32rpx font-semibold leading-40rpx">
                 {{ getServiceName(item.request?.identifier) }}
               </view>
-              <view class="shrink-0 rounded-6rpx bg-[#f0f5ff] px-12rpx py-4rpx text-24rpx text-[#2f54eb]">
+              <view class="yd-bg-info-soft yd-text-link shrink-0 rounded-6rpx px-12rpx py-4rpx text-24rpx">
                 {{ getCallType(item.request?.identifier) }}
               </view>
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">标识符：</text>{{ item.request?.identifier || '-' }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">标识符：</text>{{ item.request?.identifier || '-' }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">输入参数：</text><text class="break-all">{{ parseParams(item.request?.params) }}</text>
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">输入参数：</text><text class="break-all">{{ parseParams(item.request?.params) }}</text>
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">输出参数：</text><text class="break-all">{{ formatReply(item.reply) }}</text>
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">输出参数：</text><text class="break-all">{{ formatReply(item.reply) }}</text>
             </view>
-            <view class="mb-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-8rpx text-24rpx">
               <text class="mr-8rpx">调用时间：</text>{{ formatDateTime(item.request?.reportTime) || '-' }}
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               <text class="mr-8rpx">响应时间：</text>{{ formatDateTime(item.reply?.reportTime) || '-' }}
             </view>
           </view>
@@ -204,23 +204,23 @@
     </wd-popup>
 
     <!-- 历史数据弹窗 -->
-    <wd-popup v-model="historyVisible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="historyVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[70vh] p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ currentProperty?.name || currentProperty?.identifier || '属性历史' }}
         </view>
         <view v-if="historyLoading" class="py-60rpx text-center">
           <wd-loading />
         </view>
-        <view v-else-if="historyList.length === 0" class="py-60rpx text-center text-28rpx text-[#999]">
+        <view v-else-if="historyList.length === 0" class="yd-text-hint py-60rpx text-center text-28rpx">
           最近 7 天暂无历史数据
         </view>
         <scroll-view v-else scroll-y class="max-h-[48vh]">
-          <view v-for="item in historyList" :key="String(item.updateTime) + String(item.value)" class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx">
-            <view class="break-all text-28rpx text-[#333]">
+          <view v-for="item in historyList" :key="String(item.updateTime) + String(item.value)" class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx">
+            <view class="yd-text-main break-all text-28rpx">
               {{ formatJson(item.value, '-') }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               {{ formatDateTime(item.updateTime) || '-' }}
             </view>
           </view>

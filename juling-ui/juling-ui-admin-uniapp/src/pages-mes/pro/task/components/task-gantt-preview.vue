@@ -2,38 +2,38 @@
   <view class="bg-white px-24rpx py-20rpx">
     <view class="mb-16rpx flex items-center justify-between gap-16rpx">
       <view class="min-w-0 flex-1">
-        <view class="truncate text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main truncate text-30rpx font-semibold">
           {{ title }}
         </view>
-        <view class="mt-4rpx text-22rpx text-[#999]">
+        <view class="yd-text-hint mt-4rpx text-22rpx">
           {{ rangeText }}
         </view>
       </view>
       <slot name="actions" />
     </view>
 
-    <view v-if="rows.length === 0" class="rounded-10rpx bg-[#f7f8fa] py-48rpx text-center text-26rpx text-[#999]">
+    <view v-if="rows.length === 0" class="yd-text-hint yd-bg-subtle rounded-10rpx py-48rpx text-center text-26rpx">
       暂无甘特任务
     </view>
-    <view v-else class="overflow-hidden border border-[#eef0f3] rounded-12rpx">
+    <view v-else class="yd-border-light overflow-hidden border rounded-12rpx">
       <view class="flex">
         <!-- 左侧任务列 -->
-        <view class="w-224rpx shrink-0 border-r border-[#eef0f3]">
-          <view class="h-74rpx flex items-center bg-[#f8fafc] px-18rpx text-22rpx text-[#667085] font-semibold">
+        <view class="yd-border-light w-224rpx shrink-0 border-r">
+          <view class="yd-bg-subtle h-74rpx flex items-center px-18rpx text-22rpx text-[#667085] font-semibold">
             任务
           </view>
           <view
             v-for="row in displayRows"
             :key="row.id"
-            class="h-88rpx flex items-center border-t border-[#f1f3f5] px-16rpx"
-            :class="row.isProject ? 'bg-[#f8fafc]' : 'bg-white'"
+            class="yd-border-light h-88rpx flex items-center border-t px-16rpx"
+            :class="row.isProject ? 'yd-bg-subtle' : 'bg-white'"
             @click="handleRowClick(row)"
           >
             <view class="min-w-0" :style="{ paddingLeft: `${row.level * 20}rpx` }">
-              <view class="truncate text-24rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-24rpx font-medium">
                 {{ row.title }}
               </view>
-              <view class="mt-4rpx truncate text-20rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx truncate text-20rpx">
                 {{ row.subtitle || '-' }}
               </view>
             </view>
@@ -44,18 +44,18 @@
         <scroll-view scroll-x class="min-w-0 flex-1" scroll-with-animation>
           <view class="relative" :style="{ width: `${timelineWidth}rpx` }">
             <!-- 日期刻度 -->
-            <view class="h-74rpx flex bg-[#f8fafc]">
+            <view class="yd-bg-subtle h-74rpx flex">
               <view
                 v-for="day in days"
                 :key="day.value"
-                class="h-74rpx flex shrink-0 flex-col items-center justify-center border-r border-[#eef0f3] text-[#475467]"
-                :class="{ 'bg-[#fff7e6]': day.weekend, 'text-[#1677ff]': day.today }"
+                class="yd-border-light h-74rpx flex shrink-0 flex-col items-center justify-center border-r text-[#475467]"
+                :class="{ 'yd-bg-warning-soft': day.weekend, 'yd-text-link': day.today }"
                 :style="{ width: `${DAY_WIDTH}rpx` }"
               >
                 <view class="text-22rpx font-medium">
                   {{ day.label }}
                 </view>
-                <view class="mt-2rpx text-18rpx text-[#999]">
+                <view class="yd-text-hint mt-2rpx text-18rpx">
                   {{ day.week }}
                 </view>
               </view>
@@ -65,13 +65,13 @@
             <view
               v-for="row in displayRows"
               :key="`${row.id}-timeline`"
-              class="relative h-88rpx flex border-t border-[#f1f3f5]"
-              :class="row.isProject ? 'bg-[#f8fafc]' : 'bg-white'"
+              class="yd-border-light relative h-88rpx flex border-t"
+              :class="row.isProject ? 'yd-bg-subtle' : 'bg-white'"
             >
               <view
                 v-for="day in days"
                 :key="`${row.id}-${day.value}`"
-                class="h-88rpx shrink-0 border-r border-[#f4f5f7]"
+                class="yd-border-light h-88rpx shrink-0 border-r"
                 :class="{ 'bg-[#fffaf0]': day.weekend }"
                 :style="{ width: `${DAY_WIDTH}rpx` }"
               />
@@ -130,7 +130,7 @@
         </scroll-view>
       </view>
       <!-- 隐藏任务提示 -->
-      <view v-if="hiddenCount > 0" class="border-t border-[#eef0f3] bg-[#fafafa] px-20rpx py-14rpx text-22rpx text-[#999]">
+      <view v-if="hiddenCount > 0" class="yd-text-hint yd-border-light yd-bg-subtle border-t px-20rpx py-14rpx text-22rpx">
         还有 {{ hiddenCount }} 条任务，进入甘特编辑查看
       </view>
     </view>

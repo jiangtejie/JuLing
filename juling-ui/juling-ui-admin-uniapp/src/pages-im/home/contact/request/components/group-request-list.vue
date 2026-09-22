@@ -10,27 +10,27 @@
           <ImAvatar :src="item.userAvatar" :name="item.userNickname || String(item.userId)" />
           <view class="min-w-0 flex-1">
             <view class="flex items-center justify-between gap-12rpx">
-              <view class="truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-30rpx font-semibold">
                 {{ item.userNickname || `用户 ${item.userId}` }}
               </view>
               <dict-tag :type="DICT_TYPE.IM_GROUP_REQUEST_HANDLE_RESULT" :value="item.handleResult" />
             </view>
-            <view class="mt-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-8rpx text-26rpx">
               <template v-if="item.inviterUserId">
-                通过 <text class="text-[#4d80f0]">{{ item.inviterNickname || `用户 ${item.inviterUserId}` }}</text> 邀请加入：
+                通过 <text class="yd-text-link">{{ item.inviterNickname || `用户 ${item.inviterUserId}` }}</text> 邀请加入：
               </template>
               <template v-else>
                 申请加入：
               </template>
               {{ item.groupName || `群 ${item.groupId}` }}
             </view>
-            <view class="mt-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-8rpx text-26rpx">
               {{ item.applyContent || '暂无申请理由' }}
             </view>
-            <view v-if="item.handleContent" class="mt-8rpx text-24rpx text-[#999]">
+            <view v-if="item.handleContent" class="yd-text-hint mt-8rpx text-24rpx">
               拒绝理由：{{ item.handleContent }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               {{ formatDateTime(item.createTime) }}
             </view>
             <view v-if="item.handleResult === ImGroupRequestHandleResult.UNHANDLED" class="mt-20rpx flex gap-16rpx">

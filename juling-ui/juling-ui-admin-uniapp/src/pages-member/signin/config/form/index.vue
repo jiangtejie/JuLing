@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -33,7 +33,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view class="p-24rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint p-24rpx text-24rpx">
         默认 7 天为一个签到周期；奖励积分和奖励经验至少配置一个。
       </view>
     </view>
@@ -125,7 +125,7 @@ async function handleSubmit() {
     }
     uni.$emit('member:signin-config:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

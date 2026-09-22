@@ -27,10 +27,10 @@
         <view v-for="sip in list" :key="sip.id" class="mb-20rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
           <wd-img v-if="sip.url" :src="sip.url" width="100%" height="320rpx" mode="aspectFill" enable-preview />
           <view class="p-24rpx">
-            <view class="mb-12rpx truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx truncate text-30rpx font-semibold">
               {{ sip.title }}
             </view>
-            <view class="text-26rpx text-[#666] space-y-8rpx">
+            <view class="yd-text-sub text-26rpx space-y-8rpx">
               <view>展示顺序：{{ sip.sort }}</view>
               <view>所属工序：{{ getProcessLabel(sip) }}</view>
               <view v-if="sip.description">
@@ -74,7 +74,7 @@
     <!-- 表单弹层 -->
     <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0; max-height: 85vh;">
       <scroll-view scroll-y class="bg-white px-24rpx pb-40rpx pt-32rpx" style="max-height: 85vh;">
-        <view class="mb-32rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-32rpx text-center text-32rpx font-semibold">
           {{ formType === 'create' ? '新增 SIP' : '编辑 SIP' }}
         </view>
         <!-- 表单区域 -->

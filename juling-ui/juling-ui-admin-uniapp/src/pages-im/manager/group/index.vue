@@ -39,20 +39,20 @@
               radius="12rpx"
               mode="aspectFill"
             />
-            <view v-else class="h-88rpx w-88rpx flex items-center justify-center rounded-12rpx bg-[#f0f2f5] text-24rpx text-[#bbb]">
+            <view v-else class="yd-bg-subtle yd-text-muted h-88rpx w-88rpx flex items-center justify-center rounded-12rpx text-24rpx">
               群
             </view>
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between">
-                <text class="line-clamp-1 flex-1 text-32rpx text-[#333] font-semibold">{{ item.name || '-' }}</text>
+                <text class="yd-text-main line-clamp-1 flex-1 text-32rpx font-semibold">{{ item.name || '-' }}</text>
                 <dict-tag :type="DICT_TYPE.IM_GROUP_STATUS" :value="item.status" />
               </view>
-              <view class="mt-10rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-10rpx text-26rpx">
                 群主：{{ item.ownerNickname || `用户 ${item.ownerUserId}` }} · {{ item.memberCount ?? 0 }} 人
               </view>
               <view v-if="item.banned || item.mutedAll" class="mt-10rpx flex flex-wrap gap-12rpx">
-                <text v-if="item.banned" class="rounded-6rpx bg-[#fff1f0] px-12rpx py-4rpx text-22rpx text-[#f5222d]">已封禁</text>
-                <text v-if="item.mutedAll" class="rounded-6rpx bg-[#fff7e6] px-12rpx py-4rpx text-22rpx text-[#fa8c16]">全员禁言</text>
+                <text v-if="item.banned" class="yd-text-danger yd-bg-danger-soft rounded-6rpx px-12rpx py-4rpx text-22rpx">已封禁</text>
+                <text v-if="item.mutedAll" class="yd-text-warning yd-bg-warning-soft rounded-6rpx px-12rpx py-4rpx text-22rpx">全员禁言</text>
               </view>
             </view>
           </view>

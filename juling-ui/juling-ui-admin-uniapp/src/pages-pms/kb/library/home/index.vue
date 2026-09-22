@@ -20,7 +20,7 @@
 
     <!-- 知识库简介 -->
     <view v-if="library" class="bg-white p-24rpx">
-      <view class="rounded-8rpx bg-[#f7f8fa] p-20rpx text-26rpx text-[#666] leading-40rpx">
+      <view class="yd-text-sub yd-bg-subtle rounded-8rpx p-20rpx text-26rpx leading-40rpx">
         {{ library.description || '暂无简介' }}
       </view>
     </view>
@@ -37,7 +37,7 @@
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx pb-200rpx">
         <template v-if="tabIndex === 0">
-          <view v-if="!treeData.length" class="py-80rpx text-center text-28rpx text-[#999]">
+          <view v-if="!treeData.length" class="yd-text-hint py-80rpx text-center text-28rpx">
             暂无目录或文档
           </view>
           <TreeNode
@@ -53,7 +53,7 @@
           />
         </template>
         <template v-else>
-          <view v-if="!favoriteNodes.length" class="py-80rpx text-center text-28rpx text-[#999]">
+          <view v-if="!favoriteNodes.length" class="yd-text-hint py-80rpx text-center text-28rpx">
             暂无关注内容
           </view>
           <view
@@ -68,8 +68,8 @@
               :color="node.kind === 'folder' ? '#fa8c16' : '#1677ff'"
               class="shrink-0"
             />
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ node.label }}</text>
-            <text class="shrink-0 text-24rpx text-[#999]">{{ getKnowledgeTreeNodeTypeName(node) }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ node.label }}</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">{{ getKnowledgeTreeNodeTypeName(node) }}</text>
           </view>
         </template>
       </view>

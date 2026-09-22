@@ -32,12 +32,12 @@
             </view>
             <view v-if="item.processInstance?.summary?.length" class="bpm-summary">
               <view v-for="(s, idx) in item.processInstance.summary" :key="idx" class="bpm-summary-item">
-                <text class="text-[#999]">{{ s.key }}：</text>
+                <text class="yd-text-hint">{{ s.key }}：</text>
                 <text>{{ s.value }}</text>
               </view>
             </view>
             <view class="bpm-summary-item">
-              <text class="text-[#999]">审批意见：</text>
+              <text class="yd-text-hint">审批意见：</text>
               <text>{{ item.reason || '-' }}</text>
             </view>
             <view class="bpm-card-info">

@@ -4,10 +4,10 @@
     <view
       v-for="filter in filters"
       :key="filter.prop"
-      class="flex items-center gap-4rpx rounded-8rpx bg-[#f7f8fa] px-20rpx py-10rpx"
+      class="yd-bg-subtle flex items-center gap-4rpx rounded-8rpx px-20rpx py-10rpx"
       @click="openFilter(filter)"
     >
-      <text class="text-26rpx text-[#333]">{{ getFilterLabel(filter) }}</text>
+      <text class="yd-text-main text-26rpx">{{ getFilterLabel(filter) }}</text>
       <wd-icon name="caret-down" size="28rpx" color="#999" />
     </view>
     <wd-picker

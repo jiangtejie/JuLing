@@ -20,18 +20,18 @@
     <!-- 月度目标 -->
     <view class="mt-24rpx bg-white">
       <view class="px-24rpx py-20rpx">
-        <text class="text-30rpx text-[#333] font-semibold">月度目标</text>
+        <text class="yd-text-main text-30rpx font-semibold">月度目标</text>
       </view>
       <view class="grid grid-cols-3 gap-12rpx px-24rpx pb-24rpx">
         <view
           v-for="month in monthFields"
           :key="month.prop"
-          class="rounded-8rpx bg-[#f8f8f8] px-12rpx py-14rpx"
+          class="yd-bg-subtle rounded-8rpx px-12rpx py-14rpx"
         >
-          <view class="text-22rpx text-[#999]">
+          <view class="yd-text-hint text-22rpx">
             {{ month.label }}
           </view>
-          <view class="mt-6rpx text-24rpx text-[#333]">
+          <view class="yd-text-main mt-6rpx text-24rpx">
             {{ formatMoney(formData[month.prop]) }}
           </view>
         </view>
@@ -150,7 +150,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('crm:performance-config:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

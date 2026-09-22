@@ -1,15 +1,15 @@
 <template>
   <!-- 移动凭证弹窗 -->
-  <wd-popup v-model="visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         移动凭证
       </view>
 
       <view class="mb-24rpx flex items-center justify-between" @click="monthVisible = true">
-        <text class="text-28rpx text-[#666]">期间</text>
+        <text class="yd-text-sub text-28rpx">期间</text>
         <view class="flex items-center gap-8rpx">
-          <text class="text-28rpx text-[#333]">{{ formData.month || '请选择期间' }}</text>
+          <text class="yd-text-main text-28rpx">{{ formData.month || '请选择期间' }}</text>
           <wd-icon name="arrow-right" size="28rpx" color="#999" />
         </view>
       </view>
@@ -22,17 +22,17 @@
       />
 
       <view class="mb-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-16rpx text-28rpx">
           凭证字
         </view>
         <VoucherWordRadioGroup v-model="formData.voucherWordId" />
       </view>
 
       <view class="mb-32rpx">
-        <view class="mb-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mb-16rpx text-28rpx">
           移动规则
         </view>
-        <view class="flex items-center text-28rpx text-[#666]">
+        <view class="yd-text-sub flex items-center text-28rpx">
           <text>将</text>
           <wd-input-number v-model="formData.sourceNumber" allow-null :min="1" :precision="0" :update-on-init="false" />
           <text class="mx-8rpx">号移动到</text>
@@ -50,6 +50,7 @@
 
 <script lang="ts" setup>
 import type { VoucherMoveReq } from '@/api/fms/voucher'
+import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { moveVoucher } from '@/api/fms/voucher'
 import VoucherWordRadioGroup from '@/pages-fms/config/voucher-word/components/voucher-word-radio-group.vue'
@@ -61,6 +62,7 @@ const emit = defineEmits<{
 }>()
 
 const toast = useToast()
+const dialog = useDialog()
 const fmsStore = useFmsStore()
 const visible = ref(false) // 弹窗显隐
 const formLoading = ref(false) // 表单提交状态
@@ -114,6 +116,15 @@ async function handleSubmit() {
   }
   if (formData.value.targetNumber >= formData.value.sourceNumber) {
     toast.warning('移动到的凭证号必须小于原凭证号')
+    return
+  }
+  // add by 棱信矩灵：移动会改变凭证顺序且不可撤销，补二次确认
+  try {
+    await dialog.confirm({
+      title: '提示',
+      msg: `确认将 ${formData.value.sourceNumber} 号凭证移动到 ${formData.value.targetNumber} 号之前？该操作会改变凭证顺序。`,
+    })
+  } catch {
     return
   }
   formLoading.value = true

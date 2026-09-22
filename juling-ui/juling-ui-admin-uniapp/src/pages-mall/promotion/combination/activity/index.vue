@@ -31,12 +31,12 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || `活动 #${item.id}` }}
             </view>
-            <text class="shrink-0 text-26rpx text-[#fa8c16]">{{ formatDisplayMoney(item.combinationPrice) }}</text>
+            <text class="yd-text-warning shrink-0 text-26rpx">{{ formatDisplayMoney(item.combinationPrice) }}</text>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>成团人数：{{ item.userSize ?? '-' }}</text>
             <text>{{ formatDateTime(item.startTime) || '-' }}</text>
           </view>

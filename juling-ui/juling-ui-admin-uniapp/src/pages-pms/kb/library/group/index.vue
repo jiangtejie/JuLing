@@ -10,7 +10,7 @@
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx">
         <!-- 分组说明 -->
-        <view class="mb-24rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mb-24rpx text-26rpx">
           知识库分组是个人视图，不会影响其他成员
         </view>
 
@@ -22,15 +22,15 @@
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <wd-tag type="default" plain>
                 {{ item.type === PmsKnowledgeGroupType.CUSTOM ? '自定义分组' : '默认分组' }}
               </wd-tag>
             </view>
-            <view class="mb-16rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">知识库数量：</text>{{ item.libraryCount ?? 0 }}
+            <view class="yd-text-sub mb-16rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">知识库数量：</text>{{ item.libraryCount ?? 0 }}
             </view>
             <view class="flex items-center justify-end gap-16rpx">
               <template v-if="hasAccessByCodes(['pms:kb:library:update'])">
@@ -84,9 +84,9 @@
     />
 
     <!-- 分组表单弹窗 -->
-    <wd-popup v-model="formVisible" position="bottom" root-portal>
+    <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom root-portal>
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ formData.id ? '编辑分组' : '新增分组' }}
         </view>
         <wd-input

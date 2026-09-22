@@ -32,7 +32,7 @@
         :key="section.key"
         class="mx-24rpx mt-24rpx"
       >
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           {{ section.label }}
         </view>
         <view
@@ -40,40 +40,40 @@
           :key="item.id || `${section.key}-${index}`"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
             {{ formatHrmInsuranceProjectName(item) }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             默认基数：{{ formatHrmMoney(item.baseAmount) }}
           </view>
           <view
             v-if="formData.type === HrmInsuranceSchemeType.PROPORTION"
-            class="mb-8rpx text-26rpx text-[#666]"
+            class="yd-text-sub mb-8rpx text-26rpx"
           >
             公司比例：{{ formatHrmRate(item.corporateRate) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             个人比例：{{ formatHrmRate(item.personalRate) }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx text-26rpx">
             公司金额：{{ formatHrmMoney(getProjectAmount(item, 'corporate')) }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             个人金额：{{ formatHrmMoney(getProjectAmount(item, 'personal')) }}
           </view>
         </view>
         <view
           v-if="!section.projects.length"
-          class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]"
+          class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx"
         >
           暂无{{ section.label }}项目
         </view>
         <view v-else class="rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-28rpx font-semibold">
             {{ section.label }}合计
           </view>
-          <view class="mt-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-12rpx text-26rpx">
             公司：{{ formatHrmMoney(section.corporateTotal) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             个人：{{ formatHrmMoney(section.personalTotal) }}
           </view>
         </view>

@@ -16,19 +16,19 @@
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
             <dict-tag v-if="item.auditStatus != null" :type="DICT_TYPE.CRM_AUDIT_STATUS" :value="item.auditStatus" />
           </view>
-          <view v-if="item.no" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">编号：</text>{{ item.no }}
+          <view v-if="item.no" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">编号：</text>{{ item.no }}
           </view>
-          <view v-if="item.customerName" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">客户：</text>{{ item.customerName }}
+          <view v-if="item.customerName" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">客户：</text>{{ item.customerName }}
           </view>
-          <view v-if="item.endTime" class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">结束时间：</text>{{ formatDate(item.endTime) }}
+          <view v-if="item.endTime" class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">结束时间：</text>{{ formatDate(item.endTime) }}
           </view>
         </view>
       </view>

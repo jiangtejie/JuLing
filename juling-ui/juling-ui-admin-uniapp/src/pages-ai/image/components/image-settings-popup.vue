@@ -9,7 +9,7 @@
   >
     <view class="px-24rpx pb-28rpx pt-24rpx">
       <view class="mb-22rpx flex items-center justify-between px-4rpx">
-        <text class="text-32rpx text-[#222] font-semibold">模型与参数</text>
+        <text class="yd-text-strong text-32rpx font-semibold">模型与参数</text>
         <wd-icon name="close" size="36rpx" color="#999" @click="visible = false" />
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">

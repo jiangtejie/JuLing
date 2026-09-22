@@ -113,8 +113,8 @@
     <!-- 公海分配 -->
     <wd-popup v-model="distributeVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="bg-white pb-32rpx">
-        <view class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-24rpx">
-          <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-24rpx">
+          <view class="yd-text-main text-32rpx font-semibold">
             分配客户
           </view>
           <wd-icon name="close" size="36rpx" @click="distributeVisible = false" />
@@ -370,7 +370,7 @@ async function handlePutPool() {
     toast.success('放入公海成功')
     uni.$emit('crm:customer:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     actionLoading.value = false
   }
 }
@@ -402,7 +402,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('crm:customer:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

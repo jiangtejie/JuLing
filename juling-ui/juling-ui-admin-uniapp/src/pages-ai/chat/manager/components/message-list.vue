@@ -27,22 +27,22 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-30rpx font-semibold">
             消息 #{{ item.id }}
           </view>
-          <view class="mt-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-12rpx text-26rpx">
             对话编号：{{ item.conversationId || '-' }} / 类型：{{ item.type || '-' }}
           </view>
-          <view class="line-clamp-4 mt-12rpx text-24rpx text-[#666]">
+          <view class="yd-text-sub line-clamp-4 mt-12rpx text-24rpx">
             {{ item.content || '-' }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             用户：{{ getUserName(item.userId) }} / 模型：{{ item.model || '-' }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             携带上下文：{{ item.useContext ? '是' : '否' }}
           </view>
-          <view class="mt-8rpx text-22rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-22rpx">
             {{ formatDateTime(item.createTime) }}
           </view>
         </view>

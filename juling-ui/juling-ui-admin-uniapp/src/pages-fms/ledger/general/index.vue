@@ -31,7 +31,7 @@
             <!-- 加载状态 -->
             <view
               v-if="loading"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -46,8 +46,8 @@
                 class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
               >
                 <!-- 科目标题，点击下钻明细账 -->
-                <view class="flex items-center justify-between gap-16rpx border-0 border-b border-[#eee] border-b-solid px-24rpx py-20rpx">
-                  <text class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-border-base flex items-center justify-between gap-16rpx border-0 border-b border-b-solid px-24rpx py-20rpx">
+                  <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                     {{ group.subjectCode }} {{ group.subjectName }}
                   </text>
                   <view
@@ -55,7 +55,7 @@
                     class="flex flex-shrink-0 items-center"
                     @click="openDetail(group)"
                   >
-                    <text class="text-24rpx text-[#1677ff]">明细账</text>
+                    <text class="yd-text-link text-24rpx">明细账</text>
                     <wd-icon name="arrow-right" size="24rpx" color="#1677ff" />
                   </view>
                 </view>
@@ -63,12 +63,12 @@
                 <view
                   v-for="(row, index) in group.rows"
                   :key="index"
-                  class="border-0 border-b border-[#f5f5f5] border-b-solid px-24rpx py-16rpx"
+                  class="yd-border-light border-0 border-b border-b-solid px-24rpx py-16rpx"
                 >
-                  <view class="mb-4rpx text-26rpx text-[#333] font-semibold">
+                  <view class="yd-text-main mb-4rpx text-26rpx font-semibold">
                     {{ row.period }} {{ row.digest }}
                   </view>
-                  <view class="flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx text-[#666]">
+                  <view class="yd-text-sub flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx">
                     <text>借方 {{ formatFmsMoney(row.debitAmount) }}</text>
                     <text>贷方 {{ formatFmsMoney(row.creditAmount) }}</text>
                     <text>余额 {{ formatFmsSubjectBalance(row.balance, row.balanceDirection) }}</text>

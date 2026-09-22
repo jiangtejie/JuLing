@@ -4,14 +4,14 @@
   <wd-popup
     v-if="visible"
     v-model="visible"
-    position="bottom"
+    position="bottom" safe-area-inset-bottom
     root-portal
     custom-style="height: 60vh; border-radius: 24rpx 24rpx 0 0;"
     @after-enter="resetLocalPaging"
   >
     <view class="h-full flex flex-col bg-white">
       <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           消息已读情况
         </view>
         <wd-button size="small" variant="plain" @click="visible = false">
@@ -45,7 +45,7 @@
             class="flex items-center gap-20rpx px-24rpx py-16rpx"
           >
             <ImAvatar :src="member.avatar" :name="member.nickname" :round="false" size="76rpx" />
-            <text class="min-w-0 flex-1 truncate text-30rpx text-[#333]">
+            <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx">
               {{ getMemberDisplayName(member) }}
             </text>
           </view>

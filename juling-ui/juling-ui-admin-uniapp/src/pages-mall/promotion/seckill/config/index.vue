@@ -31,15 +31,15 @@
           @click="handleDetail(item)"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name || `时段 #${item.id}` }}
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             开始时间：{{ item.startTime || '-' }}
           </view>
-          <view class="mt-4rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-4rpx text-26rpx">
             结束时间：{{ item.endTime || '-' }}
           </view>
         </view>

@@ -21,7 +21,7 @@
         <text class="yd-upload-file__num">{{ list.length }}/{{ limit }}</text>
       </view>
     </yd-upload>
-    <view v-if="isShowTip && tipText" class="mt-8rpx text-22rpx text-[#999]">
+    <view v-if="isShowTip && tipText" class="yd-text-hint mt-8rpx text-22rpx">
       <text>{{ tipText }}</text>
     </view>
   </view>

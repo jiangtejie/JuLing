@@ -52,7 +52,7 @@
                 :precision="0"
               />
             </wd-form-item>
-            <view class="mx-24rpx mb-16rpx rounded-12rpx bg-[#f0f5ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]">
+            <view class="yd-text-link yd-bg-info-soft mx-24rpx mb-16rpx rounded-12rpx px-24rpx py-20rpx text-24rpx">
               工资薪金默认起征点为 5000 元，劳务报酬默认 800 元，起征点不得小于 0；小数位决定个税计算结果保留 0～4 位。
             </view>
           </template>
@@ -199,7 +199,7 @@ async function handleSubmit() {
     }
     uni.$emit('hrm:salary:tax-rule:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

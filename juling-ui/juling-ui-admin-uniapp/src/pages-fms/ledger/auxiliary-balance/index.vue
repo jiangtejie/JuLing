@@ -32,7 +32,7 @@
             <!-- 加载状态 -->
             <view
               v-if="loading"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -47,42 +47,42 @@
                 class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
               >
                 <!-- 项目标题 -->
-                <view class="mb-16rpx truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main mb-16rpx truncate text-30rpx font-semibold">
                   {{ item.code }} {{ item.name }}
                 </view>
                 <!-- 余额金额 -->
                 <view class="grid grid-cols-2 gap-x-32rpx gap-y-8rpx text-26rpx">
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">期初借方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.openingDebitAmount) }}</text>
+                    <text class="yd-text-hint">期初借方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.openingDebitAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">期初贷方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.openingCreditAmount) }}</text>
+                    <text class="yd-text-hint">期初贷方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.openingCreditAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">本期借方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.periodDebitAmount) }}</text>
+                    <text class="yd-text-hint">本期借方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.periodDebitAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">本期贷方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.periodCreditAmount) }}</text>
+                    <text class="yd-text-hint">本期贷方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.periodCreditAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">累计借方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.yearDebitAmount) }}</text>
+                    <text class="yd-text-hint">累计借方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.yearDebitAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">累计贷方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.yearCreditAmount) }}</text>
+                    <text class="yd-text-hint">累计贷方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.yearCreditAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">期末借方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.endingDebitAmount) }}</text>
+                    <text class="yd-text-hint">期末借方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.endingDebitAmount) }}</text>
                   </view>
                   <view class="flex items-center justify-between">
-                    <text class="text-[#999]">期末贷方</text>
-                    <text class="text-[#333]">{{ formatFmsAmount(item.endingCreditAmount) }}</text>
+                    <text class="yd-text-hint">期末贷方</text>
+                    <text class="yd-text-main">{{ formatFmsAmount(item.endingCreditAmount) }}</text>
                   </view>
                 </view>
               </view>

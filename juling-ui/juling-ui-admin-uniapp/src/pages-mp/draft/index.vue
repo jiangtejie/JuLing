@@ -31,10 +31,10 @@
         >
           <NewsCard :articles="getArticles(item)" @article-click="article => openUrl(article.url)" />
           <view class="p-24rpx">
-            <view class="mb-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-12rpx text-24rpx">
               更新时间：{{ item.updateTime ? formatDateTime(item.updateTime * 1000) : '-' }}
             </view>
-            <view class="mb-20rpx break-all text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-20rpx break-all text-24rpx">
               Media ID：{{ item.mediaId || '-' }}
             </view>
             <view class="flex gap-16rpx">

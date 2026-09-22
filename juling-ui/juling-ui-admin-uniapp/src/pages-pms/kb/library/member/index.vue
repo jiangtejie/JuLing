@@ -9,7 +9,7 @@
 
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx pb-200rpx">
-        <view class="mb-24rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mb-24rpx text-24rpx">
           创建人固定保留；管理员可维护知识库信息和成员，普通成员可新增内容，具体操作受内容协作权限控制。
         </view>
 
@@ -21,15 +21,15 @@
         >
           <template v-if="item.level === PmsKnowledgeLibraryMemberLevel.CREATOR">
             <view class="flex items-center gap-16rpx">
-              <view class="h-64rpx w-64rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1677ff] text-28rpx text-white">
+              <view class="yd-bg-primary h-64rpx w-64rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full text-28rpx text-white">
                 <wd-img v-if="item.avatar" :src="item.avatar" width="64rpx" height="64rpx" radius="50%" />
                 <text v-else>{{ (item.nickname || '-').slice(0, 1) }}</text>
               </view>
               <view class="min-w-0 flex-1">
-                <view class="text-28rpx text-[#333]">
+                <view class="yd-text-main text-28rpx">
                   {{ item.nickname || `用户 ${item.userId}` }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   创建人
                 </view>
               </view>
@@ -48,7 +48,7 @@
                   部门
                 </wd-radio>
               </wd-radio-group>
-              <text class="shrink-0 text-26rpx text-[#f5222d]" @click="memberList.splice(index, 1)">移除</text>
+              <text class="yd-text-danger shrink-0 text-26rpx" @click="memberList.splice(index, 1)">移除</text>
             </view>
             <view class="mb-12rpx">
               <UserFormPicker
@@ -65,12 +65,12 @@
                 label-width="160rpx"
                 placeholder="请选择部门"
               />
-              <view v-if="item.identityType === 'dept' && item.deptName" class="mt-8rpx text-24rpx text-[#999]">
+              <view v-if="item.identityType === 'dept' && item.deptName" class="yd-text-hint mt-8rpx text-24rpx">
                 {{ item.parentDeptName ? `${item.parentDeptName} / ` : '' }}{{ item.deptName }}
               </view>
             </view>
             <view class="flex items-center justify-between">
-              <text class="text-28rpx text-[#666]">角色</text>
+              <text class="yd-text-sub text-28rpx">角色</text>
               <wd-radio-group v-model="item.level" type="button">
                 <wd-radio :value="PmsKnowledgeLibraryMemberLevel.ADMIN">
                   管理员

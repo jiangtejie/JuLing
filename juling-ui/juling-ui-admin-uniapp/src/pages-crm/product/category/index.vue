@@ -45,10 +45,10 @@
         <view class="p-24rpx" @click="handleDetail(item)">
           <view class="flex items-center justify-between gap-16rpx">
             <view class="min-w-0 flex items-center">
-              <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#1890ff]">
+              <view class="yd-bg-primary mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx">
                 <wd-icon name="folder" size="20px" color="#fff" />
               </view>
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
             </view>
@@ -58,7 +58,7 @@
               class="flex shrink-0 items-center"
               @click.stop="handleEnterChildren(item)"
             >
-              <text class="text-24rpx text-[#1890ff]">子分类 ({{ item.children.length }})</text>
+              <text class="yd-text-link text-24rpx">子分类 ({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>

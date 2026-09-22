@@ -38,10 +38,10 @@
                 <wd-icon :name="card.icon" size="38rpx" :color="card.color" />
               </view>
               <view class="min-w-0 flex-1">
-                <view class="truncate text-24rpx text-[#888]">
+                <view class="yd-text-sub truncate text-24rpx">
                   {{ card.label }}
                 </view>
-                <view class="mt-6rpx truncate text-40rpx text-[#333] font-semibold leading-none">
+                <view class="yd-text-main mt-6rpx truncate text-40rpx font-semibold leading-none">
                   {{ card.value }}
                 </view>
               </view>
@@ -62,12 +62,12 @@
         <template v-if="activeTab === 'memory'">
           <Card title="内存使用率">
             <YdChart :option="memoryOption" :loading="loading" :empty="!monitor" height="300rpx" />
-            <view class="grid grid-cols-3 mt-12rpx gap-16rpx border-t border-[#f5f5f5] pt-24rpx text-center">
+            <view class="yd-border-light grid grid-cols-3 mt-12rpx gap-16rpx border-t pt-24rpx text-center">
               <view v-for="stat in memoryStats" :key="stat.label">
-                <view class="text-24rpx text-[#999]">
+                <view class="yd-text-hint text-24rpx">
                   {{ stat.label }}
                 </view>
-                <view class="mt-8rpx text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main mt-8rpx text-30rpx font-semibold">
                   {{ stat.value }}
                 </view>
               </view>
@@ -89,14 +89,14 @@
             <view
               v-for="item in topCommands"
               :key="item.command"
-              class="border-t border-[#f5f5f5] py-16rpx first:border-t-0"
+              class="yd-border-light border-t py-16rpx first:border-t-0"
             >
               <view class="mb-8rpx flex items-center justify-between text-28rpx">
-                <text class="text-[#333]">{{ item.command }}</text>
-                <text class="text-[#999]">{{ item.calls }}</text>
+                <text class="yd-text-main">{{ item.command }}</text>
+                <text class="yd-text-hint">{{ item.calls }}</text>
               </view>
-              <view class="h-8rpx overflow-hidden rounded-full bg-[#f0f2f5]">
-                <view class="h-full rounded-full bg-[#1677ff]" :style="{ width: `${item.percent}%` }" />
+              <view class="yd-bg-subtle h-8rpx overflow-hidden rounded-full">
+                <view class="yd-bg-primary h-full rounded-full" :style="{ width: `${item.percent}%` }" />
               </view>
             </view>
           </Card>
@@ -108,10 +108,10 @@
             <view
               v-for="item in infoItems"
               :key="item.label"
-              class="flex items-center justify-between border-t border-[#f5f5f5] py-20rpx first:border-t-0"
+              class="yd-border-light flex items-center justify-between border-t py-20rpx first:border-t-0"
             >
-              <text class="shrink-0 text-26rpx text-[#999]">{{ item.label }}</text>
-              <text class="ml-24rpx min-w-0 flex-1 truncate text-right text-28rpx text-[#333]">{{ item.value }}</text>
+              <text class="yd-text-hint shrink-0 text-26rpx">{{ item.label }}</text>
+              <text class="yd-text-main ml-24rpx min-w-0 flex-1 truncate text-right text-28rpx">{{ item.value }}</text>
             </view>
           </Card>
         </template>

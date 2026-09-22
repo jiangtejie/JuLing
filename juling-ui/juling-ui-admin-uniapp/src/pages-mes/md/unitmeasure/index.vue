@@ -32,27 +32,27 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.code || '-' }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">单位类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">单位类型：</text>
             <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="item.primaryFlag" />
           </view>
-          <view v-if="!item.primaryFlag" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">换算比例：</text>{{ formatChangeRate(item.changeRate) }}
+          <view v-if="!item.primaryFlag" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">换算比例：</text>{{ formatChangeRate(item.changeRate) }}
           </view>
-          <view v-if="item.remark" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">备注：</text>{{ item.remark }}
+          <view v-if="item.remark" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">备注：</text>{{ item.remark }}
           </view>
-          <view v-if="item.createTime" class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建时间：</text>{{ formatDateTime(item.createTime) }}
+          <view v-if="item.createTime" class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建时间：</text>{{ formatDateTime(item.createTime) }}
           </view>
         </view>
       </view>

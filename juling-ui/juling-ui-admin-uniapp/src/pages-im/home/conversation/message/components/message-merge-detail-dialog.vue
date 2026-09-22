@@ -1,10 +1,10 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" root-portal custom-style="height: 80vh; border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="height: 80vh; border-radius: 24rpx 24rpx 0 0;">
     <view class="h-full flex flex-col bg-white">
       <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
         <view class="min-w-0 flex flex-1 items-center gap-16rpx">
           <wd-icon v-if="stack.length > 1" name="arrow-left" size="34rpx" color="#666" @click="handleBack" />
-          <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
             {{ currentPayload?.title || '聊天记录' }}
           </view>
         </view>
@@ -22,7 +22,7 @@
           >
             <ImAvatar :src="item.senderAvatar" :name="item.senderNickname" :round="false" size="72rpx" />
             <view class="min-w-0 flex flex-1 flex-col" :class="item.senderId === selfUserId ? 'items-end' : ''">
-              <view class="mb-8rpx flex items-center justify-between gap-16rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx flex items-center justify-between gap-16rpx text-24rpx">
                 <text class="truncate">{{ item.senderNickname || '' }}</text>
                 <text class="shrink-0">{{ formatMergeItemTime(item.sendTime) }}</text>
               </view>

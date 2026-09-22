@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="商品详情"
@@ -27,7 +27,7 @@
             <wd-cell title="商品简介" :value="formData.introduction || '-'" />
           </wd-cell-group>
           <view class="p-24rpx">
-            <view class="mb-12rpx text-26rpx text-[#999]">
+            <view class="yd-text-hint mb-12rpx text-26rpx">
               商品封面
             </view>
             <wd-img
@@ -36,8 +36,8 @@
               width="160rpx" height="160rpx" radius="8rpx" mode="aspectFill"
               enable-preview
             />
-            <text v-else class="block text-26rpx text-[#666]">-</text>
-            <view class="mb-12rpx mt-20rpx text-26rpx text-[#999]">
+            <text v-else class="yd-text-sub block text-26rpx">-</text>
+            <view class="yd-text-hint mb-12rpx mt-20rpx text-26rpx">
               轮播图
             </view>
             <view v-if="formData.sliderPicUrls?.length" class="flex flex-wrap gap-12rpx">
@@ -49,7 +49,7 @@
                 enable-preview
               />
             </view>
-            <text v-else class="text-26rpx text-[#666]">-</text>
+            <text v-else class="yd-text-sub text-26rpx">-</text>
           </view>
         </view>
 
@@ -68,13 +68,13 @@
           </wd-cell-group>
           <!-- 多规格：各 SKU 规格明细 -->
           <view v-if="formData.specType && formData.skus?.length" class="p-24rpx">
-            <view class="mb-16rpx text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main mb-16rpx text-28rpx font-medium">
               规格明细
             </view>
             <view
               v-for="(sku, index) in formData.skus"
               :key="index"
-              class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-20rpx last:mb-0"
+              class="yd-bg-subtle mb-16rpx rounded-8rpx p-20rpx last:mb-0"
             >
               <view class="mb-12rpx flex items-center gap-16rpx">
                 <wd-img
@@ -83,11 +83,11 @@
                   width="80rpx" height="80rpx" radius="6rpx" mode="aspectFill"
                   enable-preview
                 />
-                <view class="min-w-0 flex-1 text-28rpx text-[#333] font-medium">
+                <view class="yd-text-main min-w-0 flex-1 text-28rpx font-medium">
                   {{ sku.properties?.map(item => item.valueName).join(' / ') || '默认规格' }}
                 </view>
               </view>
-              <view class="flex flex-wrap gap-x-32rpx gap-y-8rpx text-26rpx text-[#666]">
+              <view class="yd-text-sub flex flex-wrap gap-x-32rpx gap-y-8rpx text-26rpx">
                 <text>销售价：{{ formatDisplayMoney(sku.price) }}</text>
                 <text>市场价：{{ formatDisplayMoney(sku.marketPrice) }}</text>
                 <text>成本价：{{ formatDisplayMoney(sku.costPrice) }}</text>
@@ -123,7 +123,7 @@
 
         <!-- 商品详情 -->
         <view v-show="activeTab === 3" class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="p-24rpx text-28rpx text-[#666] leading-relaxed">
+          <view class="yd-text-sub p-24rpx text-28rpx leading-relaxed">
             {{ formData.description || '-' }}
           </view>
         </view>
@@ -288,7 +288,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mall:product-spu:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

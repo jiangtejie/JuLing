@@ -1,25 +1,25 @@
 <template>
   <view class="bg-white">
-    <view class="px-32rpx py-16rpx text-26rpx text-[#999]">
+    <view class="yd-text-hint px-32rpx py-16rpx text-26rpx">
       {{ title }}
     </view>
-    <view v-for="(item, index) in list" :key="index" class="flex items-center justify-between border-t border-[#f2f3f5] px-32rpx py-20rpx">
-      <text class="text-28rpx text-[#333]">{{ item.name || item.identifier }}<text class="ml-8rpx text-24rpx text-[#999]">({{ item.dataType }})</text></text>
+    <view v-for="(item, index) in list" :key="index" class="yd-border-light flex items-center justify-between border-t px-32rpx py-20rpx">
+      <text class="yd-text-main text-28rpx">{{ item.name || item.identifier }}<text class="yd-text-hint ml-8rpx text-24rpx">({{ item.dataType }})</text></text>
       <view class="flex items-center gap-24rpx">
-        <text class="text-26rpx text-[#2f54eb]" @click="openForm(item, index)">编辑</text>
-        <text class="text-26rpx text-[#fa4350]" @click="removeParam(index)">删除</text>
+        <text class="yd-text-link text-26rpx" @click="openForm(item, index)">编辑</text>
+        <text class="yd-text-danger text-26rpx" @click="removeParam(index)">删除</text>
       </view>
     </view>
-    <view class="border-t border-[#f2f3f5] px-32rpx py-20rpx">
+    <view class="yd-border-light border-t px-32rpx py-20rpx">
       <wd-button size="small" type="primary" variant="plain" @click="openForm()">
         + 新增参数
       </wd-button>
     </view>
 
     <!-- 参数表单弹窗 -->
-    <wd-popup v-model="visible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="max-h-[80vh] overflow-y-auto p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ editIndex >= 0 ? '编辑参数' : '新增参数' }}
         </view>
         <wd-form ref="formRef" :model="form" :schema="formSchema">

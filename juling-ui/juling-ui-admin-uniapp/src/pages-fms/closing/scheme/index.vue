@@ -18,7 +18,7 @@
           class="mx-24rpx mb-24rpx flex items-center justify-between rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleTemplateList"
         >
-          <view class="text-28rpx text-[#333]">
+          <view class="yd-text-main text-28rpx">
             结账模板
           </view>
           <wd-icon name="arrow-right" size="32rpx" color="#999" />
@@ -43,7 +43,7 @@
               @click="handleDetail(item)"
             >
               <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name }}
                 </view>
                 <wd-tag v-if="item.type === FmsClosingType.PROFIT_LOSS" type="primary" plain>
@@ -53,11 +53,11 @@
                   期末结转
                 </wd-tag>
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">待结转金额：</text>{{ formatFmsAmount(item.balance) }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">待结转金额：</text>{{ formatFmsAmount(item.balance) }}
               </view>
-              <view class="text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">已生成凭证：</text>{{ item.voucherIds?.length || 0 }} 张
+              <view class="yd-text-sub text-28rpx">
+                <text class="yd-text-hint mr-8rpx">已生成凭证：</text>{{ item.voucherIds?.length || 0 }} 张
               </view>
             </view>
           </view>

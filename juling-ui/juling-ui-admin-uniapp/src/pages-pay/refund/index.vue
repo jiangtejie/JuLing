@@ -32,35 +32,35 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.merchantRefundId || item.no || `退款 #${item.id}` }}
               </view>
-              <view v-if="item.merchantOrderId" class="mt-6rpx truncate text-24rpx text-[#999]">
+              <view v-if="item.merchantOrderId" class="yd-text-hint mt-6rpx truncate text-24rpx">
                 商户支付单号：{{ item.merchantOrderId }}
               </view>
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.PAY_REFUND_STATUS" :value="item.status" />
           </view>
 
-          <view class="mb-16rpx text-36rpx text-[#fa8c16] font-semibold">
+          <view class="yd-text-warning mb-16rpx text-36rpx font-semibold">
             {{ formatDisplayMoney(item.refundPrice) }}
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">支付金额：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">支付金额：</text>
             <text>{{ formatDisplayMoney(item.payPrice) }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">退款渠道：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">退款渠道：</text>
             <dict-tag v-if="item.channelCode" :type="DICT_TYPE.PAY_CHANNEL_CODE" :value="item.channelCode" />
             <text v-else>-</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">支付应用：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">支付应用：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.appName || '-' }}</text>
           </view>
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">成功时间：</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">成功时间：</text>
             <text>{{ formatDateTime(item.successTime) || '-' }}</text>
           </view>
         </view>

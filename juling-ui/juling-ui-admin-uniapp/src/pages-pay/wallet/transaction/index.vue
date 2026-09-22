@@ -31,24 +31,24 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.title || `钱包流水 #${item.id}` }}
               </view>
-              <view v-if="item.walletId != null" class="mt-6rpx truncate text-24rpx text-[#999]">
+              <view v-if="item.walletId != null" class="yd-text-hint mt-6rpx truncate text-24rpx">
                 钱包编号：{{ item.walletId }}
               </view>
             </view>
-            <view class="text-32rpx text-[#fa8c16] font-semibold">
+            <view class="yd-text-warning text-32rpx font-semibold">
               {{ formatDisplayMoney(item.price) }}
             </view>
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">钱包余额：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">钱包余额：</text>
             <text>{{ formatDisplayMoney(item.balance) }}</text>
           </view>
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">交易时间：</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">交易时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

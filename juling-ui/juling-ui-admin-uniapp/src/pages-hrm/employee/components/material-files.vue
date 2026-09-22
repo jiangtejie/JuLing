@@ -1,7 +1,7 @@
 <template>
   <view class="p-24rpx pb-32rpx">
     <view v-for="group in fileGroups" :key="group.label" class="mb-24rpx">
-      <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
         {{ group.label }}
       </view>
       <view
@@ -11,14 +11,14 @@
         @click="openFileDialog(option)"
       >
         <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-          <text class="min-w-0 flex-1 text-28rpx text-[#666]">
+          <text class="yd-text-sub min-w-0 flex-1 text-28rpx">
             {{ option.label }}
           </text>
-          <text class="shrink-0 text-26rpx text-[#999]">
+          <text class="yd-text-hint shrink-0 text-26rpx">
             {{ getUrls(option.value).length }}
           </text>
         </view>
-        <view v-if="!getUrls(option.value).length" class="text-26rpx text-[#999]">
+        <view v-if="!getUrls(option.value).length" class="yd-text-hint text-26rpx">
           {{ canUpdate ? '点击管理附件' : '暂无附件' }}
         </view>
         <view
@@ -27,10 +27,10 @@
           class="mb-8rpx flex items-center justify-between gap-16rpx"
           @click.stop="openAttachment(url)"
         >
-          <text class="min-w-0 flex-1 truncate text-26rpx text-[#333]">
+          <text class="yd-text-main min-w-0 flex-1 truncate text-26rpx">
             {{ getFileNameFromUrl(url) || `附件 ${index + 1}` }}
           </text>
-          <text class="shrink-0 text-26rpx text-[#1677ff]">
+          <text class="yd-text-link shrink-0 text-26rpx">
             查看
           </text>
         </view>
@@ -46,7 +46,7 @@
       @close="dialogVisible = false"
     >
       <view class="px-32rpx pb-32rpx pt-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ dialogTitle }}
         </view>
         <yd-upload-file

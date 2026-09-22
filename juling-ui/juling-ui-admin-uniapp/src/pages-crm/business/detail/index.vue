@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container" :class="{ 'yd-page-container-paging': isPagingTab }">
+  <view class="yd-page-container yd-page-with-footer" :class="{ 'yd-page-container-paging': isPagingTab }">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="商机详情"
@@ -36,40 +36,40 @@
       <!-- 产品清单（只读） -->
       <view class="mt-24rpx bg-white">
         <view class="px-24rpx py-20rpx">
-          <text class="text-30rpx text-[#333] font-semibold">产品清单</text>
+          <text class="yd-text-main text-30rpx font-semibold">产品清单</text>
         </view>
         <view
           v-for="(row, index) in formData.products || []"
           :key="index"
-          class="mx-24rpx mb-20rpx rounded-12rpx bg-[#f7f8fa] p-24rpx"
+          class="yd-bg-subtle mx-24rpx mb-20rpx rounded-12rpx p-24rpx"
         >
-          <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
             {{ row.productName || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">产品编码：</text>{{ row.productNo || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">产品编码：</text>{{ row.productNo || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">产品单位：</text>{{ getDictLabel(DICT_TYPE.CRM_PRODUCT_UNIT, row.productUnit) || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">产品单位：</text>{{ getDictLabel(DICT_TYPE.CRM_PRODUCT_UNIT, row.productUnit) || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">产品价格：</text>{{ formatMoney(row.productPrice) }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">产品价格：</text>{{ formatMoney(row.productPrice) }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">数量：</text>{{ row.count ?? '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">数量：</text>{{ row.count ?? '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">售价：</text>{{ formatMoney(row.businessPrice) }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">售价：</text>{{ formatMoney(row.businessPrice) }}
           </view>
-          <view class="text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">合计：</text>{{ formatMoney(row.totalPrice) }}
+          <view class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint mr-8rpx">合计：</text>{{ formatMoney(row.totalPrice) }}
           </view>
         </view>
         <wd-empty v-if="!(formData.products && formData.products.length)" icon="content" tip="暂无产品" />
-        <view v-else class="border-t border-[#f5f5f5] px-24rpx py-20rpx">
+        <view v-else class="yd-border-light border-t px-24rpx py-20rpx">
           <view class="flex items-center justify-between text-28rpx">
-            <text class="text-[#999]">产品总金额</text>
-            <text class="text-[#333]">{{ formatMoney(totalProductPrice) }}</text>
+            <text class="yd-text-hint">产品总金额</text>
+            <text class="yd-text-main">{{ formatMoney(totalProductPrice) }}</text>
           </view>
         </view>
       </view>
@@ -299,7 +299,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('crm:business:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

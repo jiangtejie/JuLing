@@ -4,8 +4,8 @@
     <view class="yd-search-form-label">
       {{ label }}
     </view>
-    <view class="flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-24rpx" @click="handleOpen">
-      <text class="text-28rpx" :class="isPlaceholder ? 'text-[#999]' : 'text-[#333]'">
+    <view class="yd-bg-subtle flex items-center justify-between rounded-12rpx p-24rpx" @click="handleOpen">
+      <text class="text-28rpx" :class="isPlaceholder ? 'yd-text-hint' : 'yd-text-main'">
         {{ displayText }}
       </text>
       <wd-icon name="arrow-right" size="32rpx" color="#666" />

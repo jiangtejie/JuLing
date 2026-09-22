@@ -31,7 +31,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.title || '-' }}
             </view>
             <dict-tag
@@ -40,22 +40,22 @@
               :value="item.status"
             />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">参保：</text>{{ item.insuredEmployeeCount ?? 0 }} 人
-            <text class="mx-8rpx text-[#ddd]">|</text>
-            <text class="mr-8rpx text-[#999]">停保：</text>{{ item.stoppedEmployeeCount ?? 0 }} 人
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">参保：</text>{{ item.insuredEmployeeCount ?? 0 }} 人
+            <text class="yd-text-muted mx-8rpx">|</text>
+            <text class="yd-text-hint mr-8rpx">停保：</text>{{ item.stoppedEmployeeCount ?? 0 }} 人
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">个人社保：</text>{{ formatHrmMoney(item.personalInsuranceAmount) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">个人社保：</text>{{ formatHrmMoney(item.personalInsuranceAmount) }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">公司社保：</text>{{ formatHrmMoney(item.corporateInsuranceAmount) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">公司社保：</text>{{ formatHrmMoney(item.corporateInsuranceAmount) }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">个人公积金：</text>{{ formatHrmMoney(item.personalProvidentFundAmount) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">个人公积金：</text>{{ formatHrmMoney(item.personalProvidentFundAmount) }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">公司公积金：</text>{{ formatHrmMoney(item.corporateProvidentFundAmount) }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">公司公积金：</text>{{ formatHrmMoney(item.corporateProvidentFundAmount) }}
           </view>
         </view>
       </view>
@@ -125,7 +125,7 @@ async function queryList() {
     }
     const data = await getInsuranceMonthRecordList(queryYear.value)
     list.value = data
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

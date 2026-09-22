@@ -102,13 +102,13 @@
         :readonly="!isEditable"
         :stock-mode="isStock"
       />
-      <view v-if="isStock" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#ad6800]">
+      <view v-if="isStock" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx">
         执行拣货会影响后续库存出库流程；H5 验证仅到拣货明细弹层、必填校验和确认提示，不在真实数据上确认保存或执行。
       </view>
-      <view v-if="isFinish" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#ad6800]">
+      <view v-if="isFinish" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx">
         执行出库会扣减库存；H5 验证仅到确认提示，不在真实数据上确认执行。
       </view>
-      <view v-if="isCancel" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff1f0] p-24rpx text-26rpx text-[#cf1322]">
+      <view v-if="isCancel" class="yd-bg-danger-soft mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx text-[#cf1322]">
         取消后不可恢复；H5 验证仅到确认提示，不在真实数据上确认取消。
       </view>
       <view class="h-180rpx" />

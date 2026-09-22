@@ -10,15 +10,15 @@
     <!-- 详情内容 -->
     <view class="pb-48rpx">
       <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-32rpx text-center shadow-sm">
-        <view class="text-44rpx text-[#1677ff] font-semibold">
+        <view class="yd-text-link text-44rpx font-semibold">
           {{ formatHrmMoney(formData.realPaySalary) }}
         </view>
-        <view class="mt-8rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mt-8rpx text-26rpx">
           实发金额（元）
         </view>
-        <view class="mt-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub mt-16rpx text-28rpx">
           {{ formData.employeeName || '-' }}
-          <text class="mx-8rpx text-[#ddd]">·</text>
+          <text class="yd-text-muted mx-8rpx">·</text>
           {{ formatHrmYearMonth(formData.year, formData.month) }}
         </view>
       </view>
@@ -44,48 +44,48 @@
 
       <!-- 工资条项 -->
       <view class="mx-24rpx mt-24rpx">
-        <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
           工资条项目
         </view>
         <view
           v-for="option in displayOptions"
           :key="getOptionKey(option)"
           class="mb-16rpx rounded-12rpx bg-white px-24rpx py-20rpx shadow-sm"
-          :class="option.children?.length ? 'bg-[#fafafa]' : ''"
+          :class="option.children?.length ? 'yd-bg-subtle' : ''"
         >
           <view class="flex items-center justify-between">
             <text
               class="min-w-0 flex-1 truncate text-28rpx"
-              :class="option.children?.length ? 'text-[#999] font-semibold' : 'text-[#333]'"
+              :class="option.children?.length ? 'yd-text-hint font-semibold' : 'yd-text-main'"
             >
               {{ option.name || '-' }}
             </text>
             <text
               v-if="!option.children?.length"
-              class="ml-16rpx shrink-0 text-28rpx text-[#333] font-semibold"
+              class="yd-text-main ml-16rpx shrink-0 text-28rpx font-semibold"
             >
               {{ formatHrmMoney(option.value) }}
             </text>
-            <text v-else class="ml-16rpx shrink-0 text-28rpx text-[#999]">
+            <text v-else class="yd-text-hint ml-16rpx shrink-0 text-28rpx">
               -
             </text>
           </view>
           <view
             v-for="child in option.children || []"
             :key="getOptionKey(child)"
-            class="mt-16rpx flex items-center justify-between border-t border-[#f0f0f0] pt-16rpx"
+            class="yd-border-light mt-16rpx flex items-center justify-between border-t pt-16rpx"
           >
-            <text class="min-w-0 flex-1 truncate pl-16rpx text-28rpx text-[#333]">
+            <text class="yd-text-main min-w-0 flex-1 truncate pl-16rpx text-28rpx">
               {{ child.name || '-' }}
             </text>
-            <text class="ml-16rpx shrink-0 text-28rpx text-[#333] font-semibold">
+            <text class="yd-text-main ml-16rpx shrink-0 text-28rpx font-semibold">
               {{ formatHrmMoney(child.value) }}
             </text>
           </view>
         </view>
         <view
           v-if="!displayOptions.length"
-          class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]"
+          class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx"
         >
           暂无工资项
         </view>
@@ -96,7 +96,8 @@
 
 <script lang="ts" setup>
 import type { SalarySlip, SalarySlipOption } from '@/api/hrm/salary/slip'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getSalarySlip } from '@/api/hrm/salary/slip'
 import { formatHrmMoney, formatHrmYearMonth } from '@/pages-hrm/utils/format'
 import { navigateBackPlus } from '@/utils'
@@ -137,7 +138,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

@@ -23,25 +23,25 @@
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.title || '成长值变动' }}
             </view>
             <wd-tag :type="(item.experience || 0) > 0 ? 'success' : 'danger'" variant="plain">
               {{ (item.experience || 0) > 0 ? `+${item.experience}` : item.experience }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-26rpx">
             {{ item.description || '-' }}
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">总成长值：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">总成长值：</text>
             <text>{{ item.totalExperience ?? '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">业务类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">业务类型：</text>
             <dict-tag :type="DICT_TYPE.MEMBER_EXPERIENCE_BIZ_TYPE" :value="item.bizType" />
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

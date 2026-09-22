@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="账套详情"
@@ -10,7 +10,7 @@
     <!-- 详情信息 -->
     <view v-if="formData.id" class="p-24rpx">
       <view class="mb-16rpx flex items-center gap-12rpx px-8rpx">
-        <text class="text-34rpx text-[#333] font-semibold">{{ formData.companyName }}</text>
+        <text class="yd-text-main text-34rpx font-semibold">{{ formData.companyName }}</text>
         <wd-tag v-if="formData.defaultStatus" type="primary" plain>
           默认
         </wd-tag>

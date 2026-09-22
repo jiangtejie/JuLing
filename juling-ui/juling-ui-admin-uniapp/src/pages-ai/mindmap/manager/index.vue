@@ -30,16 +30,16 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="line-clamp-2 text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main line-clamp-2 text-30rpx font-semibold">
             {{ item.prompt || '未命名导图' }}
           </view>
-          <view class="mt-8rpx text-22rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-22rpx">
             {{ formatDateTime(item.createTime) }}
           </view>
-          <view class="line-clamp-4 mt-16rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub line-clamp-4 mt-16rpx text-26rpx">
             {{ item.generatedContent || item.errorMessage || '-' }}
           </view>
-          <view class="mt-12rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx text-24rpx">
             用户：{{ getUserName(item.userId) }} / {{ item.platform || '-' }} / {{ item.model || '-' }}
           </view>
         </view>

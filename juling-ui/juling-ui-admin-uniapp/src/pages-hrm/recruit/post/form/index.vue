@@ -90,7 +90,7 @@
                   :max="99999999.99"
                   :precision="2"
                 />
-                <text class="shrink-0 text-26rpx text-[#999]">至</text>
+                <text class="yd-text-hint shrink-0 text-26rpx">至</text>
                 <wd-input-number
                   v-model="formData.maxSalary"
                   allow-null
@@ -108,7 +108,7 @@
                 :dict-type="DICT_TYPE.HRM_RECRUIT_SALARY_UNIT"
                 placeholder="请选择单位"
               />
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 最低薪资不能大于最高薪资；勾选「面议」后无需填写范围。
               </view>
             </view>
@@ -144,7 +144,7 @@
                   :max="99"
                   :precision="0"
                 />
-                <text class="shrink-0 text-26rpx text-[#999]">至</text>
+                <text class="yd-text-hint shrink-0 text-26rpx">至</text>
                 <wd-input-number
                   v-model="formData.maxAge"
                   allow-null
@@ -154,7 +154,7 @@
                   :precision="0"
                 />
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 最小年龄不能大于最大年龄；勾选「不限」后无需填写范围。
               </view>
             </view>
@@ -408,7 +408,7 @@ async function handleSubmit() {
     }
     uni.$emit('hrm:recruit:post:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

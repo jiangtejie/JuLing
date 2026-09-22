@@ -1,10 +1,10 @@
 <template>
   <wd-popup v-model="visible" position="bottom" closable safe-area-inset-bottom @close="handleClose">
     <view class="p-32rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         删除招聘渠道
       </view>
-      <view class="mb-24rpx rounded-12rpx bg-[#fff7e6] px-24rpx py-20rpx text-26rpx text-[#d48806]">
+      <view class="yd-bg-warning-soft yd-text-warning mb-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx">
         删除后，相关员工和候选人的招聘渠道将同步变更
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">

@@ -28,12 +28,12 @@
 
       <ReturnSalesLineList :return-id="currentId" readonly />
 
-      <view v-if="canQuality" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#ad6800] leading-40rpx">
+      <view v-if="canQuality" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         当前单据处于待检验状态，请前往【质量管理 - 退货检验（RQC）】中进行退货检验操作。
       </view>
 
       <view v-if="hasFooter" class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx">
-        <view class="mb-20rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-20rpx text-28rpx font-semibold">
           销售退货操作
         </view>
         <view class="flex flex-wrap gap-16rpx text-28rpx">
@@ -62,7 +62,7 @@
       </view>
       <view class="h-180rpx" />
     </scroll-view>
-    <view v-else class="flex-1 bg-white p-24rpx text-center text-26rpx text-[#999]">
+    <view v-else class="yd-text-hint flex-1 bg-white p-24rpx text-center text-26rpx">
       加载中...
     </view>
   </view>
@@ -203,7 +203,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mes:wm:returnsales:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

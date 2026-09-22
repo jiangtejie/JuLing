@@ -35,24 +35,24 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-32rpx font-semibold">
               {{ formatConfigTitle(item) }}
             </view>
             <wd-tag type="primary" variant="plain">
               上限 {{ item.maxCount || 0 }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="text-[#999]">适用人群：</text>{{ formatUserNames(item) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint">适用人群：</text>{{ formatUserNames(item) }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="text-[#999]">适用部门：</text>{{ formatDeptNames(item) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint">适用部门：</text>{{ formatDeptNames(item) }}
           </view>
           <view
             v-if="item.type === LimitConfType.CUSTOMER_QUANTITY_LIMIT"
-            class="mb-16rpx text-28rpx text-[#666]"
+            class="yd-text-sub mb-16rpx text-28rpx"
           >
-            <text class="text-[#999]">成交占用：</text>{{ item.dealCountEnabled ? '是' : '否' }}
+            <text class="yd-text-hint">成交占用：</text>{{ item.dealCountEnabled ? '是' : '否' }}
           </view>
           <view class="flex gap-16rpx">
             <wd-button v-if="hasAccessByCodes(['crm:customer-limit-config:update'])" size="small" type="primary" variant="plain" @click="handleEdit(item)">

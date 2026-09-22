@@ -32,7 +32,7 @@
             @click="handleDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ formatHrmYearMonth(item.year, item.month) }} 工资条
               </view>
               <view
@@ -42,13 +42,13 @@
                 新工资条
               </view>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">实发工资：</text>
-              <text class="text-[#1677ff] font-semibold">
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">实发工资：</text>
+              <text class="yd-text-link font-semibold">
                 {{ formatHrmMoney(item.realPaySalary) }}
               </text>
             </view>
-            <view v-if="item.remark" class="text-26rpx text-[#999]">
+            <view v-if="item.remark" class="yd-text-hint text-26rpx">
               备注：{{ item.remark }}
             </view>
           </view>
@@ -112,7 +112,7 @@ async function queryList() {
   try {
     const data = (await getSalarySlipList(buildListParams())) || []
     list.value = data
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
     const unreadIds = data.filter(item => item.readStatus === 0).map(item => item.id)
     if (unreadIds.length) {
       await markSalarySlipRead(unreadIds)

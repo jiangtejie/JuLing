@@ -6,13 +6,13 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="handleClose"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ title }}
         </view>
         <wd-button size="small" type="primary" :disabled="tempSelected.length === 0" @click="handleConfirm">
@@ -67,25 +67,25 @@
             @click="toggleItem(item)"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.code || '-' }}
               </view>
               <dict-tag v-if="item.itemOrProduct" :type="DICT_TYPE.MES_MD_ITEM_OR_PRODUCT" :value="item.itemOrProduct" />
-              <text v-if="isDisabled(item)" class="text-22rpx text-[#999]">
+              <text v-if="isDisabled(item)" class="yd-text-hint text-22rpx">
                 不可选
               </text>
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">名称：</text>{{ item.name || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">名称：</text>{{ item.name || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">规格：</text>{{ item.specification || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">规格：</text>{{ item.specification || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">单位：</text>{{ item.unitMeasureName || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">单位：</text>{{ item.unitMeasureName || '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">分类：</text>{{ item.itemTypeName || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">分类：</text>{{ item.itemTypeName || '-' }}
             </view>
           </view>
           <view v-if="canLoadNextPage" class="py-32rpx text-center">

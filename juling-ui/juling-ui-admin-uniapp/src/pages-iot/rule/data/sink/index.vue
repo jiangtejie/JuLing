@@ -30,21 +30,21 @@
         <view class="p-24rpx">
           <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <view class="shrink-0">
                 <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">目的类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">目的类型：</text>
               <dict-tag :type="DICT_TYPE.IOT_DATA_SINK_TYPE_ENUM" :value="item.type" />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">描述：</text>{{ item.description || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">描述：</text>{{ item.description || '-' }}
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               创建时间：{{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>

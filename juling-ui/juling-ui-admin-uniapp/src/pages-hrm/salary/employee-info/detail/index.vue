@@ -10,7 +10,7 @@
     <!-- 头部摘要 -->
     <view v-if="employee.id" class="bg-white px-24rpx py-24rpx">
       <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
           {{ employee.name || '-' }}
         </view>
         <view class="flex shrink-0 flex-col items-end gap-8rpx">
@@ -26,10 +26,10 @@
           />
         </view>
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         {{ employee.deptName || '-' }} · {{ employee.postName || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         工号：{{ employee.jobNumber || '-' }} · 手机：{{ employee.mobile || '-' }}
       </view>
     </view>
@@ -67,7 +67,7 @@
           <wd-cell title="备注" :value="salaryEmployee.remark || '-'" />
         </wd-cell-group>
 
-        <view class="mt-24rpx px-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mt-24rpx px-24rpx text-28rpx font-semibold">
           正式工资明细
         </view>
         <view class="p-24rpx">
@@ -77,26 +77,26 @@
             class="mb-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-              <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">
+              <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">
                 {{ item.name || '-' }}
               </text>
-              <text class="shrink-0 text-28rpx text-[#333] font-medium">
+              <text class="yd-text-main shrink-0 text-28rpx font-medium">
                 {{ formatHrmMoney(item.value) }}
               </text>
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               编码：{{ item.code ?? '-' }}
             </view>
           </view>
           <view
             v-if="!(salaryEmployee.salaryOptions || []).length"
-            class="py-40rpx text-center text-28rpx text-[#999]"
+            class="yd-text-hint py-40rpx text-center text-28rpx"
           >
             暂无正式工资明细
           </view>
         </view>
 
-        <view class="px-24rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main px-24rpx text-28rpx font-semibold">
           试用期工资明细
         </view>
         <view class="p-24rpx">
@@ -106,26 +106,26 @@
             class="mb-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-              <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">
+              <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">
                 {{ item.name || '-' }}
               </text>
-              <text class="shrink-0 text-28rpx text-[#333] font-medium">
+              <text class="yd-text-main shrink-0 text-28rpx font-medium">
                 {{ formatHrmMoney(item.value) }}
               </text>
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               编码：{{ item.code ?? '-' }}
             </view>
           </view>
           <view
             v-if="!(salaryEmployee.probationSalaryOptions || []).length"
-            class="py-40rpx text-center text-28rpx text-[#999]"
+            class="yd-text-hint py-40rpx text-center text-28rpx"
           >
             暂无试用期工资明细
           </view>
         </view>
       </template>
-      <view v-else class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-else class="yd-text-hint py-80rpx text-center text-28rpx">
         该员工尚未定薪
       </view>
     </view>

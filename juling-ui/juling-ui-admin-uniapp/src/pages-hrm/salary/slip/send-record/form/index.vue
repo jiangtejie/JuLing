@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container yd-page-container-paging">
+  <view class="yd-page-container yd-page-container-paging yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="发送工资条"
@@ -20,7 +20,7 @@
           <wd-switch v-model="hideEmpty" />
         </wd-cell>
       </wd-cell-group>
-      <view class="mt-16rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint mt-16rpx text-24rpx">
         模板请在 PC 端维护；移动端仅选择模板、勾选员工后发送。
       </view>
     </view>
@@ -47,17 +47,17 @@
           />
           <view class="min-w-0 flex-1">
             <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-              <text class="text-30rpx text-[#333] font-semibold">
+              <text class="yd-text-main text-30rpx font-semibold">
                 {{ item.employeeName || '-' }}
               </text>
-              <text class="text-24rpx" :class="item.sent ? 'text-[#52c41a]' : 'text-[#999]'">
+              <text class="text-24rpx" :class="item.sent ? 'yd-text-success' : 'yd-text-hint'">
                 {{ item.sent ? '已发送' : '未发送' }}
               </text>
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               {{ item.jobNumber || '-' }} · {{ item.deptName || '-' }}
             </view>
-            <view class="mt-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-8rpx text-26rpx">
               应发 {{ item.expectedPaySalary ?? '-' }} / 实发 {{ item.realPaySalary ?? '-' }}
             </view>
           </view>
@@ -85,6 +85,7 @@
 <script lang="ts" setup>
 import type { SalarySlipSendEmployee } from '@/api/hrm/salary/slip/send-record'
 import type { SalarySlipTemplate } from '@/api/hrm/salary/slip/template'
+import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, onMounted, ref } from 'vue'
 import {
@@ -106,6 +107,7 @@ definePage({
 })
 
 const toast = useToast()
+const dialog = useDialog()
 const list = ref<SalarySlipSendEmployee[]>([]) // 待发员工
 const pagingRef = ref<any>() // 分页组件引用
 const formLoading = ref(false) // 提交中
@@ -175,6 +177,17 @@ async function handleSubmit(all: boolean) {
   }
   if (!all && !selectedIds.value.length) {
     toast.warning('请选择待发员工')
+    return
+  }
+  // add by 棱信矩灵：对外且不可撤回的批量动作，补二次确认（同模块其它批量操作均已确认）
+  try {
+    await dialog.confirm({
+      title: '提示',
+      msg: all
+        ? '确认向当前筛选范围内全部员工发送工资条？发送后不可撤回。'
+        : `确认向已选中的 ${selectedIds.value.length} 名员工发送工资条？发送后不可撤回。`,
+    })
+  } catch {
     return
   }
   formLoading.value = true

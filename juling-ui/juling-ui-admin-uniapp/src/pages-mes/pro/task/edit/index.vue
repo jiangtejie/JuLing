@@ -5,7 +5,7 @@
 
     <!-- 甘特图 -->
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
-      <view v-if="loading" class="py-100rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-100rpx text-center text-26rpx">
         加载中...
       </view>
       <TaskGanttPreview

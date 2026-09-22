@@ -28,7 +28,8 @@
 <script lang="ts" setup>
 import type { StockRecord } from '@/api/erp/stock/record'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getStockRecord } from '@/api/erp/stock/record'
 import { buildErpDocumentDetail } from '@/pages-erp/utils/erp'
 import { formatCount } from '@/pages-erp/utils/format'
@@ -66,7 +67,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

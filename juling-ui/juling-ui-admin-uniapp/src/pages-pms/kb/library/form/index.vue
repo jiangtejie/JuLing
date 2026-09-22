@@ -12,17 +12,17 @@
       <view class="p-24rpx pb-200rpx">
         <view
           class="mb-16rpx flex items-center gap-16rpx rounded-12rpx p-24rpx"
-          :class="selectedTemplateId === 0 ? 'bg-[#e6f4ff] b-2rpx b-solid b-[#1677ff]' : 'bg-white shadow-sm'"
+          :class="selectedTemplateId === 0 ? 'yd-bg-info-soft b-2rpx b-solid b-[#1677ff]' : 'bg-white shadow-sm'"
           @click="selectedTemplateId = 0"
         >
           <view class="h-96rpx w-108rpx flex shrink-0 items-center justify-center b-2rpx b-[#1677ff] rounded-8rpx b-dashed">
             <wd-icon name="plus" size="40rpx" color="#1677ff" />
           </view>
           <view class="min-w-0 flex-1">
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               空白知识库
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               邀请团队成员一起创作和交流知识
             </view>
           </view>
@@ -31,21 +31,21 @@
           v-for="item in templateList"
           :key="item.id"
           class="mb-16rpx flex items-center gap-16rpx rounded-12rpx p-24rpx"
-          :class="selectedTemplateId === item.id ? 'bg-[#e6f4ff] b-2rpx b-solid b-[#1677ff]' : 'bg-white shadow-sm'"
+          :class="selectedTemplateId === item.id ? 'yd-bg-info-soft b-2rpx b-solid b-[#1677ff]' : 'bg-white shadow-sm'"
           @click="selectedTemplateId = item.id"
         >
-          <view class="h-96rpx w-108rpx flex shrink-0 items-center justify-center overflow-hidden rounded-8rpx bg-[#e6f4ff]">
+          <view class="yd-bg-info-soft h-96rpx w-108rpx flex shrink-0 items-center justify-center overflow-hidden rounded-8rpx">
             <wd-img v-if="item.coverUrl" :src="item.coverUrl" width="108rpx" height="96rpx" mode="aspectFill" />
             <wd-icon v-else name="book" size="44rpx" color="#1677ff" />
           </view>
           <view class="min-w-0 flex-1">
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               {{ item.name }}
             </view>
-            <view class="mt-4rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx truncate text-24rpx">
               {{ item.description || '暂无简介' }}
             </view>
-            <view v-if="item.documents?.length" class="mt-4rpx truncate text-24rpx text-[#999]">
+            <view v-if="item.documents?.length" class="yd-text-hint mt-4rpx truncate text-24rpx">
               含 {{ item.documents.length }} 篇文档：{{ item.documents.map(doc => doc.title).join('、') }}
             </view>
           </view>
@@ -85,7 +85,7 @@
                 公开
               </wd-radio>
             </wd-radio-group>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               {{ formData.openStatus ? '公开：所有人可以查看，成员可以协作' : '私有：只有知识库成员可以查看' }}
             </view>
           </wd-form-item>
@@ -109,7 +109,7 @@
           </template>
         </wd-cell-group>
       </wd-form>
-      <view class="p-24rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint p-24rpx text-24rpx">
         创建人由系统自动加入；初始管理员可管理知识库信息和成员，普通成员可参与内容协作
       </view>
     </scroll-view>
@@ -250,7 +250,7 @@ async function handleSubmit() {
     }
     uni.$emit('pms:kb:library:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

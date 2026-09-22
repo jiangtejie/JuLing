@@ -23,25 +23,25 @@
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.name || `优惠券 ${item.id}` }}
             </view>
             <dict-tag :type="DICT_TYPE.PROMOTION_COUPON_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">优惠类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">优惠类型：</text>
             <dict-tag :type="DICT_TYPE.PROMOTION_DISCOUNT_TYPE" :value="item.discountType" />
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">领取方式：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">领取方式：</text>
             <dict-tag :type="DICT_TYPE.PROMOTION_COUPON_TAKE_TYPE" :value="item.takeType" />
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">领取时间：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">领取时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
           <view class="flex items-center justify-between gap-16rpx">
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               使用时间：{{ formatDateTime(item.useTime) || '-' }}
             </view>
             <wd-button

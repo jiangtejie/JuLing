@@ -19,7 +19,7 @@
           年份
         </view>
         <view
-          class="min-h-72rpx flex items-center rounded-8rpx bg-[#f7f8fa] px-24rpx text-28rpx text-[#333]"
+          class="yd-text-main yd-bg-subtle min-h-72rpx flex items-center rounded-8rpx px-24rpx text-28rpx"
           @click="yearVisible = true"
         >
           {{ yearText }}

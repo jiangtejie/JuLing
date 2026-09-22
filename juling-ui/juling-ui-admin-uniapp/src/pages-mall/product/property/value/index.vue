@@ -30,15 +30,15 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="mb-12rpx truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx truncate text-32rpx font-semibold">
             {{ item.name || '-' }}
           </view>
-          <view v-if="scopedPropertyId == null" class="mb-8rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">所属属性：</text>
+          <view v-if="scopedPropertyId == null" class="yd-text-sub mb-8rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">所属属性：</text>
             <text class="truncate">{{ getPropertyName(item.propertyId) }}</text>
           </view>
-          <view class="flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
         </view>

@@ -16,7 +16,7 @@
           <view class="mb-8rpx text-40rpx text-[#323333] font-semibold">
             {{ userInfo.nickname || userInfo.username }}
           </view>
-          <view class="text-30rpx text-[#777]">
+          <view class="yd-text-sub text-30rpx">
             {{ userProfile ? (userProfile.dept?.name || '暂无部门') : '' }}
           </view>
         </view>

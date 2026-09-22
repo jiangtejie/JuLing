@@ -25,14 +25,14 @@
         >
           <view class="flex items-center justify-between p-24rpx">
             <view class="flex items-center">
-              <view class="mr-16rpx h-48rpx w-48rpx flex items-center justify-center rounded-8rpx bg-[#1890ff]">
+              <view class="yd-bg-primary mr-16rpx h-48rpx w-48rpx flex items-center justify-center rounded-8rpx">
                 <wd-icon name="location" size="20px" color="#fff" />
               </view>
               <view>
-                <view class="text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-32rpx font-semibold">
                   {{ item.name }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   编码：{{ item.id }}
                 </view>
               </view>
@@ -41,7 +41,7 @@
               v-if="item.children && item.children.length > 0"
               class="flex items-center"
             >
-              <text class="text-24rpx text-[#1890ff]">下级 ({{ item.children.length }})</text>
+              <text class="yd-text-link text-24rpx">下级 ({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>

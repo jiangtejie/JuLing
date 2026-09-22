@@ -21,7 +21,7 @@
 
     <!-- 字段配置列表 -->
     <view class="p-24rpx pb-160rpx">
-      <view v-if="loading" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="loading" class="yd-text-hint py-80rpx text-center text-28rpx">
         加载中...
       </view>
 
@@ -29,7 +29,7 @@
       <template v-else-if="activeTab === 'create'">
         <view
           v-if="createGroups.length === 0"
-          class="rounded-12rpx bg-white py-80rpx text-center text-28rpx text-[#999] shadow-sm"
+          class="yd-text-hint rounded-12rpx bg-white py-80rpx text-center text-28rpx shadow-sm"
         >
           暂无字段配置
         </view>
@@ -38,20 +38,20 @@
           :key="group.name"
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
         >
-          <view class="border-b border-[#f0f0f0] px-24rpx py-20rpx text-26rpx text-[#999]">
+          <view class="yd-border-light yd-text-hint border-b px-24rpx py-20rpx text-26rpx">
             {{ group.name }}
           </view>
           <view
             v-for="item in group.items"
             :key="item.name"
-            class="border-b border-[#f5f5f5] px-24rpx py-24rpx last:border-b-0"
+            class="yd-border-light border-b px-24rpx py-24rpx last:border-b-0"
           >
-            <view class="mb-16rpx text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main mb-16rpx text-28rpx font-medium">
               {{ item.title }}
             </view>
             <view class="flex flex-col gap-16rpx">
               <view class="flex items-center justify-between">
-                <text class="text-26rpx text-[#666]">新建在职员工</text>
+                <text class="yd-text-sub text-26rpx">新建在职员工</text>
                 <wd-switch
                   v-model="item.activeVisible"
                   :disabled="!hasAccessByCodes(['hrm:employee:config:update']) || item.activeVisibleLocked"
@@ -59,7 +59,7 @@
                 />
               </view>
               <view class="flex items-center justify-between">
-                <text class="text-26rpx text-[#666]">新建待入职员工</text>
+                <text class="yd-text-sub text-26rpx">新建待入职员工</text>
                 <wd-switch
                   v-model="item.pendingEntryVisible"
                   :disabled="!hasAccessByCodes(['hrm:employee:config:update']) || item.pendingEntryVisibleLocked"
@@ -75,7 +75,7 @@
       <template v-else>
         <view
           v-if="archiveGroups.length === 0"
-          class="rounded-12rpx bg-white py-80rpx text-center text-28rpx text-[#999] shadow-sm"
+          class="yd-text-hint rounded-12rpx bg-white py-80rpx text-center text-28rpx shadow-sm"
         >
           暂无字段配置
         </view>
@@ -84,20 +84,20 @@
           :key="group.name"
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
         >
-          <view class="border-b border-[#f0f0f0] px-24rpx py-20rpx text-26rpx text-[#999]">
+          <view class="yd-border-light yd-text-hint border-b px-24rpx py-20rpx text-26rpx">
             {{ group.name }}
           </view>
           <view
             v-for="item in group.items"
             :key="item.name"
-            class="border-b border-[#f5f5f5] px-24rpx py-24rpx last:border-b-0"
+            class="yd-border-light border-b px-24rpx py-24rpx last:border-b-0"
           >
-            <view class="mb-16rpx text-28rpx text-[#333] font-medium">
+            <view class="yd-text-main mb-16rpx text-28rpx font-medium">
               {{ item.title }}
             </view>
             <view class="flex flex-col gap-16rpx">
               <view class="flex items-center justify-between">
-                <text class="text-26rpx text-[#666]">员工是否可见</text>
+                <text class="yd-text-sub text-26rpx">员工是否可见</text>
                 <wd-switch
                   :model-value="item.visible"
                   :disabled="!hasAccessByCodes(['hrm:employee:config:update']) || item.visibleLocked"
@@ -106,7 +106,7 @@
                 />
               </view>
               <view class="flex items-center justify-between">
-                <text class="text-26rpx text-[#666]">员工是否可编辑</text>
+                <text class="yd-text-sub text-26rpx">员工是否可编辑</text>
                 <wd-switch
                   :model-value="Boolean(item.editable)"
                   :disabled="!hasAccessByCodes(['hrm:employee:config:update'])

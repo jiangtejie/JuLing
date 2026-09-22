@@ -33,39 +33,39 @@
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
               <wd-tag v-if="item.periodEnd" type="warning" plain>
                 期末结转
               </wd-tag>
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">来源科目：</text>{{ formatSubject(item.subjectId) || '使用模板时补充' }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">来源科目：</text>{{ formatSubject(item.subjectId) || '使用模板时补充' }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">取数规则：</text>{{ formatFormulaRule(item.formulaRule) }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">取数规则：</text>{{ formatFormulaRule(item.formulaRule) }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">时间类型：</text>{{ formatTimeType(item.timeType) }}
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">时间类型：</text>{{ formatTimeType(item.timeType) }}
             </view>
             <!-- 分录规则 -->
-            <view class="mt-16rpx border-0 border-t border-[#f0f0f0] border-solid pt-16rpx">
+            <view class="yd-border-light mt-16rpx border-0 border-t border-solid pt-16rpx">
               <view
                 v-for="(rule, index) in item.subjects || []"
                 :key="index"
-                class="mb-8rpx flex items-center justify-between text-26rpx text-[#666]"
+                class="yd-text-sub mb-8rpx flex items-center justify-between text-26rpx"
               >
                 <view class="min-w-0 flex-1 truncate">
                   {{ rule.digest || '-' }}（{{ formatSubject(rule.subjectId, rule.subjectCode) || '-' }}）
                 </view>
-                <view class="flex-shrink-0 text-[#999]">
+                <view class="yd-text-hint flex-shrink-0">
                   {{ rule.direction === FmsDebitCreditDirection.DEBIT ? '借' : '贷' }} {{ rule.amountRatio }}%
                 </view>
               </view>
             </view>
           </view>
-          <view v-if="!filteredList.length" class="py-96rpx text-center text-28rpx text-[#999]">
+          <view v-if="!filteredList.length" class="yd-text-hint py-96rpx text-center text-28rpx">
             暂无结账模板
           </view>
         </view>

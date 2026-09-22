@@ -32,21 +32,21 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.WMS_MERCHANT_TYPE" :value="item.type" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">企业编号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">企业编号：</text>
               <text>{{ item.code || '-' }}</text>
             </view>
-            <view v-if="item.contact || item.mobile" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">联系人：</text>
+            <view v-if="item.contact || item.mobile" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">联系人：</text>
               <text>{{ item.contact || '-' }} {{ item.mobile || '' }}</text>
             </view>
-            <view v-if="item.address" class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">地址：</text>
+            <view v-if="item.address" class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">地址：</text>
               <text class="line-clamp-1">{{ item.address }}</text>
             </view>
           </view>

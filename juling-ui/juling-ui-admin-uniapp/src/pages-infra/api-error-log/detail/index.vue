@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="错误日志详情"
@@ -46,12 +46,12 @@
 
       <!-- 异常堆栈 -->
       <view v-if="formData?.exceptionStackTrace" class="mt-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
           异常堆栈
         </view>
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
           <scroll-view scroll-y class="max-h-600rpx">
-            <text class="whitespace-pre-wrap break-all text-24rpx text-[#666] leading-relaxed">{{ formData.exceptionStackTrace }}</text>
+            <text class="yd-text-sub whitespace-pre-wrap break-all text-24rpx leading-relaxed">{{ formData.exceptionStackTrace }}</text>
           </scroll-view>
         </view>
       </view>
@@ -78,7 +78,8 @@
 import type { ApiErrorLog } from '@/api/infra/api-error-log'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getApiErrorLog, updateApiErrorLogStatus } from '@/api/infra/api-error-log'
 import { useAccess } from '@/hooks/useAccess'
 import { navigateBackPlus } from '@/utils'
@@ -183,7 +184,7 @@ async function handleProcess(processStatus: number) {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

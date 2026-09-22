@@ -30,7 +30,7 @@
 
       <!-- 触发器（满足任一即触发） -->
       <view class="mt-20rpx px-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
           触发器（满足任一即触发）
         </view>
         <TriggerItem
@@ -49,7 +49,7 @@
 
       <!-- 执行器 -->
       <view class="mt-24rpx px-24rpx">
-        <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
           执行器
         </view>
         <ActionItem
@@ -244,7 +244,7 @@ async function handleSubmit() {
     }
     uni.$emit('iot:scene-rule:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

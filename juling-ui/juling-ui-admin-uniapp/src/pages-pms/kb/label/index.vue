@@ -21,15 +21,15 @@
           v-for="item in labelList"
           :key="item.id"
           class="mr-16rpx inline-flex items-center gap-8rpx rounded-24rpx px-24rpx py-8rpx"
-          :class="selectedLabelId === item.id ? 'bg-[#e6f4ff]' : 'bg-[#f7f8fa]'"
+          :class="selectedLabelId === item.id ? 'yd-bg-info-soft' : 'yd-bg-subtle'"
           @click="handleSelectLabel(item.id)"
         >
           <text class="h-16rpx w-16rpx rounded-full" :style="{ backgroundColor: item.color }" />
-          <text class="text-26rpx" :class="selectedLabelId === item.id ? 'text-[#1677ff]' : 'text-[#333]'">
+          <text class="text-26rpx" :class="selectedLabelId === item.id ? 'yd-text-link' : 'yd-text-main'">
             {{ item.name }}
           </text>
         </view>
-        <view v-if="!labelList.length" class="py-16rpx text-26rpx text-[#999]">
+        <view v-if="!labelList.length" class="yd-text-hint py-16rpx text-26rpx">
           暂无标签
         </view>
       </scroll-view>
@@ -52,22 +52,22 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="mb-8rpx truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx truncate text-32rpx font-semibold">
             {{ item.title }}
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text class="min-w-0 flex-1 truncate">{{ item.libraryName }} · {{ item.creatorUserName || '-' }}</text>
-            <text class="shrink-0 text-24rpx text-[#999]">{{ formatDateTime(item.updateTime) || '-' }}</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">{{ formatDateTime(item.updateTime) || '-' }}</text>
           </view>
         </view>
       </view>
     </z-paging>
 
     <!-- 标签管理弹窗 -->
-    <wd-popup v-model="manageVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="manageVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="flex flex-col" :style="{ maxHeight: '80vh' }">
         <view class="flex items-center justify-between p-32rpx pb-16rpx">
-          <text class="text-32rpx text-[#333] font-semibold">管理文档标签</text>
+          <text class="yd-text-main text-32rpx font-semibold">管理文档标签</text>
           <wd-button
             v-if="hasAccessByCodes(['pms:kb:library:update'])"
             size="small" type="primary" variant="plain"
@@ -81,7 +81,7 @@
           <view
             v-for="item in labelList"
             :key="item.id"
-            class="mb-20rpx flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-20rpx"
+            class="yd-bg-subtle mb-20rpx flex items-center justify-between rounded-12rpx p-20rpx"
           >
             <wd-tag :custom-style="getColorTagStyle(item.color)">
               {{ item.name }}
@@ -115,7 +115,7 @@
     <!-- 标签表单弹窗 -->
     <wd-popup v-model="formVisible" position="center" root-portal custom-style="width: 640rpx; border-radius: 16rpx;">
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ formData.id ? '编辑标签' : '新增标签' }}
         </view>
         <wd-cell-group border>
@@ -124,7 +124,7 @@
           </wd-cell>
         </wd-cell-group>
         <view class="mt-24rpx">
-          <view class="mb-16rpx text-28rpx text-[#666]">
+          <view class="yd-text-sub mb-16rpx text-28rpx">
             标签颜色
           </view>
           <view class="mb-16rpx flex flex-wrap gap-16rpx">

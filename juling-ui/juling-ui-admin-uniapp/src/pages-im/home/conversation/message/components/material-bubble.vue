@@ -4,37 +4,37 @@
       <wd-img
         v-if="props.material.coverUrl"
         :src="props.material.coverUrl"
-        custom-class="mb-12rpx bg-[#f2f3f5]"
+        custom-class="mb-12rpx yd-bg-subtle"
         width="100%"
         height="220rpx"
         radius="8rpx"
         mode="aspectFill"
       />
-      <view class="text-30rpx text-[#333] font-semibold leading-40rpx">
+      <view class="yd-text-main text-30rpx font-semibold leading-40rpx">
         {{ props.material.title || '频道消息' }}
       </view>
     </template>
     <template v-else>
       <view class="flex items-start gap-16rpx">
         <view class="min-w-0 flex-1">
-          <view class="text-30rpx text-[#333] font-semibold leading-40rpx">
+          <view class="yd-text-main text-30rpx font-semibold leading-40rpx">
             {{ props.material.title || '频道消息' }}
           </view>
-          <view v-if="props.material.summary" class="mt-8rpx text-24rpx text-[#999] leading-34rpx">
+          <view v-if="props.material.summary" class="yd-text-hint mt-8rpx text-24rpx leading-34rpx">
             {{ props.material.summary }}
           </view>
         </view>
         <wd-img
           v-if="props.material.coverUrl"
           :src="props.material.coverUrl"
-          custom-class="shrink-0 bg-[#f2f3f5]"
+          custom-class="shrink-0 yd-bg-subtle"
           width="120rpx"
           height="120rpx"
           radius="8rpx"
           mode="aspectFill"
         />
       </view>
-      <view class="mt-12rpx flex items-center gap-10rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx text-[#999]">
+      <view class="yd-text-hint mt-12rpx flex items-center gap-10rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx">
         <wd-img
           v-if="sourceChannel?.avatar"
           :src="sourceChannel.avatar"

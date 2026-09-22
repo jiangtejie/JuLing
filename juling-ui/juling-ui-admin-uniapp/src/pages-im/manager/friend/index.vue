@@ -30,24 +30,24 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="flex items-center justify-between">
-            <view class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">
               {{ item.userNickname || `用户 ${item.userId}` }}
-              <text class="mx-8rpx text-[#bbb]">→</text>
+              <text class="yd-text-muted mx-8rpx">→</text>
               {{ item.friendNickname || `用户 ${item.friendUserId}` }}
             </view>
             <dict-tag :type="DICT_TYPE.IM_FRIEND_STATUS" :value="item.status" />
           </view>
-          <view class="mt-10rpx text-26rpx text-[#999]">
+          <view class="yd-text-hint mt-10rpx text-26rpx">
             备注：{{ item.displayName || '-' }}
             <text v-if="item.addSource != null" class="ml-16rpx">来源：{{ getDictLabel(DICT_TYPE.IM_FRIEND_ADD_SOURCE, item.addSource) }}</text>
           </view>
           <view v-if="item.silent || item.pinned || item.blocked" class="mt-12rpx flex flex-wrap gap-12rpx">
-            <text v-if="item.silent" class="rounded-6rpx bg-[#f0f2f5] px-12rpx py-4rpx text-22rpx text-[#666]">免打扰</text>
-            <text v-if="item.pinned" class="rounded-6rpx bg-[#e6f4ff] px-12rpx py-4rpx text-22rpx text-[#1677ff]">置顶</text>
-            <text v-if="item.blocked" class="rounded-6rpx bg-[#fff1f0] px-12rpx py-4rpx text-22rpx text-[#f5222d]">已拉黑</text>
+            <text v-if="item.silent" class="yd-text-sub yd-bg-subtle rounded-6rpx px-12rpx py-4rpx text-22rpx">免打扰</text>
+            <text v-if="item.pinned" class="yd-text-link yd-bg-info-soft rounded-6rpx px-12rpx py-4rpx text-22rpx">置顶</text>
+            <text v-if="item.blocked" class="yd-text-danger yd-bg-danger-soft rounded-6rpx px-12rpx py-4rpx text-22rpx">已拉黑</text>
           </view>
           <view class="mt-16rpx flex items-center justify-between">
-            <text class="text-24rpx text-[#999]">{{ formatDateTime(item.addTime) || '-' }}</text>
+            <text class="yd-text-hint text-24rpx">{{ formatDateTime(item.addTime) || '-' }}</text>
             <wd-button
               v-if="hasAccessByCodes(['im:manager:message:query'])"
               size="small" variant="plain" @click="handleViewChat(item)"

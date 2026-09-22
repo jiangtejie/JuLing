@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="推送频道消息"
@@ -132,12 +132,19 @@ function handleOpenMaterialPicker() {
 
 /** 提交表单 */
 async function handleSubmit() {
-  const { valid } = await formRef.value.validate()
-  if (!valid || !formData.value.materialId) {
+  // add by 棱信矩灵：防重。此前 loading 在 await 表单校验之后才置位，且 finally 里立即复位，
+  // 而返回被 delay(handleBack) 推迟 500ms —— 这段窗口内按钮可再次点击，
+  // 会对同一次操作重复推送（频道消息可群发且不可撤回，代价高）
+  if (formLoading.value) {
     return
   }
   formLoading.value = true
   try {
+    const { valid } = await formRef.value.validate()
+    if (!valid || !formData.value.materialId) {
+      formLoading.value = false
+      return
+    }
     await sendManagerChannelMessage({
       materialId: formData.value.materialId,
       receiverUserIds: formData.value.receiverUserType === ImChannelMessageReceiverType.USERS
@@ -146,8 +153,9 @@ async function handleSubmit() {
     })
     toast.success('推送成功')
     uni.$emit('im:manager:channel-message:reload')
+    // 成功分支刻意不复位 formLoading：保持按钮禁用直到页面返回，杜绝 500ms 窗口内重复提交
     delay(handleBack)
-  } finally {
+  } catch {
     formLoading.value = false
   }
 }

@@ -1,18 +1,18 @@
 <template>
   <wd-popup
     v-model="visible"
-    position="bottom"
+    position="bottom" safe-area-inset-bottom
     root-portal
     custom-style="height: 75vh; border-radius: 24rpx 24rpx 0 0;"
   >
     <view class="h-full flex flex-col bg-white">
       <!-- 头部 -->
       <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
-        <text class="text-28rpx text-[#999]" @click="visible = false">取消</text>
-        <text class="text-32rpx text-[#333] font-semibold">选择会话</text>
+        <text class="yd-text-hint text-28rpx" @click="visible = false">取消</text>
+        <text class="yd-text-main text-32rpx font-semibold">选择会话</text>
         <text
           class="text-28rpx"
-          :class="selectedIds.length ? 'text-[#07c160]' : 'text-[#ccc]'"
+          :class="selectedIds.length ? 'yd-text-success' : 'yd-text-muted'"
           @click="confirm"
         >
           发送{{ selectedIds.length ? `(${selectedIds.length})` : '' }}
@@ -31,14 +31,14 @@
           class="flex items-center gap-20rpx border-b border-b-[#eee] px-24rpx py-18rpx active:bg-[#f5f5f5]"
           @click="createGroup"
         >
-          <view class="h-80rpx w-80rpx flex items-center justify-center rounded-12rpx bg-[#f0f2f5]">
+          <view class="yd-bg-subtle h-80rpx w-80rpx flex items-center justify-center rounded-12rpx">
             <wd-icon name="user-add" size="44rpx" color="#576b95" />
           </view>
-          <text class="min-w-0 flex-1 text-30rpx text-[#333]">新建群聊并转发</text>
+          <text class="yd-text-main min-w-0 flex-1 text-30rpx">新建群聊并转发</text>
         </view>
         <!-- 最近转发 -->
         <view v-if="!keyword && recentForwardConversations.length" class="border-b border-b-[#eee] px-24rpx py-18rpx">
-          <text class="mb-16rpx block text-25rpx text-[#999]">最近转发</text>
+          <text class="yd-text-hint mb-16rpx block text-25rpx">最近转发</text>
           <scroll-view scroll-x class="whitespace-nowrap">
             <view class="inline-flex gap-24rpx pr-24rpx">
               <view
@@ -50,7 +50,7 @@
                 <view class="mx-auto w-80rpx">
                   <ImAvatar :src="item.avatar" :name="item.name" :round="false" size="80rpx" />
                 </view>
-                <text class="mt-8rpx block truncate text-23rpx text-[#666]">{{ item.name || '未命名' }}</text>
+                <text class="yd-text-sub mt-8rpx block truncate text-23rpx">{{ item.name || '未命名' }}</text>
                 <wd-icon
                   class="absolute right-4rpx -top-8rpx"
                   name="close"
@@ -81,7 +81,7 @@
             :color="selectedIds.includes(item.clientConversationId) ? '#07c160' : '#ccc'"
           />
           <ImAvatar :src="item.avatar" :name="item.name" :round="false" size="80rpx" />
-          <text class="min-w-0 flex-1 truncate text-30rpx text-[#333]">{{ item.name || '未命名' }}</text>
+          <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx">{{ item.name || '未命名' }}</text>
         </view>
         <wd-empty v-if="filteredConversations.length === 0" icon="message" tip="暂无会话" />
       </scroll-view>

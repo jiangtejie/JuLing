@@ -50,7 +50,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start gap-16rpx">
-            <view class="h-88rpx w-120rpx flex shrink-0 items-center justify-center overflow-hidden rounded-8rpx bg-[#e6f4ff]">
+            <view class="yd-bg-info-soft h-88rpx w-120rpx flex shrink-0 items-center justify-center overflow-hidden rounded-8rpx">
               <wd-img
                 v-if="item.coverUrl"
                 :src="item.coverUrl"
@@ -62,7 +62,7 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between gap-12rpx">
-                <text class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">{{ item.name }}</text>
+                <text class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">{{ item.name }}</text>
                 <view class="flex shrink-0 items-center gap-12rpx">
                   <wd-tag :type="item.openStatus ? 'success' : 'default'" plain>
                     {{ item.openStatus ? '公开' : '私有' }}
@@ -76,14 +76,14 @@
                   <wd-icon name="more-vertical" size="36rpx" color="#666" @click.stop="handleMore(item)" />
                 </view>
               </view>
-              <view class="mt-8rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx truncate text-24rpx">
                 {{ item.description || '暂无简介' }}
               </view>
             </view>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>成员 {{ item.memberCount ?? 0 }} · 文档 {{ item.documentCount ?? 0 }} · 文件 {{ item.fileCount ?? 0 }}</text>
-            <text class="shrink-0 text-24rpx text-[#999]">{{ formatDate(item.createTime) }}</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">{{ formatDate(item.createTime) }}</text>
           </view>
         </view>
       </view>

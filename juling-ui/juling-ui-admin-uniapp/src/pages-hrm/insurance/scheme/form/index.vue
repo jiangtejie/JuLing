@@ -51,7 +51,7 @@
           </wd-form-item>
         </wd-cell-group>
 
-        <view class="mx-24rpx mt-16rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-20rpx text-24rpx text-[#1677ff]">
+        <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-16rpx rounded-12rpx px-24rpx py-20rpx text-24rpx">
           比例模式：公司或个人缴纳金额 = 参保基数 × 对应比例；金额模式直接填写公司和个人缴纳金额。
         </view>
 
@@ -296,7 +296,7 @@ async function handleSubmit() {
     }
     uni.$emit('hrm:insurance:scheme:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -24,15 +24,15 @@
                 <wd-icon :name="card.icon" size="38rpx" color="#fff" />
               </view>
               <view class="min-w-0 flex-1">
-                <view class="truncate text-24rpx text-[#888]">
+                <view class="yd-text-sub truncate text-24rpx">
                   {{ card.label }}
                 </view>
-                <view class="mt-6rpx text-40rpx text-[#333] font-semibold leading-none">
+                <view class="yd-text-main mt-6rpx text-40rpx font-semibold leading-none">
                   {{ card.value }}
                 </view>
               </view>
             </view>
-            <view class="mt-16rpx flex items-center text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-16rpx flex items-center text-22rpx">
               <text>{{ card.metaLabel }}</text>
               <text class="ml-8rpx font-medium" :class="card.metaClass">{{ card.metaValue }}</text>
             </view>
@@ -54,15 +54,15 @@
           <view class="mb-24rpx rounded-16rpx bg-white p-24rpx shadow-sm">
             <view class="mb-20rpx flex items-center justify-between">
               <view class="flex items-baseline">
-                <text class="text-30rpx text-[#333] font-semibold">消息趋势</text>
-                <text class="ml-12rpx text-22rpx text-[#999]">私聊 + 群聊</text>
+                <text class="yd-text-main text-30rpx font-semibold">消息趋势</text>
+                <text class="yd-text-hint ml-12rpx text-22rpx">私聊 + 群聊</text>
               </view>
               <view class="flex items-center gap-8rpx">
                 <view
                   v-for="opt in DAY_OPTIONS"
                   :key="opt"
                   class="rounded-full px-16rpx py-6rpx text-22rpx"
-                  :class="messageDays === opt ? 'bg-[#1677ff] text-white' : 'bg-[#f0f2f5] text-[#666]'"
+                  :class="messageDays === opt ? 'yd-bg-primary text-white' : 'yd-bg-subtle yd-text-sub'"
                   @click="changeMessageDays(opt)"
                 >
                   {{ opt }}天
@@ -75,8 +75,8 @@
           <!-- 内容类型分布 -->
           <view class="mb-24rpx rounded-16rpx bg-white p-24rpx shadow-sm">
             <view class="mb-20rpx flex items-baseline">
-              <text class="text-30rpx text-[#333] font-semibold">内容类型分布</text>
-              <text class="ml-12rpx text-22rpx text-[#999]">近 30 天</text>
+              <text class="yd-text-main text-30rpx font-semibold">内容类型分布</text>
+              <text class="yd-text-hint ml-12rpx text-22rpx">近 30 天</text>
             </view>
             <YdChart :option="messageTypeOption" :loading="loading.messageType" :empty="!messageTypes.length" height="440rpx" />
           </view>
@@ -84,8 +84,8 @@
           <!-- 消息发送 TOP 10 -->
           <view class="mb-24rpx rounded-16rpx bg-white p-24rpx shadow-sm">
             <view class="mb-20rpx flex items-baseline">
-              <text class="text-30rpx text-[#333] font-semibold">消息发送 TOP 10</text>
-              <text class="ml-12rpx text-22rpx text-[#999]">近 30 天</text>
+              <text class="yd-text-main text-30rpx font-semibold">消息发送 TOP 10</text>
+              <text class="yd-text-hint ml-12rpx text-22rpx">近 30 天</text>
             </view>
             <YdChart :option="topSenderOption" :loading="loading.topSender" :empty="!topSenders.length" height="520rpx" />
           </view>
@@ -97,15 +97,15 @@
           <view class="mb-24rpx rounded-16rpx bg-white p-24rpx shadow-sm">
             <view class="mb-20rpx flex items-center justify-between">
               <view class="flex items-baseline">
-                <text class="text-30rpx text-[#333] font-semibold">用户趋势</text>
-                <text class="ml-12rpx text-22rpx text-[#999]">新增注册 + 日活</text>
+                <text class="yd-text-main text-30rpx font-semibold">用户趋势</text>
+                <text class="yd-text-hint ml-12rpx text-22rpx">新增注册 + 日活</text>
               </view>
               <view class="flex items-center gap-8rpx">
                 <view
                   v-for="opt in DAY_OPTIONS"
                   :key="opt"
                   class="rounded-full px-16rpx py-6rpx text-22rpx"
-                  :class="userDays === opt ? 'bg-[#1677ff] text-white' : 'bg-[#f0f2f5] text-[#666]'"
+                  :class="userDays === opt ? 'yd-bg-primary text-white' : 'yd-bg-subtle yd-text-sub'"
                   @click="changeUserDays(opt)"
                 >
                   {{ opt }}天
@@ -121,8 +121,8 @@
           <!-- 群规模分布 -->
           <view class="mb-24rpx rounded-16rpx bg-white p-24rpx shadow-sm">
             <view class="mb-20rpx flex items-baseline">
-              <text class="text-30rpx text-[#333] font-semibold">群规模分布</text>
-              <text class="ml-12rpx text-22rpx text-[#999]">按成员数区间</text>
+              <text class="yd-text-main text-30rpx font-semibold">群规模分布</text>
+              <text class="yd-text-hint ml-12rpx text-22rpx">按成员数区间</text>
             </view>
             <YdChart :option="groupSizeOption" :loading="loading.groupSize" :empty="!groupSizes.length" height="460rpx" />
           </view>
@@ -194,12 +194,12 @@ const activeTab = computed(() => TABS[tabIndex.value].key)
 /** 计算环比 */
 function calcRatio(today: number, yesterday: number) {
   if (!yesterday) {
-    return { label: '无昨日数据', cls: 'text-[#bbb]' }
+    return { label: '无昨日数据', cls: 'yd-text-muted' }
   }
   const diff = ((today - yesterday) / yesterday) * 100
   return {
     label: `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%`,
-    cls: diff >= 0 ? 'text-[#52c41a]' : 'text-[#f5222d]',
+    cls: diff >= 0 ? 'yd-text-success' : 'yd-text-danger',
   }
 }
 
@@ -216,7 +216,7 @@ const overviewCards = computed(() => { // 概览卡片（对标 vue3 + ep：图�
       gradient: 'linear-gradient(135deg, #5b9cff, #409eff)',
       metaLabel: '今日新增',
       metaValue: `+${o?.newUserToday ?? 0}`,
-      metaClass: 'text-[#52c41a]',
+      metaClass: 'yd-text-success',
     },
     {
       label: '总群组',
@@ -225,7 +225,7 @@ const overviewCards = computed(() => { // 概览卡片（对标 vue3 + ep：图�
       gradient: 'linear-gradient(135deg, #5bd6a0, #52c41a)',
       metaLabel: '今日新增',
       metaValue: `+${o?.newGroupToday ?? 0}`,
-      metaClass: 'text-[#52c41a]',
+      metaClass: 'yd-text-success',
     },
     {
       label: '日活用户',
@@ -234,7 +234,7 @@ const overviewCards = computed(() => { // 概览卡片（对标 vue3 + ep：图�
       gradient: 'linear-gradient(135deg, #ffc46b, #fa8c16)',
       metaLabel: '周 / 月活',
       metaValue: `${o?.activeUserWeekly ?? 0} / ${o?.activeUserMonthly ?? 0}`,
-      metaClass: 'text-[#999]',
+      metaClass: 'yd-text-hint',
     },
     {
       label: '今日消息',

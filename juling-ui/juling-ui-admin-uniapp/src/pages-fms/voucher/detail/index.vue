@@ -11,7 +11,7 @@
       <!-- 头部摘要 -->
       <view v-if="formData.id" class="bg-white px-24rpx py-24rpx">
         <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-          <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
             {{ formData.voucherWordName || '-' }}-{{ formData.voucherNumber }}
           </view>
           <wd-tag v-if="formData.closingGenerated" type="info" plain>
@@ -24,10 +24,10 @@
             待审核
           </wd-tag>
         </view>
-        <view class="mb-8rpx text-26rpx text-[#999]">
+        <view class="yd-text-hint mb-8rpx text-26rpx">
           凭证日期：{{ formatDate(formData.voucherTime) || '-' }}
         </view>
-        <view class="text-26rpx text-[#666]">
+        <view class="yd-text-sub text-26rpx">
           合计金额：{{ formatFmsAmount(formData.total) }}
         </view>
       </view>
@@ -60,7 +60,7 @@
 
         <!-- 凭证分录 -->
         <view class="mt-24rpx px-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             凭证分录
           </view>
           <view
@@ -68,30 +68,30 @@
             :key="entry.id || index"
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
               {{ entry.digest || '-' }}
             </view>
-            <view class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">科目：</text>
+            <view class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">科目：</text>
               {{ formatFmsSubjectDisplay(entry.subjectCode, entry.subjectName, (entry.auxiliaries || []).map(item => item.name)) || '-' }}
             </view>
-            <view v-if="entry.quantity || entry.unitPrice" class="mb-12rpx text-26rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">数量：</text>{{ formatFmsQuantity(entry.quantity) }}
-              <text class="mx-16rpx text-[#999]">单价：</text>{{ formatFmsAmount(entry.unitPrice) }}
+            <view v-if="entry.quantity || entry.unitPrice" class="yd-text-sub mb-12rpx text-26rpx">
+              <text class="yd-text-hint mr-8rpx">数量：</text>{{ formatFmsQuantity(entry.quantity) }}
+              <text class="yd-text-hint mx-16rpx">单价：</text>{{ formatFmsAmount(entry.unitPrice) }}
             </view>
-            <view class="flex items-center justify-between text-26rpx text-[#666]">
-              <text><text class="mr-8rpx text-[#999]">借方：</text>{{ formatFmsAmount(entry.debitAmount) }}</text>
-              <text><text class="mr-8rpx text-[#999]">贷方：</text>{{ formatFmsAmount(entry.creditAmount) }}</text>
+            <view class="yd-text-sub flex items-center justify-between text-26rpx">
+              <text><text class="yd-text-hint mr-8rpx">借方：</text>{{ formatFmsAmount(entry.debitAmount) }}</text>
+              <text><text class="yd-text-hint mr-8rpx">贷方：</text>{{ formatFmsAmount(entry.creditAmount) }}</text>
             </view>
           </view>
         </view>
 
         <!-- 凭证附件 -->
         <view class="mt-8rpx px-24rpx pb-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             凭证附件（{{ (formData.attachmentUrls || []).length }}）
           </view>
-          <view v-if="!(formData.attachmentUrls || []).length" class="rounded-12rpx bg-white py-48rpx text-center text-28rpx text-[#999] shadow-sm">
+          <view v-if="!(formData.attachmentUrls || []).length" class="yd-text-hint rounded-12rpx bg-white py-48rpx text-center text-28rpx shadow-sm">
             暂无附件
           </view>
           <view v-else class="rounded-12rpx bg-white p-24rpx shadow-sm">
@@ -113,10 +113,10 @@
               class="flex items-center justify-between py-12rpx"
               @click="openAttachment(url)"
             >
-              <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">
+              <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">
                 {{ getFileNameFromUrl(url) || `附件 ${index + 1}` }}
               </text>
-              <text class="ml-16rpx shrink-0 text-28rpx text-[#1677ff]">
+              <text class="yd-text-link ml-16rpx shrink-0 text-28rpx">
                 查看
               </text>
             </view>
@@ -284,7 +284,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('fms:voucher:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

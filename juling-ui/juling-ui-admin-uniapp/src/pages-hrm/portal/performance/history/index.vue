@@ -31,24 +31,24 @@
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
             @click="handleDetail(item)"
           >
-            <view class="mb-16rpx truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-16rpx truncate text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">考核周期：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">考核周期：</text>
               {{ formatHrmDateRange(item.startTime, item.endTime) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">绩效得分：</text>{{ formatHrmScore(item.score) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">绩效得分：</text>{{ formatHrmScore(item.score) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">绩效等级：</text>{{ item.resultLevel || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">绩效等级：</text>{{ item.resultLevel || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">绩效系数：</text>{{ item.coefficient ?? '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">绩效系数：</text>{{ item.coefficient ?? '-' }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">归档时间：</text>
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">归档时间：</text>
               {{ formatDateTime(item.archiveTime) || '-' }}
             </view>
           </view>

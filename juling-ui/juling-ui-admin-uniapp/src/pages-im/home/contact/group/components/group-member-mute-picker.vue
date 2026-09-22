@@ -7,21 +7,21 @@
   >
     <view class="bg-white px-28rpx pb-[calc(28rpx+env(safe-area-inset-bottom))] pt-28rpx">
       <view class="flex items-center justify-between">
-        <text class="text-32rpx text-[#333] font-semibold">设置禁言</text>
+        <text class="yd-text-main text-32rpx font-semibold">设置禁言</text>
         <wd-icon name="close" size="36rpx" color="#999" @click="visible = false" />
       </view>
-      <view class="mt-28rpx flex items-center gap-20rpx rounded-12rpx bg-[#f7f7f7] px-20rpx py-18rpx">
+      <view class="yd-bg-subtle mt-28rpx flex items-center gap-20rpx rounded-12rpx px-20rpx py-18rpx">
         <ImAvatar :src="member?.avatar" :name="member?.nickname" size="72rpx" />
         <view class="min-w-0 flex-1">
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             禁言成员
           </view>
-          <view class="mt-4rpx truncate text-28rpx text-[#333]">
+          <view class="yd-text-main mt-4rpx truncate text-28rpx">
             {{ memberName }}
           </view>
         </view>
       </view>
-      <view class="mt-28rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-28rpx text-26rpx">
         禁言时长
       </view>
       <wd-radio-group v-model="selectedSeconds" type="button" custom-class="mt-16rpx flex flex-wrap gap-16rpx">

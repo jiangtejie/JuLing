@@ -29,11 +29,11 @@
                 >
                   <wd-icon name="folder" size="20px" color="#fff" />
                 </view>
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
               </view>
-              <view class="text-26rpx text-[#666] space-y-8rpx">
+              <view class="yd-text-sub text-26rpx space-y-8rpx">
                 <view>分类编码：{{ item.code || '-' }}</view>
                 <view class="flex items-center">
                   <text class="mr-8rpx">物料/产品：</text>
@@ -56,7 +56,7 @@
               class="mt-4rpx flex shrink-0 items-center"
               @click.stop="handleEnterChildren(item)"
             >
-              <text class="text-24rpx text-[#fa8c16]">子分类({{ item.children.length }})</text>
+              <text class="yd-text-warning text-24rpx">子分类({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#fa8c16" />
             </view>
           </view>

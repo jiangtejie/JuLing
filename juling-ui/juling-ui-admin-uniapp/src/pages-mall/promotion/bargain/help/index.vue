@@ -27,17 +27,17 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <text class="text-30rpx text-[#333] font-semibold">助力记录 #{{ item.id }}</text>
-            <text class="text-30rpx text-[#fa8c16] font-semibold">{{ formatDisplayMoney(item.reducePrice) }}</text>
+            <text class="yd-text-main text-30rpx font-semibold">助力记录 #{{ item.id }}</text>
+            <text class="yd-text-warning text-30rpx font-semibold">{{ formatDisplayMoney(item.reducePrice) }}</text>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>砍价记录：{{ item.recordId ?? '-' }}</text>
             <view class="flex items-center gap-8rpx">
               <wd-img v-if="item.avatar" :src="item.avatar" width="40rpx" height="40rpx" radius="50%" mode="aspectFill" />
               <text>{{ item.nickname || `用户 #${item.userId}` }}</text>
             </view>
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             助力时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

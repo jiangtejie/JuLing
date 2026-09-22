@@ -69,13 +69,13 @@
 
       <!-- 提示信息 -->
       <view class="p-24rpx pb-0">
-        <view v-if="isJanuary" class="rounded-12rpx bg-[#e6f4ff] p-20rpx text-26rpx text-[#1677ff]">
+        <view v-if="isJanuary" class="yd-text-link yd-bg-info-soft rounded-12rpx p-20rpx text-26rpx">
           账套从一月启用，只需录入期初余额
         </view>
-        <view v-else-if="accountStartMonth && !editable" class="rounded-12rpx bg-[#fff7e6] p-20rpx text-26rpx text-[#d46b08]">
+        <view v-else-if="accountStartMonth && !editable" class="yd-bg-warning-soft yd-text-warning rounded-12rpx p-20rpx text-26rpx">
           账套已结账，初始余额不可修改
         </view>
-        <view v-if="edited" class="mt-16rpx rounded-12rpx bg-[#fff7e6] p-20rpx text-26rpx text-[#d46b08]">
+        <view v-if="edited" class="yd-bg-warning-soft yd-text-warning mt-16rpx rounded-12rpx p-20rpx text-26rpx">
           当前修改尚未保存，切换科目类别或离开页面前请先保存
         </view>
       </view>
@@ -90,7 +90,7 @@
           <!-- 行头：编码名称、余额方向 -->
           <view class="flex items-center justify-between gap-16rpx">
             <view class="min-w-0 flex-1" :style="{ paddingLeft: `${(row.level - 1) * 24}rpx` }">
-              <text class="text-30rpx font-semibold" :class="row.isAssist ? 'text-[#666]' : 'text-[#333]'">
+              <text class="text-30rpx font-semibold" :class="row.isAssist ? 'yd-text-sub' : 'yd-text-main'">
                 {{ row.isAssist ? getRowName(row) : `${row.subjectCode} ${row.subjectName}` }}
               </text>
             </view>
@@ -122,8 +122,8 @@
           </view>
 
           <!-- 期初余额 -->
-          <view class="mt-16rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-            <text class="text-26rpx text-[#666]">期初金额</text>
+          <view class="yd-bg-subtle mt-16rpx flex items-center justify-between rounded-8rpx p-16rpx">
+            <text class="yd-text-sub text-26rpx">期初金额</text>
             <wd-input-number
               v-if="canEditRow(row)"
               v-model="row.openingAmount"
@@ -131,10 +131,10 @@
               :precision="2"
               @change="handleAmountChange(row)"
             />
-            <text v-else class="text-26rpx text-[#333]">{{ formatFmsAmount(row.openingAmount) }}</text>
+            <text v-else class="yd-text-main text-26rpx">{{ formatFmsAmount(row.openingAmount) }}</text>
           </view>
-          <view v-if="row.quantityAccounting" class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-            <text class="text-26rpx text-[#666]">期初数量{{ row.quantityUnit ? `（${row.quantityUnit}）` : '' }}</text>
+          <view v-if="row.quantityAccounting" class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+            <text class="yd-text-sub text-26rpx">期初数量{{ row.quantityUnit ? `（${row.quantityUnit}）` : '' }}</text>
             <wd-input-number
               v-if="canEditRow(row)"
               v-model="row.openingQuantity"
@@ -142,13 +142,13 @@
               :precision="4"
               @change="handleAmountChange(row)"
             />
-            <text v-else class="text-26rpx text-[#333]">{{ formatFmsQuantity(row.openingQuantity) }}</text>
+            <text v-else class="yd-text-main text-26rpx">{{ formatFmsQuantity(row.openingQuantity) }}</text>
           </view>
 
           <!-- 年中启用时需要录入累计发生额 -->
           <template v-if="!isJanuary">
-            <view class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-              <text class="text-26rpx text-[#666]">本年累计借方金额</text>
+            <view class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+              <text class="yd-text-sub text-26rpx">本年累计借方金额</text>
               <wd-input-number
                 v-if="canEditRow(row)"
                 v-model="row.yearDebitAmount"
@@ -156,10 +156,10 @@
                 :precision="2"
                 @change="handleAmountChange(row)"
               />
-              <text v-else class="text-26rpx text-[#333]">{{ formatFmsAmount(row.yearDebitAmount) }}</text>
+              <text v-else class="yd-text-main text-26rpx">{{ formatFmsAmount(row.yearDebitAmount) }}</text>
             </view>
-            <view v-if="row.quantityAccounting" class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-              <text class="text-26rpx text-[#666]">本年累计借方数量</text>
+            <view v-if="row.quantityAccounting" class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+              <text class="yd-text-sub text-26rpx">本年累计借方数量</text>
               <wd-input-number
                 v-if="canEditRow(row)"
                 v-model="row.yearDebitQuantity"
@@ -167,10 +167,10 @@
                 :precision="4"
                 @change="handleAmountChange(row)"
               />
-              <text v-else class="text-26rpx text-[#333]">{{ formatFmsQuantity(row.yearDebitQuantity) }}</text>
+              <text v-else class="yd-text-main text-26rpx">{{ formatFmsQuantity(row.yearDebitQuantity) }}</text>
             </view>
-            <view class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-              <text class="text-26rpx text-[#666]">本年累计贷方金额</text>
+            <view class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+              <text class="yd-text-sub text-26rpx">本年累计贷方金额</text>
               <wd-input-number
                 v-if="canEditRow(row)"
                 v-model="row.yearCreditAmount"
@@ -178,10 +178,10 @@
                 :precision="2"
                 @change="handleAmountChange(row)"
               />
-              <text v-else class="text-26rpx text-[#333]">{{ formatFmsAmount(row.yearCreditAmount) }}</text>
+              <text v-else class="yd-text-main text-26rpx">{{ formatFmsAmount(row.yearCreditAmount) }}</text>
             </view>
-            <view v-if="row.quantityAccounting" class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-              <text class="text-26rpx text-[#666]">本年累计贷方数量</text>
+            <view v-if="row.quantityAccounting" class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+              <text class="yd-text-sub text-26rpx">本年累计贷方数量</text>
               <wd-input-number
                 v-if="canEditRow(row)"
                 v-model="row.yearCreditQuantity"
@@ -189,23 +189,23 @@
                 :precision="4"
                 @change="handleAmountChange(row)"
               />
-              <text v-else class="text-26rpx text-[#333]">{{ formatFmsQuantity(row.yearCreditQuantity) }}</text>
+              <text v-else class="yd-text-main text-26rpx">{{ formatFmsQuantity(row.yearCreditQuantity) }}</text>
             </view>
 
             <!-- 年初余额由期初余额和累计发生额按余额方向计算 -->
-            <view class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-              <text class="text-26rpx text-[#666]">年初金额</text>
-              <text class="text-26rpx text-[#333]">{{ formatFmsAmount(row.yearOpeningAmount) }}</text>
+            <view class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+              <text class="yd-text-sub text-26rpx">年初金额</text>
+              <text class="yd-text-main text-26rpx">{{ formatFmsAmount(row.yearOpeningAmount) }}</text>
             </view>
-            <view v-if="row.quantityAccounting" class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-              <text class="text-26rpx text-[#666]">年初数量</text>
-              <text class="text-26rpx text-[#333]">{{ formatFmsQuantity(row.yearOpeningQuantity) }}</text>
+            <view v-if="row.quantityAccounting" class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+              <text class="yd-text-sub text-26rpx">年初数量</text>
+              <text class="yd-text-main text-26rpx">{{ formatFmsQuantity(row.yearOpeningQuantity) }}</text>
             </view>
 
             <!-- 损益类科目需要录入实际损益发生额 -->
             <template v-if="showProfitLoss">
-              <view class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-                <text class="text-26rpx text-[#666]">实际损益发生额</text>
+              <view class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+                <text class="yd-text-sub text-26rpx">实际损益发生额</text>
                 <wd-input-number
                   v-if="canEditRow(row)"
                   v-model="row.profitLossAmount"
@@ -213,10 +213,10 @@
                   :precision="2"
                   @change="handleProfitLossAmountChange"
                 />
-                <text v-else class="text-26rpx text-[#333]">{{ formatFmsAmount(row.profitLossAmount) }}</text>
+                <text v-else class="yd-text-main text-26rpx">{{ formatFmsAmount(row.profitLossAmount) }}</text>
               </view>
-              <view v-if="row.quantityAccounting" class="mt-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-                <text class="text-26rpx text-[#666]">实际损益发生数量</text>
+              <view v-if="row.quantityAccounting" class="yd-bg-subtle mt-12rpx flex items-center justify-between rounded-8rpx p-16rpx">
+                <text class="yd-text-sub text-26rpx">实际损益发生数量</text>
                 <wd-input-number
                   v-if="canEditRow(row)"
                   v-model="row.profitLossQuantity"
@@ -224,7 +224,7 @@
                   :precision="4"
                   @change="handleProfitLossAmountChange"
                 />
-                <text v-else class="text-26rpx text-[#333]">{{ formatFmsQuantity(row.profitLossQuantity) }}</text>
+                <text v-else class="yd-text-main text-26rpx">{{ formatFmsQuantity(row.profitLossQuantity) }}</text>
               </view>
             </template>
           </template>

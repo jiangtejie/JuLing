@@ -1,10 +1,10 @@
 <template>
   <view class="min-h-0 flex flex-1 flex-col bg-white">
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         保养记录
       </view>
-      <view class="text-24rpx text-[#999]">
+      <view class="yd-text-hint text-24rpx">
         共 {{ total }} 条
       </view>
     </view>
@@ -30,26 +30,26 @@
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-28rpx font-medium">
                 {{ item.planCode || `保养记录 #${item.id}` }}
               </view>
-              <view class="mt-4rpx truncate text-26rpx text-[#666]">
+              <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                 {{ item.planName || '-' }}
               </view>
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.MES_MAINTEN_RECORD_STATUS" :value="item.status" />
-            <text v-else class="shrink-0 text-24rpx text-[#999]">-</text>
+            <text v-else class="yd-text-hint shrink-0 text-24rpx">-</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">保养时间：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">保养时间：</text>
             <text class="min-w-0 flex-1 truncate">{{ formatDateTime(item.maintenTime) || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">保养人：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">保养人：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.nickname || '-' }}</text>
           </view>
-          <view class="flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">频率：</text>
+          <view class="yd-text-sub flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">频率：</text>
             <text class="min-w-0 flex-1 truncate">{{ formatCycle(item.planCycleCount, item.planCycleType) }}</text>
           </view>
         </view>

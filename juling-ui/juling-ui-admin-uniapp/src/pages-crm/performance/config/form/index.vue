@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -44,7 +44,7 @@
             <wd-input-number v-model="formData[month.prop]" :min="0" :precision="2" input-type="number" placeholder="请输入目标金额" />
           </wd-form-item>
           <wd-form-item title="年度目标" title-width="180rpx">
-            <view class="text-28rpx text-[#333]">
+            <view class="yd-text-main text-28rpx">
               {{ yearTargetText }}
             </view>
           </wd-form-item>
@@ -199,7 +199,7 @@ async function handleSubmit() {
     }
     uni.$emit('crm:performance-config:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

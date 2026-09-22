@@ -45,10 +45,10 @@
             />
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between">
-                <text class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">{{ item.name || '未命名' }}</text>
+                <text class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">{{ item.name || '未命名' }}</text>
                 <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view class="mt-8rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-26rpx">
                 {{ item.width }} × {{ item.height }} · 排序 {{ item.sort ?? 0 }}
               </view>
             </view>

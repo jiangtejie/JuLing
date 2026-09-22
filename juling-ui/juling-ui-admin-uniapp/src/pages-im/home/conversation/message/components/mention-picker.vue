@@ -1,8 +1,8 @@
 <template>
-  <wd-popup v-model="visible" position="bottom" root-portal custom-style="height: 60vh; border-radius: 24rpx 24rpx 0 0;">
+  <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="height: 60vh; border-radius: 24rpx 24rpx 0 0;">
     <view class="h-full flex flex-col bg-white">
       <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           @ 成员
         </view>
         <wd-button size="small" variant="plain" @click="visible = false">
@@ -14,14 +14,14 @@
       </view>
       <scroll-view class="min-h-0 flex-1" scroll-y>
         <view v-if="showMentionAll" class="mention-member" @click="emit('select-all')">
-          <view class="h-72rpx w-72rpx flex items-center justify-center rounded-full bg-[#1677ff] text-26rpx text-white">
+          <view class="yd-bg-primary h-72rpx w-72rpx flex items-center justify-center rounded-full text-26rpx text-white">
             全
           </view>
           <view class="min-w-0 flex-1">
-            <view class="text-30rpx text-[#333]">
+            <view class="yd-text-main text-30rpx">
               @{{ IM_AT_ALL_NICKNAME }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               提醒群内所有成员
             </view>
           </view>
@@ -34,10 +34,10 @@
         >
           <ImAvatar :src="item.avatar" :name="item.nickname" size="72rpx" />
           <view class="min-w-0 flex-1">
-            <view class="truncate text-30rpx text-[#333]">
+            <view class="yd-text-main truncate text-30rpx">
               {{ getMemberDisplayName(item) }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               用户编号：{{ item.userId }}
             </view>
           </view>

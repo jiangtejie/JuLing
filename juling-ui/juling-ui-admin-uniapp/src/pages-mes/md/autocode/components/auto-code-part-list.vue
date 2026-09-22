@@ -1,17 +1,17 @@
 <template>
-  <view class="mt-20rpx bg-[#f5f5f5] pb-24rpx">
+  <view class="yd-bg-page mt-20rpx pb-24rpx">
     <view class="flex items-center justify-between px-24rpx py-16rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         规则组成（{{ list.length }}）
       </view>
       <wd-button size="small" type="primary" variant="plain" @click.stop="openCreateForm">
         新增分段
       </wd-button>
     </view>
-    <view v-if="loading" class="mx-24rpx rounded-12rpx bg-white py-40rpx text-center text-26rpx text-[#999] shadow-sm">
+    <view v-if="loading" class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-40rpx text-center text-26rpx shadow-sm">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="mx-24rpx rounded-12rpx bg-white py-40rpx text-center text-26rpx text-[#999] shadow-sm">
+    <view v-else-if="list.length === 0" class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-40rpx text-center text-26rpx shadow-sm">
       暂无规则组成
     </view>
     <view v-else class="px-24rpx">
@@ -23,31 +23,31 @@
         <view class="flex items-start gap-16rpx">
           <view class="min-w-0 flex-1">
             <view class="flex flex-wrap items-center gap-12rpx">
-              <text class="text-30rpx text-[#333] font-semibold">
+              <text class="yd-text-main text-30rpx font-semibold">
                 分段 {{ item.sort ?? '-' }}
               </text>
               <dict-tag v-if="item.type != null" :type="DICT_TYPE.MES_MD_AUTO_CODE_PART_TYPE" :value="item.type" />
-              <text v-else class="text-26rpx text-[#999]">-</text>
-              <text class="text-28rpx text-[#1677ff] font-semibold">
+              <text v-else class="yd-text-hint text-26rpx">-</text>
+              <text class="yd-text-link text-28rpx font-semibold">
                 长度 {{ item.length ?? '-' }}
               </text>
             </view>
-            <view class="mt-12rpx flex flex-wrap gap-x-24rpx gap-y-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-12rpx flex flex-wrap gap-x-24rpx gap-y-8rpx text-26rpx">
               <view v-if="item.type === MesAutoCodePartTypeEnum.DATE" class="min-w-240rpx">
-                <text class="text-[#999]">日期格式：</text>{{ item.dateFormat || '-' }}
+                <text class="yd-text-hint">日期格式：</text>{{ item.dateFormat || '-' }}
               </view>
               <view v-if="item.type === MesAutoCodePartTypeEnum.FIXED_CHAR" class="min-w-240rpx">
-                <text class="text-[#999]">固定字符：</text>{{ item.fixCharacter || '-' }}
+                <text class="yd-text-hint">固定字符：</text>{{ item.fixCharacter || '-' }}
               </view>
               <template v-if="item.type === MesAutoCodePartTypeEnum.SERIAL_NUMBER">
                 <view class="min-w-240rpx">
-                  <text class="text-[#999]">流水号起始：</text>{{ item.serialStartNo ?? '-' }}
+                  <text class="yd-text-hint">流水号起始：</text>{{ item.serialStartNo ?? '-' }}
                 </view>
                 <view class="min-w-240rpx">
-                  <text class="text-[#999]">流水号步长：</text>{{ item.serialStep ?? '-' }}
+                  <text class="yd-text-hint">流水号步长：</text>{{ item.serialStep ?? '-' }}
                 </view>
                 <view class="min-w-240rpx flex items-center">
-                  <text class="text-[#999]">是否循环：</text>
+                  <text class="yd-text-hint">是否循环：</text>
                   <dict-tag
                     v-if="item.cycleFlag !== undefined"
                     :type="DICT_TYPE.INFRA_BOOLEAN_STRING"
@@ -56,7 +56,7 @@
                   <text v-else>-</text>
                 </view>
                 <view v-if="item.cycleFlag" class="min-w-240rpx flex items-center">
-                  <text class="text-[#999]">循环方式：</text>
+                  <text class="yd-text-hint">循环方式：</text>
                   <dict-tag
                     v-if="item.cycleMethod != null"
                     :type="DICT_TYPE.MES_MD_AUTO_CODE_CYCLE_METHOD"
@@ -66,7 +66,7 @@
                 </view>
               </template>
               <view class="min-w-240rpx">
-                <text class="text-[#999]">备注：</text>{{ item.remark || '-' }}
+                <text class="yd-text-hint">备注：</text>{{ item.remark || '-' }}
               </view>
             </view>
           </view>
@@ -90,12 +90,12 @@
     safe-area-inset-bottom
     custom-style="height: 84vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="formVisible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ formTitle }}
         </view>
         <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmitForm">

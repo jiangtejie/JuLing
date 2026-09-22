@@ -6,7 +6,7 @@
     <!-- 连接配置 -->
     <view class="p-24rpx pb-0">
       <view class="mb-16rpx flex items-center justify-between">
-        <view class="text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-30rpx font-semibold">
           连接配置
         </view>
         <wd-button v-if="hasAccessByCodes(['iot:device:update'])" size="small" variant="plain" @click="handleEditConfig">
@@ -91,24 +91,24 @@
       <view class="p-24rpx">
         <view v-for="item in pointList" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-32rpx font-semibold">
               {{ item.name || item.identifier }}
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">标识符：</text>{{ item.identifier || '-' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">标识符：</text>{{ item.identifier || '-' }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">功能码：</text>{{ getModbusFunctionCodeLabel(item.functionCode) }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">功能码：</text>{{ getModbusFunctionCodeLabel(item.functionCode) }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">寄存器地址：</text>{{ formatRegisterAddress(item.registerAddress) }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">寄存器地址：</text>{{ formatRegisterAddress(item.registerAddress) }}
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">数据类型：</text>{{ item.rawDataType || '-' }} / {{ item.byteOrder || '-' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">数据类型：</text>{{ item.rawDataType || '-' }} / {{ item.byteOrder || '-' }}
           </view>
-          <view class="mb-16rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-16rpx text-24rpx">
             轮询间隔：{{ item.pollInterval ? `${item.pollInterval} ms` : '-' }}
           </view>
           <view v-if="hasAccessByCodes(['iot:device:update'])" class="flex justify-end gap-16rpx">
@@ -126,8 +126,8 @@
     <!-- 连接配置表单弹窗 -->
     <wd-popup v-model="configVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="bg-white pb-32rpx">
-        <view class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-24rpx">
-          <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-24rpx">
+          <view class="yd-text-main text-32rpx font-semibold">
             编辑连接配置
           </view>
           <wd-icon name="close" size="36rpx" @click="configVisible = false" />
@@ -191,8 +191,8 @@
     <!-- 点位表单弹窗 -->
     <wd-popup v-model="pointVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="bg-white pb-32rpx">
-        <view class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-24rpx">
-          <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-24rpx">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ pointTitle }}
           </view>
           <wd-icon name="close" size="36rpx" @click="pointVisible = false" />
@@ -215,7 +215,7 @@
               <wd-form-item title="寄存器地址" title-width="200rpx" prop="registerAddress">
                 <wd-input v-model.number="pointFormData.registerAddress" type="number" clearable placeholder="请输入寄存器地址">
                   <template #suffix>
-                    <text class="text-[#999]">{{ registerAddressHex }}</text>
+                    <text class="yd-text-hint">{{ registerAddressHex }}</text>
                   </template>
                 </wd-input>
               </wd-form-item>

@@ -24,7 +24,7 @@
 
       <!-- 收款明细 -->
       <view v-if="items.length > 0" class="mt-24rpx">
-        <view class="px-24rpx py-16rpx text-28rpx text-[#666]">
+        <view class="yd-text-sub px-24rpx py-16rpx text-28rpx">
           收款明细
         </view>
         <view class="px-24rpx">
@@ -33,31 +33,31 @@
             :key="index"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-12rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
               明细 {{ index + 1 }}
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">销售单据编号：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">销售单据编号：</text>
               <text class="min-w-0 flex-1">{{ item.bizNo || '-' }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">销售业务类型：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">销售业务类型：</text>
               <text class="min-w-0 flex-1">{{ getBizTypeName(item.bizType) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">应收金额：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">应收金额：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.totalPrice) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">已收金额：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">已收金额：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.receiptedPrice) }}</text>
             </view>
-            <view class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">本次收款：</text>
+            <view class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">本次收款：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.receiptPrice) }}</text>
             </view>
-            <view v-if="item.remark" class="mb-10rpx flex text-26rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">备注：</text>
+            <view v-if="item.remark" class="yd-text-sub mb-10rpx flex text-26rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">备注：</text>
               <text class="min-w-0 flex-1">{{ item.remark }}</text>
             </view>
           </view>
@@ -184,7 +184,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('erp:finance-receipt:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

@@ -2,10 +2,10 @@
   <view class="mt-16rpx bg-white px-24rpx py-20rpx">
     <view class="mb-12rpx flex items-center justify-between">
       <view>
-        <view class="text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-28rpx font-semibold">
           附加条件组
         </view>
-        <view class="mt-4rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint mt-4rpx text-24rpx">
           组间为或，组内为且
         </view>
       </view>
@@ -14,18 +14,18 @@
       </wd-button>
     </view>
 
-    <view v-if="groups.length === 0" class="rounded-8rpx bg-[#f7f8fa] px-20rpx py-24rpx text-center text-26rpx text-[#999]">
+    <view v-if="groups.length === 0" class="yd-text-hint yd-bg-subtle rounded-8rpx px-20rpx py-24rpx text-center text-26rpx">
       暂无附加条件
     </view>
 
     <view v-for="(group, groupIndex) in groups" :key="groupIndex" class="mb-16rpx">
-      <view class="border border-[#f2f3f5] rounded-8rpx bg-white">
-        <view class="flex items-center justify-between border-b border-[#f2f3f5] px-20rpx py-14rpx">
+      <view class="yd-border-light border rounded-8rpx bg-white">
+        <view class="yd-border-light flex items-center justify-between border-b px-20rpx py-14rpx">
           <view>
-            <text class="text-27rpx text-[#333] font-medium">子条件组 {{ groupIndex + 1 }}</text>
-            <text class="ml-12rpx text-24rpx text-[#999]">组内条件为且</text>
+            <text class="yd-text-main text-27rpx font-medium">子条件组 {{ groupIndex + 1 }}</text>
+            <text class="yd-text-hint ml-12rpx text-24rpx">组内条件为且</text>
           </view>
-          <text class="text-26rpx text-[#fa4350]" @click="removeGroup(groupIndex)">删除组</text>
+          <text class="yd-text-danger text-26rpx" @click="removeGroup(groupIndex)">删除组</text>
         </view>
         <view class="p-16rpx">
           <ConditionItem
@@ -48,7 +48,7 @@
           </wd-button>
         </view>
       </view>
-      <view v-if="groupIndex < groups.length - 1" class="py-12rpx text-center text-24rpx text-[#999]">
+      <view v-if="groupIndex < groups.length - 1" class="yd-text-hint py-12rpx text-center text-24rpx">
         或
       </view>
     </view>

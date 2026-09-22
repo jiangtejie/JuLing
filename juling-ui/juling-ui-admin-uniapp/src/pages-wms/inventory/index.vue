@@ -31,21 +31,21 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.itemName || '-' }}
               </view>
-              <text class="text-32rpx text-[#1890ff] font-semibold">{{ formatQuantity(item.quantity) || '0.00' }}</text>
+              <text class="yd-text-link text-32rpx font-semibold">{{ formatQuantity(item.quantity) || '0.00' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">规格：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">规格：</text>
               <text>{{ item.skuName || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">仓库：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">仓库：</text>
               <text>{{ item.warehouseName || '-' }}</text>
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">编号：</text>
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">编号：</text>
               <text>{{ item.itemCode || '-' }} / {{ item.skuCode || '-' }}</text>
             </view>
           </view>

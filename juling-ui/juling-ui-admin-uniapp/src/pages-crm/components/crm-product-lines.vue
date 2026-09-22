@@ -3,7 +3,7 @@
   <view class="mt-24rpx bg-white">
     <!-- 产品清单 -->
     <view class="flex items-center justify-between px-24rpx py-20rpx">
-      <text class="text-30rpx text-[#333] font-semibold">产品清单</text>
+      <text class="yd-text-main text-30rpx font-semibold">产品清单</text>
       <wd-button size="small" type="primary" @click="handleAdd">
         添加
       </wd-button>
@@ -11,10 +11,10 @@
     <view
       v-for="(row, index) in products"
       :key="index"
-      class="mx-24rpx mb-20rpx rounded-12rpx bg-[#f7f8fa] p-24rpx"
+      class="yd-bg-subtle mx-24rpx mb-20rpx rounded-12rpx p-24rpx"
     >
       <view class="mb-16rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-semibold">产品 {{ index + 1 }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">产品 {{ index + 1 }}</text>
         <wd-button size="small" type="danger" variant="plain" @click="handleDelete(index)">
           删除
         </wd-button>
@@ -51,14 +51,14 @@
       <wd-cell title="合计" title-width="220rpx" :value="formatMoney(row.totalPrice)" />
     </view>
     <wd-empty v-if="products.length === 0" icon="content" tip="暂无产品" />
-    <view class="border-t border-[#f5f5f5] px-24rpx py-20rpx">
+    <view class="yd-border-light border-t px-24rpx py-20rpx">
       <view class="mb-12rpx flex items-center justify-between text-28rpx">
-        <text class="text-[#999]">产品总金额</text>
-        <text class="text-[#333]">{{ formatMoney(totalProductPrice) }}</text>
+        <text class="yd-text-hint">产品总金额</text>
+        <text class="yd-text-main">{{ formatMoney(totalProductPrice) }}</text>
       </view>
       <view class="flex items-center justify-between text-28rpx">
-        <text class="text-[#999]">折扣后金额</text>
-        <text class="text-[#333]">{{ formatMoney(totalPrice) }}</text>
+        <text class="yd-text-hint">折扣后金额</text>
+        <text class="yd-text-main">{{ formatMoney(totalPrice) }}</text>
       </view>
     </view>
   </view>

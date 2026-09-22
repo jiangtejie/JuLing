@@ -20,10 +20,10 @@
         <wd-cell title="创建时间" :value="formatDateTime(formData?.createTime) || '-'" />
       </wd-cell-group>
       <view class="m-24rpx rounded-12rpx bg-white p-24rpx">
-        <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
           设备消息
         </view>
-        <text class="break-all text-24rpx text-[#666]">
+        <text class="yd-text-sub break-all text-24rpx">
           {{ formatJson(formData?.deviceMessage, '{}') }}
         </text>
       </view>
@@ -37,9 +37,9 @@
     </view>
 
     <!-- 处理弹窗 -->
-    <wd-popup v-model="processVisible" position="bottom" custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="processVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           处理告警
         </view>
         <wd-textarea v-model="processRemark" placeholder="请输入处理结果" :maxlength="300" show-word-limit />

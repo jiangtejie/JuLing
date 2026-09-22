@@ -46,13 +46,13 @@
     <!-- 修改推广员弹窗 -->
     <wd-popup
       v-model="bindVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0;"
       @close="bindVisible = false"
     >
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           修改推广员
         </view>
         <wd-input v-model="bindUserId" type="number" clearable placeholder="请输入推广员编号" />
@@ -73,7 +73,8 @@
 import type { TradeBrokerageUser } from '@/api/mall/trade/brokerage/user'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import {
   clearTradeBrokerageUserBind,
   getTradeBrokerageUser,
@@ -177,7 +178,7 @@ async function handleToggleEnabled() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

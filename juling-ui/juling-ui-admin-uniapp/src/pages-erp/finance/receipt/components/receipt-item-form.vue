@@ -1,13 +1,13 @@
 <template>
   <view class="w-full">
-    <view v-if="!items.length" class="rounded-12rpx bg-white py-40rpx text-center text-26rpx text-[#999] shadow-sm">
+    <view v-if="!items.length" class="yd-text-hint rounded-12rpx bg-white py-40rpx text-center text-26rpx shadow-sm">
       请选择销售出库或销售退货单
     </view>
     <view v-for="(item, index) in items" :key="index" class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm">
       <view class="mb-20rpx flex items-start justify-between gap-16rpx">
         <view class="min-w-0 flex-1">
-          <text class="text-28rpx text-[#333] font-semibold">收款明细 {{ index + 1 }}</text>
-          <text class="mt-8rpx block break-all text-24rpx text-[#666]">
+          <text class="yd-text-main text-28rpx font-semibold">收款明细 {{ index + 1 }}</text>
+          <text class="yd-text-sub mt-8rpx block break-all text-24rpx">
             {{ item.bizNo || '-' }}
           </text>
         </view>
@@ -15,21 +15,21 @@
           删除
         </wd-button>
       </view>
-      <view class="mb-20rpx inline-flex rounded-8rpx bg-[#f5f7fa] px-16rpx py-8rpx text-24rpx text-[#666]">
+      <view class="yd-text-sub mb-20rpx inline-flex rounded-8rpx bg-[#f5f7fa] px-16rpx py-8rpx text-24rpx">
         {{ getBizTypeName(item.bizType) }}
       </view>
       <view class="grid grid-cols-2 mb-20rpx gap-16rpx">
-        <view class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">应收金额</text>
-          <text class="mt-8rpx block text-28rpx text-[#333] font-semibold">{{ formatMoney(item.totalPrice) }}</text>
+        <view class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">应收金额</text>
+          <text class="yd-text-main mt-8rpx block text-28rpx font-semibold">{{ formatMoney(item.totalPrice) }}</text>
         </view>
-        <view class="rounded-8rpx bg-[#f8f8f8] p-16rpx">
-          <text class="block text-24rpx text-[#999]">已收金额</text>
-          <text class="mt-8rpx block text-28rpx text-[#333] font-semibold">{{ formatMoney(item.receiptedPrice) }}</text>
+        <view class="yd-bg-subtle rounded-8rpx p-16rpx">
+          <text class="yd-text-hint block text-24rpx">已收金额</text>
+          <text class="yd-text-main mt-8rpx block text-28rpx font-semibold">{{ formatMoney(item.receiptedPrice) }}</text>
         </view>
       </view>
-      <view class="mb-20rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx">
-        <text class="text-26rpx text-[#666]">本次收款</text>
+      <view class="yd-bg-subtle mb-20rpx flex items-center justify-between rounded-8rpx p-16rpx">
+        <text class="yd-text-sub text-26rpx">本次收款</text>
         <wd-input-number v-model="item.receiptPrice" :precision="2" :disabled="disabled" />
       </view>
       <wd-input v-model="item.remark" label="备注" label-width="80rpx" placeholder="请输入备注" clearable :disabled="disabled" />

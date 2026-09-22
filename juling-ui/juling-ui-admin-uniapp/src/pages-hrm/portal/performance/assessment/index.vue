@@ -30,8 +30,8 @@
             :key="item.name"
             class="mr-16rpx inline-flex rounded-full px-24rpx py-10rpx text-24rpx"
             :class="activeStatus === item.name
-              ? 'bg-[#1677ff] text-white'
-              : 'bg-[#f5f5f5] text-[#666]'"
+              ? 'yd-bg-primary text-white'
+              : 'yd-bg-page yd-text-sub'"
             @click="handleStatusChange(item.name)"
           >
             {{ item.label }}
@@ -63,7 +63,7 @@
             @click="handleDetail(item)"
           >
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
               <dict-tag
@@ -73,40 +73,40 @@
               />
             </view>
 
-            <view v-if="!isSelfTaskTab" class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">被考核人：</text>
+            <view v-if="!isSelfTaskTab" class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">被考核人：</text>
               {{ item.employeeName || '-' }}
-              <text v-if="item.jobNumber" class="ml-8rpx text-24rpx text-[#999]">
+              <text v-if="item.jobNumber" class="yd-text-hint ml-8rpx text-24rpx">
                 {{ item.jobNumber }}
               </text>
             </view>
 
-            <view v-if="isSelfTaskTab" class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">考核周期：</text>
+            <view v-if="isSelfTaskTab" class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">考核周期：</text>
               {{ formatHrmDateRange(item.startTime, item.endTime) }}
             </view>
 
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">当前阶段：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">当前阶段：</text>
               {{ currentStageName(item) }}
             </view>
 
-            <view v-if="activeTab === HrmPerformanceStageType.TARGET_CONFIRM" class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">指标数：</text>{{ item.quotas?.length || 0 }}
+            <view v-if="activeTab === HrmPerformanceStageType.TARGET_CONFIRM" class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">指标数：</text>{{ item.quotas?.length || 0 }}
             </view>
             <view
               v-else-if="activeTab === HrmPerformanceStageType.OTHER_SCORE"
-              class="mb-12rpx text-28rpx text-[#666]"
+              class="yd-text-sub mb-12rpx text-28rpx"
             >
-              <text class="mr-8rpx text-[#999]">评分权重：</text>
+              <text class="yd-text-hint mr-8rpx">评分权重：</text>
               {{ item.currentReviewStage?.weight || 0 }}%
             </view>
-            <view v-else class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">绩效得分：</text>{{ formatHrmScore(item.score) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
-              <text class="mr-8rpx text-[#999]">等级：</text>{{ item.resultLevel || '-' }}
-              <text v-if="isSelfTaskTab" class="mx-8rpx text-[#ddd]">|</text>
-              <text v-if="isSelfTaskTab" class="mr-8rpx text-[#999]">系数：</text>
+            <view v-else class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">绩效得分：</text>{{ formatHrmScore(item.score) }}
+              <text class="yd-text-muted mx-8rpx">|</text>
+              <text class="yd-text-hint mr-8rpx">等级：</text>{{ item.resultLevel || '-' }}
+              <text v-if="isSelfTaskTab" class="yd-text-muted mx-8rpx">|</text>
+              <text v-if="isSelfTaskTab" class="yd-text-hint mr-8rpx">系数：</text>
               <text v-if="isSelfTaskTab">{{ item.coefficient ?? '-' }}</text>
             </view>
           </view>

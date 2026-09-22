@@ -1,7 +1,7 @@
 <template>
   <!-- 单个总结卡片：标签 + 数值 + 环比，复用基础 card 壳 -->
-  <view v-if="!item" class="rounded-12rpx p-20rpx" :class="highlight ? 'bg-[#ecf5ff]' : 'bg-[#f8fafc]'">
-    <view class="text-24rpx text-[#999]">
+  <view v-if="!item" class="rounded-12rpx p-20rpx" :class="highlight ? 'bg-[#ecf5ff]' : 'yd-bg-subtle'">
+    <view class="yd-text-hint text-24rpx">
       {{ title }}
     </view>
     <view class="mt-8rpx text-32rpx font-semibold" :class="simpleValueClass">
@@ -9,13 +9,13 @@
     </view>
   </view>
   <Card v-else>
-    <text class="text-26rpx text-[#999]">{{ item.label }}</text>
+    <text class="yd-text-hint text-26rpx">{{ item.label }}</text>
     <view class="mt-12rpx flex items-end gap-4rpx">
-      <text v-if="item.prefix" class="text-28rpx text-[#333] font-semibold">{{ item.prefix }}</text>
-      <text class="text-40rpx text-[#333] font-semibold leading-none">{{ formattedValue }}</text>
+      <text v-if="item.prefix" class="yd-text-main text-28rpx font-semibold">{{ item.prefix }}</text>
+      <text class="yd-text-main text-40rpx font-semibold leading-none">{{ formattedValue }}</text>
     </view>
     <view v-if="item.reference !== undefined" class="mt-12rpx flex items-center gap-6rpx text-24rpx">
-      <text class="text-[#bbb]">{{ referenceLabel }}</text>
+      <text class="yd-text-muted">{{ referenceLabel }}</text>
       <text :class="rateClass">{{ rateText }}</text>
     </view>
   </Card>
@@ -55,16 +55,16 @@ const simpleValue = computed(() => {
   return Number.isNaN(value) ? 0 : value
 }) // 简单数值
 const simpleValueText = computed(() => simpleValue.value.toFixed(2)) // 简单数值文案
-const simpleValueClass = computed(() => simpleValue.value >= 0 ? 'text-[#1677ff]' : 'text-[#f5222d]') // 正负数颜色
+const simpleValueClass = computed(() => simpleValue.value >= 0 ? 'yd-text-link' : 'yd-text-danger') // 正负数颜色
 const rateValue = computed(() => calculateRelativeRate(props.item?.value || 0, props.item?.reference)) // 环比增长率
 const rateText = computed(() => `${rateValue.value > 0 ? '+' : ''}${rateValue.value}%`)
 const rateClass = computed(() => {
   if (rateValue.value > 0) {
-    return 'text-[#f5222d]' // 增长红
+    return 'yd-text-danger' // 增长红
   }
   if (rateValue.value < 0) {
-    return 'text-[#52c41a]' // 下降绿
+    return 'yd-text-success' // 下降绿
   }
-  return 'text-[#999]'
+  return 'yd-text-hint'
 })
 </script>

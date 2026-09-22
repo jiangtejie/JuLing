@@ -41,7 +41,7 @@
             class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ parent.name || '未命名菜单' }}
               </view>
               <wd-button size="small" type="primary" @click="handleEditParent(parent, parentIndex)">
@@ -60,13 +60,13 @@
               <view
                 v-for="(child, childIndex) in parent.children"
                 :key="child.id || `child-${parentIndex}-${childIndex}`"
-                class="mb-12rpx flex items-center justify-between rounded-8rpx bg-[#f8f8f8] p-16rpx"
+                class="yd-bg-subtle mb-12rpx flex items-center justify-between rounded-8rpx p-16rpx"
               >
                 <view class="min-w-0 flex-1">
-                  <view class="truncate text-28rpx text-[#333]">
+                  <view class="yd-text-main truncate text-28rpx">
                     {{ child.name || '未命名子菜单' }}
                   </view>
-                  <view class="text-22rpx text-[#999]">
+                  <view class="yd-text-hint text-22rpx">
                     {{ getMenuTypeLabel(child.type) || '未配置动作' }}
                   </view>
                 </view>
@@ -110,7 +110,7 @@
     <wd-popup v-model="editorVisible" position="bottom" safe-area-inset-bottom>
       <scroll-view scroll-y class="max-h-[80vh] bg-white">
         <view class="p-24rpx">
-          <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
             编辑菜单
           </view>
           <wd-form :model="activeMenu">

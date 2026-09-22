@@ -1,7 +1,7 @@
 <template>
   <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
     <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         条码预览
       </view>
       <dict-tag v-if="format != null" :type="DICT_TYPE.MES_WM_BARCODE_FORMAT" :value="format" />
@@ -32,10 +32,10 @@
       </view>
       <wd-empty v-else icon="content" tip="暂无条码内容" />
 
-      <view v-if="content" class="mt-20rpx w-full break-all rounded-8rpx bg-white px-20rpx py-16rpx text-center text-24rpx text-[#666]">
+      <view v-if="content" class="yd-text-sub mt-20rpx w-full break-all rounded-8rpx bg-white px-20rpx py-16rpx text-center text-24rpx">
         {{ content }}
       </view>
-      <view class="mt-16rpx text-center text-22rpx text-[#999] leading-34rpx">
+      <view class="yd-text-hint mt-16rpx text-center text-22rpx leading-34rpx">
         {{ previewTip }}
       </view>
       <view v-if="content && showActions" class="mt-20rpx flex flex-wrap justify-center gap-16rpx">

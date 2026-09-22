@@ -32,24 +32,24 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-32rpx font-semibold">
                 {{ item.no || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.WMS_ORDER_STATUS" :value="item.status" />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">单据日期：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">单据日期：</text>
               <text>{{ formatDate(item.orderTime) || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">来源仓库：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">来源仓库：</text>
               <text>{{ item.sourceWarehouseName || '-' }}</text>
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">目标仓库：</text>
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">目标仓库：</text>
               <text>{{ item.targetWarehouseName || '-' }}</text>
             </view>
-            <view class="flex items-center justify-between text-28rpx text-[#666]">
+            <view class="yd-text-sub flex items-center justify-between text-28rpx">
               <text>数量：{{ formatQuantity(item.totalQuantity) || '0.00' }}</text>
               <text>金额：{{ formatPrice(item.totalPrice) || '0.00' }}</text>
             </view>

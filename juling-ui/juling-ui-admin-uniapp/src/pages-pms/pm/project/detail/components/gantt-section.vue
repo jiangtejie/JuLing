@@ -7,16 +7,16 @@
       </view>
       <view class="flex items-center gap-16rpx">
         <view class="flex-1" @click="rangeVisible = true">
-          <view class="flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-20rpx">
-            <text class="text-26rpx" :class="dateRangeText ? 'text-[#333]' : 'text-[#999]'">
+          <view class="yd-bg-subtle flex items-center justify-between rounded-12rpx p-20rpx">
+            <text class="text-26rpx" :class="dateRangeText ? 'yd-text-main' : 'yd-text-hint'">
               {{ dateRangeText || '自定义时间轴范围' }}
             </text>
             <wd-icon name="arrow-right" size="28rpx" color="#666" />
           </view>
         </view>
         <view class="w-200rpx shrink-0" @click="viewModeVisible = true">
-          <view class="flex items-center justify-between rounded-12rpx bg-[#f7f8fa] p-20rpx">
-            <text class="text-26rpx text-[#333]">{{ viewModeLabel }}</text>
+          <view class="yd-bg-subtle flex items-center justify-between rounded-12rpx p-20rpx">
+            <text class="yd-text-main text-26rpx">{{ viewModeLabel }}</text>
             <wd-icon name="arrow-right" size="28rpx" color="#666" />
           </view>
         </view>
@@ -28,7 +28,7 @@
 
     <!-- 甘特图时间轴 -->
     <scroll-view scroll-y class="min-h-0 flex-1">
-      <view v-if="!datedRows.length" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="!datedRows.length" class="yd-text-hint py-80rpx text-center text-28rpx">
         暂无符合条件且已设置时间范围的工作项
       </view>
       <scroll-view v-else scroll-x :scroll-left="scrollLeft" class="gantt-scroll whitespace-nowrap">
@@ -44,7 +44,7 @@
               <text
                 v-for="tick in timelineTicks"
                 :key="tick.time"
-                class="absolute border-l b-[#f0f0f0] b-solid pl-8rpx text-22rpx text-[#999]"
+                class="yd-text-hint absolute border-l b-[#f0f0f0] b-solid pl-8rpx text-22rpx"
                 :style="{ left: `${tick.left}%` }"
               >
                 {{ tick.label }}
@@ -56,7 +56,7 @@
             v-for="row in datedRows"
             :key="row.key"
             class="gantt-row flex"
-            :class="{ 'bg-[#f7f8fa]': row.group }"
+            :class="{ 'yd-bg-subtle': row.group }"
             :style="{ width: `${leftWidth + timelineWidth}rpx` }"
           >
             <view class="gantt-left flex shrink-0 bg-white" :class="{ '!bg-[#f7f8fa]': row.group }" :style="{ width: `${leftWidth}rpx` }">
@@ -70,12 +70,12 @@
                 />
                 <text
                   v-if="row.item"
-                  class="truncate text-26rpx text-[#1677ff]"
+                  class="yd-text-link truncate text-26rpx"
                   @click="openWorkItem(row.item)"
                 >
                   #{{ row.item.serialNumber }} {{ row.name }}
                 </text>
-                <text v-else class="truncate text-26rpx text-[#333] font-semibold">{{ row.name }}</text>
+                <text v-else class="yd-text-main truncate text-26rpx font-semibold">{{ row.name }}</text>
               </view>
               <text class="gantt-cell-date">{{ formatDate(row.startTime) }}</text>
               <text class="gantt-cell-date">{{ formatDate(row.endTime) }}</text>
@@ -86,7 +86,7 @@
               <!-- 甘特条 -->
               <view
                 class="absolute h-40rpx min-w-24rpx flex items-center justify-center overflow-hidden rounded-8rpx text-22rpx text-white"
-                :class="row.group ? 'bg-[#52c41a] !h-32rpx' : 'bg-[#1677ff]'"
+                :class="row.group ? 'yd-bg-success !h-32rpx' : 'yd-bg-primary'"
                 :style="{ left: `${getBarLeft(row)}%`, width: `${getBarWidth(row)}%` }"
                 @click="row.item && openWorkItem(row.item)"
               >
@@ -99,9 +99,9 @@
     </scroll-view>
 
     <!-- 时间轴范围弹窗 -->
-    <wd-popup v-model="rangeVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="rangeVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           时间轴范围
         </view>
         <yd-search-date-range v-model="dateRange" label="日期范围" />

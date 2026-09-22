@@ -7,10 +7,10 @@
     <view class="p-24rpx pb-0">
       <view class="grid grid-cols-3 gap-16rpx">
         <view v-for="item in statusOptions" :key="item.value" class="rounded-12rpx bg-white p-16rpx text-center shadow-sm" @click="handleStatus(item.value)">
-          <view class="text-34rpx text-[#1677ff] font-semibold">
+          <view class="yd-text-link text-34rpx font-semibold">
             {{ statistics[item.value] || 0 }}
           </view>
-          <view class="mt-4rpx text-22rpx text-[#666]">
+          <view class="yd-text-sub mt-4rpx text-22rpx">
             {{ item.label }}
           </view>
         </view>
@@ -46,25 +46,25 @@
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-32rpx font-semibold">
               {{ item.deviceName || item.deviceId }}
             </view>
             <dict-tag :type="DICT_TYPE.IOT_OTA_TASK_RECORD_STATUS" :value="item.status" />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">当前版本：</text>{{ item.currentVersion || item.fromFirmwareVersion || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">当前版本：</text>{{ item.currentVersion || item.fromFirmwareVersion || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">目标版本：</text>{{ item.firmwareVersion || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">目标版本：</text>{{ item.firmwareVersion || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">升级进度：</text>{{ item.progress || 0 }}%
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">升级进度：</text>{{ item.progress || 0 }}%
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">状态描述：</text>{{ item.description || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">状态描述：</text>{{ item.description || '-' }}
           </view>
           <view class="flex items-center justify-between gap-16rpx">
-            <text class="text-24rpx text-[#999]">{{ formatDateTime(item.updateTime) || '-' }}</text>
+            <text class="yd-text-hint text-24rpx">{{ formatDateTime(item.updateTime) || '-' }}</text>
             <wd-button
               v-if="canCancel(item)"
               size="small"

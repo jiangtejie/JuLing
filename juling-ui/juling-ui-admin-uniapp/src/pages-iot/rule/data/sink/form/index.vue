@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar :title="getTitle" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
 
@@ -56,20 +56,20 @@
                 </wd-radio>
               </wd-radio-group>
             </wd-form-item>
-            <view class="border-t border-[#f2f3f5] px-24rpx py-20rpx">
+            <view class="yd-border-light border-t px-24rpx py-20rpx">
               <view class="mb-16rpx flex items-center justify-between">
-                <text class="text-28rpx text-[#333]">请求头</text>
+                <text class="yd-text-main text-28rpx">请求头</text>
                 <wd-button size="small" type="primary" variant="plain" @click="addHttpHeader">
                   新增
                 </wd-button>
               </view>
-              <view v-if="httpHeaderRows.length === 0" class="rounded-8rpx bg-[#f7f8fa] px-20rpx py-16rpx text-26rpx text-[#999]">
+              <view v-if="httpHeaderRows.length === 0" class="yd-text-hint yd-bg-subtle rounded-8rpx px-20rpx py-16rpx text-26rpx">
                 暂无请求头
               </view>
               <view
                 v-for="(item, index) in httpHeaderRows"
                 :key="`header-${index}`"
-                class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx"
+                class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx"
               >
                 <wd-input v-model="item.key" class="mb-12rpx" placeholder="请输入请求头名称" clearable />
                 <view class="flex items-center gap-12rpx">
@@ -80,20 +80,20 @@
                 </view>
               </view>
             </view>
-            <view class="border-t border-[#f2f3f5] px-24rpx py-20rpx">
+            <view class="yd-border-light border-t px-24rpx py-20rpx">
               <view class="mb-16rpx flex items-center justify-between">
-                <text class="text-28rpx text-[#333]">请求参数</text>
+                <text class="yd-text-main text-28rpx">请求参数</text>
                 <wd-button size="small" type="primary" variant="plain" @click="addHttpQuery">
                   新增
                 </wd-button>
               </view>
-              <view v-if="httpQueryRows.length === 0" class="rounded-8rpx bg-[#f7f8fa] px-20rpx py-16rpx text-26rpx text-[#999]">
+              <view v-if="httpQueryRows.length === 0" class="yd-text-hint yd-bg-subtle rounded-8rpx px-20rpx py-16rpx text-26rpx">
                 暂无请求参数
               </view>
               <view
                 v-for="(item, index) in httpQueryRows"
                 :key="`query-${index}`"
-                class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx"
+                class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx"
               >
                 <wd-input v-model="item.key" class="mb-12rpx" placeholder="请输入参数名称" clearable />
                 <view class="flex items-center gap-12rpx">
@@ -613,7 +613,7 @@ async function handleSubmit() {
     }
     uni.$emit('iot:data-sink:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

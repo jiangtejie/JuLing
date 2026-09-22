@@ -45,7 +45,7 @@
         </wd-empty>
       </view>
       <view v-if="relation === 'friend'" class="mt-20rpx bg-white">
-        <view class="flex items-center justify-center gap-12rpx py-30rpx text-32rpx text-[#576b95]" @click="callActionVisible = true">
+        <view class="yd-text-link flex items-center justify-center gap-12rpx py-30rpx text-32rpx" @click="callActionVisible = true">
           <wd-icon name="phone" size="40rpx" />音视频通话
         </view>
       </view>

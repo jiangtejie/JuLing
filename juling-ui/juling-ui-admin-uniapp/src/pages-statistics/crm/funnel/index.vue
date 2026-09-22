@@ -45,7 +45,7 @@
 
         <!-- 统计周期与刷新 -->
         <view class="mb-24rpx flex items-center justify-between">
-          <view class="text-26rpx text-[#999]">
+          <view class="yd-text-hint text-26rpx">
             {{ periodText }}
           </view>
           <wd-button size="small" type="primary" variant="plain" :loading="activeLoading" @click="loadData">

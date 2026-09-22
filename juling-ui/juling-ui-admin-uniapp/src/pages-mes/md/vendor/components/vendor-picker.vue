@@ -6,13 +6,13 @@
     custom-style="height: 86vh; border-radius: 24rpx 24rpx 0 0;"
     @close="handleClose"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 顶部操作 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="handleCancel">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           {{ title }}
         </view>
         <wd-button size="small" type="primary" :disabled="tempSelected.length === 0" @click="handleConfirm">
@@ -57,19 +57,19 @@
             @click="toggleItem(item)"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">编码：</text>{{ item.code || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">编码：</text>{{ item.code || '-' }}
             </view>
-            <view class="mb-10rpx text-26rpx text-[#666]">
-              <text class="text-[#999]">简称：</text>{{ item.nickname || '-' }}
+            <view class="yd-text-sub mb-10rpx text-26rpx">
+              <text class="yd-text-hint">简称：</text>{{ item.nickname || '-' }}
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">电话：</text>{{ item.telephone || '-' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">电话：</text>{{ item.telephone || '-' }}
             </view>
           </view>
         </view>

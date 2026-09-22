@@ -4,7 +4,7 @@
     <view class="flex-1" @click="visible = true">
       <wd-search :placeholder="placeholder" hide-cancel disabled />
     </view>
-    <view class="text-28rpx text-[#1890ff]" @click="handleReadAll">
+    <view class="yd-text-link text-28rpx" @click="handleReadAll">
       全部已读
     </view>
   </view>

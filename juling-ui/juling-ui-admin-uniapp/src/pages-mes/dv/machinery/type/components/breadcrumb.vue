@@ -4,7 +4,7 @@
       <view class="inline-flex items-center">
         <view
           class="flex items-center text-28rpx"
-          :class="breadcrumbList.length > 0 ? 'text-[#722ed1]' : 'text-[#333]'"
+          :class="breadcrumbList.length > 0 ? 'text-[#722ed1]' : 'yd-text-main'"
           @click="handleClick(-1)"
         >
           <text>顶级类型</text>
@@ -13,7 +13,7 @@
           <wd-icon name="arrow-right" size="12px" color="#999" custom-class="mx-8rpx" />
           <view
             class="flex items-center text-28rpx"
-            :class="index < breadcrumbList.length - 1 ? 'text-[#722ed1]' : 'text-[#333]'"
+            :class="index < breadcrumbList.length - 1 ? 'text-[#722ed1]' : 'yd-text-main'"
             @click="handleClick(index)"
           >
             <text>{{ item.name }}</text>

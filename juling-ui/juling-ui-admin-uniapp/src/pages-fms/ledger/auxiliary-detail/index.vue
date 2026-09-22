@@ -31,7 +31,7 @@
             <!-- 加载状态 -->
             <view
               v-if="loading"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -41,27 +41,27 @@
 
             <view v-else-if="list.length" class="overflow-hidden rounded-12rpx bg-white shadow-sm">
               <!-- 辅助项目标题 -->
-              <view class="border-0 border-b border-[#eee] border-b-solid px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main yd-border-base border-0 border-b border-b-solid px-24rpx py-20rpx text-30rpx font-semibold">
                 {{ queryParams.auxiliaryTypeName }}：{{ queryParams.auxiliaryItemCode }}_{{ queryParams.auxiliaryItemName }}
               </view>
               <view v-for="(row, index) in list" :key="index">
                 <!-- 凭证分录行 -->
-                <view v-if="row.rowType === FmsLedgerRowType.VOUCHER" class="border-0 border-b border-[#f5f5f5] border-b-solid px-24rpx py-20rpx">
+                <view v-if="row.rowType === FmsLedgerRowType.VOUCHER" class="yd-border-light border-0 border-b border-b-solid px-24rpx py-20rpx">
                   <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-                    <text class="text-26rpx text-[#999]">{{ row.accountDate || '-' }}</text>
+                    <text class="yd-text-hint text-26rpx">{{ row.accountDate || '-' }}</text>
                     <text
                       v-if="row.voucherId && hasAccessByCodes(['fms:voucher:query'])"
-                      class="text-26rpx text-[#1677ff]"
+                      class="yd-text-link text-26rpx"
                       @click="openVoucher(row)"
                     >
                       {{ row.voucherNumber }}
                     </text>
-                    <text v-else class="text-26rpx text-[#999]">{{ row.voucherNumber || '' }}</text>
+                    <text v-else class="yd-text-hint text-26rpx">{{ row.voucherNumber || '' }}</text>
                   </view>
-                  <view class="mb-8rpx text-28rpx text-[#333]">
+                  <view class="yd-text-main mb-8rpx text-28rpx">
                     {{ row.digest || '-' }}
                   </view>
-                  <view class="flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx text-[#666]">
+                  <view class="yd-text-sub flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx">
                     <text>借方 {{ formatFmsMoney(row.debitAmount) }}</text>
                     <text>贷方 {{ formatFmsMoney(row.creditAmount) }}</text>
                     <text>余额 {{ formatFmsSubjectBalance(row.balance, row.balanceDirection) }}</text>
@@ -70,7 +70,7 @@
                 <!-- 汇总行（期初、本期合计、本年累计） -->
                 <view
                   v-else
-                  class="flex flex-wrap items-center gap-x-24rpx gap-y-4rpx border-0 border-b border-[#f5f5f5] border-b-solid bg-[#fafafa] px-24rpx py-16rpx text-26rpx text-[#333] font-semibold"
+                  class="yd-text-main yd-border-light yd-bg-subtle flex flex-wrap items-center gap-x-24rpx gap-y-4rpx border-0 border-b border-b-solid px-24rpx py-16rpx text-26rpx font-semibold"
                 >
                   <text class="min-w-140rpx">{{ row.digest }}</text>
                   <text>借 {{ formatFmsMoney(row.debitAmount) }}</text>

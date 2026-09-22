@@ -1,17 +1,17 @@
 <template>
   <wd-popup
     v-model="visible"
-    position="bottom"
+    position="bottom" safe-area-inset-bottom
     root-portal
     custom-style="height: 76vh; border-radius: 24rpx 24rpx 0 0;"
     @after-enter="resetLocalPaging"
   >
-    <view class="h-full flex flex-col overflow-hidden bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col overflow-hidden">
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button size="small" variant="plain" @click="close">
           取消
         </wd-button>
-        <text class="text-30rpx text-[#333] font-semibold">{{ title }}</text>
+        <text class="yd-text-main text-30rpx font-semibold">{{ title }}</text>
         <wd-button
           size="small"
           type="primary"
@@ -24,7 +24,7 @@
       </view>
       <view class="bg-white px-20rpx pb-16rpx">
         <wd-search v-model="keyword" placeholder="搜索群成员" hide-cancel />
-        <view class="px-8rpx pt-8rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint px-8rpx pt-8rpx text-24rpx">
           {{ selectionSummary }}
         </view>
       </view>
@@ -42,33 +42,33 @@
         <view
           v-for="item in pagedMembers"
           :key="item.userId"
-          class="flex items-center gap-20rpx border-b border-[#eee] bg-white px-28rpx py-20rpx"
+          class="yd-border-base flex items-center gap-20rpx border-b bg-white px-28rpx py-20rpx"
           :class="isDisabled(item.userId) ? 'opacity-55' : ''"
           @click="toggle(item.userId)"
         >
           <view
             class="h-40rpx w-40rpx flex shrink-0 items-center justify-center border rounded-full"
-            :class="isSelected(item.userId) ? 'border-[#07c160] bg-[#07c160]' : 'border-[#c8c9cc] bg-white'"
+            :class="isSelected(item.userId) ? 'border-[#07c160] yd-bg-success' : 'border-[#c8c9cc] bg-white'"
           >
             <wd-icon v-if="isSelected(item.userId)" name="check" size="28rpx" color="#fff" />
           </view>
           <ImAvatar :src="item.avatar" :name="item.nickname" size="76rpx" />
           <view class="min-w-0 flex-1">
             <view class="flex items-center gap-12rpx">
-              <text class="min-w-0 truncate text-28rpx text-[#333]">
+              <text class="yd-text-main min-w-0 truncate text-28rpx">
                 {{ getMemberDisplayName(item) }}
               </text>
               <text
                 v-if="getGroupMemberRoleLabel(item.role)"
-                class="shrink-0 rounded-6rpx bg-[#edf5ff] px-10rpx py-2rpx text-20rpx text-[#4d80f0]"
+                class="yd-text-link shrink-0 rounded-6rpx bg-[#edf5ff] px-10rpx py-2rpx text-20rpx"
               >
                 {{ getGroupMemberRoleLabel(item.role) }}
               </text>
             </view>
-            <view v-if="isLocked(item.userId)" class="mt-4rpx text-22rpx text-[#999]">
+            <view v-if="isLocked(item.userId)" class="yd-text-hint mt-4rpx text-22rpx">
               已固定
             </view>
-            <view v-else-if="isDisabled(item.userId)" class="mt-4rpx text-22rpx text-[#999]">
+            <view v-else-if="isDisabled(item.userId)" class="yd-text-hint mt-4rpx text-22rpx">
               不可选择
             </view>
           </view>

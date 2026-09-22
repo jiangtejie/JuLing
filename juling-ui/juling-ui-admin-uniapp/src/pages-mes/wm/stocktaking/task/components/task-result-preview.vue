@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view v-if="showTitle" class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         盘点结果
       </view>
     </view>
@@ -29,36 +29,36 @@
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-28rpx font-medium">
                 {{ item.itemCode || '-' }}
               </view>
-              <view class="mt-4rpx truncate text-26rpx text-[#666]">
+              <view class="yd-text-sub mt-4rpx truncate text-26rpx">
                 {{ item.itemName || '-' }}
               </view>
             </view>
             <view class="shrink-0 text-right text-26rpx">
-              <view class="text-[#999]">
+              <view class="yd-text-hint">
                 账面：{{ item.quantity ?? '-' }}
               </view>
-              <view class="mt-4rpx text-28rpx text-[#1677ff] font-semibold">
+              <view class="yd-text-link mt-4rpx text-28rpx font-semibold">
                 实盘：{{ item.takingQuantity ?? '-' }}
               </view>
             </view>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">单位：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">单位：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.unitMeasureName || '-' }}</text>
           </view>
-          <view class="mb-8rpx flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">批次：</text>
+          <view class="yd-text-sub mb-8rpx flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">批次：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.batchCode || '-' }}</text>
           </view>
-          <view class="flex text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">库存位置：</text>
+          <view class="yd-text-sub flex text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">库存位置：</text>
             <text class="min-w-0 flex-1 truncate">
               {{ item.warehouseName || '-' }} / {{ item.locationName || '-' }} / {{ item.areaName || '-' }}
             </text>

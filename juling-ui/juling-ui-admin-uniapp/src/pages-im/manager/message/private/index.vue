@@ -36,17 +36,17 @@
           @click="handleDetail(item)"
         >
           <view class="flex items-center justify-between">
-            <view class="line-clamp-1 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main line-clamp-1 flex-1 text-30rpx font-semibold">
               {{ item.senderNickname || `用户 ${item.senderId}` }}
-              <text class="mx-8rpx text-[#bbb]">→</text>
+              <text class="yd-text-muted mx-8rpx">→</text>
               {{ item.receiverNickname || `用户 ${item.receiverId}` }}
             </view>
             <dict-tag :type="DICT_TYPE.IM_CONTENT_TYPE" :value="item.type" />
           </view>
-          <view class="line-clamp-2 mt-10rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub line-clamp-2 mt-10rpx text-26rpx">
             {{ getMessageSummary(item.type, item.content) }}
           </view>
-          <view class="mt-12rpx flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-12rpx flex items-center justify-between text-24rpx">
             <text>{{ formatDateTime(item.sendTime) }}</text>
             <view class="flex items-center gap-12rpx">
               <text>{{ getDictLabel(DICT_TYPE.IM_MESSAGE_STATUS, item.status) }}</text>

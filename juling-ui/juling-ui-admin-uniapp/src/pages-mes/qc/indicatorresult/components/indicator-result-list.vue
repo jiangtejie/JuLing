@@ -1,11 +1,11 @@
 <template>
   <view class="mt-24rpx bg-white">
-    <view v-if="showTitle" class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+    <view v-if="showTitle" class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+      <view class="yd-text-main text-30rpx font-semibold">
         检测结果记录
       </view>
       <view class="flex items-center gap-16rpx">
-        <view v-if="total > 0" class="text-24rpx text-[#999]">
+        <view v-if="total > 0" class="yd-text-hint text-24rpx">
           共 {{ total }} 条
         </view>
         <wd-button v-if="!readonly && hasAccessByCodes(['mes:qc-iqc:create'])" size="small" type="primary" variant="plain" @click="handleAddResult">
@@ -32,20 +32,20 @@
         <view
           v-for="item in list"
           :key="item.id"
-          class="mb-20rpx rounded-12rpx bg-[#f8f9fb] p-20rpx last:mb-0"
+          class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx last:mb-0"
         >
           <view class="mb-12rpx">
-            <view class="truncate text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-28rpx font-semibold">
               {{ item.code || '-' }}
             </view>
-            <view class="mt-6rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-6rpx truncate text-24rpx">
               物资SN：{{ item.sn || '-' }}
             </view>
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">备注：</text>{{ item.remark || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint">备注：</text>{{ item.remark || '-' }}
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view class="mt-16rpx flex gap-12rpx">
@@ -70,13 +70,13 @@
       safe-area-inset-bottom
       custom-style="height: 78vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-32rpx font-semibold">
               {{ currentResult?.code || '检测值明细' }}
             </view>
-            <view class="mt-4rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx truncate text-24rpx">
               物资SN：{{ currentResult?.sn || '-' }}
             </view>
           </view>
@@ -86,10 +86,10 @@
         </view>
 
         <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
-          <view v-if="detailLoading" class="p-24rpx text-28rpx text-[#999]">
+          <view v-if="detailLoading" class="yd-text-hint p-24rpx text-28rpx">
             加载中...
           </view>
-          <view v-else-if="detailItems.length === 0" class="p-24rpx text-28rpx text-[#999]">
+          <view v-else-if="detailItems.length === 0" class="yd-text-hint p-24rpx text-28rpx">
             暂无检测值
           </view>
           <view v-else class="p-24rpx">
@@ -99,18 +99,18 @@
               class="mb-20rpx rounded-12rpx bg-white p-20rpx last:mb-0"
             >
               <view class="mb-10rpx flex items-center justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">
                   {{ item.indicatorName || '-' }}
                 </view>
                 <dict-tag v-if="item.valueType != null" :type="DICT_TYPE.MES_QC_RESULT_TYPE" :value="item.valueType" />
               </view>
-              <view class="mb-8rpx text-26rpx text-[#666]">
-                <text class="text-[#999]">检测值：</text>{{ formatResultValue(item) }}
+              <view class="yd-text-sub mb-8rpx text-26rpx">
+                <text class="yd-text-hint">检测值：</text>{{ formatResultValue(item) }}
               </view>
-              <view v-if="item.valueSpecification" class="mb-8rpx text-24rpx text-[#999]">
+              <view v-if="item.valueSpecification" class="yd-text-hint mb-8rpx text-24rpx">
                 值属性：{{ item.valueSpecification }}
               </view>
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 备注：{{ item.remark || '-' }}
               </view>
             </view>
@@ -126,12 +126,12 @@
       safe-area-inset-bottom
       custom-style="height: 88vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="formVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ formType === 'update' ? '编辑检测结果' : '新增检测结果' }}
           </view>
           <wd-button size="small" type="primary" :loading="formLoading" @click="handleSubmitResult">
@@ -159,13 +159,13 @@
               </wd-form-item>
             </wd-cell-group>
 
-            <view class="px-24rpx py-20rpx text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main px-24rpx py-20rpx text-28rpx font-semibold">
               检测值
             </view>
-            <view v-if="formLoading" class="px-24rpx text-28rpx text-[#999]">
+            <view v-if="formLoading" class="yd-text-hint px-24rpx text-28rpx">
               加载中...
             </view>
-            <view v-else-if="formData.items.length === 0" class="px-24rpx text-28rpx text-[#999]">
+            <view v-else-if="formData.items.length === 0" class="yd-text-hint px-24rpx text-28rpx">
               暂无检测值
             </view>
             <view v-else class="px-24rpx">
@@ -175,7 +175,7 @@
                 class="mb-20rpx rounded-12rpx bg-white p-20rpx last:mb-0"
               >
                 <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-                  <view class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">
+                  <view class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">
                     {{ item.indicatorName || `检测项${index + 1}` }}
                   </view>
                   <dict-tag v-if="item.valueType != null" :type="DICT_TYPE.MES_QC_RESULT_TYPE" :value="item.valueType" />

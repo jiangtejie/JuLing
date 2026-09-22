@@ -30,25 +30,25 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="mb-16rpx truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx truncate text-32rpx font-semibold">
             {{ item.name }}
           </view>
-          <view v-if="item.illustrate" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">说明：</text>
+          <view v-if="item.illustrate" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">说明：</text>
             <text class="line-clamp-2">{{ item.illustrate }}</text>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">维度 / 指标：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">维度 / 指标：</text>
             {{ item.dimensionCount ?? 0 }} / {{ item.quotaCount ?? 0 }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">总分：</text>{{ item.upperLimitScore ?? '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">总分：</text>{{ item.upperLimitScore ?? '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">创建人：</text>{{ item.creatorName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">创建人：</text>{{ item.creatorName || '-' }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">最近更新：</text>{{ formatDateTime(item.updateTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">最近更新：</text>{{ formatDateTime(item.updateTime) || '-' }}
           </view>
         </view>
       </view>

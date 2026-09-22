@@ -10,7 +10,7 @@
     <view class="box-border h-full flex flex-col overflow-hidden p-32rpx">
       <!-- 弹窗标题 -->
       <view class="mb-24rpx flex items-center justify-between">
-        <text class="text-32rpx text-[#333] font-semibold">发送优惠券</text>
+        <text class="yd-text-main text-32rpx font-semibold">发送优惠券</text>
         <wd-icon name="close" size="20px" @click="handleClose" />
       </view>
 
@@ -34,10 +34,10 @@
           <view
             v-for="item in list"
             :key="item.id"
-            class="mb-20rpx rounded-12rpx bg-[#f7f8fa] p-24rpx"
+            class="yd-bg-subtle mb-20rpx rounded-12rpx p-24rpx"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                 {{ item.name || `优惠券 ${item.id}` }}
               </view>
               <wd-button
@@ -50,13 +50,13 @@
                 发送
               </wd-button>
             </view>
-            <view class="mb-8rpx text-24rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-24rpx">
               优惠：{{ formatDiscount(item) }}
             </view>
-            <view class="mb-8rpx text-24rpx text-[#666]">
-              最低消费：{{ formatAmount(item.usePrice) }}
+            <view class="yd-text-sub mb-8rpx text-24rpx">
+              最低消费：{{ formatDisplayMoney(item.usePrice) }}
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               剩余数量：{{ formatRemainCount(item) }}
             </view>
           </view>
@@ -70,6 +70,7 @@
 import type { PromotionCouponTemplate } from '@/api/mall/promotion/coupon/coupon-template'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, ref, watch } from 'vue'
+import { formatDisplayMoney } from '@/utils/format'
 import { sendPromotionCoupon } from '@/api/mall/promotion/coupon/coupon'
 import { getPromotionCouponTemplatePage } from '@/api/mall/promotion/coupon/coupon-template'
 import { useAccess } from '@/hooks/useAccess'
@@ -102,15 +103,10 @@ const targetUserIds = computed(() => { // 发券用户编号
   return props.userId ? [Number(props.userId)] : []
 })
 
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
-}
-
 /** 优惠信息展示 */
 function formatDiscount(item: PromotionCouponTemplate) {
   if (item.discountType === 1) {
-    return formatAmount(item.discountPrice)
+    return formatDisplayMoney(item.discountPrice)
   }
   if (item.discountType === 2) {
     return `${item.discountPercent || 0}%`

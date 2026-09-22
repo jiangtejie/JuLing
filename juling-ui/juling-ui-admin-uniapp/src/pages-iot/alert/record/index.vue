@@ -27,24 +27,24 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.configName || '告警记录' }}
             </view>
             <view class="shrink-0">
               <dict-tag :type="DICT_TYPE.IOT_ALERT_LEVEL" :value="item.configLevel" />
             </view>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">产品：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">产品：</text>
             {{ productLabel(item) }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">设备：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">设备：</text>
             {{ deviceLabel(item) }}
           </view>
           <view class="flex items-center justify-between">
             <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="item.processStatus" />
-            <text class="text-24rpx text-[#999]">
+            <text class="yd-text-hint text-24rpx">
               {{ formatDateTime(item.createTime) || '-' }}
             </text>
           </view>

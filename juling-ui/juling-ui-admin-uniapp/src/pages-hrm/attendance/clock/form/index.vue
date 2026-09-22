@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -58,12 +58,12 @@
       </wd-form>
 
       <!-- 班次提示 -->
-      <view v-if="shiftInfo" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#e6f4ff] p-24rpx text-26rpx text-[#1677ff]">
+      <view v-if="shiftInfo" class="yd-text-link yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx">
         {{ shiftTimeTip }}
       </view>
       <view
         v-else-if="formData.employeeId && attendanceDate && !shiftLoading"
-        class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#fa8c16]"
+        class="yd-text-warning yd-bg-warning-soft mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx"
       >
         该员工当天未配置有效班次，不能补录打卡
       </view>
@@ -324,7 +324,7 @@ async function handleSubmit() {
     }
     uni.$emit('hrm:attendance:clock:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

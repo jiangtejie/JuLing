@@ -6,7 +6,7 @@
   >
     <view class="divider mb-40rpx flex items-center justify-center">
       <view class="h-1rpx flex-1 bg-[#e5e5e5]" />
-      <text class="px-24rpx text-26rpx text-[#999]">其他登录方式</text>
+      <text class="yd-text-hint px-24rpx text-26rpx">其他登录方式</text>
       <view class="h-1rpx flex-1 bg-[#e5e5e5]" />
     </view>
     <view class="icons flex justify-center gap-48rpx">

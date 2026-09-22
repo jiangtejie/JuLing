@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="支付应用详情"
@@ -24,13 +24,13 @@
         </view>
       </wd-cell>
       <wd-cell title="支付回调">
-        <text class="break-all text-right text-[#333]">{{ formData.orderNotifyUrl || formData.payNotifyUrl || '-' }}</text>
+        <text class="yd-text-main break-all text-right">{{ formData.orderNotifyUrl || formData.payNotifyUrl || '-' }}</text>
       </wd-cell>
       <wd-cell title="退款回调">
-        <text class="break-all text-right text-[#333]">{{ formData.refundNotifyUrl || '-' }}</text>
+        <text class="yd-text-main break-all text-right">{{ formData.refundNotifyUrl || '-' }}</text>
       </wd-cell>
       <wd-cell title="转账回调">
-        <text class="break-all text-right text-[#333]">{{ formData.transferNotifyUrl || '-' }}</text>
+        <text class="yd-text-main break-all text-right">{{ formData.transferNotifyUrl || '-' }}</text>
       </wd-cell>
       <wd-cell title="备注" :value="formData.remark || '-'" />
       <wd-cell title="创建时间" :value="formatDateTime(formData.createTime) || '-'" />
@@ -148,7 +148,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('pay:app:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

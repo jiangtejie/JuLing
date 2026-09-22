@@ -44,12 +44,12 @@
           class="mb-24rpx"
         >
           <!-- 时间分隔（间隔较大时展示） -->
-          <view v-if="item.showTime" class="mb-16rpx text-center text-22rpx text-[#bbb]">
+          <view v-if="item.showTime" class="yd-text-muted mb-16rpx text-center text-22rpx">
             {{ formatDate(item.createTime, 'YYYY-MM-DD HH:mm') }}
           </view>
 
           <!-- 系统消息：居中 -->
-          <view v-if="item.kind === 'system'" class="text-center text-22rpx text-[#999]">
+          <view v-if="item.kind === 'system'" class="yd-text-hint text-center text-22rpx">
             {{ item.text }}
           </view>
 
@@ -78,7 +78,7 @@
                 <wd-img :src="item.picUrl" width="96rpx" height="96rpx" radius="8rpx" mode="aspectFill" />
               </view>
               <view class="min-w-0 flex-1">
-                <view class="line-clamp-2 text-26rpx text-[#333]">
+                <view class="yd-text-main line-clamp-2 text-26rpx">
                   {{ item.title || '商品' }}
                 </view>
                 <view class="mt-8rpx text-26rpx text-[#ff3000]">
@@ -91,10 +91,10 @@
               v-else-if="item.kind === 'order'"
               class="max-w-460rpx rounded-12rpx bg-white p-20rpx shadow-sm"
             >
-              <view class="text-26rpx text-[#333]">
+              <view class="yd-text-main text-26rpx">
                 订单号：{{ item.orderNo || '-' }}
               </view>
-              <view class="mt-8rpx text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-22rpx">
                 共 {{ item.productCount || 0 }} 件，总金额：<text class="text-[#ff3000]">￥{{ item.payPrice }}</text>
               </view>
             </view>
@@ -102,7 +102,7 @@
             <view
               v-else
               class="max-w-[70%] whitespace-pre-wrap break-all rounded-12rpx p-20rpx text-28rpx"
-              :class="item.fromAdmin ? 'bg-[#1677ff] text-white' : 'bg-white text-[#333] shadow-sm'"
+              :class="item.fromAdmin ? 'yd-bg-primary text-white' : 'bg-white yd-text-main shadow-sm'"
             >
               {{ item.text }}
             </view>
@@ -112,7 +112,7 @@
 
       <!-- 输入区域（固定底部，聊天记录模式键盘自适应；底部安全区域由 z-paging safe-area-inset-bottom 处理） -->
       <template #bottom>
-        <view class="border-t border-[#eee] bg-[#f7f8fa]">
+        <view class="yd-border-base yd-bg-subtle border-t">
           <view class="flex items-end gap-16rpx p-16rpx">
             <!-- 表情切换 -->
             <view class="shrink-0 pb-12rpx" @click="toggleEmoji">
@@ -142,7 +142,7 @@
           </view>
 
           <!-- 表情面板（淡灰底，微信式） -->
-          <view v-if="emojiVisible" class="flex flex-wrap border-t border-[#eee] p-12rpx">
+          <view v-if="emojiVisible" class="yd-border-base flex flex-wrap border-t p-12rpx">
             <view
               v-for="emoji in KEFU_EMOJIS"
               :key="emoji"

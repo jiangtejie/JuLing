@@ -11,7 +11,7 @@
       <view class="p-24rpx space-y-24rpx">
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
           <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-            <text class="text-30rpx text-[#333] font-semibold">
+            <text class="yd-text-main text-30rpx font-semibold">
               HR 统计
             </text>
             <wd-button size="small" type="primary" :loading="loading" @click="getSummary">
@@ -20,10 +20,20 @@
           </view>
         </view>
 
-        <view v-if="loading && !summary" class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm">
+        <view v-if="loading && !summary" class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm">
           <wd-loading size="32rpx" />
           <view class="mt-12rpx">
             正在加载工作台数据
+          </view>
+        </view>
+
+        <view
+          v-else-if="loadError"
+          class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
+        >
+          <view>数据加载失败</view>
+          <view class="mt-12rpx text-[--wot-color-theme]" @click="getSummary">
+            重新加载
           </view>
         </view>
 
@@ -65,6 +75,7 @@ definePage({
 
 const loading = ref(false) // 加载中
 const summary = ref<HrHomeStatistics>() // 工作台汇总数据
+const loadError = ref(false) // add by 棱信矩灵：加载失败标记，避免失败后整屏渲染成 0 被误认为「数据真的是 0」
 
 /** 返回上一页 */
 function handleBack() {
@@ -74,8 +85,12 @@ function handleBack() {
 /** 获得首页统计汇总 */
 async function getSummary() {
   loading.value = true
+  loadError.value = false
   try {
     summary.value = await getHrHomeStatisticsSummary()
+  } catch {
+    // add by 棱信矩灵：失败时置错误态并展示「重新加载」，此前无 catch，失败后各卡片用 || 0 兜底渲染成满屏 0
+    loadError.value = true
   } finally {
     loading.value = false
   }

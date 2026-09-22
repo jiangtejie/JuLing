@@ -62,26 +62,26 @@
               mode="aspectFit"
               enable-preview
             />
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               {{ item.name || item.mediaId || '图片素材' }}
             </view>
           </template>
           <template v-else>
-            <view v-if="currentType === 'video' && item.title" class="mb-12rpx text-30rpx text-[#333] font-semibold">
+            <view v-if="currentType === 'video' && item.title" class="yd-text-main mb-12rpx text-30rpx font-semibold">
               {{ item.title }}
             </view>
-            <view v-if="currentType === 'video' && item.introduction" class="mb-12rpx text-26rpx text-[#666]">
+            <view v-if="currentType === 'video' && item.introduction" class="yd-text-sub mb-12rpx text-26rpx">
               {{ item.introduction }}
             </view>
             <MediaPreview :type="currentType" :url="item.url" class="mb-12rpx" />
-            <view class="mb-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-8rpx text-24rpx">
               文件名：{{ item.name || '-' }}
             </view>
-            <view class="mb-12rpx break-all text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-12rpx break-all text-24rpx">
               编号：{{ item.mediaId || '-' }}
             </view>
           </template>
-          <view class="mb-20rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-20rpx text-24rpx">
             上传时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <wd-button
@@ -97,7 +97,7 @@
     <!-- 视频上传信息 -->
     <wd-popup v-model="videoFormVisible" position="bottom" safe-area-inset-bottom>
       <view class="bg-white p-24rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           新建视频素材
         </view>
         <wd-input v-model="videoForm.title" placeholder="请输入标题" clearable />

@@ -64,7 +64,7 @@
       </wd-form>
 
       <!-- 初始化提示 -->
-      <view class="m-24rpx rounded-12rpx bg-[#e6f4ff] p-24rpx text-26rpx text-[#1677ff] leading-40rpx">
+      <view class="yd-text-link yd-bg-info-soft m-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         初始化后将建立本位币、财务参数和默认凭证字，启用期间不可随意变更
       </view>
     </view>
@@ -167,7 +167,7 @@ async function handleSubmit() {
     await fmsStore.loadAccountSetList(true)
     uni.$emit('fms:config:account-set:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

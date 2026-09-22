@@ -257,7 +257,7 @@ async function handleSubmitIssue() {
     toast.success('提交成功')
     uni.$emit('mes:wm:miscissue:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     submitLoading.value = false
   }
 }
@@ -281,7 +281,7 @@ async function handleFinishIssue() {
     toast.success('出库成功')
     uni.$emit('mes:wm:miscissue:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     finishLoading.value = false
   }
 }

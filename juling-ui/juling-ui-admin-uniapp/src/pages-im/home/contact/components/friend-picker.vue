@@ -7,7 +7,7 @@
     @after-enter="resetLocalPaging"
   >
     <view
-      class="h-full flex flex-col overflow-hidden bg-[#f5f5f5]"
+      class="yd-bg-page h-full flex flex-col overflow-hidden"
       :class="fullScreen ? 'pb-[env(safe-area-inset-bottom)]' : ''"
     >
       <view
@@ -17,14 +17,14 @@
         <wd-button size="small" variant="plain" @click="visible = false">
           取消
         </wd-button>
-        <text class="text-30rpx text-[#333] font-semibold">选择好友</text>
+        <text class="yd-text-main text-30rpx font-semibold">选择好友</text>
         <wd-button size="small" type="primary" @click="confirm">
           确定
         </wd-button>
       </view>
       <view class="bg-white px-20rpx pb-16rpx">
         <wd-search v-model="keyword" placeholder="搜索好友" hide-cancel />
-        <view class="px-8rpx pt-8rpx text-24rpx text-[#999]">
+        <view class="yd-text-hint px-8rpx pt-8rpx text-24rpx">
           已选择 {{ selectedCount }} 人
         </view>
       </view>
@@ -42,25 +42,25 @@
         <view
           v-for="item in pagedFriends"
           :key="item.id"
-          class="flex items-center gap-20rpx border-b border-[#eee] bg-white px-28rpx py-20rpx"
+          class="yd-border-base flex items-center gap-20rpx border-b bg-white px-28rpx py-20rpx"
           :class="isDisabled(item.id) ? 'opacity-55' : ''"
           @click="toggle(item.id)"
         >
           <view
             class="h-40rpx w-40rpx flex shrink-0 items-center justify-center border rounded-full"
-            :class="isSelected(item.id) ? 'border-[#07c160] bg-[#07c160]' : 'border-[#c8c9cc] bg-white'"
+            :class="isSelected(item.id) ? 'border-[#07c160] yd-bg-success' : 'border-[#c8c9cc] bg-white'"
           >
             <wd-icon v-if="isSelected(item.id)" name="check" size="28rpx" color="#fff" />
           </view>
           <ImAvatar :src="item.avatar" :name="item.nickname" size="76rpx" />
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333]">
+            <view class="yd-text-main truncate text-28rpx">
               {{ item.displayName || item.nickname }}
             </view>
-            <view v-if="isLocked(item.id)" class="mt-4rpx text-22rpx text-[#999]">
+            <view v-if="isLocked(item.id)" class="yd-text-hint mt-4rpx text-22rpx">
               已固定
             </view>
-            <view v-else-if="isDisabled(item.id)" class="mt-4rpx text-22rpx text-[#999]">
+            <view v-else-if="isDisabled(item.id)" class="yd-text-hint mt-4rpx text-22rpx">
               已在群聊
             </view>
           </view>

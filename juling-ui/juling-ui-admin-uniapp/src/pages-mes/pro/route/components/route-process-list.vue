@@ -1,7 +1,7 @@
 <template>
   <view class="mt-24rpx bg-white">
     <view v-if="showTitle || editable" class="flex items-center justify-between px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         <template v-if="showTitle">
           组成工序
         </template>
@@ -10,20 +10,20 @@
         添加工序
       </wd-button>
     </view>
-    <view v-if="loading" class="px-24rpx pb-24rpx text-26rpx text-[#999]">
+    <view v-if="loading" class="yd-text-hint px-24rpx pb-24rpx text-26rpx">
       加载中...
     </view>
-    <view v-else-if="list.length === 0" class="px-24rpx pb-24rpx text-26rpx text-[#999]">
+    <view v-else-if="list.length === 0" class="yd-text-hint px-24rpx pb-24rpx text-26rpx">
       暂无组成工序
     </view>
     <view v-else class="px-24rpx pb-8rpx">
-      <view v-for="item in list" :key="item.id" class="mb-16rpx rounded-12rpx bg-[#f8fafc] p-20rpx">
+      <view v-for="item in list" :key="item.id" class="yd-bg-subtle mb-16rpx rounded-12rpx p-20rpx">
         <view class="mb-12rpx flex items-start justify-between gap-16rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-30rpx font-semibold">
               {{ item.sort }}. {{ item.processName || '-' }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               {{ item.processCode || '-' }}
             </view>
           </view>
@@ -36,7 +36,7 @@
             </wd-button>
           </view>
         </view>
-        <view class="text-26rpx text-[#666] space-y-8rpx">
+        <view class="yd-text-sub text-26rpx space-y-8rpx">
           <view>下一道工序：{{ item.nextProcessName || '-' }}</view>
           <view>
             与下道关系：
@@ -67,8 +67,8 @@
 
   <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom custom-style="border-radius: 24rpx 24rpx 0 0; max-height: 86vh;">
     <view class="max-h-[86vh] flex flex-col bg-white">
-      <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-        <text class="text-32rpx text-[#333] font-semibold">{{ formTitle }}</text>
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+        <text class="yd-text-main text-32rpx font-semibold">{{ formTitle }}</text>
         <wd-icon name="close" size="36rpx" @click="formVisible = false" />
       </view>
       <scroll-view class="min-h-0 flex-1" scroll-y>
@@ -93,13 +93,13 @@
             <wd-form-item title="准备时间" title-width="220rpx" prop="prepareTime" center>
               <view class="flex items-center gap-12rpx">
                 <wd-input-number v-model="formData.prepareTime" allow-null :min="0" :precision="0" />
-                <text class="text-26rpx text-[#999]">分钟</text>
+                <text class="yd-text-hint text-26rpx">分钟</text>
               </view>
             </wd-form-item>
             <wd-form-item title="等待时间" title-width="220rpx" prop="waitTime" center>
               <view class="flex items-center gap-12rpx">
                 <wd-input-number v-model="formData.waitTime" allow-null :min="0" :precision="0" />
-                <text class="text-26rpx text-[#999]">分钟</text>
+                <text class="yd-text-hint text-26rpx">分钟</text>
               </view>
             </wd-form-item>
             <wd-form-item title="甘特图颜色" title-width="220rpx" prop="colorCode">

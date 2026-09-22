@@ -2,7 +2,7 @@
   <view class="mt-24rpx bg-white">
     <!-- 班组标题 -->
     <view v-if="showTitle" class="flex items-center justify-between px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+      <view class="yd-text-main text-30rpx font-semibold">
         班组
       </view>
       <wd-button v-if="editable" size="small" type="primary" @click="openForm">
@@ -13,17 +13,17 @@
     <!-- 班组列表 -->
     <view class="px-24rpx pb-8rpx">
       <wd-loading v-if="loading" />
-      <view v-else-if="list.length === 0" class="py-48rpx text-center text-26rpx text-[#999]">
+      <view v-else-if="list.length === 0" class="yd-text-hint py-48rpx text-center text-26rpx">
         暂无计划班组
       </view>
       <template v-else>
-        <view v-for="item in list" :key="item.id" class="mb-20rpx rounded-12rpx bg-[#f8fafc] p-20rpx">
+        <view v-for="item in list" :key="item.id" class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx">
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1" @click="handlePreviewMembers(item)">
-              <view class="truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-30rpx font-semibold">
                 {{ item.teamName || `班组 #${item.teamId}` }}
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 {{ item.teamCode || '-' }}
               </view>
             </view>
@@ -31,7 +31,7 @@
               删除
             </wd-button>
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             备注：{{ item.remark || '-' }}
           </view>
         </view>
@@ -40,15 +40,15 @@
 
     <!-- 成员预览 -->
     <view v-if="selectedTeamId" class="mx-24rpx mb-24rpx rounded-12rpx bg-[#fff7ed] p-20rpx">
-      <view class="mb-16rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
         {{ selectedTeamName }} 成员
       </view>
       <wd-loading v-if="memberLoading" />
-      <view v-else-if="memberList.length === 0" class="py-24rpx text-center text-24rpx text-[#999]">
+      <view v-else-if="memberList.length === 0" class="yd-text-hint py-24rpx text-center text-24rpx">
         暂无成员
       </view>
-      <view v-for="member in memberList" v-else :key="member.id || member.userId" class="mb-12rpx rounded-8rpx bg-white p-16rpx text-24rpx text-[#666]">
-        <view class="text-26rpx text-[#333]">
+      <view v-for="member in memberList" v-else :key="member.id || member.userId" class="yd-text-sub mb-12rpx rounded-8rpx bg-white p-16rpx text-24rpx">
+        <view class="yd-text-main text-26rpx">
           {{ member.nickname || `用户 #${member.userId}` }}
         </view>
         <view class="mt-4rpx">
@@ -60,8 +60,8 @@
     <!-- 添加班组弹层 -->
     <wd-popup v-model="formVisible" position="bottom" :safe-area-inset-bottom="true">
       <view class="max-h-[86vh] flex flex-col bg-white">
-        <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-20rpx">
-          <text class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+          <text class="yd-text-main text-32rpx font-semibold">
             添加班组
           </text>
           <wd-icon name="close" size="36rpx" @click="formVisible = false" />
@@ -72,21 +72,21 @@
         <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
           <view class="px-24rpx pb-24rpx">
             <wd-loading v-if="teamLoading" />
-            <view v-else-if="teamOptions.length === 0" class="py-48rpx text-center text-26rpx text-[#999]">
+            <view v-else-if="teamOptions.length === 0" class="yd-text-hint py-48rpx text-center text-26rpx">
               暂无可选班组
             </view>
             <template v-else>
               <view
                 v-for="team in teamOptions"
                 :key="team.id"
-                class="mb-16rpx border border-[#edf0f5] rounded-12rpx p-20rpx"
+                class="yd-border-light mb-16rpx border rounded-12rpx p-20rpx"
                 :class="selectedTeamIds.includes(Number(team.id)) ? 'border-[#1677ff] bg-[#eef6ff]' : 'bg-white'"
                 @click="toggleTeam(team)"
               >
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   {{ team.name }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ team.code }}
                 </view>
               </view>

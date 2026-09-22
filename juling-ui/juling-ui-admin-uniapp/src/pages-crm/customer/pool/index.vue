@@ -26,7 +26,7 @@
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm" @click="handleDetail(item)">
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view class="flex flex-wrap justify-end gap-8rpx">
@@ -34,11 +34,11 @@
               <dict-tag v-if="item.source !== undefined && item.source !== null" :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="item.source" />
             </view>
           </view>
-          <view v-if="item.mobile" class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">手机：</text>{{ item.mobile }}
+          <view v-if="item.mobile" class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">手机：</text>{{ item.mobile }}
           </view>
-          <view v-if="item.industryId !== undefined && item.industryId !== null" class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">客户行业：</text><dict-tag :type="DICT_TYPE.CRM_CUSTOMER_INDUSTRY" :value="item.industryId" />
+          <view v-if="item.industryId !== undefined && item.industryId !== null" class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">客户行业：</text><dict-tag :type="DICT_TYPE.CRM_CUSTOMER_INDUSTRY" :value="item.industryId" />
           </view>
         </view>
       </view>

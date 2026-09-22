@@ -3,7 +3,7 @@
     <view class="mb-8rpx flex items-center justify-between px-24rpx py-12rpx">
       <text
         class="text-26rpx"
-        :class="Math.abs(weightTotal - 100) < 0.001 ? 'text-[#52c41a]' : 'text-[#ff4d4f]'"
+        :class="Math.abs(weightTotal - 100) < 0.001 ? 'yd-text-success' : 'yd-text-danger'"
       >
         权重合计 {{ weightTotal }}%
       </text>
@@ -30,10 +30,10 @@
     <view
       v-for="(stage, index) in model"
       :key="index"
-      class="border-b border-[#f0f0f0] px-24rpx py-20rpx"
+      class="yd-border-light border-b px-24rpx py-20rpx"
     >
       <view class="mb-12rpx flex items-center justify-between">
-        <text class="text-28rpx text-[#333] font-semibold">
+        <text class="yd-text-main text-28rpx font-semibold">
           {{ index + 1 }}. {{ stage.name || formatHrmPerformanceReviewStageName(stage) }}
         </text>
         <wd-button
@@ -101,7 +101,7 @@
       </wd-form-item>
     </view>
 
-    <view v-if="!model.length" class="px-24rpx py-24rpx text-28rpx text-[#999]">
+    <view v-if="!model.length" class="yd-text-hint px-24rpx py-24rpx text-28rpx">
       暂无评分阶段，请新增自评或他评
     </view>
   </view>

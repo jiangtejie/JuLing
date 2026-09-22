@@ -2,7 +2,7 @@
 <template>
   <view class="mx-24rpx mt-24rpx overflow-hidden rounded-16rpx bg-white">
     <!-- 标题 -->
-    <view class="px-24rpx pt-24rpx text-28rpx text-[#333] font-bold">
+    <view class="yd-text-main px-24rpx pt-24rpx text-28rpx font-bold">
       审批详情
     </view>
     <!-- 表单内容：业务表单 -->
@@ -21,24 +21,24 @@
       <!-- 其它业务表单（如 CRM 合同 / 回款）：跨分包无法内嵌组件，改为跳转到对应详情页 -->
       <view
         v-else-if="businessDetailPath"
-        class="m-24rpx flex items-center rounded-12rpx bg-[#f7f8fa] p-24rpx active:opacity-60"
+        class="yd-bg-subtle m-24rpx flex items-center rounded-12rpx p-24rpx active:opacity-60"
         @click="openBusinessDetail"
       >
-        <view class="h-72rpx w-72rpx flex shrink-0 items-center justify-center rounded-full bg-[#e6f4ff]">
+        <view class="yd-bg-info-soft h-72rpx w-72rpx flex shrink-0 items-center justify-center rounded-full">
           <wd-icon name="eye" size="40rpx" color="#1890ff" />
         </view>
         <view class="ml-20rpx flex-1">
-          <view class="text-28rpx text-[#333] font-medium">
+          <view class="yd-text-main text-28rpx font-medium">
             查看业务表单详情
           </view>
-          <view class="mt-6rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-6rpx text-24rpx">
             点击跳转查看完整业务数据
           </view>
         </view>
         <wd-icon name="arrow-right" size="32rpx" color="#c0c4cc" />
       </view>
       <!-- 未配置的业务表单 -->
-      <view v-else class="px-24rpx py-32rpx text-26rpx text-[#999]">
+      <view v-else class="yd-text-hint px-24rpx py-32rpx text-26rpx">
         暂不支持该业务表单，请参考 LeaveDetail 配置
       </view>
     </template>
@@ -51,7 +51,7 @@
         :option="normalForm.option"
         :rule="normalForm.rule"
       />
-      <view v-else class="px-24rpx py-32rpx text-26rpx text-[#999]">
+      <view v-else class="yd-text-hint px-24rpx py-32rpx text-26rpx">
         暂无流程表单数据
       </view>
     </template>

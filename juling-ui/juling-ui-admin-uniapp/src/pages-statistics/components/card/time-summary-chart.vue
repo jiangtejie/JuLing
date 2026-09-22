@@ -2,8 +2,8 @@
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
     <!-- 标题 -->
     <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-      <text class="text-30rpx text-[#333] font-semibold">{{ title }}</text>
-      <text v-if="totalText" class="text-24rpx text-[#999]">合计 {{ totalText }}</text>
+      <text class="yd-text-main text-30rpx font-semibold">{{ title }}</text>
+      <text v-if="totalText" class="yd-text-hint text-24rpx">合计 {{ totalText }}</text>
     </view>
 
     <!-- 折线图 -->

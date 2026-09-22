@@ -34,7 +34,7 @@
             <!-- 加载状态 -->
             <view
               v-if="!subjectsLoadFailed && (loading || !searchReady)"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -45,7 +45,7 @@
             <!-- 候选科目加载失败 -->
             <view
               v-else-if="subjectsLoadFailed"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <view>候选科目加载失败</view>
               <wd-button class="mt-16rpx" size="small" type="primary" plain @click="handleRetrySubjects">
@@ -55,27 +55,27 @@
 
             <view v-else-if="list.length" class="overflow-hidden rounded-12rpx bg-white shadow-sm">
               <!-- 科目标题 -->
-              <view class="border-0 border-b border-[#eee] border-b-solid px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main yd-border-base border-0 border-b border-b-solid px-24rpx py-20rpx text-30rpx font-semibold">
                 {{ list[0].subjectCode }} {{ list[0].subjectName }}
               </view>
               <view v-for="(row, index) in list" :key="index">
                 <!-- 凭证分录行 -->
-                <view v-if="row.rowType === FmsLedgerRowType.VOUCHER" class="border-0 border-b border-[#f5f5f5] border-b-solid px-24rpx py-20rpx">
+                <view v-if="row.rowType === FmsLedgerRowType.VOUCHER" class="yd-border-light border-0 border-b border-b-solid px-24rpx py-20rpx">
                   <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-                    <text class="text-26rpx text-[#999]">{{ row.accountDate || '-' }}</text>
+                    <text class="yd-text-hint text-26rpx">{{ row.accountDate || '-' }}</text>
                     <text
                       v-if="row.voucherId && hasAccessByCodes(['fms:voucher:query'])"
-                      class="text-26rpx text-[#1677ff]"
+                      class="yd-text-link text-26rpx"
                       @click="openVoucher(row)"
                     >
                       {{ row.voucherNumber }}
                     </text>
-                    <text v-else class="text-26rpx text-[#999]">{{ row.voucherNumber || '' }}</text>
+                    <text v-else class="yd-text-hint text-26rpx">{{ row.voucherNumber || '' }}</text>
                   </view>
-                  <view class="mb-8rpx text-28rpx text-[#333]">
+                  <view class="yd-text-main mb-8rpx text-28rpx">
                     {{ row.digest || '-' }}
                   </view>
-                  <view class="flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx text-[#666]">
+                  <view class="yd-text-sub flex flex-wrap items-center gap-x-24rpx gap-y-4rpx text-26rpx">
                     <text>借方 {{ formatFmsMoney(row.debitAmount) }}</text>
                     <text>贷方 {{ formatFmsMoney(row.creditAmount) }}</text>
                     <text>余额 {{ formatFmsSubjectBalance(row.balance, row.balanceDirection) }}</text>
@@ -84,7 +84,7 @@
                 <!-- 汇总行（期初、本期合计、本年累计、期末余额） -->
                 <view
                   v-else
-                  class="flex flex-wrap items-center gap-x-24rpx gap-y-4rpx border-0 border-b border-[#f5f5f5] border-b-solid bg-[#fafafa] px-24rpx py-16rpx text-26rpx text-[#333] font-semibold"
+                  class="yd-text-main yd-border-light yd-bg-subtle flex flex-wrap items-center gap-x-24rpx gap-y-4rpx border-0 border-b border-b-solid px-24rpx py-16rpx text-26rpx font-semibold"
                 >
                   <text class="min-w-140rpx">{{ row.digest }}</text>
                   <text>借 {{ formatFmsMoney(row.debitAmount) }}</text>
@@ -107,6 +107,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onShow } from '@dcloudio/uni-app'
 import type { LedgerDetail, LedgerDetailSubject } from '@/api/fms/ledger'
 import { FmsLedgerRowType, getLedgerDetailList, getLedgerDetailSubjectList } from '@/api/fms/ledger'
 import { useAccess } from '@/hooks/useAccess'
@@ -263,7 +264,7 @@ function openVoucher(row: LedgerDetail) {
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   await fmsStore.loadAccountSetList()
   initialize()
 })

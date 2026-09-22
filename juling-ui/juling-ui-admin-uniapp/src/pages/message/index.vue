@@ -37,11 +37,11 @@
                   v-if="!item.readStatus"
                   class="mr-8rpx h-12rpx w-12rpx flex-shrink-0 rounded-full bg-red-500"
                 />
-                <view class="text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-32rpx font-semibold">
                   {{ item.templateNickname }}
                 </view>
               </view>
-              <view class="text-26rpx text-[#999]">
+              <view class="yd-text-hint text-26rpx">
                 {{ formatDateTime(item.createTime) }}
               </view>
             </view>
@@ -50,15 +50,15 @@
               <view class="line-clamp-1 mb-8rpx text-30rpx text-[#323333] font-bold">
                 {{ getDictLabel(DICT_TYPE.SYSTEM_NOTIFY_TEMPLATE_TYPE, item.templateType) }}
               </view>
-              <view class="line-clamp-2 text-28rpx text-[#777]">
+              <view class="yd-text-sub line-clamp-2 text-28rpx">
                 {{ item.templateContent }}
               </view>
             </view>
             <!-- 底部操作区 -->
-            <view class="flex items-center justify-between text-26rpx text-[#999]">
+            <view class="yd-text-hint flex items-center justify-between text-26rpx">
               <view
                 v-if="!item.readStatus"
-                class="text-[#1890ff]"
+                class="yd-text-link"
                 @click.stop="handleReadOne(item)"
               >
                 标记已读

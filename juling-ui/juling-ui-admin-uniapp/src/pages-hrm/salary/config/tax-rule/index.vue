@@ -28,7 +28,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <dict-tag
@@ -37,20 +37,20 @@
               :value="item.type"
             />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">是否计税：</text>{{ item.taxEnabled == null ? '-' : (item.taxEnabled ? '是' : '否') }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">是否计税：</text>{{ item.taxEnabled == null ? '-' : (item.taxEnabled ? '是' : '否') }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">起征点：</text>{{ item.threshold == null ? '-' : `${item.threshold}元/月` }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">起征点：</text>{{ item.threshold == null ? '-' : `${item.threshold}元/月` }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">小数位：</text>{{ item.decimalScale == null ? '-' : `保留${item.decimalScale}位小数` }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">小数位：</text>{{ item.decimalScale == null ? '-' : `保留${item.decimalScale}位小数` }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">计税周期：</text>{{ formatHrmSalaryTaxCycleType(item.cycleType) }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">计税周期：</text>{{ formatHrmSalaryTaxCycleType(item.cycleType) }}
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">适用薪资组：</text>{{ item.usedGroupCount ?? 0 }}个薪资组正在使用
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">适用薪资组：</text>{{ item.usedGroupCount ?? 0 }}个薪资组正在使用
           </view>
         </view>
       </view>
@@ -97,7 +97,7 @@ function handleBack() {
 async function queryList() {
   try {
     const data = await getSalaryTaxRuleList()
-    pagingRef.value?.completeByTotal(data, data.length)
+    pagingRef.value?.completeByNoMore(data, true)
   } catch {
     pagingRef.value?.complete(false)
   }

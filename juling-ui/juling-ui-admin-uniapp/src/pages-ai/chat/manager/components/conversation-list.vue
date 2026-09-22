@@ -23,19 +23,19 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-30rpx font-semibold">
             {{ item.title || `对话 #${item.id}` }}
           </view>
-          <view class="mt-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-12rpx text-26rpx">
             对话编号：{{ item.id || '-' }} / 消息数：{{ item.messageCount ?? '-' }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             用户：{{ getUserName(item.userId) }} / 角色：{{ item.roleName || '-' }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             模型：{{ item.model || '-' }} / 温度：{{ item.temperature ?? '-' }}
           </view>
-          <view class="mt-8rpx text-22rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-22rpx">
             {{ formatDateTime(item.createTime) }}
           </view>
         </view>

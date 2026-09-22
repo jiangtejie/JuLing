@@ -1,6 +1,6 @@
 <template>
-  <view class="shrink-0 bg-[#f7f8fa] px-20rpx pb-[calc(18rpx+env(safe-area-inset-bottom))] pt-12rpx">
-    <view class="border border-[#eee] rounded-28rpx bg-white px-22rpx pb-16rpx pt-18rpx shadow-[0_12rpx_48rpx_rgba(0,0,0,0.08)]">
+  <view class="yd-bg-subtle shrink-0 px-20rpx pb-[calc(18rpx+env(safe-area-inset-bottom))] pt-12rpx">
+    <view class="yd-border-base border rounded-28rpx bg-white px-22rpx pb-16rpx pt-18rpx shadow-[0_12rpx_48rpx_rgba(0,0,0,0.08)]">
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
         <wd-textarea
           v-model="formData.prompt"
@@ -13,23 +13,23 @@
       </wd-form>
       <view class="mt-14rpx flex items-center justify-between">
         <view class="flex items-center gap-12rpx">
-          <view class="rounded-full bg-[#f5f5f5] px-18rpx py-10rpx text-22rpx text-[#666]" @click="formData.prompt = '移动端 AI 能力'">
+          <view class="yd-bg-page yd-text-sub rounded-full px-18rpx py-10rpx text-22rpx" @click="formData.prompt = '移动端 AI 能力'">
             使用示例
           </view>
-          <view v-if="hasResult" class="rounded-full bg-[#f5f5f5] px-18rpx py-10rpx text-22rpx text-[#666]" @click="emit('reset')">
+          <view v-if="hasResult" class="yd-bg-page yd-text-sub rounded-full px-18rpx py-10rpx text-22rpx" @click="emit('reset')">
             新建
           </view>
         </view>
         <view
           class="h-64rpx w-64rpx flex items-center justify-center rounded-full"
-          :class="formData.prompt.trim() && !generating ? 'bg-[#52c41a]' : 'bg-[#d9d9d9]'"
+          :class="formData.prompt.trim() && !generating ? 'yd-bg-success' : 'bg-[#d9d9d9]'"
           @click="generating ? emit('stop') : emit('submit')"
         >
           <wd-icon :name="generating ? 'stop' : 'arrow-up'" size="32rpx" color="#fff" />
         </view>
       </view>
     </view>
-    <view class="pt-10rpx text-center text-20rpx text-[#aaa]">
+    <view class="yd-text-muted pt-10rpx text-center text-20rpx">
       内容由 AI 生成，请注意甄别
     </view>
   </view>

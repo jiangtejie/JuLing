@@ -19,14 +19,14 @@
       >
         <image
           v-if="item.picUrl"
-          class="h-640rpx w-full bg-[#f1f5f9]"
+          class="yd-bg-subtle h-640rpx w-full"
           :src="item.picUrl"
           mode="aspectFit"
           @click="handlePreview(item.picUrl)"
         />
         <view
           v-else
-          class="flex flex-col items-center justify-center gap-18rpx bg-[#f8fafc] px-32rpx text-26rpx text-[#999]"
+          class="yd-text-hint yd-bg-subtle flex flex-col items-center justify-center gap-18rpx px-32rpx text-26rpx"
           :class="item.errorMessage ? 'min-h-200rpx py-32rpx' : 'h-540rpx'"
         >
           <wd-loading v-if="!item.errorMessage" />
@@ -35,12 +35,12 @@
         <view class="p-24rpx">
           <view class="mb-16rpx flex items-center justify-between">
             <dict-tag :type="DICT_TYPE.AI_IMAGE_STATUS" :value="item.status" />
-            <text class="text-22rpx text-[#999]">{{ formatDateTime(item.createTime) }}</text>
+            <text class="yd-text-hint text-22rpx">{{ formatDateTime(item.createTime) }}</text>
           </view>
-          <view class="line-clamp-2 text-28rpx text-[#333]">
+          <view class="yd-text-main line-clamp-2 text-28rpx">
             {{ item.prompt || '-' }}
           </view>
-          <view class="mt-16rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-16rpx text-24rpx">
             {{ item.platform || '-' }} / {{ item.model || '-' }}
           </view>
           <view v-if="item.buttons?.length && !publicStatus" class="mt-18rpx flex flex-wrap gap-12rpx">
@@ -56,17 +56,17 @@
             </wd-button>
           </view>
           <view class="mt-20rpx flex items-center justify-between">
-            <view class="flex items-center gap-28rpx text-24rpx text-[#666]">
+            <view class="yd-text-sub flex items-center gap-28rpx text-24rpx">
               <view class="flex items-center gap-8rpx" @click="emit('reuse', item)">
                 <wd-icon name="refresh" size="30rpx" color="#666" />
                 <text>复用参数</text>
               </view>
-              <view v-if="!publicStatus" class="flex items-center gap-8rpx text-[#f5222d]" @click="emit('delete', item)">
+              <view v-if="!publicStatus" class="yd-text-danger flex items-center gap-8rpx" @click="emit('delete', item)">
                 <wd-icon name="delete" size="30rpx" color="#f5222d" />
                 <text>删除</text>
               </view>
             </view>
-            <text class="text-22rpx text-[#999]">点击图片预览</text>
+            <text class="yd-text-hint text-22rpx">点击图片预览</text>
           </view>
         </view>
       </view>

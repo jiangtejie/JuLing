@@ -12,7 +12,7 @@
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
         <view class="p-24rpx">
           <view class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-[#f0f0f0] px-24rpx py-18rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-border-light yd-text-main border-b px-24rpx py-18rpx text-30rpx font-semibold">
               活动信息
             </view>
             <wd-cell-group border>
@@ -53,37 +53,37 @@
 
           <!-- 优惠规则 -->
           <view class="mb-160rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="flex items-center justify-between border-b border-[#f0f0f0] px-24rpx py-18rpx">
-              <text class="text-30rpx text-[#333] font-semibold">优惠规则</text>
+            <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-18rpx">
+              <text class="yd-text-main text-30rpx font-semibold">优惠规则</text>
               <wd-button size="small" type="primary" variant="plain" @click="addRule">
                 添加
               </wd-button>
             </view>
-            <view v-for="(rule, index) in rules" :key="index" class="border-b border-[#f5f5f5] p-24rpx">
+            <view v-for="(rule, index) in rules" :key="index" class="yd-border-light border-b p-24rpx">
               <view class="mb-12rpx flex items-center justify-between">
-                <text class="text-28rpx text-[#333]">规则 {{ index + 1 }}</text>
-                <text class="text-26rpx text-[#fa4350]" @click="removeRule(index)">删除</text>
+                <text class="yd-text-main text-28rpx">规则 {{ index + 1 }}</text>
+                <text class="yd-text-danger text-26rpx" @click="removeRule(index)">删除</text>
               </view>
               <view class="flex items-center gap-12rpx py-6rpx">
-                <text class="w-180rpx shrink-0 text-26rpx text-[#666]">{{ formData.conditionType === PromotionConditionTypeEnum.COUNT ? '满件数' : '满金额(元)' }}</text>
+                <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">{{ formData.conditionType === PromotionConditionTypeEnum.COUNT ? '满件数' : '满金额(元)' }}</text>
                 <wd-input-number v-model="rule.limit" :min="0" :step="formData.conditionType === PromotionConditionTypeEnum.COUNT ? 1 : 0.01" />
               </view>
               <view class="flex items-center gap-12rpx py-6rpx">
-                <text class="w-180rpx shrink-0 text-26rpx text-[#666]">优惠金额(元)</text>
+                <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">优惠金额(元)</text>
                 <wd-input-number v-model="rule.discountPrice" :min="0" :step="0.01" :precision="2" />
               </view>
               <view class="flex items-center gap-12rpx py-6rpx">
-                <text class="w-180rpx shrink-0 text-26rpx text-[#666]">赠送积分</text>
+                <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">赠送积分</text>
                 <wd-input-number v-model="rule.point" :min="0" />
               </view>
               <view class="flex items-center gap-12rpx py-6rpx">
-                <text class="w-180rpx shrink-0 text-26rpx text-[#666]">是否包邮</text>
+                <text class="yd-text-sub w-180rpx shrink-0 text-26rpx">是否包邮</text>
                 <wd-switch v-model="rule.freeDelivery" />
               </view>
               <!-- 赠送优惠券 -->
               <view class="py-6rpx">
                 <view class="mb-8rpx flex items-center justify-between">
-                  <text class="text-26rpx text-[#666]">赠送优惠券</text>
+                  <text class="yd-text-sub text-26rpx">赠送优惠券</text>
                   <wd-button size="small" variant="plain" @click="openCouponPicker(index)">
                     选择优惠券
                   </wd-button>
@@ -94,12 +94,12 @@
                     :key="coupon.templateId"
                     class="flex items-center gap-12rpx"
                   >
-                    <text class="min-w-0 flex-1 truncate text-26rpx text-[#333]">{{ couponLabel(coupon.templateId) }}</text>
+                    <text class="yd-text-main min-w-0 flex-1 truncate text-26rpx">{{ couponLabel(coupon.templateId) }}</text>
                     <wd-input-number v-model="coupon.count" :min="1" />
-                    <text class="shrink-0 text-26rpx text-[#fa4350]" @click="removeCoupon(index, coupon.templateId)">移除</text>
+                    <text class="yd-text-danger shrink-0 text-26rpx" @click="removeCoupon(index, coupon.templateId)">移除</text>
                   </view>
                 </view>
-                <text v-else class="text-24rpx text-[#999]">未选择优惠券</text>
+                <text v-else class="yd-text-hint text-24rpx">未选择优惠券</text>
               </view>
             </view>
           </view>
@@ -110,13 +110,13 @@
     <!-- 赠送优惠券选择弹窗 -->
     <wd-popup
       v-model="couponPickerVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0; height: 70vh;"
       @close="couponPickerVisible = false"
     >
       <view class="box-border h-full flex flex-col overflow-hidden p-24rpx">
-        <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
           选择赠送优惠券
         </view>
         <z-paging
@@ -136,7 +136,7 @@
               v-for="template in couponTemplates"
               :key="template.id"
               :name="template.id"
-              class="border-b border-[#f5f5f5] py-16rpx"
+              class="yd-border-light border-b py-16rpx"
             >
               {{ template.name }}
             </wd-checkbox>
@@ -385,7 +385,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:promotion-reward-activity:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

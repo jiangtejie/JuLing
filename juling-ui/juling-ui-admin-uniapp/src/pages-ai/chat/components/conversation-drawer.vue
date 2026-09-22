@@ -1,29 +1,29 @@
 <template>
   <wd-popup v-model="visible" position="left" custom-style="width: 78vw; height: 100vh;">
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <view class="flex items-center px-28rpx pb-18rpx pt-[calc(28rpx+env(safe-area-inset-top))]">
-        <text class="text-34rpx text-[#333] font-semibold">对话</text>
+        <text class="yd-text-main text-34rpx font-semibold">对话</text>
       </view>
       <view class="px-20rpx">
         <wd-search v-model="keyword" placeholder="搜索历史记录" hide-cancel />
       </view>
       <scroll-view scroll-y class="min-h-0 flex-1 px-20rpx py-12rpx">
         <view v-for="group in conversationGroups" :key="group.label" class="mb-12rpx">
-          <view class="px-12rpx py-10rpx text-22rpx text-[#999] font-medium">
+          <view class="yd-text-hint px-12rpx py-10rpx text-22rpx font-medium">
             {{ group.label }}
           </view>
           <view
             v-for="item in group.items"
             :key="item.id"
             class="mb-8rpx flex items-center gap-12rpx rounded-24rpx px-22rpx py-20rpx"
-            :class="String(item.id) === String(activeConversationId) ? 'bg-[#e6f4ff]' : 'bg-transparent'"
+            :class="String(item.id) === String(activeConversationId) ? 'yd-bg-info-soft' : 'bg-transparent'"
             @click="emit('select', item)"
           >
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-28rpx font-medium">
                 {{ item.title || '新对话' }}
               </view>
-              <view class="mt-8rpx text-22rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-22rpx">
                 {{ item.modelName || item.model || '默认模型' }}
               </view>
             </view>
@@ -35,11 +35,11 @@
             </view>
           </view>
         </view>
-        <view v-if="conversationGroups.length === 0" class="py-80rpx text-center text-26rpx text-[#999]">
+        <view v-if="conversationGroups.length === 0" class="yd-text-hint py-80rpx text-center text-26rpx">
           暂无对话
         </view>
       </scroll-view>
-      <view class="shrink-0 border-t border-[#eee] bg-white px-20rpx pb-[calc(20rpx+env(safe-area-inset-bottom))] pt-20rpx">
+      <view class="yd-border-base shrink-0 border-t bg-white px-20rpx pb-[calc(20rpx+env(safe-area-inset-bottom))] pt-20rpx">
         <wd-button block type="primary" @click="emit('new')">
           新建对话
         </wd-button>

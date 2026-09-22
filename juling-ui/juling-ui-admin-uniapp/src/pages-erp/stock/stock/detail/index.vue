@@ -7,7 +7,7 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view class="p-24rpx">
         <view class="mb-24rpx rounded-12rpx bg-white p-32rpx text-center shadow-sm">
-          <view class="text-28rpx text-[#999]">
+          <view class="yd-text-hint text-28rpx">
             当前库存
           </view>
           <view class="mt-8rpx text-48rpx text-[#9254de] font-semibold">
@@ -31,7 +31,8 @@
 <script lang="ts" setup>
 import type { Stock } from '@/api/erp/stock/stock'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { getStock } from '@/api/erp/stock/stock'
 import { buildErpDocumentDetail } from '@/pages-erp/utils/erp'
 import { formatCount } from '@/pages-erp/utils/format'
@@ -67,7 +68,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

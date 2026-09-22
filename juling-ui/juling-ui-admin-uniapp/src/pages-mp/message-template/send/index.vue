@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="发送模板消息"
@@ -18,7 +18,7 @@
             prop="userId"
           />
           <wd-cell v-if="templateContent" title="模板内容" layout="vertical" value-align="left">
-            <view class="mt-12rpx whitespace-pre-wrap break-all text-26rpx text-[#666] leading-40rpx">
+            <view class="yd-text-sub mt-12rpx whitespace-pre-wrap break-all text-26rpx leading-40rpx">
               {{ templateContent }}
             </view>
           </wd-cell>
@@ -153,7 +153,7 @@ async function handleSubmit() {
     await sendMessageTemplate(data)
     toast.success('发送成功')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     loading.value = false
   }
 }

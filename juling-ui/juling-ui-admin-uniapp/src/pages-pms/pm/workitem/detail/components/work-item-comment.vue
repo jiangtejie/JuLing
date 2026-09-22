@@ -7,19 +7,19 @@
         class="flex items-center gap-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         @click="composing = true"
       >
-        <view class="h-48rpx w-48rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1677ff] text-24rpx text-white">
+        <view class="yd-bg-primary h-48rpx w-48rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full text-24rpx text-white">
           <wd-img v-if="loginAvatar" :src="loginAvatar" width="48rpx" height="48rpx" radius="50%" />
           <text v-else>{{ loginNickname.slice(0, 1) || '-' }}</text>
         </view>
-        <text class="text-26rpx text-[#999]">写下你的评论…</text>
+        <text class="yd-text-hint text-26rpx">写下你的评论…</text>
       </view>
       <template v-else>
         <view class="mb-12rpx flex items-center gap-12rpx">
-          <view class="h-48rpx w-48rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1677ff] text-24rpx text-white">
+          <view class="yd-bg-primary h-48rpx w-48rpx flex shrink-0 items-center justify-center overflow-hidden rounded-full text-24rpx text-white">
             <wd-img v-if="loginAvatar" :src="loginAvatar" width="48rpx" height="48rpx" radius="50%" />
             <text v-else>{{ loginNickname.slice(0, 1) || '-' }}</text>
           </view>
-          <text class="text-26rpx text-[#666]">{{ loginNickname }}</text>
+          <text class="yd-text-sub text-26rpx">{{ loginNickname }}</text>
         </view>
         <wd-textarea
           v-model="newContent"
@@ -40,7 +40,7 @@
     </view>
 
     <!-- 评论列表 -->
-    <view v-if="!commentList.length" class="py-60rpx text-center text-28rpx text-[#999]">
+    <view v-if="!commentList.length" class="yd-text-hint py-60rpx text-center text-28rpx">
       暂无评论
     </view>
     <view
@@ -49,11 +49,11 @@
       class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-8rpx flex items-center gap-12rpx">
-        <view class="h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-full bg-[#1677ff] text-24rpx text-white">
+        <view class="yd-bg-primary h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-full text-24rpx text-white">
           {{ comment.userName?.slice(0, 1) || '-' }}
         </view>
-        <text class="text-28rpx text-[#333] font-semibold">{{ comment.userName || '-' }}</text>
-        <text class="text-24rpx text-[#999]">{{ formatDateTime(comment.createTime) }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">{{ comment.userName || '-' }}</text>
+        <text class="yd-text-hint text-24rpx">{{ formatDateTime(comment.createTime) }}</text>
       </view>
       <view v-if="editingId === comment.id" class="mb-8rpx">
         <wd-textarea v-model="editingContent" :maxlength="2000" />
@@ -66,28 +66,28 @@
           </wd-button>
         </view>
       </view>
-      <view v-else class="whitespace-pre-wrap break-all text-28rpx text-[#333]">
+      <view v-else class="yd-text-main whitespace-pre-wrap break-all text-28rpx">
         {{ comment.content }}
       </view>
       <view v-if="editable" class="mt-12rpx flex items-center gap-24rpx">
         <template v-if="comment.userId === loginUserId && editingId !== comment.id">
-          <text class="text-26rpx text-[#1677ff]" @click="startEdit(comment)">编辑</text>
-          <text class="text-26rpx text-[#f5222d]" @click="handleDelete(comment)">删除</text>
+          <text class="yd-text-link text-26rpx" @click="startEdit(comment)">编辑</text>
+          <text class="yd-text-danger text-26rpx" @click="handleDelete(comment)">删除</text>
         </template>
-        <text class="text-26rpx text-[#1677ff]" @click="startReply(comment, comment)">回复</text>
+        <text class="yd-text-link text-26rpx" @click="startReply(comment, comment)">回复</text>
       </view>
 
       <!-- 评论回复 -->
       <view
         v-for="reply in comment.children || []"
         :key="reply.id"
-        class="mt-16rpx rounded-8rpx bg-[#f7f8fa] p-20rpx"
+        class="yd-bg-subtle mt-16rpx rounded-8rpx p-20rpx"
       >
         <view class="mb-4rpx flex items-center gap-12rpx">
-          <text class="text-26rpx text-[#333] font-semibold">{{ reply.userName || '-' }}</text>
-          <text class="text-24rpx text-[#999]">{{ formatDateTime(reply.createTime) }}</text>
+          <text class="yd-text-main text-26rpx font-semibold">{{ reply.userName || '-' }}</text>
+          <text class="yd-text-hint text-24rpx">{{ formatDateTime(reply.createTime) }}</text>
         </view>
-        <view v-if="reply.replyUserName" class="mb-4rpx text-24rpx text-[#999]">
+        <view v-if="reply.replyUserName" class="yd-text-hint mb-4rpx text-24rpx">
           回复 @{{ reply.replyUserName }}
         </view>
         <view v-if="editingId === reply.id">
@@ -101,15 +101,15 @@
             </wd-button>
           </view>
         </view>
-        <view v-else class="whitespace-pre-wrap break-all text-28rpx text-[#333]">
+        <view v-else class="yd-text-main whitespace-pre-wrap break-all text-28rpx">
           {{ reply.content }}
         </view>
         <view v-if="editable" class="mt-8rpx flex items-center gap-24rpx">
           <template v-if="reply.userId === loginUserId && editingId !== reply.id">
-            <text class="text-26rpx text-[#1677ff]" @click="startEdit(reply)">编辑</text>
-            <text class="text-26rpx text-[#f5222d]" @click="handleDelete(reply)">删除</text>
+            <text class="yd-text-link text-26rpx" @click="startEdit(reply)">编辑</text>
+            <text class="yd-text-danger text-26rpx" @click="handleDelete(reply)">删除</text>
           </template>
-          <text class="text-26rpx text-[#1677ff]" @click="startReply(comment, reply)">回复</text>
+          <text class="yd-text-link text-26rpx" @click="startReply(comment, reply)">回复</text>
         </view>
       </view>
 

@@ -10,20 +10,20 @@
     <!-- 头部摘要 -->
     <view v-if="summary.employeeId" class="bg-white px-24rpx py-24rpx">
       <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
           {{ summary.employeeName || '-' }}
         </view>
         <view
           class="shrink-0 rounded-8rpx px-12rpx py-4rpx text-22rpx"
-          :class="summary.fullAttendance ? 'bg-[#f6ffed] text-[#52c41a]' : 'bg-[#fff7e6] text-[#fa8c16]'"
+          :class="summary.fullAttendance ? 'yd-bg-success-soft yd-text-success' : 'yd-bg-warning-soft yd-text-warning'"
         >
           {{ summary.fullAttendance ? '全勤' : '非全勤' }}
         </view>
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         {{ summary.jobNumber || '-' }} · {{ summary.deptName || '-' }} · {{ summary.postName || '-' }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         {{ yearMonthText }} · 应出勤 {{ summary.attendDays ?? 0 }} 天 · 实出勤 {{ formatHrmDays(summary.actualDays) }} 天
       </view>
     </view>
@@ -75,15 +75,15 @@
             :key="item.value"
             class="mr-16rpx inline-flex rounded-full px-24rpx py-10rpx text-24rpx"
             :class="dailyStatusFilter === item.value
-              ? 'bg-[#1677ff] text-white'
-              : 'bg-[#f5f5f5] text-[#666]'"
+              ? 'yd-bg-primary text-white'
+              : 'yd-bg-page yd-text-sub'"
             @click="dailyStatusFilter = item.value"
           >
             {{ item.label }}
           </view>
         </scroll-view>
       </view>
-      <view v-if="filteredDailyDetails.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="filteredDailyDetails.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
         暂无每日明细
       </view>
       <view v-else class="p-24rpx">
@@ -93,7 +93,7 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold">
               {{ formatDate(item.attendanceTime) || '-' }}
             </view>
             <view
@@ -104,13 +104,13 @@
               {{ item.attendanceResult }}
             </view>
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">班次：</text>{{ item.shiftName || '未排班' }}
+          <view class="yd-text-sub mb-12rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">班次：</text>{{ item.shiftName || '未排班' }}
           </view>
           <view
             v-for="clock in item.clockList || []"
             :key="clock.id || String(clock.clockTime)"
-            class="mb-8rpx flex items-center gap-12rpx text-26rpx text-[#666]"
+            class="yd-text-sub mb-8rpx flex items-center gap-12rpx text-26rpx"
           >
             <dict-tag
               v-if="clock.type != null"
@@ -126,7 +126,7 @@
               :value="clock.status"
             />
           </view>
-          <view v-if="item.leaveMinutes" class="mt-8rpx text-26rpx text-[#1677ff]">
+          <view v-if="item.leaveMinutes" class="yd-text-link mt-8rpx text-26rpx">
             请假 {{ formatHrmDays(item.leaveDays) }} 天
           </view>
         </view>
@@ -142,15 +142,15 @@
             :key="item.value"
             class="mr-16rpx inline-flex rounded-full px-24rpx py-10rpx text-24rpx"
             :class="leaveTypeFilter === item.value
-              ? 'bg-[#1677ff] text-white'
-              : 'bg-[#f5f5f5] text-[#666]'"
+              ? 'yd-bg-primary text-white'
+              : 'yd-bg-page yd-text-sub'"
             @click="leaveTypeFilter = item.value"
           >
             {{ item.label }}
           </view>
         </scroll-view>
       </view>
-      <view v-if="filteredLeaveList.length === 0" class="py-80rpx text-center text-28rpx text-[#999]">
+      <view v-if="filteredLeaveList.length === 0" class="yd-text-hint py-80rpx text-center text-28rpx">
         暂无请假记录
       </view>
       <view v-else class="p-24rpx">
@@ -165,19 +165,19 @@
               :type="DICT_TYPE.HRM_ATTENDANCE_LEAVE_TYPE"
               :value="item.type"
             />
-            <text v-else class="text-28rpx text-[#333]">-</text>
+            <text v-else class="yd-text-main text-28rpx">-</text>
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">开始：</text>{{ formatDateTime(item.startTime) || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">开始：</text>{{ formatDateTime(item.startTime) || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">结束：</text>{{ formatDateTime(item.endTime) || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">结束：</text>{{ formatDateTime(item.endTime) || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">时长：</text>{{ formatHrmDays(item.day) }} 天
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint mr-8rpx">时长：</text>{{ formatHrmDays(item.day) }} 天
           </view>
-          <view v-if="item.reason" class="text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">事由：</text>{{ item.reason }}
+          <view v-if="item.reason" class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint mr-8rpx">事由：</text>{{ item.reason }}
           </view>
         </view>
       </view>
@@ -188,7 +188,8 @@
 <script lang="ts" setup>
 import type { AttendanceDailyDetail, AttendanceMonthDetail, AttendanceMonthRecord } from '@/api/hrm/attendance/statistics'
 import type { AttendanceLeave } from '@/api/hrm/attendance/leave'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import { getAttendanceMonthDetail } from '@/api/hrm/attendance/statistics'
 import { getStrDictOptions } from '@/hooks/useDict'
 import { formatHrmDays, formatHrmMoney } from '@/pages-hrm/utils/format'
@@ -279,15 +280,15 @@ function isDailyDetailVisible(item: AttendanceDailyDetail) {
 /** 获得考勤结果样式 */
 function getAttendanceResultClass(result?: string) {
   if (result === '正常') {
-    return 'bg-[#f6ffed] text-[#52c41a]'
+    return 'yd-bg-success-soft yd-text-success'
   }
   if (result?.includes('旷工')) {
-    return 'bg-[#fff1f0] text-[#f5222d]'
+    return 'yd-bg-danger-soft yd-text-danger'
   }
   if (result?.includes('缺卡') || result?.includes('迟到') || result?.includes('早退')) {
-    return 'bg-[#fff7e6] text-[#fa8c16]'
+    return 'yd-bg-warning-soft yd-text-warning'
   }
-  return 'bg-[#f5f5f5] text-[#666]'
+  return 'yd-bg-page yd-text-sub'
 }
 
 /** 加载月度考勤详情 */
@@ -303,7 +304,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(() => {
+onShow(() => {
   getDetail()
 })
 </script>

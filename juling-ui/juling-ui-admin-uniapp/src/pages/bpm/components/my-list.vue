@@ -32,7 +32,7 @@
             </view>
             <view v-if="item.summary?.length" class="bpm-summary">
               <view v-for="(s, idx) in item.summary" :key="idx" class="bpm-summary-item">
-                <text class="text-[#999]">{{ s.key }}：</text>
+                <text class="yd-text-hint">{{ s.key }}：</text>
                 <text>{{ s.value }}</text>
               </view>
             </view>

@@ -3,7 +3,7 @@
     <view class="p-24rpx pb-60rpx">
       <!-- 公告列表标题与操作 -->
       <view class="mb-16rpx flex items-center justify-between">
-        <text class="text-30rpx text-[#333] font-semibold">项目公告（{{ list.length }}）</text>
+        <text class="yd-text-main text-30rpx font-semibold">项目公告（{{ list.length }}）</text>
         <wd-button
           v-if="editable && hasAccessByCodes(['pms:pm:project:update'])"
           size="small" type="primary"
@@ -19,24 +19,24 @@
         :key="item.id"
         class="mb-16rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
-        <view class="line-clamp-3 mb-12rpx whitespace-pre-wrap text-28rpx text-[#333] leading-40rpx">
+        <view class="yd-text-main line-clamp-3 mb-12rpx whitespace-pre-wrap text-28rpx leading-40rpx">
           {{ item.content }}
         </view>
         <view v-if="item.fileUrls?.length" class="mb-12rpx flex flex-wrap gap-16rpx">
           <text
             v-for="(url, index) in item.fileUrls"
             :key="url"
-            class="text-26rpx text-[#1677ff]"
+            class="yd-text-link text-26rpx"
             @click="openAttachment(url)"
           >
             附件 {{ index + 1 }}
           </text>
         </view>
-        <view class="flex items-center justify-between text-24rpx text-[#999]">
+        <view class="yd-text-hint flex items-center justify-between text-24rpx">
           <text>{{ item.creatorUserName || '-' }} 发布于 {{ formatDateTime(item.createTime) }}</text>
           <view v-if="editable && hasAccessByCodes(['pms:pm:project:update'])" class="flex shrink-0 gap-16rpx">
-            <text class="text-26rpx text-[#1677ff]" @click="handleEdit(item)">编辑</text>
-            <text class="text-26rpx text-[#f5222d]" @click="handleDelete(item)">删除</text>
+            <text class="yd-text-link text-26rpx" @click="handleEdit(item)">编辑</text>
+            <text class="yd-text-danger text-26rpx" @click="handleDelete(item)">删除</text>
           </view>
         </view>
       </view>
@@ -44,9 +44,9 @@
     </view>
 
     <!-- 公告表单弹窗 -->
-    <wd-popup v-model="formVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="formVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="p-32rpx">
-        <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
           {{ formData.id ? '编辑公告' : '发布公告' }}
         </view>
         <wd-form ref="formRef" :model="formData" :schema="formSchema">

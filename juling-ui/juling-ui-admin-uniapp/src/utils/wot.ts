@@ -68,7 +68,14 @@ export function createFormSchema(rules: WotFormRulesGetter): FormSchema {
     },
     isRequired(path) {
       // Wot UI 的 isRequired 不传 model，动态 required 只能依赖 props/id 等外部响应式闭包。
-      return normalizeFormRules(getFormRules(rules)[path]).some(rule => isRuleRequired(rule))
+      // add by 棱信矩灵：这里拿到的是 undefined，若规则误写成 required(model) => model.xxx 会抛错；
+      // 而 isRequired 是 wd-form-item 模板绑定的 computed（渲染期执行），抛错会中断整块表单渲染，
+      // 故兜底为 false（仅影响必填星号展示，实际校验仍由 validate(model) 正常执行）。
+      try {
+        return normalizeFormRules(getFormRules(rules)[path]).some(rule => isRuleRequired(rule))
+      } catch {
+        return false
+      }
     },
   }
 }

@@ -3,7 +3,7 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view v-if="loading" class="py-100rpx text-center">
         <wd-loading />
-        <view class="mt-16rpx text-28rpx text-[#999]">
+        <view class="yd-text-hint mt-16rpx text-28rpx">
           加载中...
         </view>
       </view>
@@ -14,10 +14,10 @@
           <view v-for="item in list" :key="item.id" class="mb-20rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
             <wd-img v-if="item.url" :src="item.url" width="100%" height="320rpx" mode="aspectFill" enable-preview />
             <view class="p-24rpx">
-              <view class="mb-12rpx truncate text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main mb-12rpx truncate text-30rpx font-semibold">
                 {{ item.title || '-' }}
               </view>
-              <view class="text-26rpx text-[#666] space-y-8rpx">
+              <view class="yd-text-sub text-26rpx space-y-8rpx">
                 <view>展示顺序：{{ item.sort ?? '-' }}</view>
                 <view>所属工序：{{ getProcessLabel(item) }}</view>
                 <view v-if="item.description">
@@ -73,7 +73,7 @@
       custom-style="border-radius: 24rpx 24rpx 0 0; max-height: 85vh;"
     >
       <scroll-view scroll-y class="bg-white px-24rpx pb-40rpx pt-32rpx" style="max-height: 85vh;">
-        <view class="mb-32rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-32rpx text-center text-32rpx font-semibold">
           {{ formType === 'create' ? `新增 ${title}` : `编辑 ${title}` }}
         </view>
         <wd-form ref="formRef" :model="formData" :schema="formSchema">

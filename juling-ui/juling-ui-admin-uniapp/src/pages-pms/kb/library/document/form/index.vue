@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       :title="getTitle"
@@ -42,7 +42,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view v-if="!isFileDocument" class="p-24rpx text-24rpx text-[#999]">
+      <view v-if="!isFileDocument" class="yd-text-hint p-24rpx text-24rpx">
         移动端以纯文本编辑文档内容；富文本格式请在 PC 端编辑
       </view>
     </scroll-view>

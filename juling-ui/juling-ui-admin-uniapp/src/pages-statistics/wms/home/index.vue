@@ -13,10 +13,10 @@
         <view class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
           <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
             <view>
-              <view class="text-30rpx text-[#333] font-semibold">
+              <view class="yd-text-main text-30rpx font-semibold">
                 WMS 首页
               </view>
-              <view class="mt-4rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-4rpx text-24rpx">
                 单据工作台 / 库存概览
               </view>
             </view>
@@ -32,11 +32,11 @@
               @change="handleWarehouseChange"
             />
           </wd-cell-group>
-          <view class="flex items-center justify-between px-24rpx py-16rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint flex items-center justify-between px-24rpx py-16rpx text-24rpx">
             <text>统计时间</text>
             <text>{{ statTime || '-' }}</text>
           </view>
-          <view v-if="loadError" class="border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx text-[#fa8c16]">
+          <view v-if="loadError" class="yd-text-warning border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx">
             部分统计数据加载失败，请稍后刷新
           </view>
         </view>
@@ -53,20 +53,20 @@
           <!-- 库存汇总 -->
           <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-16rpx flex items-center justify-between">
-              <text class="text-30rpx text-[#333] font-semibold">库存汇总</text>
+              <text class="yd-text-main text-30rpx font-semibold">库存汇总</text>
               <wd-loading v-if="loading" size="32rpx" />
             </view>
-            <view class="text-56rpx text-[#1677ff] font-semibold">
+            <view class="yd-text-link text-56rpx font-semibold">
               {{ formatQuantity(inventorySummary?.totalQuantity) || '0.00' }}
             </view>
-            <view class="mt-8rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-8rpx text-24rpx">
               当前库存总量
             </view>
           </view>
 
           <!-- 单据汇总 -->
           <view>
-            <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
               单据汇总
             </view>
             <view class="grid grid-cols-2 gap-16rpx">
@@ -79,15 +79,15 @@
                 <view class="mb-12rpx flex items-center justify-between gap-12rpx">
                   <view class="min-w-0 flex items-center gap-8rpx">
                     <view class="h-14rpx w-14rpx shrink-0 rounded-full" :style="{ backgroundColor: item.color }" />
-                    <text class="truncate text-26rpx text-[#666]">{{ item.title }}</text>
+                    <text class="yd-text-sub truncate text-26rpx">{{ item.title }}</text>
                   </view>
-                  <text class="text-22rpx text-[#1677ff]">查看</text>
+                  <text class="yd-text-link text-22rpx">查看</text>
                 </view>
                 <view class="mb-16rpx flex items-baseline gap-8rpx">
-                  <text class="text-42rpx text-[#333] font-semibold">{{ item.total || 0 }}</text>
-                  <text class="text-24rpx text-[#999]">单</text>
+                  <text class="yd-text-main text-42rpx font-semibold">{{ item.total || 0 }}</text>
+                  <text class="yd-text-hint text-24rpx">单</text>
                 </view>
-                <view class="mb-16rpx h-12rpx flex overflow-hidden rounded-full bg-[#f0f2f5]">
+                <view class="yd-bg-subtle mb-16rpx h-12rpx flex overflow-hidden rounded-full">
                   <view
                     v-for="status in statusList"
                     :key="status.status"
@@ -98,7 +98,7 @@
                 <view
                   v-for="status in statusList"
                   :key="status.status"
-                  class="mb-8rpx flex items-center justify-between text-24rpx text-[#999]"
+                  class="yd-text-hint mb-8rpx flex items-center justify-between text-24rpx"
                 >
                   <view class="flex items-center gap-8rpx">
                     <view class="h-10rpx w-10rpx rounded-full" :style="{ backgroundColor: status.color }" />
@@ -116,10 +116,10 @@
           <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-30rpx font-semibold">
                   单据趋势
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   入库、出库、移库、盘库单据数量
                 </view>
               </view>
@@ -128,7 +128,7 @@
                   v-for="item in trendDayOptions"
                   :key="item.value"
                   class="h-56rpx min-w-112rpx flex items-center justify-center rounded-6rpx px-16rpx text-24rpx"
-                  :class="trendDays === item.value ? 'bg-white text-[#1677ff] shadow-sm' : 'text-[#666]'"
+                  :class="trendDays === item.value ? 'bg-white yd-text-link shadow-sm' : 'yd-text-sub'"
                   @click="handleTrendDaysChange(item.value)"
                 >
                   {{ item.label }}
@@ -145,7 +145,7 @@
                   class="flex shrink-0 flex-col items-center justify-end"
                   :style="{ height: `${trendChartHeight}rpx` }"
                 >
-                  <text class="mb-8rpx text-20rpx text-[#999]">{{ getTrendTotal(item) }}</text>
+                  <text class="yd-text-hint mb-8rpx text-20rpx">{{ getTrendTotal(item) }}</text>
                   <view class="h-180rpx flex items-end gap-5rpx">
                     <view
                       v-for="definition in orderDefinitions"
@@ -157,18 +157,18 @@
                       }"
                     />
                   </view>
-                  <text class="mt-12rpx text-20rpx text-[#999]">{{ formatTrendDate(item.time) }}</text>
+                  <text class="yd-text-hint mt-12rpx text-20rpx">{{ formatTrendDate(item.time) }}</text>
                 </view>
               </view>
             </scroll-view>
-            <view class="mt-16rpx flex flex-wrap justify-center gap-x-24rpx gap-y-12rpx text-22rpx text-[#999]">
+            <view class="yd-text-hint mt-16rpx flex flex-wrap justify-center gap-x-24rpx gap-y-12rpx text-22rpx">
               <view v-for="item in orderDefinitions" :key="item.type" class="flex items-center gap-8rpx">
                 <view class="h-12rpx w-12rpx rounded-full" :style="{ backgroundColor: item.color }" />
                 <text>{{ item.title }}</text>
               </view>
             </view>
           </view>
-          <view v-else class="px-24rpx py-48rpx text-center text-26rpx text-[#999]">
+          <view v-else class="yd-text-hint px-24rpx py-48rpx text-center text-26rpx">
             暂无趋势数据
           </view>
         </view>
@@ -177,24 +177,24 @@
         <view v-if="activeTab === WMS_HOME_TAB.INVENTORY" class="mt-24rpx space-y-24rpx">
           <!-- 货物占比 -->
           <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
-            <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
               货物占比
             </view>
-            <view class="mb-20rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-20rpx text-24rpx">
               按商品库存数量汇总 Top {{ goodsLimit }}
             </view>
             <view v-if="goodsShareItems.length > 0" class="space-y-20rpx">
               <view v-for="item in goodsShareItems" :key="item.id">
                 <view class="mb-8rpx flex items-center justify-between gap-16rpx text-26rpx">
-                  <text class="min-w-0 flex-1 truncate text-[#333]">{{ item.name }}</text>
-                  <text class="shrink-0 text-[#999]">{{ item.quantityText }} · {{ item.percentText }}</text>
+                  <text class="yd-text-main min-w-0 flex-1 truncate">{{ item.name }}</text>
+                  <text class="yd-text-hint shrink-0">{{ item.quantityText }} · {{ item.percentText }}</text>
                 </view>
-                <view class="h-12rpx overflow-hidden rounded-full bg-[#f0f2f5]">
+                <view class="yd-bg-subtle h-12rpx overflow-hidden rounded-full">
                   <view class="h-full rounded-full bg-[#18a058]" :style="{ width: item.percentWidth }" />
                 </view>
               </view>
             </view>
-            <view v-else class="py-32rpx text-center text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint py-32rpx text-center text-26rpx">
               暂无商品库存数据
             </view>
           </view>
@@ -202,24 +202,24 @@
           <!-- 库存分布 -->
           <view class="mb-32rpx rounded-12rpx bg-white p-24rpx shadow-sm">
             <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-              <text class="text-30rpx text-[#333] font-semibold">库存分布</text>
-              <text class="text-24rpx text-[#999]">总库存 {{ formatQuantity(inventorySummary?.totalQuantity) || '0.00' }}</text>
+              <text class="yd-text-main text-30rpx font-semibold">库存分布</text>
+              <text class="yd-text-hint text-24rpx">总库存 {{ formatQuantity(inventorySummary?.totalQuantity) || '0.00' }}</text>
             </view>
-            <view class="mb-20rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mb-20rpx text-24rpx">
               按仓库库存数量汇总 Top {{ warehouseLimit }}
             </view>
             <view v-if="warehouseDistributionItems.length > 0" class="space-y-20rpx">
               <view v-for="item in warehouseDistributionItems" :key="item.id">
                 <view class="mb-8rpx flex items-center justify-between gap-16rpx text-26rpx">
-                  <text class="min-w-0 flex-1 truncate text-[#333]">{{ item.name }}</text>
-                  <text class="shrink-0 text-[#999]">{{ item.quantityText }}</text>
+                  <text class="yd-text-main min-w-0 flex-1 truncate">{{ item.name }}</text>
+                  <text class="yd-text-hint shrink-0">{{ item.quantityText }}</text>
                 </view>
-                <view class="h-12rpx overflow-hidden rounded-full bg-[#f0f2f5]">
+                <view class="yd-bg-subtle h-12rpx overflow-hidden rounded-full">
                   <view class="h-full rounded-full bg-[#2f7df6]" :style="{ width: item.percentWidth }" />
                 </view>
               </view>
             </view>
-            <view v-else class="py-32rpx text-center text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint py-32rpx text-center text-26rpx">
               暂无仓库库存数据
             </view>
           </view>

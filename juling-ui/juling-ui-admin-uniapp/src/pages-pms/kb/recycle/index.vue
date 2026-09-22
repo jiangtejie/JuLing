@@ -15,7 +15,7 @@
     </view>
 
     <!-- 提示 -->
-    <view class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fffbe6] p-20rpx text-26rpx text-[#fa8c16]">
+    <view class="yd-text-warning mx-24rpx mt-24rpx rounded-12rpx bg-[#fffbe6] p-20rpx text-26rpx">
       恢复时会保留此前单独删除的子项；彻底删除后无法恢复。内容最多保留 30 天，之后将被永久删除。
     </view>
 
@@ -31,7 +31,7 @@
     <!-- 回收站列表 -->
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx pb-200rpx">
-        <view v-if="!displayList.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!displayList.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无回收站内容
         </view>
         <view
@@ -42,7 +42,7 @@
           <view class="mb-8rpx flex items-center justify-between gap-16rpx">
             <text
               class="min-w-0 flex-1 truncate text-30rpx font-semibold"
-              :class="activeTab === 'library' ? 'text-[#333]' : 'text-[#1677ff]'"
+              :class="activeTab === 'library' ? 'yd-text-main' : 'yd-text-link'"
               @click="handleDetail(item)"
             >
               {{ item.name }}
@@ -51,7 +51,7 @@
               {{ getKnowledgeObjectTypeName(item.type) }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-12rpx text-24rpx">
             {{ item.deleteUserName || '-' }} 删除于 {{ formatDateTime(item.deleteTime) || '-' }}
             <text v-if="item.fileSize != null"> · {{ formatKnowledgeFileSize(item.fileSize) }}</text>
           </view>
@@ -68,37 +68,37 @@
     </scroll-view>
 
     <!-- 回收站详情弹窗 -->
-    <wd-popup v-model="detailVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="detailVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view v-if="detail" class="flex flex-col" :style="{ maxHeight: '80vh' }">
         <view class="p-32rpx pb-16rpx">
-          <view class="mb-8rpx text-center text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-center text-32rpx font-semibold">
             {{ detail.root.name }}
           </view>
-          <view class="text-center text-24rpx text-[#999]">
+          <view class="yd-text-hint text-center text-24rpx">
             删除于 {{ detail.root.deleteTime ? formatDateTime(detail.root.deleteTime) : '未知时间' }}
           </view>
         </view>
         <scroll-view scroll-y class="min-h-0 flex-1 px-32rpx">
-          <view class="mb-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-26rpx">
             级联删除内容（{{ detail.children.length }}）
           </view>
-          <view v-if="!detail.children.length" class="py-40rpx text-center text-26rpx text-[#999]">
+          <view v-if="!detail.children.length" class="yd-text-hint py-40rpx text-center text-26rpx">
             该对象没有级联删除内容
           </view>
           <view
             v-for="child in detail.children"
             :key="child.id"
-            class="mb-12rpx flex items-center gap-12rpx rounded-8rpx bg-[#f7f8fa] p-20rpx"
+            class="yd-bg-subtle mb-12rpx flex items-center gap-12rpx rounded-8rpx p-20rpx"
           >
             <wd-icon
               :name="child.type === PmsKnowledgeObjectType.FOLDER ? 'folder' : child.type === PmsKnowledgeObjectType.FILE ? 'file' : 'textarea'"
               size="32rpx"
               :color="child.type === PmsKnowledgeObjectType.FOLDER ? '#fa8c16' : '#1677ff'"
             />
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ child.name }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ child.name }}</text>
             <text
               v-if="child.type !== PmsKnowledgeObjectType.FOLDER"
-              class="shrink-0 text-26rpx text-[#1677ff]"
+              class="yd-text-link shrink-0 text-26rpx"
               @click="handlePreview(child.id)"
             >
               预览
@@ -120,19 +120,19 @@
     </wd-popup>
 
     <!-- 内容预览弹窗 -->
-    <wd-popup v-model="previewVisible" position="bottom" root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
+    <wd-popup v-model="previewVisible" position="bottom" safe-area-inset-bottom root-portal custom-style="border-radius: 24rpx 24rpx 0 0;">
       <view class="flex flex-col" :style="{ maxHeight: '70vh' }">
-        <view class="p-32rpx pb-16rpx text-center text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main p-32rpx pb-16rpx text-center text-32rpx font-semibold">
           {{ preview?.name || '内容预览' }}
         </view>
         <scroll-view scroll-y class="min-h-0 flex-1 px-32rpx">
           <template v-if="preview">
             <!-- 富文本消毒后渲染；纯文本（移动端自产）保留换行 -->
             <rich-text v-if="preview.content && isHtmlContent(preview.content)" :nodes="sanitizeRichText(preview.content)" />
-            <view v-else-if="preview.content" class="whitespace-pre-wrap break-all text-28rpx text-[#333]">
+            <view v-else-if="preview.content" class="yd-text-main whitespace-pre-wrap break-all text-28rpx">
               {{ preview.content }}
             </view>
-            <view v-else class="py-40rpx text-center text-26rpx text-[#999]">
+            <view v-else class="yd-text-hint py-40rpx text-center text-26rpx">
               该内容暂无可预览数据
             </view>
             <wd-button

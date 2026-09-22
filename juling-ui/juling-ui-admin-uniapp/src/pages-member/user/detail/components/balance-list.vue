@@ -19,18 +19,18 @@
         class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
       >
         <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-          <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
             {{ item.title || '余额变动' }}
           </view>
           <wd-tag :type="(item.price || 0) > 0 ? 'success' : 'danger'" variant="plain">
             {{ formatSignedAmount(item.price) }}
           </wd-tag>
         </view>
-        <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-          <text class="mr-8rpx text-[#999]">钱包余额：</text>
-          <text>{{ formatAmount(item.balance) }}</text>
+        <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+          <text class="yd-text-hint mr-8rpx">钱包余额：</text>
+          <text>{{ formatDisplayMoney(item.balance) }}</text>
         </view>
-        <view class="text-24rpx text-[#999]">
+        <view class="yd-text-hint text-24rpx">
           {{ formatDateTime(item.createTime) || '-' }}
         </view>
       </view>
@@ -43,6 +43,7 @@ import type { PayWalletTransaction } from '@/api/pay/wallet/transaction'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { getPayWalletTransactionPage } from '@/api/pay/wallet/transaction'
 import { formatDateTime } from '@/utils/date'
+import { formatDisplayMoney } from '@/utils/format'
 
 const props = defineProps<{
   walletId?: number
@@ -51,16 +52,11 @@ const props = defineProps<{
 const list = ref<PayWalletTransaction[]>([]) // 列表数据
 const pagingRef = ref<ZPagingRef<PayWalletTransaction>>() // 分页组件引用
 
-/** 金额分转元展示 */
-function formatAmount(value?: number | string) {
-  return `￥${(Number(value || 0) / 100).toFixed(2)}`
-}
-
 /** 变动金额展示 */
 function formatSignedAmount(value?: number | string) {
   const amount = Number(value || 0)
   const sign = amount > 0 ? '+' : ''
-  return `${sign}${formatAmount(amount)}`
+  return `${sign}${formatDisplayMoney(amount)}`
 }
 
 /** 查询余额流水 */

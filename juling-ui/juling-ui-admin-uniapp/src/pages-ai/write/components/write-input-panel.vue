@@ -1,6 +1,6 @@
 <template>
-  <view class="shrink-0 bg-[#f7f8fa] px-20rpx pb-[calc(18rpx+env(safe-area-inset-bottom))] pt-12rpx">
-    <view class="border border-[#eee] rounded-28rpx bg-white px-22rpx pb-16rpx pt-18rpx shadow-[0_12rpx_48rpx_rgba(0,0,0,0.08)]">
+  <view class="yd-bg-subtle shrink-0 px-20rpx pb-[calc(18rpx+env(safe-area-inset-bottom))] pt-12rpx">
+    <view class="yd-border-base border rounded-28rpx bg-white px-22rpx pb-16rpx pt-18rpx shadow-[0_12rpx_48rpx_rgba(0,0,0,0.08)]">
       <wd-textarea
         v-model="formData.prompt"
         placeholder="输入写作要求"
@@ -11,11 +11,11 @@
       />
       <view class="mt-14rpx flex items-center justify-between">
         <view class="flex items-center gap-12rpx">
-          <view class="flex items-center gap-8rpx rounded-full bg-[#f5f5f5] px-18rpx py-10rpx" @click="settingsVisible = true">
+          <view class="yd-bg-page flex items-center gap-8rpx rounded-full px-18rpx py-10rpx" @click="settingsVisible = true">
             <wd-icon name="settings" size="26rpx" color="#666" />
             <text class="text-22rpx text-[#555]">{{ formData.type === AiWriteTypeEnum.WRITING ? '撰写' : '回复' }} · 参数</text>
           </view>
-          <view v-if="hasResult" class="rounded-full bg-[#f5f5f5] px-18rpx py-10rpx text-22rpx text-[#666]" @click="emit('reset')">
+          <view v-if="hasResult" class="yd-bg-page yd-text-sub rounded-full px-18rpx py-10rpx text-22rpx" @click="emit('reset')">
             新建
           </view>
         </view>
@@ -28,7 +28,7 @@
         </view>
       </view>
     </view>
-    <view class="pt-10rpx text-center text-20rpx text-[#aaa]">
+    <view class="yd-text-muted pt-10rpx text-center text-20rpx">
       内容由 AI 生成，请注意甄别
     </view>
   </view>
@@ -44,7 +44,7 @@
   >
     <view class="px-24rpx pb-28rpx pt-24rpx">
       <view class="mb-22rpx flex items-center justify-between px-4rpx">
-        <text class="text-32rpx text-[#222] font-semibold">写作参数</text>
+        <text class="yd-text-strong text-32rpx font-semibold">写作参数</text>
         <wd-icon name="close" size="36rpx" color="#999" @click="settingsVisible = false" />
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">

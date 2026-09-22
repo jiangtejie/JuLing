@@ -27,27 +27,27 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view class="shrink-0">
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">告警级别：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">告警级别：</text>
             <dict-tag :type="DICT_TYPE.IOT_ALERT_LEVEL" :value="item.level" />
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">关联规则：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">关联规则：</text>
             {{ item.sceneRuleIds?.length || 0 }} 条
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">接收人：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">接收人：</text>
             {{ formatReceiveUserNames(item.receiveUserNames) }}
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">接收类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">接收类型：</text>
             <view class="flex flex-wrap gap-8rpx">
               <dict-tag
                 v-for="receiveType in item.receiveTypes"
@@ -58,7 +58,7 @@
               <text v-if="!item.receiveTypes?.length">-</text>
             </view>
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             创建时间：{{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

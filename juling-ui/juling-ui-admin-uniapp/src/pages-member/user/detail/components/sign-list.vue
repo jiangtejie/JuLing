@@ -23,14 +23,14 @@
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-30rpx font-semibold">
               第 {{ item.day || 0 }} 天
             </view>
             <wd-tag :type="(item.point || 0) > 0 ? 'success' : 'danger'" variant="plain">
               {{ (item.point || 0) > 0 ? `+${item.point}` : item.point }}
             </wd-tag>
           </view>
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ formatDateTime(item.createTime) || '-' }}
           </view>
         </view>

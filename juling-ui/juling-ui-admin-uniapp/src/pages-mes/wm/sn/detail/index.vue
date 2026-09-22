@@ -24,7 +24,7 @@
 
     <!-- SN 明细列表 -->
     <view class="px-24rpx pb-24rpx">
-      <view class="mb-16rpx text-28rpx text-[#666] font-semibold">
+      <view class="yd-text-sub mb-16rpx text-28rpx font-semibold">
         SN 码明细
       </view>
       <view v-if="loading" class="rounded-12rpx bg-white py-48rpx text-center">
@@ -39,23 +39,23 @@
           :key="item.id"
           class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-12rpx truncate text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx truncate text-30rpx font-semibold">
             {{ item.code || '-' }}
           </view>
-          <view class="mb-10rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">物料编码：</text>{{ item.itemCode || '-' }}
+          <view class="yd-text-sub mb-10rpx text-26rpx">
+            <text class="yd-text-hint">物料编码：</text>{{ item.itemCode || '-' }}
           </view>
-          <view class="mb-10rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">物料名称：</text>{{ item.itemName || '-' }}
+          <view class="yd-text-sub mb-10rpx text-26rpx">
+            <text class="yd-text-hint">物料名称：</text>{{ item.itemName || '-' }}
           </view>
-          <view class="mb-10rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">规格型号：</text>{{ item.specification || '-' }}
+          <view class="yd-text-sub mb-10rpx text-26rpx">
+            <text class="yd-text-hint">规格型号：</text>{{ item.specification || '-' }}
           </view>
-          <view class="mb-10rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">批次号：</text>{{ item.batchCode || '-' }}
+          <view class="yd-text-sub mb-10rpx text-26rpx">
+            <text class="yd-text-hint">批次号：</text>{{ item.batchCode || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
-            <text class="text-[#999]">生成时间：</text>{{ formatDateTime(item.createTime) || '-' }}
+          <view class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint">生成时间：</text>{{ formatDateTime(item.createTime) || '-' }}
           </view>
           <view v-if="item.id" class="mt-16rpx flex justify-end">
             <wd-button size="small" type="primary" variant="plain" @click="handleBarcode(item)">
@@ -71,7 +71,7 @@
         >
           加载更多（{{ visibleDetailList.length }}/{{ detailList.length }}）
         </wd-button>
-        <view v-else-if="detailList.length > initialVisibleSize" class="py-12rpx text-center text-24rpx text-[#999]">
+        <view v-else-if="detailList.length > initialVisibleSize" class="yd-text-hint py-12rpx text-center text-24rpx">
           已显示全部 {{ detailList.length }} 条 SN 码
         </view>
       </template>
@@ -209,7 +209,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mes:wm:sn:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

@@ -8,7 +8,7 @@
     />
 
     <template v-if="accessible">
-      <view v-if="loading && !formData.id" class="py-64rpx text-center text-26rpx text-[#999]">
+      <view v-if="loading && !formData.id" class="yd-text-hint py-64rpx text-center text-26rpx">
         <wd-loading size="32rpx" />
         <view class="mt-12rpx">
           正在加载社保详情
@@ -18,10 +18,10 @@
       <view v-else class="pb-40rpx">
         <!-- 摘要 -->
         <view class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-12rpx text-34rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx text-34rpx font-semibold">
             {{ formatHrmYearMonth(formData.year, formData.month) }} 社保表
           </view>
-          <view class="text-26rpx text-[#999]">
+          <view class="yd-text-hint text-26rpx">
             {{ formData.schemeName || '-' }}
             <text v-if="formData.schemeCity">
               · {{ formData.schemeCity }}
@@ -44,7 +44,7 @@
             <wd-cell title="个人缴纳" :value="formatHrmMoney(personalTotal)" />
             <wd-cell title="公司缴纳" :value="formatHrmMoney(corporateTotal)" />
             <wd-cell title="本月合计">
-              <text class="text-[#1677ff] font-semibold">
+              <text class="yd-text-link font-semibold">
                 {{ formatHrmMoney(personalTotal + corporateTotal) }}
               </text>
             </wd-cell>
@@ -53,7 +53,7 @@
 
         <!-- 缴费项目 -->
         <view class="mx-24rpx mt-24rpx">
-          <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
             缴费项目
           </view>
           <view
@@ -61,42 +61,42 @@
             :key="item.schemeProjectId || index"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           >
-            <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
               {{ item.name || '-' }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               缴纳基数：{{ formatHrmMoney(item.baseAmount) }}
             </view>
             <view
               v-if="formData.schemeType === HrmInsuranceSchemeType.PROPORTION"
-              class="mb-8rpx text-26rpx text-[#666]"
+              class="yd-text-sub mb-8rpx text-26rpx"
             >
               个人比例：{{ formatHrmRate(item.personalRate) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
+              <text class="yd-text-muted mx-8rpx">|</text>
               公司比例：{{ formatHrmRate(item.corporateRate) }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               个人金额：{{ formatHrmMoney(item.personalAmount) }}
             </view>
-            <view class="mb-8rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               公司金额：{{ formatHrmMoney(item.corporateAmount) }}
             </view>
-            <view class="text-26rpx text-[#666]">
+            <view class="yd-text-sub text-26rpx">
               合计：{{ formatHrmMoney((item.personalAmount || 0) + (item.corporateAmount || 0)) }}
             </view>
           </view>
-          <view v-if="!projects.length" class="rounded-12rpx bg-white p-48rpx text-center text-28rpx text-[#999]">
+          <view v-if="!projects.length" class="yd-text-hint rounded-12rpx bg-white p-48rpx text-center text-28rpx">
             暂无缴费项目
           </view>
           <view v-else class="rounded-12rpx bg-white p-24rpx shadow-sm">
-            <view class="text-28rpx text-[#333] font-semibold">
+            <view class="yd-text-main text-28rpx font-semibold">
               缴费合计
             </view>
-            <view class="mt-12rpx text-26rpx text-[#666]">
+            <view class="yd-text-sub mt-12rpx text-26rpx">
               个人：{{ formatHrmMoney(projectSummary.personalAmount) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
+              <text class="yd-text-muted mx-8rpx">|</text>
               公司：{{ formatHrmMoney(projectSummary.corporateAmount) }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
+              <text class="yd-text-muted mx-8rpx">|</text>
               合计：{{ formatHrmMoney(projectSummary.totalAmount) }}
             </view>
           </view>
@@ -108,7 +108,8 @@
 
 <script lang="ts" setup>
 import type { PortalInsuranceRecord } from '@/api/hrm/portal/insurance/record'
-import { computed, onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import { getPortalInsuranceRecord } from '@/api/hrm/portal/insurance/record'
 import { HrmInsuranceSchemeType } from '@/pages-hrm/utils/constants'
 import {
@@ -191,7 +192,7 @@ async function getDetail() {
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   accessible.value = await checkHrmPortalAccess()
   if (!accessible.value) {
     return

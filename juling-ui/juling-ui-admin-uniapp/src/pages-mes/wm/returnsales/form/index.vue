@@ -91,16 +91,16 @@
         :stock-mode="isStock"
       />
 
-      <view v-if="canQualityHint" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#ad6800] leading-40rpx">
+      <view v-if="canQualityHint" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         当前单据处于待检验状态，请前往【质量管理 - 退货检验（RQC）】中进行退货检验操作。
       </view>
-      <view v-if="isFinish" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#ad6800] leading-40rpx">
+      <view v-if="isFinish" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         执行退货会推动单据进入待上架状态；H5 验证仅到确认提示，不在真实数据上确认执行。
       </view>
-      <view v-if="isStock" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff7e6] p-24rpx text-26rpx text-[#ad6800] leading-40rpx">
+      <view v-if="isStock" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         执行上架会影响后续库存流程；H5 验证仅到确认提示，不在真实数据上确认执行。
       </view>
-      <view v-if="isCancel" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fff1f0] p-24rpx text-26rpx text-[#cf1322] leading-40rpx">
+      <view v-if="isCancel" class="yd-bg-danger-soft mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx text-[#cf1322] leading-40rpx">
         取消后不可恢复；H5 验证仅到确认提示，不在真实数据上确认取消。
       </view>
       <view class="h-180rpx" />

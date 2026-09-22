@@ -8,10 +8,10 @@
           :key="card.label"
           class="rounded-12rpx bg-white p-20rpx text-center shadow-sm"
         >
-          <view class="text-24rpx text-[#999]">
+          <view class="yd-text-hint text-24rpx">
             {{ card.label }}
           </view>
-          <view class="mt-8rpx text-36rpx text-[#333] font-semibold">
+          <view class="yd-text-main mt-8rpx text-36rpx font-semibold">
             {{ card.value }}
           </view>
         </view>
@@ -20,29 +20,29 @@
       <!-- 项目公告 -->
       <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">项目公告</text>
+          <text class="yd-text-main text-30rpx font-semibold">项目公告</text>
           <!-- 对齐 PC：概况新建公告只要求可编辑 -->
           <text
             v-if="editable"
-            class="text-28rpx text-[#1677ff]"
+            class="yd-text-link text-28rpx"
             @click="handleOpenAnnouncement"
           >
             新建公告
           </text>
         </view>
-        <view v-if="!latestAnnouncement" class="py-40rpx text-center text-28rpx text-[#999]">
+        <view v-if="!latestAnnouncement" class="yd-text-hint py-40rpx text-center text-28rpx">
           暂无公告
         </view>
         <template v-else>
-          <view class="rounded-8rpx bg-[#f7f8fa] p-20rpx">
-            <view class="mb-8rpx text-26rpx text-[#666]">
+          <view class="yd-bg-subtle rounded-8rpx p-20rpx">
+            <view class="yd-text-sub mb-8rpx text-26rpx">
               {{ latestAnnouncement.creatorUserName || '-' }} 发布于 {{ formatDate(latestAnnouncement.createTime) }}
             </view>
-            <view class="line-clamp-4 whitespace-pre-wrap text-28rpx text-[#333] leading-40rpx">
+            <view class="yd-text-main line-clamp-4 whitespace-pre-wrap text-28rpx leading-40rpx">
               {{ latestAnnouncement.content }}
             </view>
           </view>
-          <view class="mt-12rpx text-right text-28rpx text-[#1677ff]" @click="handleOpenAnnouncement">
+          <view class="yd-text-link mt-12rpx text-right text-28rpx" @click="handleOpenAnnouncement">
             查看全部公告
           </view>
         </template>
@@ -51,27 +51,27 @@
       <!-- 敏捷项目迭代 -->
       <view v-if="isAgileProject" class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">项目迭代</text>
-          <text class="text-28rpx text-[#1677ff]" @click="emit('open-tab', 'iteration')">
+          <text class="yd-text-main text-30rpx font-semibold">项目迭代</text>
+          <text class="yd-text-link text-28rpx" @click="emit('open-tab', 'iteration')">
             查看更多（{{ iterations.length }} 个未完成）
           </text>
         </view>
-        <view v-if="!iterations.length" class="py-40rpx text-center text-28rpx text-[#999]">
+        <view v-if="!iterations.length" class="yd-text-hint py-40rpx text-center text-28rpx">
           暂无未完成迭代
         </view>
         <view
           v-for="item in iterations"
           :key="item.id"
-          class="border-t border-[#f0f0f0] py-16rpx first:border-t-0"
+          class="yd-border-light border-t py-16rpx first:border-t-0"
           @click="handleIterationDetail(item)"
         >
           <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333] font-semibold">{{ item.name }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx font-semibold">{{ item.name }}</text>
             <wd-tag :type="item.status === PmsIterationStatus.ACTIVE ? 'primary' : 'default'" plain>
               {{ getIterationStatusName(item.status) }}
             </wd-tag>
           </view>
-          <view class="mb-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-8rpx text-24rpx">
             {{ formatDate(item.startTime) || '--' }} 至 {{ formatDate(item.endTime) || '--' }}
             <text v-if="item.progress !== undefined"> · 完成 {{ item.progress }}%</text>
           </view>
@@ -82,17 +82,17 @@
       <!-- 通用项目工作项趋势 -->
       <view v-else class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">工作项趋势</text>
-          <text class="text-24rpx text-[#999]">近 14 日已完成 {{ trendTotal }} 项</text>
+          <text class="yd-text-main text-30rpx font-semibold">工作项趋势</text>
+          <text class="yd-text-hint text-24rpx">近 14 日已完成 {{ trendTotal }} 项</text>
         </view>
         <template v-if="overview.completedTrends.length">
           <TrendBars :values="trendValues" height="240rpx" />
-          <view class="mt-8rpx flex justify-between text-22rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx flex justify-between text-22rpx">
             <text>{{ trendDateRange[0] }}</text>
             <text>{{ trendDateRange[1] }}</text>
           </view>
         </template>
-        <view v-else class="py-40rpx text-center text-28rpx text-[#999]">
+        <view v-else class="yd-text-hint py-40rpx text-center text-28rpx">
           暂无数据
         </view>
       </view>
@@ -106,7 +106,7 @@
         <wd-cell title="项目进度">
           <view class="flex items-center justify-end gap-12rpx">
             <wd-progress class="w-200rpx" :percentage="formatProjectCompletionRate(project)" hide-text />
-            <text class="text-26rpx text-[#666]">{{ formatProjectCompletionRate(project) }}%</text>
+            <text class="yd-text-sub text-26rpx">{{ formatProjectCompletionRate(project) }}%</text>
           </view>
         </wd-cell>
         <wd-cell title="项目描述" :value="project.description || '暂无项目描述'" />
@@ -115,23 +115,23 @@
       <!-- 分配给我的 -->
       <view class="mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
         <view class="mb-16rpx flex items-center justify-between">
-          <text class="text-30rpx text-[#333] font-semibold">分配给我的</text>
-          <text class="text-28rpx text-[#1677ff]" @click="handleOpenAssigned">
+          <text class="yd-text-main text-30rpx font-semibold">分配给我的</text>
+          <text class="yd-text-link text-28rpx" @click="handleOpenAssigned">
             查看更多
           </text>
         </view>
-        <view v-if="!overview.assignedWorkItems.length" class="py-40rpx text-center text-28rpx text-[#999]">
+        <view v-if="!overview.assignedWorkItems.length" class="yd-text-hint py-40rpx text-center text-28rpx">
           暂无工作项
         </view>
         <view
           v-for="item in overview.assignedWorkItems.slice(0, 5)"
           :key="item.id"
-          class="border-t border-[#f0f0f0] py-16rpx first:border-t-0"
+          class="yd-border-light border-t py-16rpx first:border-t-0"
           @click="handleWorkItemDetail(item.id)"
         >
           <view class="mb-8rpx flex items-center justify-between gap-16rpx">
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#333]">{{ item.name }}</text>
-            <text class="shrink-0 text-24rpx text-[#999]">#{{ item.serialNumber }} · {{ getWorkItemTypeName(item.type) }}</text>
+            <text class="yd-text-main min-w-0 flex-1 truncate text-28rpx">{{ item.name }}</text>
+            <text class="yd-text-hint shrink-0 text-24rpx">#{{ item.serialNumber }} · {{ getWorkItemTypeName(item.type) }}</text>
           </view>
           <wd-progress :percentage="item.progress" hide-text />
         </view>

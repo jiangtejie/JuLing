@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="编辑代码生成"
@@ -49,7 +49,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view class="px-24rpx pt-16rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint px-24rpx pt-16rpx text-24rpx">
         提示：上级菜单、主子表/树表关联等生成配置需在 PC 端设置。
       </view>
     </view>
@@ -131,7 +131,7 @@ async function handleSubmit() {
     toast.success('保存成功')
     uni.$emit('infra:codegen:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

@@ -1,15 +1,15 @@
 <template>
   <wd-popup
     v-model="visible"
-    position="bottom"
+    position="bottom" safe-area-inset-bottom
     root-portal
     custom-style="height: 78vh; border-radius: 24rpx 24rpx 0 0;"
     @open="handleOpen"
   >
-    <view class="h-full flex flex-col overflow-hidden bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col overflow-hidden">
       <view class="shrink-0 bg-white px-28rpx pb-18rpx pt-24rpx">
         <view class="flex items-center justify-between">
-          <text class="text-32rpx text-[#333] font-semibold">选择聊天角色</text>
+          <text class="yd-text-main text-32rpx font-semibold">选择聊天角色</text>
           <wd-icon name="close" size="36rpx" color="#666" @click="visible = false" />
         </view>
         <view class="mt-20rpx">
@@ -46,17 +46,17 @@
               radius="16rpx"
               mode="aspectFill"
             />
-            <view v-else class="h-80rpx w-80rpx flex shrink-0 items-center justify-center rounded-16rpx bg-[#1677ff] text-26rpx text-white">
+            <view v-else class="yd-bg-primary h-80rpx w-80rpx flex shrink-0 items-center justify-center rounded-16rpx text-26rpx text-white">
               AI
             </view>
             <view class="min-w-0 flex-1">
-              <view class="truncate text-29rpx text-[#333] font-medium">
+              <view class="yd-text-main truncate text-29rpx font-medium">
                 {{ item.name || '未命名角色' }}
               </view>
-              <view class="line-clamp-2 mt-6rpx text-24rpx text-[#999] leading-34rpx">
+              <view class="yd-text-hint line-clamp-2 mt-6rpx text-24rpx leading-34rpx">
                 {{ item.description || '暂无角色描述' }}
               </view>
-              <view v-if="item.knowledgeIds?.length" class="mt-8rpx text-22rpx text-[#1677ff]">
+              <view v-if="item.knowledgeIds?.length" class="yd-text-link mt-8rpx text-22rpx">
                 已绑定 {{ item.knowledgeIds.length }} 个知识库
               </view>
             </view>

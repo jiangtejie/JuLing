@@ -32,31 +32,31 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 通知任务 #{{ item.id }}
               </view>
-              <view v-if="item.appName" class="mt-6rpx truncate text-24rpx text-[#999]">
+              <view v-if="item.appName" class="yd-text-hint mt-6rpx truncate text-24rpx">
                 支付应用：{{ item.appName }}
               </view>
             </view>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.PAY_NOTIFY_STATUS" :value="item.status" />
           </view>
 
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">通知类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">通知类型：</text>
             <dict-tag v-if="item.type != null" :type="DICT_TYPE.PAY_NOTIFY_TYPE" :value="item.type" />
             <text v-else>-</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">关联编号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">关联编号：</text>
             <text>{{ item.dataId ?? '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">商户单号：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">商户单号：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.merchantOrderId || item.merchantRefundId || item.merchantTransferId || '-' }}</text>
           </view>
-          <view class="flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">下次通知：</text>
+          <view class="yd-text-sub flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">下次通知：</text>
             <text>{{ formatDateTime(item.nextNotifyTime) || '-' }}</text>
           </view>
         </view>

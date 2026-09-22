@@ -65,7 +65,7 @@
       </wd-form>
 
       <view v-if="formData.generateMode === MusicGenerateModeEnum.LYRIC" class="mt-20rpx">
-        <view class="mb-12rpx text-26rpx text-[#666]">
+        <view class="yd-text-sub mb-12rpx text-26rpx">
           音乐风格
         </view>
         <view class="flex flex-wrap gap-12rpx">
@@ -112,31 +112,31 @@
         >
           <image
             v-if="item.imageUrl"
-            class="h-360rpx w-full bg-[#f1f5f9]"
+            class="yd-bg-subtle h-360rpx w-full"
             :src="item.imageUrl"
             mode="aspectFill"
             @click="handlePreview(item.imageUrl)"
           />
-          <view v-else class="h-260rpx flex items-center justify-center bg-[#f8fafc] text-26rpx text-[#999]">
+          <view v-else class="yd-text-hint yd-bg-subtle h-260rpx flex items-center justify-center text-26rpx">
             {{ item.errorMessage || '音乐生成中' }}
           </view>
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-32rpx font-semibold">
                   {{ item.title || '未命名音乐' }}
                 </view>
-                <view class="mt-8rpx text-22rpx text-[#999]">
+                <view class="yd-text-hint mt-8rpx text-22rpx">
                   {{ formatDateTime(item.createTime) }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.AI_MUSIC_STATUS" :value="item.status" />
             </view>
 
-            <view class="line-clamp-3 text-26rpx text-[#666]">
+            <view class="yd-text-sub line-clamp-3 text-26rpx">
               {{ item.prompt || item.gptDescriptionPrompt || item.errorMessage || '-' }}
             </view>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               {{ item.platform || '-' }} / {{ item.model || '-' }} / {{ getTagsText(item.tags) }}
             </view>
 

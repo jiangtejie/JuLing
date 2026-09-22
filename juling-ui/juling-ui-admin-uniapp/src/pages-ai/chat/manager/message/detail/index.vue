@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="消息详情"
@@ -24,7 +24,7 @@
         <wd-cell title="知识库段落编号" :value="formatList(formData?.segmentIds)" />
         <wd-cell title="附件">
           <view v-if="formData?.attachmentUrls?.length">
-            <view v-for="url in formData.attachmentUrls" :key="url" class="break-all text-26rpx text-[#666]">
+            <view v-for="url in formData.attachmentUrls" :key="url" class="yd-text-sub break-all text-26rpx">
               {{ url }}
             </view>
           </view>
@@ -33,10 +33,10 @@
         <wd-cell title="联网搜索">
           <view v-if="formData?.webSearchPages?.length">
             <view v-for="page in formData.webSearchPages" :key="page.url" class="mb-12rpx">
-              <view class="text-26rpx text-[#333]">
+              <view class="yd-text-main text-26rpx">
                 {{ page.title || page.name || '-' }}
               </view>
-              <view class="break-all text-24rpx text-[#999]">
+              <view class="yd-text-hint break-all text-24rpx">
                 {{ page.url }}
               </view>
             </view>
@@ -72,7 +72,8 @@ import type { ChatMessage } from '@/api/ai/chat/message'
 import type { User } from '@/api/system/user'
 import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { onMounted, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 import { deleteChatMessageByAdmin, getChatMessage } from '@/api/ai/chat/message'
 import { getSimpleUserList } from '@/api/system/user'
 import { useAccess } from '@/hooks/useAccess'
@@ -144,7 +145,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('ai:chat-message:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }
@@ -160,7 +161,7 @@ function getUserName(userId?: number) {
 }
 
 /** 初始化 */
-onMounted(async () => {
+onShow(async () => {
   await Promise.all([
     getDetail(),
     getSimpleUserList().then(data => userList.value = data),

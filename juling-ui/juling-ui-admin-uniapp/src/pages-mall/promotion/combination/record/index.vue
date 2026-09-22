@@ -35,21 +35,21 @@
             </view>
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between gap-16rpx">
-                <text class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+                <text class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
                   {{ item.spuName || `拼团 #${item.id}` }}
                 </text>
                 <dict-tag v-if="item.status != null" class="shrink-0" :type="DICT_TYPE.PROMOTION_COMBINATION_RECORD_STATUS" :value="item.status" />
               </view>
-              <view class="mt-6rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx text-26rpx">
                 团长：{{ item.nickname || '-' }}
               </view>
             </view>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>成团人数：{{ item.userSize ?? '-' }}</text>
             <text>已参团：{{ item.userCount ?? '-' }}</text>
           </view>
-          <view class="mt-8rpx flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx flex items-center justify-between text-24rpx">
             <text>开始：{{ formatDateTime(item.startTime) || '-' }}</text>
             <text>{{ item.virtualGroup ? '虚拟成团' : '' }}</text>
           </view>

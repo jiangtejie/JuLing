@@ -39,19 +39,19 @@
             </view>
             <view class="bpm-summary">
               <view class="bpm-summary-item">
-                <text class="text-[#999]">申请编号：</text>
+                <text class="yd-text-hint">申请编号：</text>
                 <text>{{ item.id }}</text>
               </view>
               <view class="bpm-summary-item">
-                <text class="text-[#999]">开始时间：</text>
+                <text class="yd-text-hint">开始时间：</text>
                 <text>{{ formatDateTime(item.startTime) }}</text>
               </view>
               <view class="bpm-summary-item">
-                <text class="text-[#999]">结束时间：</text>
+                <text class="yd-text-hint">结束时间：</text>
                 <text>{{ formatDateTime(item.endTime) }}</text>
               </view>
               <view class="bpm-summary-item">
-                <text class="text-[#999]">请假原因：</text>
+                <text class="yd-text-hint">请假原因：</text>
                 <text>{{ item.reason }}</text>
               </view>
             </view>

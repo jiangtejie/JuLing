@@ -9,20 +9,20 @@
 
     <!-- 员工摘要 -->
     <view class="bg-white px-24rpx py-24rpx">
-      <view class="mb-12rpx text-36rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-12rpx text-36rpx font-semibold">
         {{ employee.employeeName || '-' }}的绩效档案
       </view>
-      <view class="mb-8rpx text-28rpx text-[#666]">
-        <text class="mr-8rpx text-[#999]">部门：</text>{{ employee.deptName || '-' }}
+      <view class="yd-text-sub mb-8rpx text-28rpx">
+        <text class="yd-text-hint mr-8rpx">部门：</text>{{ employee.deptName || '-' }}
       </view>
-      <view class="mb-8rpx text-28rpx text-[#666]">
-        <text class="mr-8rpx text-[#999]">职位：</text>{{ employee.postName || '-' }}
+      <view class="yd-text-sub mb-8rpx text-28rpx">
+        <text class="yd-text-hint mr-8rpx">职位：</text>{{ employee.postName || '-' }}
       </view>
-      <view class="mb-8rpx text-28rpx text-[#666]">
-        <text class="mr-8rpx text-[#999]">工号：</text>{{ employee.jobNumber || '-' }}
+      <view class="yd-text-sub mb-8rpx text-28rpx">
+        <text class="yd-text-hint mr-8rpx">工号：</text>{{ employee.jobNumber || '-' }}
       </view>
-      <view class="flex items-center text-28rpx text-[#666]">
-        <text class="mr-8rpx text-[#999]">聘用形式：</text>
+      <view class="yd-text-sub flex items-center text-28rpx">
+        <text class="yd-text-hint mr-8rpx">聘用形式：</text>
         <dict-tag
           v-if="employee.employeeType != null"
           :type="DICT_TYPE.HRM_EMPLOYEE_TYPE"
@@ -64,23 +64,23 @@
             </view>
             <view class="min-w-0 flex-1" @click.stop="handleAssessmentDetail(item)">
               <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
                 <wd-tag type="primary" plain>
                   已归档
                 </wd-tag>
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">周期类型：</text>{{ formatHrmPerformanceCycleType(item.cycleType) }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">周期类型：</text>{{ formatHrmPerformanceCycleType(item.cycleType) }}
               </view>
-              <view class="mb-12rpx text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">考核周期：</text>{{ item.cycle || '-' }}
+              <view class="yd-text-sub mb-12rpx text-28rpx">
+                <text class="yd-text-hint mr-8rpx">考核周期：</text>{{ item.cycle || '-' }}
               </view>
-              <view class="text-28rpx text-[#666]">
-                <text class="mr-8rpx text-[#999]">评分：</text>{{ item.score ?? '-' }}
-                <text class="mx-8rpx text-[#ddd]">|</text>
-                <text class="mr-8rpx text-[#999]">结果：</text>{{ item.resultLevel || '-' }}
+              <view class="yd-text-sub text-28rpx">
+                <text class="yd-text-hint mr-8rpx">评分：</text>{{ item.score ?? '-' }}
+                <text class="yd-text-muted mx-8rpx">|</text>
+                <text class="yd-text-hint mr-8rpx">结果：</text>{{ item.resultLevel || '-' }}
               </view>
             </view>
           </view>

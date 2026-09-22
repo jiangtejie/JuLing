@@ -39,15 +39,15 @@
               radius="12rpx"
               mode="aspectFill"
             />
-            <view v-else class="h-88rpx w-88rpx flex items-center justify-center rounded-12rpx bg-[#f0f2f5] text-24rpx text-[#bbb]">
+            <view v-else class="yd-bg-subtle yd-text-muted h-88rpx w-88rpx flex items-center justify-center rounded-12rpx text-24rpx">
               无
             </view>
             <view class="min-w-0 flex-1">
               <view class="flex items-center justify-between">
-                <text class="line-clamp-1 flex-1 text-32rpx text-[#333] font-semibold">{{ item.name || '-' }}</text>
+                <text class="yd-text-main line-clamp-1 flex-1 text-32rpx font-semibold">{{ item.name || '-' }}</text>
                 <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
               </view>
-              <view class="mt-10rpx text-26rpx text-[#999]">
+              <view class="yd-text-hint mt-10rpx text-26rpx">
                 编码：{{ item.code || '-' }} · 排序 {{ item.sort ?? 0 }}
               </view>
             </view>

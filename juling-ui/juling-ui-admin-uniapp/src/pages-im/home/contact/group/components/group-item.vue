@@ -5,7 +5,7 @@
     </view>
     <view class="min-w-0 flex-1 border-b border-b-[#f2f3f5] py-16rpx">
       <view class="flex items-center gap-10rpx">
-        <text class="line-clamp-1 text-30rpx text-[#222] font-medium">{{ groupName }}</text>
+        <text class="yd-text-strong line-clamp-1 text-30rpx font-medium">{{ groupName }}</text>
         <wd-tag v-if="group.banned" type="danger" plain custom-class="scale-90">
           已封禁
         </wd-tag>
@@ -13,7 +13,7 @@
           全员禁言
         </wd-tag>
       </view>
-      <view class="line-clamp-1 mt-4rpx text-24rpx text-[#999]">
+      <view class="yd-text-hint line-clamp-1 mt-4rpx text-24rpx">
         {{ group.notice || '暂无群公告' }}
       </view>
     </view>

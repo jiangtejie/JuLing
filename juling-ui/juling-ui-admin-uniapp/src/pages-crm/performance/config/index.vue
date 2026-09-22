@@ -32,16 +32,16 @@
         >
           <view class="mb-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 {{ item.objectName || '未命名对象' }}
               </view>
-              <view class="mt-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-8rpx text-24rpx">
                 {{ item.year }} 年 · {{ getBizTypeLabel(item.bizType) }} · {{ getObjectTypeLabel(item.objectType) }}
               </view>
             </view>
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">年度目标：</text>{{ formatMoney(item.yearTargetPrice) }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">年度目标：</text>{{ formatMoney(item.yearTargetPrice) }}
           </view>
         </view>
       </view>

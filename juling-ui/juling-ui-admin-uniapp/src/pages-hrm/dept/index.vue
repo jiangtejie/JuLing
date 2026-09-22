@@ -14,7 +14,7 @@
     <Breadcrumb ref="breadcrumbRef" v-model="currentParentId" />
 
     <!-- 人数说明 -->
-    <view class="mx-24rpx mt-16rpx rounded-12rpx bg-[#e6f4ff] px-24rpx py-16rpx text-24rpx text-[#1677ff]">
+    <view class="yd-text-link yd-bg-info-soft mx-24rpx mt-16rpx rounded-12rpx px-24rpx py-16rpx text-24rpx">
       人数格式为：直属人数（包含下级部门人数）
     </view>
 
@@ -32,28 +32,28 @@
               <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#13c2c2]">
                 <wd-icon name="organization" size="20px" color="#fff" />
               </view>
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="mt-16rpx pl-64rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-16rpx pl-64rpx text-26rpx">
             <view class="mb-8rpx">
-              <text class="mr-8rpx text-[#999]">在职员工：</text>
+              <text class="yd-text-hint mr-8rpx">在职员工：</text>
               {{ formatStatistics(item, 'activeCount') }}
             </view>
             <view class="mb-8rpx">
-              <text class="mr-8rpx text-[#999]">全职员工：</text>
+              <text class="yd-text-hint mr-8rpx">全职员工：</text>
               {{ formatStatistics(item, 'fullTimeCount') }}
             </view>
             <view>
-              <text class="mr-8rpx text-[#999]">非全职人数：</text>
+              <text class="yd-text-hint mr-8rpx">非全职人数：</text>
               {{ formatStatistics(item, 'nonFullTimeCount') }}
             </view>
           </view>
           <view class="mt-12rpx flex items-center justify-between pl-64rpx">
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               负责人：{{ getLeaderName(item.leaderUserId) }}
             </view>
             <view
@@ -61,7 +61,7 @@
               class="flex items-center"
               @click.stop="handleEnterChildren(item)"
             >
-              <text class="text-24rpx text-[#1890ff]">下级 ({{ item.children.length }})</text>
+              <text class="yd-text-link text-24rpx">下级 ({{ item.children.length }})</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>

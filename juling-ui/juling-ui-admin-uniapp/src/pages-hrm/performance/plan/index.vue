@@ -42,7 +42,7 @@
         >
           <view class="min-w-0" @click="handleDetail(item)">
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.name || '-' }}
               </view>
               <dict-tag
@@ -51,23 +51,23 @@
                 :value="item.status"
               />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">考核模板：</text>{{ item.assessmentTemplateName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">考核模板：</text>{{ item.assessmentTemplateName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">结果模板：</text>{{ item.resultTemplateName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">结果模板：</text>{{ item.resultTemplateName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">考核周期：</text>{{ item.cycle || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">考核周期：</text>{{ item.cycle || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">起止：</text>{{ formatHrmDateRange(item.startTime, item.endTime) }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">起止：</text>{{ formatHrmDateRange(item.startTime, item.endTime) }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">参评/完成：</text>{{ item.employeeCount || 0 }} / {{ item.finishedCount || 0 }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">参评/完成：</text>{{ item.employeeCount || 0 }} / {{ item.finishedCount || 0 }}
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">阶段：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">阶段：</text>
               <dict-tag
                 v-if="item.stageType != null"
                 :type="DICT_TYPE.HRM_PERFORMANCE_STAGE_STATUS"
@@ -79,7 +79,7 @@
               <view
                 v-for="stage in getStageCountList(item)"
                 :key="stage.stageType"
-                class="rounded-8rpx bg-[#f5f5f5] px-12rpx py-4rpx text-22rpx text-[#666]"
+                class="yd-bg-page yd-text-sub rounded-8rpx px-12rpx py-4rpx text-22rpx"
               >
                 {{ getDictLabel(DICT_TYPE.HRM_PERFORMANCE_STAGE_STATUS, stage.stageType) || '未知' }}（{{ stage.count }}）
               </view>

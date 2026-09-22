@@ -31,49 +31,49 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.sourceDocCode || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.MES_QC_TYPE" :value="item.qcType" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">来源单据类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">来源单据类型：</text>
               <dict-tag :type="DICT_TYPE.MES_QC_SOURCE_DOC_TYPE" :value="item.sourceDocType" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">检验类型：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">检验类型：</text>
               <dict-tag :type="DICT_TYPE.MES_QC_TYPE" :value="item.qcType" />
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">物料编码：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">物料编码：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.itemCode || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">物料名称：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">物料名称：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.itemName || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">规格型号：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">规格型号：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.specification || '-' }}</text>
             </view>
-            <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">待检数量：</text>
+            <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">待检数量：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.quantity ?? '-' }} {{ item.unitName || '' }}</text>
             </view>
-            <view v-if="item.vendorName" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">供应商：</text>
+            <view v-if="item.vendorName" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">供应商：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.vendorName }}</text>
             </view>
-            <view v-if="item.clientName" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">客户：</text>
+            <view v-if="item.clientName" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">客户：</text>
               <text class="min-w-0 flex-1 truncate">{{ item.clientName }}</text>
             </view>
-            <view v-if="item.workstationName || item.taskCode" class="mb-12rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">生产信息：</text>
+            <view v-if="item.workstationName || item.taskCode" class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">生产信息：</text>
               <text class="min-w-0 flex-1 truncate">{{ getProductionText(item) }}</text>
             </view>
-            <view v-if="item.recordTime" class="mb-16rpx flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx shrink-0 text-[#999]">业务时间：</text>
+            <view v-if="item.recordTime" class="yd-text-sub mb-16rpx flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx shrink-0">业务时间：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDateTime(item.recordTime) || '-' }}</text>
             </view>
             <view v-if="getCreateAction(item)" class="flex justify-end border-t border-t-[#f0f0f0] pt-20rpx">

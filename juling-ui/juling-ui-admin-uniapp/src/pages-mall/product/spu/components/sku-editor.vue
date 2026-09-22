@@ -5,18 +5,18 @@
       <view
         v-for="(spec, sIndex) in specs"
         :key="sIndex"
-        class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx"
+        class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx"
       >
         <view class="mb-12rpx flex items-center justify-between">
-          <text class="text-28rpx text-[#333] font-medium">{{ spec.propertyName }}</text>
-          <text class="text-26rpx text-[#fa4350]" @click="handleRemoveSpec(sIndex)">删除</text>
+          <text class="yd-text-main text-28rpx font-medium">{{ spec.propertyName }}</text>
+          <text class="yd-text-danger text-26rpx" @click="handleRemoveSpec(sIndex)">删除</text>
         </view>
         <!-- 已选属性值 + 选择入口（弹层多选 + 新增属性值） -->
         <view class="flex flex-wrap items-center gap-12rpx">
           <view
             v-for="val in selectedValues(spec)"
             :key="val.id"
-            class="rounded-6rpx bg-[#1677ff] px-20rpx py-8rpx text-26rpx text-white"
+            class="yd-bg-primary rounded-6rpx px-20rpx py-8rpx text-26rpx text-white"
           >
             {{ val.name }}
           </view>
@@ -39,69 +39,69 @@
     <view
       v-for="(sku, index) in rows"
       :key="index"
-      class="mb-16rpx rounded-8rpx bg-[#f7f8fa] p-16rpx"
+      class="yd-bg-subtle mb-16rpx rounded-8rpx p-16rpx"
     >
-      <view v-if="specType" class="mb-12rpx text-26rpx text-[#333] font-medium">
+      <view v-if="specType" class="yd-text-main mb-12rpx text-26rpx font-medium">
         {{ skuLabel(sku) }}
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">销售价(元)</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">销售价(元)</text>
         <wd-input-number v-model="sku.price" :min="0" :step="0.01" :precision="2" @change="emitChange" />
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">市场价(元)</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">市场价(元)</text>
         <wd-input-number v-model="sku.marketPrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">成本价(元)</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">成本价(元)</text>
         <wd-input-number v-model="sku.costPrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">库存</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">库存</text>
         <wd-input-number v-model="sku.stock" :min="0" @change="emitChange" />
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">条码</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">条码</text>
         <wd-input v-model="sku.barCode" clearable placeholder="请输入条码" @change="emitChange" />
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">重量(kg)</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">重量(kg)</text>
         <wd-input-number v-model="sku.weight" :min="0" :step="0.01" :precision="2" @change="emitChange" />
       </view>
       <view class="flex items-center gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">体积(m³)</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">体积(m³)</text>
         <wd-input-number v-model="sku.volume" :min="0" :step="0.01" :precision="2" @change="emitChange" />
       </view>
       <view class="flex items-start gap-12rpx py-6rpx">
-        <text class="w-160rpx shrink-0 text-26rpx text-[#666]">图片</text>
+        <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">图片</text>
         <yd-upload-img v-model="sku.picUrl" @update:model-value="emitChange" />
       </view>
       <!-- 单独分佣时展示一二级佣金 -->
       <template v-if="subCommissionType">
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-160rpx shrink-0 text-26rpx text-[#666]">一级佣金(元)</text>
+          <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">一级佣金(元)</text>
           <wd-input-number v-model="sku.firstBrokeragePrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
         </view>
         <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="w-160rpx shrink-0 text-26rpx text-[#666]">二级佣金(元)</text>
+          <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">二级佣金(元)</text>
           <wd-input-number v-model="sku.secondBrokeragePrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
         </view>
       </template>
     </view>
-    <view v-if="!rows.length" class="rounded-8rpx bg-[#f7f8fa] py-32rpx text-center text-26rpx text-[#999]">
+    <view v-if="!rows.length" class="yd-text-hint yd-bg-subtle rounded-8rpx py-32rpx text-center text-26rpx">
       {{ specType ? '请添加规格并生成 SKU' : '加载中...' }}
     </view>
 
     <!-- 规格选择弹窗 -->
     <wd-popup
       v-model="specPickerVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0;"
       @close="specPickerVisible = false"
     >
       <view class="p-24rpx">
-        <view class="mb-24rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-24rpx text-32rpx font-semibold">
           选择规格
         </view>
         <!-- 手动新建规格 -->
@@ -115,12 +115,12 @@
           <view
             v-for="property in availableProperties"
             :key="property.id"
-            class="border-b border-[#f5f5f5] py-20rpx text-28rpx text-[#333]"
+            class="yd-text-main yd-border-light border-b py-20rpx text-28rpx"
             @click="handleAddSpec(property)"
           >
             {{ property.name }}
           </view>
-          <view v-if="!availableProperties.length" class="py-32rpx text-center text-26rpx text-[#999]">
+          <view v-if="!availableProperties.length" class="yd-text-hint py-32rpx text-center text-26rpx">
             暂无可选规格
           </view>
         </scroll-view>
@@ -130,13 +130,13 @@
     <!-- 属性值选择弹窗（含新增属性值） -->
     <wd-popup
       v-model="valuePickerVisible"
-      position="bottom"
+      position="bottom" safe-area-inset-bottom
       closable
       custom-style="border-radius: 24rpx 24rpx 0 0; height: 70vh;"
       @close="valuePickerVisible = false"
     >
       <view v-if="editingSpec" class="h-70vh flex flex-col p-24rpx">
-        <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
           选择「{{ editingSpec.propertyName }}」属性值
         </view>
         <!-- 新增属性值 -->
@@ -151,15 +151,15 @@
           <view
             v-for="val in editingSpec.allValues"
             :key="val.id"
-            class="flex items-center justify-between border-b border-[#f5f5f5] py-20rpx"
+            class="yd-border-light flex items-center justify-between border-b py-20rpx"
             @click="toggleValue(editingSpec, val.id)"
           >
-            <text class="text-28rpx" :class="editingSpec.selectedValueIds.includes(val.id) ? 'text-[#1677ff]' : 'text-[#333]'">
+            <text class="text-28rpx" :class="editingSpec.selectedValueIds.includes(val.id) ? 'yd-text-link' : 'yd-text-main'">
               {{ val.name }}
             </text>
             <wd-icon v-if="editingSpec.selectedValueIds.includes(val.id)" name="check" size="36rpx" color="#1677ff" />
           </view>
-          <view v-if="!editingSpec.allValues.length" class="py-48rpx text-center text-26rpx text-[#999]">
+          <view v-if="!editingSpec.allValues.length" class="yd-text-hint py-48rpx text-center text-26rpx">
             暂无属性值，请在上方新增
           </view>
         </scroll-view>

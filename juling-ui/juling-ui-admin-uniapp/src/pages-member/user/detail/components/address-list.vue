@@ -7,20 +7,20 @@
       class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-16rpx flex items-center justify-between">
-        <view class="text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-30rpx font-semibold">
           {{ item.name || '-' }}
         </view>
         <wd-tag v-if="item.defaultStatus" type="primary" variant="plain">
           默认
         </wd-tag>
       </view>
-      <view class="mb-12rpx text-28rpx text-[#666]">
+      <view class="yd-text-sub mb-12rpx text-28rpx">
         {{ item.mobile || '-' }}
       </view>
-      <view class="mb-12rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-12rpx text-26rpx">
         {{ item.areaName || '-' }} {{ item.detailAddress || '' }}
       </view>
-      <view class="text-24rpx text-[#999]">
+      <view class="yd-text-hint text-24rpx">
         {{ formatDateTime(item.createTime) || '-' }}
       </view>
     </view>

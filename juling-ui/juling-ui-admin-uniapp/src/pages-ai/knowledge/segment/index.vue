@@ -32,21 +32,21 @@
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-32rpx font-semibold">
                 分段 #{{ item.id }}
               </view>
             </view>
             <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             <view class="line-clamp-4">
               {{ item.content || '-' }}
             </view>
-            <view class="mt-12rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx text-24rpx">
               文档：{{ documentName || props.documentId || '-' }} / Token {{ item.tokens ?? 0 }}
             </view>
           </view>
-          <view class="mt-20rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-20rpx text-24rpx">
             <text>召回 {{ item.retrievalCount ?? 0 }}</text>
           </view>
         </view>

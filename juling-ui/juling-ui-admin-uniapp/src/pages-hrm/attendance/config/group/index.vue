@@ -31,22 +31,22 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <wd-tag v-if="item.defaultStatus" type="primary" plain>
               默认
             </wd-tag>
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">考勤规则：</text>早晚打卡
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">考勤规则：</text>早晚打卡
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">班次：</text>
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">班次：</text>
             <text class="line-clamp-2">{{ formatShifts(item) }}</text>
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">适用范围：</text>
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">适用范围：</text>
             <text class="line-clamp-2">{{ formatAttendanceGroupScope(item) }}</text>
           </view>
         </view>

@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="MES 条码配置详情"
@@ -29,7 +29,7 @@
         <wd-cell title="备注" :value="formData?.remark || '-'" />
         <wd-cell title="创建时间" :value="formatDateTime(formData?.createTime) || '-'" />
       </wd-cell-group>
-      <view class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f7faff] p-24rpx text-26rpx text-[#666] leading-40rpx">
+      <view class="yd-text-sub mx-24rpx mt-24rpx rounded-12rpx bg-[#f7faff] p-24rpx text-26rpx leading-40rpx">
         默认打印模板暂不在移动端选择；正式打印和模板维护归入报表/打印专项。
       </view>
     </view>
@@ -130,7 +130,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mes:wm:barcode:config:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

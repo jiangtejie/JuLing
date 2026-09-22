@@ -16,21 +16,21 @@
 
     <!-- 星标项目 -->
     <view v-if="favoriteList.length > 0" class="bg-white pb-16rpx">
-      <view class="p-24rpx pb-8rpx text-28rpx text-[#333] font-semibold">
+      <view class="yd-text-main p-24rpx pb-8rpx text-28rpx font-semibold">
         星标项目
       </view>
       <scroll-view scroll-x class="whitespace-nowrap px-24rpx">
         <view
           v-for="item in favoriteList"
           :key="item.id"
-          class="mr-16rpx inline-block w-280rpx rounded-12rpx bg-[#f7f8fa] p-20rpx align-top"
+          class="yd-bg-subtle mr-16rpx inline-block w-280rpx rounded-12rpx p-20rpx align-top"
           @click="handleDetail(item)"
         >
           <view class="mb-8rpx flex items-center justify-between gap-8rpx">
-            <text class="min-w-0 flex-1 truncate text-28rpx text-[#1677ff]">{{ item.name }}</text>
+            <text class="yd-text-link min-w-0 flex-1 truncate text-28rpx">{{ item.name }}</text>
             <wd-icon name="star-fill" size="32rpx" color="#fa8c16" @click.stop="handleCollect(item)" />
           </view>
-          <view class="mb-8rpx truncate text-24rpx text-[#999]">
+          <view class="yd-text-hint mb-8rpx truncate text-24rpx">
             {{ formatProjectTypeShort(item.type) }} · {{ item.description || '暂无项目描述' }}
           </view>
           <wd-progress :percentage="formatProjectCompletionRate(item)" hide-text />
@@ -81,7 +81,7 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.name }}
             </view>
             <view class="flex shrink-0 items-center gap-12rpx">
@@ -98,15 +98,15 @@
           </view>
           <view class="mb-12rpx flex items-center gap-16rpx">
             <wd-progress class="flex-1" :percentage="formatProjectCompletionRate(item)" hide-text />
-            <text class="shrink-0 text-24rpx text-[#999]">
+            <text class="yd-text-hint shrink-0 text-24rpx">
               {{ item.completedWorkItemCount }}/{{ item.pendingWorkItemCount }}/{{ item.processingWorkItemCount }}
             </text>
           </view>
-          <view class="flex items-center justify-between text-28rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-28rpx">
             <text class="min-w-0 flex-1 truncate">
-              <text class="mr-8rpx text-[#999]">管理员：</text>{{ item.adminNames.join('、') || '-' }}
+              <text class="yd-text-hint mr-8rpx">管理员：</text>{{ item.adminNames.join('、') || '-' }}
             </text>
-            <text class="shrink-0 text-[#999]">
+            <text class="yd-text-hint shrink-0">
               {{ item.endTime ? `${formatDate(item.endTime)} 截止` : `创建于 ${formatDate(item.createTime) || '-'}` }}
             </text>
           </view>

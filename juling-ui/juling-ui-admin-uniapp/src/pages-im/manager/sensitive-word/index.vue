@@ -32,12 +32,12 @@
         >
           <view class="p-24rpx">
             <view class="mb-16rpx flex items-center justify-between">
-              <view class="line-clamp-1 flex-1 text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main line-clamp-1 flex-1 text-32rpx font-semibold">
                 {{ item.word || '-' }}
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="flex items-center text-26rpx text-[#999]">
+            <view class="yd-text-hint flex items-center text-26rpx">
               <text class="mr-8rpx">{{ item.creatorName || '系统' }}</text>
               <text>{{ formatDateTime(item.createTime) || '-' }}</text>
             </view>

@@ -8,11 +8,11 @@
       <wd-loading v-if="loading" />
       <view v-else>
         <view class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <view class="mb-12rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx text-30rpx font-semibold">
             {{ deviceData?.deviceName || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">设备编号：</text>{{ deviceData?.id || '-' }}
+          <view class="yd-text-sub text-26rpx">
+            <text class="yd-text-hint mr-8rpx">设备编号：</text>{{ deviceData?.id || '-' }}
           </view>
         </view>
 
@@ -27,7 +27,7 @@
 
         <view class="rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-16rpx flex items-center justify-between">
-            <text class="text-28rpx text-[#333] font-semibold">配置 JSON</text>
+            <text class="yd-text-main text-28rpx font-semibold">配置 JSON</text>
             <view v-if="isEditing" class="flex gap-12rpx">
               <wd-button size="small" variant="plain" @click="formatConfigText">
                 格式化
@@ -45,12 +45,12 @@
               :maxlength="8000"
               show-word-limit
             />
-            <view class="mt-12rpx text-24rpx" :class="jsonError ? 'text-[#fa4350]' : 'text-[#07c160]'">
+            <view class="mt-12rpx text-24rpx" :class="jsonError ? 'yd-text-danger' : 'yd-text-success'">
               {{ jsonMessage }}
             </view>
           </template>
-          <view v-else class="max-h-[760rpx] overflow-y-auto rounded-8rpx bg-[#f7f8fa] p-20rpx">
-            <text class="whitespace-pre-wrap break-all text-24rpx text-[#333]">{{ previewText }}</text>
+          <view v-else class="yd-bg-subtle max-h-[760rpx] overflow-y-auto rounded-8rpx p-20rpx">
+            <text class="yd-text-main whitespace-pre-wrap break-all text-24rpx">{{ previewText }}</text>
           </view>
         </view>
       </view>

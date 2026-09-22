@@ -25,7 +25,7 @@
                 <view class="w-full py-8rpx">
                   <view v-for="(_, i) in formData.afterSaleRefundReasons" :key="i" class="mb-12rpx flex items-center gap-16rpx">
                     <wd-input v-model="formData.afterSaleRefundReasons[i]" class="flex-1" placeholder="请输入退款理由" />
-                    <text class="shrink-0 text-26rpx text-[#fa4350]" @click="formData.afterSaleRefundReasons.splice(i, 1)">删除</text>
+                    <text class="yd-text-danger shrink-0 text-26rpx" @click="formData.afterSaleRefundReasons.splice(i, 1)">删除</text>
                   </view>
                   <wd-button size="small" variant="plain" @click="formData.afterSaleRefundReasons.push('')">
                     + 添加退款理由
@@ -36,7 +36,7 @@
                 <view class="w-full py-8rpx">
                   <view v-for="(_, i) in formData.afterSaleReturnReasons" :key="i" class="mb-12rpx flex items-center gap-16rpx">
                     <wd-input v-model="formData.afterSaleReturnReasons[i]" class="flex-1" placeholder="请输入退货理由" />
-                    <text class="shrink-0 text-26rpx text-[#fa4350]" @click="formData.afterSaleReturnReasons.splice(i, 1)">删除</text>
+                    <text class="yd-text-danger shrink-0 text-26rpx" @click="formData.afterSaleReturnReasons.splice(i, 1)">删除</text>
                   </view>
                   <wd-button size="small" variant="plain" @click="formData.afterSaleReturnReasons.push('')">
                     + 添加退货理由

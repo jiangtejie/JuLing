@@ -31,29 +31,29 @@
           @click="handleDetail(item)"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
               {{ item.tableName }}
             </view>
             <dict-tag class="ml-16rpx shrink-0" :type="DICT_TYPE.INFRA_CODEGEN_TEMPLATE_TYPE" :value="item.templateType" />
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">表描述：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">表描述：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.tableComment || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">实体类：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">实体类：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.className || '-' }}</text>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">模块/业务：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">模块/业务：</text>
             <text class="min-w-0 flex-1 truncate">{{ item.moduleName }} / {{ item.businessName }}</text>
           </view>
-          <view class="flex items-center justify-between text-28rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-28rpx">
             <view class="flex items-center">
-              <text class="mr-8rpx shrink-0 text-[#999]">场景：</text>
+              <text class="yd-text-hint mr-8rpx shrink-0">场景：</text>
               <dict-tag :type="DICT_TYPE.INFRA_CODEGEN_SCENE" :value="item.scene" />
             </view>
-            <text class="text-24rpx text-[#999]">{{ formatDateTime(item.createTime) }}</text>
+            <text class="yd-text-hint text-24rpx">{{ formatDateTime(item.createTime) }}</text>
           </view>
         </view>
       </view>

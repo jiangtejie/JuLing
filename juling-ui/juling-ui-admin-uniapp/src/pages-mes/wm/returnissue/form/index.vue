@@ -94,10 +94,10 @@
         :stock-mode="isStock"
       />
 
-      <view v-if="isStock" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-24rpx text-26rpx text-[#389e0d] leading-42rpx">
+      <view v-if="isStock" class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">
         请核对退料物料和入库明细数量后再执行上架；当前只验证确认框，不确认真实上架。
       </view>
-      <view v-if="isFinish" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-24rpx text-26rpx text-[#389e0d] leading-42rpx">
+      <view v-if="isFinish" class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">
         执行退料将完成退料业务流转，H5 验证时只打开确认框并取消。
       </view>
       <view class="h-180rpx" />
@@ -322,7 +322,7 @@ async function handleSubmitIssue() {
     toast.success('提交成功')
     uni.$emit('mes:wm:returnissue:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     submitLoading.value = false
   }
 }
@@ -346,7 +346,7 @@ async function handleStockIssue() {
     toast.success('上架成功')
     uni.$emit('mes:wm:returnissue:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     stockLoading.value = false
   }
 }
@@ -370,7 +370,7 @@ async function handleFinishIssue() {
     toast.success('执行成功')
     uni.$emit('mes:wm:returnissue:reload')
     delay(handleBack)
-  } finally {
+  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     finishLoading.value = false
   }
 }

@@ -10,7 +10,7 @@
     <!-- 头部摘要 -->
     <view v-if="plan.id" class="bg-white px-24rpx py-24rpx">
       <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-        <view class="min-w-0 flex-1 truncate text-36rpx text-[#333] font-semibold">
+        <view class="yd-text-main min-w-0 flex-1 truncate text-36rpx font-semibold">
           {{ plan.name || '-' }}
         </view>
         <dict-tag
@@ -19,7 +19,7 @@
           :value="plan.status"
         />
       </view>
-      <view class="mb-8rpx flex items-center gap-12rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx flex items-center gap-12rpx text-26rpx">
         <text>计划编号：{{ plan.id }}</text>
         <dict-tag
           v-if="plan.stageType != null"
@@ -27,10 +27,10 @@
           :value="plan.stageType"
         />
       </view>
-      <view class="text-26rpx text-[#666]">
+      <view class="yd-text-sub text-26rpx">
         {{ formatHrmPerformancePlanCycle(plan) }} · {{ formatHrmDateRange(plan.startTime, plan.endTime) }}
       </view>
-      <view class="mt-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mt-8rpx text-26rpx">
         参评 {{ plan.employeeCount || 0 }} / 完成 {{ plan.finishedCount || 0 }}
       </view>
     </view>
@@ -67,25 +67,25 @@
       </wd-cell-group>
 
       <wd-cell-group border title="评分流程">
-        <view v-if="!(plan.reviewStages || []).length" class="px-24rpx py-24rpx text-28rpx text-[#999]">
+        <view v-if="!(plan.reviewStages || []).length" class="yd-text-hint px-24rpx py-24rpx text-28rpx">
           暂无评分阶段
         </view>
         <view
           v-for="(stage, index) in plan.reviewStages || []"
           :key="index"
-          class="border-b border-[#f0f0f0] px-24rpx py-20rpx"
+          class="yd-border-light border-b px-24rpx py-20rpx"
         >
-          <view class="mb-8rpx text-28rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-28rpx font-semibold">
             {{ index + 1 }}. {{ stage.name || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             评分人：{{ formatHrmPerformanceRaterType(stage.rater?.type) }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             权重：{{ stage.weight || 0 }}%
           </view>
-          <view class="mt-6rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-6rpx text-26rpx">
             评语必填：{{ stage.requiredSetting ? '是' : '否' }}
-            <text class="mx-8rpx text-[#ddd]">|</text>
+            <text class="yd-text-muted mx-8rpx">|</text>
             允许驳回：{{ stage.rejectAuthority ? '是' : '否' }}
           </view>
         </view>
@@ -103,7 +103,7 @@
         <view
           v-for="item in stageCountList"
           :key="item.stageType"
-          class="rounded-8rpx bg-[#f5f5f5] px-12rpx py-4rpx text-22rpx text-[#666]"
+          class="yd-bg-page yd-text-sub rounded-8rpx px-12rpx py-4rpx text-22rpx"
         >
           {{ getDictLabel(DICT_TYPE.HRM_PERFORMANCE_STAGE_STATUS, item.stageType) || '未知' }}（{{ item.count }}）
         </view>
@@ -135,7 +135,7 @@
               <wd-checkbox :model-value="isEmployeeSelected(item.employeeId)" />
             </view>
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-              <view class="min-w-0 flex-1 truncate text-32rpx text-[#333] font-semibold">
+              <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.employeeName || '-' }}
               </view>
               <dict-tag
@@ -144,21 +144,21 @@
                 :value="item.stageType"
               />
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">工号：</text>{{ item.jobNumber || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">工号：</text>{{ item.jobNumber || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">部门：</text>{{ item.deptName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">部门：</text>{{ item.deptName || '-' }}
             </view>
-            <view class="mb-12rpx text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">处理人：</text>{{ item.currentHandlerName || '-' }}
+            <view class="yd-text-sub mb-12rpx text-28rpx">
+              <text class="yd-text-hint mr-8rpx">处理人：</text>{{ item.currentHandlerName || '-' }}
             </view>
-            <view class="text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">分数：</text>{{ item.score ?? '-' }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
-              <text class="mr-8rpx text-[#999]">等级：</text>{{ item.resultLevel || '-' }}
-              <text class="mx-8rpx text-[#ddd]">|</text>
-              <text class="mr-8rpx text-[#999]">系数：</text>{{ item.coefficient ?? '-' }}
+            <view class="yd-text-sub text-28rpx">
+              <text class="yd-text-hint mr-8rpx">分数：</text>{{ item.score ?? '-' }}
+              <text class="yd-text-muted mx-8rpx">|</text>
+              <text class="yd-text-hint mr-8rpx">等级：</text>{{ item.resultLevel || '-' }}
+              <text class="yd-text-muted mx-8rpx">|</text>
+              <text class="yd-text-hint mr-8rpx">系数：</text>{{ item.coefficient ?? '-' }}
             </view>
           </view>
         </view>

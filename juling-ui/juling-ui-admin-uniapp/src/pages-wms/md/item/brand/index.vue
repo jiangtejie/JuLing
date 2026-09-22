@@ -31,14 +31,14 @@
           @click="handleDetail(item)"
         >
           <view class="p-24rpx">
-            <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
               {{ item.name || '-' }}
             </view>
-            <view class="flex items-center text-28rpx text-[#666]">
-              <text class="mr-8rpx text-[#999]">品牌编号：</text>
+            <view class="yd-text-sub flex items-center text-28rpx">
+              <text class="yd-text-hint mr-8rpx">品牌编号：</text>
               <text>{{ item.code || '-' }}</text>
             </view>
-            <view class="mt-12rpx flex items-center text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-12rpx flex items-center text-24rpx">
               <text>创建时间：{{ formatDateTime(item.createTime) || '-' }}</text>
             </view>
           </view>

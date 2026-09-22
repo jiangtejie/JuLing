@@ -1,6 +1,6 @@
 <template>
   <view class="p-24rpx">
-    <view v-if="!list.length" class="py-40rpx text-center text-28rpx text-[#999]">
+    <view v-if="!list.length" class="yd-text-hint py-40rpx text-center text-28rpx">
       暂无异动记录
     </view>
     <view
@@ -9,29 +9,29 @@
       class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-        <text class="text-30rpx text-[#333] font-semibold">
+        <text class="yd-text-main text-30rpx font-semibold">
           {{ formatEmployeeChangeType(item.type) }}
         </text>
-        <text class="text-26rpx text-[#999]">
+        <text class="yd-text-hint text-26rpx">
           {{ formatDateTime(item.effectTime) || '-' }}
         </text>
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         原因：{{ formatEmployeeChangeReason(item.reason) }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         部门：{{ item.oldDeptName || '-' }} → {{ item.newDeptName || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         岗位：{{ item.oldPostName || '-' }} → {{ item.newPostName || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         职级：{{ item.oldPostLevel || '-' }} → {{ item.newPostLevel || '-' }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         上级：{{ item.oldLeaderEmployeeName || '-' }} → {{ item.newLeaderEmployeeName || '-' }}
       </view>
-      <view v-if="item.remark" class="text-26rpx text-[#666]">
+      <view v-if="item.remark" class="yd-text-sub text-26rpx">
         备注：{{ item.remark }}
       </view>
     </view>

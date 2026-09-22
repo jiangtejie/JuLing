@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 72vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 头部 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="visible = false">
           取消
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           选择计量单位
         </view>
         <wd-button size="small" type="primary" :disabled="!canConfirm" @click="handleConfirm">
@@ -36,17 +36,17 @@
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
-                <view class="truncate text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main truncate text-30rpx font-semibold">
                   {{ item.name || '-' }}
                 </view>
-                <view class="mt-4rpx text-24rpx text-[#999]">
+                <view class="yd-text-hint mt-4rpx text-24rpx">
                   {{ item.code || '-' }}
                 </view>
               </view>
               <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="item.status" />
             </view>
-            <view class="text-26rpx text-[#666]">
-              <text class="text-[#999]">主单位：</text>{{ item.primaryFlag ? '是' : '否' }}
+            <view class="yd-text-sub text-26rpx">
+              <text class="yd-text-hint">主单位：</text>{{ item.primaryFlag ? '是' : '否' }}
             </view>
           </view>
           <view v-if="filteredList.length === 0 && !loading" class="py-100rpx text-center">

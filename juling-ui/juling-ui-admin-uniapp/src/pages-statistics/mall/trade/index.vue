@@ -34,12 +34,12 @@
         </wd-tabs>
         <!-- 交易状况 -->
         <view v-if="activeTab === 0" class="mt-24rpx rounded-12rpx bg-white p-24rpx shadow-sm">
-          <text class="mb-20rpx block text-30rpx text-[#333] font-semibold">交易状况</text>
+          <text class="yd-text-main mb-20rpx block text-30rpx font-semibold">交易状况</text>
           <SummaryGrid :items="trendItems" reference-label="较前一周期" />
         </view>
         <!-- 交易趋势折线图 -->
         <view v-if="activeTab === 1" class="pt-24rpx">
-          <StatisticsCard :section="trendSection" :rows="trendRows" />
+          <StatisticsCard :section="trendSection" :rows="trendRows" :loading="loading" :error="tabError" @retry="handleRetryTab" />
         </view>
       </view>
     </scroll-view>
@@ -81,6 +81,7 @@ const loading = ref(false) // 统计加载状态
 const activeTab = ref(0) // 当前分组：0 交易状况 / 1 交易趋势
 const summary = ref<Record<string, any>>({ value: {}, reference: {} }) // 交易概览（昨日/本月）
 const cache = reactive<Record<string, any>>({}) // 分组数据缓存：key=`分组@时间区间`
+const tabError = ref(false) // 当前分组的加载失败标记（与「确实没有数据」区分开）
 
 const times = computed(() => formatDateRange([filters.startTime, filters.endTime])) // 查询时间区间
 function tabCacheKey(tab: number) {
@@ -146,15 +147,27 @@ async function loadSummary() {
 async function loadTab(tab: number) {
   const key = tabCacheKey(tab)
   if (cache[key] !== undefined) {
+    tabError.value = false
     return
   }
+  // add by 棱信矩灵：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
+  tabError.value = false
   const params = { times: times.value }
   if (tab === 0) {
-    cache[key] = await getTradeStatisticsAnalyse(params).catch(() => ({ value: {}, reference: {} })) || { value: {}, reference: {} }
+    const analyse = await getTradeStatisticsAnalyse(params).catch(() => undefined)
+    if (analyse === undefined) {
+      tabError.value = true
+      return
+    }
+    cache[key] = analyse || { value: {}, reference: {} }
     return
   }
   // 明细金额由分转元，避免折线图金额 ×100
-  const listData = await getTradeStatisticsList(params).catch(() => [])
+  const listData = await getTradeStatisticsList(params).catch(() => undefined)
+  if (listData === undefined) {
+    tabError.value = true
+    return
+  }
   cache[key] = normalizeRows(listData).map(item => ({
     ...item,
     turnoverPrice: fenToYuan(item.turnoverPrice),
@@ -170,6 +183,17 @@ async function handleTabChange({ index }: { index: number }) {
   loading.value = true
   try {
     await loadTab(index)
+  } finally {
+    loading.value = false
+  }
+}
+
+/** add by 棱信矩灵：加载失败后重试当前分组 */
+async function handleRetryTab() {
+  delete cache[tabCacheKey(activeTab.value)]
+  loading.value = true
+  try {
+    await loadTab(activeTab.value)
   } finally {
     loading.value = false
   }

@@ -1,7 +1,7 @@
 <template>
-  <view v-if="pages?.length" class="mt-20rpx rounded-20rpx bg-[#f5f5f5] px-22rpx py-18rpx">
+  <view v-if="pages?.length" class="yd-bg-page mt-20rpx rounded-20rpx px-22rpx py-18rpx">
     <view class="flex items-center justify-between" @click="expanded = !expanded">
-      <view class="flex items-center gap-8rpx text-25rpx text-[#333] font-medium">
+      <view class="yd-text-main flex items-center gap-8rpx text-25rpx font-medium">
         <wd-icon name="search-line" size="28rpx" color="#1677ff" />
         <text>联网搜索结果（{{ pages.length }} 条）</text>
       </view>
@@ -14,13 +14,13 @@
         class="rounded-14rpx bg-white px-18rpx py-16rpx"
         @click="handleOpen(page)"
       >
-        <view class="text-22rpx text-[#999]">
+        <view class="yd-text-hint text-22rpx">
           {{ page.name || '网页来源' }}
         </view>
-        <view class="line-clamp-2 mt-6rpx text-25rpx text-[#1677ff] font-medium leading-36rpx">
+        <view class="yd-text-link line-clamp-2 mt-6rpx text-25rpx font-medium leading-36rpx">
           {{ page.title || page.url || '-' }}
         </view>
-        <view class="line-clamp-2 mt-6rpx text-23rpx text-[#666] leading-34rpx">
+        <view class="yd-text-sub line-clamp-2 mt-6rpx text-23rpx leading-34rpx">
           {{ page.snippet || page.summary || '-' }}
         </view>
       </view>
@@ -34,19 +34,19 @@
     >
       <view class="bg-white px-28rpx pb-[calc(28rpx+env(safe-area-inset-bottom))] pt-24rpx">
         <view class="flex items-start justify-between gap-20rpx">
-          <view class="min-w-0 flex-1 text-30rpx text-[#333] font-semibold leading-42rpx">
+          <view class="yd-text-main min-w-0 flex-1 text-30rpx font-semibold leading-42rpx">
             {{ selectedPage?.title || '联网来源' }}
           </view>
           <wd-icon name="close" size="36rpx" color="#666" @click="visible = false" />
         </view>
-        <view class="mt-10rpx break-all text-22rpx text-[#999]">
+        <view class="yd-text-hint mt-10rpx break-all text-22rpx">
           {{ selectedPage?.url }}
         </view>
         <scroll-view scroll-y class="mt-20rpx max-h-[46vh]">
-          <view class="rounded-16rpx bg-[#f5f5f5] px-20rpx py-18rpx text-26rpx text-[#666] leading-42rpx">
+          <view class="yd-bg-page yd-text-sub rounded-16rpx px-20rpx py-18rpx text-26rpx leading-42rpx">
             {{ selectedPage?.snippet || '-' }}
           </view>
-          <view v-if="selectedPage?.summary" class="mt-16rpx whitespace-pre-wrap text-27rpx text-[#333] leading-44rpx">
+          <view v-if="selectedPage?.summary" class="yd-text-main mt-16rpx whitespace-pre-wrap text-27rpx leading-44rpx">
             {{ selectedPage.summary }}
           </view>
         </scroll-view>

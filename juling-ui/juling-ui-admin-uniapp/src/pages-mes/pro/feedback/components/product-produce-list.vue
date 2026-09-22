@@ -1,6 +1,6 @@
 <template>
   <view class="mt-24rpx">
-    <view v-if="showTitle" class="mb-16rpx px-24rpx text-28rpx text-[#333] font-semibold">
+    <view v-if="showTitle" class="yd-text-main mb-16rpx px-24rpx text-28rpx font-semibold">
       产品产出
     </view>
     <z-paging
@@ -21,12 +21,12 @@
       <view class="space-y-16rpx">
         <view v-for="item in list" :key="item.id" class="rounded-12rpx bg-white p-24rpx shadow-sm">
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.itemCode || '-' }}
             </view>
             <dict-tag v-if="item.qualityStatus != null" :type="DICT_TYPE.MES_WM_QUALITY_STATUS" :value="item.qualityStatus" />
           </view>
-          <view class="text-26rpx text-[#666] space-y-8rpx">
+          <view class="yd-text-sub text-26rpx space-y-8rpx">
             <view>物资名称：{{ item.itemName || '-' }}</view>
             <view>规格型号：{{ item.specification || '-' }}</view>
             <view>产出数量：{{ item.quantity ?? '-' }} {{ item.unitMeasureName || '' }}</view>

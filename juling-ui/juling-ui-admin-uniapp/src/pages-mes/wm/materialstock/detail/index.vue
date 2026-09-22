@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="MES 库存台账详情"
@@ -23,7 +23,7 @@
         <wd-cell title="冻结状态">
           <view
             class="inline-flex rounded-999rpx px-16rpx py-6rpx text-24rpx"
-            :class="formData?.frozen ? 'bg-[#fff1f0] text-[#f5222d]' : 'bg-[#f6ffed] text-[#52c41a]'"
+            :class="formData?.frozen ? 'yd-bg-danger-soft yd-text-danger' : 'yd-bg-success-soft yd-text-success'"
           >
             {{ formData?.frozen ? '已冻结' : '可用' }}
           </view>

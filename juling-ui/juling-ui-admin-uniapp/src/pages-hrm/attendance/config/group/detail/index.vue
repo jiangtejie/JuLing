@@ -22,12 +22,12 @@
       </wd-cell-group>
 
       <view class="mt-24rpx">
-        <view class="mb-16rpx px-24rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx px-24rpx text-30rpx font-semibold">
           班次
         </view>
         <view
           v-if="!formData.shifts?.length"
-          class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+          class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
         >
           暂无班次
         </view>
@@ -36,19 +36,19 @@
           :key="index"
           class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
             {{ formatHrmAttendanceWeeks(shift.weeks) }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             上下班 {{ shift.startTime }} - {{ shift.endTime }}
           </view>
-          <view class="mt-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-8rpx text-26rpx">
             上班打卡 {{ shift.clockInStartTime }} - {{ shift.clockInEndTime }}
           </view>
-          <view class="mt-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-8rpx text-26rpx">
             下班打卡 {{ shift.clockOutStartTime }} - {{ shift.clockOutEndTime }}
           </view>
-          <view class="mt-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-8rpx text-26rpx">
             休息 {{ shift.restStartTime }} - {{ shift.restEndTime }}
             {{ shift.excludeRestTime ? '（不计入工时）' : '' }}
           </view>
@@ -56,12 +56,12 @@
       </view>
 
       <view class="mt-8rpx">
-        <view class="mb-16rpx px-24rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx px-24rpx text-30rpx font-semibold">
           特殊日期
         </view>
         <view
           v-if="!formData.specialDates?.length"
-          class="mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx text-[#999] shadow-sm"
+          class="yd-text-hint mx-24rpx rounded-12rpx bg-white py-60rpx text-center text-28rpx shadow-sm"
         >
           暂无特殊日期
         </view>
@@ -70,10 +70,10 @@
           :key="index"
           class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
             {{ formatDate(specialDate.date) || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             {{ formatHrmAttendanceSpecialDate(specialDate, formData.shifts) }}
           </view>
         </view>
@@ -85,7 +85,7 @@
       </wd-cell-group>
 
       <view v-if="formData.openPointCard" class="mt-24rpx">
-        <view class="mb-16rpx px-24rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx px-24rpx text-30rpx font-semibold">
           打卡地点
         </view>
         <view
@@ -93,20 +93,20 @@
           :key="index"
           class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
             {{ point.name || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             {{ point.address || '-' }}
           </view>
-          <view class="mt-8rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mt-8rpx text-26rpx">
             经纬度 {{ formatPointCoordinate(point) }} · 范围 {{ point.radius ?? '-' }} 米
           </view>
         </view>
       </view>
 
       <view v-if="formData.openWifiCard" class="mt-24rpx">
-        <view class="mb-16rpx px-24rpx text-30rpx text-[#333] font-semibold">
+        <view class="yd-text-main mb-16rpx px-24rpx text-30rpx font-semibold">
           打卡 WiFi
         </view>
         <view
@@ -114,10 +114,10 @@
           :key="index"
           class="mx-24rpx mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
-          <view class="mb-8rpx text-30rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-30rpx font-semibold">
             {{ wifi.ssid || '-' }}
           </view>
-          <view class="text-26rpx text-[#666]">
+          <view class="yd-text-sub text-26rpx">
             MAC {{ wifi.mac || '-' }}
           </view>
         </view>

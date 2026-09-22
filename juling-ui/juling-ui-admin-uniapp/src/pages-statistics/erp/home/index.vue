@@ -12,12 +12,12 @@
         <!-- 操作栏 -->
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
           <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
-            <text class="text-30rpx text-[#333] font-semibold">ERP 统计</text>
+            <text class="yd-text-main text-30rpx font-semibold">ERP 统计</text>
             <wd-button size="small" type="primary" :loading="isActiveTabLoading" @click="reloadStatistics">
               刷新
             </wd-button>
           </view>
-          <view v-if="activeLoadError" class="border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx text-[#fa8c16]">
+          <view v-if="activeLoadError" class="yd-text-warning border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx">
             部分统计数据加载失败，请稍后刷新
           </view>
         </view>
@@ -27,7 +27,7 @@
           <wd-tab v-for="tab in tabs" :key="tab.key" :title="tab.title" />
         </wd-tabs>
 
-        <view v-if="isActiveTabLoading && !isActiveTabLoaded" class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm">
+        <view v-if="isActiveTabLoading && !isActiveTabLoaded" class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm">
           <wd-loading size="32rpx" />
           <view class="mt-12rpx">
             正在加载统计数据
@@ -37,7 +37,7 @@
         <!-- 销售统计 -->
         <view v-else-if="activeTab === ERP_HOME_TAB.SALE" class="space-y-24rpx">
           <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
               销售概况
             </view>
             <view class="grid grid-cols-2 gap-16rpx p-24rpx">
@@ -56,7 +56,7 @@
         <!-- 采购统计 -->
         <view v-else-if="activeTab === ERP_HOME_TAB.PURCHASE" class="space-y-24rpx">
           <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-            <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
               采购概况
             </view>
             <view class="grid grid-cols-2 gap-16rpx p-24rpx">

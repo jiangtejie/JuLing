@@ -30,18 +30,18 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-            <text class="text-30rpx text-[#333] font-semibold">砍价记录 #{{ item.id }}</text>
+            <text class="yd-text-main text-30rpx font-semibold">砍价记录 #{{ item.id }}</text>
             <dict-tag v-if="item.status != null" :type="DICT_TYPE.PROMOTION_BARGAIN_RECORD_STATUS" :value="item.status" />
           </view>
-          <view class="mb-8rpx flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-8rpx flex items-center justify-between text-26rpx">
             <text>用户：{{ item.userId ?? '-' }}</text>
             <text>商品：{{ item.spuId ?? '-' }}</text>
           </view>
-          <view class="flex items-center justify-between text-26rpx text-[#666]">
+          <view class="yd-text-sub flex items-center justify-between text-26rpx">
             <text>起始价：{{ formatDisplayMoney(item.bargainFirstPrice) }}</text>
             <text>已砍至：{{ formatDisplayMoney(item.bargainPrice) }}</text>
           </view>
-          <view class="mt-8rpx text-24rpx text-[#999]">
+          <view class="yd-text-hint mt-8rpx text-24rpx">
             结束时间：{{ formatDateTime(item.endTime) || '-' }}
           </view>
           <view v-if="hasAccessByCodes(['promotion:bargain-help:query'])" class="mt-12rpx flex justify-end">

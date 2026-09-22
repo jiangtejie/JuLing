@@ -1,6 +1,6 @@
 <template>
   <view class="p-24rpx">
-    <view v-if="!list.length" class="py-40rpx text-center text-28rpx text-[#999]">
+    <view v-if="!list.length" class="yd-text-hint py-40rpx text-center text-28rpx">
       暂无调薪记录
     </view>
     <view
@@ -9,7 +9,7 @@
       class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-12rpx flex items-center justify-between gap-16rpx">
-        <text class="text-30rpx text-[#333] font-semibold">
+        <text class="yd-text-main text-30rpx font-semibold">
           {{ item.recordType === HrmSalaryRecordType.FIXED ? '定薪' : '调薪' }}
         </text>
         <dict-tag
@@ -18,8 +18,8 @@
           :value="item.status"
         />
       </view>
-      <view class="mb-8rpx flex items-center gap-12rpx text-26rpx text-[#666]">
-        <text class="text-[#999]">调整原因：</text>
+      <view class="yd-text-sub mb-8rpx flex items-center gap-12rpx text-26rpx">
+        <text class="yd-text-hint">调整原因：</text>
         <dict-tag
           v-if="item.changeReason != null"
           :type="DICT_TYPE.HRM_SALARY_CHANGE_REASON"
@@ -27,16 +27,16 @@
         />
         <text v-else>-</text>
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         生效日期：{{ formatHrmDate(item.effectTime) }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         正式：{{ formatHrmMoney(item.beforeTotal) }} → {{ formatHrmMoney(item.afterTotal) }}
       </view>
-      <view class="mb-8rpx text-26rpx text-[#666]">
+      <view class="yd-text-sub mb-8rpx text-26rpx">
         试用：{{ formatHrmMoney(item.probationBeforeTotal) }} → {{ formatHrmMoney(item.probationAfterTotal) }}
       </view>
-      <view v-if="item.remark" class="mb-12rpx text-26rpx text-[#666]">
+      <view v-if="item.remark" class="yd-text-sub mb-12rpx text-26rpx">
         备注：{{ item.remark }}
       </view>
       <view class="flex flex-wrap justify-end gap-16rpx">

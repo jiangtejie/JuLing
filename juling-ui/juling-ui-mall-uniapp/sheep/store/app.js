@@ -69,49 +69,46 @@ const app = defineStore('app', {
       await adaptTemplate(this.template, templateId);
 
       // TODO 棱信矩灵：【初始化优化】未来支持改为从管理后台读取初始化信息
-      if (true) {
-        this.info = {
-          name: '矩灵商城',
-          logo: '',
-          version: '2026.08',
-          copyright: '全部开源，个人与企业可 100% 免费使用',
-          copytime: 'Copyright© 2018-2025',
+      // 说明：以下为内置的默认应用信息；装修模板已在上方 adaptTemplate 中从后端拉取。
+      this.info = {
+        name: '矩灵商城',
+        logo: '',
+        version: '2026.08',
+        copyright: '全部开源，个人与企业可 100% 免费使用',
+        copytime: 'Copyright© 2018-2025',
 
-          cdnurl: '', // 云存储域名（留空表示使用后端返回的地址）
-          filesystem: 'qcloud', // 云存储平台
-        };
-        this.platform = {
-          share: {
-            methods: ['forward', 'poster', 'link'],
-            linkAddress: h5Url,
-            posterInfo: {
-              user_bg: '/static/img/shop/config/user-poster-bg.png',
-              goods_bg: '/static/img/shop/config/goods-poster-bg.png',
-              groupon_bg: '/static/img/shop/config/groupon-poster-bg.png',
-            },
-            forwardInfo: {
-              title: '',
-              image: '',
-              desc: '',
-            },
+        cdnurl: '', // 云存储域名（留空表示使用后端返回的地址）
+        filesystem: 'qcloud', // 云存储平台
+      };
+      this.platform = {
+        share: {
+          methods: ['forward', 'poster', 'link'],
+          linkAddress: h5Url,
+          posterInfo: {
+            user_bg: '/static/img/shop/config/user-poster-bg.png',
+            goods_bg: '/static/img/shop/config/goods-poster-bg.png',
+            groupon_bg: '/static/img/shop/config/groupon-poster-bg.png',
           },
-          bind_mobile: 0,
-        };
-        this.has_wechat_trade_managed = 0;
+          forwardInfo: {
+            title: '',
+            image: '',
+            desc: '',
+          },
+        },
+        bind_mobile: 0,
+      };
+      this.has_wechat_trade_managed = 0;
 
-        // 加载主题
-        const sysStore = sys();
-        sysStore.setTheme();
+      // 加载主题
+      const sysStore = sys();
+      sysStore.setTheme();
 
-        // 模拟用户登录
-        const userStore = user();
-        if (userStore.isLogin) {
-          userStore.loginAfter();
-        }
-        return Promise.resolve(true);
-      } else {
-        $router.error('InitError', res.msg || '加载失败');
+      // 模拟用户登录
+      const userStore = user();
+      if (userStore.isLogin) {
+        userStore.loginAfter();
       }
+      return Promise.resolve(true);
     },
     // 设置 paramsForTabbar
     setParamsForTabbar(params = {}) {

@@ -24,7 +24,7 @@
             <!-- 加载状态 -->
             <view
               v-if="loading"
-              class="rounded-12rpx bg-white py-64rpx text-center text-26rpx text-[#999] shadow-sm"
+              class="yd-text-hint rounded-12rpx bg-white py-64rpx text-center text-26rpx shadow-sm"
             >
               <wd-loading size="32rpx" />
               <view class="mt-12rpx">
@@ -35,7 +35,7 @@
             <template v-else>
               <!-- 资产 -->
               <view>
-                <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
                   资产
                 </view>
                 <ReportRowList :rows="assetRows" primary-label="期末余额" secondary-label="年初余额" />
@@ -43,7 +43,7 @@
 
               <!-- 负债和所有者权益 -->
               <view>
-                <view class="mb-16rpx text-30rpx text-[#333] font-semibold">
+                <view class="yd-text-main mb-16rpx text-30rpx font-semibold">
                   负债和所有者权益
                 </view>
                 <ReportRowList :rows="liabilityRows" primary-label="期末余额" secondary-label="年初余额" />

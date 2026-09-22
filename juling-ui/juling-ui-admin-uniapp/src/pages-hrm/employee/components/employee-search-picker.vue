@@ -4,7 +4,7 @@
       {{ label }}
     </view>
     <view class="flex items-center justify-between">
-      <text :class="displayValue ? 'text-[#333]' : 'text-[#bfbfbf]'">
+      <text :class="displayValue ? 'yd-text-main' : 'text-[#bfbfbf]'">
         {{ displayValue || placeholder }}
       </text>
       <view class="flex items-center gap-8rpx">

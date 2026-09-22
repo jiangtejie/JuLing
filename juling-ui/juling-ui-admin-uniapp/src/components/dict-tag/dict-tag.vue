@@ -10,12 +10,21 @@ interface DictTagProps {
   plain?: boolean // 是否镂空，默认为 true
   separator?: string // 字符串多值的分隔符（仅 value 为字符串时生效）
   gutter?: string // 多个标签之间的间距
+  /**
+   * 未命中字典项时的兜底文案，默认 '-'
+   *
+   * add by 棱信矩灵：此前未命中（值不存在 / 值为空 / 字典未定义该项）时整个组件不渲染任何内容，
+   * 详情页会显示成「状态：」这样标签后空白，与项目其它字段用 - 占位的约定不一致。
+   * 传入空字符串可关闭兜底（回到只渲染标签的行为）。
+   */
+  placeholder?: string
 }
 
 const props = withDefaults(defineProps<DictTagProps>(), {
   plain: true,
   separator: ',',
   gutter: '8rpx',
+  placeholder: '-',
 })
 
 /**
@@ -79,4 +88,6 @@ const dictTags = computed(() => {
       {{ tag.label }}
     </wd-tag>
   </view>
+  <!-- 未命中字典项时的兜底展示（与项目其它字段的 '-' 约定保持一致） -->
+  <text v-else-if="placeholder !== ''" class="yd-text-hint">{{ placeholder }}</text>
 </template>

@@ -30,25 +30,25 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
         >
           <view class="mb-16rpx flex items-center justify-between">
-            <view class="min-w-0 flex-1 truncate text-30rpx text-[#333] font-semibold">
+            <view class="yd-text-main min-w-0 flex-1 truncate text-30rpx font-semibold">
               {{ item.title || '积分变动' }}
             </view>
             <wd-tag :type="(item.point || 0) >= 0 ? 'success' : 'danger'" variant="plain">
               {{ (item.point || 0) > 0 ? `+${item.point}` : item.point }}
             </wd-tag>
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">用户：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">用户：</text>
             <text>{{ item.nickname || item.userId }}</text>
           </view>
-          <view class="mb-12rpx text-26rpx text-[#666]">
+          <view class="yd-text-sub mb-12rpx text-26rpx">
             {{ item.description || '-' }}
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">业务类型：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx">业务类型：</text>
             <dict-tag :type="DICT_TYPE.MEMBER_POINT_BIZ_TYPE" :value="item.bizType" />
           </view>
-          <view class="flex items-center justify-between text-24rpx text-[#999]">
+          <view class="yd-text-hint flex items-center justify-between text-24rpx">
             <text>总积分：{{ item.totalPoint ?? '-' }}</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>

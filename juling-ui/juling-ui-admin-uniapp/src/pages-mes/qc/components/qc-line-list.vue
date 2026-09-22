@@ -1,11 +1,11 @@
 <template>
   <view class="mt-24rpx bg-white">
     <!-- 标题栏 -->
-    <view v-if="showTitle" class="flex items-center justify-between border-b border-[#f5f5f5] px-24rpx py-20rpx">
-      <view class="text-30rpx text-[#333] font-semibold">
+    <view v-if="showTitle" class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
+      <view class="yd-text-main text-30rpx font-semibold">
         检验项明细
       </view>
-      <view v-if="total > 0" class="text-24rpx text-[#999]">
+      <view v-if="total > 0" class="yd-text-hint text-24rpx">
         共 {{ total }} 项
       </view>
     </view>
@@ -29,35 +29,35 @@
         <view
           v-for="item in list"
           :key="item.id"
-          class="mb-20rpx rounded-12rpx bg-[#f8f9fb] p-20rpx last:mb-0"
+          class="yd-bg-subtle mb-20rpx rounded-12rpx p-20rpx last:mb-0"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">
-              <view class="truncate text-28rpx text-[#333] font-semibold">
+              <view class="yd-text-main truncate text-28rpx font-semibold">
                 {{ item.indicatorName || '-' }}
               </view>
-              <view class="mt-6rpx truncate text-24rpx text-[#999]">
+              <view class="yd-text-hint mt-6rpx truncate text-24rpx">
                 {{ item.indicatorCode || '-' }}
               </view>
             </view>
             <dict-tag v-if="item.indicatorType != null" :type="DICT_TYPE.MES_INDICATOR_TYPE" :value="item.indicatorType" />
           </view>
 
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">检测工具：</text>{{ item.tool || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint">检测工具：</text>{{ item.tool || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">检测方法：</text>{{ item.checkMethod || '-' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint">检测方法：</text>{{ item.checkMethod || '-' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">标准值：</text>{{ formatDisplayValue(item.standardValue) }} {{ item.unitMeasureName || '' }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint">标准值：</text>{{ formatDisplayValue(item.standardValue) }} {{ item.unitMeasureName || '' }}
           </view>
-          <view class="mb-8rpx text-26rpx text-[#666]">
-            <text class="text-[#999]">误差范围：</text>{{ formatDisplayValue(item.minThreshold) }} ~ {{ formatDisplayValue(item.maxThreshold) }}
+          <view class="yd-text-sub mb-8rpx text-26rpx">
+            <text class="yd-text-hint">误差范围：</text>{{ formatDisplayValue(item.minThreshold) }} ~ {{ formatDisplayValue(item.maxThreshold) }}
           </view>
           <view class="grid grid-cols-3 gap-12rpx rounded-10rpx bg-white px-16rpx py-14rpx text-center">
             <view>
-              <view class="text-22rpx text-[#999]">
+              <view class="yd-text-hint text-22rpx">
                 致命
               </view>
               <view class="mt-4rpx text-26rpx text-[#d93026] font-semibold">
@@ -65,23 +65,23 @@
               </view>
             </view>
             <view>
-              <view class="text-22rpx text-[#999]">
+              <view class="yd-text-hint text-22rpx">
                 严重
               </view>
-              <view class="mt-4rpx text-26rpx text-[#fa8c16] font-semibold">
+              <view class="yd-text-warning mt-4rpx text-26rpx font-semibold">
                 {{ formatDisplayValue(item.majorQuantity) }}
               </view>
             </view>
             <view>
-              <view class="text-22rpx text-[#999]">
+              <view class="yd-text-hint text-22rpx">
                 轻微
               </view>
-              <view class="mt-4rpx text-26rpx text-[#1677ff] font-semibold">
+              <view class="yd-text-link mt-4rpx text-26rpx font-semibold">
                 {{ formatDisplayValue(item.minorQuantity) }}
               </view>
             </view>
           </view>
-          <view v-if="item.remark" class="mt-10rpx text-24rpx text-[#999]">
+          <view v-if="item.remark" class="yd-text-hint mt-10rpx text-24rpx">
             备注：{{ item.remark }}
           </view>
           <view class="mt-16rpx">
@@ -100,14 +100,14 @@
       safe-area-inset-bottom
       custom-style="height: 72vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <!-- 顶部操作 -->
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <view class="min-w-0 flex-1">
-            <view class="truncate text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main truncate text-32rpx font-semibold">
               缺陷记录
             </view>
-            <view class="mt-4rpx truncate text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx truncate text-24rpx">
               {{ currentLine?.indicatorName || '-' }}
             </view>
           </view>
@@ -147,18 +147,18 @@
               class="mb-20rpx rounded-12rpx bg-white p-20rpx last:mb-0"
             >
               <view class="mb-10rpx flex items-start justify-between gap-16rpx">
-                <view class="min-w-0 flex-1 text-28rpx text-[#333] font-semibold">
+                <view class="yd-text-main min-w-0 flex-1 text-28rpx font-semibold">
                   {{ record.name || '-' }}
                 </view>
                 <dict-tag v-if="record.level != null" :type="DICT_TYPE.MES_DEFECT_LEVEL" :value="record.level" />
               </view>
-              <view class="mb-8rpx text-26rpx text-[#666]">
-                <text class="text-[#999]">缺陷数量：</text>{{ formatDisplayValue(record.quantity) }}
+              <view class="yd-text-sub mb-8rpx text-26rpx">
+                <text class="yd-text-hint">缺陷数量：</text>{{ formatDisplayValue(record.quantity) }}
               </view>
-              <view class="mb-8rpx text-24rpx text-[#999]">
+              <view class="yd-text-hint mb-8rpx text-24rpx">
                 备注：{{ record.remark || '-' }}
               </view>
-              <view class="text-24rpx text-[#999]">
+              <view class="yd-text-hint text-24rpx">
                 创建时间：{{ formatDateTime(record.createTime) || '-' }}
               </view>
               <view v-if="!readonly" class="mt-16rpx flex gap-16rpx">
@@ -195,12 +195,12 @@
       safe-area-inset-bottom
       custom-style="height: 76vh; border-radius: 24rpx 24rpx 0 0;"
     >
-      <view class="h-full flex flex-col bg-[#f5f5f5]">
+      <view class="yd-bg-page h-full flex flex-col">
         <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
           <wd-button variant="plain" size="small" @click="defectFormVisible = false">
             取消
           </wd-button>
-          <view class="text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main text-32rpx font-semibold">
             {{ defectFormData.id ? '编辑缺陷记录' : '新增缺陷记录' }}
           </view>
           <wd-button size="small" type="primary" :loading="defectFormLoading" @click="handleSubmitDefect">

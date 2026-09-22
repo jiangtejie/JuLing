@@ -5,13 +5,13 @@
     safe-area-inset-bottom
     custom-style="height: 82vh; border-radius: 24rpx 24rpx 0 0;"
   >
-    <view class="h-full flex flex-col bg-[#f5f5f5]">
+    <view class="yd-bg-page h-full flex flex-col">
       <!-- 弹窗标题 -->
       <view class="flex items-center justify-between bg-white px-24rpx py-20rpx">
         <wd-button variant="plain" size="small" @click="visible = false">
           关闭
         </wd-button>
-        <view class="text-32rpx text-[#333] font-semibold">
+        <view class="yd-text-main text-32rpx font-semibold">
           查看条码
         </view>
         <wd-button
@@ -32,7 +32,7 @@
           <wd-loading />
         </view>
         <view v-else class="p-24rpx">
-          <view v-if="loadError" class="mb-24rpx rounded-12rpx bg-[#fff7e6] p-20rpx text-26rpx text-[#d46b08] leading-38rpx">
+          <view v-if="loadError" class="yd-bg-warning-soft yd-text-warning mb-24rpx rounded-12rpx p-20rpx text-26rpx leading-38rpx">
             条码查询失败，请稍后重试。
           </view>
           <BarcodePreview :content="barcodeData.content" :format="barcodeData.format" />

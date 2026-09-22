@@ -45,20 +45,20 @@
               />
               <view
                 v-else
-                class="h-80rpx w-80rpx flex items-center justify-center rounded-full bg-[#1890ff] text-32rpx text-white"
+                class="yd-bg-primary h-80rpx w-80rpx flex items-center justify-center rounded-full text-32rpx text-white"
               >
                 {{ (item.nickname || item.username)?.charAt(0) }}
               </view>
               <view>
-                <view class="text-32rpx text-[#333] font-semibold">
+                <view class="yd-text-main text-32rpx font-semibold">
                   {{ item.nickname || item.username }}
                 </view>
-                <view class="text-24rpx text-[#999]">
+                <view class="yd-text-hint text-24rpx">
                   {{ item.deptName || '未分配部门' }}
                 </view>
               </view>
             </view>
-            <view v-if="item.loginDate" class="absolute bottom-24rpx right-24rpx text-22rpx text-[#999]">
+            <view v-if="item.loginDate" class="yd-text-hint absolute bottom-24rpx right-24rpx text-22rpx">
               登录时间：{{ formatDate(item.loginDate) }}
             </view>
           </view>

@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-page-container">
+  <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
       title="会员配置"
@@ -25,7 +25,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view class="p-24rpx text-24rpx text-[#999] leading-40rpx">
+      <view class="yd-text-hint p-24rpx text-24rpx leading-40rpx">
         抵扣金额单位为元，表示 1 积分可抵扣多少金额；抵扣上限为 0 时不限制；赠送积分表示实际支付 1 元赠送多少积分。
       </view>
     </view>

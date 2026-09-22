@@ -30,20 +30,20 @@
           class="mb-24rpx overflow-hidden rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="mb-12rpx truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-12rpx truncate text-32rpx font-semibold">
             {{ item.name || '-' }}
           </view>
-          <view class="mb-12rpx truncate text-26rpx text-[#999]">
+          <view class="yd-text-hint mb-12rpx truncate text-26rpx">
             {{ item.remark || '暂无备注' }}
           </view>
-          <view class="mb-12rpx flex items-center text-26rpx text-[#666]">
-            <text class="mr-8rpx shrink-0 text-[#999]">创建时间：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-26rpx">
+            <text class="yd-text-hint mr-8rpx shrink-0">创建时间：</text>
             <text>{{ formatDateTime(item.createTime) || '-' }}</text>
           </view>
           <!-- 属性值入口 -->
-          <view class="mt-16rpx flex items-center justify-end border-t border-[#f0f0f0] pt-16rpx">
+          <view class="yd-border-light mt-16rpx flex items-center justify-end border-t pt-16rpx">
             <view class="flex items-center" @click.stop="handleViewValues(item)">
-              <text class="text-26rpx text-[#1890ff]">属性值</text>
+              <text class="yd-text-link text-26rpx">属性值</text>
               <wd-icon name="arrow-right" size="12px" color="#1890ff" />
             </view>
           </view>

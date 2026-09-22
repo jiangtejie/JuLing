@@ -17,7 +17,7 @@
     <!-- 浏览列表 -->
     <scroll-view scroll-y class="min-h-0 flex-1">
       <view class="p-24rpx">
-        <view v-if="!activeItems.length" class="py-80rpx text-center text-28rpx text-[#999]">
+        <view v-if="!activeItems.length" class="yd-text-hint py-80rpx text-center text-28rpx">
           暂无浏览记录
         </view>
         <view
@@ -33,14 +33,14 @@
             class="shrink-0"
           />
           <view class="min-w-0 flex-1">
-            <view class="truncate text-28rpx text-[#333]">
+            <view class="yd-text-main truncate text-28rpx">
               {{ item.name }}
             </view>
-            <view class="mt-4rpx text-24rpx text-[#999]">
+            <view class="yd-text-hint mt-4rpx text-24rpx">
               {{ getKnowledgeObjectTypeName(item.type) }} · {{ item.libraryName }}
             </view>
           </view>
-          <text class="shrink-0 text-24rpx text-[#999]">{{ formatDateTime(item.createTime) || '-' }}</text>
+          <text class="yd-text-hint shrink-0 text-24rpx">{{ formatDateTime(item.createTime) || '-' }}</text>
         </view>
       </view>
     </scroll-view>

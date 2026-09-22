@@ -23,25 +23,25 @@
           class="mb-24rpx rounded-12rpx bg-white p-24rpx shadow-sm"
           @click="handleDetail(item)"
         >
-          <view class="mb-16rpx truncate text-32rpx text-[#333] font-semibold">
+          <view class="yd-text-main mb-16rpx truncate text-32rpx font-semibold">
             {{ item.name || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">工号：</text>{{ item.jobNumber || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">工号：</text>{{ item.jobNumber || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">部门：</text>{{ item.deptName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">部门：</text>{{ item.deptName || '-' }}
           </view>
-          <view class="mb-12rpx text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">岗位：</text>{{ item.postName || '-' }}
+          <view class="yd-text-sub mb-12rpx text-28rpx">
+            <text class="yd-text-hint mr-8rpx">岗位：</text>{{ item.postName || '-' }}
           </view>
-          <view class="mb-12rpx flex items-center text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">聘用形式：</text>
+          <view class="yd-text-sub mb-12rpx flex items-center text-28rpx">
+            <text class="yd-text-hint mr-8rpx">聘用形式：</text>
             <dict-tag v-if="item.type != null" :type="DICT_TYPE.HRM_EMPLOYEE_TYPE" :value="item.type" />
             <text v-else>-</text>
           </view>
-          <view class="text-28rpx text-[#666]">
-            <text class="mr-8rpx text-[#999]">入职时间：</text>{{ formatDateTime(item.entryTime) || '-' }}
+          <view class="yd-text-sub text-28rpx">
+            <text class="yd-text-hint mr-8rpx">入职时间：</text>{{ formatDateTime(item.entryTime) || '-' }}
           </view>
         </view>
       </view>

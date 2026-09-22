@@ -31,10 +31,10 @@
           @click="handleDetail(item)"
         >
           <view class="p-24rpx">
-            <view class="mb-16rpx text-32rpx text-[#333] font-semibold">
+            <view class="yd-text-main mb-16rpx text-32rpx font-semibold">
               {{ item.name }}
             </view>
-            <view class="text-24rpx text-[#999]">
+            <view class="yd-text-hint text-24rpx">
               创建时间：{{ formatDateTime(item.createTime) || '-' }}
             </view>
           </view>

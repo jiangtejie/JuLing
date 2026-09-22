@@ -162,7 +162,7 @@
       <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx text-26rpx text-[#8c8c8c] leading-40rpx">
         请先保存装箱单主表，保存后可继续维护子箱和装箱清单。
       </view>
-      <view v-if="isFinish" class="mx-24rpx mt-24rpx rounded-12rpx bg-[#f6ffed] p-24rpx text-26rpx text-[#389e0d] leading-42rpx">
+      <view v-if="isFinish" class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">
         完成后装箱单将不可编辑；H5 验证仅打开确认框并取消，不确认真实完成。
       </view>
       <view class="h-180rpx" />

@@ -13,16 +13,16 @@
         <wd-loading />
       </view>
       <view v-else-if="detail" class="px-32rpx pb-80rpx pt-36rpx">
-        <view class="text-42rpx text-[#222] font-semibold leading-58rpx">
+        <view class="yd-text-strong text-42rpx font-semibold leading-58rpx">
           {{ detail.title || '频道消息' }}
         </view>
-        <view v-if="detail.summary" class="mt-20rpx text-27rpx text-[#888] leading-42rpx">
+        <view v-if="detail.summary" class="yd-text-sub mt-20rpx text-27rpx leading-42rpx">
           {{ detail.summary }}
         </view>
         <wd-img
           v-if="detail.coverUrl"
           :src="detail.coverUrl"
-          custom-class="mt-28rpx bg-[#f2f3f5]"
+          custom-class="mt-28rpx yd-bg-subtle"
           width="100%"
           height="360rpx"
           radius="8rpx"
@@ -30,13 +30,13 @@
         />
         <rich-text
           v-if="detail.content"
-          class="article-content mt-32rpx text-30rpx text-[#333] leading-52rpx"
+          class="article-content yd-text-main mt-32rpx text-30rpx leading-52rpx"
           :nodes="detail.content"
           selectable
         />
         <view
           v-if="detail.url"
-          class="mt-32rpx break-all text-28rpx text-[#576b95] leading-44rpx"
+          class="yd-text-link mt-32rpx break-all text-28rpx leading-44rpx"
           @click="openSafeUrl(detail.url)"
         >
           查看原文

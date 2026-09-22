@@ -1,7 +1,7 @@
 <template>
   <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom @close="visible = false">
     <view class="bg-white px-24rpx pb-32rpx pt-24rpx">
-      <view class="mb-24rpx text-center text-32rpx text-[#333] font-semibold">
+      <view class="yd-text-main mb-24rpx text-center text-32rpx font-semibold">
         {{ dialogTitle }}
       </view>
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
