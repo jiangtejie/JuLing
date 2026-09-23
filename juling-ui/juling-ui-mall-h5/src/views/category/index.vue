@@ -108,7 +108,8 @@
       flex: 1;
       height: 100%;
       overflow-y: auto;
-      padding: 0 12px 12px;
+      /* 底部预留固定 tabbar 的高度，否则滚到底时最后一项（如「没有更多了」）会被 tabbar 遮挡 */
+      padding: 0 12px calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom));
       background: var(--app-bg-color);
     }
 

@@ -209,6 +209,11 @@
 </template>
 
 <style scoped lang="scss">
+  /* 内容底部避让固定提交栏（van-submit-bar 默认无 placeholder），避免最后一项被遮挡 */
+  :deep(.app-scroll) {
+    padding-bottom: 52px;
+  }
+
   .detail {
     &__loading {
       display: flex;
