@@ -5,6 +5,8 @@ import {
   logout as logoutApi,
   getProfile,
 } from '@/api/auth';
+import { STORAGE_KEYS } from '@/constants';
+import { persistKey } from '@/stores';
 import type { LoginParam, UserInfo } from '@/types';
 import { clearTokens, getToken, setTokens } from '@/utils/auth';
 
@@ -80,7 +82,7 @@ export const useUserStore = defineStore(
   {
     // 仅持久化会员信息，token 由 utils/auth 单独管理
     persist: {
-      key: 'user-info',
+      key: persistKey(STORAGE_KEYS.USER_INFO),
       pick: ['userInfo'],
     },
   },

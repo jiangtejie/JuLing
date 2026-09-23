@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { adaptCartList } from '@/api/adapters/cart';
 import { getCartList } from '@/api/cart';
+import { STORAGE_KEYS } from '@/constants';
+import { persistKey } from '@/stores';
 import type { CartItem, Sku } from '@/types';
 import { deepClone } from '@/utils/index';
 import { resolvePrice } from '@/utils/price';
@@ -153,7 +155,7 @@ export const useCartStore = defineStore(
   },
   {
     persist: {
-      key: 'cart',
+      key: persistKey(STORAGE_KEYS.CART),
       pick: ['items'],
     },
   },
