@@ -1,5 +1,8 @@
 DELETE FROM "im_private_message";
 DELETE FROM "im_group_message";
+DELETE FROM "im_channel_message";
+DELETE FROM "im_channel_material";
+DELETE FROM "im_channel";
 DELETE FROM "im_conversation_read";
 DELETE FROM "im_group";
 DELETE FROM "im_group_member";

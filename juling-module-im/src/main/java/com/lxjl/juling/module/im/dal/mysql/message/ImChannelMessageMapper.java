@@ -32,7 +32,7 @@ public interface ImChannelMessageMapper extends BaseMapperX<ImChannelMessageDO> 
         return selectList(new LambdaQueryWrapperX<ImChannelMessageDO>()
                 .gt(ImChannelMessageDO::getId, minId)
                 .and(w -> w.isNull(ImChannelMessageDO::getReceiverUserIds)
-                        .or().eq(ImChannelMessageDO::getReceiverUserIds, "")
+                        .or().apply("receiver_user_ids = ''")
                         .or().apply(MyBatisUtils.findInSet("receiver_user_ids"), userId))
                 .orderByAsc(ImChannelMessageDO::getId)
                 .last("LIMIT " + size));
