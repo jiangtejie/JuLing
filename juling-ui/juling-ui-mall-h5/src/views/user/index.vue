@@ -77,7 +77,17 @@
   <div class="app-page">
     <!-- 头部 -->
     <div class="user__header" @click="!userStore.isLogin && toLogin()">
-      <van-image class="user__avatar" round :src="resolveImage(userStore.avatar)" fit="cover" />
+      <!-- 无头像时用默认人像，避免回退成「商品占位图」那种明显不搭的图标 -->
+      <van-image
+        v-if="userStore.avatar"
+        class="user__avatar"
+        round
+        :src="resolveImage(userStore.avatar)"
+        fit="cover"
+      />
+      <div v-else class="user__avatar user__avatar--empty">
+        <van-icon name="manager" size="28" />
+      </div>
       <div class="user__info">
         <template v-if="userStore.isLogin">
           <div class="user__name">{{ userStore.nickname }}</div>
@@ -162,6 +172,13 @@
       width: 56px;
       height: 56px;
       background: rgb(255 255 255 / 30%);
+    }
+
+    &__avatar--empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgb(255 255 255 / 90%);
     }
 
     &__info {
