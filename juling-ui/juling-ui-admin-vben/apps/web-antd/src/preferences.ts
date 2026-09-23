@@ -22,6 +22,8 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
     enableRefreshToken: true,
+    /** 默认首页：登录后跳转 ERP 首页（原先指向的 /dashboard/analytics 是 vben 演示页，已移除） */
+    defaultHomePath: '/erp/home',
   },
   logo: {
     // 使用 BASE_URL 拼接,兼容根路径(dev)与 nginx 子路径(如 /jl)部署

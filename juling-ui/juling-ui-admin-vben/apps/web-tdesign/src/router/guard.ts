@@ -13,6 +13,53 @@ import { useAuthStore } from '#/store';
 
 import { generateAccess } from './access';
 
+/** 全局 404 兜底路由的名称，定义见 router/routes/core.ts */
+const FALLBACK_NOT_FOUND_ROUTE_NAME = 'FallbackNotFound';
+
+/** 菜单节点（只取兜底逻辑需要的字段），避免额外引入类型依赖 */
+interface AccessibleMenuLike {
+  children?: AccessibleMenuLike[];
+  path?: string;
+  show?: boolean;
+}
+
+/** 判断是否命中了 404 兜底路由 */
+function isFallbackNotFound(matched: { name?: unknown }[]): boolean {
+  return matched.some((route) => route.name === FALLBACK_NOT_FOUND_ROUTE_NAME);
+}
+
+/**
+ * 获取当前用户可访问的第一个菜单路径。
+ *
+ * 用途：当默认首页（preferences.app.defaultHomePath）对应的菜单未被授权给当前角色时，
+ * 登录后会命中 404 兜底路由。此方法用于改跳该用户可访问的第一个菜单，避免用户直接看到 404。
+ */
+function getFirstAccessiblePath(
+  menus?: AccessibleMenuLike[],
+): string | undefined {
+  if (!Array.isArray(menus)) {
+    return undefined;
+  }
+  for (const menu of menus) {
+    const childPath = getFirstAccessiblePath(menu?.children);
+    if (childPath) {
+      return childPath;
+    }
+    const path = menu?.path;
+    const isLeaf = !menu?.children || menu.children.length === 0;
+    if (
+      isLeaf &&
+      menu?.show !== false &&
+      typeof path === 'string' &&
+      path.startsWith('/') &&
+      !path.startsWith('//')
+    ) {
+      return path;
+    }
+  }
+  return undefined;
+}
+
 /**
  * 通用守卫配置
  * @param router
@@ -91,6 +138,20 @@ function setupAccessGuard(router: Router) {
 
     // 是否已经生成过动态路由
     if (accessStore.isAccessChecked) {
+      // 兜底：默认首页未被授权给当前角色时会命中 404 兜底路由；
+      // 此时改跳该用户可访问的第一个菜单，避免登录后直接看到 404 页面
+      if (
+        isFallbackNotFound(to.matched) &&
+        to.path ===
+          (userStore.userInfo?.homePath ?? preferences.app.defaultHomePath)
+      ) {
+        const fallbackPath = getFirstAccessiblePath(
+          accessStore.accessMenus as unknown as AccessibleMenuLike[],
+        );
+        if (fallbackPath && fallbackPath !== to.path) {
+          return { path: fallbackPath, replace: true };
+        }
+      }
       return true;
     }
 
@@ -129,13 +190,29 @@ function setupAccessGuard(router: Router) {
     accessStore.setAccessRoutes(accessibleRoutes);
     accessStore.setIsAccessChecked(true);
     userStore.setUserRoles(userRoles);
+    const homePath = (userInfo?.homePath ||
+      preferences.app.defaultHomePath) as string;
     const redirectPath = (from.query.redirect ??
       (to.path === preferences.app.defaultHomePath
-        ? userInfo?.homePath || preferences.app.defaultHomePath
+        ? homePath
         : to.fullPath)) as string;
 
+    // 兜底：默认首页未被授权给当前角色时，改跳该用户可访问的第一个菜单
+    const resolved = router.resolve(decodeURIComponent(redirectPath));
+    if (
+      isFallbackNotFound(resolved.matched) &&
+      decodeURIComponent(redirectPath) === homePath
+    ) {
+      const fallbackPath = getFirstAccessiblePath(
+        accessibleMenus as unknown as AccessibleMenuLike[],
+      );
+      if (fallbackPath) {
+        return { ...router.resolve(fallbackPath), replace: true };
+      }
+    }
+
     return {
-      ...router.resolve(decodeURIComponent(redirectPath)),
+      ...resolved,
       replace: true,
     };
   });
