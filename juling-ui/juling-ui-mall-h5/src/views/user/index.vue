@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { showConfirmDialog, showToast } from 'vant';
+  import { getOrderCount, type OrderCountMap } from '@/api/order';
   import { ORDER_STATUS_MAP } from '@/constants';
   import { useUserStore } from '@/stores/user';
   import { maskMobile } from '@/utils/format';
@@ -10,12 +11,26 @@
   const router = useRouter();
   const userStore = useUserStore();
 
+  /**
+   * 订单状态入口。
+   * `countKey` 对应后端 `/trade/order/get-count` 的返回字段；
+   * 「已完成」后端没有独立计数，置 null —— 不显示角标。
+   */
   const statusEntries = [
-    { key: 'UNPAID', count: 2 },
-    { key: 'PAID', count: 1 },
-    { key: 'SHIPPED', count: 0 },
-    { key: 'COMPLETED', count: 3 },
+    { key: 'UNPAID', icon: 'pending-payment', countKey: 'unpaidCount' },
+    { key: 'PAID', icon: 'send-gift-o', countKey: 'undeliveredCount' },
+    { key: 'SHIPPED', icon: 'logistics', countKey: 'deliveredCount' },
+    { key: 'COMPLETED', icon: 'passed', countKey: null },
   ] as const;
+
+  const orderCount = ref<OrderCountMap | null>(null);
+
+  /** 某状态入口的角标数（未登录 / 无数据时为 0，配合 show-zero 不显示） */
+  function countOf(entry: (typeof statusEntries)[number]): number {
+    const key = entry.countKey;
+    if (!key || !orderCount.value) return 0;
+    return orderCount.value[key] ?? 0;
+  }
 
   const menus = [
     { label: '我的订货单', icon: 'i-carbon-shopping-cart', to: '/cart' },
@@ -40,7 +55,17 @@
   }
 
   onMounted(() => {
-    if (userStore.isLogin && !userStore.userInfo) {
+    if (!userStore.isLogin) return;
+
+    void getOrderCount()
+      .then((res) => {
+        orderCount.value = res;
+      })
+      .catch((err) => {
+        console.warn('[user] 拉取订单数量失败:', err);
+      });
+
+    if (!userStore.userInfo) {
       void userStore.fetchProfile().catch((err) => {
         console.warn('[user] 拉取会员信息失败:', err);
       });
@@ -86,9 +111,11 @@
           class="user__orders-item"
           @click="toOrderList(entry.key)"
         >
-          <van-badge :content="entry.count || ''" :show-zero="false">
-            <span class="user__orders-text">{{ ORDER_STATUS_MAP[entry.key].text }}</span>
+          <!-- 角标挂在图标上，避免压住下方文字 -->
+          <van-badge :content="countOf(entry) || ''" :show-zero="false">
+            <van-icon :name="entry.icon" class="user__orders-icon" />
           </van-badge>
+          <span class="user__orders-text">{{ ORDER_STATUS_MAP[entry.key].text }}</span>
         </div>
       </div>
     </div>
@@ -158,7 +185,7 @@
 
     &__orders {
       margin: -16px 12px 0;
-      padding: 16px 0;
+      padding: 18px 0 20px;
     }
 
     &__menus {
@@ -166,7 +193,7 @@
     }
 
     &__orders-head {
-      padding: 0 12px 8px;
+      padding: 0 16px 4px;
     }
 
     &__orders-title {
@@ -181,17 +208,26 @@
 
     &__orders-grid {
       display: flex;
+      padding-top: 16px;
     }
 
     &__orders-item {
       display: flex;
       flex: 1;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 13px;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    &__orders-icon {
+      font-size: 24px;
+      color: var(--app-primary-color);
     }
 
     &__orders-text {
+      font-size: 12px;
+      line-height: 1;
       color: var(--app-text-color);
     }
 

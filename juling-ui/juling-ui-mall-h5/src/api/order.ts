@@ -59,3 +59,24 @@ export function cancelOrder(id: number): Promise<boolean> {
 export function confirmOrder(id: number): Promise<boolean> {
   return http.put<boolean>('/trade/order/receive', undefined, { params: { id } });
 }
+
+/** 各状态订单数量（后端 /trade/order/get-count） */
+export interface OrderCountMap {
+  /** 全部 */
+  allCount: number;
+  /** 待付款 */
+  unpaidCount: number;
+  /** 待发货 */
+  undeliveredCount: number;
+  /** 待收货 */
+  deliveredCount: number;
+  /** 待评价 */
+  uncommentedCount: number;
+  /** 售后中 */
+  afterSaleCount: number;
+}
+
+/** 订单数量统计（用于「我的」页订单卡片角标） */
+export function getOrderCount(): Promise<OrderCountMap> {
+  return http.get<OrderCountMap>('/trade/order/get-count');
+}
