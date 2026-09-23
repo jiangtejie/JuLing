@@ -76,11 +76,15 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
 
         // 2.1 插入订单
         ErpPurchaseOrderDO purchaseOrder = BeanUtils.toBean(createReqVO, ErpPurchaseOrderDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()));
+                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 入库/退货数量必须初始化为 0（而不是 null）：否则“可采购入库”的查询条件
+                // t.in_count < t.total_count 在 SQL 三值逻辑下恒不成立，订单不会出现在入库单的“关联订单”弹窗里
+                .setInCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         calculateTotalPrice(purchaseOrder, purchaseOrderItems);
         purchaseOrderMapper.insert(purchaseOrder);
-        // 2.2 插入订单项
-        purchaseOrderItems.forEach(o -> o.setOrderId(purchaseOrder.getId()));
+        // 2.2 插入订单项（同样初始化，避免后续更新入库数量时对 null 做计算）
+        purchaseOrderItems.forEach(o -> o.setOrderId(purchaseOrder.getId())
+                .setInCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         purchaseOrderItemMapper.insertBatch(purchaseOrderItems);
         return purchaseOrder.getId();
     }
@@ -134,11 +138,13 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
             throw exception(approve ? PURCHASE_ORDER_APPROVE_FAIL : PURCHASE_ORDER_PROCESS_FAIL);
         }
         // 1.3 存在采购入单，无法反审核
-        if (!approve && purchaseOrder.getInCount().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && purchaseOrder.getInCount() != null
+                && purchaseOrder.getInCount().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(PURCHASE_ORDER_PROCESS_FAIL_EXISTS_IN);
         }
         // 1.4 存在采购退货单，无法反审核
-        if (!approve && purchaseOrder.getReturnCount().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && purchaseOrder.getReturnCount() != null
+                && purchaseOrder.getReturnCount().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(PURCHASE_ORDER_PROCESS_FAIL_EXISTS_RETURN);
         }
 
@@ -193,7 +199,9 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         // 1. 更新每个采购订单项
         orderItems.forEach(item -> {
             BigDecimal inCount = inCountMap.getOrDefault(item.getId(), BigDecimal.ZERO);
-            if (item.getInCount().equals(inCount)) {
+            // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异（0 与 0.000000）导致的误判
+            BigDecimal oldInCount = item.getInCount() != null ? item.getInCount() : BigDecimal.ZERO;
+            if (oldInCount.compareTo(inCount) == 0) {
                 return;
             }
             if (inCount.compareTo(item.getCount()) > 0) {
@@ -213,10 +221,13 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         // 1. 更新每个采购订单项
         orderItems.forEach(item -> {
             BigDecimal returnCount = returnCountMap.getOrDefault(item.getId(), BigDecimal.ZERO);
-            if (item.getReturnCount().equals(returnCount)) {
+            // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异导致的误判
+            BigDecimal oldReturnCount = item.getReturnCount() != null ? item.getReturnCount() : BigDecimal.ZERO;
+            if (oldReturnCount.compareTo(returnCount) == 0) {
                 return;
             }
-            if (returnCount.compareTo(item.getInCount()) > 0) {
+            BigDecimal inCount = item.getInCount() != null ? item.getInCount() : BigDecimal.ZERO;
+            if (returnCount.compareTo(inCount) > 0) {
                 throw exception(PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED,
                         productService.getProduct(item.getProductId()).getName(), item.getInCount());
             }

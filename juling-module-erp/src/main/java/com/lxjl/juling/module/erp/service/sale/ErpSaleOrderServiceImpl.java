@@ -84,11 +84,15 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
 
         // 2.1 插入订单
         ErpSaleOrderDO saleOrder = BeanUtils.toBean(createReqVO, ErpSaleOrderDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()));
+                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 出库/退货数量必须初始化为 0（而不是 null）：否则“可销售出库”的查询条件
+                // t.out_count < t.total_count 在 SQL 三值逻辑下恒不成立，订单不会出现在出库单的“关联订单”弹窗里
+                .setOutCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         calculateTotalPrice(saleOrder, saleOrderItems);
         saleOrderMapper.insert(saleOrder);
-        // 2.2 插入订单项
-        saleOrderItems.forEach(o -> o.setOrderId(saleOrder.getId()));
+        // 2.2 插入订单项（同样初始化，避免后续更新出库数量时对 null 做计算）
+        saleOrderItems.forEach(o -> o.setOrderId(saleOrder.getId())
+                .setOutCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         saleOrderItemMapper.insertBatch(saleOrderItems);
         return saleOrder.getId();
     }
@@ -146,11 +150,13 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
             throw exception(approve ? SALE_ORDER_APPROVE_FAIL : SALE_ORDER_PROCESS_FAIL);
         }
         // 1.3 存在销售出库单，无法反审核
-        if (!approve && saleOrder.getOutCount().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && saleOrder.getOutCount() != null
+                && saleOrder.getOutCount().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(SALE_ORDER_PROCESS_FAIL_EXISTS_OUT);
         }
         // 1.4 存在销售退货单，无法反审核
-        if (!approve && saleOrder.getReturnCount().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && saleOrder.getReturnCount() != null
+                && saleOrder.getReturnCount().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(SALE_ORDER_PROCESS_FAIL_EXISTS_RETURN);
         }
 
@@ -205,7 +211,9 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         // 1. 更新每个销售订单项
         orderItems.forEach(item -> {
             BigDecimal outCount = outCountMap.getOrDefault(item.getId(), BigDecimal.ZERO);
-            if (item.getOutCount().equals(outCount)) {
+            // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异（0 与 0.000000）导致的误判
+            BigDecimal oldOutCount = item.getOutCount() != null ? item.getOutCount() : BigDecimal.ZERO;
+            if (oldOutCount.compareTo(outCount) == 0) {
                 return;
             }
             if (outCount.compareTo(item.getCount()) > 0) {
@@ -225,10 +233,13 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         // 1. 更新每个销售订单项
         orderItems.forEach(item -> {
             BigDecimal returnCount = returnCountMap.getOrDefault(item.getId(), BigDecimal.ZERO);
-            if (item.getReturnCount().equals(returnCount)) {
+            // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异导致的误判
+            BigDecimal oldReturnCount = item.getReturnCount() != null ? item.getReturnCount() : BigDecimal.ZERO;
+            if (oldReturnCount.compareTo(returnCount) == 0) {
                 return;
             }
-            if (returnCount.compareTo(item.getOutCount()) > 0) {
+            BigDecimal outCount = item.getOutCount() != null ? item.getOutCount() : BigDecimal.ZERO;
+            if (returnCount.compareTo(outCount) > 0) {
                 throw exception(SALE_ORDER_ITEM_RETURN_FAIL_OUT_EXCEED,
                         productService.getProduct(item.getProductId()).getName(), item.getOutCount());
             }

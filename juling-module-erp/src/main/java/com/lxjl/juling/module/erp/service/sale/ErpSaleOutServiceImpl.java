@@ -90,7 +90,10 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
 
         // 2.1 插入出库
         ErpSaleOutDO saleOut = BeanUtils.toBean(createReqVO, ErpSaleOutDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()))
+                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 已收款金额必须初始化为 0（而不是 null）：否则"可收款"的查询条件
+                // t.receipt_price < t.total_price 在 SQL 三值逻辑下恒不成立，出库单不会出现在收款单的"选择销售出库单"弹窗里
+                .setReceiptPrice(BigDecimal.ZERO))
                 .setOrderNo(saleOrder.getNo()).setCustomerId(saleOrder.getCustomerId());
         calculateTotalPrice(saleOut, saleOutItems);
         saleOutMapper.insert(saleOut);
@@ -148,7 +151,9 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
             saleOut.setDiscountPercent(BigDecimal.ZERO);
         }
         saleOut.setDiscountPrice(MoneyUtils.priceMultiplyPercent(saleOut.getTotalPrice(), saleOut.getDiscountPercent()));
-        saleOut.setTotalPrice(saleOut.getTotalPrice().subtract(saleOut.getDiscountPrice().add(saleOut.getOtherPrice())));
+        // 其他费用可能未传值，按 0 处理，避免 NPE
+        BigDecimal otherPrice = saleOut.getOtherPrice() != null ? saleOut.getOtherPrice() : BigDecimal.ZERO;
+        saleOut.setTotalPrice(saleOut.getTotalPrice().subtract(saleOut.getDiscountPrice().add(otherPrice)));
     }
 
     private void updateSaleOrderOutCount(Long orderId) {
@@ -172,7 +177,8 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
             throw exception(approve ? SALE_OUT_APPROVE_FAIL : SALE_OUT_PROCESS_FAIL);
         }
         // 1.3 校验已退款
-        if (!approve && saleOut.getReceiptPrice().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && saleOut.getReceiptPrice() != null
+                && saleOut.getReceiptPrice().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(SALE_OUT_PROCESS_FAIL_EXISTS_RECEIPT);
         }
 
@@ -198,7 +204,9 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
     @Override
     public void updateSaleInReceiptPrice(Long id, BigDecimal receiptPrice) {
         ErpSaleOutDO saleOut = saleOutMapper.selectById(id);
-        if (saleOut.getReceiptPrice().equals(receiptPrice)) {
+        // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异（0 与 0.000000）导致的误判
+        BigDecimal oldReceiptPrice = saleOut.getReceiptPrice() != null ? saleOut.getReceiptPrice() : BigDecimal.ZERO;
+        if (oldReceiptPrice.compareTo(receiptPrice) == 0) {
             return;
         }
         if (receiptPrice.compareTo(saleOut.getTotalPrice()) > 0) {

@@ -33,17 +33,19 @@ public interface ErpPurchaseInMapper extends BaseMapperX<ErpPurchaseInDO> {
                 .eqIfPresent(ErpPurchaseInDO::getAccountId, reqVO.getAccountId())
                 .likeIfPresent(ErpPurchaseInDO::getOrderNo, reqVO.getOrderNo())
                 .orderByDesc(ErpPurchaseInDO::getId);
-        // 付款状态。为什么需要 t. 的原因，是因为联表查询时，需要指定表名，不然会报字段不存在的错误
+        // 付款状态。为什么需要 t. 的原因，是因为联表查询时，需要指定表名，不然会报字段不存在的错误。
+        // 注意：已付款金额历史数据可能为 NULL，而 SQL 中 NULL 参与比较恒为 NULL（即不成立），
+        // 会导致"可付款"的单据一条都查不出来，因此统一用 COALESCE(x, 0) 兜底
         if (Objects.equals(reqVO.getPaymentStatus(), ErpPurchaseInPageReqVO.PAYMENT_STATUS_NONE)) {
-            query.eq(ErpPurchaseInDO::getPaymentPrice, 0);
+            query.apply("COALESCE(t.payment_price, 0) = 0");
         } else if (Objects.equals(reqVO.getPaymentStatus(), ErpPurchaseInPageReqVO.PAYMENT_STATUS_PART)) {
-            query.gt(ErpPurchaseInDO::getPaymentPrice, 0).apply("t.payment_price < t.total_price");
+            query.apply("COALESCE(t.payment_price, 0) > 0 AND COALESCE(t.payment_price, 0) < t.total_price");
         } else if (Objects.equals(reqVO.getPaymentStatus(), ErpPurchaseInPageReqVO.PAYMENT_STATUS_ALL)) {
-            query.apply("t.payment_price = t.total_price");
+            query.apply("COALESCE(t.payment_price, 0) = t.total_price");
         }
         if (Boolean.TRUE.equals(reqVO.getPaymentEnable())) {
             query.eq(ErpPurchaseInDO::getStatus, ErpAuditStatus.APPROVE.getStatus())
-                    .apply("t.payment_price < t.total_price");
+                    .apply("COALESCE(t.payment_price, 0) < t.total_price");
         }
         if (reqVO.getWarehouseId() != null || reqVO.getProductId() != null) {
             query.leftJoin(ErpPurchaseInItemDO.class, ErpPurchaseInItemDO::getInId, ErpPurchaseInDO::getId)

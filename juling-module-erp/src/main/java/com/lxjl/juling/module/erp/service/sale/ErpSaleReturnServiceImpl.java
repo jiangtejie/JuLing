@@ -90,7 +90,10 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
 
         // 2.1 插入退货
         ErpSaleReturnDO saleReturn = BeanUtils.toBean(createReqVO, ErpSaleReturnDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()))
+                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 已退款金额必须初始化为 0（而不是 null）：否则"可退款"的查询条件
+                // t.refund_price < t.total_price 在 SQL 三值逻辑下恒不成立
+                .setRefundPrice(BigDecimal.ZERO))
                 .setOrderNo(saleOrder.getNo()).setCustomerId(saleOrder.getCustomerId());
         calculateTotalPrice(saleReturn, saleReturnItems);
         saleReturnMapper.insert(saleReturn);
@@ -148,7 +151,9 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
             saleReturn.setDiscountPercent(BigDecimal.ZERO);
         }
         saleReturn.setDiscountPrice(MoneyUtils.priceMultiplyPercent(saleReturn.getTotalPrice(), saleReturn.getDiscountPercent()));
-        saleReturn.setTotalPrice(saleReturn.getTotalPrice().subtract(saleReturn.getDiscountPrice().add(saleReturn.getOtherPrice())));
+        // 其他费用可能未传值，按 0 处理，避免 NPE
+        BigDecimal otherPrice = saleReturn.getOtherPrice() != null ? saleReturn.getOtherPrice() : BigDecimal.ZERO;
+        saleReturn.setTotalPrice(saleReturn.getTotalPrice().subtract(saleReturn.getDiscountPrice().add(otherPrice)));
     }
 
     private void updateSaleOrderReturnCount(Long orderId) {
@@ -172,7 +177,8 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
             throw exception(approve ? SALE_RETURN_APPROVE_FAIL : SALE_RETURN_PROCESS_FAIL);
         }
         // 1.3 校验已退款
-        if (!approve && saleReturn.getRefundPrice().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && saleReturn.getRefundPrice() != null
+                && saleReturn.getRefundPrice().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(SALE_RETURN_PROCESS_FAIL_EXISTS_REFUND);
         }
 
@@ -198,7 +204,9 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
     @Override
     public void updateSaleReturnRefundPrice(Long id, BigDecimal refundPrice) {
         ErpSaleReturnDO saleReturn = saleReturnMapper.selectById(id);
-        if (saleReturn.getRefundPrice().equals(refundPrice)) {
+        // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异（0 与 0.000000）导致的误判
+        BigDecimal oldRefundPrice = saleReturn.getRefundPrice() != null ? saleReturn.getRefundPrice() : BigDecimal.ZERO;
+        if (oldRefundPrice.compareTo(refundPrice) == 0) {
             return;
         }
         if (refundPrice.compareTo(saleReturn.getTotalPrice()) > 0) {

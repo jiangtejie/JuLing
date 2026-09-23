@@ -82,7 +82,10 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
 
         // 2.1 插入退货
         ErpPurchaseReturnDO purchaseReturn = BeanUtils.toBean(createReqVO, ErpPurchaseReturnDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()))
+                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 已退款金额必须初始化为 0（而不是 null）：否则"可退款"的查询条件
+                // t.refund_price < t.total_price 在 SQL 三值逻辑下恒不成立
+                .setRefundPrice(BigDecimal.ZERO))
                 .setOrderNo(purchaseOrder.getNo()).setSupplierId(purchaseOrder.getSupplierId());
         calculateTotalPrice(purchaseReturn, purchaseReturnItems);
         purchaseReturnMapper.insert(purchaseReturn);
@@ -136,7 +139,9 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
             purchaseReturn.setDiscountPercent(BigDecimal.ZERO);
         }
         purchaseReturn.setDiscountPrice(MoneyUtils.priceMultiplyPercent(purchaseReturn.getTotalPrice(), purchaseReturn.getDiscountPercent()));
-        purchaseReturn.setTotalPrice(purchaseReturn.getTotalPrice().subtract(purchaseReturn.getDiscountPrice()).add(purchaseReturn.getOtherPrice()));
+        // 其他费用可能未传值，按 0 处理，避免 NPE
+        BigDecimal otherPrice = purchaseReturn.getOtherPrice() != null ? purchaseReturn.getOtherPrice() : BigDecimal.ZERO;
+        purchaseReturn.setTotalPrice(purchaseReturn.getTotalPrice().subtract(purchaseReturn.getDiscountPrice()).add(otherPrice));
     }
 
     private void updatePurchaseOrderReturnCount(Long orderId) {
@@ -160,7 +165,8 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
             throw exception(approve ? PURCHASE_RETURN_APPROVE_FAIL : PURCHASE_RETURN_PROCESS_FAIL);
         }
         // 1.3 校验已退款
-        if (!approve && purchaseReturn.getRefundPrice().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && purchaseReturn.getRefundPrice() != null
+                && purchaseReturn.getRefundPrice().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(PURCHASE_RETURN_PROCESS_FAIL_EXISTS_REFUND);
         }
 
@@ -186,7 +192,9 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
     @Override
     public void updatePurchaseReturnRefundPrice(Long id, BigDecimal refundPrice) {
         ErpPurchaseReturnDO purchaseReturn = purchaseReturnMapper.selectById(id);
-        if (purchaseReturn.getRefundPrice().equals(refundPrice)) {
+        // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异（0 与 0.000000）导致的误判
+        BigDecimal oldRefundPrice = purchaseReturn.getRefundPrice() != null ? purchaseReturn.getRefundPrice() : BigDecimal.ZERO;
+        if (oldRefundPrice.compareTo(refundPrice) == 0) {
             return;
         }
         if (refundPrice.compareTo(purchaseReturn.getTotalPrice()) > 0) {

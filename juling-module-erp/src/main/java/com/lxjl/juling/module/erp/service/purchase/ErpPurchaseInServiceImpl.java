@@ -86,7 +86,10 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
 
         // 2.1 插入入库
         ErpPurchaseInDO purchaseIn = BeanUtils.toBean(createReqVO, ErpPurchaseInDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()))
+                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 已付款金额必须初始化为 0（而不是 null）：否则"可付款"的查询条件
+                // t.payment_price < t.total_price 在 SQL 三值逻辑下恒不成立，入库单不会出现在付款单的"选择采购入库单"弹窗里
+                .setPaymentPrice(BigDecimal.ZERO))
                 .setOrderNo(purchaseOrder.getNo()).setSupplierId(purchaseOrder.getSupplierId());
         calculateTotalPrice(purchaseIn, purchaseInItems);
         purchaseInMapper.insert(purchaseIn);
@@ -140,7 +143,9 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
             purchaseIn.setDiscountPercent(BigDecimal.ZERO);
         }
         purchaseIn.setDiscountPrice(MoneyUtils.priceMultiplyPercent(purchaseIn.getTotalPrice(), purchaseIn.getDiscountPercent()));
-        purchaseIn.setTotalPrice(purchaseIn.getTotalPrice().subtract(purchaseIn.getDiscountPrice()).add(purchaseIn.getOtherPrice()));
+        // 其他费用可能未传值，按 0 处理，避免 NPE
+        BigDecimal otherPrice = purchaseIn.getOtherPrice() != null ? purchaseIn.getOtherPrice() : BigDecimal.ZERO;
+        purchaseIn.setTotalPrice(purchaseIn.getTotalPrice().subtract(purchaseIn.getDiscountPrice()).add(otherPrice));
     }
 
     private void updatePurchaseOrderInCount(Long orderId) {
@@ -164,7 +169,8 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
             throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
         }
         // 1.3 校验已付款
-        if (!approve && purchaseIn.getPaymentPrice().compareTo(BigDecimal.ZERO) > 0) {
+        if (!approve && purchaseIn.getPaymentPrice() != null
+                && purchaseIn.getPaymentPrice().compareTo(BigDecimal.ZERO) > 0) {
             throw exception(PURCHASE_IN_PROCESS_FAIL_EXISTS_PAYMENT);
         }
 
@@ -190,7 +196,9 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     @Override
     public void updatePurchaseInPaymentPrice(Long id, BigDecimal paymentPrice) {
         ErpPurchaseInDO purchaseIn = purchaseInMapper.selectById(id);
-        if (purchaseIn.getPaymentPrice().equals(paymentPrice)) {
+        // 历史数据可能为 null，统一按 0 处理；用 compareTo 避免 BigDecimal 精度差异（0 与 0.000000）导致的误判
+        BigDecimal oldPaymentPrice = purchaseIn.getPaymentPrice() != null ? purchaseIn.getPaymentPrice() : BigDecimal.ZERO;
+        if (oldPaymentPrice.compareTo(paymentPrice) == 0) {
             return;
         }
         if (paymentPrice.compareTo(purchaseIn.getTotalPrice()) > 0) {

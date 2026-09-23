@@ -29,31 +29,33 @@ public interface ErpPurchaseOrderMapper extends BaseMapperX<ErpPurchaseOrderDO> 
                 .likeIfPresent(ErpPurchaseOrderDO::getRemark, reqVO.getRemark())
                 .eqIfPresent(ErpPurchaseOrderDO::getCreator, reqVO.getCreator())
                 .orderByDesc(ErpPurchaseOrderDO::getId);
-        // 入库状态。为什么需要 t. 的原因，是因为联表查询时，需要指定表名，不然会报 in_count 错误
+        // 入库状态。为什么需要 t. 的原因，是因为联表查询时，需要指定表名，不然会报 in_count 错误。
+        // 注意：入库/退货数量历史数据可能为 NULL，而 SQL 中 NULL 参与比较恒为 NULL（即不成立），
+        // 会导致“可采购入库/可采购退货”的订单一条都查不出来，因此统一用 COALESCE(x, 0) 兜底
         if (Objects.equals(reqVO.getInStatus(), ErpPurchaseOrderPageReqVO.IN_STATUS_NONE)) {
-            query.eq(ErpPurchaseOrderDO::getInCount, 0);
+            query.apply("COALESCE(t.in_count, 0) = 0");
         } else if (Objects.equals(reqVO.getInStatus(), ErpPurchaseOrderPageReqVO.IN_STATUS_PART)) {
-            query.gt(ErpPurchaseOrderDO::getInCount, 0).apply("t.in_count < t.total_count");
+            query.apply("COALESCE(t.in_count, 0) > 0 AND COALESCE(t.in_count, 0) < t.total_count");
         } else if (Objects.equals(reqVO.getInStatus(), ErpPurchaseOrderPageReqVO.IN_STATUS_ALL)) {
-            query.apply("t.in_count = t.total_count");
+            query.apply("COALESCE(t.in_count, 0) = t.total_count");
         }
         // 退货状态
         if (Objects.equals(reqVO.getReturnStatus(), ErpPurchaseOrderPageReqVO.RETURN_STATUS_NONE)) {
-            query.eq(ErpPurchaseOrderDO::getReturnCount, 0);
+            query.apply("COALESCE(t.return_count, 0) = 0");
         } else if (Objects.equals(reqVO.getReturnStatus(), ErpPurchaseOrderPageReqVO.RETURN_STATUS_PART)) {
-            query.gt(ErpPurchaseOrderDO::getReturnCount, 0).apply("t.return_count < t.total_count");
+            query.apply("COALESCE(t.return_count, 0) > 0 AND COALESCE(t.return_count, 0) < t.total_count");
         } else if (Objects.equals(reqVO.getReturnStatus(), ErpPurchaseOrderPageReqVO.RETURN_STATUS_ALL)) {
-            query.apply("t.return_count = t.total_count");
+            query.apply("COALESCE(t.return_count, 0) = t.total_count");
         }
         // 可采购入库
         if (Boolean.TRUE.equals(reqVO.getInEnable())) {
             query.eq(ErpPurchaseOrderDO::getStatus, ErpAuditStatus.APPROVE.getStatus())
-                    .apply("t.in_count < t.total_count");
+                    .apply("COALESCE(t.in_count, 0) < t.total_count");
         }
         // 可采购退货
         if (Boolean.TRUE.equals(reqVO.getReturnEnable())) {
             query.eq(ErpPurchaseOrderDO::getStatus, ErpAuditStatus.APPROVE.getStatus())
-                    .apply("t.return_count < t.in_count");
+                    .apply("COALESCE(t.return_count, 0) < COALESCE(t.in_count, 0)");
         }
         if (reqVO.getProductId() != null) {
             query.leftJoin(ErpPurchaseOrderItemDO.class, ErpPurchaseOrderItemDO::getOrderId, ErpPurchaseOrderDO::getId)

@@ -34,17 +34,19 @@ public interface ErpSaleReturnMapper extends BaseMapperX<ErpSaleReturnDO> {
                 .eqIfPresent(ErpSaleReturnDO::getAccountId, reqVO.getAccountId())
                 .likeIfPresent(ErpSaleReturnDO::getOrderNo, reqVO.getOrderNo())
                 .orderByDesc(ErpSaleReturnDO::getId);
-        // 退款状态。为什么需要 t. 的原因，是因为联表查询时，需要指定表名，不然会报字段不存在的错误
+        // 退款状态。为什么需要 t. 的原因，是因为联表查询时，需要指定表名，不然会报字段不存在的错误。
+        // 注意：已退款金额历史数据可能为 NULL，而 SQL 中 NULL 参与比较恒为 NULL（即不成立），
+        // 会导致"可退款"的单据一条都查不出来，因此统一用 COALESCE(x, 0) 兜底
         if (Objects.equals(reqVO.getRefundStatus(), ErpSaleReturnPageReqVO.REFUND_STATUS_NONE)) {
-            query.eq(ErpSaleReturnDO::getRefundPrice, 0);
+            query.apply("COALESCE(t.refund_price, 0) = 0");
         } else if (Objects.equals(reqVO.getRefundStatus(), ErpSaleReturnPageReqVO.REFUND_STATUS_PART)) {
-            query.gt(ErpSaleReturnDO::getRefundPrice, 0).apply("t.refund_price < t.total_price");
+            query.apply("COALESCE(t.refund_price, 0) > 0 AND COALESCE(t.refund_price, 0) < t.total_price");
         } else if (Objects.equals(reqVO.getRefundStatus(), ErpSaleReturnPageReqVO.REFUND_STATUS_ALL)) {
-            query.apply("t.refund_price = t.total_price");
+            query.apply("COALESCE(t.refund_price, 0) = t.total_price");
         }
         if (Boolean.TRUE.equals(reqVO.getRefundEnable())) {
             query.eq(ErpSaleOutDO::getStatus, ErpAuditStatus.APPROVE.getStatus())
-                    .apply("t.refund_price < t.total_price");
+                    .apply("COALESCE(t.refund_price, 0) < t.total_price");
         }
         if (reqVO.getWarehouseId() != null || reqVO.getProductId() != null) {
             query.leftJoin(ErpSaleReturnItemDO.class, ErpSaleReturnItemDO::getReturnId, ErpSaleReturnDO::getId)
