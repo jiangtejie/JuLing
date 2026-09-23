@@ -1,11 +1,15 @@
 <script setup lang="ts">
+  import { showToast } from 'vant';
   import { getCategoryList, getProductPage } from '@/api/product';
   import type { Product } from '@/types';
+  import { useCartStore } from '@/stores/cart';
+  import { formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
 
   defineOptions({ name: 'Category' });
 
   const router = useRouter();
+  const cartStore = useCartStore();
 
   const categories = ref<Array<{ id: number; name: string }>>([]);
   /** van-sidebar 的 v-model 是「索引」而非业务 id */
@@ -39,6 +43,20 @@
     void router.push(`/product/${id}`);
   }
 
+  /** 悬浮购物车栏：查看订货单明细 */
+  function toCart(): void {
+    void router.push('/cart');
+  }
+
+  /** 悬浮购物车栏：去结算 */
+  function toConfirm(): void {
+    if (!cartStore.checkedItems.length) {
+      showToast('请先勾选要下单的商品');
+      return;
+    }
+    void router.push('/order/confirm');
+  }
+
   onMounted(() => {
     void init();
   });
@@ -55,7 +73,12 @@
       </van-sidebar>
 
       <!-- 右侧商品 -->
-      <div class="category__content">
+      <div
+        :class="[
+          'category__content',
+          { 'category__content--with-cartbar': cartStore.totalKinds > 0 },
+        ]"
+      >
         <div class="category__title">{{ activeName }}</div>
         <van-list
           v-model:loading="loading"
@@ -86,6 +109,29 @@
         </van-list>
       </div>
     </div>
+
+    <!-- 底部悬浮购物车栏（美团外卖点菜式）：有已选商品时出现 -->
+    <div v-if="cartStore.totalKinds > 0" class="category__cartbar">
+      <div class="category__cartbar-info" @click="toCart">
+        <div class="category__cartbar-icon">
+          <van-icon name="shopping-cart-o" size="20" />
+          <span class="category__cartbar-badge">{{ cartStore.totalQuantity }}</span>
+        </div>
+        <div class="category__cartbar-amount">
+          <span class="category__cartbar-price">¥{{ formatPrice(cartStore.totalPrice) }}</span>
+          <span class="category__cartbar-tip">共 {{ cartStore.totalKinds }} 种</span>
+        </div>
+      </div>
+      <van-button
+        class="category__cartbar-btn"
+        type="primary"
+        round
+        size="small"
+        @click="toConfirm"
+      >
+        去结算
+      </van-button>
+    </div>
   </div>
 </template>
 
@@ -111,6 +157,84 @@
       /* 底部预留固定 tabbar 的高度，否则滚到底时最后一项（如「没有更多了」）会被 tabbar 遮挡 */
       padding: 0 12px calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom));
       background: var(--app-bg-color);
+    }
+
+    /* 有悬浮购物车栏时，内容区再多留出它的高度（48 + 8 间距） */
+    &__content--with-cartbar {
+      padding-bottom: calc(
+        12px + var(--app-tabbar-height) + env(safe-area-inset-bottom) + 56px
+      );
+    }
+
+    /* ===== 悬浮购物车栏（美团外卖点菜式） ===== */
+    &__cartbar {
+      position: fixed;
+      right: 12px;
+      left: 12px;
+      bottom: calc(var(--app-tabbar-height) + env(safe-area-inset-bottom) + 8px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      padding: 0 6px 0 12px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+    }
+
+    &__cartbar-info {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    &__cartbar-icon {
+      position: relative;
+      display: flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      color: #fff;
+      background: var(--app-primary-color);
+      border-radius: 50%;
+    }
+
+    &__cartbar-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      font-size: 10px;
+      line-height: 16px;
+      color: #fff;
+      text-align: center;
+      background: var(--app-danger-color);
+      border-radius: 8px;
+    }
+
+    &__cartbar-amount {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    &__cartbar-price {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--app-danger-color);
+    }
+
+    &__cartbar-tip {
+      font-size: 11px;
+      color: var(--app-text-color-secondary);
     }
 
     &__title {
