@@ -51,8 +51,8 @@
     <AppNavBar title="登录" />
 
     <div class="login__brand">
-      <div class="login__logo">钜</div>
-      <div class="login__title">钜灵订货商城</div>
+      <div class="login__logo">矩</div>
+      <div class="login__title">矩灵订货商城</div>
       <div class="login__subtitle">企业专属订货价 · 阶梯价更优惠</div>
     </div>
 
