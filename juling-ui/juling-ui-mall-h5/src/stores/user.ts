@@ -6,9 +6,9 @@ import {
   getProfile,
 } from '@/api/auth';
 import { STORAGE_KEYS } from '@/constants';
-import { persistKey } from '@/stores';
 import type { LoginParam, UserInfo } from '@/types';
 import { clearTokens, getToken, setTokens } from '@/utils/auth';
+import { persistKey } from '@/utils/persist';
 
 /**
  * 用户状态。
