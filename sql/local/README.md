@@ -23,15 +23,18 @@ psql -U root -d juling -f sql/local/09_dict_baseline_gaps.sql
 psql -U root -d juling -f sql/local/10_rename_legacy_identifiers.sql
 # 补齐「线上库有、基线+本目录没有」的字典(菜单类型/数据范围/MES 发料状态)
 psql -U root -d juling -f sql/local/11_dict_fresh_install_gaps.sql
+# 修复 ERP 单据「数量/金额」计数器为 NULL 导致的「关联单据」弹窗查询为空（代码修复见提交 2c8f7f32）
+psql -U root -d juling -f sql/local/12_fix_erp_null_counters.sql
 ```
 
-> 全新环境按 `01 → 11` 顺序执行一遍即可;字典覆盖可用
+> 全新环境按 `01 → 12` 顺序执行一遍即可;字典覆盖可用
 > `python script/tools/check-dict-coverage.py` 复核(应输出「缺失 0 个 / 无数据行 0 个」)。
 
 > 本地库名统一为 `juling`(见根 README 与 `application-local.yaml`)。
 > 管理员密码已改为自定义强密码,不入库;重置用下方「维护脚本」里的 `admin_password_reset.sql` 模板。
 
-所有脚本均为**幂等**(`ON CONFLICT (id) DO NOTHING`),重复执行安全。
+所有脚本均为**幂等**、重复执行安全:数据类靠 `ON CONFLICT (id) DO NOTHING`,结构/回填类靠
+`WHERE ... IS NULL` 与 `SET DEFAULT` 的天然幂等。
 
 ## 维护脚本(非补丁,按需执行)
 
@@ -55,6 +58,11 @@ psql -U root -d juling -f sql/local/11_dict_fresh_install_gaps.sql
 | 09_dict_baseline_gaps.sql | 代码引用但基线脚本缺失的字典 4 类(hrm_employee_id_type、mes_auto_code_*) | 字典 11100+、111000+ |
 | 10_rename_legacy_identifiers.sql | T2 改名同步:`infra_file_config.config` 的 `@class` 全类名、OAuth2 logo、租户域名、用户头像、历史错误日志的类名/路径 | — |
 | 11_dict_fresh_install_gaps.sql | 线上库有、基线+本目录没有的字典 3 类(`system_menu_type`、`system_data_scope`、`mes_wm_issue_status`) | 字典 11200+、112000+ |
+| 12_fix_erp_null_counters.sql | 回填 ERP 单据「数量/金额」计数器(`in_count`/`out_count`/`return_count`/`receipt_price`/`payment_price`/`refund_price`)的历史 NULL 为 0,并补 `DEFAULT 0`;修复前快照存入 schema `bak_erp_null_counters` | — |
+
+> `12_fix_erp_null_counters.sql` 作用的对象是 ERP 业务表(`erp_*`)。这些表**不在基线脚本中**
+> (由 ERP 模块单独建表),所以全新环境若尚未导入 `erp_*` 表,该脚本会自动跳过缺失的表/列并打印
+> NOTICE、不会报错;等 ERP 表就绪后重新执行一次即可。脚本为幂等,重复执行安全。
 
 > `08_fms_subject_template.sql` 与上面的菜单/字典补丁不同,它是**业务种子数据**:FMS「账套初始化」从
 > `fms_subject_template` 生成账套科目,该表为空时初始化必然失败(先静默不建科目,随后结账模板预置
