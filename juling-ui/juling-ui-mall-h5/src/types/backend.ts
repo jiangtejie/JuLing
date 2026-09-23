@@ -129,16 +129,33 @@ export interface AppMemberUserInfoRespVO {
 
 /* -------------------------------- 购物车 -------------------------------- */
 
+/** 商品 SPU 基础信息（购物车内嵌） */
+export interface AppProductSpuBaseRespVO {
+  id: number;
+  name: string;
+  picUrl: string;
+  categoryId: number;
+  stock: number;
+  status: number;
+}
+
+/** 商品 SKU 基础信息（购物车内嵌；无 name、无阶梯价、无起订量） */
+export interface AppProductSkuBaseRespVO {
+  id: number;
+  picUrl: string;
+  price: number;
+  stock: number;
+  properties: AppProductPropertyValueDetailRespVO[];
+}
+
 /** 购物车行项（AppCartListRespVO.Cart） */
 export interface AppCartItemRespVO {
   id: number;
   /** 数量（前端用作 quantity） */
   count: number;
   selected: boolean;
-  /** 商品 SPU 简要信息（本次未消费，保留宽松类型） */
-  spu: Record<string, unknown> | null;
-  /** 商品 SKU 简要信息 */
-  sku: Record<string, unknown> | null;
+  spu: AppProductSpuBaseRespVO | null;
+  sku: AppProductSkuBaseRespVO | null;
 }
 
 /** 购物车列表（GET /trade/cart/list） */

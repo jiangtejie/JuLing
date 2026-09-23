@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
-import { login as loginApi, logout as logoutApi, getProfile } from '@/api/auth';
+import {
+  login as loginApi,
+  loginBySms as loginBySmsApi,
+  logout as logoutApi,
+  getProfile,
+} from '@/api/auth';
 import type { LoginParam, UserInfo } from '@/types';
 import { clearTokens, getToken, setTokens } from '@/utils/auth';
 
@@ -25,6 +30,13 @@ export const useUserStore = defineStore(
     async function login(param: LoginParam): Promise<void> {
       const result = await loginApi(param);
       // 成对写入 accessToken + refreshToken（后者用于 401 静默刷新）
+      setTokens(result.accessToken, result.refreshToken);
+      await fetchProfile();
+    }
+
+    /** 短信验证码登录 */
+    async function loginBySms(param: { mobile: string; code: string }): Promise<void> {
+      const result = await loginBySmsApi(param);
       setTokens(result.accessToken, result.refreshToken);
       await fetchProfile();
     }
@@ -59,6 +71,7 @@ export const useUserStore = defineStore(
       nickname,
       avatar,
       login,
+      loginBySms,
       fetchProfile,
       logout,
       reset,

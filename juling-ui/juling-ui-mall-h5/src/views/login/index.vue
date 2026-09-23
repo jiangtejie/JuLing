@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { showSuccessToast, showToast } from 'vant';
+  import { sendSmsCode } from '@/api/auth';
   import { useUserStore } from '@/stores/user';
   import { isMobile } from '@/utils/is';
 
@@ -9,20 +10,65 @@
   const router = useRouter();
   const userStore = useUserStore();
 
+  /** 登录方式：password 账号密码 / sms 短信验证码 */
+  const mode = ref<'password' | 'sms'>('password');
+
   const form = reactive({
     mobile: '',
     password: '',
+    code: '',
   });
 
   const agreed = ref(true);
 
+  /* ---------------------------- 短信验证码倒计时 ---------------------------- */
+  const SEND_INTERVAL = 60;
+  const countdown = ref(0);
+  let countdownTimer: ReturnType<typeof setInterval> | undefined;
+
+  onUnmounted(() => {
+    if (countdownTimer) clearInterval(countdownTimer);
+  });
+
+  const smsButtonText = computed(() =>
+    countdown.value > 0 ? `${countdown.value}s 后重发` : '获取验证码',
+  );
+
+  async function onSendSms(): Promise<void> {
+    if (countdown.value > 0) return;
+    if (!isMobile(form.mobile)) {
+      showToast('请输入正确的手机号');
+      return;
+    }
+    try {
+      await sendSmsCode(form.mobile);
+    } catch {
+      // 失败提示已由 axios 响应拦截器统一处理
+      return;
+    }
+    showSuccessToast('验证码已发送');
+    countdown.value = SEND_INTERVAL;
+    countdownTimer = setInterval(() => {
+      countdown.value -= 1;
+      if (countdown.value <= 0 && countdownTimer) {
+        clearInterval(countdownTimer);
+        countdownTimer = undefined;
+      }
+    }, 1000);
+  }
+
+  /* -------------------------------- 提交登录 -------------------------------- */
   async function onSubmit(): Promise<void> {
     if (!isMobile(form.mobile)) {
       showToast('请输入正确的手机号');
       return;
     }
-    if (!form.password) {
+    if (mode.value === 'password' && !form.password) {
       showToast('请输入登录密码');
+      return;
+    }
+    if (mode.value === 'sms' && !form.code) {
+      showToast('请输入短信验证码');
       return;
     }
     if (!agreed.value) {
@@ -31,7 +77,11 @@
     }
 
     try {
-      await userStore.login({ mobile: form.mobile, password: form.password });
+      if (mode.value === 'password') {
+        await userStore.login({ mobile: form.mobile, password: form.password });
+      } else {
+        await userStore.loginBySms({ mobile: form.mobile, code: form.code });
+      }
     } catch {
       // 错误提示已由 axios 响应拦截器统一处理
       return;
@@ -56,6 +106,12 @@
       <div class="login__subtitle">企业专属订货价 · 阶梯价更优惠</div>
     </div>
 
+    <!-- 登录方式切换 -->
+    <van-tabs v-model:active="mode" class="login__tabs" shrink line-width="28">
+      <van-tab title="密码登录" name="password" />
+      <van-tab title="短信登录" name="sms" />
+    </van-tabs>
+
     <van-form class="login__form" @submit="run">
       <van-cell-group inset>
         <van-field
@@ -66,17 +122,39 @@
           placeholder="请输入手机号"
           maxlength="11"
           clearable
-          :rules="[{ required: true, message: '请输入手机号' }]"
         />
+
         <van-field
+          v-if="mode === 'password'"
           v-model="form.password"
           name="password"
           type="password"
           label="登录密码"
           placeholder="请输入登录密码"
           clearable
-          :rules="[{ required: true, message: '请输入密码' }]"
         />
+
+        <van-field
+          v-else
+          v-model="form.code"
+          name="code"
+          type="digit"
+          label="验证码"
+          placeholder="请输入短信验证码"
+          maxlength="6"
+        >
+          <template #button>
+            <van-button
+              size="small"
+              type="primary"
+              plain
+              :disabled="countdown > 0"
+              @click="onSendSms"
+            >
+              {{ smsButtonText }}
+            </van-button>
+          </template>
+        </van-field>
       </van-cell-group>
 
       <div class="login__tips">
@@ -128,6 +206,10 @@
       color: var(--app-text-color-secondary);
     }
 
+    &__tabs {
+      --van-tabs-line-height: 40px;
+    }
+
     &__form {
       margin-top: 8px;
     }
@@ -138,8 +220,8 @@
       color: var(--app-text-color-secondary);
     }
 
-      &__submit {
-        padding: 20px 16px 0;
-      }
+    &__submit {
+      padding: 20px 16px 0;
     }
+  }
 </style>

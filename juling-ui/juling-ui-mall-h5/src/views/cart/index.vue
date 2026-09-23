@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { showConfirmDialog, showToast } from 'vant';
+  import { deleteCart, updateCartQuantity } from '@/api/cart';
   import type { CartItem } from '@/types';
   import { useCartStore } from '@/stores/cart';
+  import { useUserStore } from '@/stores/user';
   import { formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
 
@@ -9,10 +11,23 @@
 
   const router = useRouter();
   const cartStore = useCartStore();
+  const userStore = useUserStore();
   const { items, totalPrice, totalQuantity, allChecked } = storeToRefs(cartStore);
 
+  onMounted(() => {
+    // 登录态：以服务端订货单为准；拉取失败则沿用本地数据
+    if (userStore.isLogin) {
+      void cartStore.loadFromServer().catch(() => undefined);
+    }
+  });
+
   function onQuantityChange(item: CartItem, value: number | string): void {
-    cartStore.updateQuantity(item.skuId, Number(value));
+    const count = Number(value);
+    cartStore.updateQuantity(item.skuId, count);
+    // 登录态：同步到服务端（失败不阻塞本地操作）
+    if (userStore.isLogin && item.cartId) {
+      void updateCartQuantity({ id: item.cartId, count }).catch(() => undefined);
+    }
   }
 
   async function onRemove(): Promise<void> {
@@ -26,6 +41,13 @@
       message: `确认删除已选的 ${checked.length} 种商品？`,
     });
     cartStore.removeItems(checked.map((item) => item.skuId));
+    // 登录态：同步删除到服务端
+    if (userStore.isLogin) {
+      const ids = checked
+        .map((item) => item.cartId)
+        .filter((id): id is number => typeof id === 'number');
+      if (ids.length) void deleteCart(ids).catch(() => undefined);
+    }
     showToast('已删除');
   }
 
