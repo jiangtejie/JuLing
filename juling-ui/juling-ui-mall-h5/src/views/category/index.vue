@@ -1,0 +1,152 @@
+<script setup lang="ts">
+  import { getCategoryList, getProductPage } from '@/api/product';
+  import type { Product } from '@/types';
+  import { resolveImage } from '@/utils/image';
+
+  defineOptions({ name: 'Category' });
+
+  const router = useRouter();
+
+  const categories = ref<Array<{ id: number; name: string }>>([]);
+  /** van-sidebar 的 v-model 是「索引」而非业务 id */
+  const activeIndex = ref(0);
+
+  const { list, loading, finished, error, onLoad, search } = usePaging<Product, { categoryId?: number }>(
+    (params) => getProductPage(params),
+    { immediate: false },
+  );
+
+  const activeName = computed(() => categories.value[activeIndex.value]?.name ?? '');
+
+  async function init(): Promise<void> {
+    try {
+      categories.value = await getCategoryList();
+      const first = categories.value[0];
+      if (first) await search({ categoryId: first.id });
+    } catch (err) {
+      // 错误提示由请求层统一处理，这里仅留痕，避免未捕获的 Promise rejection
+      console.warn('[category] 初始化失败:', err);
+    }
+  }
+
+  async function onSelect(index: number): Promise<void> {
+    const category = categories.value[index];
+    if (!category) return;
+    await search({ categoryId: category.id });
+  }
+
+  function toDetail(id: number): void {
+    void router.push(`/product/${id}`);
+  }
+
+  onMounted(() => {
+    void init();
+  });
+</script>
+
+<template>
+  <div class="app-page app-page--fixed">
+    <AppNavBar title="商品分类" :left-arrow="false" />
+
+    <div class="category">
+      <!-- 左侧一级分类 -->
+      <van-sidebar v-model="activeIndex" class="category__sidebar" @change="onSelect">
+        <van-sidebar-item v-for="item in categories" :key="item.id" :title="item.name" />
+      </van-sidebar>
+
+      <!-- 右侧商品 -->
+      <div class="category__content">
+        <div class="category__title">{{ activeName }}</div>
+        <van-list
+          v-model:loading="loading"
+          :finished="finished"
+          :error="error"
+          finished-text="没有更多了"
+          error-text="加载失败，点击重试"
+          @load="onLoad"
+        >
+          <div
+            v-for="product in list"
+            :key="product.id"
+            class="category__item"
+            @click="toDetail(product.id)"
+          >
+            <van-image
+              :src="resolveImage(product.picUrl)"
+              fit="cover"
+              radius="6"
+              class="category__img"
+            />
+            <div class="category__info">
+              <div class="text-ellipsis-2 category__name">{{ product.name }}</div>
+              <div class="category__stock">库存 {{ product.stock }} {{ product.unit ?? '件' }}</div>
+              <PriceText :value="product.price" />
+            </div>
+          </div>
+        </van-list>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+  .category {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+
+    &__sidebar {
+      flex: none;
+      width: 88px;
+      height: 100%;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    &__content {
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      padding: 0 12px 12px;
+      background: var(--app-bg-color);
+    }
+
+    &__title {
+      padding: 12px 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    &__item {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #fff;
+      border-radius: var(--app-radius-md);
+    }
+
+    &__img {
+      flex: none;
+      width: 76px;
+      height: 76px;
+    }
+
+    &__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &__name {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    &__stock {
+      margin: 4px 0;
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+  }
+</style>

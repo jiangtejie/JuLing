@@ -41,7 +41,9 @@
 
   onMounted(() => {
     if (userStore.isLogin && !userStore.userInfo) {
-      void userStore.fetchProfile();
+      void userStore.fetchProfile().catch((err) => {
+        console.warn('[user] 拉取会员信息失败:', err);
+      });
     }
   });
 </script>
