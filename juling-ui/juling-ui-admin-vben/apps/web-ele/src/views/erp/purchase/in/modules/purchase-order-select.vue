@@ -115,7 +115,7 @@ function handleOk() {
       @close="open = false"
       :append-to-body="true"
     >
-      <Grid table-title="采购订单列表(仅展示可退货)" />
+      <Grid table-title="采购订单列表(仅展示可入库)" />
       <template #footer>
         <ElButton @click.stop="open = false">取消</ElButton>
         <ElButton type="primary" @click.stop="handleOk">确定</ElButton>

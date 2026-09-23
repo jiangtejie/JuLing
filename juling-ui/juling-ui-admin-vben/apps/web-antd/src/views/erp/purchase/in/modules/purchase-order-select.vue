@@ -114,7 +114,7 @@ function handleOk() {
       @cancel.stop="open = false"
       @ok.stop="handleOk"
     >
-      <Grid table-title="采购订单列表(仅展示可退货)" />
+      <Grid table-title="采购订单列表(仅展示可入库)" />
     </Modal>
   </div>
 </template>
