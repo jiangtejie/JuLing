@@ -92,7 +92,7 @@
     </div>
 
     <!-- 功能菜单 -->
-    <van-cell-group inset class="mt-3">
+    <van-cell-group inset class="user__menus">
       <van-cell
         v-for="menu in menus"
         :key="menu.label"
@@ -156,7 +156,11 @@
 
     &__orders {
       margin: -16px 12px 0;
-      padding: 12px 0;
+      padding: 16px 0;
+    }
+
+    &__menus {
+      margin-top: 20px;
     }
 
     &__orders-head {
