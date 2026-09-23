@@ -9,9 +9,9 @@ import formCreate from '@form-create/ant-design-vue';
 import FcDesigner from '@form-create/antd-designer';
 import { useClipboard } from '@vueuse/core';
 import { Button, message } from 'ant-design-vue';
-import hljs from 'highlight.js';
-import xml from 'highlight.js/lib/languages/java';
+import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';
+import xml from 'highlight.js/lib/languages/xml';
 
 import { useFormCreateDesigner } from '#/components/form-create';
 

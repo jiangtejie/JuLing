@@ -16,7 +16,8 @@ COPY . /app
 
 # 安装依赖
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build --filter=\!./docs
+# 只构建管理后台及其 workspace 依赖；排除 web-antdv-next/web-ele/web-naive/web-tdesign
+RUN pnpm run build --filter=@vben/web-antd...
 
 RUN echo "Builder Success 🎉"
 
@@ -26,8 +27,8 @@ FROM nginx:stable-alpine AS production
 RUN echo "types { application/javascript js mjs; }" > /etc/nginx/conf.d/mjs.conf \
     && rm -rf /etc/nginx/conf.d/default.conf
 
-# 复制构建产物
-COPY --from=builder /app/playground/dist /usr/share/nginx/html
+# 复制构建产物（子路径 /jl，与 VITE_BASE=/jl/ 对应）
+COPY --from=builder /app/apps/web-antd/dist /usr/share/nginx/html/jl
 
 # 复制 nginx 配置
 COPY --from=builder /app/scripts/deploy/nginx.conf /etc/nginx/nginx.conf
