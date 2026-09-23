@@ -197,7 +197,9 @@ service.interceptors.response.use(
       return payload;
     }
 
-    const { code, data, msg } = payload;
+    const { data, msg } = payload;
+    // 后端 code 约定为数字，但网关/序列化差异下可能是字符串，统一归一化后再比较
+    const code = Number(payload.code);
 
     // yudao 体系：code === 0 成功；部分网关返回 200
     if (code === 0 || code === 200) {

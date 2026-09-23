@@ -78,7 +78,9 @@
   function addToCart(payload: AddCartPayload): void {
     cartStore.addItem(payload);
     if (userStore.isLogin) {
-      void addCart({ skuId: payload.sku.id, count: payload.quantity }).catch(() => undefined);
+      void addCart({ skuId: payload.sku.id, count: payload.quantity }).catch((error) => {
+        console.warn('[cart] 同步加入订货单失败:', error);
+      });
     }
   }
 

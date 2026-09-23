@@ -8,17 +8,20 @@ import type {
 import { adaptLoginResult, adaptUserInfo } from '@/api/adapters';
 import { http } from '@/utils/request';
 
-/** 账号密码登录 */
+/**
+ * 账号密码登录。
+ *
+ * 刻意**不加** `silent` —— 登录失败（如「登录失败，账号密码不正确」）必须把后端的
+ * 业务 msg 经全局拦截器展示出来，否则用户点击登录后毫无反馈。
+ */
 export async function login(data: LoginParam): Promise<LoginResult> {
-  const result = await http.post<AppAuthLoginRespVO>('/member/auth/login', data, { silent: true });
+  const result = await http.post<AppAuthLoginRespVO>('/member/auth/login', data);
   return adaptLoginResult(result);
 }
 
-/** 短信验证码登录 */
+/** 短信验证码登录（同样需要展示业务错误） */
 export async function loginBySms(data: { mobile: string; code: string }): Promise<LoginResult> {
-  const result = await http.post<AppAuthLoginRespVO>('/member/auth/sms-login', data, {
-    silent: true,
-  });
+  const result = await http.post<AppAuthLoginRespVO>('/member/auth/sms-login', data);
   return adaptLoginResult(result);
 }
 

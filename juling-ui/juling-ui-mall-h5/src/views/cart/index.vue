@@ -17,7 +17,9 @@
   onMounted(() => {
     // 登录态：以服务端订货单为准；拉取失败则沿用本地数据
     if (userStore.isLogin) {
-      void cartStore.loadFromServer().catch(() => undefined);
+      void cartStore.loadFromServer().catch((error) => {
+        console.warn('[cart] 拉取服务端订货单失败:', error);
+      });
     }
   });
 
@@ -26,7 +28,9 @@
     cartStore.updateQuantity(item.skuId, count);
     // 登录态：同步到服务端（失败不阻塞本地操作）
     if (userStore.isLogin && item.cartId) {
-      void updateCartQuantity({ id: item.cartId, count }).catch(() => undefined);
+      void updateCartQuantity({ id: item.cartId, count }).catch((error) => {
+        console.warn('[cart] 同步数量失败:', error);
+      });
     }
   }
 
@@ -46,7 +50,11 @@
       const ids = checked
         .map((item) => item.cartId)
         .filter((id): id is number => typeof id === 'number');
-      if (ids.length) void deleteCart(ids).catch(() => undefined);
+      if (ids.length) {
+        void deleteCart(ids).catch((error) => {
+          console.warn('[cart] 同步删除失败:', error);
+        });
+      }
     }
     showToast('已删除');
   }
