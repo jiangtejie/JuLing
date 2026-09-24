@@ -16,6 +16,10 @@ const projectRoot = fileURLToPath(new URL('./', import.meta.url));
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, projectRoot, 'VITE_');
 
+  // 部署基础路径：生产构建部署在 /jl-mall/ 子路径下（对应 nginx 的 location /jl-mall/），
+  // 开发环境保持根路径以简化本地调试；需要别的前缀时用 VITE_BASE 覆盖。
+  const basePath = env.VITE_BASE || (mode === 'development' ? '/' : '/jl-mall/');
+
   const isBuild = mode !== 'development';
   const isReport = mode === 'report' || env.VITE_REPORT === 'true';
   const enableProxy = env.VITE_USE_PROXY === 'true';
@@ -85,8 +89,8 @@ export default defineConfig(({ mode }) => {
         short_name: '矩灵商城',
         description: '炬信矩灵 · 移动端订货商城',
         lang: 'zh-CN',
-        start_url: '/',
-        scope: '/',
+        start_url: basePath,
+        scope: basePath,
         display: 'standalone',
         orientation: 'portrait',
         theme_color: '#0081ff',
@@ -111,7 +115,7 @@ export default defineConfig(({ mode }) => {
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
-        navigateFallback: '/index.html',
+        navigateFallback: `${basePath}index.html`,
         // 接口请求不要被导航回退拦截
         navigateFallbackDenylist: [/^\/app-api/, /^\/infra/, /^\/admin-api/],
         runtimeCaching: [
@@ -168,7 +172,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    base: '/',
+    base: basePath,
 
     plugins,
 
