@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { showConfirmDialog, showToast } from 'vant';
+  import { showToast } from 'vant';
   import { deleteCart, updateCartQuantity } from '@/api/cart';
   import type { CartItem } from '@/types';
   import { useCartStore } from '@/stores/cart';
   import { useUserStore } from '@/stores/user';
+  import { confirmDialog } from '@/utils/confirm';
   import { resolveImage } from '@/utils/image';
 
   defineOptions({ name: 'Cart' });
@@ -39,10 +40,7 @@
       showToast('请先选择要删除的商品');
       return;
     }
-    await showConfirmDialog({
-      title: '提示',
-      message: `确认删除已选的 ${checked.length} 种商品？`,
-    });
+    if (!(await confirmDialog(`确认删除已选的 ${checked.length} 种商品？`))) return;
     cartStore.removeItems(checked.map((item) => item.skuId));
     // 登录态：同步删除到服务端
     if (userStore.isLogin) {

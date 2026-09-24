@@ -127,6 +127,42 @@ test('adaptSpu：sliderPicUrls 多图透传，空数组归一为 undefined', () 
   assert.equal(adaptSpu({ ...base, sliderPicUrls: [] }).sliderPicUrls, undefined);
 });
 
+test('adaptSpu / adaptSku：内网绝对地址在适配层就被归一化为相对路径', () => {
+  const spu = adaptSpu({
+    id: 1,
+    name: 'A',
+    introduction: 'a',
+    categoryId: 1,
+    // 后端常见形态：写死 http://127.0.0.1:48080 的绝对地址
+    picUrl: 'http://127.0.0.1:48080/admin-api/infra/file/29/get/a.png',
+    sliderPicUrls: ['http://127.0.0.1:48080/admin-api/infra/file/29/get/b.png'],
+    specType: false,
+    price: 100,
+    marketPrice: 120,
+    stock: 1,
+    salesCount: 0,
+    deliveryTypes: [1],
+  });
+  assert.equal(spu.picUrl, '/admin-api/infra/file/29/get/a.png');
+  assert.deepEqual(spu.sliderPicUrls, ['/admin-api/infra/file/29/get/b.png']);
+
+  const sku = adaptSku(
+    {
+      id: 101,
+      properties: [],
+      price: 100,
+      marketPrice: 100,
+      vipPrice: 0,
+      picUrl: 'http://192.168.110.62:48080/admin-api/infra/file/29/get/c.png',
+      stock: 1,
+      weight: 0,
+      volume: 0,
+    },
+    1,
+  );
+  assert.equal(sku.picUrl, '/admin-api/infra/file/29/get/c.png');
+});
+
 test('adaptSpuDetail：description→detailHtml、skus 映射并注入 spuId', () => {
   const product = adaptSpuDetail({
     id: 1001,

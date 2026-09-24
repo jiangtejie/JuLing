@@ -1,4 +1,6 @@
 import type { AppAuthLoginRespVO, AppMemberUserInfoRespVO, LoginResult, UserInfo } from '@/types';
+// 带 `.ts` 扩展名：adapter 会被 `node --test` 直接执行，ESM 环境不接受省略扩展名
+import { normalizeOptionalAssetUrl } from '../../utils/asset.ts';
 
 /**
  * 会员域 DTO → 领域模型映射。
@@ -23,7 +25,7 @@ export function adaptUserInfo(raw: AppMemberUserInfoRespVO): UserInfo {
   return {
     id: raw.id,
     nickname: raw.nickname,
-    avatar: raw.avatar,
+    avatar: normalizeOptionalAssetUrl(raw.avatar),
     mobile: raw.mobile,
     levelName: raw.level?.name,
   };

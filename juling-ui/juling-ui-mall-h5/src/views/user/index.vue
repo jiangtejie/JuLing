@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { showConfirmDialog, showToast } from 'vant';
+  import { showToast } from 'vant';
   import { getOrderCount, type OrderCountMap } from '@/api/order';
   import { ORDER_STATUS_MAP } from '@/constants';
   import { useUserStore } from '@/stores/user';
+  import { confirmDialog } from '@/utils/confirm';
   import { maskMobile } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
 
@@ -58,7 +59,7 @@
   }
 
   async function onLogout(): Promise<void> {
-    await showConfirmDialog({ title: '提示', message: '确认退出当前账号？' });
+    if (!(await confirmDialog('确认退出当前账号？'))) return;
     await userStore.logout();
     showToast('已退出登录');
   }

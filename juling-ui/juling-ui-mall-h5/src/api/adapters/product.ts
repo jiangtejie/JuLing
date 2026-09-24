@@ -9,6 +9,10 @@ import type {
   Product,
   Sku,
 } from '@/types';
+// 注意：这里的 import 必须带 `.ts` 扩展名 —— adapter 会被 `node --test` 直接执行
+// （见 tests/adapters.test.ts），那个环境按 ESM 解析、不接受省略扩展名，也不认 `@` 别名。
+// 本文件其余的 `@/types` 都是纯类型导入，运行时会整体擦除，因此不受影响。
+import { normalizeAssetUrl, normalizeOptionalAssetUrl } from '../../utils/asset.ts';
 
 /**
  * 商品域 DTO → 领域模型映射。
@@ -43,7 +47,7 @@ export function adaptSku(raw: AppProductSkuDetailRespVO, spuId: number): Sku {
     id: raw.id,
     spuId,
     name: buildSkuName(raw.id, properties),
-    picUrl: raw.picUrl,
+    picUrl: normalizeOptionalAssetUrl(raw.picUrl),
     properties,
     price: raw.price,
     marketPrice: raw.marketPrice || raw.price,
@@ -74,9 +78,10 @@ export function adaptSpu(raw: SpuCommon): Product {
   return {
     id: raw.id,
     name: raw.name,
-    picUrl: raw.picUrl,
-    // 详情轮播图：后端可能返回空数组 → 归一为 undefined，由详情页回退 picUrl
-    sliderPicUrls: raw.sliderPicUrls?.length ? raw.sliderPicUrls : undefined,
+    picUrl: normalizeOptionalAssetUrl(raw.picUrl),
+    // 详情轮播图：后端可能返回空数组 → 归一为 undefined，由详情页回退 picUrl；
+    // 多图同样做内网地址归一化（后端返回的是写死内网 host 的绝对 URL）
+    sliderPicUrls: raw.sliderPicUrls?.length ? raw.sliderPicUrls.map(normalizeAssetUrl) : undefined,
     subTitle: raw.introduction,
     price: raw.price,
     marketPrice: raw.marketPrice,
@@ -111,5 +116,5 @@ export function adaptCategory(raw: AppCategoryRespVO): {
   name: string;
   picUrl?: string;
 } {
-  return { id: raw.id, name: raw.name, picUrl: raw.picUrl };
+  return { id: raw.id, name: raw.name, picUrl: normalizeOptionalAssetUrl(raw.picUrl) };
 }

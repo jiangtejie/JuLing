@@ -12,6 +12,9 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
+    // 允许写 `import ... from './x.ts'`：adapter 会被 `node --test` 直接执行，
+    // 该环境要求显式扩展名（与 noEmit 搭配使用，见 tests/adapters.test.ts）
+    "allowImportingTsExtensions": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

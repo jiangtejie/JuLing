@@ -78,7 +78,7 @@ juling-ui-mall-h5
 │   ├── stores/                 # Pinia：app / user / cart
 │   ├── styles/                 # 全局样式与设计变量
 │   ├── types/                  # 类型定义（SKU / 订单 / 购物车 / 环境变量）
-│   ├── utils/                  # 工具：request / storage / auth / format / price
+│   ├── utils/                  # 工具：request / storage / auth / format / price / confirm
 │   └── views/                  # 页面
 ├── postcss.config.mjs          # px 转 vw 适配
 ├── uno.config.ts               # UnoCSS 预设、主题、快捷类
@@ -241,7 +241,9 @@ fix(cart): 修复订货单数量超过库存后未截断
 9. **Lazyload 用 IntersectionObserver 模式**：Vant 的 Lazyload 默认基于 scroll 事件、只监听 window，分类页（内容区内部滚动）加 `lazy-load` 后图片不会加载；改为 `observer: true` 后由 IO 统一驱动，列表新增元素与 keep-alive 返回都会重新参与观察。
 10. **`van-skeleton` 自定义模板的动画来自根元素**：`.van-skeleton--animate` 的闪烁作用在组件根上，自定义 `#template` 插槽无需再给子元素加动画类名；骨架卡片与真实卡片保持同一内边距，避免加载完成时跳动。
 11. **`van-action-bar` 的 `placeholder` 高度由 `useHeight` 实测**，而 CSS 变量沿 DOM 继承 ——把 `--van-action-bar-height` 定义在组件根上，fixed 操作栏与占位块会同时生效，不需要手写避让 padding。
-12. **列表首屏骨架的显示条件是 `!list.length && loading && !refreshing`**：下拉刷新时列表会被清空，若只判断前两项会闪一下骨架；`van-list` 自身也有默认的「加载中...」文案，属于分页提示，不要和骨架混用。
+12. **列表首屏骨架的显示条件是 `!list.length && loading && !refreshing`**：下拉刷新时列表会被清空，若只判断前两项会闪一下骨架；同时把 `van-list` 的 `loading-text` 条件化为「列表非空时才显示」，避免首屏骨架与「加载中...」文案叠在一起。
+13. **Vant 的 `showConfirmDialog` 在「取消」时 reject**（`dialog/function-call.mjs` 里的 `(action === "confirm" ? resolve : reject)(action)`），而 Vue 会把事件处理器返回的 Promise rejection 交给 `app.config.errorHandler` —— 用户只是想放弃操作，却会看到兜底的「页面出现异常」Toast。**统一改用 `utils/confirm.ts` 的 `confirmDialog()`**（取消返回 `false`），需要 loading 反馈的操作用 `van-action-bar-button` / `van-button` 的 `loading` 属性而不是全局 loading。
+14. **后端返回的文件地址是内网绝对 URL**（`http://127.0.0.1:48080/admin-api/infra/file/...`），公网访问时浏览器会去请求访问者自己的 127.0.0.1，https 页面下还会触发混合内容拦截 —— 表现就是「页面能开、图片全裂」。`utils/asset.ts` 的 `normalizeAssetUrl()` 会把本机 / 内网来源（127.x / localhost / 10.x / 192.168.x / 172.16-31.x / ::1）改写成同源相对路径（保留 `/admin-api` 前缀），由 nginx 或 vite 代理转发；**部署侧必须存在 `/admin-api/` → 后端的转发**。
 
 ## 后续建议
 

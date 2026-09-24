@@ -201,6 +201,13 @@ export default defineConfig(({ mode }) => {
               changeOrigin: true,
               ws: true,
             },
+            // 图片等文件资源由后端返回的 /admin-api 路径承载（yudao 文件服务）。
+            // 生产环境由 nginx 承担同样的转发（location /admin-api/），开发环境补上这条
+            // 才能让 resolveImage 归一化后的相对路径有处可去。
+            '/admin-api': {
+              target: proxyTarget,
+              changeOrigin: true,
+            },
           }
         : undefined,
     },

@@ -28,9 +28,9 @@
 
   const skus = computed<Sku[]>(() => product.value?.skus ?? []);
 
-  /** 轮播图：优先后端多图（sliderPicUrls），缺失时回退主图 */
+  /** 轮播图：优先后端多图（sliderPicUrls），缺失时回退主图；统一做内网地址归一化 */
   const gallery = computed<string[]>(() => {
-    const sliders = (product.value?.sliderPicUrls ?? []).filter(Boolean);
+    const sliders = (product.value?.sliderPicUrls ?? []).filter(Boolean).map(resolveImage);
     return sliders.length ? sliders : [resolveImage(product.value?.picUrl)];
   });
 

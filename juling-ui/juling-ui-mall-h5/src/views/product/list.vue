@@ -48,6 +48,7 @@
         v-model:loading="loading"
         :finished="finished"
         :error="error"
+        :loading-text="list.length ? '加载中...' : ''"
         finished-text="没有更多了"
         error-text="加载失败，点击重试"
         @load="onLoad"

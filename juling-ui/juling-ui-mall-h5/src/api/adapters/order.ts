@@ -8,6 +8,8 @@ import type {
   OrderStatus,
   PageResult,
 } from '@/types';
+// 带 `.ts` 扩展名：adapter 会被 `node --test` 直接执行，ESM 环境不接受省略扩展名
+import { normalizeOptionalAssetUrl } from '../../utils/asset.ts';
 
 /**
  * 交易订单域 DTO → 领域模型映射，并集中承载「后端状态码 ↔ 前端 key」。
@@ -64,7 +66,7 @@ export function adaptOrderItem(raw: AppTradeOrderItemRespVO): OrderItem {
     spuId: raw.spuId,
     skuId: raw.skuId,
     name: raw.spuName,
-    picUrl: raw.picUrl,
+    picUrl: normalizeOptionalAssetUrl(raw.picUrl),
     specText: propertiesToSpecText(raw.properties),
     price,
     quantity: count,

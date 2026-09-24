@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { showConfirmDialog, showSuccessToast, showToast } from 'vant';
+  import { showSuccessToast, showToast } from 'vant';
   import { cancelOrder, confirmOrder, getOrderDetail } from '@/api/order';
   import { ORDER_STATUS_MAP, ORDER_STATUS_STEPS } from '@/constants';
   import type { Order } from '@/types';
+  import { confirmDialog } from '@/utils/confirm';
   import { formatDate, formatPrice, maskMobile } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
   import { copyText } from '@/utils/index';
@@ -17,6 +18,8 @@
   const loading = ref(true);
   /** 加载失败（网络 / 服务异常）——与「订单不存在」区分，可重试 */
   const loadError = ref(false);
+  /** 取消 / 确认收货进行中：按钮显示 loading，避免重复提交 */
+  const acting = ref(false);
 
   /** 各步骤对应的发生时间，作为步骤条副标题展示 */
   const stepTimes = computed<Record<string, string | undefined>>(() => {
@@ -57,17 +60,31 @@
   }
 
   async function onCancel(): Promise<void> {
-    await showConfirmDialog({ title: '提示', message: '确认取消该订单？' });
-    await cancelOrder(orderId.value);
-    showSuccessToast('订单已取消');
-    await load();
+    if (!(await confirmDialog('确认取消该订单？'))) return;
+    acting.value = true;
+    try {
+      await cancelOrder(orderId.value);
+      showSuccessToast('订单已取消');
+      await load();
+    } catch {
+      // 拦截器已提示
+    } finally {
+      acting.value = false;
+    }
   }
 
   async function onReceive(): Promise<void> {
-    await showConfirmDialog({ title: '提示', message: '确认已收到货物？' });
-    await confirmOrder(orderId.value);
-    showSuccessToast('已确认收货');
-    await load();
+    if (!(await confirmDialog('确认已收到货物？'))) return;
+    acting.value = true;
+    try {
+      await confirmOrder(orderId.value);
+      showSuccessToast('已确认收货');
+      await load();
+    } catch {
+      // 拦截器已提示
+    } finally {
+      acting.value = false;
+    }
   }
 
   function onCopy(): void {
@@ -187,11 +204,13 @@
           v-if="order.status === 'UNPAID'"
           type="danger"
           text="取消订单"
+          :loading="acting"
           @click="onCancel"
         />
         <van-action-bar-button
           v-if="order.status === 'SHIPPED'"
           type="primary"
+          :loading="acting"
           text="确认收货"
           @click="onReceive"
         />

@@ -1,5 +1,7 @@
 import type { AppCartItemRespVO, AppCartListRespVO, CartItem } from '@/types';
-import { adaptProperties } from './product';
+import { adaptProperties } from './product.ts';
+// 带 `.ts` 扩展名：adapter 会被 `node --test` 直接执行，ESM 环境不接受省略扩展名
+import { normalizeAssetUrl } from '../../utils/asset.ts';
 
 /**
  * 购物车 DTO → 领域模型映射。
@@ -17,7 +19,7 @@ export function adaptCartItem(raw: AppCartItemRespVO): CartItem {
   const stock = Number(sku?.stock ?? 0);
   const properties = adaptProperties(sku?.properties);
   const specText = Object.values(properties).filter(Boolean).join(' ') || `规格 ${skuId}`;
-  const picUrl = sku?.picUrl || spu?.picUrl || '';
+  const picUrl = normalizeAssetUrl(sku?.picUrl || spu?.picUrl || '');
 
   return {
     key: `${spuId}-${skuId}`,
