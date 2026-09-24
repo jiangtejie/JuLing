@@ -1,8 +1,8 @@
 # pnpm 11 起，依赖的构建脚本需要显式白名单，否则 pnpm install 会以非 0 退出。
 # esbuild 需要执行安装脚本以校验/落位平台二进制。
-# @parcel/watcher 是可选的原生文件监听器（Windows 走 @parcel/watcher-win32-x64 预编译包），
-# 跳过其构建脚本不影响 dev/build；不写这条时 pnpm 11.7 会以 ERR_PNPM_IGNORED_BUILDS 非 0 退出，
-# 并且在文件里写回 "set this to true or false" 占位符，导致 pnpm dev 的前置依赖检查失败。
 allowBuilds:
+  # @parcel/watcher 是可选的原生文件监听器（Windows 走 @parcel/watcher-win32-x64 预编译包），
+  # 跳过其构建脚本不影响 dev/build；不写这条时 pnpm 11.7 会以 ERR_PNPM_IGNORED_BUILDS 非 0 退出，
+  # 并在文件里写回占位符，导致 pnpm dev 的前置依赖检查失败。
   '@parcel/watcher': false
   esbuild: true
