@@ -220,10 +220,22 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         // 物流信息
         order.setDeliveryType(createReqVO.getDeliveryType());
         if (Objects.equals(createReqVO.getDeliveryType(), DeliveryTypeEnum.EXPRESS.getType())) {
-            MemberAddressRespDTO address = addressApi.getAddress(createReqVO.getAddressId(), userId);
-            Assert.notNull(address, "地址({}) 不能为空", createReqVO.getAddressId()); // 价格计算时，已经计算
-            order.setReceiverName(address.getName()).setReceiverMobile(address.getMobile())
-                    .setReceiverAreaId(address.getAreaId()).setReceiverDetailAddress(address.getDetailAddress());
+            // 情况一：已选择收件地址簿中的地址，以地址簿为准
+            if (createReqVO.getAddressId() != null) {
+                MemberAddressRespDTO address = addressApi.getAddress(createReqVO.getAddressId(), userId);
+                Assert.notNull(address, "地址({}) 不能为空", createReqVO.getAddressId()); // 价格计算时，已经计算
+                order.setReceiverName(address.getName()).setReceiverMobile(address.getMobile())
+                        .setReceiverAreaId(address.getAreaId()).setReceiverDetailAddress(address.getDetailAddress());
+            } else {
+                // 情况二：未选择收件地址，回退使用请求中手填的收货信息（订货商城场景：允许不维护地址簿）
+                // 注意：该情况下价格计算不会走快递模板，即不计运费（见 TradeDeliveryPriceCalculator#calculateExpress）
+                if (StrUtil.hasBlank(createReqVO.getReceiverName(), createReqVO.getReceiverMobile(),
+                        createReqVO.getReceiverDetailAddress())) {
+                    throw exception(ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE);
+                }
+                order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile())
+                        .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
+            }
         } else if (Objects.equals(createReqVO.getDeliveryType(), DeliveryTypeEnum.PICK_UP.getType())) {
             order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile());
             order.setPickUpVerifyCode(RandomUtil.randomNumbers(8)); // 随机一个核销码，长度为 8 位

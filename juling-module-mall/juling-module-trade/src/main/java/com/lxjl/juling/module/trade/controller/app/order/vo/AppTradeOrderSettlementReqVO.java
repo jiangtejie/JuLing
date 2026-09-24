@@ -46,6 +46,8 @@ public class AppTradeOrderSettlementReqVO {
     @Schema(description = "收件人手机", example = "15601691300") // 选择门店自提时，该字段为联系人手机
     @Mobile(message = "收件人手机格式不正确")
     private String receiverMobile;
+    @Schema(description = "收件详细地址", example = "重庆市江北区xx路 1 号") // 未选择收件地址时，手填的收货详细地址
+    private String receiverDetailAddress;
 
     // ========== 秒杀活动相关字段 ==========
     @Schema(description = "秒杀活动编号", example = "1024")
