@@ -1,0 +1,31 @@
+# 依赖
+node_modules
+.pnpm-store
+
+# 构建产物
+dist
+dist-ssr
+stats.html
+*.local
+
+# 缓存
+.vite
+.cache
+node_modules/.cache
+.eslintcache
+*.tsbuildinfo
+
+# 环境变量（本地覆盖文件不入库）
+.env.local
+.env.*.local
+
+# 编辑器 / 系统
+.idea
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 注意：src/types/auto-imports.d.ts 与 src/types/components.d.ts 由 unplugin 生成，
+# 但为了让全新克隆的仓库也能直接通过 vue-tsc 类型检查，这里选择入库而不是忽略。

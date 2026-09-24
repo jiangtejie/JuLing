@@ -1,0 +1,4 @@
+# pnpm 11 起，依赖的构建脚本需要显式白名单，否则 pnpm install 会以非 0 退出。
+# esbuild 需要执行安装脚本以校验/落位平台二进制。
+allowBuilds:
+  esbuild: true

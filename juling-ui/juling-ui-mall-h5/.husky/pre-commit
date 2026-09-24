@@ -1,0 +1,2 @@
+# 提交前：对暂存区文件做 ESLint 自动修复 + Prettier 格式化
+pnpm exec lint-staged
