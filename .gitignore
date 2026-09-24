@@ -134,3 +134,9 @@ run/*
 
 .rivet/
 .reasonix/
+
+######################################################################
+# lefthook：vben 的 prepare 脚本会在仓库根生成 lefthook.yml，
+# 而本仓库 hooks 统一走 script/git-hooks（core.hooksPath），该文件为副产物
+
+/lefthook.yml
