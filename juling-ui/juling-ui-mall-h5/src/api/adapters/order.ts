@@ -48,9 +48,7 @@ export function orderStatusKeyToCode(key?: string): number | undefined {
 }
 
 /** 属性数组 → 规格文本，如「红色 M」 */
-function propertiesToSpecText(
-  properties?: Array<{ valueName?: string }> | null,
-): string {
+function propertiesToSpecText(properties?: Array<{ valueName?: string }> | null): string {
   return (properties ?? [])
     .map((item) => item?.valueName)
     .filter(Boolean)
@@ -75,9 +73,7 @@ export function adaptOrderItem(raw: AppTradeOrderItemRespVO): OrderItem {
 }
 
 /** 后端订单分页 → 前端分页 */
-export function adaptOrderPage(
-  page: BackendPage<AppTradeOrderPageItemRespVO>,
-): PageResult<Order> {
+export function adaptOrderPage(page: BackendPage<AppTradeOrderPageItemRespVO>): PageResult<Order> {
   return {
     list: (page?.list ?? []).map((raw) => ({
       id: raw.id,

@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { showToast } from 'vant';
+import { Lazyload, showToast } from 'vant';
 
 // 原子化 CSS：reset 在前，工具类在后
 import '@unocss/reset/tailwind-compat.css';
@@ -31,6 +31,15 @@ function bootstrap(): void {
   setupStore(app);
   setupRouter(app);
   setupPwa();
+
+  // 图片懒加载：滚动到可视区才真正加载。
+  // 用 IntersectionObserver 模式而非默认的 scroll 事件模式——后者只监听 window，
+  // 分类页这类「内容区内部滚动」的页面收不到滚动信号，图片会一直不加载；
+  // 不支持 IO 的老 WebView 由 Vant 自动回退到事件模式。
+  app.use(Lazyload, {
+    observer: true,
+    observerOptions: { rootMargin: '100px' },
+  });
 
   app.mount('#app');
 

@@ -106,6 +106,27 @@ test('adaptSpu：introduction→subTitle、supportTierPrice=false、字段透传
   assert.equal(product.salesCount, 12860);
 });
 
+test('adaptSpu：sliderPicUrls 多图透传，空数组归一为 undefined', () => {
+  const base = {
+    id: 1,
+    name: 'A',
+    introduction: 'a',
+    categoryId: 1,
+    picUrl: 'p.png',
+    specType: false,
+    price: 100,
+    marketPrice: 120,
+    stock: 1,
+    salesCount: 0,
+    deliveryTypes: [1],
+  };
+  assert.deepEqual(adaptSpu({ ...base, sliderPicUrls: ['a.png', 'b.png'] }).sliderPicUrls, [
+    'a.png',
+    'b.png',
+  ]);
+  assert.equal(adaptSpu({ ...base, sliderPicUrls: [] }).sliderPicUrls, undefined);
+});
+
 test('adaptSpuDetail：description→detailHtml、skus 映射并注入 spuId', () => {
   const product = adaptSpuDetail({
     id: 1001,

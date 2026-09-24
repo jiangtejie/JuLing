@@ -60,6 +60,7 @@ type SpuCommon = Pick<
   | 'id'
   | 'name'
   | 'picUrl'
+  | 'sliderPicUrls'
   | 'introduction'
   | 'price'
   | 'marketPrice'
@@ -74,6 +75,8 @@ export function adaptSpu(raw: SpuCommon): Product {
     id: raw.id,
     name: raw.name,
     picUrl: raw.picUrl,
+    // 详情轮播图：后端可能返回空数组 → 归一为 undefined，由详情页回退 picUrl
+    sliderPicUrls: raw.sliderPicUrls?.length ? raw.sliderPicUrls : undefined,
     subTitle: raw.introduction,
     price: raw.price,
     marketPrice: raw.marketPrice,

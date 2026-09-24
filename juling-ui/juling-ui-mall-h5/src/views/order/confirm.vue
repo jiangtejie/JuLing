@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { showSuccessToast, showToast } from 'vant';
   import { createOrder } from '@/api/order';
-  import { DEFAULT_ADDRESS } from '@/constants';
   import { useCartStore } from '@/stores/cart';
   import { formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
+  import { isMobile } from '@/utils/is';
 
   defineOptions({ name: 'OrderConfirm' });
 
@@ -13,11 +13,24 @@
   const { checkedItems, totalPrice, totalQuantity } = storeToRefs(cartStore);
 
   const remark = ref('');
-  const address = reactive({ ...DEFAULT_ADDRESS });
+  // 不预填任何示例地址：避免用户未填写就把假收货信息提交到后端
+  const address = reactive({ name: '', mobile: '', address: '' });
 
   async function onSubmit(): Promise<void> {
     if (!checkedItems.value.length) {
       showToast('请先选择要下单的商品');
+      return;
+    }
+    if (!address.name.trim()) {
+      showToast('请输入收货人姓名');
+      return;
+    }
+    if (!isMobile(address.mobile.trim())) {
+      showToast('请输入正确的联系电话');
+      return;
+    }
+    if (!address.address.trim()) {
+      showToast('请输入详细收货地址');
       return;
     }
 
@@ -27,9 +40,9 @@
           skuId: item.skuId,
           quantity: item.quantity,
         })),
-        receiverName: address.name,
-        receiverMobile: address.mobile,
-        receiverAddress: address.address,
+        receiverName: address.name.trim(),
+        receiverMobile: address.mobile.trim(),
+        receiverAddress: address.address.trim(),
         remark: remark.value,
       });
     } catch {
@@ -63,13 +76,16 @@
           label="收货人"
           placeholder="请输入收货人姓名"
           input-align="right"
+          required
         />
         <van-field
           v-model="address.mobile"
           label="联系电话"
           type="tel"
+          maxlength="11"
           placeholder="请输入联系电话"
           input-align="right"
+          required
         />
         <van-field
           v-model="address.address"
@@ -78,6 +94,7 @@
           rows="2"
           autosize
           placeholder="请输入详细收货地址"
+          required
         />
       </van-cell-group>
 
@@ -90,6 +107,7 @@
             :src="resolveImage(item.picUrl)"
             fit="cover"
             radius="6"
+            lazy-load
           />
           <div class="order-confirm__info">
             <div class="text-ellipsis-2 order-confirm__name">{{ item.name }}</div>
@@ -98,7 +116,6 @@
               <PriceText :value="item.price" />
               <span class="order-confirm__qty">× {{ item.quantity }}</span>
             </div>
-            <van-tag v-if="item.tierPrice" type="danger" plain class="mt-1">已享阶梯价</van-tag>
           </div>
         </div>
 

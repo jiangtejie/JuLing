@@ -48,6 +48,15 @@
     void router.push({ path: '/order/list', query: status ? { status } : {} });
   }
 
+  /** 菜单点击：已接入的直接跳转；未接入的（地址簿 / 企业资料 / 客服 / 设置）给出明确反馈 */
+  function onMenuClick(menu: { label: string; to: string }): void {
+    if (menu.to) {
+      void router.push(menu.to);
+      return;
+    }
+    showToast('功能开发中，敬请期待');
+  }
+
   async function onLogout(): Promise<void> {
     await showConfirmDialog({ title: '提示', message: '确认退出当前账号？' });
     await userStore.logout();
@@ -137,8 +146,7 @@
         :key="menu.label"
         :title="menu.label"
         is-link
-        :clickable="Boolean(menu.to)"
-        @click="menu.to && router.push(menu.to)"
+        @click="onMenuClick(menu)"
       >
         <template #icon>
           <i :class="menu.icon" class="user__menu-icon" />
@@ -163,7 +171,7 @@
       align-items: center;
       gap: 12px;
       padding: calc(24px + env(safe-area-inset-top)) 16px 32px;
-      background: linear-gradient(135deg, #0081ff, #41b0ff);
+      background: var(--app-primary-gradient);
       color: #fff;
     }
 

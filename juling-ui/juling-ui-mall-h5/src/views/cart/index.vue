@@ -4,7 +4,6 @@
   import type { CartItem } from '@/types';
   import { useCartStore } from '@/stores/cart';
   import { useUserStore } from '@/stores/user';
-  import { formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
 
   defineOptions({ name: 'Cart' });
@@ -96,6 +95,7 @@
             :src="resolveImage(item.picUrl)"
             fit="cover"
             radius="6"
+            lazy-load
             @click="toDetail(item.spuId)"
           />
 
@@ -116,13 +116,6 @@
                 input-width="40"
                 @change="(value: number | string) => onQuantityChange(item, value)"
               />
-            </div>
-
-            <div class="cart__tier">
-              <van-tag v-if="item.tierPrice" type="danger">已享阶梯价</van-tag>
-              <span v-if="item.tierPrice" class="cart__origin">
-                原价 ¥{{ formatPrice(item.originPrice) }}
-              </span>
             </div>
           </div>
         </div>
@@ -192,20 +185,6 @@
       margin-top: 2px;
       font-size: 12px;
       color: var(--app-text-color-secondary);
-    }
-
-    &__tier {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      min-height: 20px;
-      margin-top: 4px;
-    }
-
-    &__origin {
-      font-size: 12px;
-      color: var(--app-text-color-secondary);
-      text-decoration: line-through;
     }
 
     &__submit {

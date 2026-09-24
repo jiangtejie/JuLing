@@ -15,10 +15,10 @@
   /** van-sidebar 的 v-model 是「索引」而非业务 id */
   const activeIndex = ref(0);
 
-  const { list, loading, finished, error, onLoad, search } = usePaging<Product, { categoryId?: number }>(
-    (params) => getProductPage(params),
-    { immediate: false },
-  );
+  const { list, loading, finished, error, refreshing, total, onLoad, onRefresh, search } =
+    usePaging<Product, { categoryId?: number }>((params) => getProductPage(params), {
+      immediate: false,
+    });
 
   const activeName = computed(() => categories.value[activeIndex.value]?.name ?? '');
 
@@ -72,41 +72,52 @@
         <van-sidebar-item v-for="item in categories" :key="item.id" :title="item.name" />
       </van-sidebar>
 
-      <!-- 右侧商品 -->
+      <!-- 右侧商品：内部滚动容器，下拉刷新需挂在容器内才生效 -->
       <div
         :class="[
           'category__content',
           { 'category__content--with-cartbar': cartStore.totalKinds > 0 },
         ]"
       >
-        <div class="category__title">{{ activeName }}</div>
-        <van-list
-          v-model:loading="loading"
-          :finished="finished"
-          :error="error"
-          finished-text="没有更多了"
-          error-text="加载失败，点击重试"
-          @load="onLoad"
-        >
-          <div
-            v-for="product in list"
-            :key="product.id"
-            class="category__item"
-            @click="toDetail(product.id)"
-          >
-            <van-image
-              :src="resolveImage(product.picUrl)"
-              fit="cover"
-              radius="6"
-              class="category__img"
-            />
-            <div class="category__info">
-              <div class="text-ellipsis-2 category__name">{{ product.name }}</div>
-              <div class="category__stock">库存 {{ product.stock }} {{ product.unit ?? '件' }}</div>
-              <PriceText :value="product.price" />
-            </div>
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <div class="flex-between category__title">
+            <span>{{ activeName }}</span>
+            <span v-if="total" class="category__count">共 {{ total }} 件</span>
           </div>
-        </van-list>
+          <van-list
+            v-model:loading="loading"
+            :finished="finished"
+            :error="error"
+            finished-text="没有更多了"
+            error-text="加载失败，点击重试"
+            @load="onLoad"
+          >
+            <!-- 首屏骨架：列表为空且加载中时用骨架屏代替空白（切换分类同样适用） -->
+            <ListSkeleton v-if="!list.length && loading && !refreshing" :rows="4" />
+            <div
+              v-for="product in list"
+              :key="product.id"
+              class="category__item"
+              @click="toDetail(product.id)"
+            >
+              <van-image
+                :src="resolveImage(product.picUrl)"
+                fit="cover"
+                radius="6"
+                lazy-load
+                class="category__img"
+              />
+              <div class="category__info">
+                <div class="text-ellipsis-2 category__name">{{ product.name }}</div>
+                <div class="category__stock">库存 {{ product.stock }} 件</div>
+                <PriceText :value="product.price" />
+              </div>
+            </div>
+          </van-list>
+
+          <!-- 空态：该分类下暂无商品（区别于「加载失败」，无需重试入口） -->
+          <van-empty v-if="!loading && !list.length" image="search" description="该分类暂无商品" />
+        </van-pull-refresh>
       </div>
     </div>
 
@@ -161,9 +172,7 @@
 
     /* 有悬浮购物车栏时，内容区再多留出它的高度（48 + 8 间距） */
     &__content--with-cartbar {
-      padding-bottom: calc(
-        12px + var(--app-tabbar-height) + env(safe-area-inset-bottom) + 56px
-      );
+      padding-bottom: calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom) + 56px);
     }
 
     /* ===== 悬浮购物车栏（美团外卖点菜式） ===== */
@@ -241,6 +250,12 @@
       padding: 12px 0 8px;
       font-size: 14px;
       font-weight: 600;
+    }
+
+    &__count {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--app-text-color-secondary);
     }
 
     &__item {

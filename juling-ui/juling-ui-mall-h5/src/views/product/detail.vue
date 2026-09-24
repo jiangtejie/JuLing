@@ -1,13 +1,14 @@
 <script setup lang="ts">
-  import { showSuccessToast, showToast } from 'vant';
+  import { showImagePreview, showSuccessToast, showToast } from 'vant';
   import { addCart } from '@/api/cart';
   import { getProductDetail } from '@/api/product';
   import type { Product, Sku } from '@/types';
   import { useCartStore, type AddCartPayload } from '@/stores/cart';
   import { useUserStore } from '@/stores/user';
-  import { formatCount, formatPrice } from '@/utils/format';
+  import { formatCount } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
   import { resolvePrice } from '@/utils/price';
+  import { BizError } from '@/utils/request';
 
   defineOptions({ name: 'ProductDetail' });
 
@@ -20,10 +21,23 @@
 
   const product = ref<Product | null>(null);
   const loading = ref(true);
+  /** 加载失败（网络 / 服务异常）——与「商品不存在」区分，可重试 */
+  const loadError = ref(false);
   const activeSkuId = ref(0);
   const quantity = ref(1);
 
   const skus = computed<Sku[]>(() => product.value?.skus ?? []);
+
+  /** 轮播图：优先后端多图（sliderPicUrls），缺失时回退主图 */
+  const gallery = computed<string[]>(() => {
+    const sliders = (product.value?.sliderPicUrls ?? []).filter(Boolean);
+    return sliders.length ? sliders : [resolveImage(product.value?.picUrl)];
+  });
+
+  /** 点击轮播图放大预览（样式已在 main.ts 引入） */
+  function previewImage(index: number): void {
+    showImagePreview({ images: gallery.value, startPosition: index, closeable: true });
+  }
 
   const activeSku = computed<Sku | undefined>(
     () => skus.value.find((item) => item.id === activeSkuId.value) ?? skus.value[0],
@@ -47,8 +61,11 @@
       const firstSku = detail.skus?.[0];
       activeSkuId.value = firstSku?.id ?? 0;
       quantity.value = firstSku?.minOrderQuantity ?? 1;
-    } catch {
-      // 拦截器已提示
+      loadError.value = false;
+    } catch (error) {
+      // 拦截器已提示。业务错误（如商品不存在/已下架）不是加载失败；
+      // 网络或服务异常才标记为可重试，避免把「网络不通」说成「商品不存在」。
+      loadError.value = !(error instanceof BizError);
     } finally {
       loading.value = false;
     }
@@ -113,11 +130,39 @@
   <div class="app-page detail">
     <AppNavBar :title="product?.name ?? '商品详情'" />
 
-    <van-loading v-if="loading" class="detail__loading" size="24" vertical>加载中…</van-loading>
+    <!-- 加载态：骨架屏（贴合内容结构，避免居中转圈带来的跳动） -->
+    <div v-if="loading" class="detail__skeleton">
+      <van-skeleton title :row="3" />
+      <van-skeleton title :row="5" class="mt-3" />
+    </div>
+
+    <!-- 加载失败：网络 / 服务异常，给一个重试入口（与「商品不存在」区分开） -->
+    <div v-else-if="loadError" class="detail__error">
+      <van-empty image="error" description="加载失败，请检查网络后重试">
+        <van-button round type="primary" size="small" class="mt-3" @click="load">
+          重新加载
+        </van-button>
+      </van-empty>
+    </div>
 
     <template v-else-if="product">
       <div class="app-scroll">
-        <van-image class="detail__banner" :src="resolveImage(product.picUrl)" fit="cover" />
+        <!-- 轮播：多图可滑动，点击放大预览；单图时不显示指示器 -->
+        <van-swipe
+          class="detail__banner"
+          :autoplay="0"
+          :show-indicators="gallery.length > 1"
+          indicator-color="#fff"
+        >
+          <van-swipe-item v-for="(img, index) in gallery" :key="index">
+            <van-image
+              class="detail__banner-img"
+              :src="img"
+              fit="cover"
+              @click="previewImage(index)"
+            />
+          </van-swipe-item>
+        </van-swipe>
 
         <div class="detail__head app-card">
           <div class="flex-between">
@@ -126,28 +171,6 @@
           </div>
           <div class="detail__name">{{ product.name }}</div>
           <div class="detail__sub">{{ product.subTitle }}</div>
-        </div>
-
-        <!-- 阶梯价：订货业务核心信息 -->
-        <div v-if="activeSku?.tierPrices?.length" class="detail__block app-card">
-          <div class="detail__block-title">
-            <i class="i-carbon-chart-line mr-1" />阶梯价（当前数量 {{ quantity }} 件）
-          </div>
-          <div class="detail__tiers">
-            <div
-              v-for="tier in activeSku.tierPrices"
-              :key="tier.minQuantity"
-              class="detail__tier"
-              :class="{ 'detail__tier--active': priceInfo.tier?.minQuantity === tier.minQuantity }"
-            >
-              <div class="detail__tier-range">
-                {{ tier.minQuantity }}
-                <template v-if="tier.maxQuantity">-{{ tier.maxQuantity }}</template>
-                <template v-else>+</template>
-              </div>
-              <div class="detail__tier-price">¥{{ formatPrice(tier.price) }}</div>
-            </div>
-          </div>
         </div>
 
         <!-- 规格选择 -->
@@ -191,17 +214,28 @@
         </div>
       </div>
 
-      <van-submit-bar
-        class="detail__submit"
-        :button-text="soldOut ? '已售罄' : '立即订货'"
-        :disabled="soldOut"
-        @submit="onBuyNow"
-      >
-        <div class="detail__add" @click="onAddCart">
-          <i class="i-carbon-shopping-cart" />
-          <span>加入订货单</span>
-        </div>
-      </van-submit-bar>
+      <!-- 底部固定操作栏（van-action-bar 自带 safe-area 与 placeholder 占位） -->
+      <van-action-bar class="detail__bar" placeholder safe-area-inset-bottom>
+        <van-action-bar-icon
+          icon="shopping-cart-o"
+          text="订货单"
+          :badge="cartStore.totalQuantity"
+          :badge-props="{ showZero: false }"
+          to="/cart"
+        />
+        <van-action-bar-button
+          type="warning"
+          text="加入订货单"
+          :disabled="soldOut"
+          @click="onAddCart"
+        />
+        <van-action-bar-button
+          type="danger"
+          :text="soldOut ? '已售罄' : '立即订货'"
+          :disabled="soldOut"
+          @click="onBuyNow"
+        />
+      </van-action-bar>
     </template>
 
     <van-empty v-else description="商品不存在或已下架" />
@@ -209,13 +243,12 @@
 </template>
 
 <style scoped lang="scss">
-  /* 内容底部避让固定提交栏（van-submit-bar 默认无 placeholder），避免最后一项被遮挡 */
-  :deep(.app-scroll) {
-    padding-bottom: 52px;
-  }
-
   .detail {
-    &__loading {
+    &__skeleton {
+      padding: 24px 16px;
+    }
+
+    &__error {
       display: flex;
       flex: 1;
       align-items: center;
@@ -223,6 +256,11 @@
     }
 
     &__banner {
+      height: 300px;
+      background: #fff;
+    }
+
+    &__banner-img {
       display: block;
       width: 100%;
       height: 300px;
@@ -264,39 +302,6 @@
       font-weight: 600;
     }
 
-    &__tiers {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-    }
-
-    &__tier {
-      flex: none;
-      min-width: 78px;
-      padding: 8px 10px;
-      text-align: center;
-      background: var(--app-bg-color);
-      border: 1px solid transparent;
-      border-radius: var(--app-radius-md);
-    }
-
-    &__tier--active {
-      background: rgb(0 129 255 / 8%);
-      border-color: var(--app-primary-color);
-    }
-
-    &__tier-range {
-      font-size: 12px;
-      color: var(--app-text-color-secondary);
-    }
-
-    &__tier-price {
-      margin-top: 2px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--app-danger-color);
-    }
-
     &__skus {
       display: flex;
       flex-wrap: wrap;
@@ -317,19 +322,8 @@
       color: var(--app-text-color-secondary);
     }
 
-    &__submit {
-      --van-submit-bar-height: 52px;
-    }
-
-    &__add {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      padding: 0 8px;
-      font-size: 12px;
-      color: var(--app-text-color);
+    &__bar {
+      --van-action-bar-height: 52px;
     }
   }
 </style>

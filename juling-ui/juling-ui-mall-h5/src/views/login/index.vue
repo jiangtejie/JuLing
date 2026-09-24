@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { showSuccessToast, showToast } from 'vant';
+  import { showDialog, showSuccessToast, showToast } from 'vant';
   import { sendSmsCode } from '@/api/auth';
   import { useUserStore } from '@/stores/user';
   import { isMobile } from '@/utils/is';
@@ -19,7 +19,23 @@
     code: '',
   });
 
-  const agreed = ref(true);
+  // 默认不勾选：协议需由用户主动确认（合规要求）
+  const agreed = ref(false);
+
+  /**
+   * 查看协议正文。
+   * 正式的协议页面尚未接入（待法务提供文本），先用弹窗给出要点说明，
+   * 避免「点了没反应」——接入协议页后把这里替换为路由跳转即可。
+   */
+  function showAgreement(type: 'service' | 'privacy'): void {
+    const isService = type === 'service';
+    showDialog({
+      title: isService ? '用户服务协议' : '隐私政策',
+      message: isService
+        ? '本协议说明矩灵订货商城提供的服务范围、账号使用规则与订单履约方式。\n正式文本以平台发布版本为准。'
+        : '我们仅收集完成订货与配送所必需的信息（手机号、收货人姓名、联系电话、收货地址），不用于其它用途。\n正式文本以平台发布版本为准。',
+    });
+  }
 
   /* ---------------------------- 短信验证码倒计时 ---------------------------- */
   const SEND_INTERVAL = 60;
@@ -103,7 +119,7 @@
     <div class="login__brand">
       <div class="login__logo">矩</div>
       <div class="login__title">矩灵订货商城</div>
-      <div class="login__subtitle">企业专属订货价 · 阶梯价更优惠</div>
+      <div class="login__subtitle">企业专属订货价 · 登录后可见</div>
     </div>
 
     <!-- 登录方式切换 -->
@@ -159,7 +175,10 @@
 
       <div class="login__tips">
         <van-checkbox v-model="agreed" icon-size="14px" shape="square">
-          我已阅读并同意《用户服务协议》与《隐私政策》
+          我已阅读并同意
+          <span class="login__link" @click.stop="showAgreement('service')"> 《用户服务协议》 </span>
+          与
+          <span class="login__link" @click.stop="showAgreement('privacy')">《隐私政策》</span>
         </van-checkbox>
       </div>
 
@@ -190,7 +209,7 @@
       font-size: 30px;
       font-weight: 700;
       color: #fff;
-      background: linear-gradient(135deg, #0081ff, #41b0ff);
+      background: var(--app-primary-gradient);
       border-radius: 16px;
     }
 
@@ -218,6 +237,10 @@
       padding: 16px 24px 0;
       font-size: 12px;
       color: var(--app-text-color-secondary);
+    }
+
+    &__link {
+      color: var(--app-primary-color);
     }
 
     &__submit {

@@ -72,7 +72,6 @@ declare global {
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const useAppStore: typeof import('../stores/app').useAppStore
-  const useAppTheme: typeof import('../composables/useAppTheme').useAppTheme
   const useAttrs: typeof import('vue').useAttrs
   const useCartStore: typeof import('../stores/cart').useCartStore
   const useClipboard: typeof import('@vueuse/core').useClipboard
@@ -85,6 +84,7 @@ declare global {
   const useLink: typeof import('vue-router').useLink
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
   const useModel: typeof import('vue').useModel
+  const useNetworkNotice: typeof import('../composables/useNetworkNotice').useNetworkNotice
   const useOnline: typeof import('@vueuse/core').useOnline
   const usePaging: typeof import('../composables/usePaging').usePaging
   const useRoute: typeof import('vue-router').useRoute
@@ -184,7 +184,6 @@ declare module 'vue' {
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAppStore: UnwrapRef<typeof import('../stores/app')['useAppStore']>
-    readonly useAppTheme: UnwrapRef<typeof import('../composables/useAppTheme')['useAppTheme']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useCartStore: UnwrapRef<typeof import('../stores/cart')['useCartStore']>
     readonly useClipboard: UnwrapRef<typeof import('@vueuse/core')['useClipboard']>
@@ -197,6 +196,7 @@ declare module 'vue' {
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useNetworkNotice: UnwrapRef<typeof import('../composables/useNetworkNotice')['useNetworkNotice']>
     readonly useOnline: UnwrapRef<typeof import('@vueuse/core')['useOnline']>
     readonly usePaging: UnwrapRef<typeof import('../composables/usePaging')['usePaging']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>

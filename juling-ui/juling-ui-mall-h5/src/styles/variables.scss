@@ -1,0 +1,69 @@
+/**
+ * 全局设计变量（CSS 自定义属性）
+ *
+ * 为什么用 :root:root：Vant 4 也会在 :root 上声明同名 --van-* 变量，
+ * 而按需引入时 Vant 样式是异步 chunk，加载顺序不可控。
+ * 提高一级选择器优先级可以保证主题覆盖一定生效。
+ *
+ * 所有 px 都会被 postcss-px-to-viewport 自动换算为 vw（设计稿基准 375）。
+ */
+:root:root {
+  /* ===== 品牌色 ===== */
+  --app-primary-color: #0081ff;
+  --app-primary-color-light: #41b0ff;
+  /* 主色渐变：首页 banner / 登录页 logo / 我的页头部共用，换肤只需改上面两个色值 */
+  --app-primary-gradient: linear-gradient(
+    135deg,
+    var(--app-primary-color),
+    var(--app-primary-color-light)
+  );
+  --app-success-color: #07c160;
+  --app-warning-color: #ff976a;
+  --app-danger-color: #ee0a24;
+
+  /* ===== 中性色 ===== */
+  --app-text-color: #323233;
+  --app-text-color-secondary: #969799;
+  --app-text-color-placeholder: #c8c9cc;
+  --app-border-color: #ebedf0;
+  --app-bg-color: #f6f6f6;
+  --app-white: #ffffff;
+
+  /* ===== 圆角 / 间距 ===== */
+  --app-radius-sm: 4px;
+  --app-radius-md: 8px;
+  --app-radius-lg: 12px;
+  --app-spacing: 12px;
+
+  /* ===== 组件高度 ===== */
+  --app-nav-bar-height: 46px;
+  --app-tabbar-height: 50px;
+
+  /* ===== Vant 4 主题覆盖 ===== */
+  --van-primary-color: var(--app-primary-color);
+  --van-success-color: var(--app-success-color);
+  --van-warning-color: var(--app-warning-color);
+  --van-danger-color: var(--app-danger-color);
+
+  --van-text-color: var(--app-text-color);
+  --van-text-color-2: var(--app-text-color-secondary);
+  --van-text-color-3: var(--app-text-color-placeholder);
+  --van-border-color: var(--app-border-color);
+  --van-background: var(--app-bg-color);
+  --van-background-2: var(--app-white);
+
+  --van-nav-bar-height: var(--app-nav-bar-height);
+  --van-nav-bar-background: var(--app-white);
+  --van-nav-bar-title-font-size: 17px;
+
+  --van-tabbar-height: var(--app-tabbar-height);
+  --van-tabbar-item-active-color: var(--app-primary-color);
+
+  --van-button-primary-background: var(--app-primary-color);
+  --van-button-primary-border-color: var(--app-primary-color);
+  --van-button-border-radius: var(--app-radius-md);
+
+  --van-cell-vertical-padding: 12px;
+  --van-card-price-color: var(--app-danger-color);
+  --van-submit-bar-button-height: 40px;
+}

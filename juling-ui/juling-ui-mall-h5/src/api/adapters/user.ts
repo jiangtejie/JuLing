@@ -1,9 +1,4 @@
-import type {
-  AppAuthLoginRespVO,
-  AppMemberUserInfoRespVO,
-  LoginResult,
-  UserInfo,
-} from '@/types';
+import type { AppAuthLoginRespVO, AppMemberUserInfoRespVO, LoginResult, UserInfo } from '@/types';
 
 /**
  * 会员域 DTO → 领域模型映射。
