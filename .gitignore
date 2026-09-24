@@ -127,3 +127,10 @@ application-my.yaml
 run/*
 !run/*.ps1
 !run/README.md
+
+######################################################################
+# AI 协作工具运行产物（rivet / reasonix）：本地数据库、artifacts、任务快照
+# 说明：.rivet-config.json / .rivet.md / AGENTS.md 属配置，仍纳入版本管理
+
+.rivet/
+.reasonix/

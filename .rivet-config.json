@@ -1,0 +1,6 @@
+{
+  "verify": {
+    "test": "mvn test",
+    "build": "mvn compile"
+  }
+}

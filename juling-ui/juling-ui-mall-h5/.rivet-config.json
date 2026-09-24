@@ -1,0 +1,8 @@
+{
+  "verify": {
+    "test": "npm test",
+    "build": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "lint": "npx eslint ."
+  }
+}
