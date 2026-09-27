@@ -31,6 +31,10 @@ psql -U root -d juling -f sql/local/13_pay_app_seed.sql
 psql -U root -d yate -f sql/local/15_add_missing_primary_keys.sql
 # 线下收款（付款凭证）改造：建凭证表 + 订单加收款字段 + 字典 + 收款核验按钮权限
 psql -U root -d yate -f sql/local/16_trade_payment_proof.sql
+# 支付模块下线：清理支付菜单/字典/定时任务，pay_* 表重命名归档（pay_channel_code 字典保留）
+psql -U root -d yate -f sql/local/18_remove_pay_module.sql
+# 佣金提现下线：清理提现菜单/字典，提现表归档
+psql -U root -d yate -f sql/local/20_remove_brokerage_withdraw.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -67,6 +71,9 @@ psql -U root -d yate -f sql/local/16_trade_payment_proof.sql
 | 11_dict_fresh_install_gaps.sql | 线上库有、基线+本目录没有的字典 3 类(`system_menu_type`、`system_data_scope`、`mes_wm_issue_status`) | 字典 11200+、112000+ |
 | 12_fix_erp_null_counters.sql | 回填 ERP 单据「数量/金额」计数器(`in_count`/`out_count`/`return_count`/`receipt_price`/`payment_price`/`refund_price`)的历史 NULL 为 0,并补 `DEFAULT 0`;修复前快照存入 schema `bak_erp_null_counters` | — |
 | 13_pay_app_seed.sql | 补齐 `pay_app` 支付应用(`mall` 商城应用 / `wallet` 钱包应用)。交易订单创建后置逻辑在 `payPrice > 0` 时无条件建支付单,`TradeOrderProperties.payAppKey` 默认 `mall`,库里没有该 `app_key` 时下单直接抛 `APP_NOT_FOUND`(1007000000「App 不存在」) | 用表序列/默认值 |
+| 20_remove_brokerage_withdraw.sql | 佣金提现下线：删除提现菜单与 `trade:brokerage-withdraw:*` 权限、删提现状态字典（保留 `brokerage_withdraw_type`，交易配置仍在用）、`trade_brokerage_withdraw` 表重命名为 `zz_deprecated_trade_brokerage_withdraw` 归档。幂等 | — |
+| 19_trade_after_sale_offline_refund.sql | 售后线下退款：`trade_after_sale` 增加 `refund_channel_code`/`refund_proof_urls`/`refund_remark`，配合后台「确认线下退款」登记（原 `pay_refund_id` 保留但不再写入）。幂等 | — |
+| 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
 

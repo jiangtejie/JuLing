@@ -4,7 +4,8 @@
 
 - 后端：Spring Boot 3.5 + JDK 17 + MyBatis-Plus + PostgreSQL 15 + Redis + Flowable + Quartz
 - 前端：Vue3 + Vben5 + Ant Design Vue（`juling-ui/juling-ui-admin-vben`），生产环境经 Nginx 发布
-- 移动端：uni-app（`juling-ui/juling-ui-admin-uniapp`、`juling-ui/juling-ui-mall-uniapp`）
+- 移动端：uni-app（`juling-ui/juling-ui-admin-uniapp`）
+- 商城收款：**线下转账**（客户下单后上传付款截图，后台核验收款/驳回重传），不接入线上支付
 - 数据库：PostgreSQL 15，库名 `juling`
 
 ## 目录结构
@@ -17,7 +18,6 @@ JuLing/
 ├─ juling-module-infra/         基础设施(代码生成/文件/定时任务/日志/配置…)
 ├─ juling-module-member/        会员中心
 ├─ juling-module-bpm/           工作流(Flowable)
-├─ juling-module-pay/           支付
 ├─ juling-module-mp/            微信公众号
 ├─ juling-module-mall/          商城(商品/促销/交易/统计)
 ├─ juling-module-crm/           客户关系
@@ -30,7 +30,7 @@ JuLing/
 ├─ sql/                        数据库脚本(见下)
 ├─ script/                     运维与迁移脚本(备份/自检工具/本地补丁)
 ├─ run/start-backend.ps1       后端启动脚本
-└─ juling-ui/                   各前端源码(vben / admin-uniapp / mall-uniapp)
+└─ juling-ui/                   各前端源码(vben 管理后台 / admin-uniapp / mall-h5 订货商城)
 ```
 
 数据库脚本：
