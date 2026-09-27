@@ -116,6 +116,19 @@
       : `首次提交 ${first} · 等待财务核验`;
   });
 
+  /**
+   * 底部是否还有可执行操作。
+   *
+   * 线下收款下，货款已收齐且订单已发货/完成的订单可能一个操作都没有，
+   * 此时整条操作栏应当隐藏，否则会留下一条没有任何按钮的空白栏。
+   */
+  const hasActions = computed(
+    () =>
+      canUpload.value ||
+      order.value?.status === 'UNPAID' ||
+      order.value?.status === 'SHIPPED',
+  );
+
   function toPayment(): void {
     void router.push(`/order/${orderId.value}/payment`);
   }
@@ -180,6 +193,16 @@
   onMounted(() => {
     void load();
   });
+
+  /**
+   * 路由参数变化时重新拉取。
+   *
+   * 从 /order/18 直接跳到 /order/23 时 vue-router 会复用同一组件、不再触发 onMounted，
+   * 不监听就会一直显示上一个订单的数据。
+   */
+  watch(orderId, () => {
+    if (orderId.value) void load();
+  });
 </script>
 
 <template>
@@ -202,7 +225,7 @@
     </div>
 
     <template v-else-if="order">
-      <div class="app-scroll">
+      <div class="app-scroll" :class="{ 'app-scroll--with-bar': hasActions }">
         <!-- 订单状态：正向流程用垂直步骤条展示进度（含各节点时间）；取消 / 售后用色块 -->
         <van-steps
           v-if="!isAbnormal"
@@ -232,7 +255,9 @@
         <div class="order-detail__card app-card">
           <div class="flex-between">
             <span class="order-detail__title">货款收款</span>
-            <van-tag :color="receiveBadge.color" plain>{{ receiveBadge.text }}</van-tag>
+            <van-tag class="order-detail__tag" :color="receiveBadge.color" plain round>
+              {{ receiveBadge.text }}
+            </van-tag>
           </div>
 
           <!-- 收款进度：客户上传 → 财务核验 → 收款完成 -->
@@ -299,7 +324,12 @@
                       · 核定 ¥{{ formatPrice(proof.confirmedAmount) }}
                     </template>
                   </span>
-                  <van-tag :color="PROOF_STATUS_MAP[proof.status]?.color" plain>
+                  <van-tag
+                    class="order-detail__tag"
+                    :color="PROOF_STATUS_MAP[proof.status]?.color"
+                    plain
+                    round
+                  >
                     {{ PROOF_STATUS_MAP[proof.status]?.text ?? '未知' }}
                   </van-tag>
                 </div>
@@ -375,7 +405,14 @@
 
         <!-- 订单信息与时间 -->
         <van-cell-group inset class="order-detail__group">
-          <van-cell title="订单号" :value="order.orderNo" is-link @click="onCopy" />
+          <van-cell title="订单号" class="order-detail__no" @click="onCopy">
+            <template #value>
+              <span class="order-detail__no-text">{{ order.orderNo }}</span>
+            </template>
+            <template #right-icon>
+              <span class="order-detail__copy" @click.stop="onCopy">复制</span>
+            </template>
+          </van-cell>
           <van-cell title="下单时间" :value="formatDate(order.createTime)" />
           <van-cell v-if="order.payTime" title="收款时间" :value="formatDate(order.payTime)" />
           <van-cell
@@ -387,8 +424,7 @@
       </div>
 
       <!-- 底部固定操作栏：无需滚到底即可操作 -->
-      <van-action-bar class="order-detail__bar">
-        <van-action-bar-icon icon="orders-o" text="复制订单号" @click="onCopy" />
+      <van-action-bar v-if="hasActions" class="order-detail__bar">
         <van-action-bar-button
           v-if="canUpload"
           type="primary"
@@ -417,8 +453,8 @@
 </template>
 
 <style scoped lang="scss">
-  /* 内容区避让底部固定操作栏（van-action-bar 无 placeholder） */
-  :deep(.app-scroll) {
+  /* 内容区避让底部固定操作栏（van-action-bar 无 placeholder），没有操作栏时不留白 */
+  :deep(.app-scroll--with-bar) {
     padding-bottom: 56px;
   }
 
@@ -549,7 +585,49 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      /* 右侧给折叠箭头留出间距，避免标签贴到箭头上 */
+      padding-right: 8px;
       font-size: 13px;
+    }
+
+    /* 状态标签：统一圆角描边风格，且不参与 flex 压缩 */
+    &__tag {
+      flex: none;
+      margin-left: 8px;
+      font-weight: 400;
+    }
+
+    /* 订单号行：数值可省略、右侧跟一个「复制」小胶囊 */
+    &__no {
+      :deep(.van-cell__value) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
+      }
+
+      :deep(.van-cell__right-icon) {
+        display: flex;
+        align-items: center;
+        margin-left: 8px;
+        line-height: 1;
+      }
+    }
+
+    &__no-text {
+      overflow: hidden;
+      color: var(--app-text-color);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__copy {
+      padding: 1px 8px;
+      font-size: 11px;
+      line-height: 16px;
+      color: var(--app-primary-color);
+      border: 1px solid currentcolor;
+      border-radius: 10px;
     }
 
     &__proof-imgs {
