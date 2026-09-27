@@ -3,8 +3,6 @@ package com.lxjl.juling.module.trade.dal.dataobject.order;
 import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
 import com.lxjl.juling.framework.mybatis.core.type.LongListTypeHandler;
-import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.trade.dal.dataobject.brokerage.BrokerageUserDO;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryPickUpStoreDO;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
@@ -114,13 +112,6 @@ public class TradeOrderDO extends BaseDO {
      * false - 未评价
      */
     private Boolean commentStatus;
-
-    /**
-     * 推广人编号
-     *
-     * 关联 {@link BrokerageUserDO#getId()} 字段，即 {@link MemberUserRespDTO#getId()} 字段
-     */
-    private Long brokerageUserId;
 
     // ========== 价格 + 支付基本信息 ==========
 

@@ -124,7 +124,6 @@ export interface AppMemberUserInfoRespVO {
   point: number;
   experience: number;
   level: AppMemberUserLevelRespVO | null;
-  brokerageEnabled: boolean;
 }
 
 /* -------------------------------- 购物车 -------------------------------- */

@@ -59,13 +59,4 @@ public class ProductSkuRespDTO {
      * 商品体积，单位：m^3 平米
      */
     private Double volume;
-    /**
-     * 一级分销的佣金，单位：分
-     */
-    private Integer firstBrokeragePrice;
-    /**
-     * 二级分销的佣金，单位：分
-     */
-    private Integer secondBrokeragePrice;
-
 }

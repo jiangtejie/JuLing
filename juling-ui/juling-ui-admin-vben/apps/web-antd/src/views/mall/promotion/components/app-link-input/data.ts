@@ -143,27 +143,6 @@ export const APP_LINK_GROUP_LIST = [
     ],
   },
   {
-    name: '分销商城',
-    links: [
-      {
-        name: '分销中心',
-        path: '/pages/commission/index',
-      },
-      {
-        name: '推广商品',
-        path: '/pages/commission/goods',
-      },
-      {
-        name: '分销订单',
-        path: '/pages/commission/order',
-      },
-      {
-        name: '我的团队',
-        path: '/pages/commission/team',
-      },
-    ],
-  },
-  {
     name: '支付',
     links: [
       {
@@ -202,10 +181,6 @@ export const APP_LINK_GROUP_LIST = [
       {
         name: '地址管理',
         path: '/pages/user/address/list',
-      },
-      {
-        name: '用户佣金',
-        path: '/pages/user/wallet/commission',
       },
       {
         name: '用户余额',

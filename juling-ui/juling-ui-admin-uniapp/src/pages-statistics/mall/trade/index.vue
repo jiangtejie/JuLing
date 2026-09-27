@@ -99,9 +99,9 @@ const summaryItems = computed<SummaryItem[]>(() => [
 const trendItems = computed<SummaryItem[]>(() => {
   const value = trend.value.value || {}
   const reference = trend.value.reference || {}
-  // 营业额、商品支付、充值、支出、余额支付、支付佣金、商品退款
-  const props = ['turnoverPrice', 'orderPayPrice', 'rechargePrice', 'expensePrice', 'walletPayPrice', 'brokerageSettlementPrice', 'afterSaleRefundPrice']
-  const labels = ['营业额', '商品支付', '充值', '支出', '余额支付', '支付佣金', '商品退款']
+  // 营业额、商品支付、充值、支出、余额支付、商品退款
+  const props = ['turnoverPrice', 'orderPayPrice', 'rechargePrice', 'expensePrice', 'walletPayPrice', 'afterSaleRefundPrice']
+  const labels = ['营业额', '商品支付', '充值', '支出', '余额支付', '商品退款']
   return props.map((prop, index) => ({
     label: labels[index],
     value: fenToYuan(value[prop]),

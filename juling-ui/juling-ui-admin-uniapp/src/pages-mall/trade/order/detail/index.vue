@@ -27,9 +27,6 @@
             <view><text class="yd-text-hint">来源：</text>{{ getDictLabel(DICT_TYPE.TERMINAL, formData.terminal) || '-' }}</view>
             <view><text class="yd-text-hint">类型：</text>{{ getDictLabel(DICT_TYPE.TRADE_ORDER_TYPE, formData.type) || '-' }}</view>
             <view><text class="yd-text-hint">支付：</text>{{ formData.payStatus ? '已支付' : '未支付' }}</view>
-            <view v-if="formData.brokerageUser">
-              <text class="yd-text-hint">推广用户：</text>{{ formData.brokerageUser.nickname || '-' }}
-            </view>
             <view v-if="formData.payOrderId">
               <text class="yd-text-hint">支付单号：</text>{{ formData.payOrderId }}
             </view>

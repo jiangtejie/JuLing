@@ -17,7 +17,6 @@ export interface TradeOrderCount {
   undelivered?: number
   pickUp?: number
   afterSaleApply?: number
-  auditingWithdraw?: number
 }
 
 /** 会员数量统计 */
@@ -78,7 +77,6 @@ export interface TradeTrendSummary {
   rechargePrice?: number
   expensePrice?: number
   walletPayPrice?: number
-  brokerageSettlementPrice?: number
   afterSaleRefundPrice?: number
 }
 

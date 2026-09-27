@@ -9,16 +9,6 @@ export namespace MallTradeConfigApi {
     deliveryExpressFreeEnabled: boolean;
     deliveryExpressFreePrice: number;
     deliveryPickUpEnabled: boolean;
-    brokerageEnabled?: boolean;
-    brokerageEnabledCondition?: number;
-    brokerageBindMode?: number;
-    brokeragePosterUrls: string[];
-    brokerageFirstPercent?: number;
-    brokerageSecondPercent?: number;
-    brokerageWithdrawMinPrice: number;
-    brokerageFrozenDays: number;
-    brokerageWithdrawFeePercent: number;
-    brokerageWithdrawTypes: number[];
     tencentLbsKey?: string;
   }
 }

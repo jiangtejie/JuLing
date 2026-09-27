@@ -90,13 +90,6 @@ const MALL_DICT = {
   TRADE_ORDER_STATUS: 'trade_order_status', // 订单 - 状态
   TRADE_PAYMENT_PROOF_STATUS: 'trade_payment_proof_status', // 订单 - 收款状态（线下收款）
   TRADE_ORDER_TYPE: 'trade_order_type', // 订单 - 类型
-  BROKERAGE_BANK_NAME: 'brokerage_bank_name', // 佣金提现银行
-  BROKERAGE_BIND_MODE: 'brokerage_bind_mode', // 分销关系绑定模式
-  BROKERAGE_ENABLED_CONDITION: 'brokerage_enabled_condition', // 分佣模式
-  BROKERAGE_RECORD_BIZ_TYPE: 'brokerage_record_biz_type', // 佣金业务类型
-  BROKERAGE_RECORD_STATUS: 'brokerage_record_status', // 佣金状态
-  BROKERAGE_WITHDRAW_STATUS: 'brokerage_withdraw_status', // 佣金提现状态
-  BROKERAGE_WITHDRAW_TYPE: 'brokerage_withdraw_type', // 佣金提现类型
 
   /** ========== MALL - 营销模块 ========== */
 

@@ -537,7 +537,6 @@ test('adaptUserInfo：level 拍平为 levelName，未提供字段留空', () => 
     point: 0,
     experience: 0,
     level: { id: 1, name: '金牌经销商', level: 3, icon: '' },
-    brokerageEnabled: false,
   });
   assert.equal(user.nickname, '张经理');
   assert.equal(user.levelName, '金牌经销商');
@@ -556,7 +555,6 @@ test('adaptUserInfo：level 为 null 时不报错', () => {
     point: 0,
     experience: 0,
     level: null,
-    brokerageEnabled: false,
   });
   assert.equal(user.levelName, undefined);
 });

@@ -116,25 +116,6 @@ export function useSkuFormSchema(
       },
     },
     {
-      fieldName: 'subCommissionType',
-      label: '分销类型',
-      component: 'RadioGroup',
-      componentProps: {
-        allowClear: true,
-        options: [
-          {
-            label: '默认设置',
-            value: false,
-          },
-          {
-            label: '单独设置',
-            value: true,
-          },
-        ],
-      },
-      rules: 'required',
-    },
-    {
       fieldName: 'specType',
       label: '商品规格',
       component: 'RadioGroup',

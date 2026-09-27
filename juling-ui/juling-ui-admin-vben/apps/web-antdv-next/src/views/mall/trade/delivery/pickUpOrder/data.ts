@@ -102,11 +102,6 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       minWidth: 100,
     },
     {
-      field: 'brokerageUser.nickname',
-      title: '推荐人信息',
-      minWidth: 100,
-    },
-    {
       field: 'spuName',
       title: '商品信息',
       minWidth: 300,

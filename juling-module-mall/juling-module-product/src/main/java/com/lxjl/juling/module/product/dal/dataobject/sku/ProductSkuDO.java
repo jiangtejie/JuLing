@@ -77,15 +77,6 @@ public class ProductSkuDO extends BaseDO {
      */
     private Double volume;
 
-    /**
-     * 一级分销的佣金，单位：分
-     */
-    private Integer firstBrokeragePrice;
-    /**
-     * 二级分销的佣金，单位：分
-     */
-    private Integer secondBrokeragePrice;
-
     // ========== 营销相关字段 =========
 
     // ========== 统计相关字段 =========
@@ -131,4 +122,3 @@ public class ProductSkuDO extends BaseDO {
     }
 
 }
-

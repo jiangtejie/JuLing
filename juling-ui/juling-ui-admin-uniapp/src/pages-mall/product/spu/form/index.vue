@@ -54,16 +54,6 @@
                   </wd-radio>
                 </wd-radio-group>
               </wd-form-item>
-              <wd-form-item title="单独分佣" title-width="200rpx" prop="subCommissionType" center>
-                <wd-radio-group v-model="formData.subCommissionType" type="button">
-                  <wd-radio :value="false">
-                    否
-                  </wd-radio>
-                  <wd-radio :value="true">
-                    是
-                  </wd-radio>
-                </wd-radio-group>
-              </wd-form-item>
             </wd-cell-group>
             <view class="px-24rpx py-20rpx">
               <view class="yd-text-main mb-16rpx text-28rpx font-medium">
@@ -72,7 +62,6 @@
               <SkuEditor
                 v-model="skus"
                 :spec-type="formData.specType"
-                :sub-commission-type="formData.subCommissionType"
               />
             </view>
           </view>
@@ -180,7 +169,6 @@ const formData = ref<ProductSpu>({
   deliveryTemplateId: undefined,
   brandId: undefined,
   specType: false,
-  subCommissionType: false,
   description: '',
   sort: 0,
   giveIntegral: 0,
@@ -198,7 +186,6 @@ const formSchema = createFormSchema({
   deliveryTypes: [{ required: true, message: '配送方式不能为空' }],
   deliveryTemplateId: [{ required: (model: Record<string, any>) => !!model?.deliveryTypes?.includes(DeliveryTypeEnum.EXPRESS), message: '运费模板不能为空' }],
   specType: [{ required: true, message: '多规格不能为空' }],
-  subCommissionType: [{ required: true, message: '单独分佣不能为空' }],
   description: [{ required: true, message: '商品详情不能为空' }],
   sort: [{ required: true, message: '排序不能为空' }],
 })
@@ -211,7 +198,6 @@ const PROP_TAB: Record<string, number> = {
   picUrl: 0,
   sliderPicUrls: 0,
   specType: 1,
-  subCommissionType: 1,
   deliveryTypes: 2,
   deliveryTemplateId: 2,
   description: 3,
@@ -230,8 +216,6 @@ function toYuanSku(sku: ProductSku): ProductSku {
     price: fenToYuan(sku.price),
     marketPrice: fenToYuan(sku.marketPrice),
     costPrice: fenToYuan(sku.costPrice),
-    firstBrokeragePrice: fenToYuan(sku.firstBrokeragePrice),
-    secondBrokeragePrice: fenToYuan(sku.secondBrokeragePrice),
   }
 }
 
@@ -244,8 +228,6 @@ function toCentSku(sku: ProductSku): ProductSku {
     price: yuanToFen(sku.price),
     marketPrice: yuanToFen(sku.marketPrice),
     costPrice: yuanToFen(sku.costPrice),
-    firstBrokeragePrice: yuanToFen(sku.firstBrokeragePrice),
-    secondBrokeragePrice: yuanToFen(sku.secondBrokeragePrice),
   }
 }
 

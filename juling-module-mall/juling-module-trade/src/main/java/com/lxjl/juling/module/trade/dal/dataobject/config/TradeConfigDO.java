@@ -1,10 +1,6 @@
 package com.lxjl.juling.module.trade.dal.dataobject.config;
 
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
-import com.lxjl.juling.framework.mybatis.core.type.IntegerListTypeHandler;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageBindModeEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageEnabledConditionEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageWithdrawTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -63,56 +59,5 @@ public class TradeConfigDO extends BaseDO {
      * 是否开启自提
      */
     private Boolean deliveryPickUpEnabled;
-
-    // ========== 分销相关 ==========
-
-    /**
-     * 是否启用分佣
-     */
-    private Boolean brokerageEnabled;
-    /**
-     * 分佣模式
-     * <p>
-     * 枚举 {@link BrokerageEnabledConditionEnum 对应的类}
-     */
-    private Integer brokerageEnabledCondition;
-    /**
-     * 分销关系绑定模式
-     * <p>
-     * 枚举 {@link BrokerageBindModeEnum 对应的类}
-     */
-    private Integer brokerageBindMode;
-    /**
-     * 分销海报图地址数组
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<String> brokeragePosterUrls;
-    /**
-     * 一级返佣比例
-     */
-    private Integer brokerageFirstPercent;
-    /**
-     * 二级返佣比例
-     */
-    private Integer brokerageSecondPercent;
-    /**
-     * 用户提现最低金额
-     */
-    private Integer brokerageWithdrawMinPrice;
-    /**
-     * 用户提现手续费百分比
-     */
-    private Integer brokerageWithdrawFeePercent;
-    /**
-     * 佣金冻结时间(天)
-     */
-    private Integer brokerageFrozenDays;
-    /**
-     * 提现方式
-     * <p>
-     * 枚举 {@link BrokerageWithdrawTypeEnum 对应的类}
-     */
-    @TableField(typeHandler = IntegerListTypeHandler.class)
-    private List<Integer> brokerageWithdrawTypes;
 
 }

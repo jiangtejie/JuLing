@@ -107,7 +107,6 @@
     <AfterSaleList v-if="loadedTabs.has('after-sale')" v-show="activeTab === 'after-sale'" class="min-h-0 flex-1" :user-id="props.id" />
     <FavoriteList v-if="loadedTabs.has('favorite')" v-show="activeTab === 'favorite'" class="min-h-0 flex-1" :user-id="props.id" />
     <CouponList v-if="loadedTabs.has('coupon')" v-show="activeTab === 'coupon'" class="min-h-0 flex-1" :user-id="props.id" />
-    <BrokerageList v-if="loadedTabs.has('brokerage')" v-show="activeTab === 'brokerage'" class="min-h-0 flex-1" :bind-user-id="props.id" />
 
     <!-- 底部操作按钮 -->
     <view class="yd-detail-footer">
@@ -150,7 +149,6 @@ import { DICT_TYPE } from '@/utils/constants'
 import { formatDate, formatDateTime } from '@/utils/date'
 import AddressList from './components/address-list.vue'
 import AfterSaleList from './components/after-sale-list.vue'
-import BrokerageList from './components/brokerage-list.vue'
 import CouponList from './components/coupon-list.vue'
 import CouponSendForm from './components/coupon-send-form.vue'
 import ExperienceList from './components/experience-list.vue'
@@ -182,7 +180,6 @@ const tabs: { key: string, title: string }[] = [ // 详情分类
   { key: 'after-sale', title: '售后管理' },
   { key: 'favorite', title: '收藏记录' },
   { key: 'coupon', title: '优惠券' },
-  { key: 'brokerage', title: '推广用户' },
 ]
 const { hasAccessByCodes } = useAccess()
 const toast = useToast()

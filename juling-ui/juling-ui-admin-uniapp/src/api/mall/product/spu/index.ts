@@ -23,8 +23,6 @@ export interface ProductSku {
   stock?: number
   weight?: number
   volume?: number
-  firstBrokeragePrice?: number | string
-  secondBrokeragePrice?: number | string
   salesCount?: number
 }
 
@@ -41,7 +39,6 @@ export interface ProductSpu {
   deliveryTemplateId?: number
   brandId?: number
   specType?: boolean
-  subCommissionType?: boolean
   skus?: ProductSku[]
   description?: string
   sort?: number

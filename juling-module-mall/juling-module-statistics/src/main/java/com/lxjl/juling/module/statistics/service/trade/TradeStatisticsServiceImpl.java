@@ -39,8 +39,6 @@ public class TradeStatisticsServiceImpl implements TradeStatisticsService {
     private TradeOrderStatisticsService tradeOrderStatisticsService;
     @Resource
     private AfterSaleStatisticsService afterSaleStatisticsService;
-    @Resource
-    private BrokerageStatisticsService brokerageStatisticsService;
 
     @Override
     public TradeSummaryRespBO getTradeSummaryByDays(int days) {
@@ -113,10 +111,6 @@ public class TradeStatisticsServiceImpl implements TradeStatisticsService {
         stopWatch.start("统计售后");
         AfterSaleSummaryRespBO afterSaleSummary = afterSaleStatisticsService.getAfterSaleSummary(beginTime, endTime);
         stopWatch.stop();
-        // 3.3 统计佣金
-        stopWatch.start("统计佣金");
-        Integer brokerageSettlementPrice = brokerageStatisticsService.getBrokerageSettlementPriceSummary(beginTime, endTime);
-        stopWatch.stop();
         // 3.4 统计充值（充值/钱包功能已下线，固定返回 0）
         stopWatch.start("统计充值");
         WalletSummaryRespBO walletSummary = new WalletSummaryRespBO()
@@ -125,8 +119,7 @@ public class TradeStatisticsServiceImpl implements TradeStatisticsService {
         stopWatch.stop();
 
         // 4. 插入数据
-        entity = TradeStatisticsConvert.INSTANCE.convert(date, orderSummary, afterSaleSummary, brokerageSettlementPrice,
-                walletSummary);
+        entity = TradeStatisticsConvert.INSTANCE.convert(date, orderSummary, afterSaleSummary, walletSummary);
         tradeStatisticsMapper.insert(entity);
         return stopWatch.prettyPrint();
     }

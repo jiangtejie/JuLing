@@ -93,29 +93,6 @@ public interface ErrorCodeConstants {
     ErrorCode PICK_UP_STORE_NOT_EXISTS = new ErrorCode(1_011_006_000, "自提门店不存在");
     ErrorCode PICK_UP_STORE_STAFF_NOT_EXISTS = new ErrorCode(1_011_006_000, "自提门店店员不存在");
 
-    // ========== 分销用户 模块 1-011-007-000 ==========
-    ErrorCode BROKERAGE_USER_NOT_EXISTS = new ErrorCode(1_011_007_000, "分销用户不存在");
-    ErrorCode BROKERAGE_USER_FROZEN_PRICE_NOT_ENOUGH = new ErrorCode(1_011_007_001, "用户冻结佣金({})数量不足");
-    ErrorCode BROKERAGE_BIND_SELF = new ErrorCode(1_011_007_002, "不能绑定自己");
-    ErrorCode BROKERAGE_BIND_USER_NOT_ENABLED = new ErrorCode(1_011_007_003, "绑定用户没有推广资格");
-    ErrorCode BROKERAGE_BIND_CONDITION_ADMIN = new ErrorCode(1_011_007_004, "仅可在后台绑定推广员");
-    ErrorCode BROKERAGE_BIND_MODE_REGISTER = new ErrorCode(1_011_007_005, "只有在注册时可以绑定");
-    ErrorCode BROKERAGE_BIND_OVERRIDE = new ErrorCode(1_011_007_006, "已绑定了推广人");
-    ErrorCode BROKERAGE_BIND_LOOP = new ErrorCode(1_011_007_007, "下级不能绑定自己的上级");
-    ErrorCode BROKERAGE_USER_LEVEL_NOT_SUPPORT = new ErrorCode(1_011_007_008, "目前只支持 level 小于等于 2");
-    ErrorCode BROKERAGE_CREATE_USER_EXISTS = new ErrorCode(1_011_007_009, "分销用户已存在");
-
-    // ========== 分销提现 模块 1-011-008-000 ==========
-    ErrorCode BROKERAGE_WITHDRAW_NOT_EXISTS = new ErrorCode(1_011_008_000, "佣金提现记录不存在");
-    ErrorCode BROKERAGE_WITHDRAW_STATUS_NOT_AUDITING = new ErrorCode(1_011_008_001, "佣金提现记录状态不是审核中");
-    ErrorCode BROKERAGE_WITHDRAW_MIN_PRICE = new ErrorCode(1_011_008_002, "提现金额不能低于 {} 元");
-    ErrorCode BROKERAGE_WITHDRAW_USER_BALANCE_NOT_ENOUGH = new ErrorCode(1_011_008_003, "您当前最多可提现 {} 元");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_TRANSFER_ID_ERROR = new ErrorCode(1_011_008_005, "提现单更新转账状态失败，转账单不匹配");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_TRANSFER_STATUS_NOT_SUCCESS_OR_CLOSED = new ErrorCode(1_011_008_006, "提现单更新转账状态失败，转账单状态不是成功或关闭状态");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_PRICE_NOT_MATCH = new ErrorCode(1_011_008_007, "提现单更新转账状态失败，转账单金额不匹配");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_MERCHANT_EXISTS = new ErrorCode(1_011_008_008, "提现单更新转账状态失败，转账单的商户订单不匹配");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_CHANNEL_NOT_MATCH = new ErrorCode(1_011_008_009, "提现单更新转账状态失败，转账渠道不匹配");
-
     // ========== Order 付款凭证（线下收款）1-011-000-000 ==========
     // 注意：付款凭证的错误码从 040 起，避免与上面订单的 020-039 撞号
     ErrorCode ORDER_PAYMENT_PROOF_NOT_EXISTS = new ErrorCode(1_011_000_040, "交易订单付款凭证不存在");

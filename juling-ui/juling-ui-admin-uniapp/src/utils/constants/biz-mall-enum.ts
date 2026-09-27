@@ -41,17 +41,6 @@ export const TradeAfterSaleStatusEnum = {
 }
 
 /**
- * 佣金提现状态枚举
- */
-export const BrokerageWithdrawStatusEnum = {
-  AUDITING: 0, // 审核中
-  AUDIT_SUCCESS: 10, // 审核通过
-  WITHDRAW_SUCCESS: 11, // 提现成功
-  AUDIT_FAIL: 20, // 审核不通过
-  WITHDRAW_FAIL: 21, // 提现失败
-}
-
-/**
  * 快递运费模板计费方式枚举
  */
 export const DeliveryExpressChargeModeEnum = {

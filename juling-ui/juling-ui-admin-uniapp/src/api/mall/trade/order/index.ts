@@ -86,11 +86,6 @@ export interface TradeOrder {
     nickname?: string
     avatar?: string
   }
-  brokerageUser?: {
-    id?: number
-    nickname?: string
-    avatar?: string
-  }
   logs?: TradeOrderLog[]
 }
 

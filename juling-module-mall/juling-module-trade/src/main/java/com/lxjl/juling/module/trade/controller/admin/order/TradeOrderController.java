@@ -66,8 +66,7 @@ public class TradeOrderController {
         }
 
         // 查询用户信息
-        Set<Long> userIds = CollUtil.unionDistinct(convertList(pageResult.getList(), TradeOrderDO::getUserId),
-                convertList(pageResult.getList(), TradeOrderDO::getBrokerageUserId, Objects::nonNull));
+        Set<Long> userIds = convertSet(pageResult.getList(), TradeOrderDO::getUserId);
         Map<Long, MemberUserRespDTO> userMap = memberUserApi.getUserMap(userIds);
         // 查询订单项
         List<TradeOrderItemDO> orderItems = tradeOrderQueryService.getOrderItemListByOrderId(
@@ -98,10 +97,8 @@ public class TradeOrderController {
 
         // 拼接数据
         MemberUserRespDTO user = memberUserApi.getUser(order.getUserId());
-        MemberUserRespDTO brokerageUser = order.getBrokerageUserId() != null ?
-                memberUserApi.getUser(order.getBrokerageUserId()) : null;
         List<TradeOrderLogDO> orderLogs = tradeOrderLogService.getOrderLogListByOrderId(id);
-        return success(TradeOrderConvert.INSTANCE.convert(order, orderItems, orderLogs, user, brokerageUser));
+        return success(TradeOrderConvert.INSTANCE.convert(order, orderItems, orderLogs, user));
     }
 
     @GetMapping("/get-express-track-list")

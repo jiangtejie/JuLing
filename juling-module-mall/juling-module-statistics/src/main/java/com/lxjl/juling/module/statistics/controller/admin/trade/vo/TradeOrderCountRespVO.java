@@ -16,7 +16,4 @@ public class TradeOrderCountRespVO {
     @Schema(description = "退款中", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long afterSaleApply;
 
-    @Schema(description = "提现待审核", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Long auditingWithdraw;
-
 }

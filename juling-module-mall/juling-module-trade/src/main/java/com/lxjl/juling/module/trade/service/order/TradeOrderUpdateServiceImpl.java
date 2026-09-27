@@ -287,7 +287,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
             throw exception(ORDER_UPDATE_PAID_STATUS_NOT_UNPAID);
         }
 
-        // 3. 执行 TradeOrderHandler 的后置处理（与线上支付成功保持一致：分销、拼团、积分等）
+        // 3. 执行 TradeOrderHandler 的后置处理（与线上支付成功保持一致：拼团、积分等）
         List<TradeOrderItemDO> orderItems = tradeOrderItemMapper.selectListByOrderId(id);
         tradeOrderHandlers.forEach(handler -> handler.afterPayOrder(order, orderItems));
 

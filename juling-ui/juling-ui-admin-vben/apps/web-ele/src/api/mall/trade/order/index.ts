@@ -55,12 +55,6 @@ export namespace MallOrderApi {
       id?: number; // 用户编号
       nickname?: string; // 用户昵称
     };
-    brokerageUser?: {
-      // 推广用户信息
-      avatar?: string; // 用户头像
-      id?: number; // 用户编号
-      nickname?: string; // 用户昵称
-    }; // 推广用户信息
     logs?: OrderLog[]; // 订单操作日志
   }
 

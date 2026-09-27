@@ -72,10 +72,6 @@ public class ProductSpuSaveReqVO {
     @NotNull(message = "商品赠送积分不能为空")
     private Integer giveIntegral;
 
-    @Schema(description = "分销类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "商品分销类型不能为空")
-    private Boolean subCommissionType;
-
     // ========== 统计相关字段 =========
 
     @Schema(description = "虚拟销量", example = "66")

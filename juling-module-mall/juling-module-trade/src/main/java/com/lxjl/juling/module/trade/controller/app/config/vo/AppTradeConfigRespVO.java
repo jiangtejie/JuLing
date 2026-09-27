@@ -27,18 +27,4 @@ public class AppTradeConfigRespVO {
     @Schema(description = "售后的退货理由", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<String> afterSaleReturnReasons;
 
-    // ========== 分销相关 ==========
-
-    @Schema(description = "分销海报地址数组", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<String> brokeragePosterUrls;
-
-    @Schema(description = "佣金冻结时间（天）", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-    private Integer brokerageFrozenDays;
-
-    @Schema(description = "佣金提现最小金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer brokerageWithdrawMinPrice;
-
-    @Schema(description = "提现方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "[1, 2]")
-    private List<Integer> brokerageWithdrawTypes;
-
 }

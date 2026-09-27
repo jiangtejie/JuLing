@@ -76,17 +76,6 @@
         <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">图片</text>
         <yd-upload-img v-model="sku.picUrl" @update:model-value="emitChange" />
       </view>
-      <!-- 单独分佣时展示一二级佣金 -->
-      <template v-if="subCommissionType">
-        <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">一级佣金(元)</text>
-          <wd-input-number v-model="sku.firstBrokeragePrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
-        </view>
-        <view class="flex items-center gap-12rpx py-6rpx">
-          <text class="yd-text-sub w-160rpx shrink-0 text-26rpx">二级佣金(元)</text>
-          <wd-input-number v-model="sku.secondBrokeragePrice" :min="0" :step="0.01" :precision="2" @change="emitChange" />
-        </view>
-      </template>
     </view>
     <view v-if="!rows.length" class="yd-text-hint yd-bg-subtle rounded-8rpx py-32rpx text-center text-26rpx">
       {{ specType ? '请添加规格并生成 SKU' : '加载中...' }}
@@ -194,7 +183,6 @@ interface SpecItem {
 const props = defineProps<{
   modelValue: ProductSku[] // SKU 列表（金额单位元）
   specType?: boolean // 是否多规格
-  subCommissionType?: boolean // 是否单独分佣
 }>()
 
 const emit = defineEmits<{
@@ -213,7 +201,7 @@ const canGenerate = computed(() => specs.value.length > 0 && specs.value.every(s
 
 /** 创建一条默认 SKU（元） */
 function createSku(properties: ProductSku['properties'] = []): ProductSku {
-  return { price: 0, marketPrice: 0, costPrice: 0, stock: 0, barCode: '', weight: 0, volume: 0, picUrl: '', firstBrokeragePrice: 0, secondBrokeragePrice: 0, properties }
+  return { price: 0, marketPrice: 0, costPrice: 0, stock: 0, barCode: '', weight: 0, volume: 0, picUrl: '', properties }
 }
 
 /** SKU 规格组合文案 */

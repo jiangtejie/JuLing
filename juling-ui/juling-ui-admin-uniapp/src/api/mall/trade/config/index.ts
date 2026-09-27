@@ -9,17 +9,6 @@ export interface TradeConfig {
   deliveryExpressFreeEnabled?: boolean
   deliveryExpressFreePrice?: number
   deliveryPickUpEnabled?: boolean
-  // 分销
-  brokerageEnabled?: boolean
-  brokerageEnabledCondition?: number
-  brokerageBindMode?: number
-  brokeragePosterUrls?: string[]
-  brokerageFirstPercent?: number
-  brokerageSecondPercent?: number
-  brokerageWithdrawMinPrice?: number
-  brokerageWithdrawFeePercent?: number
-  brokerageFrozenDays?: number
-  brokerageWithdrawTypes?: number[]
 }
 
 /** 获取交易中心配置 */

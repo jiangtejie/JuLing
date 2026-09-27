@@ -8,12 +8,10 @@ import com.lxjl.juling.module.statistics.controller.admin.trade.vo.*;
 import com.lxjl.juling.module.statistics.convert.trade.TradeStatisticsConvert;
 import com.lxjl.juling.module.statistics.dal.dataobject.trade.TradeStatisticsDO;
 import com.lxjl.juling.module.statistics.service.trade.AfterSaleStatisticsService;
-import com.lxjl.juling.module.statistics.service.trade.BrokerageStatisticsService;
 import com.lxjl.juling.module.statistics.service.trade.TradeOrderStatisticsService;
 import com.lxjl.juling.module.statistics.service.trade.TradeStatisticsService;
 import com.lxjl.juling.module.statistics.service.trade.bo.TradeSummaryRespBO;
 import com.lxjl.juling.module.trade.enums.aftersale.AfterSaleStatusEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageWithdrawStatusEnum;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,8 +44,6 @@ public class TradeStatisticsController {
     private TradeOrderStatisticsService tradeOrderStatisticsService;
     @Resource
     private AfterSaleStatisticsService afterSaleStatisticsService;
-    @Resource
-    private BrokerageStatisticsService brokerageStatisticsService;
 
     @GetMapping("/summary")
     @Operation(summary = "获得交易统计")
@@ -107,9 +103,8 @@ public class TradeStatisticsController {
                 TradeOrderStatusEnum.DELIVERED.getStatus(), DeliveryTypeEnum.PICK_UP.getType());
         // 售后统计
         Long afterSaleApplyCount = afterSaleStatisticsService.getCountByStatus(AfterSaleStatusEnum.APPLY);
-        Long auditingWithdrawCount = brokerageStatisticsService.getWithdrawCountByStatus(BrokerageWithdrawStatusEnum.AUDITING);
         // 拼接返回
-        return success(TradeStatisticsConvert.INSTANCE.convert(undeliveredCount, pickUpCount, afterSaleApplyCount, auditingWithdrawCount));
+        return success(TradeStatisticsConvert.INSTANCE.convert(undeliveredCount, pickUpCount, afterSaleApplyCount));
     }
 
     @GetMapping("/order-comparison")

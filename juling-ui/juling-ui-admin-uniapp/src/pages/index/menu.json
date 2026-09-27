@@ -771,28 +771,6 @@
           ]
         },
         {
-          "key": "brokerage",
-          "name": "分销管理",
-          "menus": [
-            {
-              "key": "mallBrokerageUser",
-              "name": "分销用户",
-              "icon": "user",
-              "iconColor": "#722ed1",
-              "url": "/pages-mall/trade/brokerage/user/index",
-              "permission": "trade:brokerage-user:query"
-            },
-            {
-              "key": "mallBrokerageRecord",
-              "name": "佣金记录",
-              "icon": "list",
-              "iconColor": "#9254de",
-              "url": "/pages-mall/trade/brokerage/record/index",
-              "permission": "trade:brokerage-record:query"
-            }
-          ]
-        },
-        {
           "key": "statistics",
           "name": "统计中心",
           "menus": [

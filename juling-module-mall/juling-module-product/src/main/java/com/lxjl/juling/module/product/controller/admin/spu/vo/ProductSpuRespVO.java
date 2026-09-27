@@ -105,10 +105,6 @@ public class ProductSpuRespVO {
     @ExcelProperty("赠送积分")
     private Integer giveIntegral;
 
-    @Schema(description = "分销类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @ExcelProperty("分销类型")
-    private Boolean subCommissionType;
-
     // ========== 统计相关字段 =========
 
     @Schema(description = "商品销量", requiredMode = Schema.RequiredMode.REQUIRED, example = "2000")

@@ -50,7 +50,7 @@ public interface TradeStatisticsConvert {
     List<TradeTrendSummaryExcelVO> convertList02(List<TradeTrendSummaryRespVO> list);
 
     TradeStatisticsDO convert(LocalDateTime time, TradeOrderSummaryRespBO orderSummary,
-                              AfterSaleSummaryRespBO afterSaleSummary, Integer brokerageSettlementPrice,
+                              AfterSaleSummaryRespBO afterSaleSummary,
                               WalletSummaryRespBO walletSummary);
 
     @IterableMapping(qualifiedByName = "convert")
@@ -65,10 +65,10 @@ public interface TradeStatisticsConvert {
                 .setDate(tradeStatistics.getTime().toLocalDate())
                 // 营业额 = 商品支付金额 + 充值金额
                 .setTurnoverPrice(tradeStatistics.getOrderPayPrice() + tradeStatistics.getRechargePayPrice())
-                // 支出金额 = 余额支付金额 + 支付佣金金额 + 商品退款金额
-                .setExpensePrice(tradeStatistics.getWalletPayPrice() + tradeStatistics.getBrokerageSettlementPrice() + tradeStatistics.getAfterSaleRefundPrice());
+                // 支出金额 = 余额支付金额 + 商品退款金额（佣金分佣已下线，不再计入）
+                .setExpensePrice(tradeStatistics.getWalletPayPrice() + tradeStatistics.getAfterSaleRefundPrice());
     }
 
-    TradeOrderCountRespVO convert(Long undelivered, Long pickUp, Long afterSaleApply, Long auditingWithdraw);
+    TradeOrderCountRespVO convert(Long undelivered, Long pickUp, Long afterSaleApply);
 
 }

@@ -91,14 +91,4 @@ public class ProductSpuRespDTO {
      */
     private Integer giveIntegral;
 
-    // ========== 分销相关字段 =========
-
-    /**
-     * 分销类型
-     *
-     * false - 默认
-     * true - 自行设置
-     */
-    private Boolean subCommissionType;
-
 }

@@ -57,11 +57,6 @@ export function useOrderInfoSchema(): DescriptionItemSchema[] {
           value: val,
         }),
     },
-    {
-      field: 'brokerageUser.nickname',
-      label: '推广用户',
-      render: (val) => val || '-',
-    },
   ];
 }
 

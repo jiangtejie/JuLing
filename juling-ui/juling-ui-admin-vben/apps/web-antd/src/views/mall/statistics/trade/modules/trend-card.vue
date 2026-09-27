@@ -198,7 +198,7 @@ async function handleExport() {
       <Col :md="6" :sm="12" :xs="24" class="mb-4">
         <SummaryCard
           title="支出金额"
-          tooltip="余额支付金额、支付佣金金额、商品退款金额"
+          tooltip="余额支付金额、商品退款金额"
           icon="lucide:trending-down"
           icon-color="text-green-500"
           icon-bg-color="bg-green-100"
@@ -231,29 +231,6 @@ async function handleExport() {
           "
         />
       </Col>
-      <Col :md="6" :sm="12" :xs="24" class="mb-4">
-        <SummaryCard
-          title="支付佣金金额"
-          tooltip="后台给推广员支付的推广佣金，以实际支付为准"
-          icon="lucide:gift"
-          icon-color="text-orange-500"
-          icon-bg-color="bg-orange-100"
-          prefix="￥"
-          :decimals="2"
-          :value="
-            Number(
-              fenToYuan(trendSummary?.value?.brokerageSettlementPrice || 0),
-            )
-          "
-          :percent="
-            calculateRelativeRate(
-              trendSummary?.value?.brokerageSettlementPrice,
-              trendSummary?.reference?.brokerageSettlementPrice,
-            )
-          "
-        />
-      </Col>
-
       <Col :md="6" :sm="12" :xs="24" class="mb-4">
         <SummaryCard
           title="商品退款金额"

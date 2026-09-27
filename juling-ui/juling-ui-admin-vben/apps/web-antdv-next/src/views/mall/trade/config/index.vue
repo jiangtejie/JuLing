@@ -28,9 +28,6 @@ async function getConfigInfo() {
   formData.value.deliveryExpressFreePrice = Number.parseFloat(
     fenToYuan(formData.value.deliveryExpressFreePrice!),
   );
-  formData.value.brokerageWithdrawMinPrice = Number.parseFloat(
-    fenToYuan(formData.value.brokerageWithdrawMinPrice!),
-  );
   formData.value!.type = activeKey.value;
   formApi.updateSchema(schema);
   // 设置到 values
@@ -55,7 +52,6 @@ async function handleSubmit() {
   const data = (await formApi.getValues()) as MallTradeConfigApi.Config;
   // 转换金额单位
   data.deliveryExpressFreePrice = yuanToFen(data.deliveryExpressFreePrice!);
-  data.brokerageWithdrawMinPrice = yuanToFen(data.brokerageWithdrawMinPrice!);
   await saveTradeConfig(data);
   message.success($t('ui.actionMessage.operationSuccess'));
 }
@@ -91,7 +87,6 @@ onMounted(() => {
       <Tabs :active-key="activeKey" @change="handleTabChange">
         <TabPane tab="售后" key="afterSale" :force-render="true" />
         <TabPane tab="配送" key="delivery" :force-render="true" />
-        <TabPane tab="分销" key="brokerage" :force-render="true" />
       </Tabs>
       <Form class="w-2/5" />
     </Card>

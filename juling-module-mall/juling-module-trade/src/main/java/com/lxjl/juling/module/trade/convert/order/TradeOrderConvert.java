@@ -33,7 +33,6 @@ import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderLogDO;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderItemAfterSaleStatusEnum;
 import com.lxjl.juling.module.trade.framework.delivery.core.client.dto.ExpressTrackRespDTO;
 import com.lxjl.juling.module.trade.framework.order.config.TradeOrderProperties;
-import com.lxjl.juling.module.trade.service.brokerage.bo.BrokerageAddReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
 import org.mapstruct.Mapper;
@@ -110,8 +109,6 @@ public interface TradeOrderConvert {
             orderVO.setReceiverAreaName(AreaUtils.format(order.getReceiverAreaId()));
             // 增加用户信息
             orderVO.setUser(convertUser(memberUserMap.get(orderVO.getUserId())));
-            // 增加推广人信息
-            orderVO.setBrokerageUser(convertUser(memberUserMap.get(orderVO.getBrokerageUserId())));
             return orderVO;
         });
         return new PageResult<>(orderVOs, pageResult.getTotal());
@@ -125,13 +122,12 @@ public interface TradeOrderConvert {
 
     default TradeOrderDetailRespVO convert(TradeOrderDO order, List<TradeOrderItemDO> orderItems,
                                            List<TradeOrderLogDO> orderLogs,
-                                           MemberUserRespDTO user, MemberUserRespDTO brokerageUser) {
+                                           MemberUserRespDTO user) {
         TradeOrderDetailRespVO orderVO = convert2(order, orderItems);
         // 处理收货地址
         orderVO.setReceiverAreaName(AreaUtils.format(order.getReceiverAreaId()));
         // 处理用户信息
         orderVO.setUser(convert(user));
-        orderVO.setBrokerageUser(convert(brokerageUser));
         // 处理日志
         orderVO.setLogs(convertList03(orderLogs));
         return orderVO;
@@ -244,19 +240,6 @@ public interface TradeOrderConvert {
     TradeOrderDO convert(TradeOrderUpdatePriceReqVO reqVO);
 
     TradeOrderDO convert(TradeOrderRemarkReqVO reqVO);
-
-    default BrokerageAddReqBO convert(MemberUserRespDTO user, TradeOrderItemDO item,
-                                      ProductSpuRespDTO spu, ProductSkuRespDTO sku) {
-        BrokerageAddReqBO bo = new BrokerageAddReqBO().setBizId(String.valueOf(item.getId())).setSourceUserId(item.getUserId())
-                .setBasePrice(item.getPayPrice())
-                .setTitle(StrUtil.format("{}成功购买{}", user.getNickname(), item.getSpuName()));
-        if (BooleanUtil.isTrue(spu.getSubCommissionType())) {
-            // 特殊：单独设置的佣金需要乘以购买数量。关联 上游仓库
-            bo.setFirstFixedPrice(ObjectUtil.defaultIfNull(sku.getFirstBrokeragePrice(), 0) * item.getCount())
-                    .setSecondFixedPrice(ObjectUtil.defaultIfNull(sku.getSecondBrokeragePrice(), 0) * item.getCount());
-        }
-        return bo;
-    }
 
     @Named("convertList04")
     List<TradeOrderRespDTO> convertList04(List<TradeOrderDO> list);

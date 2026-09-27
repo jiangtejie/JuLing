@@ -37,11 +37,6 @@ const data = reactive({
   productAlertStock: { name: '库存预警', value: 0, routerName: 'ProductSpu' },
   productForSale: { name: '上架商品', value: 0, routerName: 'ProductSpu' },
   productInWarehouse: { name: '仓库商品', value: 0, routerName: 'ProductSpu' },
-  withdrawAuditing: {
-    name: '提现待审核',
-    value: 0,
-    routerName: 'TradeBrokerageWithdraw',
-  },
   rechargePrice: {
     name: '账户充值',
     value: 0,
@@ -62,9 +57,6 @@ async function loadOrderData() {
   }
   if (orderCount.pickUp) {
     data.orderWaitePickUp.value = orderCount.pickUp;
-  }
-  if (orderCount.auditingWithdraw) {
-    data.withdrawAuditing.value = orderCount.auditingWithdraw;
   }
 }
 

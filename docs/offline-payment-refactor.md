@@ -113,3 +113,6 @@
    订单呈现为「已取消 + 已收金额 > 0」，可据此筛出待退款单据。
 5. `trade_order.pay_order_id`、`trade_after_sale.pay_refund_id` 等列保留但不再写入，
    物理删列留待确认无历史数据依赖后再做。
+6. 商品分销（分销用户 / 佣金记录 / 佣金提现）整体下线：后端分销包、订单推广人钩子、
+   SKU 佣金字段与统计佣金口径，前端 vben 三个模板与 admin-uniapp 的分销页面与配置项一并删除；
+   分销表重命名归档、相关列保留不 DROP。详见 `docs/brokerage-removal.md`。

@@ -59,11 +59,6 @@ public class TradeStatisticsDO extends BaseDO {
     private Integer afterSaleRefundPrice;
 
     /**
-     * 佣金金额（已结算），单位：分
-     */
-    private Integer brokerageSettlementPrice;
-
-    /**
      * 总支付金额（余额），单位：分
      */
     private Integer walletPayPrice;

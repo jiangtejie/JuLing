@@ -37,12 +37,6 @@ const menuList = [
     routerName: 'TradeAfterSale',
   },
   {
-    name: '分销管理',
-    icon: 'fa-solid:project-diagram',
-    bgColor: 'bg-cyan-500',
-    routerName: 'TradeBrokerageUser',
-  },
-  {
     name: '优惠券',
     icon: 'lucide:ticket',
     bgColor: 'bg-blue-500',
