@@ -8,6 +8,7 @@ import {
   adaptSku,
   adaptSpu,
   adaptSpuDetail,
+  buildCategoryTree,
   buildSkuName,
 } from '../src/api/adapters/product.ts';
 import {
@@ -227,12 +228,47 @@ test('adaptProductPage：空响应兜底', () => {
   assert.deepEqual(page, { list: [], total: 0 });
 });
 
-test('adaptCategory：字段透传', () => {
+test('adaptCategory：字段透传（保留 parentId）', () => {
   assert.deepEqual(adaptCategory({ id: 1, parentId: 0, name: '粮油干货', picUrl: '' }), {
     id: 1,
     name: '粮油干货',
+    parentId: 0,
     picUrl: '',
   });
+});
+
+test('adaptCategory：子分类保留 parentId，内网图片地址归一化', () => {
+  assert.deepEqual(
+    adaptCategory({
+      id: 3,
+      parentId: 2,
+      name: '土里埋的',
+      picUrl: 'http://127.0.0.1:48080/admin-api/infra/file/29/a.png',
+    }),
+    { id: 3, name: '土里埋的', parentId: 2, picUrl: '/admin-api/infra/file/29/a.png' },
+  );
+});
+
+test('buildCategoryTree：平铺列表 → 一级分类挂在 children 上', () => {
+  const tree = buildCategoryTree([
+    { id: 2, parentId: 0, name: '素菜' },
+    { id: 3, parentId: 2, name: '土里埋的' },
+    { id: 4, parentId: 0, name: '肉禽蛋' },
+  ]);
+  assert.equal(tree.length, 2);
+  assert.equal(tree[0].name, '素菜');
+  assert.deepEqual(
+    tree[0].children?.map((item) => item.name),
+    ['土里埋的'],
+  );
+  assert.deepEqual(tree[1].children, []);
+});
+
+test('buildCategoryTree：父分类不在列表中的孤儿节点提升为一级', () => {
+  const tree = buildCategoryTree([{ id: 9, parentId: 999, name: '父分类已禁用' }]);
+  assert.equal(tree.length, 1);
+  assert.equal(tree[0].id, 9);
+  assert.deepEqual(tree[0].children, []);
 });
 
 /* ------------------------------ 订单适配 ------------------------------ */

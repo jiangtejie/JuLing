@@ -217,7 +217,7 @@
       <!-- 底部固定操作栏（van-action-bar 自带 safe-area 与 placeholder 占位） -->
       <van-action-bar class="detail__bar" placeholder safe-area-inset-bottom>
         <van-action-bar-icon
-          icon="shopping-cart-o"
+          icon="cart-o"
           text="订货单"
           :badge="cartStore.totalQuantity"
           :badge-props="{ showZero: false }"
@@ -324,6 +324,8 @@
 
     &__bar {
       --van-action-bar-height: 52px;
+      /* 主题色：主按钮（立即订货）用品牌渐变，与分类页动作栏的「去结算」保持一致 */
+      --van-action-bar-button-danger-color: var(--app-primary-gradient);
     }
   }
 </style>

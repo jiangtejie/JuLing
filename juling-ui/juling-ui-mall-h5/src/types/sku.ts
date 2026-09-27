@@ -36,6 +36,22 @@ export interface Sku {
   tierPrices?: SkuTierPrice[];
 }
 
+/**
+ * 商品分类。
+ *
+ * 后端 `/product/category/list` 返回的是**平铺列表**（含 parentId），
+ * 层级由前端用 `buildCategoryTree` 组装：一级分类挂在 children 上。
+ */
+export interface Category {
+  id: number;
+  name: string;
+  /** 父分类 id；0 表示一级分类 */
+  parentId: number;
+  picUrl?: string;
+  /** 二级分类（仅一级分类会有） */
+  children?: Category[];
+}
+
 /** 商品（SPU） */
 export interface Product {
   id: number;

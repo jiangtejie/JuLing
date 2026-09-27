@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import banner1 from '@/assets/images/banner-1.jpg';
   import { getProductPage } from '@/api/product';
   import type { Product } from '@/types';
   import { formatCount } from '@/utils/format';
@@ -15,25 +16,18 @@
     { keyword?: string }
   >((params) => getProductPage(params));
 
-  /** 轮播（演示用渐变色，接入后端后替换为图片 URL） */
+  /**
+   * 首页轮播。
+   *
+   * 目前用本地运营图（src/assets/images/banner-1.jpg，750×350 / 约 42 KB，
+   * 由 1837×856 的原图等比缩放 + JPEG q85 导出）；后端 banner 接口就绪后，
+   * 把这里换成接口数据即可，模板与样式不用动。新增图片时往数组里追加一项。
+   */
   const banners = [
     {
       id: 1,
-      title: '新客首单立减',
-      desc: '满 500 元包邮',
-      bg: 'var(--app-primary-gradient)',
-    },
-    {
-      id: 2,
-      title: '专属订货价',
-      desc: '登录后可查看专属订货价',
-      bg: 'linear-gradient(135deg, #ff7a45, #ffa940)',
-    },
-    {
-      id: 3,
-      title: '整箱直供',
-      desc: '厂价直发，省去中间环节',
-      bg: 'linear-gradient(135deg, #07c160, #4dd88a)',
+      image: banner1,
+      alt: '亚特云餐饮 · 共赢数字餐饮新时代',
     },
   ];
 
@@ -80,13 +74,20 @@
           text="满 500 元包邮 · 厂价直供"
         />
 
-        <!-- 轮播 -->
-        <van-swipe class="home__banner" :autoplay="4000" indicator-color="#fff">
+        <!-- 轮播：只有一张时不显示指示点 -->
+        <van-swipe
+          class="home__banner"
+          :autoplay="4000"
+          :show-indicators="banners.length > 1"
+          indicator-color="#fff"
+        >
           <van-swipe-item v-for="item in banners" :key="item.id">
-            <div class="home__banner-item" :style="{ background: item.bg }">
-              <div class="home__banner-title">{{ item.title }}</div>
-              <div class="home__banner-desc">{{ item.desc }}</div>
-            </div>
+            <van-image
+              class="home__banner-img"
+              :src="item.image"
+              :alt="item.alt"
+              fit="cover"
+            />
           </van-swipe-item>
         </van-swipe>
 
@@ -167,24 +168,13 @@
       overflow: hidden;
     }
 
-    &__banner-item {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 120px;
-      padding: 0 20px;
-      color: #fff;
-    }
-
-    &__banner-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    &__banner-desc {
-      margin-top: 6px;
-      font-size: 13px;
-      opacity: 0.9;
+    /* 与素材等比：设计稿宽 375 - 左右各 12 = 351，351 × 856/1837 ≈ 164。
+       px 会被自动换算成 vw，所以任意屏宽下图片都刚好铺满、不裁切；
+       换图时按同一个公式重算高度即可。 */
+    &__banner-img {
+      display: block;
+      width: 100%;
+      height: 164px;
     }
 
     &__entries {

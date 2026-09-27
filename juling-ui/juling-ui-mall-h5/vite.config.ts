@@ -194,6 +194,13 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       port: Number(env.VITE_PORT) || 3001,
       open: false,
+      // Windows 上部分编辑器/工具采用「临时目录 + 原子改名」保存文件，会短暂产生
+      // 形如 `.<name>.vue.<pid>.<guid>.tmpdir/<name>.vue.tmp` 的路径。Vite 的 fs.watch
+      // 会尝试监听这个转瞬即逝且被占用的临时文件，抛 EBUSY 后整个 dev server 进程退出。
+      // 把这类中间产物排除在监听之外。
+      watch: {
+        ignored: ['**/*.tmpdir/**', '**/*.tmp'],
+      },
       proxy: enableProxy
         ? {
             [apiPrefix]: {

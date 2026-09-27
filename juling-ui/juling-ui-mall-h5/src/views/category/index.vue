@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { showToast } from 'vant';
-  import { getCategoryList, getProductPage } from '@/api/product';
-  import type { Product } from '@/types';
+  import { getCategoryTree, getProductPage } from '@/api/product';
+  import type { Category, Product } from '@/types';
   import { useCartStore } from '@/stores/cart';
-  import { formatPrice } from '@/utils/format';
+  import { formatCount } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
 
   defineOptions({ name: 'Category' });
@@ -11,7 +11,8 @@
   const router = useRouter();
   const cartStore = useCartStore();
 
-  const categories = ref<Array<{ id: number; name: string }>>([]);
+  /** 一级分类（带 children，见 api/product.ts 的 getCategoryTree） */
+  const categories = ref<Category[]>([]);
   /** van-sidebar 的 v-model 是「索引」而非业务 id */
   const activeIndex = ref(0);
 
@@ -20,11 +21,67 @@
       immediate: false,
     });
 
-  const activeName = computed(() => categories.value[activeIndex.value]?.name ?? '');
+  const activeCategory = computed(() => categories.value[activeIndex.value]);
+  const activeName = computed(() => activeCategory.value?.name ?? '');
+  /** 当前一级分类下的二级分类 */
+  const subCategories = computed(() => activeCategory.value?.children ?? []);
+  /** 有二级分类时，右侧按二级分组展示 */
+  const grouped = computed(() => subCategories.value.length > 0);
+
+  interface ProductGroup {
+    id: number;
+    name: string;
+    items: Product[];
+  }
+
+  /**
+   * 右侧商品按二级分类分组。
+   *
+   * 后端 `/product/spu/page?categoryId=<一级 id>` 会连同子分类的商品一起返回
+   * （ProductSpuServiceImpl 里做了 categoryId + children 的展开），所以这里
+   * 只按商品自身的 categoryId 归组即可，不必逐个二级分类发请求。
+   */
+  const groups = computed<ProductGroup[]>(() => {
+    const root = activeCategory.value;
+    if (!root) return [];
+    const rows = list.value;
+
+    // 没有二级分类：保持平铺，不再多一层分组标题
+    if (!subCategories.value.length) {
+      return rows.length ? [{ id: root.id, name: root.name, items: rows }] : [];
+    }
+
+    const sections: ProductGroup[] = [
+      // 直接挂在一级分类上的商品
+      { id: root.id, name: root.name, items: [] },
+      ...subCategories.value.map((item) => ({ id: item.id, name: item.name, items: [] })),
+    ];
+    const byId = new Map(sections.map((section) => [section.id, section]));
+
+    const rest: Product[] = [];
+    rows.forEach((product) => {
+      const section = product.categoryId === undefined ? undefined : byId.get(product.categoryId);
+      if (section) section.items.push(product);
+      else rest.push(product);
+    });
+    if (rest.length) sections.push({ id: -1, name: '其他', items: rest });
+
+    return sections.filter((section) => section.items.length);
+  });
+
+  /** 整个列表的最后一行不留分隔线 */
+  function isLastRow(groupIndex: number, itemIndex: number): boolean {
+    const rows = groups.value;
+    const group = rows[groupIndex];
+    return groupIndex === rows.length - 1 && itemIndex === (group?.items.length ?? 0) - 1;
+  }
+
+  /** 订货单非空时才展示底部动作栏（同时决定内容区避让高度） */
+  const hasCartItems = computed(() => cartStore.totalKinds > 0);
 
   async function init(): Promise<void> {
     try {
-      categories.value = await getCategoryList();
+      categories.value = await getCategoryTree();
       const first = categories.value[0];
       if (first) await search({ categoryId: first.id });
     } catch (err) {
@@ -43,12 +100,12 @@
     void router.push(`/product/${id}`);
   }
 
-  /** 悬浮购物车栏：查看订货单明细 */
+  /** 动作栏：查看订货单明细 */
   function toCart(): void {
     void router.push('/cart');
   }
 
-  /** 悬浮购物车栏：去结算 */
+  /** 动作栏：去结算 */
   function toConfirm(): void {
     if (!cartStore.checkedItems.length) {
       showToast('请先勾选要下单的商品');
@@ -67,23 +124,19 @@
     <AppNavBar title="商品分类" :left-arrow="false" />
 
     <div class="category">
-      <!-- 左侧一级分类 -->
+      <!-- 左侧只放一级分类：二级分类在右侧分组呈现（后端分类是 parentId 表达的层级） -->
       <van-sidebar v-model="activeIndex" class="category__sidebar" @change="onSelect">
         <van-sidebar-item v-for="item in categories" :key="item.id" :title="item.name" />
       </van-sidebar>
 
       <!-- 右侧商品：内部滚动容器，下拉刷新需挂在容器内才生效 -->
-      <div
-        :class="[
-          'category__content',
-          { 'category__content--with-cartbar': cartStore.totalKinds > 0 },
-        ]"
-      >
+      <div :class="['category__content', { 'category__content--with-bar': hasCartItems }]">
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <div class="flex-between category__title">
             <span>{{ activeName }}</span>
             <span v-if="total" class="category__count">共 {{ total }} 件</span>
           </div>
+
           <van-list
             v-model:loading="loading"
             :finished="finished"
@@ -95,23 +148,43 @@
           >
             <!-- 首屏骨架：列表为空且加载中时用骨架屏代替空白（切换分类同样适用） -->
             <ListSkeleton v-if="!list.length && loading && !refreshing" :rows="4" />
-            <div
-              v-for="product in list"
-              :key="product.id"
-              class="category__item"
-              @click="toDetail(product.id)"
-            >
-              <van-image
-                :src="resolveImage(product.picUrl)"
-                fit="cover"
-                radius="6"
-                lazy-load
-                class="category__img"
-              />
-              <div class="category__info">
-                <div class="text-ellipsis-2 category__name">{{ product.name }}</div>
-                <div class="category__stock">库存 {{ product.stock }} 件</div>
-                <PriceText :value="product.price" />
+
+            <div v-for="(group, groupIndex) in groups" :key="group.id" class="category__group">
+              <!-- 二级分类标题：吸顶在分类标题下方，滚动时知道当前在哪一组 -->
+              <div v-if="grouped" class="category__group-title">{{ group.name }}</div>
+
+              <div
+                v-for="(product, index) in group.items"
+                :key="product.id"
+                class="category__item"
+                :class="{ 'category__item--last': isLastRow(groupIndex, index) }"
+                @click="toDetail(product.id)"
+              >
+                <van-image
+                  class="category__img"
+                  :src="resolveImage(product.picUrl)"
+                  fit="cover"
+                  radius="8"
+                  lazy-load
+                />
+                <div class="category__info">
+                  <div class="text-ellipsis-2 category__name">{{ product.name }}</div>
+
+                  <div class="category__meta">
+                    <van-tag v-if="(product.stock ?? 0) > 0" plain type="primary">
+                      库存 {{ product.stock }}
+                    </van-tag>
+                    <van-tag v-else plain type="danger">缺货</van-tag>
+                    <span class="category__sales">
+                      已订 {{ formatCount(product.salesCount ?? 0) }}
+                    </span>
+                  </div>
+
+                  <div class="category__foot">
+                    <PriceText :value="product.price" size="large" />
+                    <span class="category__unit">/ {{ product.unit ?? '件' }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </van-list>
@@ -122,28 +195,28 @@
       </div>
     </div>
 
-    <!-- 底部悬浮购物车栏（美团外卖点菜式）：有已选商品时出现 -->
-    <div v-if="cartStore.totalKinds > 0" class="category__cartbar">
-      <div class="category__cartbar-info" @click="toCart">
-        <div class="category__cartbar-icon">
-          <van-icon name="shopping-cart-o" size="20" />
-          <span class="category__cartbar-badge">{{ cartStore.totalQuantity }}</span>
-        </div>
-        <div class="category__cartbar-amount">
-          <span class="category__cartbar-price">¥{{ formatPrice(cartStore.totalPrice) }}</span>
-          <span class="category__cartbar-tip">共 {{ cartStore.totalKinds }} 种</span>
-        </div>
+    <!--
+      底部购物车动作栏：Vant ActionBar 官方结构（图标 + 合计 + 主按钮）。
+      订货单为空时不渲染，避免遮挡内容（这也是原「悬浮购物车栏」的交互约定）。
+    -->
+    <van-action-bar v-if="hasCartItems" class="category__bar" :safe-area-inset-bottom="false">
+      <van-action-bar-icon
+        icon="cart-o"
+        text="订货单"
+        :badge="cartStore.totalQuantity"
+        to="/cart"
+      />
+      <div class="category__bar-total" @click="toCart">
+        <span class="category__bar-label">合计</span>
+        <PriceText :value="cartStore.totalPrice" size="large" />
       </div>
-      <van-button
-        class="category__cartbar-btn"
-        type="primary"
-        round
-        size="small"
+      <van-action-bar-button
+        class="category__bar-btn"
+        type="danger"
+        text="去结算"
         @click="toConfirm"
-      >
-        去结算
-      </van-button>
-    </div>
+      />
+    </van-action-bar>
   </div>
 </template>
 
@@ -154,12 +227,19 @@
     min-height: 0;
     overflow: hidden;
 
+    /* 侧边导航：保留 Vant 官方观感（浅灰导轨 + 选中项白底 + 主题色指示条），
+       只把宽度与字号调大，避免中文分类名折行 */
     &__sidebar {
       flex: none;
-      width: 88px;
+      width: var(--van-sidebar-width);
       height: 100%;
-      overflow-y: auto;
-      background: #fff;
+      /* Vant 的 .van-sidebar 本身没有背景（灰底来自每个 item），补一层整列灰底，
+         选中项的白底才能与右侧白色内容区连成一体（美团外卖的分类页观感） */
+      background: var(--van-sidebar-background);
+      --van-sidebar-width: 92px;
+      --van-sidebar-font-size: 13px;
+      --van-sidebar-padding: 16px 10px;
+      --van-sidebar-line-height: 20px;
     }
 
     &__content {
@@ -168,89 +248,27 @@
       overflow-y: auto;
       /* 底部预留固定 tabbar 的高度，否则滚到底时最后一项（如「没有更多了」）会被 tabbar 遮挡 */
       padding: 0 12px calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom));
-      background: var(--app-bg-color);
+      /* 白底：与左侧选中项的白底无缝相接，形成「左菜单 + 右内容」连成一体的观感（美团外卖式） */
+      background: var(--app-white);
     }
 
-    /* 有悬浮购物车栏时，内容区再多留出它的高度（48 + 8 间距） */
-    &__content--with-cartbar {
-      padding-bottom: calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom) + 56px);
+    /* 有底部动作栏时，内容区再多留出动作栏高度（50 + 8 间距） */
+    &__content--with-bar {
+      padding-bottom: calc(
+        12px + var(--app-tabbar-height) + env(safe-area-inset-bottom) + 58px
+      );
     }
 
-    /* ===== 悬浮购物车栏（美团外卖点菜式） ===== */
-    &__cartbar {
-      position: fixed;
-      right: 12px;
-      left: 12px;
-      bottom: calc(var(--app-tabbar-height) + env(safe-area-inset-bottom) + 8px);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 48px;
-      padding: 0 6px 0 12px;
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
-    }
-
-    &__cartbar-info {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    &__cartbar-icon {
-      position: relative;
-      display: flex;
-      flex: none;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      color: #fff;
-      background: var(--app-primary-color);
-      border-radius: 50%;
-    }
-
-    &__cartbar-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      min-width: 16px;
-      height: 16px;
-      padding: 0 4px;
-      font-size: 10px;
-      line-height: 16px;
-      color: #fff;
-      text-align: center;
-      background: var(--app-danger-color);
-      border-radius: 8px;
-    }
-
-    &__cartbar-amount {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    &__cartbar-price {
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 1.1;
-      color: var(--app-danger-color);
-    }
-
-    &__cartbar-tip {
-      font-size: 11px;
-      color: var(--app-text-color-secondary);
-    }
-
+    /* 一级分类标题吸顶：高度固定为 40px，二级分组标题据此下移 */
     &__title {
-      padding: 12px 0 8px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 10px 0;
       font-size: 14px;
       font-weight: 600;
+      line-height: 20px;
+      background: var(--app-white);
     }
 
     &__count {
@@ -259,35 +277,124 @@
       color: var(--app-text-color-secondary);
     }
 
+    /* 二级分类标题：吸顶在一级标题下方 */
+    &__group-title {
+      position: sticky;
+      top: 40px;
+      z-index: 1;
+      padding: 8px 0 6px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 18px;
+      color: var(--app-text-color);
+      background: var(--app-white);
+    }
+
+    /* ===== 商品行 =====
+       白底平铺 + 细分隔线（不再用白卡片），让右侧内容区与左侧选中项连成一块白 */
     &__item {
       display: flex;
       gap: 10px;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #fff;
-      border-radius: var(--app-radius-md);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--app-border-color);
+    }
+
+    &__item:active {
+      background: var(--van-active-color);
+    }
+
+    &__item--last {
+      border-bottom: 0;
+    }
+
+    /* 骨架屏沿用平铺行（默认的白色卡片在白底内容区里会「隐形」） */
+    :deep(.list-skeleton) {
+      gap: 0;
+      padding: 0;
+    }
+
+    :deep(.list-skeleton__card) {
+      padding: 12px 0;
+      background: transparent;
+      border-radius: 0;
     }
 
     &__img {
       flex: none;
-      width: 76px;
-      height: 76px;
+      width: 84px;
+      height: 84px;
+      overflow: hidden;
+      background: var(--app-bg-color);
+      border-radius: var(--app-radius-md);
     }
 
     &__info {
+      display: flex;
       flex: 1;
+      flex-direction: column;
       min-width: 0;
     }
 
     &__name {
       font-size: 14px;
+      font-weight: 500;
       line-height: 1.4;
+      color: var(--app-text-color);
     }
 
-    &__stock {
-      margin: 4px 0;
+    &__meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    &__sales {
       font-size: 12px;
       color: var(--app-text-color-secondary);
+    }
+
+    &__foot {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    &__unit {
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    /* ===== 底部动作栏 ===== */
+    &__bar {
+      /* 叠在 tabbar 之上：tabbar 已经处理了底部安全区，动作栏不再重复避让 */
+      bottom: calc(var(--app-tabbar-height) + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--app-border-color);
+      /* 主题色：主按钮用品牌渐变，替换 Vant 默认的红色渐变 */
+      --van-action-bar-button-danger-color: var(--app-primary-gradient);
+    }
+
+    &__bar-total {
+      display: flex;
+      flex: 1;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 4px;
+      min-width: 0;
+      padding-right: 10px;
+    }
+
+    &__bar-label {
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    /* 单个主按钮不必占满剩余空间，固定宽度更接近商城观感 */
+    &__bar-btn {
+      flex: none;
+      width: 116px;
     }
   }
 </style>
