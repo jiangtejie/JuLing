@@ -20,6 +20,4 @@ public interface BrokerageStatisticsMapper extends BaseMapperX<TradeStatisticsDO
                                                              @Param("beginTime") LocalDateTime beginTime,
                                                              @Param("endTime") LocalDateTime endTime);
 
-    Long selectWithdrawCountByStatus(@Param("status") Integer status);
-
 }

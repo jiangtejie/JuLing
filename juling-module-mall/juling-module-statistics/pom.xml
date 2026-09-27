@@ -38,11 +38,6 @@
             <artifactId>juling-module-member</artifactId>
             <version>${revision}</version>
         </dependency>
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-pay</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
         <!-- 业务组件 -->
         <dependency>

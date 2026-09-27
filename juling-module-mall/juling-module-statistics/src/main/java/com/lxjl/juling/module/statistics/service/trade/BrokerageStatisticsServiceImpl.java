@@ -31,7 +31,8 @@ public class BrokerageStatisticsServiceImpl implements BrokerageStatisticsServic
 
     @Override
     public Long getWithdrawCountByStatus(BrokerageWithdrawStatusEnum status) {
-        return brokerageStatisticsMapper.selectWithdrawCountByStatus(status.getStatus());
+        // 佣金提现功能已下线，提现记录数量固定返回 0
+        return 0L;
     }
 
 }

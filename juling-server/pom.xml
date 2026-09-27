@@ -63,12 +63,6 @@
             <artifactId>juling-module-bpm</artifactId>
             <version>${revision}</version>
         </dependency>
-        <!-- 支付服务 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-pay</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
         <!-- 微信公众号模块 -->
         <dependency>

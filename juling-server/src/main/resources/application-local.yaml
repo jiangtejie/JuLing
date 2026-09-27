@@ -184,8 +184,6 @@ logging:
     com.lxjl.juling.module.infra.dal.mysql.logger.ApiErrorLogMapper: INFO # 配置 ApiErrorLogMapper 的日志级别为 info，避免和 GlobalExceptionHandler 重复打印
     com.lxjl.juling.module.infra.dal.mysql.job.JobLogMapper: INFO # 配置 JobLogMapper 的日志级别为 info
     com.lxjl.juling.module.infra.dal.mysql.file.FileConfigMapper: INFO # 配置 FileConfigMapper 的日志级别为 info
-    com.lxjl.juling.module.pay.dal.mysql: debug
-    com.lxjl.juling.module.pay.dal.mysql.notify.PayNotifyTaskMapper: INFO # 配置 PayNotifyTaskMapper 的日志级别为 info
     com.lxjl.juling.module.system.dal.mysql: debug
     com.lxjl.juling.module.system.dal.mysql.sms.SmsChannelMapper: INFO # 配置 SmsChannelMapper 的日志级别为 info
     com.lxjl.juling.module.tool.dal.mysql: debug

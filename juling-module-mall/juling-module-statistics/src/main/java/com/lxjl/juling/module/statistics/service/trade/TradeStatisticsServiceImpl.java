@@ -8,7 +8,6 @@ import com.lxjl.juling.module.statistics.controller.admin.trade.vo.TradeTrendSum
 import com.lxjl.juling.module.statistics.convert.trade.TradeStatisticsConvert;
 import com.lxjl.juling.module.statistics.dal.dataobject.trade.TradeStatisticsDO;
 import com.lxjl.juling.module.statistics.dal.mysql.trade.TradeStatisticsMapper;
-import com.lxjl.juling.module.statistics.service.pay.PayWalletStatisticsService;
 import com.lxjl.juling.module.statistics.service.trade.bo.AfterSaleSummaryRespBO;
 import com.lxjl.juling.module.statistics.service.trade.bo.TradeOrderSummaryRespBO;
 import com.lxjl.juling.module.statistics.service.trade.bo.TradeSummaryRespBO;
@@ -42,8 +41,6 @@ public class TradeStatisticsServiceImpl implements TradeStatisticsService {
     private AfterSaleStatisticsService afterSaleStatisticsService;
     @Resource
     private BrokerageStatisticsService brokerageStatisticsService;
-    @Resource
-    private PayWalletStatisticsService payWalletStatisticsService;
 
     @Override
     public TradeSummaryRespBO getTradeSummaryByDays(int days) {
@@ -120,9 +117,11 @@ public class TradeStatisticsServiceImpl implements TradeStatisticsService {
         stopWatch.start("统计佣金");
         Integer brokerageSettlementPrice = brokerageStatisticsService.getBrokerageSettlementPriceSummary(beginTime, endTime);
         stopWatch.stop();
-        // 3.4 统计充值
+        // 3.4 统计充值（充值/钱包功能已下线，固定返回 0）
         stopWatch.start("统计充值");
-        WalletSummaryRespBO walletSummary = payWalletStatisticsService.getWalletSummary(beginTime, endTime);
+        WalletSummaryRespBO walletSummary = new WalletSummaryRespBO()
+                .setWalletPayPrice(0).setRechargePayCount(0).setRechargePayPrice(0)
+                .setRechargeRefundCount(0).setRechargeRefundPrice(0);
         stopWatch.stop();
 
         // 4. 插入数据

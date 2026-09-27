@@ -12,7 +12,6 @@ import com.lxjl.juling.module.statistics.convert.member.MemberStatisticsConvert;
 import com.lxjl.juling.module.statistics.dal.mysql.member.MemberStatisticsMapper;
 import com.lxjl.juling.module.statistics.service.infra.ApiAccessLogStatisticsService;
 import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
-import com.lxjl.juling.module.statistics.service.pay.PayWalletStatisticsService;
 import com.lxjl.juling.module.statistics.service.pay.bo.RechargeSummaryRespBO;
 import com.lxjl.juling.module.statistics.service.trade.TradeOrderStatisticsService;
 import com.lxjl.juling.module.statistics.service.trade.TradeStatisticsService;
@@ -24,7 +23,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertMap;
 
@@ -41,8 +39,6 @@ public class MemberStatisticsServiceImpl implements MemberStatisticsService {
     private MemberStatisticsMapper memberStatisticsMapper;
 
     @Resource
-    private PayWalletStatisticsService payWalletStatisticsService;
-    @Resource
     private TradeStatisticsService tradeStatisticsService;
     @Resource
     private TradeOrderStatisticsService tradeOrderStatisticsService;
@@ -51,7 +47,9 @@ public class MemberStatisticsServiceImpl implements MemberStatisticsService {
 
     @Override
     public MemberSummaryRespVO getMemberSummary() {
-        RechargeSummaryRespBO rechargeSummary = payWalletStatisticsService.getUserRechargeSummary(null, null);
+        // 充值/钱包功能已下线，充值相关统计固定返回 0
+        RechargeSummaryRespBO rechargeSummary = new RechargeSummaryRespBO()
+                .setRechargeUserCount(0).setRechargePrice(0);
         // TODO @疯狂：1）这里是实时统计，不好走走 TradeStatistics 表；2）因为这个放在商城下，所以只考虑订单数据，即按照 trade_order 的 pay_price 并且已支付来计算；
         Integer expensePrice = tradeStatisticsService.getExpensePrice(null, null);
         Integer userCount = memberStatisticsMapper.selectUserCount(null, null);
@@ -95,8 +93,8 @@ public class MemberStatisticsServiceImpl implements MemberStatisticsService {
     }
 
     private MemberAnalyseDataRespVO getMemberAnalyseData(LocalDateTime beginTime, LocalDateTime endTime) {
-        Integer rechargeUserCount = Optional.ofNullable(payWalletStatisticsService.getUserRechargeSummary(beginTime, endTime))
-                .map(RechargeSummaryRespBO::getRechargeUserCount).orElse(0);
+        // 充值/钱包功能已下线，充值会员数量固定返回 0
+        Integer rechargeUserCount = 0;
         return new MemberAnalyseDataRespVO()
                 .setRegisterUserCount(memberStatisticsMapper.selectUserCount(beginTime, endTime))
                 .setVisitUserCount(apiAccessLogStatisticsService.getUserCount(UserTypeEnum.MEMBER.getValue(), beginTime, endTime))
