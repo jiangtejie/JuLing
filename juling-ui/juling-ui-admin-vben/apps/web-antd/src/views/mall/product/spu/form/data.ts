@@ -33,6 +33,7 @@ export function useInfoFormSchema(): VbenFormSchema[] {
       fieldName: 'categoryId',
       label: '分类名称',
       component: 'ApiTreeSelect',
+      help: '可选一级或二级分类；只选一级时，商品直接归属该一级分类',
       componentProps: {
         api: async () => {
           const data = await getCategoryList({});

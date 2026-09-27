@@ -37,11 +37,12 @@ public interface ProductSpuMapper extends BaseMapperX<ProductSpuDO> {
      * @param reqVO 分页请求参数
      * @return 商品 SPU 分页列表数据
      */
-    default PageResult<ProductSpuDO> selectPage(ProductSpuPageReqVO reqVO) {
+    default PageResult<ProductSpuDO> selectPage(ProductSpuPageReqVO reqVO, Set<Long> categoryIds) {
         Integer tabType = reqVO.getTabType();
         LambdaQueryWrapperX<ProductSpuDO> queryWrapper = new LambdaQueryWrapperX<ProductSpuDO>()
                 .likeIfPresent(ProductSpuDO::getName, reqVO.getName())
-                .eqIfPresent(ProductSpuDO::getCategoryId, reqVO.getCategoryId())
+                // 分类：入参已展开为「选中分类 + 其子分类」，因此一级分类也能筛出挂在二级分类下的商品
+                .inIfPresent(ProductSpuDO::getCategoryId, categoryIds)
                 .betweenIfPresent(ProductSpuDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(ProductSpuDO::getSort)
                 .orderByDesc(ProductSpuDO::getId);
@@ -153,10 +154,10 @@ public interface ProductSpuMapper extends BaseMapperX<ProductSpuDO> {
      * @param tabType Tab 标签类型
      * @return 数量
      */
-    default Long selectCountByTab(ProductSpuPageReqVO reqVO, Integer tabType) {
+    default Long selectCountByTab(ProductSpuPageReqVO reqVO, Integer tabType, Set<Long> categoryIds) {
         LambdaQueryWrapperX<ProductSpuDO> queryWrapper = new LambdaQueryWrapperX<ProductSpuDO>()
                 .likeIfPresent(ProductSpuDO::getName, reqVO.getName())
-                .eqIfPresent(ProductSpuDO::getCategoryId, reqVO.getCategoryId())
+                .inIfPresent(ProductSpuDO::getCategoryId, categoryIds)
                 .betweenIfPresent(ProductSpuDO::getCreateTime, reqVO.getCreateTime());
         appendTabQuery(tabType, queryWrapper);
         return selectCount(queryWrapper);
