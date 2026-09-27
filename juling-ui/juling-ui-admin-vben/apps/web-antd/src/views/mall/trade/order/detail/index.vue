@@ -4,7 +4,7 @@ import type { MallDeliveryExpressApi } from '#/api/mall/trade/delivery/express';
 import type { MallDeliveryPickUpStoreApi } from '#/api/mall/trade/delivery/pickUpStore';
 import type { MallOrderApi } from '#/api/mall/trade/order';
 
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { confirm, Page, useVbenModal } from '@vben/common-ui';
@@ -16,7 +16,7 @@ import {
 import { useTabs } from '@vben/hooks';
 import { fenToYuan, formatDateTime } from '@vben/utils';
 
-import { Image, message, Space, Tag } from 'ant-design-vue';
+import { Card, Divider, Image, message, Space, Tag } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
@@ -43,7 +43,6 @@ import {
   useOrderInfoSchema,
   useOrderPriceSchema,
   useOrderStatusSchema,
-  usePaymentInfoSchema,
   useProductColumns,
 } from './data';
 
@@ -102,13 +101,10 @@ const [OrderPriceDescriptions] = useDescription({
   schema: useOrderPriceSchema(),
 });
 
-const [PaymentInfoDescriptions] = useDescription({
-  title: '收款信息（线下收款）',
-  bordered: false,
-  column: 4,
-  class: 'mx-4',
-  schema: usePaymentInfoSchema(),
-});
+/** 待收货款（应付 - 已确认收款，负数归零） */
+const remainAmount = computed(() =>
+  Math.max(0, (order.value.payPrice ?? 0) - (order.value.paidAmount ?? 0)),
+);
 
 const [DeliveryInfoDescriptions] = useDescription({
   title: '收货信息',
@@ -342,16 +338,119 @@ onMounted(async () => {
     <PriceFormModal @success="getDetail" />
     <PaymentProofFormModal @success="getDetail" />
 
-    <!-- 订单信息 -->
-    <div class="mb-4">
-      <OrderInfoDescriptions :data="order" />
-    </div>
-    <!-- 订单状态 -->
-    <div class="mb-4">
-      <OrderStatusDescriptions :data="order" />
-    </div>
-    <!-- 商品信息 -->
-    <div class="mb-4">
+    <!-- 统一 16px 纵向间距：各区块不再各自写 mb-4，避免间距不一致 -->
+    <div class="flex flex-col gap-4">
+      <!-- 顶部：订单信息（宽屏占 2/3）+ 订单状态与操作提示（1/3），压缩纵向长度 -->
+      <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <div class="xl:col-span-2">
+          <OrderInfoDescriptions :data="order" />
+        </div>
+        <div>
+          <OrderStatusDescriptions :data="order" />
+        </div>
+      </div>
+      <!-- 线下收款：收款进度 + 客户付款凭证（核验入口在页面右上角） -->
+      <Card title="线下收款">
+        <template #extra>
+          <DictTag
+            :type="DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS"
+            :value="order.paymentProofStatus ?? 0"
+          />
+        </template>
+
+        <!-- 收款概览：金额用同一行对齐展示，避免碎片化 -->
+        <div class="flex flex-wrap items-baseline gap-x-12 gap-y-3">
+          <div>
+            <span class="text-gray-400">已确认收款</span>
+            <span class="ml-2 text-base font-semibold">
+              ¥{{ fenToYuan(order.paidAmount ?? 0) }}
+            </span>
+          </div>
+          <div>
+            <span class="text-gray-400">待收货款</span>
+            <span
+              class="ml-2 text-base font-semibold"
+              :class="remainAmount > 0 ? 'text-red-500' : 'text-green-600'"
+            >
+              ¥{{ fenToYuan(remainAmount) }}
+            </span>
+          </div>
+          <div>
+            <span class="text-gray-400">应收金额</span>
+            <span class="ml-2">¥{{ fenToYuan(order.payPrice ?? 0) }}</span>
+          </div>
+          <div v-if="order.payChannelCode">
+            <span class="text-gray-400">收款渠道</span>
+            <span class="ml-2">
+              <DictTag
+                :type="DICT_TYPE.PAY_CHANNEL_CODE"
+                :value="order.payChannelCode"
+              />
+            </span>
+          </div>
+        </div>
+
+        <Divider class="!my-3" />
+
+        <div v-if="proofs.length === 0" class="py-2 text-gray-400">
+          客户尚未上传付款凭证
+        </div>
+        <div v-else class="flex flex-col gap-3">
+          <div
+            v-for="proof in proofs"
+            :key="proof.id"
+            class="rounded-md border border-border p-3"
+          >
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <Tag :color="PROOF_STATUS_MAP[proof.status ?? 0]?.color">
+                {{ PROOF_STATUS_MAP[proof.status ?? 0]?.text }}
+              </Tag>
+              <span>
+                申报
+                <span class="font-medium">¥{{ fenToYuan(proof.amount ?? 0) }}</span>
+              </span>
+              <span
+                v-if="
+                  proof.confirmedAmount !== null &&
+                  proof.confirmedAmount !== undefined
+                "
+              >
+                核定
+                <span class="font-medium">
+                  ¥{{ fenToYuan(proof.confirmedAmount) }}
+                </span>
+              </span>
+              <span v-if="proof.payerName" class="text-gray-400">
+                付款人：{{ proof.payerName }}
+              </span>
+              <DictTag
+                v-if="proof.payChannelCode"
+                :type="DICT_TYPE.PAY_CHANNEL_CODE"
+                :value="proof.payChannelCode"
+              />
+              <span class="text-xs text-gray-400">
+                {{ formatDateTime(proof.createTime) }}
+              </span>
+            </div>
+            <Image.PreviewGroup>
+              <Space :size="12" wrap class="mt-3">
+                <Image
+                  v-for="(url, index) in proof.urls"
+                  :key="index"
+                  :src="url"
+                  :width="128"
+                  class="rounded-md border border-border"
+                />
+              </Space>
+            </Image.PreviewGroup>
+            <div v-if="proof.auditRemark" class="mt-2 text-xs text-red-500">
+              核验意见：{{ proof.auditRemark }}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- 商品信息 -->
       <ProductGrid table-title="商品信息">
         <template #spuName="{ row }">
           <div class="flex flex-1 flex-col items-start gap-1 text-left">
@@ -368,69 +467,17 @@ onMounted(async () => {
           </div>
         </template>
       </ProductGrid>
-    </div>
-    <!-- 费用信息 -->
-    <div class="mb-4">
+
+      <!-- 费用信息 -->
       <OrderPriceDescriptions :data="order" />
-    </div>
-    <!-- 收款信息（线下收款） -->
-    <div class="mb-4">
-      <PaymentInfoDescriptions :data="order" />
-    </div>
-    <!-- 付款凭证：客户上传的转账截图与核验进度 -->
-    <div v-if="proofs.length > 0" class="mx-4 mb-4">
-      <div class="mb-2 font-medium">付款凭证（线下收款）</div>
-      <div
-        v-for="proof in proofs"
-        :key="proof.id"
-        class="mb-3 rounded border border-gray-200 p-3"
-      >
-        <div class="mb-2 flex flex-wrap items-center gap-3">
-          <Tag :color="PROOF_STATUS_MAP[proof.status ?? 0]?.color">
-            {{ PROOF_STATUS_MAP[proof.status ?? 0]?.text }}
-          </Tag>
-          <span>申报 {{ fenToYuan(proof.amount ?? 0) }} 元</span>
-          <span v-if="proof.confirmedAmount !== null && proof.confirmedAmount !== undefined">
-            核定 {{ fenToYuan(proof.confirmedAmount) }} 元
-          </span>
-          <span class="text-gray-400">
-            提交 {{ formatDateTime(proof.createTime) }}
-          </span>
-          <span v-if="proof.payerName" class="text-gray-400">
-            付款人：{{ proof.payerName }}
-          </span>
-          <DictTag
-            v-if="proof.payChannelCode"
-            :type="DICT_TYPE.PAY_CHANNEL_CODE"
-            :value="proof.payChannelCode"
-          />
-        </div>
-        <Image.PreviewGroup>
-          <Space :size="12" wrap>
-            <Image
-              v-for="(url, index) in proof.urls"
-              :key="index"
-              :src="url"
-              :width="120"
-              class="rounded border border-gray-200"
-            />
-          </Space>
-        </Image.PreviewGroup>
-        <div v-if="proof.auditRemark" class="mt-2 text-xs text-red-500">
-          核验意见：{{ proof.auditRemark }}
-        </div>
-      </div>
-    </div>
-    <!-- 收货信息 -->
-    <div class="mb-4">
+      <!-- 收货信息 -->
       <DeliveryInfoDescriptions :data="order" />
-    </div>
-    <!-- 物流详情 -->
-    <div v-if="expressTrackList.length > 0" class="mb-4">
-      <ExpressTrackGrid table-title="物流详情" />
-    </div>
-    <!-- 操作日志 -->
-    <div>
+      <!-- 物流详情 -->
+      <ExpressTrackGrid
+        v-if="expressTrackList.length > 0"
+        table-title="物流详情"
+      />
+      <!-- 操作日志 -->
       <OperateLogGrid table-title="操作日志">
         <template #userType="{ row }">
           <Tag v-if="row.userType === 0" color="default"> 系统 </Tag>

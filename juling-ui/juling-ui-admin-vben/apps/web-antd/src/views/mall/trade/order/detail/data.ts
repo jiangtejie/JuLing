@@ -45,13 +45,10 @@ export function useOrderInfoSchema(): DescriptionItemSchema[] {
       field: 'remark',
       label: '商家备注',
     },
-    {
-      field: 'payOrderId',
-      label: '支付单号',
-    },
+    // 线下收款：不再展示「支付单号」（线上支付已切除，该字段恒空）
     {
       field: 'payChannelCode',
-      label: '付款方式',
+      label: '收款渠道',
       render: (val) =>
         h(DictTag, {
           type: DICT_TYPE.PAY_CHANNEL_CODE,
@@ -64,6 +61,20 @@ export function useOrderInfoSchema(): DescriptionItemSchema[] {
     },
   ];
 }
+
+/**
+ * 收款状态 → 下一步操作提示。
+ *
+ * 本分支只走线下转账（客户转账后上传付款截图、商家核验），
+ * 原先「货款直接进入商户号（微信/支付宝）」的文案与业务不符，改为按收款进度给操作指引。
+ */
+const RECEIVE_PROMPT: Record<number, string> = {
+  0: '等待客户上传付款凭证：客户转账后可在订单列表点「核验收款」核对到账金额',
+  1: '客户已提交付款凭证，请及时核验到账金额（可通过右上角「核验收款」或在订单列表操作）',
+  2: '付款凭证已被驳回，等待客户重新上传，请留意新的凭证',
+  3: '已收到部分货款，请等待客户补齐尾款后再安排发货',
+  4: '货款已收齐，可安排发货',
+};
 
 /** 订单状态信息 schema */
 export function useOrderStatusSchema(): DescriptionItemSchema[] {
@@ -80,15 +91,31 @@ export function useOrderStatusSchema(): DescriptionItemSchema[] {
     {
       field: 'reminder',
       label: '提醒',
-      render: () =>
-        h('div', { class: 'space-y-1' }, [
-          h('div', '买家付款成功后，货款将直接进入您的商户号（微信、支付宝）'),
-          h('div', '请及时关注你发出的包裹状态，确保可以配送至买家手中'),
-          h(
-            'div',
-            '如果买家表示没收到货或货物有问题，请及时联系买家处理，友好协商',
-          ),
-        ]),
+      render: (_val, data) => {
+        const receiveStatus: number = data?.paymentProofStatus ?? 0;
+        const remain = Math.max(
+          0,
+          (data?.payPrice ?? 0) - (data?.paidAmount ?? 0),
+        );
+        return h(
+          'div',
+          { class: 'space-y-1 leading-6' },
+          [
+            h('div', RECEIVE_PROMPT[receiveStatus] ?? RECEIVE_PROMPT[0]),
+            receiveStatus !== 4 &&
+              h(
+                'div',
+                { class: 'text-red-500' },
+                `待收货款：${fenToYuan(remain)} 元`,
+              ),
+            h(
+              'div',
+              { class: 'text-gray-400' },
+              '发货后请关注物流状态，确保可配送至客户手中',
+            ),
+          ].filter(Boolean),
+        );
+      },
     },
   ];
 }
@@ -139,45 +166,6 @@ export function useOrderPriceSchema(): DescriptionItemSchema[] {
       field: 'payPrice',
       label: '应付金额',
       render: (val) => `${fenToYuan(val ?? 0)} 元`,
-    },
-  ];
-}
-
-/** 线下收款信息 schema */
-export function usePaymentInfoSchema(): DescriptionItemSchema[] {
-  return [
-    {
-      field: 'paymentProofStatus',
-      label: '收款状态',
-      render: (val) =>
-        h(DictTag, {
-          type: DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS,
-          value: val,
-        }),
-    },
-    {
-      field: 'payChannelCode',
-      label: '收款渠道',
-      render: (val) =>
-        h(DictTag, {
-          type: DICT_TYPE.PAY_CHANNEL_CODE,
-          value: val,
-        }),
-    },
-    {
-      field: 'paidAmount',
-      label: '已确认收款',
-      render: (val) => `${fenToYuan(val ?? 0)} 元`,
-    },
-    {
-      field: 'paidAmount',
-      label: '待收金额',
-      render: (val, data) =>
-        h(
-          'span',
-          { class: 'text-red-500' },
-          `${fenToYuan(Math.max(0, (data?.payPrice ?? 0) - (val ?? 0)))} 元`,
-        ),
     },
   ];
 }
