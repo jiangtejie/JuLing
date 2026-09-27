@@ -43,7 +43,7 @@
     amountYuan: '',
     payerName: '',
     payChannelCode: 'offline_transfer' as string,
-    /** 转账时间（原生 datetime-local 的值，形如 2026-09-27T10:30） */
+    /** 转账时间（用 Vant 日期+时间选择器选出，格式 yyyy-MM-dd HH:mm:ss） */
     transferTime: '',
     remark: '',
   });
@@ -57,6 +57,48 @@
   function onSelectChannel(action: { code: string }): void {
     form.payChannelCode = action.code;
     channelSheet.value = false;
+  }
+
+  /* ------------------------- 转账时间（日期 + 时间选择器） ------------------------- */
+
+  const pad2 = (value: number): string => String(value).padStart(2, '0');
+
+  /** 选择器气泡是否展示 */
+  const showTransferPicker = ref(false);
+  /** van-date-picker 的值（字符串数组，如 ['2026','09','27']） */
+  const transferDate = ref<string[]>([]);
+  /** van-time-picker 的值（字符串数组，如 ['10','30']） */
+  const transferClock = ref<string[]>([]);
+  /** 可选范围：近半年内、不晚于今天（转账不可能发生在未来） */
+  const transferMinDate = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
+  const transferMaxDate = new Date();
+
+  /** 打开选择器：已有值则回填，否则默认当前时间，减少手工操作 */
+  function openTransferPicker(): void {
+    if (form.transferTime) {
+      const [date = '', clock = ''] = form.transferTime.split(' ');
+      transferDate.value = date.split('-');
+      transferClock.value = clock.split(':').slice(0, 2);
+    } else {
+      const now = new Date();
+      transferDate.value = [
+        String(now.getFullYear()),
+        pad2(now.getMonth() + 1),
+        pad2(now.getDate()),
+      ];
+      transferClock.value = [pad2(now.getHours()), pad2(now.getMinutes())];
+    }
+    showTransferPicker.value = true;
+  }
+
+  /** 确认：拼成后端要求的 yyyy-MM-dd HH:mm:ss */
+  function onTransferConfirm(): void {
+    const [year, month, day] = transferDate.value;
+    const [hour, minute] = transferClock.value;
+    if (year && month && day && hour && minute) {
+      form.transferTime = `${year}-${month}-${day} ${hour}:${minute}:00`;
+    }
+    showTransferPicker.value = false;
   }
 
   /**
@@ -122,7 +164,7 @@
         amount,
         payerName: form.payerName.trim() || undefined,
         payChannelCode: form.payChannelCode,
-        transferTime: form.transferTime ? `${form.transferTime.replace('T', ' ')}:00` : undefined,
+        transferTime: form.transferTime || undefined,
         remark: form.remark.trim() || undefined,
       });
     } catch {
@@ -230,10 +272,13 @@
               @click="channelSheet = true"
             />
             <van-field
-              v-model="form.transferTime"
+              :model-value="form.transferTime"
               label="转账时间"
-              type="datetime-local"
+              placeholder="请选择转账时间"
               input-align="right"
+              readonly
+              is-link
+              @click="openTransferPicker"
             />
             <van-field
               v-model="form.remark"
@@ -310,6 +355,23 @@
       close-on-click-action
       @select="onSelectChannel"
     />
+
+    <!-- 转账时间：Vant 日期 + 时间选择器（van-picker-group 内置「选择日期 / 选择时间」两个页签） -->
+    <van-popup v-model:show="showTransferPicker" position="bottom" round>
+      <van-picker-group
+        title="转账时间"
+        :tabs="['选择日期', '选择时间']"
+        @confirm="onTransferConfirm"
+        @cancel="showTransferPicker = false"
+      >
+        <van-date-picker
+          v-model="transferDate"
+          :min-date="transferMinDate"
+          :max-date="transferMaxDate"
+        />
+        <van-time-picker v-model="transferClock" />
+      </van-picker-group>
+    </van-popup>
   </div>
 </template>
 
