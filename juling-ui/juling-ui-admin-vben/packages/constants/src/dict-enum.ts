@@ -88,6 +88,7 @@ const MALL_DICT = {
   TRADE_DELIVERY_TYPE: 'trade_delivery_type', // 配送方式
   TRADE_ORDER_ITEM_AFTER_SALE_STATUS: 'trade_order_item_after_sale_status', // 订单项 - 售后状态
   TRADE_ORDER_STATUS: 'trade_order_status', // 订单 - 状态
+  TRADE_PAYMENT_PROOF_STATUS: 'trade_payment_proof_status', // 订单 - 收款状态（线下收款）
   TRADE_ORDER_TYPE: 'trade_order_type', // 订单 - 类型
   BROKERAGE_BANK_NAME: 'brokerage_bank_name', // 佣金提现银行
   BROKERAGE_BIND_MODE: 'brokerage_bind_mode', // 分销关系绑定模式

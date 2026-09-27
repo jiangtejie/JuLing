@@ -28,6 +28,8 @@ export namespace MallOrderApi {
     deliveryPrice?: number; // 运费金额
     adjustPrice?: number; // 订单调价（总）
     payPrice?: number; // 应付金额（总）
+    paidAmount?: number; // 已确认收款金额（总）
+    paymentProofStatus?: number; // 收款状态（线下收款）
     deliveryType?: number; // 发货方式
     pickUpStoreId?: number; // 自提门店编号
     pickUpVerifyCode?: string; // 自提核销码
@@ -126,6 +128,31 @@ export namespace MallOrderApi {
     adjustPrice: number; // 调整金额，单位：分
   }
 
+  /** 付款凭证 */
+  export interface PaymentProof {
+    id?: number; // 凭证编号
+    orderId?: number; // 交易订单编号
+    urls?: string[]; // 付款凭证图片地址（多图）
+    amount?: number; // 申报收款金额，单位：分
+    confirmedAmount?: number; // 核定的收款金额，单位：分
+    payerName?: string; // 付款人姓名
+    payChannelCode?: string; // 收款渠道
+    transferTime?: Date; // 转账时间
+    remark?: string; // 客户备注
+    status?: number; // 单条凭证状态：0 待核验、1 已确认、2 已驳回
+    auditTime?: Date; // 核验时间
+    auditRemark?: string; // 核验意见（驳回原因）
+    createTime?: Date; // 提交时间
+  }
+
+  /** 付款凭证核验请求 */
+  export interface PaymentProofAuditReqVO {
+    id: number; // 凭证编号
+    approved: boolean; // 是否确认收款：true 确认、false 驳回
+    confirmedAmount?: number; // 核定收款金额，单位：分
+    auditRemark?: string; // 核验意见
+  }
+
   /** 订单地址请求 */
   export interface OrderUpdateAddressReqVO {
     id: number; // 订单编号
@@ -186,6 +213,19 @@ export function updateOrderPrice(data: MallOrderApi.OrderUpdatePriceReqVO) {
 /** 修改订单地址 */
 export function updateOrderAddress(data: MallOrderApi.OrderUpdateAddressReqVO) {
   return requestClient.put('/trade/order/update-address', data);
+}
+
+/** 查询订单的付款凭证列表 */
+export function getPaymentProofList(orderId: number) {
+  return requestClient.get<MallOrderApi.PaymentProof[]>(
+    '/trade/order/payment-proof/list',
+    { params: { orderId } },
+  );
+}
+
+/** 核验付款凭证（确认收款 / 驳回） */
+export function auditPaymentProof(data: MallOrderApi.PaymentProofAuditReqVO) {
+  return requestClient.put('/trade/order/payment-proof/audit', data);
 }
 
 /** 订单核销 */

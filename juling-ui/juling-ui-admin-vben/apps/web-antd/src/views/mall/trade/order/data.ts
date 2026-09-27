@@ -43,6 +43,16 @@ export function useGridFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      fieldName: 'paymentProofStatus',
+      label: '收款状态',
+      component: 'Select',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS, 'number'),
+        placeholder: '请选择收款状态',
+        allowClear: true,
+      },
+    },
+    {
       fieldName: 'createTime',
       label: '创建时间',
       component: 'RangePicker',
@@ -214,6 +224,21 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       title: '实际支付',
       formatter: 'formatFenToYuanAmount',
       minWidth: 180,
+    },
+    {
+      field: 'paymentProofStatus',
+      title: '收款状态',
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS },
+      },
+      minWidth: 110,
+    },
+    {
+      field: 'paidAmount',
+      title: '已确认收款',
+      formatter: 'formatFenToYuanAmount',
+      minWidth: 120,
     },
     {
       field: 'user',

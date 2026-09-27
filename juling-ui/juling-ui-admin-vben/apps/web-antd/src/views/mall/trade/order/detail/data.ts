@@ -143,6 +143,45 @@ export function useOrderPriceSchema(): DescriptionItemSchema[] {
   ];
 }
 
+/** 线下收款信息 schema */
+export function usePaymentInfoSchema(): DescriptionItemSchema[] {
+  return [
+    {
+      field: 'paymentProofStatus',
+      label: '收款状态',
+      render: (val) =>
+        h(DictTag, {
+          type: DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS,
+          value: val,
+        }),
+    },
+    {
+      field: 'payChannelCode',
+      label: '收款渠道',
+      render: (val) =>
+        h(DictTag, {
+          type: DICT_TYPE.PAY_CHANNEL_CODE,
+          value: val,
+        }),
+    },
+    {
+      field: 'paidAmount',
+      label: '已确认收款',
+      render: (val) => `${fenToYuan(val ?? 0)} 元`,
+    },
+    {
+      field: 'paidAmount',
+      label: '待收金额',
+      render: (val, data) =>
+        h(
+          'span',
+          { class: 'text-red-500' },
+          `${fenToYuan(Math.max(0, (data?.payPrice ?? 0) - (val ?? 0)))} 元`,
+        ),
+    },
+  ];
+}
+
 /** 收货信息 schema */
 export function useDeliveryInfoSchema(): DescriptionItemSchema[] {
   return [

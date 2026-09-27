@@ -14,8 +14,9 @@ import {
   TradeOrderStatusEnum,
 } from '@vben/constants';
 import { useTabs } from '@vben/hooks';
+import { fenToYuan, formatDateTime } from '@vben/utils';
 
-import { message, Tag } from 'ant-design-vue';
+import { Image, message, Space, Tag } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
@@ -23,6 +24,7 @@ import { getDeliveryPickUpStore } from '#/api/mall/trade/delivery/pickUpStore';
 import {
   getExpressTrackList,
   getOrder,
+  getPaymentProofList,
   pickUpOrder,
 } from '#/api/mall/trade/order';
 import { useDescription } from '#/components/description';
@@ -31,6 +33,7 @@ import { TableAction } from '#/components/table-action';
 
 import AddressForm from '../modules/address-form.vue';
 import DeliveryForm from '../modules/delivery-form.vue';
+import PaymentProofForm from '../modules/payment-proof-form.vue';
 import PriceForm from '../modules/price-form.vue';
 import RemarkForm from '../modules/remark-form.vue';
 import {
@@ -40,6 +43,7 @@ import {
   useOrderInfoSchema,
   useOrderPriceSchema,
   useOrderStatusSchema,
+  usePaymentInfoSchema,
   useProductColumns,
 } from './data';
 
@@ -54,6 +58,20 @@ const orderId = ref(0);
 const order = ref<MallOrderApi.Order>({
   logs: [],
 });
+/** 付款凭证（线下收款，含历史与驳回记录） */
+const proofs = ref<MallOrderApi.PaymentProof[]>([]);
+
+/**
+ * 单条凭证状态（后端 TradeOrderPaymentProofStatusEnum）。
+ * 这里用本地映射而非字典：订单维度已有字典 trade_payment_proof_status，
+ * 凭证维度只有 3 个值且仅本页展示，避免为一个纯展示字段新增一套字典数据。
+ */
+const PROOF_STATUS_MAP: Record<number, { color: string; text: string }> = {
+  0: { color: 'warning', text: '待核验' },
+  1: { color: 'success', text: '已确认' },
+  2: { color: 'error', text: '已驳回' },
+};
+
 const deliveryExpressList = ref<MallDeliveryExpressApi.DeliveryExpress[]>([]);
 const expressTrackList = ref<any[]>([]);
 const pickUpStore = ref<
@@ -82,6 +100,14 @@ const [OrderPriceDescriptions] = useDescription({
   column: 4,
   class: 'mx-4',
   schema: useOrderPriceSchema(),
+});
+
+const [PaymentInfoDescriptions] = useDescription({
+  title: '收款信息（线下收款）',
+  bordered: false,
+  column: 4,
+  class: 'mx-4',
+  schema: usePaymentInfoSchema(),
 });
 
 const [DeliveryInfoDescriptions] = useDescription({
@@ -161,6 +187,11 @@ const [PriceFormModal, priceFormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
+const [PaymentProofFormModal, paymentProofFormModalApi] = useVbenModal({
+  connectedComponent: PaymentProofForm,
+  destroyOnClose: true,
+});
+
 /** 获得详情 */
 async function getDetail() {
   loading.value = true;
@@ -174,6 +205,8 @@ async function getDetail() {
     order.value = res;
     productGridApi.setGridOptions({ data: res.items || [] });
     operateLogGridApi.setGridOptions({ data: res.logs || [] });
+    // 线下收款：付款凭证（核验进度与驳回原因）
+    proofs.value = await getPaymentProofList(orderId.value);
 
     // 如果配送方式为快递，则查询物流公司
     if (res.deliveryType === DeliveryTypeEnum.EXPRESS.type) {
@@ -210,6 +243,11 @@ const handleUpdateAddress = () => {
 
 const handleUpdatePrice = () => {
   priceFormModalApi.setData(order.value).open();
+};
+
+/** 线下收款：核验付款凭证 */
+const handleAuditPaymentProof = () => {
+  paymentProofFormModalApi.setData(order.value).open();
 };
 
 /** 核销 */
@@ -259,6 +297,12 @@ onMounted(async () => {
             ifShow: order.status === TradeOrderStatusEnum.UNPAID.status,
           },
           {
+            label: '核验收款',
+            type: 'primary',
+            onClick: handleAuditPaymentProof,
+            ifShow: order.paymentProofStatus === 1,
+          },
+          {
             label: '备注',
             type: 'primary',
             onClick: handleRemark,
@@ -296,6 +340,7 @@ onMounted(async () => {
     <RemarkFormModal @success="getDetail" />
     <AddressFormModal @success="getDetail" />
     <PriceFormModal @success="getDetail" />
+    <PaymentProofFormModal @success="getDetail" />
 
     <!-- 订单信息 -->
     <div class="mb-4">
@@ -327,6 +372,54 @@ onMounted(async () => {
     <!-- 费用信息 -->
     <div class="mb-4">
       <OrderPriceDescriptions :data="order" />
+    </div>
+    <!-- 收款信息（线下收款） -->
+    <div class="mb-4">
+      <PaymentInfoDescriptions :data="order" />
+    </div>
+    <!-- 付款凭证：客户上传的转账截图与核验进度 -->
+    <div v-if="proofs.length > 0" class="mx-4 mb-4">
+      <div class="mb-2 font-medium">付款凭证（线下收款）</div>
+      <div
+        v-for="proof in proofs"
+        :key="proof.id"
+        class="mb-3 rounded border border-gray-200 p-3"
+      >
+        <div class="mb-2 flex flex-wrap items-center gap-3">
+          <Tag :color="PROOF_STATUS_MAP[proof.status ?? 0]?.color">
+            {{ PROOF_STATUS_MAP[proof.status ?? 0]?.text }}
+          </Tag>
+          <span>申报 {{ fenToYuan(proof.amount ?? 0) }} 元</span>
+          <span v-if="proof.confirmedAmount !== null && proof.confirmedAmount !== undefined">
+            核定 {{ fenToYuan(proof.confirmedAmount) }} 元
+          </span>
+          <span class="text-gray-400">
+            提交 {{ formatDateTime(proof.createTime) }}
+          </span>
+          <span v-if="proof.payerName" class="text-gray-400">
+            付款人：{{ proof.payerName }}
+          </span>
+          <DictTag
+            v-if="proof.payChannelCode"
+            :type="DICT_TYPE.PAY_CHANNEL_CODE"
+            :value="proof.payChannelCode"
+          />
+        </div>
+        <Image.PreviewGroup>
+          <Space :size="12" wrap>
+            <Image
+              v-for="(url, index) in proof.urls"
+              :key="index"
+              :src="url"
+              :width="120"
+              class="rounded border border-gray-200"
+            />
+          </Space>
+        </Image.PreviewGroup>
+        <div v-if="proof.auditRemark" class="mt-2 text-xs text-red-500">
+          核验意见：{{ proof.auditRemark }}
+        </div>
+      </div>
     </div>
     <!-- 收货信息 -->
     <div class="mb-4">
