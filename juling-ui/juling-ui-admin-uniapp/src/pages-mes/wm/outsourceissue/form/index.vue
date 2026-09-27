@@ -325,7 +325,7 @@ async function handleSubmitIssue() {
     toast.success('提交成功')
     uni.$emit('mes:wm:outsourceissue:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     submitLoading.value = false
   }
 }
@@ -357,7 +357,7 @@ async function handleStockIssue() {
     toast.success('拣货成功')
     uni.$emit('mes:wm:outsourceissue:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     stockLoading.value = false
   }
 }
@@ -382,7 +382,7 @@ async function handleFinishIssue() {
     toast.success('领出成功')
     uni.$emit('mes:wm:outsourceissue:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     finishLoading.value = false
   }
 }

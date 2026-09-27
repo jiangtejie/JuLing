@@ -38,7 +38,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_NOT_FO
 /**
  * 交易订单【读】 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class TradeOrderQueryServiceImpl implements TradeOrderQueryService {

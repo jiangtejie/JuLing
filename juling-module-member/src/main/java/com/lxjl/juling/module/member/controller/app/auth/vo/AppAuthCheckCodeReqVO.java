@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-// TODO 棱信矩灵：code review 相关逻辑
+// TODO 亚特：code review 相关逻辑
 @Schema(description = "用户 APP - 校验验证码 Request VO")
 @Data
 @NoArgsConstructor

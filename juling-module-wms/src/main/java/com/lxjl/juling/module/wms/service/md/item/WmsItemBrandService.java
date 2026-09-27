@@ -15,7 +15,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * WMS 商品品牌 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface WmsItemBrandService {
 

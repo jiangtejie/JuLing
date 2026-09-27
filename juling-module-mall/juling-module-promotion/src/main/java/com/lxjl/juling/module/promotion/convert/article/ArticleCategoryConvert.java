@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 文章分类 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ArticleCategoryConvert {

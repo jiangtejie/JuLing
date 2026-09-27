@@ -33,7 +33,7 @@ public class HrmEmployeeRespVO {
     private Long userId;
 
     @ExcelProperty(value = "绑定用户", index = 17)
-    @Schema(description = "后台用户昵称", example = "矩灵")
+    @Schema(description = "后台用户昵称", example = "亚特")
     private String userNickname;
 
     @ExcelProperty(value = "手机号", index = 3)

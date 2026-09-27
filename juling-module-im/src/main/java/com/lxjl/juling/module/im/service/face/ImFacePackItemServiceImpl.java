@@ -22,7 +22,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.FACE_PACK_ITEM_
 /**
  * IM 表情包项 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

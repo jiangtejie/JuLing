@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * FMS 常用摘要 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsDigestMapper extends BaseMapperX<FmsDigestDO> {

@@ -10,7 +10,7 @@ import jakarta.annotation.Resource;
 /**
  * 秒杀活动接口 Api 接口实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

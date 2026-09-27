@@ -11,7 +11,7 @@ import lombok.ToString;
 /**
  * FMS 常用摘要 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_digest")
 @KeySequence("fms_digest_seq")

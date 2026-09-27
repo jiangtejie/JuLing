@@ -22,7 +22,7 @@ import java.util.List;
  *
  * Token 通过自定义 CoAP Option 2088 携带
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotCoapUpstreamHandler extends IotCoapAbstractHandler {

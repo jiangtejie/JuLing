@@ -13,7 +13,7 @@ import reactor.core.publisher.Flux;
  *
  * 基于 <a href="https://cloud.tencent.com/document/product/1823/132252">TokenHub OpenAI 兼容接口</a> 实现
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @RequiredArgsConstructor

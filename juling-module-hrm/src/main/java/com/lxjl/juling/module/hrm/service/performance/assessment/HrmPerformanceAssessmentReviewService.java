@@ -14,7 +14,7 @@ import com.lxjl.juling.module.hrm.dal.dataobject.performance.plan.HrmPerformance
 /**
  * HRM 绩效评分 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface HrmPerformanceAssessmentReviewService {
 

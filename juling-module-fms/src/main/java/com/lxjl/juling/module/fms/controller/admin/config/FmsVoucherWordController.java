@@ -32,7 +32,7 @@ import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtil
 /**
  * FMS 凭证字 Controller
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Tag(name = "管理后台 - FMS 凭证字")
 @RestController

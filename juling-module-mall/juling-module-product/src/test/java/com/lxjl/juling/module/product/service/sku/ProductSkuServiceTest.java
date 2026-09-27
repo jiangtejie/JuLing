@@ -32,9 +32,9 @@ import static org.mockito.Mockito.verify;
 /**
  * {@link ProductSkuServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(ProductSkuServiceImpl.class)
 public class ProductSkuServiceTest extends BaseDbUnitTest {
 

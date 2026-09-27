@@ -10,7 +10,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 编码规则组成 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_md_auto_code_part")
 @KeySequence("mes_md_auto_code_part_seq")

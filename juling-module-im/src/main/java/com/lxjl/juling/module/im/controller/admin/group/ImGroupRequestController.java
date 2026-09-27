@@ -40,7 +40,7 @@ import static com.lxjl.juling.framework.web.core.util.WebFrameworkUtils.getLogin
 /**
  * IM 加群申请 Controller
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Tag(name = "管理后台 - IM 加群申请")
 @RestController

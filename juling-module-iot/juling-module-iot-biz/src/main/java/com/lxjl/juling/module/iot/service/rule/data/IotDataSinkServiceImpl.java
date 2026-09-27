@@ -26,7 +26,7 @@ import static com.lxjl.juling.module.iot.enums.ErrorCodeConstants.DATA_SINK_NOT_
 /**
  * IoT 数据流转目的 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

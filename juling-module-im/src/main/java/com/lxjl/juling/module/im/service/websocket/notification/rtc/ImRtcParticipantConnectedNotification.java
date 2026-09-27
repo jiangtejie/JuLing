@@ -10,7 +10,7 @@ import lombok.Data;
  * <p>
  * 前端 callStore 把 userId 追加进 joinedUserIds；胶囊条人数 +1；群聊场景首条 1602 携带通话元信息以便 首次填充胶囊条
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ImRtcParticipantConnectedNotification {

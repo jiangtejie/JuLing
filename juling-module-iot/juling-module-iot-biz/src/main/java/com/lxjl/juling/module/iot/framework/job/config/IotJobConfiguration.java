@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 /**
  * IoT 模块的 Job 自动配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Configuration
 public class IotJobConfiguration {

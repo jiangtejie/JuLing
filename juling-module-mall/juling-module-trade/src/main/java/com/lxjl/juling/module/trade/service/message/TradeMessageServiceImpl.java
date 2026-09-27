@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Trade 消息 service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -32,7 +32,7 @@ public class TradeMessageServiceImpl implements TradeMessageService {
         Map<String, Object> msgMap = new HashMap<>(2);
         msgMap.put("orderId", reqBO.getOrderId());
         msgMap.put("deliveryMessage", reqBO.getMessage());
-        // TODO 棱信矩灵：看下模版
+        // TODO 亚特：看下模版
         // 2、发送站内信
         notifyMessageSendApi.sendSingleMessageToMember(
                 new NotifySendSingleToUserReqDTO()

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * 单元测试，assert 断言工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AssertUtils {
 

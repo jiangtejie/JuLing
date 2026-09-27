@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * IoT 设备属性设置的 {@link IotSceneRuleAction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

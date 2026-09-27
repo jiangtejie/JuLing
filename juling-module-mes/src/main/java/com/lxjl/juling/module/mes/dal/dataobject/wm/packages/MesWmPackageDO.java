@@ -15,7 +15,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 装箱单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_package")
 @KeySequence("mes_wm_package_seq")

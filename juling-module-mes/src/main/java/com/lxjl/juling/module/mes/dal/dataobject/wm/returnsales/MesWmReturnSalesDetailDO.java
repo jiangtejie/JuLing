@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * MES 销售退货明细 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_return_sales_detail")
 @KeySequence("mes_wm_return_sales_detail_seq")

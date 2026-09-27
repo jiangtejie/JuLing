@@ -167,9 +167,9 @@ wx: # 参见 https://github.com/jiangtejie/JuLing 文档
       key-prefix: wa # Redis Key 的前缀
       http-client-type: HttpComponents # 采用 HttpComponents（HttpClient 5）请求微信小程序平台
 
---- #################### 矩灵相关配置 ####################
+--- #################### 亚特相关配置 ####################
 
-# 矩灵配置项，设置当前项目所有自定义的配置
+# 亚特配置项，设置当前项目所有自定义的配置
 juling:
   pay:
     order-notify-url: http://juling.natapp1.cc/admin-api/pay/notify/order # 支付渠道的【支付】回调地址

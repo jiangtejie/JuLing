@@ -22,7 +22,7 @@ import static com.lxjl.juling.module.iot.gateway.protocol.modbus.common.utils.Io
  * 2. 通过 {@link IotModbusTcpClientConnectionManager.ModbusConnection} 执行事务
  * 3. 从响应中提取原始值
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @UtilityClass
 @Slf4j

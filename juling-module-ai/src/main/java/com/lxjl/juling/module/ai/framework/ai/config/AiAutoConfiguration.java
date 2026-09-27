@@ -51,9 +51,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * 矩灵 AI 自动配置
+ * 亚特 AI 自动配置
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Configuration
 @EnableConfigurationProperties({ JuLingAiProperties.class,

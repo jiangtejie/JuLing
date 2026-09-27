@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * MES 条码格式枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * HRM 员工月度社保记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_insurance_month_employee_record", autoResultMap = true)
 @KeySequence("hrm_insurance_month_employee_record_seq")

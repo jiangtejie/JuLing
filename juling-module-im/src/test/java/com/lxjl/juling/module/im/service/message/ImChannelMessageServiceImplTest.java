@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link ImChannelMessageServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ImChannelMessageServiceImplTest extends BaseMockitoUnitTest {
 

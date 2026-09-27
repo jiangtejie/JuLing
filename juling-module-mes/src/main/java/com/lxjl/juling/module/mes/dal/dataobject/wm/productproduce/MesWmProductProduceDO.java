@@ -18,7 +18,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 生产入库单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_product_produce")
 @KeySequence("mes_wm_product_produce_seq")

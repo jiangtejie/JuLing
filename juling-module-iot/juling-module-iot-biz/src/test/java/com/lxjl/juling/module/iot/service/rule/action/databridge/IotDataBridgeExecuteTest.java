@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link IotDataRuleAction} 实现类的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Disabled // 默认禁用，需要手动启用测试
 @Slf4j
@@ -39,7 +39,7 @@ public class IotDataBridgeExecuteTest extends BaseMockitoUnitTest {
 
     @BeforeEach
     public void setUp() {
-        // TODO @棱信矩灵：@puhui999：需要调整下；
+        // TODO @亚特：@puhui999：需要调整下；
         // 创建共享的测试消息
         //message = IotDeviceMessage.builder().messageId("TEST-001").reportTime(LocalDateTime.now())
         //        .productKey("testProduct").deviceName("testDevice")

@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * IM 内容类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @RequiredArgsConstructor

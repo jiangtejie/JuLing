@@ -18,7 +18,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * IoT 场景规则匹配器统一管理器：负责管理所有匹配器（触发器匹配器和条件匹配器），并提供统一的匹配入口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

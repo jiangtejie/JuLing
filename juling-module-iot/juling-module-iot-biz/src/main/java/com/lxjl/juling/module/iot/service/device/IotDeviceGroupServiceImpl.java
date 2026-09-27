@@ -19,7 +19,7 @@ import static com.lxjl.juling.module.iot.enums.ErrorCodeConstants.DEVICE_GROUP_N
 /**
  * IoT 设备分组 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

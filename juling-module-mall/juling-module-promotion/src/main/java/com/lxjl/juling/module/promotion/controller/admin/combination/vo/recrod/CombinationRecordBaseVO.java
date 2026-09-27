@@ -13,7 +13,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
  * 拼团记录 Base VO，提供给添加、修改、详细的子 VO 使用
  * 如果子 VO 存在差异的字段，请不要添加到这里，影响 Swagger 文档生成
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CombinationRecordBaseVO {
@@ -33,7 +33,7 @@ public class CombinationRecordBaseVO {
     @NotNull(message = "用户编号不能为空")
     private Long userId;
 
-    @Schema(description = "用户昵称", example = "老棱信矩灵")
+    @Schema(description = "用户昵称", example = "老亚特")
     private String nickname;
 
     @Schema(description = "用户头像", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://github.com/jiangtejie/JuLing")

@@ -1,4 +1,4 @@
-# 棱信矩灵 移动端管理后台(uni-app)
+# 亚特 移动端管理后台(uni-app)
 
 基于 uni-app 实现的移动端管理后台,复用本仓库后端接口(`/admin-api`),与桌面端
 `juling-ui-admin-vben` 功能对应,面向手机 App / 小程序 / H5 场景。

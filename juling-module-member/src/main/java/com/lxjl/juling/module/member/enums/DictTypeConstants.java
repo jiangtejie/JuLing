@@ -3,7 +3,7 @@ package com.lxjl.juling.module.member.enums;
 /**
  * Member 字典类型的枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DictTypeConstants {
 

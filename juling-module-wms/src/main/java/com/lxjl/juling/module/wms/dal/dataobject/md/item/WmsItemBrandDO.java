@@ -9,7 +9,7 @@ import lombok.*;
 /**
  * WMS 商品品牌 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("wms_item_brand")
 @KeySequence("wms_item_brand_seq")

@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * MES 点检保养方案状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

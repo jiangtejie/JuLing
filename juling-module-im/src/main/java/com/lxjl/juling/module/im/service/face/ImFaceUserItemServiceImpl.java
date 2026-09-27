@@ -24,7 +24,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.FACE_USER_ITEM_
 /**
  * IM 用户私有表情 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

@@ -25,7 +25,7 @@ import java.util.Map;
  * Redis 的 {@link IotDataRuleAction} 实现类
  * 支持多种 Redis 数据结构：Stream、Hash、List、Set、ZSet、String
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

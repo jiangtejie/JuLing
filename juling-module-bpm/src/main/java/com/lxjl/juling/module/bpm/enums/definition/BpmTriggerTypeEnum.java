@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * BPM Simple 触发器类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

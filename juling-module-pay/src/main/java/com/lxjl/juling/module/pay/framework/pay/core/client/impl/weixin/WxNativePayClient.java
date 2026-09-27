@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * 文档：<a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_4_1.shtml">Native 下单</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class WxNativePayClient extends AbstractWxPayClient {

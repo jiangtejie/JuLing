@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Positive;
 @Data
 public class MemberLevelBaseVO {
 
-    @Schema(description = "等级名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "等级名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @NotBlank(message = "等级名称不能为空")
     private String name;
 

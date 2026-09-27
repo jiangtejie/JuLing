@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link PmsKnowledgeGroupServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(PmsKnowledgeGroupServiceImpl.class)
 public class PmsKnowledgeGroupServiceImplTest extends BaseDbUnitTest {

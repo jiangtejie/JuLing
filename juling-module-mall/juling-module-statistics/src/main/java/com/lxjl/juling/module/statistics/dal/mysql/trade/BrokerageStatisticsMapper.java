@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * 订单分销的统计 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface BrokerageStatisticsMapper extends BaseMapperX<TradeStatisticsDO> {

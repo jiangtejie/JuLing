@@ -27,7 +27,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * CRM 销售漏斗分析 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class CrmStatisticsFunnelServiceImpl implements CrmStatisticsFunnelService {

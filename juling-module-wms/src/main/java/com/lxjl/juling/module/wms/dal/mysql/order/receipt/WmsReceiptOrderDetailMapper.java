@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * WMS 入库单明细 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface WmsReceiptOrderDetailMapper extends BaseMapperX<WmsReceiptOrderDetailDO> {

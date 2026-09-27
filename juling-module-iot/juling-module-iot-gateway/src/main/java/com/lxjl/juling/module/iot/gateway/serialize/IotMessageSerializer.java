@@ -8,7 +8,7 @@ import com.lxjl.juling.module.iot.core.mq.message.IotDeviceMessage;
  *
  * 用于序列化和反序列化设备消息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotMessageSerializer {
 

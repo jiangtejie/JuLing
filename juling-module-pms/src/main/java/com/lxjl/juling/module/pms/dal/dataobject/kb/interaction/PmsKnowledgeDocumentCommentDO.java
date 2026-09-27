@@ -13,7 +13,7 @@ import lombok.ToString;
 /**
  * PMS 知识库文档评论 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_knowledge_document_comment")
 @KeySequence("pms_knowledge_document_comment_seq")

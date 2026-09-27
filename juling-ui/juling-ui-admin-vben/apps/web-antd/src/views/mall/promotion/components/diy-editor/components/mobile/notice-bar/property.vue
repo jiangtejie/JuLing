@@ -37,7 +37,7 @@ const rules = {
           height="48px"
           :show-description="false"
         >
-          <!-- TODO @棱信矩灵：这里不提示；是不是组件得封装下；-->
+          <!-- TODO @亚特：这里不提示；是不是组件得封装下；-->
           <template #tip>建议尺寸：24 * 24</template>
         </UploadImg>
       </FormItem>

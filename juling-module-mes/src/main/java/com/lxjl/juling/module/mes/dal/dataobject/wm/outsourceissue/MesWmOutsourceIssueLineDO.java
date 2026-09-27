@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 /**
  * MES 外协发料单行 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_outsource_issue_line")
 @KeySequence("mes_wm_outsource_issue_line_seq")

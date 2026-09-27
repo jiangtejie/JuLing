@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * MES 销售出库单行 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesWmProductSalesLineMapper extends BaseMapperX<MesWmProductSalesLineDO> {

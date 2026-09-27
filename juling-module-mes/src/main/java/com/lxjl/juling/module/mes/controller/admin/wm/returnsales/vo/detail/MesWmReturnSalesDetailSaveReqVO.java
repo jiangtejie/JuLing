@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 管理后台 - MES 销售退货相关
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - MES 销售退货明细新增/修改 Request VO")
 @Data

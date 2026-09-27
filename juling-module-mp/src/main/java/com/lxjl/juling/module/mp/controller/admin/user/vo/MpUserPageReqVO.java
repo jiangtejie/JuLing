@@ -24,7 +24,7 @@ public class MpUserPageReqVO extends PageParam {
     @Schema(description = "微信生态唯一标识，模糊匹配", example = "o6_bmjrPTlm6_2sgVt7hMZOPfL2M")
     private String unionId;
 
-    @Schema(description = "公众号粉丝昵称，模糊匹配", example = "棱信矩灵")
+    @Schema(description = "公众号粉丝昵称，模糊匹配", example = "亚特")
     private String nickname;
 
 }

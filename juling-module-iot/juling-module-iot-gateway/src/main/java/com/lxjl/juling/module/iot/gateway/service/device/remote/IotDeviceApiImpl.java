@@ -33,7 +33,7 @@ import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeCo
 /**
  * Iot 设备信息 Service 实现类：调用远程的 device http 接口，进行设备认证、设备获取等
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

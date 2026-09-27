@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * ERP 采购订单 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpPurchaseOrderMapper extends BaseMapperX<ErpPurchaseOrderDO> {

@@ -15,7 +15,7 @@ public class AppProductSpuDetailRespVO {
 
     // ========== 基本信息 =========
 
-    @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
     @Schema(description = "商品简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "我是一个快乐简介")

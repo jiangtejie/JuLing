@@ -297,7 +297,7 @@ async function loadTab(tab: number) {
     tabError.value = false
     return
   }
-  // add by 棱信矩灵：此前失败会把空对象/空数组写进缓存，而命中缓存即 return，
+  // add by 亚特：此前失败会把空对象/空数组写进缓存，而命中缓存即 return，
   // 导致一次网络抖动后该分组永久显示「暂无统计数据」，切走再切回也不会重新请求。
   // 现改为：失败不写缓存 + 置错误态，由 StatisticsCard 展示「加载失败 / 重新加载」。
   tabError.value = false
@@ -358,7 +358,7 @@ async function handleTabChange({ index }: { index: number }) {
   }
 }
 
-/** add by 棱信矩灵：加载失败后重试当前分组（失败时未写缓存，这里再兜底清一次） */
+/** add by 亚特：加载失败后重试当前分组（失败时未写缓存，这里再兜底清一次） */
 async function handleRetryTab() {
   delete cache[tabCacheKey(activeTab.value)]
   loading.value = true

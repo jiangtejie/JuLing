@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * HRM 招聘职位状态的 {@link IParseFunction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

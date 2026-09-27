@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * 会员统计 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MemberStatisticsConvert {

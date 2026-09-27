@@ -5,7 +5,7 @@ import com.lxjl.juling.framework.common.exception.ErrorCode;
 /**
  * FMS 错误码常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ErrorCodeConstants {
 

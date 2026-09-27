@@ -12,7 +12,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 上下工记录流水 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_pro_work_record_log")
 @KeySequence("mes_pro_work_record_log_seq")

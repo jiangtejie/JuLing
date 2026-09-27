@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * IM 通话结束原因枚举；落历史消息时计算 content 文案
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

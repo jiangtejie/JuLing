@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 字典数据 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DictDataCommonApi {
 

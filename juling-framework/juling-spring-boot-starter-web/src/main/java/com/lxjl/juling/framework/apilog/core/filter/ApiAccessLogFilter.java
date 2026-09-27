@@ -44,7 +44,7 @@ import static com.lxjl.juling.framework.common.util.json.JsonUtils.toJsonString;
  *
  * 目的：记录 API 访问日志到数据库中
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class ApiAccessLogFilter extends ApiRequestFilter {

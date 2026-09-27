@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * HRM 员工培训经历 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface HrmEmployeeTrainingExperienceService {
 

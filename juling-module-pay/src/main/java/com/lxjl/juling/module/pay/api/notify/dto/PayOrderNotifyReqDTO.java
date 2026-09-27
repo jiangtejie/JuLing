@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 支付单的通知 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @Builder

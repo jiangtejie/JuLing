@@ -10,7 +10,7 @@ public class PmsProjectMemberRespVO {
     @Schema(description = "后台用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long userId;
 
-    @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String nickname;
 
     @Schema(description = "用户头像")

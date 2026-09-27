@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * IoT 网关 CoAP 订阅者：接收下行给设备的消息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotCoapDownstreamSubscriber extends AbstractIotProtocolDownstreamSubscriber {

@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 /**
  * 短信验证码 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface SmsCodeApi {
 

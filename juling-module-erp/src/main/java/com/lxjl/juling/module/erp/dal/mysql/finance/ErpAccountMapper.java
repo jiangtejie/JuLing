@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ERP 结算账户 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpAccountMapper extends BaseMapperX<ErpAccountDO> {

@@ -1,6 +1,6 @@
-# 棱信矩灵 管理系统
+# 亚特 管理系统
 
-面向 **棱信矩灵** 自有业务的一体化管理平台：进销存、财务、生产制造、人力资源、项目与客户管理。
+面向 **亚特** 自有业务的一体化管理平台：进销存、财务、生产制造、人力资源、项目与客户管理。
 
 - 后端：Spring Boot 3.5 + JDK 17 + MyBatis-Plus + PostgreSQL 15 + Redis + Flowable + Quartz
 - 前端：Vue3 + Vben5 + Ant Design Vue（`juling-ui/juling-ui-admin-vben`），生产环境经 Nginx 发布
@@ -61,7 +61,7 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 # Nginx: location /jl/ → alias 到上面的 dist；/admin-api/ → 48080；/infra/ws → WebSocket
 ```
 
-默认账号 `admin`（租户：棱信矩灵）。初始密码已由 `admin123` 改为自定义强密码，出于安全考虑
+默认账号 `admin`（租户：亚特）。初始密码已由 `admin123` 改为自定义强密码，出于安全考虑
 **不写入仓库**，仅存于本机文件 `script/local/admin-password.txt`（该目录已被 Git 排除）；
 如需重置，使用模板 `sql/local/admin_password_reset.sql`（把 BCrypt 值写回 `system_users`）。
 
@@ -70,7 +70,7 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 - **PostgreSQL 适配**：统计类 Mapper 的 SQL 已由 MySQL 方言改写为 PG 原生
   （`COALESCE` / `to_char` / `EXTRACT` / `STRING_TO_ARRAY`，以及 `deleted = 0` 等）。
   如需换回 MySQL，需自行改写统计类 Mapper 与代码生成模板。
-- **品牌**：界面标题、水印、菜单与提示文案统一为「棱信矩灵 / 矩灵」。
+- **品牌**：界面标题、水印、菜单与提示文案统一为「亚特」。
 - **命名约定**：Maven 坐标 `com.lxjl.boot:juling-*`，Java 包 `com.lxjl.juling.*`，配置键 `juling.*`，
   数据库库名 `juling`；新增业务模块按同一约定命名。
 - **许可**：MIT License，详见 [LICENSE](./LICENSE)。

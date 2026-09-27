@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * PMS 项目公告 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "pms_project_announcement", autoResultMap = true)
 @KeySequence("pms_project_announcement_seq")

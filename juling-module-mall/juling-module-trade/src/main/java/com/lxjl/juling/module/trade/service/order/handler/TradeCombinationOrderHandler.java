@@ -25,7 +25,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_DELIVE
 /**
  * 拼团订单的 {@link TradeOrderHandler} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class TradeCombinationOrderHandler implements TradeOrderHandler {

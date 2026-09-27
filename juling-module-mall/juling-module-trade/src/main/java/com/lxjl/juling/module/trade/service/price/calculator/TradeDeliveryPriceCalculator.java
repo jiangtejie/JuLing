@@ -34,7 +34,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.*;
 /**
  * 运费的 {@link TradePriceCalculator} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Order(TradePriceCalculator.ORDER_DELIVERY)

@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * 积分商城活动 Api 接口实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

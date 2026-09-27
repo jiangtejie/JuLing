@@ -16,7 +16,7 @@ public class PayOrderDetailsRespVO extends PayOrderBaseVO {
     @Schema(description = "支付订单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long id;
 
-    @Schema(description = "应用名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "应用名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String appName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)

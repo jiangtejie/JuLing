@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.f
 /**
  * IoT Modbus TCP Client 轮询调度器：管理点位的轮询定时器，调度读取任务并上报结果
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotModbusTcpClientPollScheduler extends AbstractIotModbusPollScheduler {

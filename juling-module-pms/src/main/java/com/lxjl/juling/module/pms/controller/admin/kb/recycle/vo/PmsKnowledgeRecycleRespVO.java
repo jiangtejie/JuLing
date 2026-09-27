@@ -30,7 +30,7 @@ public class PmsKnowledgeRecycleRespVO {
     @Schema(description = "删除人用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long deleteUserId;
 
-    @Schema(description = "删除人姓名", example = "矩灵")
+    @Schema(description = "删除人姓名", example = "亚特")
     private String deleteUserName;
 
     @Schema(description = "删除时间", requiredMode = Schema.RequiredMode.REQUIRED)

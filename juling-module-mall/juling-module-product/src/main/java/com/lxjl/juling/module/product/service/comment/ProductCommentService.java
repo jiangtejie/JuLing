@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * 商品评论 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

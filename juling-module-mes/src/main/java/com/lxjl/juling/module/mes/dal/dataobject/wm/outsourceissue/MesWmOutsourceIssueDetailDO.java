@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 /**
  * MES 外协发料单明细 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_outsource_issue_detail")
 @KeySequence("mes_wm_outsource_issue_detail_seq")

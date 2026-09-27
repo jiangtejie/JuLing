@@ -20,7 +20,7 @@ import static java.io.File.separator;
  * <p>
  * 通过修改 groupIdNew、artifactIdNew、projectBaseDirNew 三个变量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class ProjectReactor {
@@ -28,7 +28,7 @@ public class ProjectReactor {
     private static final String GROUP_ID = "com.lxjl.boot";
     private static final String ARTIFACT_ID = "juling";
     private static final String PACKAGE_NAME = "com.lxjl.juling";
-    private static final String TITLE = "矩灵管理系统";
+    private static final String TITLE = "亚特管理系统";
 
     /**
      * 白名单文件，不进行重写，避免出问题

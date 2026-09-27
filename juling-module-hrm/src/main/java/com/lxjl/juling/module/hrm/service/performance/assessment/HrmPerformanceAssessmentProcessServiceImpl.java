@@ -94,7 +94,7 @@ import static com.lxjl.juling.module.hrm.enums.LogRecordConstants.HRM_PERFORMANC
 /**
  * HRM 绩效流程 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -345,7 +345,7 @@ public class HrmPerformanceAssessmentProcessServiceImpl
         templateParams.put("planName", plan.getName());
         templateParams.put("stageName", stage.getName());
         templateParams.put("assessmentId", assessment.getId());
-        // TODO DONE @棱信矩灵：通知模板保留员工绩效入口，接收人进入页面后按待办页签处理。
+        // TODO DONE @亚特：通知模板保留员工绩效入口，接收人进入页面后按待办页签处理。
         templateParams.put("route", "/hrm/portal/performance/assessment");
         notifyMessageSendApi.sendSingleMessageToAdmin(new NotifySendSingleToUserReqDTO()
                 .setUserId(handler.getUserId())
@@ -377,7 +377,7 @@ public class HrmPerformanceAssessmentProcessServiceImpl
         templateParams.put("actionName", actionName);
         templateParams.put("result", result);
         templateParams.put("assessmentId", assessment.getId());
-        // TODO DONE @棱信矩灵：处理结果与待办共用员工绩效入口，避免维护不同阶段的临时地址。
+        // TODO DONE @亚特：处理结果与待办共用员工绩效入口，避免维护不同阶段的临时地址。
         templateParams.put("route", "/hrm/portal/performance/assessment");
         for (HrmEmployeeDO employee : employees) {
             if (employee.getUserId() == null) {

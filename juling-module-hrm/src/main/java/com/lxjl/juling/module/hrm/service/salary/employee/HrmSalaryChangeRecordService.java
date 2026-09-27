@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * HRM 定薪/调薪记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface HrmSalaryChangeRecordService {
 

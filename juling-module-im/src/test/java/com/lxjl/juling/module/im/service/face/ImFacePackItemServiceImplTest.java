@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link ImFacePackItemServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ImFacePackItemServiceImplTest extends BaseMockitoUnitTest {
 

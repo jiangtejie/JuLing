@@ -32,7 +32,7 @@
     showDialog({
       title: isService ? '用户服务协议' : '隐私政策',
       message: isService
-        ? '本协议说明矩灵订货商城提供的服务范围、账号使用规则与订单履约方式。\n正式文本以平台发布版本为准。'
+        ? '本协议说明亚特订货商城提供的服务范围、账号使用规则与订单履约方式。\n正式文本以平台发布版本为准。'
         : '我们仅收集完成订货与配送所必需的信息（手机号、收货人姓名、联系电话、收货地址），不用于其它用途。\n正式文本以平台发布版本为准。',
     });
   }
@@ -117,8 +117,8 @@
     <AppNavBar title="登录" />
 
     <div class="login__brand">
-      <div class="login__logo">矩</div>
-      <div class="login__title">矩灵订货商城</div>
+      <div class="login__logo">亚</div>
+      <div class="login__title">亚特订货商城</div>
       <div class="login__subtitle">企业专属订货价 · 登录后可见</div>
     </div>
 

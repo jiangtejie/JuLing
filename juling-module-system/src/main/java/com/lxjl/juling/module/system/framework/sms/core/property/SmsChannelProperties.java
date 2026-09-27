@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 短信渠道配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021/1/25 17:01
  */
 @Data

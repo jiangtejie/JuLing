@@ -14,7 +14,7 @@ public class IotDataRuleRespVO {
     @Schema(description = "数据流转规则编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "8540")
     private Long id;
 
-    @Schema(description = "数据流转规则名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "数据流转规则名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
     @Schema(description = "数据流转规则描述", example = "你猜")

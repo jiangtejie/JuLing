@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * IM 实时通话 Service
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImRtcCallService {
 

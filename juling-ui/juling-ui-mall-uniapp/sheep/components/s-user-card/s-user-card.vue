@@ -24,7 +24,7 @@
       </view>
     </view>
 
-    <!-- 提示绑定手机号 先隐藏矩灵需要再修改 -->
+    <!-- 提示绑定手机号 先隐藏亚特需要再修改 -->
     <view
       class="bind-mobile-box ss-flex ss-row-between ss-col-center"
       v-if="isLogin && !userInfo.mobile"

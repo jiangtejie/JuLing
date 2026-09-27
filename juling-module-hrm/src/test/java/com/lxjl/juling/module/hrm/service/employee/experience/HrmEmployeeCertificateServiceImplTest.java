@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 /**
  * {@link HrmEmployeeCertificateServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmEmployeeCertificateServiceImpl.class)
 public class HrmEmployeeCertificateServiceImplTest extends BaseDbUnitTest {

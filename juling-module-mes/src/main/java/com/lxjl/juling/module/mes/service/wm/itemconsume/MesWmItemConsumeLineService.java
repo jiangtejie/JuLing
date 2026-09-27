@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * MES 物料消耗记录行 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesWmItemConsumeLineService {
 

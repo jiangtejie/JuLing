@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link CombinationRecordServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(CombinationRecordServiceImpl.class)
 public class CombinationRecordServiceImplTest extends BaseDbUnitTest {
@@ -269,7 +269,7 @@ public class CombinationRecordServiceImplTest extends BaseDbUnitTest {
     private void mockCreateContext() {
         MemberUserRespDTO user = randomPojo(MemberUserRespDTO.class, o -> {
             o.setId(USER_ID);
-            o.setNickname("棱信矩灵");
+            o.setNickname("亚特");
             o.setAvatar("https://github.com/jiangtejie/JuLing");
         });
         when(memberUserApi.getUser(USER_ID)).thenReturn(user);
@@ -305,7 +305,7 @@ public class CombinationRecordServiceImplTest extends BaseDbUnitTest {
             o.setSkuId(SKU_ID);
             o.setCount(1);
             o.setUserId(USER_ID);
-            o.setNickname("棱信矩灵");
+            o.setNickname("亚特");
             o.setAvatar("https://github.com/jiangtejie/JuLing");
             o.setHeadId(CombinationRecordDO.HEAD_ID_GROUP);
             o.setStatus(CombinationRecordStatusEnum.IN_PROGRESS.getStatus());

@@ -16,7 +16,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 退货检验单（RQC, Return Quality Control） DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_qc_rqc")
 @KeySequence("mes_qc_rqc_seq")

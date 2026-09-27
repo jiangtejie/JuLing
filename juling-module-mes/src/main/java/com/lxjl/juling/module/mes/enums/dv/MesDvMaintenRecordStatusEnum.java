@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * MES 设备保养记录状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

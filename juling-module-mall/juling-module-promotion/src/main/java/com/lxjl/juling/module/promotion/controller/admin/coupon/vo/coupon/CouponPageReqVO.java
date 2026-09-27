@@ -31,7 +31,7 @@ public class CouponPageReqVO extends PageParam {
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 
-    @Schema(description = "用户昵称", example = "棱信矩灵")
+    @Schema(description = "用户昵称", example = "亚特")
     private String nickname;
 
     @Schema(description = "用户编号", example = "1")

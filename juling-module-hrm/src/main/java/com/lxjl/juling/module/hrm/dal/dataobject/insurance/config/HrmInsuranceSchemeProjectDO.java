@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 /**
  * HRM 社保方案项目 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_insurance_scheme_project")
 @KeySequence("hrm_insurance_scheme_project_seq")

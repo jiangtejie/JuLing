@@ -15,7 +15,7 @@ import static com.lxjl.juling.module.mp.enums.ErrorCodeConstants.USER_NOT_EXISTS
 /**
  * 公众号粉丝 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MpUserService {
 

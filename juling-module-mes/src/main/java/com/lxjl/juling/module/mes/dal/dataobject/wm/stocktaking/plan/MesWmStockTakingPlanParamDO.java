@@ -11,7 +11,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 盘点方案参数 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_stock_taking_plan_param")
 @KeySequence("mes_wm_stock_taking_plan_param_seq")

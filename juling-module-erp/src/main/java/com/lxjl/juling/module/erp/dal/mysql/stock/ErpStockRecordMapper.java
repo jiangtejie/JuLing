@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * ERP 产品库存明细 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpStockRecordMapper extends BaseMapperX<ErpStockRecordDO> {

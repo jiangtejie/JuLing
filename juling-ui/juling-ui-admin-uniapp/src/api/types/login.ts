@@ -39,11 +39,11 @@ export interface AuthPermissionInfo {
   user: IUserInfoRes
   roles: string[]
   permissions: string[]
-  // menus: AppRouteRecordRaw[]; // add by 棱信矩灵：暂时用不到
+  // menus: AppRouteRecordRaw[]; // add by 亚特：暂时用不到
 }
 
 // 认证存储数据结构
-// TODO @棱信矩灵：可以考虑删除
+// TODO @亚特：可以考虑删除
 export interface AuthStorage {
   mode: AuthMode
   tokens: ISingleTokenRes | IDoubleTokenRes

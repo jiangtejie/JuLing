@@ -15,7 +15,7 @@ import java.util.List;
  * <p>
  * status 字段复用 {@link ImRtcParticipantStatusEnum}，表达「本次信令对应的参与者状态变迁」
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ImRtcCallNotification {

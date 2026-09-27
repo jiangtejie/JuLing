@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * OAuth2.0 访问令牌创建 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class OAuth2AccessTokenCreateReqDTO implements Serializable {

@@ -29,7 +29,7 @@ import static com.lxjl.juling.module.ai.enums.ErrorCodeConstants.API_CONFIG_PLAC
 /**
  * Spring AI 工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AiUtils {
 
@@ -99,7 +99,7 @@ public class AiUtils {
         switch (platform) {
             case TONG_YI:
                 return DashScopeChatOptions.builder().model(model).temperature(temperature).maxToken(maxTokens)
-                        .enableThinking(true) // TODO 棱信矩灵：默认都开启 thinking 模式，后续可以让用户配置
+                        .enableThinking(true) // TODO 亚特：默认都开启 thinking 模式，后续可以让用户配置
                         .multiModel(TONG_YI_MULTI_MODELS.contains(model)) // 是否多模态模型
                         .toolCallbacks(toolCallbacks).toolContext(toolContext).build();
             case DEEP_SEEK:

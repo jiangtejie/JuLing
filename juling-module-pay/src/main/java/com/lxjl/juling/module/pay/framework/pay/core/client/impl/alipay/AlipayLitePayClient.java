@@ -21,7 +21,7 @@ import static com.lxjl.juling.module.pay.framework.pay.core.client.impl.alipay.A
  *
  * 文档：<a href="https://opendocs.alipay.com/mini/6039ed0c_alipay.trade.create">统一收单交易创建</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AlipayLitePayClient extends AbstractAlipayPayClient {
 

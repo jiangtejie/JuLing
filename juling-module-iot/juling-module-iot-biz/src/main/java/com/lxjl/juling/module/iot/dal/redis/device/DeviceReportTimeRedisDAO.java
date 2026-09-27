@@ -14,7 +14,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 设备的最后上报时间的 Redis DAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Repository
 public class DeviceReportTimeRedisDAO {

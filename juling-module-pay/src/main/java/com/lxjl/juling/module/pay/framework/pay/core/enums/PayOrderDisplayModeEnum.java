@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 支付 UI 展示模式
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

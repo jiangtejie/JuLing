@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * 客户自动掉入公海 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class CrmCustomerAutoPutPoolJob implements JobHandler {

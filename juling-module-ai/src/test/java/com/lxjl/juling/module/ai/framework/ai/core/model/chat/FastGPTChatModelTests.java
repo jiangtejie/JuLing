@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 基于 {@link OpenAiChatModel} 集成 FastGPT 测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class FastGPTChatModelTests {
 

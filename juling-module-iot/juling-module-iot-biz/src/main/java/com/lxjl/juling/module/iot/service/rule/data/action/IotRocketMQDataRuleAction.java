@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 /**
  * RocketMQ 的 {@link IotDataRuleAction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConditionalOnClass(name = "org.apache.rocketmq.client.producer.DefaultMQProducer")
 @Component

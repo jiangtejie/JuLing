@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link MesQcIpqcServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(MesQcIpqcServiceImpl.class)
 public class MesQcIpqcServiceImplTest extends BaseDbUnitTest {

@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * FMS 会计制度枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

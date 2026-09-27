@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link PmsKnowledgeDocumentShareServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(PmsKnowledgeDocumentShareServiceImpl.class)
 public class PmsKnowledgeDocumentShareServiceImplTest extends BaseDbUnitTest {

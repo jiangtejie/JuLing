@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * PMS 知识库文档 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "pms_knowledge_document", autoResultMap = true)
 @KeySequence("pms_knowledge_document_seq")

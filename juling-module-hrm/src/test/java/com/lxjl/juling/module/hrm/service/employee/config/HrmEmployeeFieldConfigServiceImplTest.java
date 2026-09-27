@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmEmployeeFieldConfigServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmEmployeeFieldConfigServiceImpl.class)
 public class HrmEmployeeFieldConfigServiceImplTest extends BaseDbUnitTest {

@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * {@link PmsWorkItemActivityServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(PmsWorkItemActivityServiceImpl.class)
 public class PmsWorkItemActivityServiceImplTest extends BaseDbUnitTest {

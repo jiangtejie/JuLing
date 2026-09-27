@@ -181,7 +181,7 @@ const formSchema = createFormSchema({
   takeType: [{ required: true, message: '领取方式不能为空' }],
   discountType: [{ required: true, message: '优惠类型不能为空' }],
   validityType: [{ required: true, message: '有效期类型不能为空' }],
-  // edit by 棱信矩灵：required 必须用无参闭包。wd-form-item 的 isRequired 是模板绑定的 computed，
+  // edit by 亚特：required 必须用无参闭包。wd-form-item 的 isRequired 是模板绑定的 computed，
   // 渲染期调用 schema.isRequired(prop) 时不传 model，写成 required(model) => model.xxx 会抛 TypeError 导致表单渲染中断
   validStartTime: [{ required: () => formData.value.validityType === CouponTemplateValidityTypeEnum.DATE, message: '固定开始时间不能为空' }],
   validEndTime: [{ required: () => formData.value.validityType === CouponTemplateValidityTypeEnum.DATE, message: '固定结束时间不能为空' }],
@@ -240,7 +240,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:promotion-coupon-template:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

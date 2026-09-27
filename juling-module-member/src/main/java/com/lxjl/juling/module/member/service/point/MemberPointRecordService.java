@@ -9,7 +9,7 @@ import com.lxjl.juling.module.member.enums.point.MemberPointBizTypeEnum;
 /**
  * 用户积分记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MemberPointRecordService {
 

@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link MesWmProductSalesLineServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(MesWmProductSalesLineServiceImpl.class)
 public class MesWmProductSalesLineServiceImplTest extends BaseDbUnitTest {

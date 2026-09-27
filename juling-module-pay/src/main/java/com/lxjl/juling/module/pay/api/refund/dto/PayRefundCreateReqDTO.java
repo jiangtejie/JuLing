@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * 退款单创建 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class PayRefundCreateReqDTO {

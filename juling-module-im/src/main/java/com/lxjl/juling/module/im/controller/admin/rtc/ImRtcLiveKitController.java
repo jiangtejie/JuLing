@@ -25,7 +25,7 @@ import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
  * <p>
  * 安全由请求签名（JWT + body sha256）保证，不走登录鉴权；伪造请求会被签名校验直接拒绝
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Tag(name = "LiveKit Webhook 回调")
 @RestController

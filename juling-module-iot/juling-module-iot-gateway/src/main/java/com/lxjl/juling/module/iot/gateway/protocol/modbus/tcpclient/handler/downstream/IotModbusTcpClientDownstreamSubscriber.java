@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * IoT Modbus TCP 下行消息订阅器：订阅消息总线的下行消息并转发给处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotModbusTcpClientDownstreamSubscriber extends AbstractIotProtocolDownstreamSubscriber {

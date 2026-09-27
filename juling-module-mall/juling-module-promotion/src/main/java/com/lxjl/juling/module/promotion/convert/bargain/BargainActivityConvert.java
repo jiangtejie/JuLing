@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.common.util.collection.MapUtils.findAndT
 /**
  * 拼团活动 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface BargainActivityConvert {

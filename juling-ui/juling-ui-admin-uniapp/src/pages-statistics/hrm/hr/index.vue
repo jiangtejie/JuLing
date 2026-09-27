@@ -75,7 +75,7 @@ definePage({
 
 const loading = ref(false) // 加载中
 const summary = ref<HrHomeStatistics>() // 工作台汇总数据
-const loadError = ref(false) // add by 棱信矩灵：加载失败标记，避免失败后整屏渲染成 0 被误认为「数据真的是 0」
+const loadError = ref(false) // add by 亚特：加载失败标记，避免失败后整屏渲染成 0 被误认为「数据真的是 0」
 
 /** 返回上一页 */
 function handleBack() {
@@ -89,7 +89,7 @@ async function getSummary() {
   try {
     summary.value = await getHrHomeStatisticsSummary()
   } catch {
-    // add by 棱信矩灵：失败时置错误态并展示「重新加载」，此前无 catch，失败后各卡片用 || 0 兜底渲染成满屏 0
+    // add by 亚特：失败时置错误态并展示「重新加载」，此前无 catch，失败后各卡片用 || 0 兜底渲染成满屏 0
     loadError.value = true
   } finally {
     loading.value = false

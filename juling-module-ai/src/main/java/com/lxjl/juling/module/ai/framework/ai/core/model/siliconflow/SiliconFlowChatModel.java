@@ -14,7 +14,7 @@ import reactor.core.publisher.Flux;
  *
  * 1. API 文档：<a href="https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions">API 文档</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @RequiredArgsConstructor

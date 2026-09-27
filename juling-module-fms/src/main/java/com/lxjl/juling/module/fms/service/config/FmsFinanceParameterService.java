@@ -7,7 +7,7 @@ import com.lxjl.juling.module.fms.dal.dataobject.config.FmsFinanceParameterDO;
 /**
  * FMS 财务参数 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FmsFinanceParameterService {
 

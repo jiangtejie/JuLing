@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Bpm 流程定义的 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface BpmProcessDefinitionConvert {

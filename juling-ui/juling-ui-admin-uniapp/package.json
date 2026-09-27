@@ -3,9 +3,9 @@
   "type": "module",
   "version": "4.1.0",
   "packageManager": "pnpm@10.10.0",
-  "description": "棱信矩灵 管理系统移动端(uni-app)",
+  "description": "亚特 管理系统移动端(uni-app)",
   "author": {
-    "name": "棱信矩灵",
+    "name": "亚特",
     "email": "dev@lxjl.local",
     "url": "https://github.com/jiangtejie/JuLing"
   },

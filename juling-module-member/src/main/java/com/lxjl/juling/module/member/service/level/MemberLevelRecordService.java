@@ -7,7 +7,7 @@ import com.lxjl.juling.module.member.dal.dataobject.level.MemberLevelRecordDO;
 /**
  * 会员等级记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MemberLevelRecordService {
 

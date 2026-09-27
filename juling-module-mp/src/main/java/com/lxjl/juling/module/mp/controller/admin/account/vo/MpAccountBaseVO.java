@@ -9,12 +9,12 @@ import jakarta.validation.constraints.NotEmpty;
  * 公众号账号 Base VO，提供给添加、修改、详细的子 VO 使用
  * 如果子 VO 存在差异的字段，请不要添加到这里，影响 Swagger 文档生成
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class MpAccountBaseVO {
 
-    @Schema(description = "公众号名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "公众号名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @NotEmpty(message = "公众号名称不能为空")
     private String name;
 
@@ -37,7 +37,7 @@ public class MpAccountBaseVO {
     @Schema(description = "加密密钥", example = "gjN+Ksei")
     private String aesKey;
 
-    @Schema(description = "备注", example = "请关注棱信矩灵，学习技术")
+    @Schema(description = "备注", example = "请关注亚特，学习技术")
     private String remark;
 
 }

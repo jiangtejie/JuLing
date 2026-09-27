@@ -14,7 +14,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 转移单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_transfer")
 @KeySequence("mes_wm_transfer_seq")

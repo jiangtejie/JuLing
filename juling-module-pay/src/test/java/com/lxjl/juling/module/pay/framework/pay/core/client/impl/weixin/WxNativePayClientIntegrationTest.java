@@ -21,7 +21,7 @@ import static com.lxjl.juling.module.pay.framework.pay.core.client.impl.weixin.A
 /**
  * {@link WxNativePayClient} 的集成测试，用于快速调试微信扫码支付
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Disabled
 public class WxNativePayClientIntegrationTest {

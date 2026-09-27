@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 数据库表 Service
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DatabaseTableService {
 

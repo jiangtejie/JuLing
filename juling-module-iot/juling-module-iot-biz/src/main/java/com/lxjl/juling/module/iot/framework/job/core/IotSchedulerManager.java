@@ -18,7 +18,7 @@ import java.util.Properties;
  * 疑问：为什么 IoT 模块不复用全局的 SchedulerManager 呢？
  * 回复：juling-cloud 项目，使用的是 XXL-Job 作为调度中心，无法动态添加任务。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotSchedulerManager {

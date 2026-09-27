@@ -59,7 +59,7 @@ import static java.util.Collections.singletonList;
 /**
  * 客户 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j
@@ -429,7 +429,7 @@ public class CrmCustomerServiceImpl implements CrmCustomerService {
         permissionService.createPermissionBatch(createPermissions);
         // 2.4 记录负责人变更历史
         ownerRecordService.createOwnerRecordList(ownerRecords);
-        // TODO @棱信矩灵：要不要处理关联的联系人？？？
+        // TODO @亚特：要不要处理关联的联系人？？？
 
         // 3. 记录操作日志
         AdminUserRespDTO user = null;

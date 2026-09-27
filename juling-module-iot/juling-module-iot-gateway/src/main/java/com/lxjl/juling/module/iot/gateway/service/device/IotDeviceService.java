@@ -5,7 +5,7 @@ import com.lxjl.juling.module.iot.core.biz.dto.IotDeviceRespDTO;
 /**
  * IoT 设备信息 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotDeviceService {
 

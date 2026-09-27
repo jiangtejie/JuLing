@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmAttendanceLeaveServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmAttendanceLeaveServiceImpl.class)
 public class HrmAttendanceLeaveServiceImplTest extends BaseDbUnitTest {

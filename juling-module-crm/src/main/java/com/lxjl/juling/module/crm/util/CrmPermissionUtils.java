@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtil
 /**
  * 数据权限工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class CrmPermissionUtils {
 

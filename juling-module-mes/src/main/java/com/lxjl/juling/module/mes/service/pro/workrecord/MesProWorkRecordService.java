@@ -8,7 +8,7 @@ import com.lxjl.juling.module.mes.dal.dataobject.pro.workrecord.MesProWorkRecord
 /**
  * MES 工作记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesProWorkRecordService {
 

@@ -43,7 +43,7 @@ exports[`defaultPreferences immutability test > should not modify the config obj
     "styleType": "normal",
   },
   "copyright": {
-    "companyName": "棱信矩灵",
+    "companyName": "亚特",
     "companySiteLink": "https://github.com/jiangtejie/JuLing",
     "date": "2026",
     "enable": true,

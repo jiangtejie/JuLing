@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * PMS 项目公告 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PmsProjectAnnouncementService {
 

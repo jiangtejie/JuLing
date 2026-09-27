@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 /**
  * IM 私聊消息 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_private_message")
 @KeySequence("im_private_message_seq")

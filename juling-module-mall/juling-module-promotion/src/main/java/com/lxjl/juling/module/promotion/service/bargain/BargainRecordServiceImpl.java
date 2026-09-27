@@ -29,7 +29,7 @@ import static com.lxjl.juling.module.promotion.enums.ErrorCodeConstants.*;
 /**
  * 砍价记录 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

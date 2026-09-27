@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 销售退货明细 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesWmReturnSalesDetailMapper extends BaseMapperX<MesWmReturnSalesDetailDO> {

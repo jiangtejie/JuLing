@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Excel 字符串列表转换器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class StringListConvert implements Converter<List<String>> {
 

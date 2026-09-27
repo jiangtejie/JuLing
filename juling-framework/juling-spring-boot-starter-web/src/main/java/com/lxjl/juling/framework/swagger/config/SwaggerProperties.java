@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 /**
  * Swagger 配置属性
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties("juling.swagger")
 @Data

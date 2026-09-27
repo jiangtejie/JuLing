@@ -8,7 +8,7 @@ import java.util.Collections;
  * <p>
  * 统一封装 WebSocket 通知推送，事务内调用时提交后异步执行。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImWebSocketService {
 

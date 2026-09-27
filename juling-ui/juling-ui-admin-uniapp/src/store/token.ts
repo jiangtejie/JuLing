@@ -70,7 +70,7 @@ export const useTokenStore = defineStore(
         // const refreshExpireTime = now + val.refreshExpiresIn * 1000
         uni.setStorageSync('accessTokenExpireTime', accessExpireTime)
         // uni.setStorageSync('refreshTokenExpireTime', refreshExpireTime)
-        // add by 棱信矩灵：目前后端没有返回 refreshToken 的过期时间，所以这里暂时不存储 refreshToken 过期时间
+        // add by 亚特：目前后端没有返回 refreshToken 的过期时间，所以这里暂时不存储 refreshToken 过期时间
       }
     }
 
@@ -103,7 +103,7 @@ export const useTokenStore = defineStore(
       // if (!refreshExpireTime)
       //   return true
       // return now >= refreshExpireTime
-      // add by 棱信矩灵：目前后端没有返回 refreshToken 的过期时间，所以这里暂时不做过期判断，先全部返回 false 非过期
+      // add by 亚特：目前后端没有返回 refreshToken 的过期时间，所以这里暂时不做过期判断，先全部返回 false 非过期
       return false
     })
 
@@ -117,7 +117,7 @@ export const useTokenStore = defineStore(
       // 获取用户信息
       const userStore = useUserStore()
       await userStore.fetchUserInfo()
-      // add by 棱信矩灵：加载字典数据（异步）
+      // add by 亚特：加载字典数据（异步）
       const dictStore = useDictStore()
       void dictStore.loadDictCacheWithRetry()
     }
@@ -151,7 +151,7 @@ export const useTokenStore = defineStore(
         }
         // console.log('普通登录-res: ', res)
         await _postLogin(res)
-        // 注释 by 棱信矩灵：使用 wd-toast 替代
+        // 注释 by 亚特：使用 wd-toast 替代
         // uni.showToast({
         //   title: `${typeName}成功`,
         //   icon: 'success',
@@ -161,7 +161,7 @@ export const useTokenStore = defineStore(
       }
       catch (error) {
         console.error(`${typeName}失败:`, error)
-        // 注释 by 棱信矩灵：避免覆盖 http.ts 中的错误提示
+        // 注释 by 亚特：避免覆盖 http.ts 中的错误提示
         // uni.showToast({
         //   title: `${typeName}失败，请重试`,
         //   icon: 'error',
@@ -202,7 +202,7 @@ export const useTokenStore = defineStore(
         uni.$emit('auth:logout')
         const userStore = useUserStore()
         userStore.clearUserInfo()
-        // add by 棱信矩灵：清空字典缓存
+        // add by 亚特：清空字典缓存
         const dictStore = useDictStore()
         dictStore.clearDictCache()
       }
@@ -281,7 +281,7 @@ export const useTokenStore = defineStore(
     const hasValidLogin = computed(() => {
       console.log('hasValidLogin', hasLoginInfo.value, !isTokenExpired.value)
       if (isDoubleTokenMode) {
-        // add by 棱信矩灵：双令牌场景下，以刷新令牌过期为准。而刷新令牌是否过期，通过请求时返回 401 来判断（由于后端 refreshToken 不返回过期时间）
+        // add by 亚特：双令牌场景下，以刷新令牌过期为准。而刷新令牌是否过期，通过请求时返回 401 来判断（由于后端 refreshToken 不返回过期时间）
         // 即相比下面的判断方式，去掉了“!isTokenExpired.value”
         // 如果不这么做：访问令牌过期时（刷新令牌没过期），会导致刷新界面时，直接认为是令牌过期，导致跳转到登录界面
         return hasLoginInfo.value

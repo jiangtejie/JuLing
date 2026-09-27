@@ -5,7 +5,7 @@ import com.lxjl.juling.module.mes.dal.dataobject.md.autocode.MesMdAutoCodePartDO
 /**
  * MES 编码规则分段策略接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesMdAutoCodePartStrategy {
 

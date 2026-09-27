@@ -31,7 +31,7 @@ import java.nio.ByteOrder;
  *   <li>点位查找（{@link #findPoint}）</li>
  * </ul>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @UtilityClass
 @Slf4j

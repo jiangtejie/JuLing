@@ -33,7 +33,7 @@ import static com.lxjl.juling.module.iot.enums.ErrorCodeConstants.*;
 /**
  * IoT 产品 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service
@@ -150,7 +150,7 @@ public class IotProductServiceImpl implements IotProductService {
         validateProductExists(id);
 
         // 2. 更新为发布状态，需要创建产品超级表数据模型
-        // TODO @棱信矩灵：【待定 001】1）是否需要操作后，在 redis 进行缓存，实现一个“快照”的情况，类似 tl；
+        // TODO @亚特：【待定 001】1）是否需要操作后，在 redis 进行缓存，实现一个“快照”的情况，类似 tl；
         if (Objects.equals(status, IotProductStatusEnum.PUBLISHED.getStatus())) {
             devicePropertyDataService.defineDevicePropertyData(id);
         }

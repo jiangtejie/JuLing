@@ -44,7 +44,7 @@ function handleOpenEditDialog() {
           class="min-w-[80px]"
           :show-description="false"
         >
-          <!-- TODO @棱信矩灵：这里不提示；是不是组件得封装下；-->
+          <!-- TODO @亚特：这里不提示；是不是组件得封装下；-->
           <template #tip> 推荐宽度 750 </template>
         </UploadImg>
       </FormItem>

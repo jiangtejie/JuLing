@@ -39,7 +39,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
  * 1. 提供 HTTP Hook 服务（/mqtt/auth、/mqtt/acl、/mqtt/event）给 EMQX 调用
  * 2. 通过 MQTT Client 订阅设备上行消息，并发布下行消息到 Broker
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotEmqxProtocol implements IotProtocol {

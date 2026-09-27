@@ -20,7 +20,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 生产报工 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_pro_feedback")
 @KeySequence("mes_pro_feedback_seq")
@@ -48,7 +48,7 @@ public class MesProFeedbackDO extends BaseDO {
      * 枚举 {@link MesProFeedbackTypeEnum}
      */
     private Integer type;
-    // TODO @棱信矩灵：这个字段，暂时没使用到；
+    // TODO @亚特：这个字段，暂时没使用到；
     /**
      * 报工途径
      *
@@ -83,7 +83,7 @@ public class MesProFeedbackDO extends BaseDO {
      * 关联 {@link MesProWorkOrderDO#getId()}
      */
     private Long workOrderId;
-    // TODO @棱信矩灵：这里待关联；
+    // TODO @亚特：这里待关联；
     /**
      * 生产任务编号
      */
@@ -101,7 +101,7 @@ public class MesProFeedbackDO extends BaseDO {
     /**
      * 生产批号
      *
-     * TODO @棱信矩灵：预留字段，当前未启用
+     * TODO @亚特：预留字段，当前未启用
      */
     private String lotNumber;
     /**

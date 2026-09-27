@@ -14,7 +14,7 @@ import lombok.ToString;
 /**
  * PMS 知识库成员 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_knowledge_library_member")
 @KeySequence("pms_knowledge_library_member_seq")

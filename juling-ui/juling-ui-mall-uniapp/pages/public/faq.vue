@@ -49,7 +49,7 @@
     }
   }
   onLoad(() => {
-    // TODO 棱信矩灵：【文章】目前简单做，使用营销文章，作为 faq
+    // TODO 亚特：【文章】目前简单做，使用营销文章，作为 faq
     if (true) {
       sheep.$router.go('/pages/public/richtext', {
         title: '常见问题',

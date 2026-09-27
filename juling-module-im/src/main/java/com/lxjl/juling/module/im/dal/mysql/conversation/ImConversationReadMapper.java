@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * IM 会话读位置 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ImConversationReadMapper extends BaseMapperX<ImConversationReadDO> {

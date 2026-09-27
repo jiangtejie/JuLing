@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * IoT 规则场景 Job，用于执行 {@link IotSceneRuleTriggerTypeEnum#TIMER} 类型的规则场景
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotSceneRuleJob extends QuartzJobBean {

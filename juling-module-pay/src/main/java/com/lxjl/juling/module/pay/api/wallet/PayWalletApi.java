@@ -6,7 +6,7 @@ import com.lxjl.juling.module.pay.api.wallet.dto.PayWalletRespDTO;
 /**
  * 钱包 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PayWalletApi {
 

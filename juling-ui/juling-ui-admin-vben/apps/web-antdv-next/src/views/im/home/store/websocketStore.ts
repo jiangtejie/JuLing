@@ -234,7 +234,7 @@ export const useImWebSocketStore = defineStore('imWebSocketStore', {
 
     /**
      * 连接 WebSocket
-     * 复用矩灵内置 /infra/ws 通道，后端通过 sendObject(type, content) 下发
+     * 复用亚特内置 /infra/ws 通道，后端通过 sendObject(type, content) 下发
      *
      * socket 实例即连接 owner，旧连接回调不得进入新连接
      */

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 砍价订单的 {@link TradeOrderHandler} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class TradeBargainOrderHandler implements TradeOrderHandler {

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 会员用户 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MemberUserService {
 

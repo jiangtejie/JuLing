@@ -19,7 +19,7 @@ public class PmsKnowledgeDocumentCommentRespVO {
     @Schema(description = "评论人用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long userId;
 
-    @Schema(description = "评论人昵称", example = "矩灵")
+    @Schema(description = "评论人昵称", example = "亚特")
     private String userName;
 
     @Schema(description = "主评论编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")

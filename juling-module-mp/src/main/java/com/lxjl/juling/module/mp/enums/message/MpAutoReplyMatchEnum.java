@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 公众号消息自动回复的匹配模式
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

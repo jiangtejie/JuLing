@@ -18,7 +18,7 @@ page {
   // --wot-button-primary-bg-color: green;
 
   // ==================== 语义色 token ====================
-  // add by 棱信矩灵：此前全站硬编码了 160+ 种颜色取值（text-[#333] 这类写法用了 8000 处），
+  // add by 亚特：此前全站硬编码了 160+ 种颜色取值（text-[#333] 这类写法用了 8000 处），
   // 主题不可控、也无法接入暗色模式。这里收敛成语义变量，页面改用下方具名类；
   // 后续换肤或做暗色模式只需改这里（或在暗色媒体查询里覆盖这些变量）。
   --yd-text-main: #333333; // 主要文字
@@ -63,7 +63,7 @@ border-t-1
 // ==================== 全局公共样式 ====================
 
 // ==================== 语义色具名类 ====================
-// add by 棱信矩灵：配合上方 CSS 变量使用，替代 text-[#333] / text-[#666] / text-[#999] 等硬编码写法
+// add by 亚特：配合上方 CSS 变量使用，替代 text-[#333] / text-[#666] / text-[#999] 等硬编码写法
 .yd-text-main {
   color: var(--yd-text-main);
 }
@@ -137,7 +137,7 @@ border-t-1
 }
 
 // 详情页内容底部留白：为固定定位的 .yd-detail-footer 让位，避免末屏内容被永久遮挡
-// add by 棱信矩灵：此前各页自行用 h-160rpx/pb-xxx 零散处理，约一半页面漏加，这里收敛为具名类
+// add by 亚特：此前各页自行用 h-160rpx/pb-xxx 零散处理，约一半页面漏加，这里收敛为具名类
 .yd-page-with-footer {
   padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 }
@@ -152,7 +152,7 @@ border-t-1
   z-index: 10;
   background-color: #fff;
   padding: 24rpx;
-  // add by 棱信矩灵：兼容 iPhone 全面屏，避免主操作按钮落进 Home 指示条手势区
+  // add by 亚特：兼容 iPhone 全面屏，避免主操作按钮落进 Home 指示条手势区
   // 顶部导航统一写了 safe-area-inset-top，底部此前遗漏，此处统一补齐（覆盖全站 500+ 页面）
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 

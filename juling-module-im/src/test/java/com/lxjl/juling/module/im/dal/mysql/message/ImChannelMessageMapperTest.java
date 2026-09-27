@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * {@code ClassCastException: String cannot be cast to List}，导致拉取接口恒 500。
  * 此处用真实 SQL（H2）锁定「收件人为空 = 全员可见」的筛选行为。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ImChannelMessageMapperTest extends BaseDbUnitTest {
 

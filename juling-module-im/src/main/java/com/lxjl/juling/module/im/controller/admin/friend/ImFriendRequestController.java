@@ -38,7 +38,7 @@ import static com.lxjl.juling.framework.web.core.util.WebFrameworkUtils.getLogin
 /**
  * IM 好友申请记录 Controller
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Tag(name = "管理后台 - IM 好友申请")
 @RestController

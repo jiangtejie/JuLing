@@ -31,7 +31,7 @@ import static com.lxjl.juling.module.product.enums.ErrorCodeConstants.*;
 /**
  * 商品 SKU Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

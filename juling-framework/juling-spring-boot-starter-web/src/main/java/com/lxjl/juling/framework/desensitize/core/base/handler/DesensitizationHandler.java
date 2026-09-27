@@ -7,7 +7,7 @@ import java.lang.annotation.Annotation;
 /**
  * 脱敏处理器接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DesensitizationHandler<T extends Annotation> {
 

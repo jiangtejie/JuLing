@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 /**
  * 转账单的通知 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @Builder

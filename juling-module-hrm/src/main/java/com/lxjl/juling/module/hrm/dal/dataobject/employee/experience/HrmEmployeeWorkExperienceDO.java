@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 员工工作经历 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_employee_work_experience")
 @KeySequence("hrm_employee_work_experience_seq")

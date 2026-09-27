@@ -15,7 +15,7 @@ public class ImGroupRequestApplyReqVO {
     @NotNull(message = "群编号不能为空")
     private Long groupId;
 
-    @Schema(description = "申请理由", example = "我是棱信矩灵（一种食材）")
+    @Schema(description = "申请理由", example = "我是亚特（一种食材）")
     @Size(max = 255, message = "申请理由最多 255 个字符")
     private String applyContent;
 

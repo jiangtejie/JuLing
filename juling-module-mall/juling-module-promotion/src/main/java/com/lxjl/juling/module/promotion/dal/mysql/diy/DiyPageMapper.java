@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 装修页面 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface DiyPageMapper extends BaseMapperX<DiyPageDO> {

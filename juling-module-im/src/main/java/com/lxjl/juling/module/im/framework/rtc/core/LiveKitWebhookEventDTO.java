@@ -8,7 +8,7 @@ import lombok.Data;
  * <p>
  * 文档参考：<a href="https://docs.livekit.io/home/server/webhook/">webhook 文档</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -24,7 +24,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
  * 和 {@link #pollTask(Long, String)}。
  * <p>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public abstract class AbstractIotModbusPollScheduler {

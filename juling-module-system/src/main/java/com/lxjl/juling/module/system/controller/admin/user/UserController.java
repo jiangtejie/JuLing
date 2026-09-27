@@ -178,7 +178,7 @@ public class UserController {
         // 手动创建导出 demo
         List<UserImportExcelVO> list = Arrays.asList(
                 UserImportExcelVO.builder().username("juling").deptId(1L).email("juling@example.com").mobile("15601691300")
-                        .nickname("矩灵").status(CommonStatusEnum.ENABLE.getStatus()).sex(SexEnum.MALE.getSex()).build(),
+                        .nickname("亚特").status(CommonStatusEnum.ENABLE.getStatus()).sex(SexEnum.MALE.getSex()).build(),
                 UserImportExcelVO.builder().username("yuanma").deptId(2L).email("yuanma@example.com").mobile("15601701300")
                         .nickname("源码").status(CommonStatusEnum.DISABLE.getStatus()).sex(SexEnum.FEMALE.getSex()).build()
         );
@@ -218,7 +218,7 @@ public class UserController {
 
     @GetMapping("/list-by-nickname")
     @Operation(summary = "按昵称模糊搜索用户精简信息", description = "用于加好友等场景；免鉴权；当前仅按昵称匹配")
-    @Parameter(name = "nickname", description = "昵称关键词", required = true, example = "矩灵")
+    @Parameter(name = "nickname", description = "昵称关键词", required = true, example = "亚特")
     public CommonResult<List<UserSimpleRespVO>> getSimpleUserListByNickname(@RequestParam("nickname") String nickname) {
         if (StrUtil.isBlank(nickname)) {
             return success(Collections.emptyList());

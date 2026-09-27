@@ -25,7 +25,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.PRICE_CALCUL
 /**
  * 使用积分的 {@link TradePriceCalculator} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Order(TradePriceCalculator.ORDER_POINT_USE)

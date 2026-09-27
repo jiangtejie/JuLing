@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ErpProductCategoryListReqVO {
 
-    @Schema(description = "分类名称", example = "棱信矩灵")
+    @Schema(description = "分类名称", example = "亚特")
     private String name;
 
     @Schema(description = "开启状态", example = "1")

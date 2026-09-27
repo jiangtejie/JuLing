@@ -19,7 +19,7 @@ import type { Group, GroupDO, GroupMember, GroupMemberDO, Message } from '../typ
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getGroupDisplayName } from '@/pages-im/utils/user'
-// edit by 棱信矩灵：sendTime 是 LocalDateTime 字符串，new Date(字符串) 在 iOS/JSCore 上返回 NaN
+// edit by 亚特：sendTime 是 LocalDateTime 字符串，new Date(字符串) 在 iOS/JSCore 上返回 NaN
 import { toTimestamp } from '@/utils/date'
 import {
   CommonStatusEnum,

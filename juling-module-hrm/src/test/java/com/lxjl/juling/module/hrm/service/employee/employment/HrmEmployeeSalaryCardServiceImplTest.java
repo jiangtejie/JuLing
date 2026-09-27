@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmEmployeeSalaryCardServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmEmployeeSalaryCardServiceImpl.class)
 public class HrmEmployeeSalaryCardServiceImplTest extends BaseDbUnitTest {

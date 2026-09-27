@@ -33,7 +33,7 @@ import static com.lxjl.juling.module.iot.gateway.enums.ErrorCodeConstants.DEVICE
 /**
  * WebSocket 上行消息处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotWebSocketUpstreamHandler implements Handler<ServerWebSocket> {

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  * - 联系人置顶：{@link #pinned} 单边，影响联系人 / 会话排序
  * - 黑名单：{@link #blocked} 弱关联 friend，单边屏蔽对方消息（必须先是好友）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_friend")
 @KeySequence("im_friend_seq")

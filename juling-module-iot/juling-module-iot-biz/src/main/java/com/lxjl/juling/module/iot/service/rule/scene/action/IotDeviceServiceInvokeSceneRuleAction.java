@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * IoT 设备服务调用的 {@link IotSceneRuleAction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * IoT 场景联动 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface IotSceneRuleMapper extends BaseMapperX<IotSceneRuleDO> {

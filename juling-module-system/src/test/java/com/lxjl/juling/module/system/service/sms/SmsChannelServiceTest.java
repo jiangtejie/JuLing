@@ -158,7 +158,7 @@ public class SmsChannelServiceTest extends BaseDbUnitTest {
     public void testGetSmsChannelPage() {
        // mock 数据
        SmsChannelDO dbSmsChannel = randomPojo(SmsChannelDO.class, o -> { // 等会查询到
-           o.setSignature("棱信矩灵");
+           o.setSignature("亚特");
            o.setStatus(CommonStatusEnum.ENABLE.getStatus());
            o.setCreateTime(buildTime(2020, 12, 12));
        });
@@ -171,7 +171,7 @@ public class SmsChannelServiceTest extends BaseDbUnitTest {
        smsChannelMapper.insert(cloneIgnoreId(dbSmsChannel, o -> o.setCreateTime(buildTime(2020, 11, 11))));
        // 准备参数
        SmsChannelPageReqVO reqVO = new SmsChannelPageReqVO();
-       reqVO.setSignature("矩灵");
+       reqVO.setSignature("亚特");
        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
        reqVO.setCreateTime(buildBetweenTime(2020, 12, 1, 2020, 12, 24));
 

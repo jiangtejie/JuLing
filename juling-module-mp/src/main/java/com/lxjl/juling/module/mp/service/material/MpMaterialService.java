@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 公众号素材 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MpMaterialService {
 

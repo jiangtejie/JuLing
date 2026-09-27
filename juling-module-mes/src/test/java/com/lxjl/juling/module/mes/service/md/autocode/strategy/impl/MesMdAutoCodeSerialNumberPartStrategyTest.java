@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link MesMdAutoCodeSerialNumberPartStrategy} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import({MesMdAutoCodeSerialNumberPartStrategy.class, MesMdAutoCodeRedisDAO.class})
 public class MesMdAutoCodeSerialNumberPartStrategyTest extends BaseRedisUnitTest {

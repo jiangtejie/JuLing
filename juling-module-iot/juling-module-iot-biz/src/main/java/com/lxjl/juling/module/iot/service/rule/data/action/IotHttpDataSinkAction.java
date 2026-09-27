@@ -23,7 +23,7 @@ import static com.lxjl.juling.framework.web.core.util.WebFrameworkUtils.HEADER_T
 /**
  * HTTP 的 {@link IotDataRuleAction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

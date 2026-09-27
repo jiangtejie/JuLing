@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 拼团记录的创建 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CombinationRecordCreateRespDTO {

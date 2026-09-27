@@ -7,7 +7,7 @@ import org.flowable.task.service.delegate.DelegateTask;
 /**
  * 类型为 class 的 TaskListener 监听器示例
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class DemoDelegateClassTaskListener implements TaskListener {

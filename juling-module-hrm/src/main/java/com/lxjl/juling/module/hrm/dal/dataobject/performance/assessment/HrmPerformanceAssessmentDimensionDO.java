@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 /**
  * HRM 员工绩效考核维度 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_performance_assessment_dimension")
 @KeySequence("hrm_performance_assessment_dimension_seq")

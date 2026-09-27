@@ -14,7 +14,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.f
 /**
  * FMS 多栏账 Excel 构建工具
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class FmsLedgerMultiColumnExcelHelper {
 

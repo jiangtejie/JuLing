@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 /**
  * 优惠券过期 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class CouponExpireJob implements JobHandler {

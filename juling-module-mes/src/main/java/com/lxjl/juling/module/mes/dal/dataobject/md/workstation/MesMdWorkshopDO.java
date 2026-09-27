@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 /**
  * MES 车间 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_md_workshop")
 @KeySequence("mes_md_workshop_seq")

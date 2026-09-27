@@ -14,7 +14,7 @@ import lombok.ToString;
 /**
  * HRM 员工联系人 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_employee_contact")
 @KeySequence("hrm_employee_contact_seq")

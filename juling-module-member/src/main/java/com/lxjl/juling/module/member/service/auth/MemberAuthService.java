@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
  *
  * 提供用户的账号密码登录、token 的校验等认证相关的功能
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MemberAuthService {
 

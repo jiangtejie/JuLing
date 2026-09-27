@@ -50,7 +50,7 @@ import static com.lxjl.juling.module.hrm.enums.LogRecordConstants.HRM_SALARY_SLI
 /**
  * HRM 工资条发放记录 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

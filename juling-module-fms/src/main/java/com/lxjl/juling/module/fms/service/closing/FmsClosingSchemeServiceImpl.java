@@ -75,7 +75,7 @@ import static com.lxjl.juling.module.fms.enums.LogRecordConstants.*;
 /**
  * FMS 结账方案 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

@@ -32,7 +32,7 @@ import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtil
  * 1. 在 getUserInfo 方法上，添加 @PreAuthorize("@ss.hasScope('user.read')") 注解，声明需要满足 scope = user.read
  * 2. 在 updateUserInfo 方法上，添加 @PreAuthorize("@ss.hasScope('user.write')") 注解，声明需要满足 scope = user.write
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Tag(name = "管理后台 - OAuth2.0 用户")
 @RestController

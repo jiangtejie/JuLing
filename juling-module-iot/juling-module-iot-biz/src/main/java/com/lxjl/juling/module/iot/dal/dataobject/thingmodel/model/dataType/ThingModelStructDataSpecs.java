@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * IoT 物模型数据类型为 struct 的 DataSpec 定义
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

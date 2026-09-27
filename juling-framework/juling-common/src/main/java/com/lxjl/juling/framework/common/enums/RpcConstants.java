@@ -5,7 +5,7 @@ package com.lxjl.juling.framework.common.enums;
  *
  * 虽然放在 juling-spring-boot-starter-rpc 会相对合适，但是每个 API 模块需要使用到，所以暂时只好放在此处
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class RpcConstants {
 

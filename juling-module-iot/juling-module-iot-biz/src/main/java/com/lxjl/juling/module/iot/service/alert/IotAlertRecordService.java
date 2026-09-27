@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * IoT 告警记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotAlertRecordService {
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 支付通知类型
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

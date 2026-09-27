@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * FMS 结账模板 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsClosingTemplateMapper extends BaseMapperX<FmsClosingTemplateDO> {

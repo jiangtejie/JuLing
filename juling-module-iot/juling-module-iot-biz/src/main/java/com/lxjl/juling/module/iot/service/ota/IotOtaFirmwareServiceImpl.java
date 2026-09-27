@@ -32,7 +32,7 @@ import static com.lxjl.juling.module.iot.enums.ErrorCodeConstants.OTA_FIRMWARE_P
 /**
  * OTA 固件管理 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

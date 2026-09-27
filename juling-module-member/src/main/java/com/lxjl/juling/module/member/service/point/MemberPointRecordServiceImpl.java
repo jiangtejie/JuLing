@@ -29,7 +29,7 @@ import static com.lxjl.juling.module.member.enums.ErrorCodeConstants.USER_POINT_
 /**
  * 积分记录 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service

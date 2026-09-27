@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * IoT 网关 Modbus TCP Client 协议：主动轮询 Modbus 从站设备数据
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotModbusTcpClientProtocol implements IotProtocol {

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * HRM 员工合同 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_employee_contract", autoResultMap = true)
 @KeySequence("hrm_employee_contract_seq")

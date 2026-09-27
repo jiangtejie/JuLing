@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * HRM 员工状态页签枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

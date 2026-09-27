@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 /**
  * {@link HrmEmployeePersonalNoteServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmEmployeePersonalNoteServiceImpl.class)
 public class HrmEmployeePersonalNoteServiceImplTest extends BaseDbUnitTest {

@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link PmsKnowledgeRecycleServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import({PmsKnowledgeRecycleServiceImpl.class, PmsKnowledgeLibraryServiceImpl.class,
         PmsKnowledgeFolderServiceImpl.class, PmsKnowledgeDocumentServiceImpl.class})

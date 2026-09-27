@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * MES 转移单行 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_transfer_line")
 @KeySequence("mes_wm_transfer_line_seq")

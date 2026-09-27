@@ -123,7 +123,7 @@ function emitActivityChange() {
             class="h-full w-full rounded-lg object-cover"
           />
           <!-- 删除按钮 -->
-          <!-- TODO @棱信矩灵：待与上游 vben 对应组件同步 进一步统一 -->
+          <!-- TODO @亚特：待与上游 vben 对应组件同步 进一步统一 -->
           <IconifyIcon
             v-if="!disabled"
             icon="lucide:x"

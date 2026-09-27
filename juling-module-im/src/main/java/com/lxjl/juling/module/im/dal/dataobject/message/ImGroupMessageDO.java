@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * IM 群聊消息 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "im_group_message", autoResultMap = true)
 @KeySequence("im_group_message_seq")

@@ -59,7 +59,7 @@ onMounted(loadProfile);
           <ElTabPane name="userSocial" label="社交绑定" force-render>
             <UserSocial @update:active-name="activeName = $event" />
           </ElTabPane>
-          <!-- TODO @棱信矩灵：在线设备 -->
+          <!-- TODO @亚特：在线设备 -->
         </ElTabs>
       </ElCard>
     </div>

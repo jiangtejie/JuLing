@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * {@link WenDuoDuoPptApi} 集成测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Disabled
 public class WenDuoDuoPptApiTests {

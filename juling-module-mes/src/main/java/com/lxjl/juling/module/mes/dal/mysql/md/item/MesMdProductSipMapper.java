@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 产品SIP Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesMdProductSipMapper extends BaseMapperX<MesMdProductSipDO> {

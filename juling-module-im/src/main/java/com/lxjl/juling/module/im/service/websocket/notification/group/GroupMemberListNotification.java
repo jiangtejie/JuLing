@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 群事件成员列表通知基类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public abstract class GroupMemberListNotification extends BaseGroupNotification {

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * API 异常数据
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("infra_api_error_log")
 @Data

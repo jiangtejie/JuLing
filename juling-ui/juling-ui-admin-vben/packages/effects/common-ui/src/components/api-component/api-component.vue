@@ -118,7 +118,7 @@ const bindProps = computed(() => {
     [props.optionsPropName]: unref(getOptions),
     [`onUpdate:${props.modelPropName}`]: (val: string) => {
       modelValue.value = val;
-      // 外层表单（如矩灵按 baseModelPropName='value' 绑定）只监听 update:value，
+      // 外层表单（如亚特按 baseModelPropName='value' 绑定）只监听 update:value，
       // 若不原样向上转发，改动会停留在组件内部导致表单值不更新
       if (props.modelPropName !== 'modelValue' && instance) {
         instance.emit(`update:${props.modelPropName}`, val);

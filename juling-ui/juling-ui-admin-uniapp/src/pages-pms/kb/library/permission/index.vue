@@ -135,7 +135,7 @@ import {
   PmsKnowledgeContentLevel,
 } from '@/pages-pms/kb/utils/constants'
 import { getIntDictOptions } from '@/hooks/useDict'
-// edit by 棱信矩灵：getIntDictOptions 由 @/hooks/useDict 导出，此前误从 @/utils/constants 导入，运行时会取到 undefined
+// edit by 亚特：getIntDictOptions 由 @/hooks/useDict 导出，此前误从 @/utils/constants 导入，运行时会取到 undefined
 import { DICT_TYPE } from '@/utils/constants'
 import { navigateBackPlus } from '@/utils'
 

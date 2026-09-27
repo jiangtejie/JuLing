@@ -23,7 +23,7 @@ import static com.lxjl.juling.module.pay.enums.PayChannelEnum.*;
 /**
  * 支付客户端的工厂实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class PayClientFactoryImpl implements PayClientFactory {

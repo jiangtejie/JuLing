@@ -17,7 +17,7 @@ import lombok.Data;
  * 与 {@link ImRtcCallStartNotification} 两段式配对：START 在 invite 事务里 INSERT，END 在 cancel / leave 事务里 INSERT；
  * 两段位于不同请求 / 事务，自增 id 保证聊天流顺序
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ImRtcCallEndNotification {

@@ -49,7 +49,7 @@ export default {
           'updateTimelineShareData',
           'scanQRCode',
           // 'requestMerchantTransfer', // TODO @使用者：如果需要微信商家转账功能，请打开该注释；
-        ], // TODO 棱信矩灵：后续可以设置更多权限；
+        ], // TODO 亚特：后续可以设置更多权限；
         openTagList: data.openTagList,
       });
       configAppId = data.appId;
@@ -80,7 +80,7 @@ export default {
     }
   },
 
-  //在需要定位页面调用 TODO 棱信矩灵：未测试
+  //在需要定位页面调用 TODO 亚特：未测试
   getLocation(callback) {
     this.isReady(() => {
       jweixin.getLocation({
@@ -111,7 +111,7 @@ export default {
     });
   },
 
-  // 微信扫码 TODO 棱信矩灵：未测试
+  // 微信扫码 TODO 亚特：未测试
   scanQRCode(callback) {
     this.isReady(() => {
       jweixin.scanQRCode({
@@ -151,7 +151,7 @@ export default {
     });
   },
 
-  // 打开坐标位置 TODO 棱信矩灵：未测试
+  // 打开坐标位置 TODO 亚特：未测试
   openLocation(data, callback) {
     this.isReady(() => {
       jweixin.openLocation({
@@ -163,7 +163,7 @@ export default {
     });
   },
 
-  // 选择图片 TODO 棱信矩灵：未测试
+  // 选择图片 TODO 亚特：未测试
   chooseImage(callback) {
     this.isReady(() => {
       jweixin.chooseImage({

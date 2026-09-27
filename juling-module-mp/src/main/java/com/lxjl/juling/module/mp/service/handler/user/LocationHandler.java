@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * 逻辑：粉丝上传地理位置时，也可以触发自动回复
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

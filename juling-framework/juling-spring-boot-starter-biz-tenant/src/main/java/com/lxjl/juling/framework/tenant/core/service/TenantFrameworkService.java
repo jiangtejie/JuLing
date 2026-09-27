@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Tenant 框架 Service 接口，定义获取租户信息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TenantFrameworkService {
 

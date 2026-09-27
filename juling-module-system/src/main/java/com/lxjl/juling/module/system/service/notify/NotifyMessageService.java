@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 站内信 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface NotifyMessageService {
 

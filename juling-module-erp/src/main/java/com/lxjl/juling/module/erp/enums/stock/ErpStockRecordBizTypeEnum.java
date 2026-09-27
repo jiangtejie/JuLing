@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * ERP 库存明细 - 业务类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

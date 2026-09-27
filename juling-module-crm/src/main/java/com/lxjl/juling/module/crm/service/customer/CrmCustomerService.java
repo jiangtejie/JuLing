@@ -16,7 +16,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 客户 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface CrmCustomerService {
 
@@ -73,7 +73,7 @@ public interface CrmCustomerService {
      *
      * @param ids 客户编号数组
      * @return 客户列表
-     * @author 棱信矩灵
+     * @author 亚特
      */
     List<CrmCustomerDO> getCustomerList(Collection<Long> ids);
 

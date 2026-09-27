@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 客服会话 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface KeFuConversationService {
 

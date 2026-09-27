@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * 会员积分的业务类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

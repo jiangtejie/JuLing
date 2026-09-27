@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * MES 质检来源单据类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

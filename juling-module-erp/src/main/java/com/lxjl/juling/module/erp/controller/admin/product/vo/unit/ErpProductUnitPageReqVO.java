@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class ErpProductUnitPageReqVO extends PageParam {
 
-    @Schema(description = "单位名字", example = "棱信矩灵")
+    @Schema(description = "单位名字", example = "亚特")
     private String name;
 
     @Schema(description = "单位状态", example = "1")

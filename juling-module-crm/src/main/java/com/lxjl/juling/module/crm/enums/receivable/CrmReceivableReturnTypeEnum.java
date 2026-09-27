@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * CRM 回款方式枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

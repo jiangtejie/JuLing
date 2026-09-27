@@ -3,7 +3,7 @@ package com.lxjl.juling.module.pms.enums;
 /**
  * PMS 消息模板常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MessageTemplateConstants {
 

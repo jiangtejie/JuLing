@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 佣金记录 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface BrokerageRecordMapper extends BaseMapperX<BrokerageRecordDO> {
@@ -87,7 +87,7 @@ public interface BrokerageRecordMapper extends BaseMapperX<BrokerageRecordDO> {
                                                                      @Param("beginTime") LocalDateTime beginTime,
                                                                      @Param("endTime") LocalDateTime endTime);
 
-    // TODO @棱信矩灵：收敛掉 @Select 注解操作，统一成 MyBatis-Plus 的方式，或者 xml
+    // TODO @亚特：收敛掉 @Select 注解操作，统一成 MyBatis-Plus 的方式，或者 xml
     @Select("SELECT user_id AS id, SUM(price) AS brokeragePrice FROM trade_brokerage_record " +
             "WHERE biz_type = #{bizType} AND status = #{status} AND deleted = 0 " +
             "AND unfreeze_time BETWEEN #{beginTime} AND #{endTime} " +

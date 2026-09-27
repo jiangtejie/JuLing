@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * IoT 网关 WebSocket 下行消息处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @RequiredArgsConstructor

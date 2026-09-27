@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 短信模板的审核状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

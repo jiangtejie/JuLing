@@ -49,7 +49,7 @@ public class ErpCustomerSaveReqVO {
     @Schema(description = "税率", example = "10")
     private BigDecimal taxPercent;
 
-    @Schema(description = "开户行", example = "棱信矩灵")
+    @Schema(description = "开户行", example = "亚特")
     private String bankName;
 
     @Schema(description = "开户账号", example = "622908212277228617")

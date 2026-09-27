@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * HRM 绩效考核模板 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_performance_assessment_template", autoResultMap = true)
 @KeySequence("hrm_performance_assessment_template_seq")

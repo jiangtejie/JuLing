@@ -40,9 +40,9 @@ import static org.mockito.Mockito.when;
 /**
  * {@link AfterSaleService} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(AfterSaleServiceImpl.class)
 public class AfterSaleServiceTest extends BaseDbUnitTest {
 
@@ -120,7 +120,7 @@ public class AfterSaleServiceTest extends BaseDbUnitTest {
             o.setWay(AfterSaleWayEnum.RETURN_AND_REFUND.getWay());
             o.setType(AfterSaleTypeEnum.IN_SALE.getType());
             o.setOrderNo("202211190847450020500011");
-            o.setSpuName("棱信矩灵");
+            o.setSpuName("亚特");
             o.setCreateTime(buildTime(2022, 1, 15));
         });
         tradeAfterSaleMapper.insert(dbAfterSale);

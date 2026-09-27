@@ -15,7 +15,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 外协发料单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_outsource_issue")
 @KeySequence("mes_wm_outsource_issue_seq")

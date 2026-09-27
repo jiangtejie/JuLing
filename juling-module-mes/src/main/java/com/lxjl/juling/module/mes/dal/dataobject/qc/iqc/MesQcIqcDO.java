@@ -21,7 +21,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 来料检验单（IQC, Incoming Quality Control） DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_qc_iqc")
 @KeySequence("mes_qc_iqc_seq")

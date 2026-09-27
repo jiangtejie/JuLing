@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link IotMqttDataRuleAction} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 class IotMqttDataRuleActionTest {
 

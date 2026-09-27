@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 秒杀活动 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface SeckillActivityMapper extends BaseMapperX<SeckillActivityDO> {

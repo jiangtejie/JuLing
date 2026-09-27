@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 /**
  * TDEngine 数据源
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

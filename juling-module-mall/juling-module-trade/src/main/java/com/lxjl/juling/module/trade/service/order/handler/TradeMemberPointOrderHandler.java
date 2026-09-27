@@ -19,7 +19,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.g
 /**
  * 会员积分、等级的 {@link TradeOrderHandler} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class TradeMemberPointOrderHandler implements TradeOrderHandler {

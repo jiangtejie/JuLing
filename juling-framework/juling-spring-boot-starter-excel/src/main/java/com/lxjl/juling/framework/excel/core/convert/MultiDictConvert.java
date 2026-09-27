@@ -31,7 +31,7 @@ import java.util.Set;
  * 使用时，需要在字段上同时配置
  * {@code @ExcelProperty(converter = MultiDictConvert.class)} 和 {@link DictFormat}
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class MultiDictConvert implements Converter<Object> {

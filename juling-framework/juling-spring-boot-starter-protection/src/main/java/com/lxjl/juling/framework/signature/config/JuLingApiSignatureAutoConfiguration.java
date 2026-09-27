@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 /**
  * HTTP API 签名的自动配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AutoConfiguration(after = JuLingRedisAutoConfiguration.class)
 public class JuLingApiSignatureAutoConfiguration {

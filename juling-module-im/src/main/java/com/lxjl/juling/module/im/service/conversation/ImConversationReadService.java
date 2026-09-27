@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * IM 会话读位置 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImConversationReadService {
 

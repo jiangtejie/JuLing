@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 /**
  * 滑动脱敏处理器抽象类，已实现通用的方法
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public abstract class AbstractSliderDesensitizationHandler<T extends Annotation>
         implements DesensitizationHandler<T> {

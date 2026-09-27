@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmPerformanceAssessmentReviewServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmPerformanceAssessmentReviewServiceImpl.class)
 public class HrmPerformanceAssessmentReviewServiceImplTest extends BaseDbUnitTest {

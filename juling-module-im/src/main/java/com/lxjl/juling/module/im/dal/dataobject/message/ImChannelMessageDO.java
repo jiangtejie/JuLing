@@ -22,7 +22,7 @@ import java.util.List;
  * - {@link #channelId} 冗余 {@link ImChannelMaterialDO#getChannelId()} 便于按频道检索
  * - {@link #content} 存推送时 payload 的 JSON 快照（title / coverUrl / summary / url）；不含富文本正文
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "im_channel_message", autoResultMap = true)
 @KeySequence("im_channel_message_seq")

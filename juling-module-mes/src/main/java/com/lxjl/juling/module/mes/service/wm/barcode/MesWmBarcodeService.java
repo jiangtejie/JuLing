@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * MES 条码清单 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesWmBarcodeService {
 

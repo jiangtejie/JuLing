@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 短信日志 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 13:48 2021/3/2
  */
 public interface SmsLogService {

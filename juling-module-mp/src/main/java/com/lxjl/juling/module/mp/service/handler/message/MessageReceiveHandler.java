@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 保存微信消息的事件处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

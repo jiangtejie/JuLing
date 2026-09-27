@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * 逻辑：粉丝点击菜单时，触发对应的回复
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class MenuHandler implements WxMpMessageHandler {

@@ -53,7 +53,7 @@ import static com.lxjl.juling.module.promotion.enums.MessageTemplateConstants.CO
 /**
  * 拼团记录 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

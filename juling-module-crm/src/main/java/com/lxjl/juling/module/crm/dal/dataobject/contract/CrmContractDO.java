@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 /**
  * CRM 合同 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("crm_contract")
 @KeySequence("crm_contract_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。

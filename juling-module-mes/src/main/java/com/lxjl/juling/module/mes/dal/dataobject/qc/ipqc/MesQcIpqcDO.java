@@ -20,7 +20,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 过程检验单（IPQC, In-Process Quality Control） DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_qc_ipqc")
 @KeySequence("mes_qc_ipqc_seq")

@@ -22,7 +22,7 @@ import static com.lxjl.juling.module.infra.dal.dataobject.logger.ApiAccessLogDO.
 /**
  * API 访问日志 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service

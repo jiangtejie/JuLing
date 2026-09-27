@@ -17,7 +17,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 安灯呼叫记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_pro_andon_record")
 @KeySequence("mes_pro_andon_record_seq")

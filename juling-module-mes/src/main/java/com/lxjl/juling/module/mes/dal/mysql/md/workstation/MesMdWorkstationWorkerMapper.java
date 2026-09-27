@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * MES 人力资源 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesMdWorkstationWorkerMapper extends BaseMapperX<MesMdWorkstationWorkerDO> {

@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * CRM 商品状态
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2023-11-30 21:53
  */
 @Getter

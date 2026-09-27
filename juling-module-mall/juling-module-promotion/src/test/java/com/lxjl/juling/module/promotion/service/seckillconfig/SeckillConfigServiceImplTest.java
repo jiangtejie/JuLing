@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * {@link SeckillConfigServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(SeckillConfigServiceImpl.class)
-@Disabled // TODO 棱信矩灵：未来开启；后续要 review 下
+@Disabled // TODO 亚特：未来开启；后续要 review 下
 public class SeckillConfigServiceImplTest extends BaseDbUnitTest {
 
     @Resource

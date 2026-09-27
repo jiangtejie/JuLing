@@ -21,7 +21,7 @@ import static com.lxjl.juling.module.hrm.enums.ErrorCodeConstants.SALARY_CHANGE_
 /**
  * HRM 定薪/调薪记录 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

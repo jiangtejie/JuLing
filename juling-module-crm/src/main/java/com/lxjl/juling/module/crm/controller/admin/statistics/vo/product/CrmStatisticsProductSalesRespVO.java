@@ -33,7 +33,7 @@ public class CrmStatisticsProductSalesRespVO {
     @Schema(description = "负责人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long ownerUserId;
 
-    @Schema(description = "负责人姓名", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "负责人姓名", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String ownerUserName;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "40")

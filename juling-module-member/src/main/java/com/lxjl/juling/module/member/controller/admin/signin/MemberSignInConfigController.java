@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 
-// TODO 棱信矩灵：url
+// TODO 亚特：url
 @Tag(name = "管理后台 - 签到规则")
 @RestController
 @RequestMapping("/member/sign-in/config")

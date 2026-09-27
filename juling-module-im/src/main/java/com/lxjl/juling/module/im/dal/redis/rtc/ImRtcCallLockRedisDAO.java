@@ -19,7 +19,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.RTC_INVITE_BUSY
  * <p>
  * invite 入口包一层；锁内做「SELECT 已有活跃通话 → 命中即加入分支；否则 INSERT 新通话」
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Repository
 @Slf4j

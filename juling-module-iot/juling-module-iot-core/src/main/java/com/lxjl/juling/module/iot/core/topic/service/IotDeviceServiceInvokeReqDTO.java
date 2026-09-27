@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * 用于 {@link IotDeviceMessageMethodEnum#SERVICE_INVOKE} 下行消息的 params 参数
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @NoArgsConstructor

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * 管理员名字的 {@link IParseFunction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Component
@@ -39,7 +39,7 @@ public class SysAdminUserParseFunction implements IParseFunction {
             log.warn("[apply][获取用户{{}}为空", value);
             return "";
         }
-        // 返回格式 棱信矩灵(13888888888)
+        // 返回格式 亚特(13888888888)
         String nickname = user.getNickname();
         if (StrUtil.isEmpty(user.getMobile())) {
             return nickname;

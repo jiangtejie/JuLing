@@ -17,7 +17,7 @@ public class BpmUserGroupPageReqVO extends PageParam {
     @Schema(description = "编号", example = "1024")
     private Long id;
 
-    @Schema(description = "组名", example = "矩灵")
+    @Schema(description = "组名", example = "亚特")
     private String name;
 
     @Schema(description = "状态", example = "1")

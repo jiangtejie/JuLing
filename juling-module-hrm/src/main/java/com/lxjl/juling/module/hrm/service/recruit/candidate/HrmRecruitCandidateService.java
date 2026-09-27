@@ -20,7 +20,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 招聘候选人 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface HrmRecruitCandidateService {
 

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * 单向：服务端运营推送 → C 端用户；C 端不能向频道发消息。
  * 字段分层：顶层是消息元数据 + 检索维度，content 是 MaterialMessage payload 的 JSON 串。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @Accessors(chain = true)

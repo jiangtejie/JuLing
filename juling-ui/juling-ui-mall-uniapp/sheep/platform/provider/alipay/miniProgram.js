@@ -59,7 +59,7 @@ const mobileLogin = async (e) =>{
     // } else {
     //   return resolve(false);
     // }
-    // TODO 棱信矩灵：shareInfo: uni.getStorageSync('shareLog') || {},
+    // TODO 亚特：shareInfo: uni.getStorageSync('shareLog') || {},
   });
 }
 

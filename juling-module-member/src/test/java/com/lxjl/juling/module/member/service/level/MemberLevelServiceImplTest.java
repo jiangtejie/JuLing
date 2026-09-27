@@ -25,11 +25,11 @@ import static com.lxjl.juling.framework.test.core.util.RandomUtils.*;
 import static com.lxjl.juling.module.member.enums.ErrorCodeConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-// TODO 棱信矩灵：完全 review 完，在去 review 单测
+// TODO 亚特：完全 review 完，在去 review 单测
 /**
  * {@link MemberLevelServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(MemberLevelServiceImpl.class)
 public class MemberLevelServiceImplTest extends BaseDbUnitTest {

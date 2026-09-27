@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 /**
  * RabbitMQ 的 {@link IotDataRuleAction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConditionalOnClass(name = "com.rabbitmq.client.Channel")
 @Component

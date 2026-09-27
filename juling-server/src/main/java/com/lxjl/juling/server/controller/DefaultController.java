@@ -14,7 +14,7 @@ import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeCo
  * 默认 Controller，解决部分 module 未开启时的 404 提示。
  * 例如说，/bpm/** 路径，工作流
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RestController
 @Slf4j

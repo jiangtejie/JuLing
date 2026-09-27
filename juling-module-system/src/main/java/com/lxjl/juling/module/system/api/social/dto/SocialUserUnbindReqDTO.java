@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 /**
  * 社交绑定 Request DTO，使用 code 授权码
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @AllArgsConstructor

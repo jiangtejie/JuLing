@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmAttendanceGroupServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class HrmAttendanceGroupServiceImplTest extends BaseMockitoUnitTest {
 

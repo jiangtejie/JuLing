@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 检验结果 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesQcIndicatorResultService {
 

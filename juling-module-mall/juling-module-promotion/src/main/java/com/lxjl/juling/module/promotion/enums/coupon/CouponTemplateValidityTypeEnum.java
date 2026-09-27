@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * 优惠劵模板的有限期类型的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

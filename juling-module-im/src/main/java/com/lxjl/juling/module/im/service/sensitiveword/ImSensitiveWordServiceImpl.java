@@ -41,7 +41,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.SENSITIVE_WORD_
  * <p>
  * 词库匹配交给 houbb sensitive-word 库（trie 树 + 全/半角 / 大小写 / 繁简体 / 数字风格规范化）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

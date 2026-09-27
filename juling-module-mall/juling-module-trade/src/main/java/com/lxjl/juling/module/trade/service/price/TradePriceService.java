@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 价格计算 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TradePriceService {
 

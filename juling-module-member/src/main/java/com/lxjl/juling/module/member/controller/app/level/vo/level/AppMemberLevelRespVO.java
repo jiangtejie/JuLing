@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class AppMemberLevelRespVO {
 
-    @Schema(description = "等级名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "等级名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
     @Schema(description = "等级", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")

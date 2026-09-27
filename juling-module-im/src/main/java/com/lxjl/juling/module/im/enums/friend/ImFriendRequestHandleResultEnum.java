@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * IM 好友申请处理结果枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

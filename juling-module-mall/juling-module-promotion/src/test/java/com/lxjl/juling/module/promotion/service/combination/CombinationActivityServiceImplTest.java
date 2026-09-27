@@ -21,13 +21,13 @@ import static com.lxjl.juling.framework.test.core.util.RandomUtils.randomPojo;
 import static com.lxjl.juling.module.promotion.enums.ErrorCodeConstants.COMBINATION_ACTIVITY_NOT_EXISTS;
 import static org.junit.jupiter.api.Assertions.*;
 
-// TODO 棱信矩灵：等完成后，在补全单测
+// TODO 亚特：等完成后，在补全单测
 /**
  * {@link CombinationActivityServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(CombinationActivityServiceImpl.class)
 public class CombinationActivityServiceImplTest extends BaseDbUnitTest {
 

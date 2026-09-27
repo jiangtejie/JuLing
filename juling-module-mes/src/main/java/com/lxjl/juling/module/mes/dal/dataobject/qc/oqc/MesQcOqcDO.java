@@ -16,7 +16,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 出货检验单（OQC, Outgoing Quality Control） DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_qc_oqc")
 @KeySequence("mes_qc_oqc_seq")

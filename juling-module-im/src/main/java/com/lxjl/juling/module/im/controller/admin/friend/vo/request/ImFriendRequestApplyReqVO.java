@@ -10,7 +10,7 @@ import lombok.Data;
 /**
  * IM 好友申请 - 发起 Request VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - IM 好友申请发起 Request VO")
 @Data
@@ -20,7 +20,7 @@ public class ImFriendRequestApplyReqVO {
     @NotNull(message = "接收方用户编号不能为空")
     private Long toUserId;
 
-    @Schema(description = "申请理由", example = "我是棱信矩灵（一种食材）")
+    @Schema(description = "申请理由", example = "我是亚特（一种食材）")
     @Size(max = 255, message = "申请理由最多 255 个字符")
     private String applyContent;
 

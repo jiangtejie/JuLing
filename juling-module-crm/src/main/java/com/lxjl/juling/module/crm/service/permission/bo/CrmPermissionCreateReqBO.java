@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * crm 数据权限 Create Req BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CrmPermissionCreateReqBO {

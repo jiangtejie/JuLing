@@ -62,7 +62,7 @@ public class ErpCustomerRespVO {
     @ExcelProperty("税率")
     private BigDecimal taxPercent;
 
-    @Schema(description = "开户行", example = "棱信矩灵")
+    @Schema(description = "开户行", example = "亚特")
     @ExcelProperty("开户行")
     private String bankName;
 

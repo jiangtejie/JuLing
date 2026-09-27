@@ -5,7 +5,7 @@ import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO
 /**
  * 产品评论 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ProductCommentApi {
 

@@ -8,7 +8,7 @@ import com.lxjl.juling.module.mes.dal.dataobject.wm.stocktaking.task.MesWmStockT
 /**
  * MES 盘点结果 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesWmStockTakingTaskResultService {
 

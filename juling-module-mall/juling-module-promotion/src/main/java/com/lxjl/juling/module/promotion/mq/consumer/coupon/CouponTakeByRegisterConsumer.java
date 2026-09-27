@@ -12,7 +12,7 @@ import jakarta.annotation.Resource;
 /**
  * 用户注册时，发送优惠劵的消费者，基 {@link MemberUserCreateMessage} 消息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

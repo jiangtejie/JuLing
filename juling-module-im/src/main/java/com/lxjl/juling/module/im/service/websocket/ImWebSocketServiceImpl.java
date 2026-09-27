@@ -23,7 +23,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
  * 当调用方处于事务中时，推送会延迟到事务提交后再异步执行，
  * 避免客户端收到 WebSocket 消息时数据库变更尚未可见。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

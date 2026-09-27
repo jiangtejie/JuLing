@@ -12,7 +12,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 /**
  * 交易状况统计 Excel VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class TradeTrendSummaryExcelVO {

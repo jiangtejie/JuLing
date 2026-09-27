@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 /**
  * API 访问日志
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("infra_api_access_log")
 @KeySequence(value = "infra_api_access_log_seq")

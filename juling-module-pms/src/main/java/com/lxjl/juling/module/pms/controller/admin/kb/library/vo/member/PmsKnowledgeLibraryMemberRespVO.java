@@ -13,7 +13,7 @@ public class PmsKnowledgeLibraryMemberRespVO {
     @Schema(description = "用户编号", example = "1")
     private Long userId;
 
-    @Schema(description = "用户姓名", example = "棱信矩灵")
+    @Schema(description = "用户姓名", example = "亚特")
     private String nickname;
 
     @Schema(description = "用户头像")

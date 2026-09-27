@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 考勤打卡记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_attendance_clock")
 @KeySequence("hrm_attendance_clock_seq")

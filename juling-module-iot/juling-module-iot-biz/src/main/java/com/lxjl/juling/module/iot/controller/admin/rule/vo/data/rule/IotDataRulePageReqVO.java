@@ -13,7 +13,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @Data
 public class IotDataRulePageReqVO extends PageParam {
 
-    @Schema(description = "数据流转规则名称", example = "棱信矩灵")
+    @Schema(description = "数据流转规则名称", example = "亚特")
     private String name;
 
     @Schema(description = "数据流转规则状态", example = "1")

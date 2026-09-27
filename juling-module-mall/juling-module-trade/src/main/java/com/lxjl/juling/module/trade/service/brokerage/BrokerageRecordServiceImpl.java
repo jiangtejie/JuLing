@@ -43,7 +43,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.BROKERAGE_WI
 /**
  * 佣金记录 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service

@@ -13,6 +13,6 @@
  * +--------+                 +-------------+                   +---------+
  * </pre>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 package com.lxjl.juling.module.iot.gateway.protocol.emqx;

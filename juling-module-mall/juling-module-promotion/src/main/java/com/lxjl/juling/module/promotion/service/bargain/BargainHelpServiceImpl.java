@@ -27,7 +27,7 @@ import static com.lxjl.juling.module.promotion.enums.ErrorCodeConstants.*;
 /**
  * 砍价助力 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -93,7 +93,7 @@ public class BargainHelpServiceImpl implements BargainHelpService {
         return help;
     }
 
-    // TODO 棱信矩灵：优化点：实现一个更随机的逻辑，可以按照你自己的业务；
+    // TODO 亚特：优化点：实现一个更随机的逻辑，可以按照你自己的业务；
     private Integer calculateReducePrice(BargainActivityDO activity, BargainRecordDO record) {
         // 1. 随机金额
         Integer reducePrice = MathUtil.randomInt(activity.getBargainMinPrice(),

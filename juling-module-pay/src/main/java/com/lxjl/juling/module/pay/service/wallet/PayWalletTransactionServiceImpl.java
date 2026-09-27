@@ -25,7 +25,7 @@ import static com.lxjl.juling.module.pay.controller.app.wallet.vo.transaction.Ap
 /**
  * 钱包流水 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

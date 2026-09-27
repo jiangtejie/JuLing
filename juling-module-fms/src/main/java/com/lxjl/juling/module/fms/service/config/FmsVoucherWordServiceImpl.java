@@ -38,7 +38,7 @@ import static com.lxjl.juling.module.fms.enums.LogRecordConstants.FMS_VOUCHER_WO
 /**
  * FMS 凭证字 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

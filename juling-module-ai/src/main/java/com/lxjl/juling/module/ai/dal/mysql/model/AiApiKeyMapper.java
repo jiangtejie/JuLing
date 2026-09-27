@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * AI API 密钥 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface AiApiKeyMapper extends BaseMapperX<AiApiKeyDO> {

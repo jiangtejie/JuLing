@@ -57,7 +57,7 @@ import static com.lxjl.juling.module.iot.enums.ErrorCodeConstants.*;
 /**
  * IoT 产品物模型 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

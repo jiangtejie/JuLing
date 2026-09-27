@@ -21,7 +21,7 @@ import static com.lxjl.juling.module.mp.enums.ErrorCodeConstants.*;
 /**
  * 公众号统计 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class MpStatisticsServiceImpl implements MpStatisticsService {

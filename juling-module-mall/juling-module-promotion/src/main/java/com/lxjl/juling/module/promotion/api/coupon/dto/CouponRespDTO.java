@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 优惠劵 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CouponRespDTO {

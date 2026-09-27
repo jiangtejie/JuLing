@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 过程检验单（IPQC） Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesQcIpqcService {
 

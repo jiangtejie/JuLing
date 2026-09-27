@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>
  * 注意：该类的线程安全由调用方（IotWebSocketDataRuleAction）通过分布式锁保证
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotWebSocketClient {

@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * BPM 发送同步 HTTP 请求触发器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

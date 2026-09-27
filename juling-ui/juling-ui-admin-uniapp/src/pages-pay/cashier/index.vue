@@ -255,7 +255,7 @@ function submit(channelCode: string) {
 
 /** 执行支付提交 */
 async function submit0(channelCode: string) {
-  // add by 棱信矩灵：资金类操作防重。此前 loading 只作用于当前渠道按钮，
+  // add by 亚特：资金类操作防重。此前 loading 只作用于当前渠道按钮，
   // 在一个渠道请求在途时点击另一个渠道会并发发出两笔 submitPayOrder
   if (submitLoading.value) {
     return

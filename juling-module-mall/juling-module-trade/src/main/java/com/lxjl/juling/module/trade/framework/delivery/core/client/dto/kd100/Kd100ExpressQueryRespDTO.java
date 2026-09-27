@@ -17,7 +17,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.TIME_ZONE_DEF
  *
  * 参见  <a href="https://api.kuaidi100.com/document/5f0ffb5ebc8da837cbd8aefc">快递 100 文档</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class Kd100ExpressQueryRespDTO {

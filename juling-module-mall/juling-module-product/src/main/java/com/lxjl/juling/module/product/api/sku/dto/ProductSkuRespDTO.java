@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 商品 SKU 信息 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 @Data

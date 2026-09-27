@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 检验结果明细 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

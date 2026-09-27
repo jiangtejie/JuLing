@@ -24,7 +24,7 @@ import static com.lxjl.juling.module.member.enums.ErrorCodeConstants.*;
 /**
  * 会员标签 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

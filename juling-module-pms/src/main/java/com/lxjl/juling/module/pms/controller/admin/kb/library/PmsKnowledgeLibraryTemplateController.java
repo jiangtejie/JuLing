@@ -33,7 +33,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 管理后台 - PMS 知识库模板 Controller
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Tag(name = "管理后台 - PMS 知识库模板")
 @RestController

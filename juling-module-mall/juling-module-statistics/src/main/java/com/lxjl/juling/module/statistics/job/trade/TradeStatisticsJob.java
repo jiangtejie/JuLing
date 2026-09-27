@@ -14,7 +14,7 @@ import jakarta.annotation.Resource;
 /**
  * 交易统计 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class TradeStatisticsJob implements JobHandler {

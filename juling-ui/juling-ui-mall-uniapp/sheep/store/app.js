@@ -68,10 +68,10 @@ const app = defineStore('app', {
       // 加载装修配置
       await adaptTemplate(this.template, templateId);
 
-      // TODO 棱信矩灵：【初始化优化】未来支持改为从管理后台读取初始化信息
+      // TODO 亚特：【初始化优化】未来支持改为从管理后台读取初始化信息
       // 说明：以下为内置的默认应用信息；装修模板已在上方 adaptTemplate 中从后端拉取。
       this.info = {
-        name: '矩灵商城',
+        name: '亚特商城',
         logo: '',
         version: '2026.08',
         copyright: '全部开源，个人与企业可 100% 免费使用',

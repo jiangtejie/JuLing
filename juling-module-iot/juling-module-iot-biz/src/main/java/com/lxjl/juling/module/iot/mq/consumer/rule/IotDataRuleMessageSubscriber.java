@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * 针对 {@link IotDeviceMessage} 的消费者，处理数据流转
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

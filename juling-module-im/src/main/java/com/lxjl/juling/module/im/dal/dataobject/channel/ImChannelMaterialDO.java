@@ -16,7 +16,7 @@ import lombok.*;
  * - 一条素材 1:N 关联多条 {@link ImChannelMessageDO}
  * - {@link #content} 富文本仅在素材详情接口按需返回，推送 payload 不带，避免压爆 WebSocket 通道
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_channel_material")
 @KeySequence("im_channel_material_seq")

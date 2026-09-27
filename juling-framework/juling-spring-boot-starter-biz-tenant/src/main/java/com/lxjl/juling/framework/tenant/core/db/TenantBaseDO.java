@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 /**
  * 拓展多租户的 BaseDO 基类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

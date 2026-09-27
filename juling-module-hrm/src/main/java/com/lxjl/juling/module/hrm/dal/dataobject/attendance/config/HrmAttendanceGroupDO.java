@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * HRM 考勤组 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_attendance_group", autoResultMap = true)
 @KeySequence("hrm_attendance_group_seq")

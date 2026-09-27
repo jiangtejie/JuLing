@@ -5,7 +5,7 @@ import com.lxjl.juling.module.promotion.api.seckill.dto.SeckillValidateJoinRespD
 /**
  * 秒杀活动 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface SeckillActivityApi {
 

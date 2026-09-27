@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 /**
  * PMS 知识库回收站记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_knowledge_recycle_record")
 @KeySequence("pms_knowledge_recycle_record_seq")

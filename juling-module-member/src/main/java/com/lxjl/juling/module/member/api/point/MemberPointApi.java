@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Min;
 /**
  * 用户积分的 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MemberPointApi {
 

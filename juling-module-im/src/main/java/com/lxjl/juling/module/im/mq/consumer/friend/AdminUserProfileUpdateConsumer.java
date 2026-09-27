@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 监听 system 模块的 {@link AdminUserProfileUpdateMessage} 消息，向「资料被改的人」的所有好友推送 FRIEND_INFO_UPDATED 通知
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Component

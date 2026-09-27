@@ -93,7 +93,7 @@ public class PmsIterationOverviewRespVO {
         @Schema(description = "操作人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
         private Long operatorUserId;
 
-        @Schema(description = "操作人昵称", example = "矩灵")
+        @Schema(description = "操作人昵称", example = "亚特")
         private String operatorUserName;
 
         @Schema(description = "动态内容", requiredMode = Schema.RequiredMode.REQUIRED, example = "将状态更新为「已完成」")

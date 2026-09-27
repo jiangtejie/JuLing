@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmAttendanceClockServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmAttendanceClockServiceImpl.class)
 public class HrmAttendanceClockServiceImplTest extends BaseDbUnitTest {

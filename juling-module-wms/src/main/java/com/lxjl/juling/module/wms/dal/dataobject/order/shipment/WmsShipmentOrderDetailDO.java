@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 /**
  * WMS 出库单明细 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("wms_shipment_order_detail")
 @KeySequence("wms_shipment_order_detail_seq")

@@ -16,7 +16,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @EqualsAndHashCode(callSuper = true)
 public class DictTypePageReqVO extends PageParam {
 
-    @Schema(description = "字典类型名称，模糊匹配", example = "矩灵")
+    @Schema(description = "字典类型名称，模糊匹配", example = "亚特")
     private String name;
 
     @Schema(description = "字典类型，模糊匹配", example = "sys_common_sex")

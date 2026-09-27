@@ -21,7 +21,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.g
 /**
  * 满减送活动 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface RewardActivityService {
 

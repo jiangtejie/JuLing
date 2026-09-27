@@ -86,7 +86,7 @@ async function getDetail() {
 
 /** 提交表单 */
 async function handleSubmit() {
-  // add by 棱信矩灵：防重，理由同 im/manager/channel/message/send —— delay(handleBack) 的 500ms 内按钮会重新可点
+  // add by 亚特：防重，理由同 im/manager/channel/message/send —— delay(handleBack) 的 500ms 内按钮会重新可点
   if (formLoading.value) {
     return
   }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * MES 点检保养方案设备 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesDvCheckPlanMachineryMapper extends BaseMapperX<MesDvCheckPlanMachineryDO> {

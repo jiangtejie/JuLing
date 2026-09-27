@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * 钱包余额增加 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class PayWalletAddBalanceReqDTO {

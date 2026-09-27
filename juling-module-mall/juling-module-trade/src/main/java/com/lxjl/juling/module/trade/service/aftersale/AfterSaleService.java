@@ -12,7 +12,7 @@ import com.lxjl.juling.module.trade.dal.dataobject.aftersale.AfterSaleDO;
 /**
  * 售后订单 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface AfterSaleService {
 

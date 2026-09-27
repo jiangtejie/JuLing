@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 满减送活动 API 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

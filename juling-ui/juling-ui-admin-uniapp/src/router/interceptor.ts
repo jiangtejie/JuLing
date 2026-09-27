@@ -17,7 +17,7 @@ let excludeListInited = false // 标记 EXCLUDE_LOGIN_PATH_LIST 是否已经根�
 export function judgeIsExcludePath(path: string) {
   const isDev = import.meta.env.DEV
   if (!isDev) {
-    // edit by 棱信矩灵：非开发环境下，只初始化一次
+    // edit by 亚特：非开发环境下，只初始化一次
     if (!excludeListInited) {
       const pages = getAllPages('excludeLoginPath')
       pages.forEach((page) => {

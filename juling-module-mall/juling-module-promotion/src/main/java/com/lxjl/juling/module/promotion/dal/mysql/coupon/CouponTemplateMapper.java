@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 /**
  * 优惠劵模板 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface CouponTemplateMapper extends BaseMapperX<CouponTemplateDO> {

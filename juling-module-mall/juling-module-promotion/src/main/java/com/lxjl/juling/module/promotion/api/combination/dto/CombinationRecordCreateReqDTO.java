@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 拼团记录的创建 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CombinationRecordCreateReqDTO {

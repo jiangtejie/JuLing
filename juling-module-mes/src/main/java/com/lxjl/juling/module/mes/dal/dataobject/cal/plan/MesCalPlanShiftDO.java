@@ -9,7 +9,7 @@ import lombok.*;
 /**
  * MES 计划班次 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_cal_plan_shift")
 @KeySequence("mes_cal_plan_shift_seq")

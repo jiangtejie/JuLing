@@ -9,7 +9,7 @@ import com.lxjl.juling.module.iot.service.rule.scene.matcher.trigger.IotSceneRul
  * - {@link IotSceneRuleTriggerMatcher} 触发器匹配器
  * - {@link IotSceneRuleConditionMatcher} 条件匹配器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotSceneRuleMatcher {
 

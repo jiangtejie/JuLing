@@ -10,7 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  * Matcher 测试基类
  * 提供通用的 Spring 测试配置
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @SpringJUnitConfig
 public abstract class IotBaseConditionMatcherTest {

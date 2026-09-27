@@ -10,7 +10,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 条码清单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_barcode")
 @KeySequence("mes_wm_barcode_seq")

@@ -25,7 +25,7 @@ import { FRIEND_REQUEST_PAGE_SIZE } from '@/pages-im/utils/config'
 import { getDb, initDb, StorageKeys } from '@/pages-im/utils/db'
 import { runIncrementalPull } from '@/pages-im/utils/pull'
 import { getFriendDisplayName } from '@/pages-im/utils/user'
-// edit by 棱信矩灵：addTime/handleTime 等是 LocalDateTime 字符串，new Date(字符串) 在 iOS/JSCore 上返回 NaN
+// edit by 亚特：addTime/handleTime 等是 LocalDateTime 字符串，new Date(字符串) 在 iOS/JSCore 上返回 NaN
 import { toTimestamp } from '@/utils/date'
 import { useUserStore } from '@/store/user'
 import {

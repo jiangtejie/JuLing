@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 优惠劵的 {@link TradeOrderHandler} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

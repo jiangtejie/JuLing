@@ -46,7 +46,7 @@ import static com.lxjl.juling.module.pay.framework.pay.core.client.impl.alipay.A
 /**
  * 支付宝抽象类，实现支付宝统一的接口、以及部分实现（退款）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public abstract class AbstractAlipayPayClient extends AbstractPayClient<AlipayPayClientConfig> {
@@ -319,7 +319,7 @@ public abstract class AbstractAlipayPayClient extends AbstractPayClient<AlipayPa
                 response.getOutBizNo(), response);
     }
 
-    // TODO @棱信矩灵：由于支付宝一直没触发回调，这个方法暂时没办法测试
+    // TODO @亚特：由于支付宝一直没触发回调，这个方法暂时没办法测试
     @Override
     protected PayTransferRespDTO doParseTransferNotify(Map<String, String> params, String body, Map<String, String> headers)
             throws Throwable {

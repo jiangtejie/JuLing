@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'development') {
 if (typeof baseUrl === 'undefined') {
   console.error('请检查.env配置文件是否存在');
 } else {
-  console.log(`[矩灵商城 ${version}]`);
+  console.log(`[亚特商城 ${version}]`);
 }
 
 export const apiPath = import.meta.env.SHOPRO_API_PATH;

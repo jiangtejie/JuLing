@@ -24,7 +24,7 @@ public class ImFriendRequestManagerRespVO {
     @Schema(description = "接收方昵称", example = "李四")
     private String toNickname;
 
-    @Schema(description = "申请理由", example = "我是棱信矩灵")
+    @Schema(description = "申请理由", example = "我是亚特")
     private String applyContent;
 
     @Schema(description = "发起方对接收方的备注")

@@ -6,7 +6,7 @@ import com.lxjl.juling.module.iot.dal.dataobject.rule.IotDataSinkDO;
 /**
  * IoT 数据流转目的的执行器 action 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotDataRuleAction {
 

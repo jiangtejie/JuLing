@@ -85,7 +85,7 @@ import static com.lxjl.juling.module.hrm.util.HrmExcelUtils.parseAmount;
 /**
  * HRM 月度工资 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

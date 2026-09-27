@@ -10,7 +10,7 @@ import lombok.Getter;
 /**
  * IoT TCP 拆包类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

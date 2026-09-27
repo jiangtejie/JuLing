@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 批次管理 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesWmBatchMapper extends BaseMapperX<MesWmBatchDO> {

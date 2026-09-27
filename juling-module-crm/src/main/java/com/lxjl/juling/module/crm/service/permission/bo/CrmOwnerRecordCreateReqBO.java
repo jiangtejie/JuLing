@@ -8,7 +8,7 @@ import lombok.Data;
 /**
  * CRM 负责人变更记录 Create Req BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CrmOwnerRecordCreateReqBO {

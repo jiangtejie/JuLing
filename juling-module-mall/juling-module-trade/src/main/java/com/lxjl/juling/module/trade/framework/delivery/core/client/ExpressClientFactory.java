@@ -5,7 +5,7 @@ import com.lxjl.juling.module.trade.framework.delivery.core.enums.ExpressClientE
 /**
  * 快递客户端工厂接口：用于创建和缓存快递客户端
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ExpressClientFactory {
 

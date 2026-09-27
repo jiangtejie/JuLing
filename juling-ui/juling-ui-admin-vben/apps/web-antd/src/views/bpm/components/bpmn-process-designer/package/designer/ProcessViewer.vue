@@ -136,7 +136,7 @@ const clearViewer = () => {
 };
 
 /** 添加自定义箭头 */
-// TODO 棱信矩灵：自定义箭头不生效，有点奇怪！！！！相关的 marker-end、marker-start 暂时也注释了！！！
+// TODO 亚特：自定义箭头不生效，有点奇怪！！！！相关的 marker-end、marker-start 暂时也注释了！！！
 const addCustomDefs = () => {
   if (!bpmnViewer.value) {
     return;

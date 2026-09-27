@@ -10,7 +10,7 @@ import lombok.Data;
  * <p>
  * 前端 callStore 把 userId 从 joinedUserIds 移除；胶囊条人数 -1
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ImRtcParticipantDisconnectedNotification {

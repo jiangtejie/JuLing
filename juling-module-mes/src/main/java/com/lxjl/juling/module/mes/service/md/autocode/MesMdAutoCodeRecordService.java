@@ -3,7 +3,7 @@ package com.lxjl.juling.module.mes.service.md.autocode;
 /**
  * MES 编码生成记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesMdAutoCodeRecordService {
 

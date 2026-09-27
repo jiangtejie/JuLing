@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 /**
  * 佣金解冻 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BrokerageRecordUnfreezeJob implements JobHandler {

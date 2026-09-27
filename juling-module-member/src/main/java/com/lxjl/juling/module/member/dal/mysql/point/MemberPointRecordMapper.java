@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * 用户积分记录 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MemberPointRecordMapper extends BaseMapperX<MemberPointRecordDO> {

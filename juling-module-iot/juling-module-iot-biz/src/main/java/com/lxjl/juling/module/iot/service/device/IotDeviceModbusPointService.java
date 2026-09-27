@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * IoT 设备 Modbus 点位配置 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotDeviceModbusPointService {
 

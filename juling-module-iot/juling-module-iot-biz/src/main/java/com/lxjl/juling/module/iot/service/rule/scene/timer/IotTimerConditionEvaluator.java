@@ -23,7 +23,7 @@ import java.util.Map;
  * 与设备触发器不同，定时触发器没有设备消息上下文，
  * 需要主动查询设备属性和状态来评估条件。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * 用于定义设备消息的序列化格式
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

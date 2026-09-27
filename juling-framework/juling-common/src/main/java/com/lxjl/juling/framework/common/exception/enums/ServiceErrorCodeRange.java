@@ -25,7 +25,7 @@ package com.lxjl.juling.framework.common.exception.enums;
  *       不限制规则。
  *       一般建议，每个模块自增。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ServiceErrorCodeRange {
 

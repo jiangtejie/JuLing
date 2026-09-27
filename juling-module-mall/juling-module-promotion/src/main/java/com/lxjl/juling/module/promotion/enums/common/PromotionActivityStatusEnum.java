@@ -6,11 +6,11 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
-// TODO 棱信矩灵：弱化这个状态
+// TODO 亚特：弱化这个状态
 /**
  * 促销活动的状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

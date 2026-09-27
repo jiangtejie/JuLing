@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link MesMdAutoCodeRecordServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ExtendWith(MockitoExtension.class)
 public class MesMdAutoCodeRecordServiceImplTest {

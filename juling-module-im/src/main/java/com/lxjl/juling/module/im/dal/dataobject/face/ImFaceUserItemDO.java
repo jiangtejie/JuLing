@@ -9,7 +9,7 @@ import lombok.*;
 /**
  * IM 用户私有表情 DO（个人表情包，对照微信「我的表情」）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_face_user_item")
 @KeySequence("im_face_user_item_seq")

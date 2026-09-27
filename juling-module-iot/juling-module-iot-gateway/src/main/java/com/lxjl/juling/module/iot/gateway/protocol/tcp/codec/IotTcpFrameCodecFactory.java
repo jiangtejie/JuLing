@@ -7,7 +7,7 @@ import com.lxjl.juling.module.iot.gateway.protocol.tcp.IotTcpConfig;
 /**
  * IoT TCP 帧编解码器工厂
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class IotTcpFrameCodecFactory {
 

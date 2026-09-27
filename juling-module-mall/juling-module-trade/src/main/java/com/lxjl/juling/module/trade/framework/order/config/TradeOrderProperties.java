@@ -12,7 +12,7 @@ import java.time.Duration;
 /**
  * 交易订单的配置项
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-09-15
  */
 @ConfigurationProperties(prefix = "juling.trade.order")

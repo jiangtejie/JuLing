@@ -12,7 +12,7 @@ import lombok.ToString;
 /**
  * PMS 工作项工时记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_work_item_work_log")
 @KeySequence("pms_work_item_work_log_seq")

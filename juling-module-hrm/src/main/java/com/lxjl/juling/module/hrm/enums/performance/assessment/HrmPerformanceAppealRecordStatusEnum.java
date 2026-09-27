@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * HRM 绩效申诉记录处理状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

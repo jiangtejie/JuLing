@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * 优惠劵领取方式
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

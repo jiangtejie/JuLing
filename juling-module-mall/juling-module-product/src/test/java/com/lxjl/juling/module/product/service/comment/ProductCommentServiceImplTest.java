@@ -31,13 +31,13 @@ import static com.lxjl.juling.framework.test.core.util.RandomUtils.randomPojo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-// TODO 棱信矩灵：单测详细 review 下
+// TODO 亚特：单测详细 review 下
 /**
  * {@link ProductCommentServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(ProductCommentServiceImpl.class)
 public class ProductCommentServiceImplTest extends BaseDbUnitTest {
 

@@ -53,7 +53,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link PayOrderServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import({PayOrderServiceImpl.class, PayNoRedisDAO.class})
 public class PayOrderServiceTest extends BaseDbAndRedisUnitTest {
@@ -358,7 +358,7 @@ public class PayOrderServiceTest extends BaseDbAndRedisUnitTest {
             when(client.unifiedOrder(argThat(payOrderUnifiedReqDTO -> {
                 assertNotNull(payOrderUnifiedReqDTO.getOutTradeNo());
                 assertThat(payOrderUnifiedReqDTO)
-//                        .extracting("subject", "body", "notifyUrl", "returnUrl", "price", "expireTime") // TODO @棱信矩灵：win11 下，时间不太准
+//                        .extracting("subject", "body", "notifyUrl", "returnUrl", "price", "expireTime") // TODO @亚特：win11 下，时间不太准
                         .extracting("subject", "body", "notifyUrl", "returnUrl", "price")
                         .containsExactly(order.getSubject(), order.getBody(), "http://127.0.0.1/10",
 //                                reqVO.getReturnUrl(), order.getPrice(), order.getExpireTime());
@@ -414,7 +414,7 @@ public class PayOrderServiceTest extends BaseDbAndRedisUnitTest {
             when(client.unifiedOrder(argThat(payOrderUnifiedReqDTO -> {
                 assertNotNull(payOrderUnifiedReqDTO.getOutTradeNo());
                 assertThat(payOrderUnifiedReqDTO)
-//                        .extracting("subject", "body", "notifyUrl", "returnUrl", "price", "expireTime") // TODO @棱信矩灵：win11 下，时间不太准
+//                        .extracting("subject", "body", "notifyUrl", "returnUrl", "price", "expireTime") // TODO @亚特：win11 下，时间不太准
                         .extracting("subject", "body", "notifyUrl", "returnUrl", "price")
                         .containsExactly(order.getSubject(), order.getBody(), "http://127.0.0.1/10",
 //                                reqVO.getReturnUrl(), order.getPrice(), order.getExpireTime());

@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * HRM 员工异动生效 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

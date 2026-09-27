@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 优惠劵模板 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface CouponTemplateConvert {

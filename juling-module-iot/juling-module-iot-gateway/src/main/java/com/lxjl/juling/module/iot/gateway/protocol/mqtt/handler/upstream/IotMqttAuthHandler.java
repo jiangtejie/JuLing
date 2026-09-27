@@ -24,7 +24,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
  * <p>
  * 处理 MQTT CONNECT 事件，完成设备认证、连接注册、上线通知
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotMqttAuthHandler extends IotMqttAbstractHandler {

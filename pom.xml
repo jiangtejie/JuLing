@@ -34,7 +34,7 @@
     </modules>
 
     <name>${project.artifactId}</name>
-    <description>棱信矩灵 管理系统</description>
+    <description>亚特 管理系统</description>
     <url>https://gitee.com/</url>
 
     <properties>

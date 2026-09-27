@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link PmsWorkItemStatusServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import({PmsWorkItemStatusServiceImpl.class, PmsWorkItemBoardServiceImpl.class, PmsWorkItemServiceImpl.class})
 public class PmsWorkItemStatusServiceImplTest extends BaseDbUnitTest {

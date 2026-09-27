@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
 /**
  * {@link HrmPerformanceAssessmentServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmPerformanceAssessmentServiceImpl.class)
 public class HrmPerformanceAssessmentServiceImplTest extends BaseDbUnitTest {

@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link PmsWorkItemWorkLogServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(PmsWorkItemWorkLogServiceImpl.class)
 public class PmsWorkItemWorkLogServiceImplTest extends BaseDbUnitTest {

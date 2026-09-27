@@ -15,7 +15,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @EqualsAndHashCode(callSuper = true)
 public class RolePageReqVO extends PageParam {
 
-    @Schema(description = "角色名称，模糊匹配", example = "矩灵")
+    @Schema(description = "角色名称，模糊匹配", example = "亚特")
     private String name;
 
     @Schema(description = "角色标识，模糊匹配", example = "juling")

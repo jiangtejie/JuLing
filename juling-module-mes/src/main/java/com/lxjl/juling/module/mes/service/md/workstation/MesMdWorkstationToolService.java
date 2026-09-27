@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * MES 工装夹具资源 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesMdWorkstationToolService {
 

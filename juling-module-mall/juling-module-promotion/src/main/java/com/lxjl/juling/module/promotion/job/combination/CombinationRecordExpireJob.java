@@ -12,7 +12,7 @@ import jakarta.annotation.Resource;
 /**
  * 拼团过期 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class CombinationRecordExpireJob implements JobHandler {

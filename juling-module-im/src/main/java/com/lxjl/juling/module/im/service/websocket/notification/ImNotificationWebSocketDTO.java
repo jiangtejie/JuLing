@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
  * conversationType 定位会话维度；contentType 定位业务内容；payload 承载对应通知对象。
  * 会进入聊天流的私聊、群聊、频道事件走 message 子包；不进入聊天流的好友、加群申请、通话信令走 NONE 会话。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @Accessors(chain = true)

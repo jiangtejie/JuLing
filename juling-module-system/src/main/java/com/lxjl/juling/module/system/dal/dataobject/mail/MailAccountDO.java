@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  *
  * 用途：配置发送邮箱的账号
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-03-21
  */
 @TableName(value = "system_mail_account", autoResultMap = true)

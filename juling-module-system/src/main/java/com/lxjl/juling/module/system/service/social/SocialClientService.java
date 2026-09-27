@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 社交应用 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface SocialClientService {
 

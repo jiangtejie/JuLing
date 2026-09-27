@@ -12,7 +12,7 @@ import static com.lxjl.juling.module.pay.dal.redis.RedisKeyConstants.PAY_NOTIFY_
 /**
  * 支付通知的锁 Redis DAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Repository
 public class PayNotifyLockRedisDAO {

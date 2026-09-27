@@ -11,7 +11,7 @@ public class ImGroupSaveReqVO {
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1003")
     private Long id;
 
-    @Schema(description = "群名称", example = "棱信矩灵")
+    @Schema(description = "群名称", example = "亚特")
     private String name;
 
     @Schema(description = "群主用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "31460")

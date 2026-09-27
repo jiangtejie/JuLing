@@ -10,7 +10,7 @@ public class MenuSimpleRespVO {
     @Schema(description = "菜单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long id;
 
-    @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
     @Schema(description = "父菜单 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")

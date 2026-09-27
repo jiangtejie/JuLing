@@ -24,7 +24,7 @@ public class HrmAttendanceClockRespVO {
     @ExcelProperty(value = "员工编号", index = 1)
     private Long employeeId;
 
-    @Schema(description = "员工姓名", example = "矩灵")
+    @Schema(description = "员工姓名", example = "亚特")
     @ExcelProperty(value = "员工姓名", index = 2)
     private String employeeName;
 

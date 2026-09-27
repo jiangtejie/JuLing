@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 员工异动记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_employee_change_record")
 @KeySequence("hrm_employee_change_record_seq")

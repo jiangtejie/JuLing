@@ -17,7 +17,7 @@ import lombok.ToString;
  *
  * 同一月度工资表可以分多批次发放工资条，因此发放记录保持独立实体。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_salary_slip_send_record")
 @KeySequence("hrm_salary_slip_send_record_seq")

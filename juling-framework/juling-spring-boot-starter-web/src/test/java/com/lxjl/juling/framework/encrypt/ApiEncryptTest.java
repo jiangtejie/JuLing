@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * 各种 API 加解密的测试类：不是单测，而是方便大家生成密钥、加密、解密等操作。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @SuppressWarnings("ConstantValue")
 public class ApiEncryptTest {

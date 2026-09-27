@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * 模拟支付返回结果都是成功，方便大家日常流畅
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class MockPayClient extends AbstractPayClient<NonePayClientConfig> {
 

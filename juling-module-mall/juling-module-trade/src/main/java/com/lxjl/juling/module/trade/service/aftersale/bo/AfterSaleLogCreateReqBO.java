@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 售后日志的创建 Request BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2023/6/19 09:54
  */
 @Data

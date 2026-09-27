@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 员工教育经历 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_employee_education_experience")
 @KeySequence("hrm_employee_education_experience_seq")

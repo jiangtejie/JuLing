@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * 对应字典 mes_cal_holiday_type
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

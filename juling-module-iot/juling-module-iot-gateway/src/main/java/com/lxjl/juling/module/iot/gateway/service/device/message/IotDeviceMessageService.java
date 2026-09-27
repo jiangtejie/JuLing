@@ -6,7 +6,7 @@ import com.lxjl.juling.module.iot.core.mq.message.IotDeviceMessage;
 /**
  * IoT 设备消息 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotDeviceMessageService {
 

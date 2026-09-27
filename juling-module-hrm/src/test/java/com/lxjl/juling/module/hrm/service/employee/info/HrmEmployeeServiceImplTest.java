@@ -120,7 +120,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmEmployeeServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import({HrmEmployeeServiceImpl.class, HrmEmployeeServiceImplTest.TransactionTemplateTestConfiguration.class})
 public class HrmEmployeeServiceImplTest extends BaseDbUnitTest {

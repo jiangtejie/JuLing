@@ -24,7 +24,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 /**
  * IoT 网关 HTTP 协议的处理器抽象基类：提供通用的前置处理（认证）、全局的异常捕获等
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public abstract class IotHttpAbstractHandler implements Handler<RoutingContext> {

@@ -31,7 +31,7 @@ import static com.lxjl.juling.module.trade.service.price.calculator.TradePriceCa
  *
  * 由于“会员折扣”和“限时折扣”是冲突，需要选择优惠金额多的，所以也放在这里计算
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Order(TradePriceCalculator.ORDER_DISCOUNT_ACTIVITY)

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * 【本地化改造】增加 juling.iot.tdengine-init 开关：未部署 TDengine 时序库时(默认 false)跳过，
  * 避免启动时执行 TDengine 方言 SQL 失败导致系统退出；部署 TDengine 后置为 true 即可恢复官方行为。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @ConditionalOnProperty(prefix = "juling.iot", name = "tdengine-init", havingValue = "true")

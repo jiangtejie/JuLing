@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * MES 杂项入库单行 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_misc_receipt_line")
 @KeySequence("mes_wm_misc_receipt_line_seq")

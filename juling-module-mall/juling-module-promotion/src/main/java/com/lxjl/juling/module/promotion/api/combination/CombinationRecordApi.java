@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 /**
  * 拼团记录 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface CombinationRecordApi {
 

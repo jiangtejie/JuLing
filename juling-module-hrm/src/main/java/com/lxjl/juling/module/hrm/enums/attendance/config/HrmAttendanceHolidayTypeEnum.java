@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * HRM 考勤节假日类型
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

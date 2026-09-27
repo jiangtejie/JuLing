@@ -32,7 +32,7 @@ import static com.lxjl.juling.module.mp.enums.ErrorCodeConstants.*;
 /**
  * 公众号标签 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service

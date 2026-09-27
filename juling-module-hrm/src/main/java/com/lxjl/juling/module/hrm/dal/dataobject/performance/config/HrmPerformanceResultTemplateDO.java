@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * HRM 绩效结果模板 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_performance_result_template", autoResultMap = true)
 @KeySequence("hrm_performance_result_template_seq")

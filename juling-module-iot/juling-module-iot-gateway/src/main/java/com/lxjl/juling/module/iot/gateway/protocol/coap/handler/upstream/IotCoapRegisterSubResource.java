@@ -12,7 +12,7 @@ import org.eclipse.californium.core.server.resources.Resource;
  * <p>
  * 支持动态路径匹配：productKey 和 deviceName 是网关设备的标识
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotCoapRegisterSubResource extends CoapResource {

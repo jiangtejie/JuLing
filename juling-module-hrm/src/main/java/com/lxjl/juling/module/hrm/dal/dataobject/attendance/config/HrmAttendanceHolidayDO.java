@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 考勤节假日 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_attendance_holiday")
 @KeySequence("hrm_attendance_holiday_seq")

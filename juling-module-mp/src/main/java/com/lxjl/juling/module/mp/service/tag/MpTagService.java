@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 公众号标签 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MpTagService {
 

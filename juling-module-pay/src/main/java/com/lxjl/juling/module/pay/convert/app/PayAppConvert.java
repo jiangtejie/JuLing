@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 /**
  * 支付应用信息 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface PayAppConvert {

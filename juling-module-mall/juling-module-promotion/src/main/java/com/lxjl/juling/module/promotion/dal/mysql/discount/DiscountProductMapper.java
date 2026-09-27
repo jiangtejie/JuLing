@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 限时折扣商城 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface DiscountProductMapper extends BaseMapperX<DiscountProductDO> {

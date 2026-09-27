@@ -17,7 +17,7 @@ import static com.lxjl.juling.module.pms.enums.ErrorCodeConstants.PROJECT_ANNOUN
 /**
  * PMS 项目公告 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

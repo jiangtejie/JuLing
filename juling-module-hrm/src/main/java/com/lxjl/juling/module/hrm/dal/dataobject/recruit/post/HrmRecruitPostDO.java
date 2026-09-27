@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * HRM 招聘职位 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_recruit_post", autoResultMap = true)
 @KeySequence("hrm_recruit_post_seq")

@@ -9,9 +9,9 @@ import jakarta.validation.Valid;
 /**
  * BPM 消息 Service 接口
  *
- * TODO 棱信矩灵：未来支持消息的可配置；不同的流程，在什么场景下，需要发送什么消息，消息的内容是什么；
+ * TODO 亚特：未来支持消息的可配置；不同的流程，在什么场景下，需要发送什么消息，消息的内容是什么；
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface BpmMessageService {
 

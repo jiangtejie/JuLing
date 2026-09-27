@@ -16,7 +16,7 @@ public class PayRefundDetailsRespVO extends PayRefundBaseVO {
     @Schema(description = "支付退款编号", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
-    @Schema(description = "应用名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "我是棱信矩灵")
+    @Schema(description = "应用名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "我是亚特")
     private String appName;
 
     @Schema(description = "支付订单", requiredMode = Schema.RequiredMode.REQUIRED)

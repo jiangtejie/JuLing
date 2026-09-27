@@ -14,7 +14,7 @@ import lombok.ToString;
 /**
  * PMS 工作项看板状态 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_work_item_status")
 @KeySequence("pms_work_item_status_seq")

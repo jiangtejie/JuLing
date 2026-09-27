@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * HTTP API 加解密配置
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties(prefix = "juling.api-encrypt")
 @Validated

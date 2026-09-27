@@ -33,7 +33,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.GROUP_MEMBER_NO
 /**
  * 群成员 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service

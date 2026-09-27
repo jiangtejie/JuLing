@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * IoT 设备通用 API
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotDeviceCommonApi {
 

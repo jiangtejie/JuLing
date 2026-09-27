@@ -30,7 +30,7 @@ import static com.lxjl.juling.module.crm.enums.ErrorCodeConstants.CRM_PERMISSION
 /**
  * Crm 数据权限校验 AOP 切面
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Aspect

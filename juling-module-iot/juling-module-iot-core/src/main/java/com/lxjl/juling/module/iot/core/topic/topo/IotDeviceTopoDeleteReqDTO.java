@@ -13,7 +13,7 @@ import java.util.List;
  * <p>
  * 用于 {@link IotDeviceMessageMethodEnum#TOPO_DELETE} 消息的 params 参数
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @see <a href="https://help.aliyun.com/zh/marketplace/delete-a-topological-relationship">阿里云 - 删除拓扑关系</a>
  */
 @Data

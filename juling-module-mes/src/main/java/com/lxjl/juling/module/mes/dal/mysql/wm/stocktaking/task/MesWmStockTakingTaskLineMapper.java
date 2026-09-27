@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 盘点任务行 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesWmStockTakingTaskLineMapper extends BaseMapperX<MesWmStockTakingTaskLineDO> {

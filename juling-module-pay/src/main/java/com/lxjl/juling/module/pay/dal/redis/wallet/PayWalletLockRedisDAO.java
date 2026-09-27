@@ -13,7 +13,7 @@ import static com.lxjl.juling.module.pay.dal.redis.RedisKeyConstants.PAY_WALLET_
 /**
  * 支付钱包的锁 Redis DAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Repository
 public class PayWalletLockRedisDAO {

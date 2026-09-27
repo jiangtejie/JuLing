@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * HRM 定薪调薪记录生效 Job
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class HrmSalaryChangeJob implements JobHandler {

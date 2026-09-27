@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 商机产品 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface CrmBusinessProductMapper extends BaseMapperX<CrmBusinessProductDO> {

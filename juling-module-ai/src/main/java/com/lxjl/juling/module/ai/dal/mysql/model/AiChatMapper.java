@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * API 模型 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface AiChatMapper extends BaseMapperX<AiModelDO> {

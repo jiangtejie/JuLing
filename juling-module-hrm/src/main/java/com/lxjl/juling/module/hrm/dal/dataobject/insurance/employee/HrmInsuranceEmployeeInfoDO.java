@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 员工参保信息 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_insurance_employee_info")
 @KeySequence("hrm_insurance_employee_info_seq")

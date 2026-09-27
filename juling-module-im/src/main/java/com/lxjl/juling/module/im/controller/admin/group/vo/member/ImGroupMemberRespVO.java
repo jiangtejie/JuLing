@@ -18,7 +18,7 @@ public class ImGroupMemberRespVO {
     @Schema(description = "用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "21730")
     private Long userId;
 
-    @Schema(description = "组内显示名", example = "棱信矩灵")
+    @Schema(description = "组内显示名", example = "亚特")
     private String displayUserName;
 
     @Schema(description = "群备注", example = "核心群")
@@ -47,7 +47,7 @@ public class ImGroupMemberRespVO {
 
     // ========== 关联 AdminUser 的字段 ==========
 
-    @Schema(description = "用户昵称", example = "矩灵")
+    @Schema(description = "用户昵称", example = "亚特")
     private String nickname;
 
     @Schema(description = "用户头像")

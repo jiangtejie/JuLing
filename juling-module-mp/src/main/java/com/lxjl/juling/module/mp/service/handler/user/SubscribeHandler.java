@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 关注的事件处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

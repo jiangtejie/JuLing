@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 评论创建请求 DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ProductCommentCreateReqDTO {

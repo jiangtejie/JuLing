@@ -219,7 +219,7 @@ async function handleSubmit() {
   if (!valid) {
     return
   }
-  // add by 棱信矩灵：离职会写入计划离职时间与薪资结算日期，直接影响工资与社保核算，补二次确认
+  // add by 亚特：离职会写入计划离职时间与薪资结算日期，直接影响工资与社保核算，补二次确认
   try {
     await dialog.confirm({
       title: '提示',

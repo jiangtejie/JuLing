@@ -5,7 +5,7 @@ import com.lxjl.juling.framework.desensitize.core.regex.annotation.EmailDesensit
 /**
  * {@link EmailDesensitize} 的脱敏处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class EmailDesensitizationHandler extends AbstractRegexDesensitizationHandler<EmailDesensitize> {
 

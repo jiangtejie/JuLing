@@ -115,7 +115,7 @@ const formData = useVModel(props, 'modelValue', emit);
         </FormItem>
         <FormItem label="角标" name="badge.imgUrl" v-if="formData.badge.show">
           <UploadImg v-model="formData.badge.imgUrl" height="44px" width="72px">
-            <!-- TODO @棱信矩灵：这里不提示；是不是组件得封装下；-->
+            <!-- TODO @亚特：这里不提示；是不是组件得封装下；-->
             <template #tip> 建议尺寸：36 * 22</template>
           </UploadImg>
         </FormItem>
@@ -146,7 +146,7 @@ const formData = useVModel(props, 'modelValue', emit);
               width="56px"
               :show-description="false"
             >
-              <!-- TODO @棱信矩灵：这里不提示；是不是组件得封装下；-->
+              <!-- TODO @亚特：这里不提示；是不是组件得封装下；-->
               <template #tip> 建议尺寸：56 * 56</template>
             </UploadImg>
           </FormItem>

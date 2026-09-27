@@ -9,7 +9,7 @@ import lombok.*;
 /**
  * MES 设备资源 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_md_workstation_machine")
 @KeySequence("mes_md_workstation_machine_seq")
@@ -35,7 +35,7 @@ public class MesMdWorkstationMachineDO extends BaseDO {
     /**
      * 设备编号
      *
-     * TODO @棱信矩灵：等 dv 模块，关联设备表
+     * TODO @亚特：等 dv 模块，关联设备表
      */
     private Long machineryId;
     /**

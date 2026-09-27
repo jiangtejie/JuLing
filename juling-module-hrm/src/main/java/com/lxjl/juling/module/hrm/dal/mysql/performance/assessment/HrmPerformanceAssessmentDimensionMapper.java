@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * HRM 绩效员工维度 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface HrmPerformanceAssessmentDimensionMapper

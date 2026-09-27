@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * 商品评论的星级枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

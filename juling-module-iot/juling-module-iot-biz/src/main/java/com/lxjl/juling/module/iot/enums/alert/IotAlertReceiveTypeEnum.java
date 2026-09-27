@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * IoT 告警的接收方式枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

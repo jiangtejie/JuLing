@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * {@link Kd100ExpressClient} 的集成测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class Kd100ExpressClientIntegrationTest {

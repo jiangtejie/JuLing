@@ -6,7 +6,7 @@ import com.lxjl.juling.module.system.dal.dataobject.tenant.TenantDO;
  * 租户信息处理
  * 目的：尽量减少租户逻辑耦合到系统中
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TenantInfoHandler {
 

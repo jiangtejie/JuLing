@@ -39,7 +39,7 @@ import static java.util.Arrays.asList;
 /**
  * 优惠劵 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Service

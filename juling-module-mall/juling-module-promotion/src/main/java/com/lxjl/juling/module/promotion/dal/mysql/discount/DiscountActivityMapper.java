@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 限时折扣活动 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface DiscountActivityMapper extends BaseMapperX<DiscountActivityDO> {

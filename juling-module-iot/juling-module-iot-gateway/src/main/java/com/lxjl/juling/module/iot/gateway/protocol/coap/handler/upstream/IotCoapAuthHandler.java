@@ -20,7 +20,7 @@ import static com.lxjl.juling.module.iot.gateway.enums.ErrorCodeConstants.DEVICE
 /**
  * IoT 网关 CoAP 协议的【认证】处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotCoapAuthHandler extends IotCoapAbstractHandler {

@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * 分销用户 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface BrokerageUserConvert {

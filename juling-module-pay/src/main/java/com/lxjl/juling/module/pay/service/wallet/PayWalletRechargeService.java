@@ -8,7 +8,7 @@ import com.lxjl.juling.module.pay.dal.dataobject.wallet.PayWalletRechargeDO;
 /**
  * 钱包充值 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PayWalletRechargeService {
 

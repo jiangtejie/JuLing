@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link CodegenEngine} 的 Vue3 Admin Uniapp + Wot UI 单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class CodegenEngineUniappTest extends CodegenEngineAbstractTest {
 

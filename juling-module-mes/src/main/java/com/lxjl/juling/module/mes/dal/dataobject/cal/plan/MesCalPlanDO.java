@@ -15,7 +15,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 排班计划 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_cal_plan")
 @KeySequence("mes_cal_plan_seq")

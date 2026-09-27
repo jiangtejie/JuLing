@@ -1,4 +1,4 @@
--- 清理演示账号与演示租户（保留 system_users.id = 1 的 admin 与租户 1 棱信矩灵）
+-- 清理演示账号与演示租户（保留 system_users.id = 1 的 admin 与租户 1 亚特）
 BEGIN;
 
 -- 1) 演示账号：仅保留 id = 1

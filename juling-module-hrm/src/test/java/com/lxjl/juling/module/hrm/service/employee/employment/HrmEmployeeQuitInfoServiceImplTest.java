@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * {@link HrmEmployeeQuitInfoServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmEmployeeQuitInfoServiceImpl.class)
 public class HrmEmployeeQuitInfoServiceImplTest extends BaseDbUnitTest {

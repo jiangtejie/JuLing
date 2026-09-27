@@ -19,7 +19,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * IM 会话读位置 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

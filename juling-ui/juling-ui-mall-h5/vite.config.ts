@@ -85,9 +85,9 @@ export default defineConfig(({ mode }) => {
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
-        name: '矩灵订货商城',
-        short_name: '矩灵商城',
-        description: '炬信矩灵 · 移动端订货商城',
+        name: '亚特订货商城',
+        short_name: '亚特商城',
+        description: '亚特 · 移动端订货商城',
         lang: 'zh-CN',
         start_url: basePath,
         scope: basePath,

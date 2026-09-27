@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * 适用于：IQC（来料检验）、IPQC（过程检验）、OQC（出货检验）、RQC（退货检验）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

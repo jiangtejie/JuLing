@@ -41,7 +41,7 @@ import static com.lxjl.juling.module.pay.framework.pay.core.client.impl.weixin.W
 /**
  * 微信支付抽象类，实现微信统一的接口、以及部分实现（退款）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public abstract class AbstractWxPayClient extends AbstractPayClient<WxPayClientConfig> {
@@ -91,7 +91,7 @@ public abstract class AbstractWxPayClient extends AbstractPayClient<WxPayClientC
                 case API_VERSION_V2:
                     return doUnifiedOrderV2(reqDTO);
                 case API_VERSION_V3:
-                    // TODO @棱信矩灵：【可能是 wxjava 的 bug】参考 https://github.com/binarywang/WxJava/issues/1557
+                    // TODO @亚特：【可能是 wxjava 的 bug】参考 https://github.com/binarywang/WxJava/issues/1557
                     client.getConfig().setApiV3HttpClient(null);
                     return doUnifiedOrderV3(reqDTO);
                 default:

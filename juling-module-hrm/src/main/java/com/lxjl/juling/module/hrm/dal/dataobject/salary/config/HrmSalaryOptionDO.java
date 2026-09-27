@@ -15,7 +15,7 @@ import lombok.ToString;
 /**
  * HRM 工资表薪资项 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_salary_option")
 @KeySequence("hrm_salary_option_seq")

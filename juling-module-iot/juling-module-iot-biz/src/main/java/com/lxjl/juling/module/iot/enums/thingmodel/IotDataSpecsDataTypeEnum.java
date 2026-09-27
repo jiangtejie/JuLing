@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * IoT 数据定义的数据类型枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

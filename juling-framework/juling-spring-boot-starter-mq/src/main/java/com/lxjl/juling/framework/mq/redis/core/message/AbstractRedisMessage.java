@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Redis 消息抽象基类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public abstract class AbstractRedisMessage {

@@ -14,7 +14,7 @@ import lombok.*;
  * - 频道是运营单向推送的主体；C 端用户不能向频道发消息
  * - {@link #code} 是业务码（API / 字典外露），id 是数字主键给前端会话 targetId 用
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_channel")
 @KeySequence("im_channel_seq")

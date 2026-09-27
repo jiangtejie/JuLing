@@ -14,7 +14,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 招聘渠道下拉框数据源的 {@link ExcelColumnSelectFunction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class HrmRecruitChannelExcelColumnSelectFunction implements ExcelColumnSelectFunction {

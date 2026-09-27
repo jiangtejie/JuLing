@@ -59,7 +59,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmSalaryMonthEmployeeRecordServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmSalaryMonthEmployeeRecordServiceImpl.class)
 public class HrmSalaryMonthEmployeeRecordServiceImplTest extends BaseDbUnitTest {

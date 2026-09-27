@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * IM 群成员 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ImGroupMemberMapper extends BaseMapperX<ImGroupMemberDO> {

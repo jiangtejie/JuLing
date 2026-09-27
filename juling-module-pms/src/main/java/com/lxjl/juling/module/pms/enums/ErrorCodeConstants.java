@@ -7,7 +7,7 @@ import com.lxjl.juling.framework.common.exception.ErrorCode;
  *
  * PMS 系统，使用 1-053-000-000 段
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ErrorCodeConstants {
 

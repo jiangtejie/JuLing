@@ -23,7 +23,7 @@ import static com.lxjl.juling.module.hrm.enums.LogRecordConstants.HRM_RECRUIT_EL
 /**
  * HRM 招聘设置 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

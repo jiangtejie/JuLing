@@ -29,7 +29,7 @@ import static com.lxjl.juling.module.pms.enums.ErrorCodeConstants.KNOWLEDGE_FAVO
 /**
  * PMS 知识收藏（关注）Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

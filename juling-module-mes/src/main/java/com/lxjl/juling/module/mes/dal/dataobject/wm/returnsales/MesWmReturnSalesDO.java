@@ -14,7 +14,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 销售退货单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_return_sales")
 @KeySequence("mes_wm_return_sales_seq")

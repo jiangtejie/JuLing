@@ -5,7 +5,7 @@ import com.lxjl.juling.module.iot.core.topic.IotDeviceIdentity;
 /**
  * IoT 设备 Token Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotDeviceTokenService {
 

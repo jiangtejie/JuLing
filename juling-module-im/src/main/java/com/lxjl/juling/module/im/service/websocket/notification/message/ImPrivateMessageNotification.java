@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * IM 私聊消息 WebSocket 统一推送通知
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @Accessors(chain = true)

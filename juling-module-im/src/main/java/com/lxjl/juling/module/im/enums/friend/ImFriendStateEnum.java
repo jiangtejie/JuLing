@@ -14,7 +14,7 @@ import java.util.Objects;
  * <p>
  * 用于 ImFriendService.getFriendState 返回值与 FRIEND_STATE 缓存值：私聊发送热点路径下，sender 调缓存即可同时判定「能否发」和「是否屏蔽接收方」
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

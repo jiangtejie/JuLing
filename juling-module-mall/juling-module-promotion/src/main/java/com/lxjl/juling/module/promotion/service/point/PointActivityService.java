@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 积分商城活动 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PointActivityService {
 

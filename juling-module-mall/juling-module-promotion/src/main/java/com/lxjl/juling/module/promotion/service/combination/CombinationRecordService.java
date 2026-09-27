@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 拼团记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface CombinationRecordService {
 

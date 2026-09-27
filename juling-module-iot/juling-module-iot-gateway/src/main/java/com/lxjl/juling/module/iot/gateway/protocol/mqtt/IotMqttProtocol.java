@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * IoT 网关 MQTT 协议：接收设备上行消息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotMqttProtocol implements IotProtocol {

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * HRM 招聘面试记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_recruit_interview", autoResultMap = true)
 @KeySequence("hrm_recruit_interview_seq")

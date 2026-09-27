@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * IoT 设备【消息】的工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class IotDeviceMessageUtils {
 

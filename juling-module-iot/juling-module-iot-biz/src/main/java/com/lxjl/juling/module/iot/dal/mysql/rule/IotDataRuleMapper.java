@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * IoT 数据流转规则 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface IotDataRuleMapper extends BaseMapperX<IotDataRuleDO> {

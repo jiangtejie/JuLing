@@ -50,7 +50,7 @@ import static com.lxjl.juling.module.pay.enums.refund.PayRefundStatusEnum.*;
 /**
  * 钱包充值 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j
@@ -101,7 +101,7 @@ public class PayWalletRechargeServiceImpl implements PayWalletRechargeService {
                 .setMerchantOrderId(recharge.getId().toString()) // 业务的订单编号
                 .setSubject(WALLET_RECHARGE_ORDER_SUBJECT).setBody("")
                 .setPrice(recharge.getPayPrice())
-                .setExpireTime(addTime(Duration.ofHours(2L)))); // TODO @棱信矩灵：支付超时时间
+                .setExpireTime(addTime(Duration.ofHours(2L)))); // TODO @亚特：支付超时时间
         // 2.2 更新钱包充值记录中支付订单
         walletRechargeMapper.updateById(new PayWalletRechargeDO().setId(recharge.getId()).setPayOrderId(payOrderId));
         recharge.setPayOrderId(payOrderId);
@@ -297,7 +297,7 @@ public class PayWalletRechargeServiceImpl implements PayWalletRechargeService {
         if (wallet.getBalance() < walletRecharge.getTotalPrice()) {
             throw exception(WALLET_RECHARGE_REFUND_BALANCE_NOT_ENOUGH);
         }
-        // TODO @棱信矩灵：需要考虑下，赠送的金额，会不会导致提现超过；
+        // TODO @亚特：需要考虑下，赠送的金额，会不会导致提现超过；
         return wallet;
     }
 

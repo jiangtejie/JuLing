@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * AI 工具 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface AiToolMapper extends BaseMapperX<AiToolDO> {

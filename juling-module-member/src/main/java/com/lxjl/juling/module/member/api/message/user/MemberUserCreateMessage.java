@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 会员用户创建消息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class MemberUserCreateMessage {

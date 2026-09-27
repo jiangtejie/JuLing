@@ -17,7 +17,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 物料消耗记录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_item_consume")
 @KeySequence("mes_wm_item_consume_seq")

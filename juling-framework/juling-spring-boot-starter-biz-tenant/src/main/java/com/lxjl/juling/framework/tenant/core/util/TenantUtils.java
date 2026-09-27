@@ -10,7 +10,7 @@ import static com.lxjl.juling.framework.web.core.util.WebFrameworkUtils.HEADER_T
 /**
  * 多租户 Util
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TenantUtils {
 

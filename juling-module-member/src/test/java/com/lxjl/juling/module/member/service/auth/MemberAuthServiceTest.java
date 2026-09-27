@@ -22,16 +22,16 @@ import static cn.hutool.core.util.RandomUtil.randomEle;
 import static com.lxjl.juling.framework.test.core.util.RandomUtils.randomPojo;
 import static com.lxjl.juling.framework.test.core.util.RandomUtils.randomString;
 
-// TODO @棱信矩灵：单测的 review，等逻辑都达成一致后
+// TODO @亚特：单测的 review，等逻辑都达成一致后
 /**
  * {@link MemberAuthService} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import({MemberAuthServiceImpl.class, JuLingRedisAutoConfiguration.class})
 public class MemberAuthServiceTest extends BaseDbAndRedisUnitTest {
 
-    // TODO @棱信矩灵：登录相关的单测，待补全
+    // TODO @亚特：登录相关的单测，待补全
 
     @Resource
     private MemberAuthServiceImpl authService;
@@ -52,7 +52,7 @@ public class MemberAuthServiceTest extends BaseDbAndRedisUnitTest {
     @Resource
     private MemberUserMapper memberUserMapper;
 
-    // TODO 棱信矩灵：后续重构这个单测
+    // TODO 亚特：后续重构这个单测
 //    @Test
 //    public void testUpdatePassword_success(){
 //        // 准备参数
@@ -78,7 +78,7 @@ public class MemberAuthServiceTest extends BaseDbAndRedisUnitTest {
 //        assertEquals(memberUserMapper.selectById(userDO.getId()).getPassword(),newPassword);
 //    }
 
-    // TODO 棱信矩灵：后续重构这个单测
+    // TODO 亚特：后续重构这个单测
 //    @Test
 //    public void testResetPassword_success(){
 //        // 准备参数

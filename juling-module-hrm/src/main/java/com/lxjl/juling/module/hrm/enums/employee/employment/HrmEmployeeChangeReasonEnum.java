@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * HRM 员工异动原因枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

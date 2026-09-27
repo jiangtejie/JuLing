@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 /**
  * WMS 库存流水 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("wms_inventory_history")
 @KeySequence("wms_inventory_history_seq")

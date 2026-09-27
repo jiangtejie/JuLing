@@ -26,7 +26,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
  *
  * 该类包含了匹配器实现中常用的工具方法，如条件评估、参数校验、日志记录等
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public final class IotSceneRuleMatcherHelper {

@@ -17,11 +17,11 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-// TODO 棱信矩灵：晚点 review
+// TODO 亚特：晚点 review
 /**
  * {@link TradePointGiveCalculator} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TradePointGiveCalculatorTest extends BaseMockitoUnitTest {
 

@@ -63,7 +63,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.*;
  * <p>
  * 职责边界：媒体协商完全交给 LiveKit；后端只做会话状态机、Token 签发、来电信令推送、通话历史落消息流；房内媒体流变化交给 LiveKit 客户端事件（TrackSubscribed 等），后端不重复推
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

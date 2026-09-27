@@ -5,7 +5,7 @@ package com.lxjl.juling.module.iot.core.messagebus.core;
  *
  * 用于处理从消息总线接收到的消息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotMessageSubscriber<T> {
 

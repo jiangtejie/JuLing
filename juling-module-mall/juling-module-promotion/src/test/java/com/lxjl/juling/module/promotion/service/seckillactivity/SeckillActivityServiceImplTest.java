@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
 * {@link SeckillActivityServiceImpl} 的单元测试类
 *
-* @author 棱信矩灵
+* @author 亚特
 */
 @Import(SeckillActivityServiceImpl.class)
-@Disabled // TODO 棱信矩灵：未来开启
+@Disabled // TODO 亚特：未来开启
 public class SeckillActivityServiceImplTest extends BaseDbUnitTest {
 
     @Resource

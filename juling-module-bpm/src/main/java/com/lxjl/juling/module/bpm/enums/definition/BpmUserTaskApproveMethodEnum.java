@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * BPM 多人审批方式的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

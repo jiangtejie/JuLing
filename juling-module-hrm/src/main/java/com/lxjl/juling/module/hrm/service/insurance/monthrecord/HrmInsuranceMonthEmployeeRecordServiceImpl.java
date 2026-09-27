@@ -72,7 +72,7 @@ import static com.lxjl.juling.module.hrm.enums.LogRecordConstants.HRM_INSURANCE_
 /**
  * HRM 员工月度社保 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

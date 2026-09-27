@@ -17,10 +17,10 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @ToString(callSuper = true)
 public class TenantPageReqVO extends PageParam {
 
-    @Schema(description = "租户名", example = "矩灵")
+    @Schema(description = "租户名", example = "亚特")
     private String name;
 
-    @Schema(description = "联系人", example = "棱信矩灵")
+    @Schema(description = "联系人", example = "亚特")
     private String contactName;
 
     @Schema(description = "联系手机", example = "15601691300")

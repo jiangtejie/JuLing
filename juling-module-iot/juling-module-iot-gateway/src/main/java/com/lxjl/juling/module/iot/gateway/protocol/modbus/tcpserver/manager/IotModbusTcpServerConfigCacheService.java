@@ -23,7 +23,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * IoT Modbus TCP Server 配置缓存：认证时按需加载，断连时清理，定时刷新已连接设备
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Slf4j

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * IM 用户私有表情 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImFaceUserItemService {
 

@@ -55,7 +55,7 @@ import static com.lxjl.juling.module.pay.framework.job.config.PayJobConfiguratio
 /**
  * 支付通知 Core Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Valid

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 接收客服会话管理的事件处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class KfSessionHandler implements WxMpMessageHandler {

@@ -28,7 +28,7 @@ import static com.lxjl.juling.module.ai.enums.ErrorCodeConstants.CHAT_ROLE_NOT_E
 /**
  * AI 聊天角色 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

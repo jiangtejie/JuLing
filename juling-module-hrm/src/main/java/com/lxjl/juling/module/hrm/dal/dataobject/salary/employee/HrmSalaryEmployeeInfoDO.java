@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * HRM 员工薪资信息 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "hrm_salary_employee_info", autoResultMap = true)
 @KeySequence("hrm_salary_employee_info_seq")

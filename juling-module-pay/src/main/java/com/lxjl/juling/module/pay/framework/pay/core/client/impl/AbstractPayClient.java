@@ -20,7 +20,7 @@ import static com.lxjl.juling.framework.common.util.json.JsonUtils.toJsonString;
 /**
  * 支付客户端的抽象类，提供模板方法，减少子类的冗余代码
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public abstract class AbstractPayClient<Config extends PayClientConfig> implements PayClient<Config> {

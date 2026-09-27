@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * CRM 联系人与商机的关联 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface CrmContactBusinessService {
 

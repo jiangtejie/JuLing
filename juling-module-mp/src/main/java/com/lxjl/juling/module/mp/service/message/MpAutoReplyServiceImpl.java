@@ -33,7 +33,7 @@ import static com.lxjl.juling.module.mp.enums.ErrorCodeConstants.*;
 /**
  * 公众号的自动回复 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 用户群群 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImGroupService {
 

@@ -47,7 +47,7 @@ public class ImGroupRequestRespVO {
 
     // ========== 下面是聚合字段，方便前端显示 ==========
 
-    @Schema(description = "申请人 / 被邀请人昵称（实时聚合自 AdminUser）", example = "矩灵")
+    @Schema(description = "申请人 / 被邀请人昵称（实时聚合自 AdminUser）", example = "亚特")
     private String userNickname;
 
     @Schema(description = "申请人 / 被邀请人头像（实时聚合自 AdminUser）")
@@ -59,7 +59,7 @@ public class ImGroupRequestRespVO {
     @Schema(description = "邀请人头像（实时聚合自 AdminUser）")
     private String inviterAvatar;
 
-    @Schema(description = "群名称（实时聚合自 ImGroup）", example = "矩灵技术交流群")
+    @Schema(description = "群名称（实时聚合自 ImGroup）", example = "亚特技术交流群")
     private String groupName;
 
     @Schema(description = "群头像（实时聚合自 ImGroup）")

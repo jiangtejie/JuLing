@@ -3,7 +3,7 @@ package com.lxjl.juling.module.hrm.dal.redis;
 /**
  * HRM Redis Key 常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface RedisKeyConstants {
 

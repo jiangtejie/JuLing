@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * 管理设备 TCP 连接：socket ↔ 设备双向映射
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotModbusTcpServerConnectionManager {

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * BPM 条件表达式操作符枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

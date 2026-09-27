@@ -78,7 +78,7 @@ import static java.util.Collections.singletonList;
 /**
  * 社交应用 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

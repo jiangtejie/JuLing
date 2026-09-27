@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link AlipayWapPayClient} 单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AlipayWapPayClientTest extends AbstractAlipayClientTest {
 

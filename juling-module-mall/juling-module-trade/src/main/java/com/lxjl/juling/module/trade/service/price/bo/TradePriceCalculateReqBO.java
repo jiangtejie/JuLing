@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 价格计算 Request BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class TradePriceCalculateReqBO {

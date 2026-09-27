@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class CrmContactPageReqVO extends PageParam {
 
-    @Schema(description = "姓名", example = "棱信矩灵")
+    @Schema(description = "姓名", example = "亚特")
     private String name;
 
     @Schema(description = "客户编号", example = "10795")

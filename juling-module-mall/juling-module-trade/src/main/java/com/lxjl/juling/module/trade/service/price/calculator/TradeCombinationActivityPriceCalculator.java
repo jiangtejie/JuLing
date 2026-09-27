@@ -17,7 +17,7 @@ import jakarta.annotation.Resource;
 /**
  * 拼团活动的 {@link TradePriceCalculator} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Order(TradePriceCalculator.ORDER_COMBINATION_ACTIVITY)

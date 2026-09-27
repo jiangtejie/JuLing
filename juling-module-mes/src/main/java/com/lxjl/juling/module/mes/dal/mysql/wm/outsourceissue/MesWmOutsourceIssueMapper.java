@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * MES 外协发料单 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesWmOutsourceIssueMapper extends BaseMapperX<MesWmOutsourceIssueDO> {

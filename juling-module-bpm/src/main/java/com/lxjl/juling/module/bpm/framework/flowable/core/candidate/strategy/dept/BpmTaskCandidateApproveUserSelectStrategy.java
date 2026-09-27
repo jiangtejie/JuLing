@@ -22,7 +22,7 @@ import java.util.Map;
  * 审批人自选 {@link BpmTaskCandidateUserStrategy} 实现类
  * 审批人在审批时选择下一个节点的审批人
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmTaskCandidateApproveUserSelectStrategy extends AbstractBpmTaskCandidateDeptLeaderStrategy {

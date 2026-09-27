@@ -2,13 +2,13 @@ package com.lxjl.juling.module.bpm.service.task.trigger;
 
 import com.lxjl.juling.module.bpm.enums.definition.BpmTriggerTypeEnum;
 
-// TODO @棱信矩灵：可能会想换个包地址
+// TODO @亚特：可能会想换个包地址
 /**
  * BPM 触发器接口
  * <p>
  * 处理不同的动作
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface BpmTrigger {
 

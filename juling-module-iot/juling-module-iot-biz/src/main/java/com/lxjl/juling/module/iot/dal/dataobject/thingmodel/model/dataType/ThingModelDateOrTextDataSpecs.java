@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  *
  * 数据类型，取值为 date 或 text
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

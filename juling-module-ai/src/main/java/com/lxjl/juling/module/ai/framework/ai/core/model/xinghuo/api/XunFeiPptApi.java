@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 /**
  * 讯飞智能 PPT 生成 API
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @see <a href="https://www.xfyun.cn/doc/spark/PPTv2.html">智能 PPT 生成 API</a>
  */
 @Slf4j

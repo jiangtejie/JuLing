@@ -11,7 +11,7 @@ import static com.lxjl.juling.module.crm.enums.DictTypeConstants.CRM_CUSTOMER_IN
 /**
  * 行业的 {@link IParseFunction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

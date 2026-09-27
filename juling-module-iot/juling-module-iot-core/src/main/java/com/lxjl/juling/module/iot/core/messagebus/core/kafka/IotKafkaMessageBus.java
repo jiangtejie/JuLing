@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * 基于 Kafka 的 {@link IotMessageBus} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotKafkaMessageBus implements IotMessageBus {

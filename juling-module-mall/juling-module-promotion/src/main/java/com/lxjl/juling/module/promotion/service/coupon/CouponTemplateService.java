@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 优惠劵模板 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface CouponTemplateService {
 

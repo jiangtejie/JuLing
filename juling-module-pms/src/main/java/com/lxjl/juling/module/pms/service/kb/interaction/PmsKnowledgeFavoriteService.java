@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * PMS 知识收藏（关注）Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PmsKnowledgeFavoriteService {
 

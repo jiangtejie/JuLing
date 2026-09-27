@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * MES 产品BOM Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesMdProductBomService {
 

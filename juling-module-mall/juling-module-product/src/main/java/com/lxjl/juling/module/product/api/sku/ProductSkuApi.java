@@ -12,7 +12,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 商品 SKU API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 public interface ProductSkuApi {

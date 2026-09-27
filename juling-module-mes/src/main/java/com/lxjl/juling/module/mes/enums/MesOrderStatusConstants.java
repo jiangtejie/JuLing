@@ -6,7 +6,7 @@ package com.lxjl.juling.module.mes.enums;
  * 集中管理各模块单据状态的编号，作为状态值的中央注册中心。
  * 各枚举类引用此处常量，避免硬编码数字。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public final class MesOrderStatusConstants {
 

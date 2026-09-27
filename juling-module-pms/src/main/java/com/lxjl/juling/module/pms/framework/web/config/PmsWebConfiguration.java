@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * PMS 模块的 Web 配置
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Configuration(proxyBeanMethods = false)
 public class PmsWebConfiguration {

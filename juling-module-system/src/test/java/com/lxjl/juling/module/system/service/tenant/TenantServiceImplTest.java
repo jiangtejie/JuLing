@@ -50,7 +50,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link TenantServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(TenantServiceImpl.class)
 public class TenantServiceImplTest extends BaseDbUnitTest {
@@ -145,14 +145,14 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
         when(userService.createUser(argThat(user -> {
             assertEquals("juling", user.getUsername());
             assertEquals("yuanma", user.getPassword());
-            assertEquals("矩灵", user.getNickname());
+            assertEquals("亚特", user.getNickname());
             assertEquals("15601691300", user.getMobile());
             return true;
         }))).thenReturn(300L);
 
         // 准备参数
         TenantSaveReqVO reqVO = randomPojo(TenantSaveReqVO.class, o -> {
-            o.setContactName("矩灵");
+            o.setContactName("亚特");
             o.setContactMobile("15601691300");
             o.setPackageId(100L);
             o.setStatus(randomCommonStatus());
@@ -287,8 +287,8 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
     public void testGetTenantPage() {
         // mock 数据
         TenantDO dbTenant = randomPojo(TenantDO.class, o -> { // 等会查询到
-            o.setName("棱信矩灵");
-            o.setContactName("棱信矩灵");
+            o.setName("亚特");
+            o.setContactName("亚特");
             o.setContactMobile("15601691300");
             o.setStatus(CommonStatusEnum.ENABLE.getStatus());
             o.setCreateTime(buildTime(2020, 12, 12));
@@ -306,8 +306,8 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
         tenantMapper.insert(cloneIgnoreId(dbTenant, o -> o.setCreateTime(buildTime(2021, 12, 12))));
         // 准备参数
         TenantPageReqVO reqVO = new TenantPageReqVO();
-        reqVO.setName("矩灵");
-        reqVO.setContactName("矩灵");
+        reqVO.setName("亚特");
+        reqVO.setContactName("亚特");
         reqVO.setContactMobile("1560");
         reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
         reqVO.setCreateTime(buildBetweenTime(2020, 12, 1, 2020, 12, 24));
@@ -323,11 +323,11 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testGetTenantByName() {
         // mock 数据
-        TenantDO dbTenant = randomPojo(TenantDO.class, o -> o.setName("矩灵"));
+        TenantDO dbTenant = randomPojo(TenantDO.class, o -> o.setName("亚特"));
         tenantMapper.insert(dbTenant);// @Sql: 先插入出一条存在的数据
 
         // 调用
-        TenantDO result = tenantService.getTenantByName("矩灵");
+        TenantDO result = tenantService.getTenantByName("亚特");
         // 校验存在
         assertPojoEquals(result, dbTenant);
     }

@@ -37,7 +37,7 @@ import static com.lxjl.juling.module.pay.enums.ErrorCodeConstants.REFUND_NOT_FOU
 /**
  * 钱包支付的 PayClient 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class WalletPayClient extends AbstractPayClient<NonePayClientConfig> {

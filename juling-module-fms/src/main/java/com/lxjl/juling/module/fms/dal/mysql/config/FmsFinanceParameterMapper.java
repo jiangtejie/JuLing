@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * FMS 财务参数 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsFinanceParameterMapper extends BaseMapperX<FmsFinanceParameterDO> {

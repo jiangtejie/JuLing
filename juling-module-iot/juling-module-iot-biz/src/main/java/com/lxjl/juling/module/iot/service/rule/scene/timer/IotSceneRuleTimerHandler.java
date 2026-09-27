@@ -20,7 +20,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.f
 /**
  * IoT 场景规则定时触发器处理器：负责管理定时触发器的注册、更新、删除等操作
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

@@ -6,7 +6,7 @@ import com.lxjl.juling.module.mes.dal.dataobject.wm.itemconsume.MesWmItemConsume
 /**
  * MES 物料消耗记录 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MesWmItemConsumeService {
 

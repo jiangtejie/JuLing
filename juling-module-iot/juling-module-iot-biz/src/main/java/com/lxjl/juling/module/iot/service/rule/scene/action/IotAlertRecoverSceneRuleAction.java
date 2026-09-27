@@ -17,7 +17,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * IoT 告警恢复的 {@link IotSceneRuleAction} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class IotAlertRecoverSceneRuleAction implements IotSceneRuleAction {

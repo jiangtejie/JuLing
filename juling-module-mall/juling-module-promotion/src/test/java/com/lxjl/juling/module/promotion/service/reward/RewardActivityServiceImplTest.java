@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link RewardActivityServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 public class RewardActivityServiceImplTest extends BaseMockitoUnitTest {
 
     @InjectMocks
@@ -146,7 +146,7 @@ public class RewardActivityServiceImplTest extends BaseMockitoUnitTest {
     public void testGetRewardActivityPage() {
         // mock 数据
         RewardActivityDO dbRewardActivity = randomPojo(RewardActivityDO.class, o -> { // 等会查询到
-            o.setName("棱信矩灵");
+            o.setName("亚特");
             o.setStatus(CommonStatusEnum.DISABLE.getStatus());
         });
         rewardActivityMapper.insert(dbRewardActivity);
@@ -156,7 +156,7 @@ public class RewardActivityServiceImplTest extends BaseMockitoUnitTest {
         rewardActivityMapper.insert(cloneIgnoreId(dbRewardActivity, o -> o.setStatus(CommonStatusEnum.ENABLE.getStatus())));
         // 准备参数
         RewardActivityPageReqVO reqVO = new RewardActivityPageReqVO();
-        reqVO.setName("棱信矩灵");
+        reqVO.setName("亚特");
         reqVO.setStatus(CommonStatusEnum.DISABLE.getStatus());
 
         // 调用
@@ -167,7 +167,7 @@ public class RewardActivityServiceImplTest extends BaseMockitoUnitTest {
         assertPojoEquals(dbRewardActivity, pageResult.getList().get(0), "rules");
     }
 
-    // TODO 棱信矩灵：后续完善单测
+    // TODO 亚特：后续完善单测
 //    @Test
 //    public void testGetRewardActivities_all() {
 //        LocalDateTime now = LocalDateTime.now();

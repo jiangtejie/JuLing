@@ -16,7 +16,7 @@ import static com.lxjl.juling.module.mes.enums.ErrorCodeConstants.MD_ITEM_NOT_EX
 /**
  * MES 物料批次属性配置 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

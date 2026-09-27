@@ -37,7 +37,7 @@ import static com.lxjl.juling.module.mp.enums.ErrorCodeConstants.USER_UPDATE_TAG
 /**
  * 微信公众号粉丝 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

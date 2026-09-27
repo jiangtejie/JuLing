@@ -29,7 +29,7 @@ public class ErpPurchaseInRespVO {
 
     @Schema(description = "供应商编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
     private Long supplierId;
-    @Schema(description = "供应商名称", example = "矩灵")
+    @Schema(description = "供应商名称", example = "亚特")
     @ExcelProperty("供应商名称")
     private String supplierName;
 
@@ -78,9 +78,9 @@ public class ErpPurchaseInRespVO {
     @ExcelProperty("备注")
     private String remark;
 
-    @Schema(description = "创建人", example = "矩灵")
+    @Schema(description = "创建人", example = "亚特")
     private String creator;
-    @Schema(description = "创建人名称", example = "矩灵")
+    @Schema(description = "创建人名称", example = "亚特")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -11,7 +11,7 @@ import lombok.*;
 /**
  * MES SN 码 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_sn")
 @KeySequence("mes_wm_sn_seq")
@@ -46,7 +46,7 @@ public class MesWmSnDO extends BaseDO {
      * 批次号
      */
     private String batchCode;
-    // TODO @棱信矩灵：【暂时不处理】看看后续要不要去掉这个字段。
+    // TODO @亚特：【暂时不处理】看看后续要不要去掉这个字段。
     /**
      * 生产工单编号
      *

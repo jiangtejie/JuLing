@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  *     <li>处理：群主 / 管理员调 agree / refuse 推进状态机；同意时把 addSource / inviterUserId 同步写入 {@link ImGroupMemberDO}</li>
  * </ul>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_group_request")
 @KeySequence("im_group_request_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增；MySQL 等可不写

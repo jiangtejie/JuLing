@@ -13,7 +13,7 @@ import lombok.ToString;
 /**
  * PMS 知识内容协作权限 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_knowledge_content_permission")
 @KeySequence("pms_knowledge_content_permission_seq")

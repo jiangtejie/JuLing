@@ -11,7 +11,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 工艺路线工序 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_pro_route_process")
 @KeySequence("mes_pro_route_process_seq")

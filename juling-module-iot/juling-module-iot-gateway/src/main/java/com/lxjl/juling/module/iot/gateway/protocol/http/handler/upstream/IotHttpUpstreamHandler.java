@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * IoT 网关 HTTP 协议的【上行】处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotHttpUpstreamHandler extends IotHttpAbstractHandler {

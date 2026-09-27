@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 /**
  * FMS 资产负债表数据 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_balance_sheet_report")
 @KeySequence("fms_balance_sheet_report_seq")

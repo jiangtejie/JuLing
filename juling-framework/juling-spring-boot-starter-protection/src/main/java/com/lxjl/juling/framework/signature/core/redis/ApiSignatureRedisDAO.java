@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * HTTP API 签名 Redis DAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 public class ApiSignatureRedisDAO {

@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * IM 消息状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

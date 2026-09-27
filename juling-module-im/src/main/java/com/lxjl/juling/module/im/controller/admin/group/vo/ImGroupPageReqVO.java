@@ -14,7 +14,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @ToString(callSuper = true)
 public class ImGroupPageReqVO extends PageParam {
 
-    @Schema(description = "群名称", example = "棱信矩灵")
+    @Schema(description = "群名称", example = "亚特")
     private String name;
 
     @Schema(description = "群主用户编号", example = "31460")

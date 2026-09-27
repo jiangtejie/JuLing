@@ -19,7 +19,7 @@ import static com.lxjl.juling.module.promotion.enums.ErrorCodeConstants.BANNER_N
 /**
  * 首页 banner 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

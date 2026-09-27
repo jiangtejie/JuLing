@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * IoT Kafka 配置 {@link IotAbstractDataSinkConfig} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class IotDataSinkKafkaConfig extends IotAbstractDataSinkConfig {

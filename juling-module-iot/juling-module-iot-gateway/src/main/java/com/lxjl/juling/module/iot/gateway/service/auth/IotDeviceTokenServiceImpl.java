@@ -24,7 +24,7 @@ import static com.lxjl.juling.module.iot.gateway.enums.ErrorCodeConstants.DEVICE
  *
  * 注意：目前仅 HTTP 协议使用
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

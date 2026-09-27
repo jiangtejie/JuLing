@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * IoT 设备信息查询 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class IotDeviceGetReqDTO {

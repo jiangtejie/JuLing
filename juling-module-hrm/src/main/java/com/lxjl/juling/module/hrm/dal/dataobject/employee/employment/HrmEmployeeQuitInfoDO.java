@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 /**
  * HRM 员工离职信息 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_employee_quit_info")
 @KeySequence("hrm_employee_quit_info_seq")

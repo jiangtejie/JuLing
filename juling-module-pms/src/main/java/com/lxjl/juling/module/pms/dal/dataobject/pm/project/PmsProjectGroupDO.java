@@ -15,7 +15,7 @@ import lombok.ToString;
  *
  * 项目分组是后台用户个人维护的项目视图，不影响其他成员看到的项目分组
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_project_group")
 @KeySequence("pms_project_group_seq")

@@ -37,7 +37,7 @@ import static com.lxjl.juling.module.im.enums.ErrorCodeConstants.IM_CHANNEL_MESS
 /**
  * IM 频道消息 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

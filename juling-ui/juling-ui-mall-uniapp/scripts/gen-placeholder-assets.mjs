@@ -244,7 +244,7 @@ const banner = (id, from, to, title, sub) =>
   text(376, 172, 62, '#ffffff', title) + text(376, 236, 28, 'rgba(255,255,255,0.88)', sub, 'normal') + '</svg>';
 
 ASSETS.push(['static/img/banner/banner-1.png',
-  banner('b1', '#ff5a3c', '#ff9b56', '矩灵商城', '占位图 · 请在管理后台替换为运营素材')]);
+  banner('b1', '#ff5a3c', '#ff9b56', '亚特商城', '占位图 · 请在管理后台替换为运营素材')]);
 ASSETS.push(['static/img/banner/banner-2.png',
   banner('b2', '#3b82f6', '#22d3ee', '精选好物', '占位图 · 请在管理后台替换为运营素材')]);
 

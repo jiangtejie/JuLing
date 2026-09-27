@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * Banner 的自动配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AutoConfiguration
 public class JuLingBannerAutoConfiguration {

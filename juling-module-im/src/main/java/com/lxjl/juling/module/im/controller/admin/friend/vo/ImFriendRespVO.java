@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * IM 好友 Response VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - IM 好友 Response VO")
 @Data
@@ -52,7 +52,7 @@ public class ImFriendRespVO {
 
     // ========== 下面是聚合字段，方便前端显示 ==========
 
-    @Schema(description = "好友昵称（实时聚合自 AdminUser）", example = "矩灵")
+    @Schema(description = "好友昵称（实时聚合自 AdminUser）", example = "亚特")
     private String nickname;
 
     @Schema(description = "好友昵称的拼音（小写无空格）", example = "juling")

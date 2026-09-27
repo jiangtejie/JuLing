@@ -28,7 +28,7 @@ import static java.util.Arrays.asList;
 /**
  * {@link DashScopeChatModel} 集成测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TongYiChatModelTests {
 

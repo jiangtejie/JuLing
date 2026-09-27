@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Flowable Web 过滤器，将 userId 设置到 {@link org.flowable.common.engine.impl.identity.Authentication} 中
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class FlowableWebFilter extends OncePerRequestFilter {
 

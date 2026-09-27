@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * IM 会话读位置 Response VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - IM 会话读位置 Response VO")
 @Data

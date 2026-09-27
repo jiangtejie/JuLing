@@ -15,7 +15,7 @@ public class HrmOperateLogRespVO {
     @Schema(description = "操作用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long userId;
 
-    @Schema(description = "操作用户名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "操作用户名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String userName;
 
     @Schema(description = "操作用户类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")

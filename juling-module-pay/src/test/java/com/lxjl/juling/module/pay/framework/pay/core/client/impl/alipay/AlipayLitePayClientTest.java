@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link AlipayLitePayClient} 单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AlipayLitePayClientTest extends AbstractAlipayClientTest {
 

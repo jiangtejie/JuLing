@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.mq.redis.config.JuLingRedisMQConsumerAut
 /**
  * Redis 的 {@link IotMessageBus} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotRedisMessageBus implements IotMessageBus {

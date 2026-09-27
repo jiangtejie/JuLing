@@ -19,7 +19,7 @@ import static com.lxjl.juling.module.pay.framework.pay.core.client.impl.alipay.A
  *
  * 文档：<a href="https://opendocs.alipay.com/apis/02890k">扫码支付</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class AlipayQrPayClient extends AbstractAlipayPayClient {

@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * MES 生产入库明细 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_wm_product_produce_detail")
 @KeySequence("mes_wm_product_produce_detail_seq")

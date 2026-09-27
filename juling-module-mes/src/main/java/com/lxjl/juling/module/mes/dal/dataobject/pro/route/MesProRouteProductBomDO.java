@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 /**
  * MES 工艺路线产品 BOM DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_pro_route_product_bom")
 @KeySequence("mes_pro_route_product_bom_seq")

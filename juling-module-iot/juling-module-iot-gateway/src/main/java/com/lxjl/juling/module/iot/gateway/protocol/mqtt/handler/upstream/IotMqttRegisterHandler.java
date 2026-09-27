@@ -19,7 +19,7 @@ import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeCo
 /**
  * IoT 网关 MQTT 设备注册处理器：处理设备动态注册消息（一型一密）
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotMqttRegisterHandler extends IotMqttAbstractHandler {

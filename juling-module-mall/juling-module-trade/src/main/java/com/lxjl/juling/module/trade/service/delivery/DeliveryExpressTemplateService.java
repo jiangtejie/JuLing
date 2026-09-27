@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 快递运费模板 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DeliveryExpressTemplateService {
 

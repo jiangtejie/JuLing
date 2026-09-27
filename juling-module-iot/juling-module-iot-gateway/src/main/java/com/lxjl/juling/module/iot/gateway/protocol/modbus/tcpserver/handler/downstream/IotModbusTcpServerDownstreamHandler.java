@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1. 处理下行消息（如属性设置 thing.service.property.set）
  * 2. 将属性值转换为 Modbus 写指令，通过 TCP 连接发送给设备
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotModbusTcpServerDownstreamHandler {

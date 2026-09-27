@@ -9,7 +9,7 @@ import com.lxjl.juling.module.system.dal.dataobject.logger.OperateLogDO;
 /**
  * 操作日志 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface OperateLogService {
 

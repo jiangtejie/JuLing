@@ -37,7 +37,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 /**
  * {@link HrmRecruitChannelServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmRecruitChannelServiceImpl.class)
 public class HrmRecruitChannelServiceImplTest extends BaseDbUnitTest {

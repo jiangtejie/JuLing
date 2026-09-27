@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 /**
  * {@link MesProFeedbackServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(MesProFeedbackServiceImpl.class)
 public class MesProFeedbackServiceImplTest extends BaseDbUnitTest {

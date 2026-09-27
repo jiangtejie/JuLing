@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
  * 各子模块用嵌套 inner class 区分（friend / group / face / message / rtc 等），
  * yaml 路径保持 juling.im.{module}.{key} 与原有部署保持兼容
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @ConfigurationProperties(prefix = "juling.im")

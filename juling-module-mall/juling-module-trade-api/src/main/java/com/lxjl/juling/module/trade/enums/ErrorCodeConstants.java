@@ -6,7 +6,7 @@ import com.lxjl.juling.framework.common.exception.ErrorCode;
  * Trade 错误码枚举类
  * trade 系统，使用 1-011-000-000 段
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 public interface ErrorCodeConstants {

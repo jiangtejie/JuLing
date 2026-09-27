@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * <p>
  * 终态闭合：通话 ENDED 时所有明细 status 必属 {LEFT / REJECTED / NO_ANSWER} 之一
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_rtc_participant")
 @KeySequence("im_rtc_participant_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增；MySQL 等数据库可不写

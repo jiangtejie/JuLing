@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * 从消息总线接收到下行消息，然后发布到 MQTT Broker，从而被设备所接收
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotEmqxDownstreamHandler {

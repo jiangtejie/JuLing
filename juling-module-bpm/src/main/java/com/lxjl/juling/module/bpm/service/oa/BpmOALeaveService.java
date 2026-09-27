@@ -11,8 +11,8 @@ import jakarta.validation.Valid;
 /**
  * 请假申请 Service 接口
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  */
 public interface BpmOALeaveService {
 

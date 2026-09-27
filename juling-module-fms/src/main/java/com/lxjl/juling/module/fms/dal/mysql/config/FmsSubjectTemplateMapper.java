@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * FMS 科目模板 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsSubjectTemplateMapper extends BaseMapperX<FmsSubjectTemplateDO> {

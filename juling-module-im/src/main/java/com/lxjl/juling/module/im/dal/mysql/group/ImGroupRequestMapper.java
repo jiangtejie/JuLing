@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * IM 加群申请记录 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ImGroupRequestMapper extends BaseMapperX<ImGroupRequestDO> {

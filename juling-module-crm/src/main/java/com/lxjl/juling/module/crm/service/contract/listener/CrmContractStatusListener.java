@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * 合同审批的结果的监听器实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class CrmContractStatusListener extends BpmProcessInstanceStatusEventListener {

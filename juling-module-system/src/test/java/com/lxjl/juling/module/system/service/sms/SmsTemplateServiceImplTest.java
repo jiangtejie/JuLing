@@ -206,7 +206,7 @@ public class SmsTemplateServiceImplTest extends BaseDbUnitTest {
             o.setType(SmsTemplateTypeEnum.PROMOTION.getType());
             o.setStatus(CommonStatusEnum.ENABLE.getStatus());
             o.setCode("tudou");
-            o.setContent("棱信矩灵");
+            o.setContent("亚特");
             o.setApiTemplateId("juling");
             o.setChannelId(1L);
             o.setCreateTime(buildTime(2021, 11, 11));
@@ -231,7 +231,7 @@ public class SmsTemplateServiceImplTest extends BaseDbUnitTest {
         reqVO.setType(SmsTemplateTypeEnum.PROMOTION.getType());
         reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
         reqVO.setCode("tu");
-        reqVO.setContent("矩灵");
+        reqVO.setContent("亚特");
         reqVO.setApiTemplateId("ju");
         reqVO.setChannelId(1L);
         reqVO.setCreateTime(buildBetweenTime(2021, 11, 1, 2021, 12, 1));

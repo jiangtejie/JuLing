@@ -16,7 +16,7 @@ import lombok.ToString;
 /**
  * HRM 员工材料附件 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("hrm_employee_file")
 @KeySequence("hrm_employee_file_seq")

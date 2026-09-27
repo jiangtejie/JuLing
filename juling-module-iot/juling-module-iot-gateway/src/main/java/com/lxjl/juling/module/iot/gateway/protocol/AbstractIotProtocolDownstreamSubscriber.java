@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * 负责接收来自消息总线的下行消息，并委托给子类进行业务处理
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Slf4j

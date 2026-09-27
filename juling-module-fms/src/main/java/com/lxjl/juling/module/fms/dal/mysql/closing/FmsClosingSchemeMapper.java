@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * FMS 结账方案 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsClosingSchemeMapper extends BaseMapperX<FmsClosingSchemeDO> {

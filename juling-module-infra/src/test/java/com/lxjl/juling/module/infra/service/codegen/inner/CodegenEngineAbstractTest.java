@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * {@link CodegenEngine} 的单元测试抽象基类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public abstract class CodegenEngineAbstractTest extends BaseMockitoUnitTest {
 

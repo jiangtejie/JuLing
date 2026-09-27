@@ -22,7 +22,7 @@ import static cn.hutool.core.collection.ListUtil.toList;
 /**
  * 发起人连续多级部门的负责人 {@link BpmTaskCandidateStrategy} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmTaskCandidateStartUserDeptLeaderMultiStrategy extends AbstractBpmTaskCandidateDeptLeaderStrategy {

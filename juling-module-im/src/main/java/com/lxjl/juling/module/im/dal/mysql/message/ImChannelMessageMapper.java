@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * IM 频道消息 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ImChannelMessageMapper extends BaseMapperX<ImChannelMessageDO> {

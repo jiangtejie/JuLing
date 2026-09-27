@@ -9,7 +9,7 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
  *
  * 设备通过此资源进行认证，获取 Token
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotCoapAuthResource extends CoapResource {

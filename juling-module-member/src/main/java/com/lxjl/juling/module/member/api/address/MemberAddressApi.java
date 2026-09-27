@@ -5,7 +5,7 @@ import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 /**
  * 用户收件地址 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MemberAddressApi {
 

@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * 基于 RabbitMQ 的 {@link IotMessageBus} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Slf4j

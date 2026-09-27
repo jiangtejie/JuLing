@@ -1,9 +1,9 @@
 {
   "id": "juling-mall",
   "name": "juling-mall",
-  "displayName": "矩灵商城",
+  "displayName": "亚特商城",
   "version": "2026.08",
-  "description": "矩灵商城，一套代码，同时发行到iOS、Android、H5、微信小程序多个平台，请使用手机扫码快速体验强大功能",
+  "description": "亚特商城，一套代码，同时发行到iOS、Android、H5、微信小程序多个平台，请使用手机扫码快速体验强大功能",
   "packageManager": "pnpm@11.7.0",
   "engines": {
     "node": ">=20"

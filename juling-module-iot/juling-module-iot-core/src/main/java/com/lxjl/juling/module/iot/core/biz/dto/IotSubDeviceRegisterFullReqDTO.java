@@ -12,7 +12,7 @@ import java.util.List;
  * <p>
  * 额外包含了网关设备的标识信息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class IotSubDeviceRegisterFullReqDTO {

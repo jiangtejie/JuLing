@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * IoT 产品物模型 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface IotThingModelMapper extends BaseMapperX<IotThingModelDO> {

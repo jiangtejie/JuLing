@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 /**
  * 支付宝 Client 的测试基类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public abstract class AbstractAlipayClientTest extends BaseMockitoUnitTest {
 

@@ -14,7 +14,7 @@ import lombok.ToString;
 /**
  * PMS 知识收藏（关注）DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("pms_knowledge_favorite")
 @KeySequence("pms_knowledge_favorite_seq")

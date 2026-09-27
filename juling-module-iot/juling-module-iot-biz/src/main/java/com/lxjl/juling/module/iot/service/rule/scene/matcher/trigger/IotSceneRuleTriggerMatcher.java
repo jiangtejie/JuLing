@@ -10,7 +10,7 @@ import com.lxjl.juling.module.iot.service.rule.scene.matcher.IotSceneRuleMatcher
  *
  * 触发器匹配器负责判断设备消息是否满足场景规则的主触发条件，是场景规则执行的第一道门槛
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotSceneRuleTriggerMatcher extends IotSceneRuleMatcher {
 

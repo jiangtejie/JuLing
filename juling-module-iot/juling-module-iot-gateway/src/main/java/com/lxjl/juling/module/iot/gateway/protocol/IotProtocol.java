@@ -7,7 +7,7 @@ import com.lxjl.juling.module.iot.core.enums.IotProtocolTypeEnum;
  *
  * 定义传输层协议的生命周期管理
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotProtocol {
 

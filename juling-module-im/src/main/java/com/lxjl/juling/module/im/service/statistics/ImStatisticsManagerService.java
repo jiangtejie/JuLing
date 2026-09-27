@@ -9,7 +9,7 @@ import java.util.Map;
  * 仅服务于 manager 后台统计页，独立于业务 Service，避免污染。
  * 返回的均为聚合后的简单结构，由 Controller 负责 VO 装配与昵称回填。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImStatisticsManagerService {
 

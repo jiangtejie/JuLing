@@ -31,7 +31,7 @@ import java.util.Objects;
  * <p>
  * 由 {@link com.lxjl.juling.module.im.framework.rtc.config.ImRtcConfiguration} 注册为 Bean，本类不带 {@code @Component}
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class LiveKitClient {

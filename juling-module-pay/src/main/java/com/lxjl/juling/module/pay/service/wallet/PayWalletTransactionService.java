@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 /**
  * 钱包余额流水 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PayWalletTransactionService {
 

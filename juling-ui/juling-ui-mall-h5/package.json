@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.7.0",
-  "description": "炬信矩灵 · 订货商城 H5（Vue3 + Vite + TypeScript + Vant4）",
+  "description": "亚特 · 订货商城 H5（Vue3 + Vite + TypeScript + Vant4）",
   "author": {
-    "name": "炬信矩灵",
+    "name": "亚特",
     "email": "dev@lxjl.local"
   },
   "license": "MIT",

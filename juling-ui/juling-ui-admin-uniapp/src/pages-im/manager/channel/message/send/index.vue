@@ -132,7 +132,7 @@ function handleOpenMaterialPicker() {
 
 /** 提交表单 */
 async function handleSubmit() {
-  // add by 棱信矩灵：防重。此前 loading 在 await 表单校验之后才置位，且 finally 里立即复位，
+  // add by 亚特：防重。此前 loading 在 await 表单校验之后才置位，且 finally 里立即复位，
   // 而返回被 delay(handleBack) 推迟 500ms —— 这段窗口内按钮可再次点击，
   // 会对同一次操作重复推送（频道消息可群发且不可撤回，代价高）
   if (formLoading.value) {

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * IM 好友申请 Response VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - IM 好友申请 Response VO")
 @Data
@@ -26,7 +26,7 @@ public class ImFriendRequestRespVO {
     @Schema(description = "处理结果", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
     private Integer handleResult; // 参见 ImFriendRequestHandleResultEnum 枚举
 
-    @Schema(description = "申请理由", example = "我是棱信矩灵（一种食材）")
+    @Schema(description = "申请理由", example = "我是亚特（一种食材）")
     private String applyContent;
 
     @Schema(description = "处理理由（接收方拒绝时可选填）", example = "暂不通过")
@@ -46,7 +46,7 @@ public class ImFriendRequestRespVO {
 
     // ========== 下面是聚合字段，方便前端显示 ==========
 
-    @Schema(description = "发起方昵称（实时聚合自 AdminUser）", example = "矩灵")
+    @Schema(description = "发起方昵称（实时聚合自 AdminUser）", example = "亚特")
     private String fromNickname;
 
     @Schema(description = "发起方头像（实时聚合自 AdminUser）")

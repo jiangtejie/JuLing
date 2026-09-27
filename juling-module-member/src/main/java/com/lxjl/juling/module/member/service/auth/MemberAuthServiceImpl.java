@@ -41,7 +41,7 @@ import static com.lxjl.juling.module.member.enums.ErrorCodeConstants.*;
 /**
  * 会员的认证 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j
@@ -245,7 +245,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         // 情况 3：如果是修改密码场景，需要查询手机号，无需前端传递
         if (Objects.equals(reqVO.getScene(), SmsSceneEnum.MEMBER_UPDATE_PASSWORD.getScene())) {
             MemberUserDO user = userService.getUser(userId);
-            // TODO 棱信矩灵：后续 member user 手机非强绑定，这块需要做下调整；
+            // TODO 亚特：后续 member user 手机非强绑定，这块需要做下调整；
             reqVO.setMobile(user.getMobile());
         }
 

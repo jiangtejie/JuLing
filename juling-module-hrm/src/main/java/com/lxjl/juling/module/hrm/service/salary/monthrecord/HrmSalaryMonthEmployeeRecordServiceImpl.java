@@ -79,7 +79,7 @@ import static com.lxjl.juling.module.hrm.enums.LogRecordConstants.HRM_SALARY_MON
 /**
  * HRM 员工月度工资 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * 读（导入）：把「地区全路径名称」解析成地区编号
  * 写（导出 / 下载导入模板）：把地区编号格式化成「地区全路径名称」
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class AreaConvert implements Converter<Object> {

@@ -38,7 +38,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * IoT 消息总线自动配置
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AutoConfiguration
 @EnableConfigurationProperties(IotMessageBusProperties.class)

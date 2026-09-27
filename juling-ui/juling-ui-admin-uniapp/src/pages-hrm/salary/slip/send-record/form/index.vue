@@ -179,7 +179,7 @@ async function handleSubmit(all: boolean) {
     toast.warning('请选择待发员工')
     return
   }
-  // add by 棱信矩灵：对外且不可撤回的批量动作，补二次确认（同模块其它批量操作均已确认）
+  // add by 亚特：对外且不可撤回的批量动作，补二次确认（同模块其它批量操作均已确认）
   try {
     await dialog.confirm({
       title: '提示',

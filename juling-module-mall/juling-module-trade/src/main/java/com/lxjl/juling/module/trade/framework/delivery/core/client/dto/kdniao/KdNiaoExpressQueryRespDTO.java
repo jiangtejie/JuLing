@@ -17,7 +17,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.TIME_ZONE_DEF
  *
  * 参见 <a href="https://www.yuque.com/kdnjishuzhichi/dfcrg1/wugo6k">快递鸟接口文档</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class KdNiaoExpressQueryRespDTO {

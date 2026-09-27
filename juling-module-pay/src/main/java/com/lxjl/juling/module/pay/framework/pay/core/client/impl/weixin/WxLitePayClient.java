@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * 文档：<a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_1.shtml">JSAPI 下单</>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class WxLitePayClient extends WxPubPayClient {

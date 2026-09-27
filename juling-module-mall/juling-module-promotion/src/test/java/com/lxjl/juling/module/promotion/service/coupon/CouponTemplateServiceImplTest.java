@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
 * {@link CouponTemplateServiceImpl} 的单元测试类
 *
-* @author 棱信矩灵
+* @author 亚特
 */
 @Import(CouponTemplateServiceImpl.class)
 public class CouponTemplateServiceImplTest extends BaseDbUnitTest {
@@ -184,7 +184,7 @@ public class CouponTemplateServiceImplTest extends BaseDbUnitTest {
     public void testGetCouponTemplatePage() {
        // mock 数据
        CouponTemplateDO dbCouponTemplate = randomPojo(CouponTemplateDO.class, o -> { // 等会查询到
-           o.setName("棱信矩灵");
+           o.setName("亚特");
            o.setStatus(CommonStatusEnum.ENABLE.getStatus());
            o.setDiscountType(PromotionDiscountTypeEnum.PERCENT.getType());
            o.setCreateTime(buildTime(2022, 2, 2));
@@ -200,7 +200,7 @@ public class CouponTemplateServiceImplTest extends BaseDbUnitTest {
        couponTemplateMapper.insert(cloneIgnoreId(dbCouponTemplate, o -> o.setCreateTime(buildTime(2022, 1, 1))));
        // 准备参数
        CouponTemplatePageReqVO reqVO = new CouponTemplatePageReqVO();
-       reqVO.setName("棱信矩灵");
+       reqVO.setName("亚特");
        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
        reqVO.setDiscountType(PromotionDiscountTypeEnum.PERCENT.getType());
        reqVO.setCreateTime((new LocalDateTime[]{buildTime(2022, 2, 1), buildTime(2022, 2, 3)}));

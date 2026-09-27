@@ -8,7 +8,7 @@ import lombok.ToString;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - Banner更新 Request VO")
 @Data

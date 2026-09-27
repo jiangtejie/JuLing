@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * 负责根据枚举创建和管理序列化器实例
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotMessageSerializerManager {

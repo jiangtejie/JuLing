@@ -3,7 +3,7 @@ package com.lxjl.juling.module.hrm.enums;
 /**
  * HRM 操作日志常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface LogRecordConstants {
 

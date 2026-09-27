@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 跟进信息 Create Req BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class CrmFollowUpCreateReqBO {

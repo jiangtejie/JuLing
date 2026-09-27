@@ -25,7 +25,7 @@ import static com.lxjl.juling.module.bpm.enums.ErrorCodeConstants.*;
 /**
  * BPM 流程分类 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

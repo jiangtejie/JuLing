@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 /**
  * 会员 User Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MemberUserMapper extends BaseMapperX<MemberUserDO> {

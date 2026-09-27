@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link HrmSalarySlipSendRecordServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(HrmSalarySlipSendRecordServiceImpl.class)
 public class HrmSalarySlipSendRecordServiceImplTest extends BaseDbUnitTest {

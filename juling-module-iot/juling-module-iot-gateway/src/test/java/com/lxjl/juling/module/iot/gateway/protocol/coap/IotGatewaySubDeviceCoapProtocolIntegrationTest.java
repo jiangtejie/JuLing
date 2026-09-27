@@ -44,7 +44,7 @@ import static com.lxjl.juling.module.iot.gateway.protocol.coap.handler.upstream.
  *     </li>
  * </ol>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Disabled

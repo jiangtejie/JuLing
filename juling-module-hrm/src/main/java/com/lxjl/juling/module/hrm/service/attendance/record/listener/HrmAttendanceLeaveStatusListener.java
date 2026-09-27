@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * HRM 请假审批状态监听器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class HrmAttendanceLeaveStatusListener extends BpmProcessInstanceStatusEventListener {

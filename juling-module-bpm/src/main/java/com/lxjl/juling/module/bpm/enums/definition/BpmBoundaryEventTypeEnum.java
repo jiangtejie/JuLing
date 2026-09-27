@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * BPM 边界事件 (boundary event) 自定义类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

@@ -54,7 +54,7 @@ import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeCo
 /**
  * 全局异常处理器，将 Exception 翻译成 CommonResult + 对应的异常编号
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RestControllerAdvice
 @Order(0) // 优先于三方库默认的全局异常处理器，例如 JimuReport

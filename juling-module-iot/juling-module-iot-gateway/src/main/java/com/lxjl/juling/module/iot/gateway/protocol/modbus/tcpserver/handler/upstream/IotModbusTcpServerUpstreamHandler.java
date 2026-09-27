@@ -46,7 +46,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
  * 1. 自定义 FC 认证
  * 2. 轮询响应 → 点位翻译 → thing.property.post
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotModbusTcpServerUpstreamHandler {

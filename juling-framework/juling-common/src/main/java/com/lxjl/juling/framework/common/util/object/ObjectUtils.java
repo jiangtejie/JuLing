@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 /**
  * Object 工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ObjectUtils {
 

@@ -44,7 +44,7 @@ import static com.lxjl.juling.module.hrm.enums.LogRecordConstants.HRM_EMPLOYEE_C
 /**
  * HRM 员工字段配置 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

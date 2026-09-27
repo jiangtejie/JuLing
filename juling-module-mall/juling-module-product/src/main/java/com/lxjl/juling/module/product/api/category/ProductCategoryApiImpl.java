@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * 商品分类 API 接口实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

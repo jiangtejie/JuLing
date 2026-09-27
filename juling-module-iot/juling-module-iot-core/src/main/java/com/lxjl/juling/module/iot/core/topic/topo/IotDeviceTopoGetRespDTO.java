@@ -11,7 +11,7 @@ import java.util.List;
  * <p>
  * 用于 {@link IotDeviceMessageMethodEnum#TOPO_GET} 响应
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @see <a href="https://help.aliyun.com/zh/marketplace/obtain-topological-relationship">阿里云 - 获取拓扑关系</a>
  */
 @Data

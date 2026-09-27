@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link DiyTemplateServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(DiyTemplateServiceImpl.class)
 public class DiyTemplateServiceImplTest extends BaseDbUnitTest {
 

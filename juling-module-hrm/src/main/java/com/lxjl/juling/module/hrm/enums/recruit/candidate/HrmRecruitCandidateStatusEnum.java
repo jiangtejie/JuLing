@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * HRM 招聘候选人状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

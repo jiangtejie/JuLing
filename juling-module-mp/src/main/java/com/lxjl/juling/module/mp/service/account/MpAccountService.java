@@ -15,7 +15,7 @@ import static com.lxjl.juling.module.mp.enums.ErrorCodeConstants.ACCOUNT_NOT_EXI
 /**
  * 公众号账号 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MpAccountService {
 

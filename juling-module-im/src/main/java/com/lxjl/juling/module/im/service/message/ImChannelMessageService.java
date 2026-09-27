@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * IM 频道消息 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImChannelMessageService {
 

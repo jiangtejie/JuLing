@@ -5,7 +5,7 @@ import com.lxjl.juling.module.iot.dal.dataobject.device.IotDevicePropertyDO;
 /**
  * IoT Redis Key 枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface RedisKeyConstants {
 

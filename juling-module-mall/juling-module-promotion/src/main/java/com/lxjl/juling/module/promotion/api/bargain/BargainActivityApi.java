@@ -3,7 +3,7 @@ package com.lxjl.juling.module.promotion.api.bargain;
 /**
  * 砍价活动 Api 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface BargainActivityApi {
 

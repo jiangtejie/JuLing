@@ -3,7 +3,7 @@ package com.lxjl.juling.module.im.enums;
 /**
  * IM 通用常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ImCommonConstants {
 

@@ -3,7 +3,7 @@ package com.lxjl.juling.module.promotion.enums;
 /**
  * 通知模板枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface MessageTemplateConstants {
 

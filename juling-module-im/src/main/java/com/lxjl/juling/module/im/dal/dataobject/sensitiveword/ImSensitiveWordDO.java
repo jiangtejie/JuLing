@@ -10,7 +10,7 @@ import lombok.*;
 /**
  * IM 敏感词 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_sensitive_word")
 @KeySequence("im_sensitive_word_seq")

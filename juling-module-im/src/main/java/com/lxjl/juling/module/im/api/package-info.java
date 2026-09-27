@@ -1,5 +1,5 @@
 /**
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2024/3/9 下午8:59
  */
 package com.lxjl.juling.module.im.api;

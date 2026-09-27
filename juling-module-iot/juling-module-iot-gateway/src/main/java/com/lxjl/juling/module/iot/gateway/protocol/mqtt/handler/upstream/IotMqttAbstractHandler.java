@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * 提供通用的连接校验、响应发送等功能
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @RequiredArgsConstructor

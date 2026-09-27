@@ -16,7 +16,7 @@ public class CodegenTablePageReqVO extends PageParam {
     @Schema(description = "表名称，模糊匹配", example = "juling")
     private String tableName;
 
-    @Schema(description = "表描述，模糊匹配", example = "矩灵")
+    @Schema(description = "表描述，模糊匹配", example = "亚特")
     private String tableComment;
 
     @Schema(description = "实体，模糊匹配", example = "JuLing")

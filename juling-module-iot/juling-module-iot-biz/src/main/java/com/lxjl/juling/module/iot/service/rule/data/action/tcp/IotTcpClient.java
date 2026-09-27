@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 负责与外部 TCP 服务器建立连接并发送设备消息
  * 支持 JSON 和 BINARY 两种数据格式，支持 SSL 加密连接
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class IotTcpClient {

@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * MES 设备保养记录 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesDvMaintenRecordMapper extends BaseMapperX<MesDvMaintenRecordDO> {

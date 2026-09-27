@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * HRM 绩效指标评分类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

@@ -19,7 +19,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 /**
  * OAuth2 授予 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class OAuth2GrantServiceImpl implements OAuth2GrantService {

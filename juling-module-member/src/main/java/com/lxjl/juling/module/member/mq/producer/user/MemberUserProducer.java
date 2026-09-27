@@ -10,7 +10,7 @@ import jakarta.annotation.Resource;
 /**
  * 会员用户 Producer
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @Component

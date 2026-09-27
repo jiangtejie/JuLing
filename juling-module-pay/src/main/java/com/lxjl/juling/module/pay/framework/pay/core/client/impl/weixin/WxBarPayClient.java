@@ -26,7 +26,7 @@ import static com.lxjl.juling.framework.common.util.json.JsonUtils.toJsonString;
  *
  * 文档：<a href="https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1">付款码支付</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class WxBarPayClient extends AbstractWxPayClient {

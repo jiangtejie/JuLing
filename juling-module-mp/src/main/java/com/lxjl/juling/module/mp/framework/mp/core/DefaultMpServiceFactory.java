@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * 默认的 {@link MpServiceFactory} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @RequiredArgsConstructor

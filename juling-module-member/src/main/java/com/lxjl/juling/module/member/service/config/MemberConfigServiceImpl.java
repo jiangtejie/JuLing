@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 会员配置 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

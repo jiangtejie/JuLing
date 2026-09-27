@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * IoT 产品物模型中的参数
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ThingModelParam {

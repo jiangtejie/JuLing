@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * IM 通话参与者角色枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

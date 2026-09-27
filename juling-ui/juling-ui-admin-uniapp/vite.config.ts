@@ -30,7 +30,7 @@ import vitePluginEruda from './scripts/vite-plugin-eruda'
 import { createCopyNativeResourcesPlugin } from './vite-plugins/copy-native-resources'
 import syncManifestPlugin from './vite-plugins/sync-manifest-plugins'
 
-/** 矩灵 UI 组件解析器：本地 @/components/juling-ui/* 的组件 */
+/** 亚特 UI 组件解析器：本地 @/components/juling-ui/* 的组件 */
 function JuLingUiResolver(): ComponentResolver {
   return {
     type: 'component',

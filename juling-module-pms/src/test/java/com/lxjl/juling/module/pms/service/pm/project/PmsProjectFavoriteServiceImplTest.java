@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link PmsProjectFavoriteServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(PmsProjectFavoriteServiceImpl.class)
 public class PmsProjectFavoriteServiceImplTest extends BaseDbUnitTest {

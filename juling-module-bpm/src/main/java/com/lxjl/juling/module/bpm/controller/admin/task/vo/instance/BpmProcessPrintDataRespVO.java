@@ -28,7 +28,7 @@ public class BpmProcessPrintDataRespVO {
         @Schema(description = "流程任务的编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
         private String id;
 
-        @Schema(description = "任务名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+        @Schema(description = "任务名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
         private String name;
 
         @Schema(description = "签名 URL", example = "https://github.com/jiangtejie/JuLing")

@@ -15,7 +15,7 @@ import lombok.Data;
  * START 在 invite 接口事务里 INSERT，END 在 cancel / leave 接口事务里 INSERT，
  * 两段位于不同请求 / 事务，自增 id 保证聊天流顺序；后续如果合并到同一事务里 push，需要额外保证 START 先于 END
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ImRtcCallStartNotification {

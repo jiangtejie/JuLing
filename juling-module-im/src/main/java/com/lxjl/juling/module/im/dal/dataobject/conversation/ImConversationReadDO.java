@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  * <p>
  * 只表达「用户在某个会话的最大已读位置」，私聊 / 群聊 / 频道统一落这张表，是读位置的唯一权威。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("im_conversation_read")
 @KeySequence("im_conversation_read_seq")

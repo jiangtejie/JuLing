@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * IM 群聊消息发送 DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class ImGroupMessageSendDTO {

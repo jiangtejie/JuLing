@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * IoT 设备消息的方法枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor
@@ -22,7 +22,7 @@ public enum IotDeviceMessageMethodEnum implements ArrayValuable<String> {
 
     STATE_UPDATE("thing.state.update", "设备状态更新", true),
 
-    // TODO 棱信矩灵：要不要加个 ping 消息；
+    // TODO 亚特：要不要加个 ping 消息；
 
     // ========== 拓扑管理 ==========
     // 可参考：https://help.aliyun.com/zh/iot/user-guide/manage-topological-relationships

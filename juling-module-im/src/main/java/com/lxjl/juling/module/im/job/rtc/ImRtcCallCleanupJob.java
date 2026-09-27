@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * 僵尸通话清理 Job：兜底 LiveKit Webhook 丢失 / 客户端异常关闭等未调 leave 的场景
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * 用于 {@link IotDeviceMessageMethodEnum#PROPERTY_PACK_POST} 消息的 params 参数
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @see <a href="http://help.aliyun.com/zh/marketplace/gateway-reports-data-in-batches">阿里云 - 网关批量上报数据</a>
  */
 @Data

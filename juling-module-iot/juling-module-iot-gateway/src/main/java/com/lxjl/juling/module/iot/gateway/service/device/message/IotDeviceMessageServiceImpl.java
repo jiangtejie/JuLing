@@ -22,7 +22,7 @@ import static com.lxjl.juling.module.iot.gateway.enums.ErrorCodeConstants.DEVICE
 /**
  * IoT 设备消息 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

@@ -11,7 +11,7 @@ import com.lxjl.juling.module.mes.enums.DictTypeConstants;
 /**
  * MES 安灯呼叫配置 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("mes_pro_andon_config")
 @KeySequence("mes_pro_andon_config_seq")

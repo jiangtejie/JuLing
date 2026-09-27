@@ -53,7 +53,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.f
 /**
  * HRM 员工绩效考核查询 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class HrmPerformanceAssessmentQueryServiceImpl

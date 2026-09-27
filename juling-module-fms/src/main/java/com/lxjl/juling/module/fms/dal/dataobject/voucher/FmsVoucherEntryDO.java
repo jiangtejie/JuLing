@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * FMS 凭证分录 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "fms_voucher_entry", autoResultMap = true)
 @KeySequence("fms_voucher_entry_seq")

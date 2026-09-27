@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * IoT 设备 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface IotDeviceMapper extends BaseMapperX<IotDeviceDO> {

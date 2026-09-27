@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 数据权限转移 Request BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @NoArgsConstructor

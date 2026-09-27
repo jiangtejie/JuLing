@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>
  * 本质是一个 Map，key 为属性标识符，value 为属性值
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class IotDevicePropertySetReqDTO extends HashMap<String, Object> {
 

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link BpmFormServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(BpmFormServiceImpl.class)
 public class BpmFormServiceTest extends BaseDbUnitTest {
@@ -117,14 +117,14 @@ public class BpmFormServiceTest extends BaseDbUnitTest {
     public void testGetFormPage() {
         // mock 数据
         BpmFormDO dbForm = randomPojo(BpmFormDO.class, o -> { // 等会查询到
-            o.setName("棱信矩灵");
+            o.setName("亚特");
         });
         formMapper.insert(dbForm);
         // 测试 name 不匹配
         formMapper.insert(cloneIgnoreId(dbForm, o -> o.setName("源码")));
         // 准备参数
         BpmFormPageReqVO reqVO = new BpmFormPageReqVO();
-        reqVO.setName("矩灵");
+        reqVO.setName("亚特");
 
         // 调用
         PageResult<BpmFormDO> pageResult = formService.getFormPage(reqVO);

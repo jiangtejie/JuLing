@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 商机状态 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface CrmBusinessStatusMapper extends BaseMapperX<CrmBusinessStatusDO> {

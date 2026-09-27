@@ -5,7 +5,7 @@ package com.lxjl.juling.module.iot.core.messagebus.core;
  *
  * 用于在 IoT 系统中发布和订阅消息，支持多种消息中间件实现
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface IotMessageBus {
 
@@ -30,7 +30,7 @@ public interface IotMessageBus {
      * @param subscriber 订阅者
      */
     default void unregister(IotMessageSubscriber<?> subscriber) {
-        // TODO 棱信矩灵：暂时不实现，需求量不大，但是
+        // TODO 亚特：暂时不实现，需求量不大，但是
         // throw new UnsupportedOperationException("取消注册消息订阅者功能，尚未实现");
     }
 

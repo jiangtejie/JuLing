@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - Banner 创建 Request VO")
 @Data

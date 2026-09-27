@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 商品 SPU API 接口实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-09-06
  */
 @Service

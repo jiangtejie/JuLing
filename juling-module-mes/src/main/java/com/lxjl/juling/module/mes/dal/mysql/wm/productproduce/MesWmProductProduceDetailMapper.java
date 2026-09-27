@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * MES 生产入库明细 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MesWmProductProduceDetailMapper extends BaseMapperX<MesWmProductProduceDetailDO> {

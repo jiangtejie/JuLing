@@ -12,7 +12,7 @@ public class RoleSimpleRespVO {
     @Schema(description = "角色编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long id;
 
-    @Schema(description = "角色名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "角色名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
 }

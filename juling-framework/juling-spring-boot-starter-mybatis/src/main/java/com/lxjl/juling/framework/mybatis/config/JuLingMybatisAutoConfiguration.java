@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * MyBaits 配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AutoConfiguration(before = MybatisPlusAutoConfiguration.class) // 目的：先于 MyBatis Plus 自动配置，避免 @MapperScan 可能扫描不到 Mapper 打印 warn 日志
 @MapperScan(value = "${juling.info.base-package}", annotationClass = Mapper.class,

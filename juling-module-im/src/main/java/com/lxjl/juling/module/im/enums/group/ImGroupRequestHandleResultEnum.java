@@ -12,7 +12,7 @@ import java.util.Objects;
  * <p>
  * 取值与 {@link com.lxjl.juling.module.im.enums.friend.ImFriendRequestHandleResultEnum} 平行，便于复用心智模型
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter
