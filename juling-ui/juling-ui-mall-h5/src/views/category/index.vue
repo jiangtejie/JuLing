@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { motion } from 'motion-v';
   import { showToast } from 'vant';
   import { addCart } from '@/api/cart';
   import { getCategoryTree, getProductDetail, getProductPage } from '@/api/product';
@@ -203,14 +204,24 @@
             <!-- 首屏骨架：列表为空且加载中时用骨架屏代替空白（切换分类同样适用） -->
             <ListSkeleton v-if="!list.length && loading && !refreshing" :rows="4" />
 
+            <!-- 切换分类时整块淡入上移：key 变化触发重建，让「换了一批商品」有明确的视觉切换 -->
+            <motion.div
+              :key="activeIndex"
+              :initial="{ opacity: 0, y: 8 }"
+              :animate="{ opacity: 1, y: 0 }"
+              :transition="{ duration: 0.22, ease: 'easeOut' }"
+            >
             <div v-for="group in groups" :key="group.id" class="category__group">
               <!-- 二级分类标题：吸顶在分类标题下方，滚动时知道当前在哪一组 -->
               <div v-if="grouped" class="category__group-title">{{ group.name }}</div>
 
-              <div
-                v-for="product in group.items"
+              <motion.div
+                v-for="(product, index) in group.items"
                 :key="product.id"
                 class="category__item"
+                :initial="{ opacity: 0, y: 10 }"
+                :animate="{ opacity: 1, y: 0 }"
+                :transition="{ delay: Math.min(index, 8) * 0.03, duration: 0.2, ease: 'easeOut' }"
                 @click="toDetail(product.id)"
               >
                 <van-image
@@ -266,8 +277,9 @@
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
+          </motion.div>
           </van-list>
 
           <!-- 空态：该分类下暂无商品（区别于「加载失败」，无需重试入口） -->
@@ -289,7 +301,16 @@
       />
       <div class="category__bar-total" @click="toCart">
         <span class="category__bar-label">合计</span>
-        <PriceText :value="cartStore.totalPrice" size="large" />
+        <!-- 加购后金额变化时轻微弹一下：key 变化即重放，反馈「已加入」 -->
+        <motion.span
+          :key="cartStore.totalPrice"
+          class="category__bar-amount"
+          :initial="{ scale: 1.08 }"
+          :animate="{ scale: 1 }"
+          :transition="{ type: 'spring', stiffness: 420, damping: 18 }"
+        >
+          <PriceText :value="cartStore.totalPrice" size="large" />
+        </motion.span>
       </div>
       <van-action-bar-button
         class="category__bar-btn"
@@ -492,6 +513,11 @@
       border-top: 1px solid var(--app-border-color);
       /* 主题色：主按钮用品牌渐变，替换 Vant 默认的红色渐变 */
       --van-action-bar-button-danger-color: var(--app-primary-gradient);
+    }
+
+    /* 金额弹跳需要一个行内块容器，避免影响动作栏的 flex 布局 */
+    &__bar-amount {
+      display: inline-block;
     }
 
     &__bar-total {

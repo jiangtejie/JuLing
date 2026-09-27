@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { motion } from 'motion-v';
   import { showImagePreview, showSuccessToast, showToast } from 'vant';
   import { cancelOrder, confirmOrder, getOrderDetail, getPaymentProofList } from '@/api/order';
   import {
@@ -387,16 +388,22 @@
           </van-collapse>
           <div v-else class="order-detail__proof-empty">还没有上传付款凭证</div>
 
-          <van-button
+          <!-- 主操作按钮加轻微点按反馈 -->
+          <motion.div
             v-if="canUpload"
             class="order-detail__upload"
-            type="primary"
-            block
-            round
-            size="small"
-            :text="uploadText"
-            @click="toPayment"
-          />
+            :while-tap="{ scale: 0.97 }"
+            :transition="{ duration: 0.1 }"
+          >
+            <van-button
+              type="primary"
+              block
+              round
+              size="small"
+              :text="uploadText"
+              @click="toPayment"
+            />
+          </motion.div>
         </div>
 
         <!-- 收货信息 -->

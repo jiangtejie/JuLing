@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { motion } from 'motion-v';
   import { getOrderPage } from '@/api/order';
   import { useReorder } from '@/composables/useReorder';
   import { ORDER_STATUS_MAP, ORDER_TABS, RECEIVE_STATUS_MAP } from '@/constants';
@@ -77,10 +78,13 @@
         <ListSkeleton v-if="!list.length && loading && !refreshing" variant="order" :rows="3" />
         <div v-if="list.length" class="order-list__count">共 {{ total }} 笔订单</div>
         <div v-if="list.length" class="order-list__wrap">
-          <div
-            v-for="order in list"
+          <motion.div
+            v-for="(order, index) in list"
             :key="order.id"
             class="order-list__item app-card"
+            :initial="{ opacity: 0, y: 12 }"
+            :animate="{ opacity: 1, y: 0 }"
+            :transition="{ delay: Math.min(index, 8) * 0.035, duration: 0.22, ease: 'easeOut' }"
             @click="toDetail(order.id)"
           >
             <div class="flex-between order-list__head">
@@ -147,7 +151,7 @@
                 已收 ¥{{ formatPrice(order.paidAmount) }}
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </van-list>
 

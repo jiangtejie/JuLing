@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { motion } from 'motion-v';
   import type { UploaderFileListItem } from 'vant';
   import {
     showImagePreview,
@@ -335,14 +336,17 @@
       </div>
 
       <div v-if="remainAmount > 0" class="order-payment__footer">
-        <van-button
-          type="primary"
-          block
-          round
-          :loading="submitting"
-          text="提交付款凭证"
-          @click="run"
-        />
+        <!-- 主操作按钮加轻微点按反馈：移动端点下去「有回应」 -->
+        <motion.div :while-tap="{ scale: 0.97 }" :transition="{ duration: 0.1 }">
+          <van-button
+            type="primary"
+            block
+            round
+            :loading="submitting"
+            text="提交付款凭证"
+            @click="run"
+          />
+        </motion.div>
       </div>
     </template>
 
