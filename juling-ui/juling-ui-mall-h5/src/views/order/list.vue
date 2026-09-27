@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { getOrderPage } from '@/api/order';
+  import { useReorder } from '@/composables/useReorder';
   import { ORDER_STATUS_MAP, ORDER_TABS, RECEIVE_STATUS_MAP } from '@/constants';
   import type { Order } from '@/types';
   import { formatDate, formatPrice } from '@/utils/format';
@@ -31,6 +32,13 @@
 
   function toDetail(id: number): void {
     void router.push(`/order/${id}`);
+  }
+
+  /** 已完成 / 已取消订单支持「再来一单」：按当前商品重新加入订货单 */
+  const { canReorder, reorder, reordering } = useReorder();
+
+  function onReorder(order: Order): void {
+    void reorder(order);
   }
 
   /**
@@ -108,6 +116,20 @@
                 formatDate(order.createTime, 'YYYY-MM-DD HH:mm')
               }}</span>
               <span class="order-list__total"> 实付 <PriceText :value="order.payPrice" /> </span>
+            </div>
+
+            <!-- 已完成 / 已取消：美团式「再来一单」，一键把商品重新加入订货单 -->
+            <div v-if="canReorder(order)" class="order-list__actions">
+              <van-button
+                size="small"
+                round
+                plain
+                type="primary"
+                :loading="reordering"
+                @click.stop="onReorder(order)"
+              >
+                再来一单
+              </van-button>
             </div>
 
             <!-- 线下收款状态：客户一眼看出「还要不要传凭证 / 财务有没有核验」 -->
@@ -242,6 +264,13 @@
     &__paid {
       font-size: 12px;
       color: var(--app-text-color-secondary);
+    }
+
+    /* 卡片底部操作：右对齐的次要按钮，不抢「实付金额」的视觉重心 */
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 10px;
     }
   }
 </style>

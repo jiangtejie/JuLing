@@ -8,6 +8,7 @@
     RECEIVE_STATUS_MAP,
   } from '@/constants';
   import type { Order, PaymentProof } from '@/types';
+  import { useReorder } from '@/composables/useReorder';
   import { confirmDialog } from '@/utils/confirm';
   import { formatDate, formatPrice, maskMobile } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
@@ -79,6 +80,13 @@
    * 前端提前把「为什么不能取消」讲清楚，避免点下去才报错。
    */
   const proofUnderReview = computed(() => order.value?.paymentProofStatus === 1);
+  /** 已完成 / 已取消订单：支持「再来一单」 */
+  const { canReorder, reorder, reordering } = useReorder();
+
+  function onReorder(): void {
+    if (order.value) void reorder(order.value);
+  }
+
   /** 允许取消：待收款且没有正在核验的凭证 */
   const canCancel = computed(
     () => order.value?.status === 'UNPAID' && !proofUnderReview.value,
@@ -136,7 +144,8 @@
     () =>
       canUpload.value ||
       order.value?.status === 'UNPAID' ||
-      order.value?.status === 'SHIPPED',
+      order.value?.status === 'SHIPPED' ||
+      canReorder(order.value),
   );
 
   function toPayment(): void {
@@ -465,6 +474,14 @@
           :loading="acting"
           text="确认收货"
           @click="onReceive"
+        />
+        <!-- 已完成 / 已取消：一键把商品重新加入订货单 -->
+        <van-action-bar-button
+          v-if="canReorder(order)"
+          type="primary"
+          :loading="reordering"
+          text="再来一单"
+          @click="onReorder"
         />
       </van-action-bar>
     </template>
