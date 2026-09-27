@@ -91,13 +91,6 @@
       <yd-search-picker v-model="formData.payChannelCode" label="支付方式" :dict-type="DICT_TYPE.PAY_CHANNEL_CODE" dict-kind="str" all-option />
       <yd-search-picker v-model="formData.terminal" label="订单来源" :dict-type="DICT_TYPE.TERMINAL" all-option />
       <ExpressSearchPicker ref="expressSearchPickerRef" v-model="formData.logisticsId" />
-      <PickUpStoreSearchPicker ref="pickUpStoreSearchPickerRef" v-model="formData.pickUpStoreId" />
-      <view class="yd-search-form-item">
-        <view class="yd-search-form-label">
-          核销码
-        </view>
-        <wd-input v-model="formData.pickUpVerifyCode" placeholder="请输入核销码" clearable />
-      </view>
       <yd-search-date-range v-model="formData.createTime" label="下单时间" />
       <view class="yd-search-form-actions">
         <wd-button class="flex-1" variant="plain" @click="handleReset">
@@ -118,7 +111,6 @@ import { getTopPopupModalStyle, getTopPopupStyle } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDate, formatDateRange } from '@/utils/date'
 import ExpressSearchPicker from '../../delivery/express/components/express-search-picker.vue'
-import PickUpStoreSearchPicker from '../../delivery/pick-up-store/components/pick-up-store-search-picker.vue'
 
 const emit = defineEmits<{
   search: [data: Record<string, any>]
@@ -127,7 +119,6 @@ const emit = defineEmits<{
 
 const visible = ref(false) // 搜索弹窗显示状态
 const expressSearchPickerRef = ref<InstanceType<typeof ExpressSearchPicker>>() // 快递公司搜索选择器
-const pickUpStoreSearchPickerRef = ref<InstanceType<typeof PickUpStoreSearchPicker>>() // 自提门店搜索选择器
 const formData = reactive({
   no: undefined as string | undefined,
   userId: undefined as string | undefined,
@@ -139,8 +130,6 @@ const formData = reactive({
   payChannelCode: undefined as string | undefined,
   terminal: undefined as number | undefined,
   logisticsId: undefined as number | undefined,
-  pickUpStoreId: undefined as number | undefined, // 单选自提门店，提交时转 pickUpStoreIds 数组
-  pickUpVerifyCode: undefined as string | undefined,
   createTime: [undefined, undefined] as [number | undefined, number | undefined],
 }) // 搜索表单数据
 
@@ -174,9 +163,6 @@ const placeholder = computed(() => {
   if (formData.logisticsId !== undefined) {
     conditions.push(`快递:${expressSearchPickerRef.value?.format(formData.logisticsId) || formData.logisticsId}`)
   }
-  if (formData.pickUpStoreId !== undefined) {
-    conditions.push(`门店:${pickUpStoreSearchPickerRef.value?.format(formData.pickUpStoreId) || formData.pickUpStoreId}`)
-  }
   if (formData.createTime?.[0] && formData.createTime?.[1]) {
     conditions.push(`时间:${formatDate(formData.createTime[0])}~${formatDate(formData.createTime[1])}`)
   }
@@ -197,8 +183,6 @@ function handleSearch() {
     payChannelCode: formData.payChannelCode,
     terminal: formData.terminal,
     logisticsId: formData.logisticsId,
-    pickUpStoreIds: formData.pickUpStoreId === undefined ? undefined : [formData.pickUpStoreId],
-    pickUpVerifyCode: formData.pickUpVerifyCode || undefined,
     createTime: formatDateRange(formData.createTime),
   })
 }
@@ -215,8 +199,6 @@ function handleReset() {
   formData.payChannelCode = undefined
   formData.terminal = undefined
   formData.logisticsId = undefined
-  formData.pickUpStoreId = undefined
-  formData.pickUpVerifyCode = undefined
   formData.createTime = [undefined, undefined]
   visible.value = false
   emit('reset')

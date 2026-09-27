@@ -116,10 +116,6 @@ export const DeliveryTypeEnum = {
     type: 1,
     name: '快递发货',
   },
-  PICK_UP: {
-    type: 2,
-    name: '到店自提',
-  },
 };
 /**
  * 交易订单 - 状态

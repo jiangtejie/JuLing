@@ -8,7 +8,6 @@ export namespace MallTradeConfigApi {
     afterSaleReturnReasons: string[];
     deliveryExpressFreeEnabled: boolean;
     deliveryExpressFreePrice: number;
-    deliveryPickUpEnabled: boolean;
     tencentLbsKey?: string;
   }
 }

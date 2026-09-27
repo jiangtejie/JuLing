@@ -35,7 +35,6 @@ export interface ProductSpu {
   picUrl?: string
   sliderPicUrls?: string[]
   introduction?: string
-  deliveryTypes?: number[]
   deliveryTemplateId?: number
   brandId?: number
   specType?: boolean

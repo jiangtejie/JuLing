@@ -44,7 +44,6 @@ const formData = ref<MallSpuApi.Spu>({
   picUrl: '',
   sliderPicUrls: [],
   introduction: '',
-  deliveryTypes: [],
   deliveryTemplateId: undefined,
   brandId: undefined,
   specType: false,

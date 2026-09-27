@@ -196,7 +196,6 @@ public interface TradeOrderConvert {
                 .setCouponId(settlementReqVO.getCouponId()).setPointStatus(settlementReqVO.getPointStatus())
                 // 物流信息
                 .setDeliveryType(settlementReqVO.getDeliveryType()).setAddressId(settlementReqVO.getAddressId())
-                .setPickUpStoreId(settlementReqVO.getPickUpStoreId())
                 // 各种活动
                 .setSeckillActivityId(settlementReqVO.getSeckillActivityId())
                 .setBargainRecordId(settlementReqVO.getBargainRecordId())

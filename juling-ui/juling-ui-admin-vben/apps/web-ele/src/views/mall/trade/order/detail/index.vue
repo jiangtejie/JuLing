@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MallDeliveryExpressApi } from '#/api/mall/trade/delivery/express';
-import type { MallDeliveryPickUpStoreApi } from '#/api/mall/trade/delivery/pickUpStore';
 import type { MallOrderApi } from '#/api/mall/trade/order';
 
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { confirm, Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 import {
   DeliveryTypeEnum,
   DICT_TYPE,
@@ -15,11 +14,10 @@ import {
 } from '@vben/constants';
 import { useTabs } from '@vben/hooks';
 
-import { ElCard, ElLoading, ElMessage, ElTag } from 'element-plus';
+import { ElCard, ElMessage, ElTag } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
-import { getDeliveryPickUpStore } from '#/api/mall/trade/delivery/pickUpStore';
 import * as TradeOrderApi from '#/api/mall/trade/order';
 import { getExpressTrackList } from '#/api/mall/trade/order';
 import { useDescription } from '#/components/description';
@@ -53,9 +51,6 @@ const order = ref<MallOrderApi.Order>({
 });
 const deliveryExpressList = ref<MallDeliveryExpressApi.DeliveryExpress[]>([]);
 const expressTrackList = ref<any[]>([]);
-const pickUpStore = ref<
-  MallDeliveryPickUpStoreApi.DeliveryPickUpStore | undefined
->();
 
 const [OrderInfoDescriptions] = useDescription({
   title: '订单信息',
@@ -177,11 +172,6 @@ async function getDetail() {
           data: expressTrackList.value || [],
         });
       }
-    } else if (
-      res.deliveryType === DeliveryTypeEnum.PICK_UP.type &&
-      res.pickUpStoreId
-    ) {
-      pickUpStore.value = await getDeliveryPickUpStore(res.pickUpStoreId);
     }
   } finally {
     loading.value = false;
@@ -203,21 +193,6 @@ const handleUpdateAddress = () => {
 
 const handleUpdatePrice = () => {
   priceFormModalApi.setData(order.value).open();
-};
-
-/** 核销 */
-const handlePickUp = async () => {
-  await confirm('确认核销订单吗？');
-  const loadingInstance = ElLoading.service({
-    text: '正在处理中...',
-  });
-  try {
-    await TradeOrderApi.pickUpOrder(order.value.id!);
-    ElMessage.success('核销成功');
-    await getDetail();
-  } finally {
-    loadingInstance.close();
-  }
 };
 
 /** 返回列表页 */
@@ -270,14 +245,6 @@ onMounted(async () => {
             ifShow:
               order.status === TradeOrderStatusEnum.UNDELIVERED.status &&
               order.deliveryType === DeliveryTypeEnum.EXPRESS.type,
-          },
-          {
-            label: '核销',
-            type: 'primary',
-            onClick: handlePickUp,
-            ifShow:
-              order.status === TradeOrderStatusEnum.UNDELIVERED.status &&
-              order.deliveryType === DeliveryTypeEnum.PICK_UP.type,
           },
         ]"
       />

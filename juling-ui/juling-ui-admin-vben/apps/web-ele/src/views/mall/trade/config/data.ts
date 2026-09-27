@@ -82,14 +82,4 @@ export const schema: VbenFormSchema[] = [
     },
     help: '商城商品满多少金额即可包邮，单位：元',
   },
-  {
-    fieldName: 'deliveryPickUpEnabled',
-    label: '启用门店自提',
-    component: 'Switch',
-    rules: 'required',
-    dependencies: {
-      triggerFields: ['type'],
-      show: (values) => values.type === 'delivery',
-    },
-  },
 ];

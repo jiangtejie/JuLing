@@ -7,7 +7,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
@@ -18,8 +17,6 @@ import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.product.api.comment.ProductCommentApi;
 import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO;
 import com.lxjl.juling.module.promotion.api.combination.CombinationRecordApi;
-import com.lxjl.juling.module.promotion.api.combination.dto.CombinationRecordRespDTO;
-import com.lxjl.juling.module.promotion.enums.combination.CombinationRecordStatusEnum;
 import com.lxjl.juling.module.system.api.social.SocialClientApi;
 import com.lxjl.juling.module.system.api.social.dto.SocialWxaSubscribeMessageSendReqDTO;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderDeliveryReqVO;
@@ -33,7 +30,6 @@ import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderIt
 import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.cart.CartDO;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
-import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryPickUpStoreDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
 import com.lxjl.juling.module.trade.dal.mysql.order.TradeOrderItemMapper;
@@ -46,7 +42,6 @@ import com.lxjl.juling.module.trade.framework.order.core.annotations.TradeOrderL
 import com.lxjl.juling.module.trade.framework.order.core.utils.TradeOrderLogUtils;
 import com.lxjl.juling.module.trade.service.cart.CartService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
-import com.lxjl.juling.module.trade.service.delivery.DeliveryPickUpStoreService;
 import com.lxjl.juling.module.trade.service.message.TradeMessageService;
 import com.lxjl.juling.module.trade.service.message.bo.TradeOrderMessageWhenDeliveryOrderReqBO;
 import com.lxjl.juling.module.trade.service.order.handler.TradeOrderHandler;
@@ -103,8 +98,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     private DeliveryExpressService deliveryExpressService;
     @Resource
     private TradeMessageService tradeMessageService;
-    @Resource
-    private DeliveryPickUpStoreService pickUpStoreService;
 
     @Resource
     private MemberAddressApi addressApi;
@@ -224,9 +217,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
                 order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile())
                         .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
             }
-        } else if (Objects.equals(createReqVO.getDeliveryType(), DeliveryTypeEnum.PICK_UP.getType())) {
-            order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile());
-            order.setPickUpVerifyCode(RandomUtil.randomNumbers(8)); // 随机一个核销码，长度为 8 位
         }
         return order;
     }
@@ -691,51 +681,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
         // 记录订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), order.getStatus());
-    }
-
-    @Override
-    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.ADMIN_PICK_UP_RECEIVE)
-    public void pickUpOrderByAdmin(Long userId, Long id) {
-        getSelf().pickUpOrder(userId, tradeOrderMapper.selectById(id));
-    }
-
-    @Override
-    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.ADMIN_PICK_UP_RECEIVE)
-    public void pickUpOrderByAdmin(Long userId, String pickUpVerifyCode) {
-        getSelf().pickUpOrder(userId, tradeOrderMapper.selectOneByPickUpVerifyCode(pickUpVerifyCode));
-    }
-
-    @Override
-    public TradeOrderDO getByPickUpVerifyCode(String pickUpVerifyCode) {
-        return tradeOrderMapper.selectOneByPickUpVerifyCode(pickUpVerifyCode);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void pickUpOrder(Long userId, TradeOrderDO order) {
-        if (order == null) {
-            throw exception(ORDER_NOT_FOUND);
-        }
-        if (ObjUtil.notEqual(DeliveryTypeEnum.PICK_UP.getType(), order.getDeliveryType())) {
-            throw exception(ORDER_RECEIVE_FAIL_DELIVERY_TYPE_NOT_PICK_UP);
-        }
-        if (!TradeOrderStatusEnum.isUndelivered(order.getStatus())) {
-            throw exception(ORDER_PICK_UP_FAIL_STATUS_NOT_UNDELIVERED);
-        }
-        // 情况一：如果是拼团订单，则校验拼团是否成功
-        if (TradeOrderTypeEnum.isCombination(order.getType())) {
-            CombinationRecordRespDTO combinationRecord = combinationRecordApi.getCombinationRecordByOrderId(
-                    order.getUserId(), order.getId());
-            if (!CombinationRecordStatusEnum.isSuccess(combinationRecord.getStatus())) {
-                throw exception(ORDER_PICK_UP_FAIL_COMBINATION_NOT_SUCCESS);
-            }
-        }
-        DeliveryPickUpStoreDO deliveryPickUpStore = pickUpStoreService.getDeliveryPickUpStore(order.getPickUpStoreId());
-        if (deliveryPickUpStore == null
-                || !CollUtil.contains(deliveryPickUpStore.getVerifyUserIds(), userId)) {
-            throw exception(ORDER_PICK_UP_FAIL_NOT_VERIFY_USER);
-        }
-
-        receiveOrder0(order);
     }
 
     // =================== Order Item ===================

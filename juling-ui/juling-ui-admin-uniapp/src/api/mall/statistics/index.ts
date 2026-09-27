@@ -15,7 +15,6 @@ export interface TradeOrderComparison {
 /** 交易订单数量 */
 export interface TradeOrderCount {
   undelivered?: number
-  pickUp?: number
   afterSaleApply?: number
 }
 

@@ -49,13 +49,6 @@ public class TradePriceCalculateReqBO {
      */
     private Long addressId;
     /**
-     * 自提门店编号
-     *
-     * 对应 PickUpStoreDO 的 id 编号
-     */
-    private Long pickUpStoreId;
-
-    /**
      * 商品 SKU 数组
      */
     @NotNull(message = "商品数组不能为空")

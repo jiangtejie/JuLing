@@ -175,7 +175,6 @@ const comparisonItems = computed<SummaryItem[]>(() => [
 const operationCards = ref([
   { key: 'undelivered', label: '待发货订单', value: '-', route: '/pages-mall/trade/order/index' },
   { key: 'afterSaleApply', label: '退款中订单', value: '-', route: '/pages-mall/trade/after-sale/index' },
-  { key: 'pickUp', label: '待核销订单', value: '-', route: '/pages-mall/trade/delivery/pick-up-order/index' },
   { key: 'productForSale', label: '上架商品', value: '-', route: '/pages-mall/product/spu/index' },
   { key: 'productWarehouse', label: '仓库商品', value: '-', route: '/pages-mall/product/spu/index' },
   { key: 'productAlertStock', label: '库存预警', value: '-', route: '/pages-mall/product/spu/index' },
@@ -273,7 +272,6 @@ async function loadBase() {
   if (orderCount.status === 'fulfilled') {
     updateOperationCard('undelivered', orderCount.value.undelivered || 0)
     updateOperationCard('afterSaleApply', orderCount.value.afterSaleApply || 0)
-    updateOperationCard('pickUp', orderCount.value.pickUp || 0)
   }
   if (productCount.status === 'fulfilled') {
     updateOperationCard('productForSale', productCount.value['0'] || 0)

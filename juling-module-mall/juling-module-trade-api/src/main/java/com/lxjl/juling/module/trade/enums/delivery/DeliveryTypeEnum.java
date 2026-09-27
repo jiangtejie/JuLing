@@ -15,8 +15,7 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum DeliveryTypeEnum implements ArrayValuable<Integer> {
 
-    EXPRESS(1, "快递发货"),
-    PICK_UP(2, "用户自提"),;
+    EXPRESS(1, "快递发货");
 
     public static final Integer[] ARRAYS = Arrays.stream(values()).map(DeliveryTypeEnum::getType).toArray(Integer[]::new);
 

@@ -1,6 +1,5 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeGridPropTypes } from '#/adapter/vxe-table';
-import type { MallDeliveryPickUpStoreApi } from '#/api/mall/trade/delivery/pickUpStore';
 
 import { markRaw } from 'vue';
 
@@ -9,15 +8,8 @@ import { getDictOptions } from '@vben/hooks';
 import { convertToInteger, formatToFraction } from '@vben/utils';
 
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
-import { getSimpleDeliveryPickUpStoreList } from '#/api/mall/trade/delivery/pickUpStore';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
-
-/** 关联数据 */
-let pickUpStoreList: MallDeliveryPickUpStoreApi.DeliveryPickUpStore[] = [];
-getSimpleDeliveryPickUpStoreList().then((data) => {
-  pickUpStoreList = data;
-});
 
 /** 列表的搜索表单 */
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -95,35 +87,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
       dependencies: {
         triggerFields: ['deliveryType'],
         show: (values) => values.deliveryType === DeliveryTypeEnum.EXPRESS.type,
-      },
-    },
-    {
-      fieldName: 'pickUpStoreId',
-      label: '自提门店',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleDeliveryPickUpStoreList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择自提门店',
-        allowClear: true,
-      },
-      dependencies: {
-        triggerFields: ['deliveryType'],
-        show: (values) => values.deliveryType === DeliveryTypeEnum.PICK_UP.type,
-      },
-    },
-    {
-      fieldName: 'pickUpVerifyCode',
-      label: '核销码',
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入核销码',
-        allowClear: true,
-      },
-      dependencies: {
-        triggerFields: ['deliveryType'],
-        show: (values) => values.deliveryType === DeliveryTypeEnum.PICK_UP.type,
       },
     },
     {
@@ -259,17 +222,6 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
             .filter(Boolean)
             .join(' ');
           return `买家：${row.user?.nickname ?? '-'} / 收货人：${receiver || '-'}`;
-        }
-        if (row.deliveryType === DeliveryTypeEnum.PICK_UP.type) {
-          const store = pickUpStoreList.find(
-            (item) => item.id === row.pickUpStoreId,
-          );
-          const parts = [
-            store?.name && `门店名称：${store.name}`,
-            store?.phone && `门店手机：${store.phone}`,
-            store?.detailAddress && `自提门店：${store.detailAddress}`,
-          ].filter(Boolean);
-          return parts.join(' / ') || '-';
         }
         return '-';
       },

@@ -8,12 +8,10 @@ import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
 import com.lxjl.juling.module.member.api.address.MemberAddressApi;
 import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.trade.dal.dataobject.config.TradeConfigDO;
-import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryPickUpStoreDO;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryExpressChargeModeEnum;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
 import com.lxjl.juling.module.trade.service.config.TradeConfigService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressTemplateService;
-import com.lxjl.juling.module.trade.service.delivery.DeliveryPickUpStoreService;
 import com.lxjl.juling.module.trade.service.delivery.bo.DeliveryExpressTemplateRespBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
@@ -45,8 +43,6 @@ public class TradeDeliveryPriceCalculator implements TradePriceCalculator {
     private MemberAddressApi addressApi;
 
     @Resource
-    private DeliveryPickUpStoreService deliveryPickUpStoreService;
-    @Resource
     private DeliveryExpressTemplateService deliveryExpressTemplateService;
     @Resource
     private TradeConfigService tradeConfigService;
@@ -56,26 +52,9 @@ public class TradeDeliveryPriceCalculator implements TradePriceCalculator {
         if (param.getDeliveryType() == null) {
             return;
         }
-        // 校验是不是存在商品不能门店自提，或者不能快递发货的情况。就是说，配送方式不匹配哈
-        if (CollectionUtils.anyMatch(result.getItems(), item -> !item.getDeliveryTypes().contains(param.getDeliveryType()))) {
-            throw exception(PRICE_CALCULATE_DELIVERY_PRICE_TYPE_ILLEGAL);
-        }
-
-        if (DeliveryTypeEnum.PICK_UP.getType().equals(param.getDeliveryType())) {
-            calculateByPickUp(param);
-        } else if (DeliveryTypeEnum.EXPRESS.getType().equals(param.getDeliveryType())) {
+        // 只支持快递发货：按快递运费模板计算
+        if (DeliveryTypeEnum.EXPRESS.getType().equals(param.getDeliveryType())) {
             calculateExpress(param, result);
-        }
-    }
-
-    private void calculateByPickUp(TradePriceCalculateReqBO param) {
-        if (param.getPickUpStoreId() == null) {
-            // 价格计算时，如果为空就不算~最终下单，会校验该字段不允许空
-            return;
-        }
-        DeliveryPickUpStoreDO pickUpStore = deliveryPickUpStoreService.getDeliveryPickUpStore(param.getPickUpStoreId());
-        if (pickUpStore == null || CommonStatusEnum.DISABLE.getStatus().equals(pickUpStore.getStatus())) {
-            throw exception(PICK_UP_STORE_NOT_EXISTS);
         }
     }
 

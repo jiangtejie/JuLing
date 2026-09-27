@@ -1,7 +1,5 @@
 import type { VbenFormSchema } from '#/adapter/form';
 
-import { DeliveryTypeEnum, DICT_TYPE } from '@vben/constants';
-import { getDictOptions } from '@vben/hooks';
 import { handleTree } from '@vben/utils';
 
 import { getSimpleBrandList } from '#/api/mall/product/brand';
@@ -196,15 +194,6 @@ export function useDeliveryFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      fieldName: 'deliveryTypes',
-      label: '配送方式',
-      component: 'CheckboxGroup',
-      componentProps: {
-        options: getDictOptions(DICT_TYPE.TRADE_DELIVERY_TYPE, 'number'),
-      },
-      rules: 'required',
-    },
-    {
       fieldName: 'deliveryTemplateId',
       label: '运费模板',
       component: 'ApiSelect',
@@ -212,12 +201,6 @@ export function useDeliveryFormSchema(): VbenFormSchema[] {
         api: getSimpleTemplateList,
         labelField: 'name',
         valueField: 'id',
-      },
-      dependencies: {
-        triggerFields: ['deliveryTypes'],
-        show: (values) =>
-          !!values.deliveryTypes &&
-          values.deliveryTypes.includes(DeliveryTypeEnum.EXPRESS.type),
       },
       rules: 'required',
     },

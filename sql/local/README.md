@@ -39,6 +39,8 @@ psql -U root -d yate -f sql/local/20_remove_brokerage_withdraw.sql
 psql -U root -d yate -f sql/local/21_trade_amount_defaults.sql
 # 商品分销整体下线（物理清除）：清理分销菜单/权限/字典/定时任务，并删除三张分销表与 14 个分销列
 psql -U root -d yate -f sql/local/22_remove_brokerage.sql
+# 门店自提整体下线：清理自提菜单/权限与配送方式字典项，删除自提门店表与相关列
+psql -U root -d yate -f sql/local/23_remove_pick_up.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -78,6 +80,7 @@ psql -U root -d yate -f sql/local/22_remove_brokerage.sql
 | 21_trade_amount_defaults.sql | 订单/清单项金额列兜底：给 `trade_order_item.adjust_price` 补默认值 0 并回填历史 NULL（NULL 会让首次调价、售后等路径直接 NPE，对外表现为「系统异常」），同时回填 `trade_order` 的 `adjust_price`/`refund_price`/`refund_point`。幂等 | — |
 | 20_remove_brokerage_withdraw.sql | 佣金提现下线：删除提现菜单与 `trade:brokerage-withdraw:*` 权限、删提现状态字典（保留 `brokerage_withdraw_type`，交易配置仍在用）、`trade_brokerage_withdraw` 表重命名为 `zz_deprecated_trade_brokerage_withdraw` 归档。幂等 | — |
 | 22_remove_brokerage.sql | 商品分销整体下线（物理清除）：删除分销菜单 11 条与角色关联、分销字典 6 类 23 条、分销定时任务；`DROP TABLE` 三张分销表、`DROP COLUMN` 14 个分销列。幂等 | — |
+| 23_remove_pick_up.sql | 门店自提下线（物理清除）：删除自提菜单 9 条与角色关联、`trade_delivery_type` 的「用户自提」字典数据；`DROP TABLE trade_delivery_pick_up_store`；删列 `trade_config.delivery_pick_up_enabled`、`trade_order.pick_up_store_id`/`pick_up_verify_code`、`product_spu.delivery_types`。幂等 | — |
 | 19_trade_after_sale_offline_refund.sql | 售后线下退款：`trade_after_sale` 增加 `refund_channel_code`/`refund_proof_urls`/`refund_remark`，配合后台「确认线下退款」登记（原 `pay_refund_id` 保留但不再写入）。幂等 | — |
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |

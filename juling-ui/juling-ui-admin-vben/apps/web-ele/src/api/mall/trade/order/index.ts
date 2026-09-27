@@ -29,8 +29,6 @@ export namespace MallOrderApi {
     adjustPrice?: number; // 订单调价（总）
     payPrice?: number; // 应付金额（总）
     deliveryType?: number; // 发货方式
-    pickUpStoreId?: number; // 自提门店编号
-    pickUpVerifyCode?: string; // 自提核销码
     deliveryTemplateId?: number; // 配送模板编号
     logisticsId?: number; // 发货物流公司编号
     logisticsNo?: string; // 发货物流单号
@@ -180,24 +178,4 @@ export function updateOrderPrice(data: MallOrderApi.OrderUpdatePriceReqVO) {
 /** 修改订单地址 */
 export function updateOrderAddress(data: MallOrderApi.OrderUpdateAddressReqVO) {
   return requestClient.put('/trade/order/update-address', data);
-}
-
-/** 订单核销 */
-export function pickUpOrder(id: number) {
-  return requestClient.put(`/trade/order/pick-up-by-id?id=${id}`);
-}
-
-/** 订单核销 */
-export function pickUpOrderByVerifyCode(pickUpVerifyCode: string) {
-  return requestClient.put('/trade/order/pick-up-by-verify-code', undefined, {
-    params: { pickUpVerifyCode },
-  });
-}
-
-/** 查询核销码对应的订单 */
-export function getOrderByPickUpVerifyCode(pickUpVerifyCode: string) {
-  return requestClient.get<MallOrderApi.Order>(
-    '/trade/order/get-by-pick-up-verify-code',
-    { params: { pickUpVerifyCode } },
-  );
 }

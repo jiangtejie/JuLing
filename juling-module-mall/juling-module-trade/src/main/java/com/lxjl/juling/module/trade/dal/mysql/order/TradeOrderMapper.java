@@ -40,8 +40,6 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
                 .eqIfPresent(TradeOrderDO::getPaymentProofStatus, reqVO.getPaymentProofStatus())
                 .eqIfPresent(TradeOrderDO::getTerminal, reqVO.getTerminal())
                 .eqIfPresent(TradeOrderDO::getLogisticsId, reqVO.getLogisticsId())
-                .inIfPresent(TradeOrderDO::getPickUpStoreId, reqVO.getPickUpStoreIds())
-                .likeIfPresent(TradeOrderDO::getPickUpVerifyCode, reqVO.getPickUpVerifyCode())
                 .betweenIfPresent(TradeOrderDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TradeOrderDO::getId));
     }
@@ -61,8 +59,6 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
                 .eqIfPresent(TradeOrderDO::getPayChannelCode, reqVO.getPayChannelCode())
                 .eqIfPresent(TradeOrderDO::getTerminal, reqVO.getTerminal())
                 .eqIfPresent(TradeOrderDO::getLogisticsId, reqVO.getLogisticsId())
-                .inIfPresent(TradeOrderDO::getPickUpStoreId, reqVO.getPickUpStoreIds())
-                .likeIfPresent(TradeOrderDO::getPickUpVerifyCode, reqVO.getPickUpVerifyCode())
                 .betweenIfPresent(TradeOrderDO::getCreateTime, reqVO.getCreateTime())
                 .groupBy(TradeOrderDO::getRefundStatus)); // 按售后状态分组
     }
@@ -124,10 +120,6 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
             queryWrapperX.eq(TradeOrderDO::getPointActivityId, activityId);
         }
         return selectList(queryWrapperX);
-    }
-
-    default TradeOrderDO selectOneByPickUpVerifyCode(String pickUpVerifyCode) {
-        return selectOne(TradeOrderDO::getPickUpVerifyCode, pickUpVerifyCode);
     }
 
     default TradeOrderDO selectByUserIdAndCombinationActivityIdAndStatus(Long userId, Long combinationActivityId, Integer status) {

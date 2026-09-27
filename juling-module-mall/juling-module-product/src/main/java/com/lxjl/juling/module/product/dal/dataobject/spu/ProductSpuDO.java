@@ -1,7 +1,6 @@
 package com.lxjl.juling.module.product.dal.dataobject.spu;
 
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
-import com.lxjl.juling.framework.mybatis.core.type.IntegerListTypeHandler;
 import com.lxjl.juling.module.product.dal.dataobject.brand.ProductBrandDO;
 import com.lxjl.juling.module.product.dal.dataobject.category.ProductCategoryDO;
 import com.lxjl.juling.module.product.dal.dataobject.sku.ProductSkuDO;
@@ -124,13 +123,6 @@ public class ProductSpuDO extends BaseDO {
 
     // ========== 物流相关字段 =========
 
-    /**
-     * 配送方式数组
-     *
-     * 对应 DeliveryTypeEnum 枚举
-     */
-    @TableField(typeHandler = IntegerListTypeHandler.class)
-    private List<Integer> deliveryTypes;
     /**
      * 物流配置模板编号
      *

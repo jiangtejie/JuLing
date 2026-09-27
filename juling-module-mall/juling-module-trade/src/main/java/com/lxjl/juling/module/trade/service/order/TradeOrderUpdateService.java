@@ -107,29 +107,6 @@ public interface TradeOrderUpdateService {
      */
     void updateOrderAddress(TradeOrderUpdateAddressReqVO reqVO);
 
-    /**
-     * 【管理员】核销订单
-     *
-     * @param userId 管理员编号
-     * @param id 订单编号
-     */
-    void pickUpOrderByAdmin(Long userId, Long id);
-
-    /**
-     * 【管理员】核销订单
-     *
-     * @param userId 管理员编号
-     * @param pickUpVerifyCode 自提核销码
-     */
-    void pickUpOrderByAdmin(Long userId, String pickUpVerifyCode);
-
-    /**
-     * 【管理员】根据自提核销码，查询订单
-     *
-     * @param pickUpVerifyCode 自提核销码
-     */
-    TradeOrderDO getByPickUpVerifyCode(String pickUpVerifyCode);
-
     // =================== Order Item ===================
 
     /**

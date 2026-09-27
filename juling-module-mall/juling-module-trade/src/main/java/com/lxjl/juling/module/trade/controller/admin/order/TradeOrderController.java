@@ -142,15 +142,6 @@ public class TradeOrderController {
         return success(true);
     }
 
-    @PutMapping("/pick-up-by-id")
-    @Operation(summary = "订单核销")
-    @Parameter(name = "id", description = "交易订单编号")
-    @PreAuthorize("@ss.hasPermission('trade:order:pick-up')")
-    public CommonResult<Boolean> pickUpOrderById(@RequestParam("id") Long id) {
-        tradeOrderUpdateService.pickUpOrderByAdmin(getLoginUserId(), id);
-        return success(true);
-    }
-
     @PutMapping("/payment-proof/audit")
     @Operation(summary = "核验订单付款凭证", description = "确认收款（可核定实际到账金额）或驳回重传")
     @PreAuthorize("@ss.hasPermission('trade:order:payment-proof:audit')")
@@ -166,24 +157,6 @@ public class TradeOrderController {
     public CommonResult<List<TradeOrderPaymentProofRespVO>> getPaymentProofList(@RequestParam("orderId") Long orderId) {
         List<TradeOrderPaymentProofDO> list = tradeOrderPaymentProofService.getPaymentProofList(orderId);
         return success(BeanUtils.toBean(list, TradeOrderPaymentProofRespVO.class));
-    }
-
-    @PutMapping("/pick-up-by-verify-code")
-    @Operation(summary = "订单核销")
-    @Parameter(name = "pickUpVerifyCode", description = "自提核销码")
-    @PreAuthorize("@ss.hasPermission('trade:order:pick-up')")
-    public CommonResult<Boolean> pickUpOrderByVerifyCode(@RequestParam("pickUpVerifyCode") String pickUpVerifyCode) {
-        tradeOrderUpdateService.pickUpOrderByAdmin(getLoginUserId(), pickUpVerifyCode);
-        return success(true);
-    }
-
-    @GetMapping("/get-by-pick-up-verify-code")
-    @Operation(summary = "查询核销码对应的订单")
-    @Parameter(name = "pickUpVerifyCode", description = "自提核销码")
-    @PreAuthorize("@ss.hasPermission('trade:order:query')")
-    public CommonResult<TradeOrderDetailRespVO> getByPickUpVerifyCode(@RequestParam("pickUpVerifyCode") String pickUpVerifyCode) {
-        TradeOrderDO tradeOrder = tradeOrderUpdateService.getByPickUpVerifyCode(pickUpVerifyCode);
-        return success(TradeOrderConvert.INSTANCE.convert2(tradeOrder, null));
     }
 
 }

@@ -39,11 +39,9 @@ public class AppTradeOrderSettlementReqVO {
     @Schema(description = "收件地址编号", example = "1")
     private Long addressId;
 
-    @Schema(description = "自提门店编号", example = "1088")
-    private Long pickUpStoreId;
-    @Schema(description = "收件人名称", example = "亚特") // 选择门店自提时，该字段为联系人名
+    @Schema(description = "收件人名称", example = "亚特")
     private String receiverName;
-    @Schema(description = "收件人手机", example = "15601691300") // 选择门店自提时，该字段为联系人手机
+    @Schema(description = "收件人手机", example = "15601691300")
     @Mobile(message = "收件人手机格式不正确")
     private String receiverMobile;
     @Schema(description = "收件详细地址", example = "重庆市江北区xx路 1 号") // 未选择收件地址时，手填的收货详细地址

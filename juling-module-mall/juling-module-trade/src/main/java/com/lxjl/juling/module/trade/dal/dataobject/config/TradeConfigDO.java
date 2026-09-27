@@ -55,9 +55,4 @@ public class TradeConfigDO extends BaseDO {
      */
     private Integer deliveryExpressFreePrice;
 
-    /**
-     * 是否开启自提
-     */
-    private Boolean deliveryPickUpEnabled;
-
 }

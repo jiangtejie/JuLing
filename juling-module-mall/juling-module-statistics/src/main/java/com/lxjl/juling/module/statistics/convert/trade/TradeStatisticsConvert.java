@@ -69,6 +69,6 @@ public interface TradeStatisticsConvert {
                 .setExpensePrice(tradeStatistics.getWalletPayPrice() + tradeStatistics.getAfterSaleRefundPrice());
     }
 
-    TradeOrderCountRespVO convert(Long undelivered, Long pickUp, Long afterSaleApply);
+    TradeOrderCountRespVO convert(Long undelivered, Long afterSaleApply);
 
 }

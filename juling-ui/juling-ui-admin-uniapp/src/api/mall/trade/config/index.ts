@@ -8,7 +8,6 @@ export interface TradeConfig {
   // 配送
   deliveryExpressFreeEnabled?: boolean
   deliveryExpressFreePrice?: number
-  deliveryPickUpEnabled?: boolean
 }
 
 /** 获取交易中心配置 */

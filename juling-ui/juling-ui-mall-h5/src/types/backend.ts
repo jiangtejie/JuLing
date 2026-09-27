@@ -36,8 +36,6 @@ export interface AppProductSpuRespVO {
   marketPrice: number;
   stock: number;
   salesCount: number;
-  /** 支持的配送方式（DeliveryTypeEnum：1 快递 / 2 自提） */
-  deliveryTypes: number[];
 }
 
 /** 商品属性值明细 */
@@ -248,8 +246,6 @@ export interface AppTradeOrderDetailRespVO {
   receiverAreaId: number | null;
   receiverAreaName: string;
   receiverDetailAddress: string;
-  pickUpStoreId: number | null;
-  pickUpVerifyCode: string | null;
   refundStatus: number | null;
   refundPrice: number | null;
   couponId: number | null;
@@ -310,7 +306,7 @@ export interface AppTradeOrderCreateReqVO {
   items: AppTradeOrderCreateItemReqVO[];
   /** 是否使用积分（必填 @NotNull） */
   pointStatus: boolean;
-  /** 配送方式（必填，DeliveryTypeEnum：1 快递 / 2 自提） */
+  /** 配送方式（必填，DeliveryTypeEnum：1 快递发货） */
   deliveryType: number;
   receiverName?: string;
   receiverMobile?: string;

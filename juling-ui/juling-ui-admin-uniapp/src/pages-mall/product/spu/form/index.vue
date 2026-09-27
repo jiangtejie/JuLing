@@ -69,19 +69,7 @@
           <!-- 物流设置 -->
           <view v-show="activeTab === 2" class="mb-160rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
             <wd-cell-group border>
-              <wd-form-item title="配送方式" title-width="200rpx" prop="deliveryTypes" center>
-                <wd-checkbox-group v-model="formData.deliveryTypes" type="button">
-                  <wd-checkbox
-                    v-for="dict in getIntDictOptions(DICT_TYPE.TRADE_DELIVERY_TYPE)"
-                    :key="dict.value"
-                    :name="dict.value"
-                  >
-                    {{ dict.label }}
-                  </wd-checkbox>
-                </wd-checkbox-group>
-              </wd-form-item>
               <TemplateSelect
-                v-if="formData.deliveryTypes?.includes(DeliveryTypeEnum.EXPRESS)"
                 v-model="formData.deliveryTemplateId"
                 label="运费模板"
                 label-width="200rpx"
@@ -133,12 +121,10 @@ import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, onMounted, ref } from 'vue'
 import { createProductSpu, getProductSpu, updateProductSpu } from '@/api/mall/product/spu'
 import { delay, navigateBackPlus } from '@/utils'
-import { DeliveryTypeEnum, DICT_TYPE } from '@/utils/constants'
 import BrandSelect from '@/pages-mall/product/brand/components/brand-select.vue'
 import CategorySelect from '@/pages-mall/product/category/components/category-select.vue'
 import SkuEditor from '@/pages-mall/product/spu/components/sku-editor.vue'
 import TemplateSelect from '@/pages-mall/trade/delivery/express-template/components/template-select.vue'
-import { getIntDictOptions } from '@/hooks/useDict'
 import { fenToYuan, yuanToFen } from '@/utils/format'
 import { createFormSchema } from '@/utils/wot'
 
@@ -165,7 +151,6 @@ const formData = ref<ProductSpu>({
   picUrl: '',
   sliderPicUrls: [],
   introduction: '',
-  deliveryTypes: [DeliveryTypeEnum.EXPRESS],
   deliveryTemplateId: undefined,
   brandId: undefined,
   specType: false,
@@ -183,8 +168,7 @@ const formSchema = createFormSchema({
   introduction: [{ required: true, message: '商品简介不能为空' }],
   picUrl: [{ required: true, message: '商品封面不能为空' }],
   sliderPicUrls: [{ required: true, message: '轮播图不能为空' }],
-  deliveryTypes: [{ required: true, message: '配送方式不能为空' }],
-  deliveryTemplateId: [{ required: (model: Record<string, any>) => !!model?.deliveryTypes?.includes(DeliveryTypeEnum.EXPRESS), message: '运费模板不能为空' }],
+  deliveryTemplateId: [{ required: true, message: '运费模板不能为空' }],
   specType: [{ required: true, message: '多规格不能为空' }],
   description: [{ required: true, message: '商品详情不能为空' }],
   sort: [{ required: true, message: '排序不能为空' }],
@@ -198,7 +182,6 @@ const PROP_TAB: Record<string, number> = {
   picUrl: 0,
   sliderPicUrls: 0,
   specType: 1,
-  deliveryTypes: 2,
   deliveryTemplateId: 2,
   description: 3,
   sort: 4,
@@ -246,7 +229,6 @@ async function loadDetail() {
   formData.value = {
     ...data,
     sliderPicUrls: data.sliderPicUrls || [],
-    deliveryTypes: data.deliveryTypes || [],
   }
   skus.value = (data.skus || []).map(toYuanSku)
 }
@@ -258,7 +240,6 @@ function buildSubmitData(): ProductSpu {
     ...data,
     id: formId.value,
     sliderPicUrls: data.sliderPicUrls || [],
-    deliveryTypes: data.deliveryTypes || [],
     skus: skus.value.map(toCentSku),
   }
 }

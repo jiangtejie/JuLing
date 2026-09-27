@@ -611,22 +611,6 @@
               "permission": "trade:delivery:express-template:query"
             },
             {
-              "key": "mallDeliveryPickUpStore",
-              "name": "门店管理",
-              "icon": "store",
-              "iconColor": "#13c2c2",
-              "url": "/pages-mall/trade/delivery/pick-up-store/index",
-              "permission": "trade:delivery:pick-up-store:query"
-            },
-            {
-              "key": "mallDeliveryPickUpOrder",
-              "name": "核销订单",
-              "icon": "scan",
-              "iconColor": "#36cfc9",
-              "url": "/pages-mall/trade/delivery/pick-up-order/index",
-              "permission": "trade:order:query"
-            },
-            {
               "key": "mallTradeConfig",
               "name": "交易配置",
               "icon": "settings",

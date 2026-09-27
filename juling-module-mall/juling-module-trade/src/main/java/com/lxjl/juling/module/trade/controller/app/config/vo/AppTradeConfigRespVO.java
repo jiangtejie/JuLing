@@ -13,12 +13,6 @@ public class AppTradeConfigRespVO {
     @Schema(description = "腾讯地图 KEY", requiredMode = Schema.RequiredMode.REQUIRED, example = "123456")
     private String tencentLbsKey;
 
-    // ========== 配送相关 ==========
-
-    @Schema(description = "是否开启自提", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "是否开启自提不能为空")
-    private Boolean deliveryPickUpEnabled;
-
     // ========== 售后相关 ==========
 
     @Schema(description = "售后的退款理由", requiredMode = Schema.RequiredMode.REQUIRED)

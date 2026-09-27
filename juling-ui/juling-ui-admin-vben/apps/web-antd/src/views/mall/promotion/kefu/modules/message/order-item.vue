@@ -52,9 +52,6 @@ function formatOrderStatus(order: any) {
   if (order.status === 10 && order.deliveryType === 1) {
     return '待发货';
   }
-  if (order.status === 10 && order.deliveryType === 2) {
-    return '待核销';
-  }
   if (order.status === 20) {
     return '待收货';
   }

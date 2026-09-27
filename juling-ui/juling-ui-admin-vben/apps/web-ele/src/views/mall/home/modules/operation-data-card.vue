@@ -33,7 +33,6 @@ const data = reactive({
     value: 0,
     routerName: 'TradeAfterSale',
   },
-  orderWaitePickUp: { name: '待核销订单', value: 0, routerName: 'TradeOrder' },
   productAlertStock: { name: '库存预警', value: 0, routerName: 'ProductSpu' },
   productForSale: { name: '上架商品', value: 0, routerName: 'ProductSpu' },
   productInWarehouse: { name: '仓库商品', value: 0, routerName: 'ProductSpu' },
@@ -54,9 +53,6 @@ async function loadOrderData() {
   }
   if (orderCount.afterSaleApply) {
     data.orderAfterSaleApply.value = orderCount.afterSaleApply;
-  }
-  if (orderCount.pickUp) {
-    data.orderWaitePickUp.value = orderCount.pickUp;
   }
 }
 

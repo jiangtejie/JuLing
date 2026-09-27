@@ -31,8 +31,6 @@ export namespace MallOrderApi {
     paidAmount?: number; // 已确认收款金额（总）
     paymentProofStatus?: number; // 收款状态（线下收款）
     deliveryType?: number; // 发货方式
-    pickUpStoreId?: number; // 自提门店编号
-    pickUpVerifyCode?: string; // 自提核销码
     deliveryTemplateId?: number; // 配送模板编号
     logisticsId?: number; // 发货物流公司编号
     logisticsNo?: string; // 发货物流单号
@@ -220,24 +218,4 @@ export function getPaymentProofList(orderId: number) {
 /** 核验付款凭证（确认收款 / 驳回） */
 export function auditPaymentProof(data: MallOrderApi.PaymentProofAuditReqVO) {
   return requestClient.put('/trade/order/payment-proof/audit', data);
-}
-
-/** 订单核销 */
-export function pickUpOrder(id: number) {
-  return requestClient.put(`/trade/order/pick-up-by-id?id=${id}`);
-}
-
-/** 订单核销 */
-export function pickUpOrderByVerifyCode(pickUpVerifyCode: string) {
-  return requestClient.put('/trade/order/pick-up-by-verify-code', undefined, {
-    params: { pickUpVerifyCode },
-  });
-}
-
-/** 查询核销码对应的订单 */
-export function getOrderByPickUpVerifyCode(pickUpVerifyCode: string) {
-  return requestClient.get<MallOrderApi.Order>(
-    '/trade/order/get-by-pick-up-verify-code',
-    { params: { pickUpVerifyCode } },
-  );
 }

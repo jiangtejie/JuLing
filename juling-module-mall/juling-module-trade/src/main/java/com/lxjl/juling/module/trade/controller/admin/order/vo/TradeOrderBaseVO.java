@@ -99,12 +99,6 @@ public class TradeOrderBaseVO {
     @Schema(description = "配送方式", example = "10")
     private Integer deliveryType;
 
-    @Schema(description = "自提门店", example = "10")
-    private Long pickUpStoreId;
-
-    @Schema(description = "自提核销码", example = "10")
-    private Long pickUpVerifyCode;
-
     @Schema(description = "配送模板编号", example = "1024")
     private Long deliveryTemplateId;
 

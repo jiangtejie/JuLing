@@ -100,7 +100,6 @@ test('adaptSpu：introduction→subTitle、supportTierPrice=false、字段透传
     marketPrice: 7475,
     stock: 1180,
     salesCount: 12860,
-    deliveryTypes: [1],
   });
   assert.equal(product.id, 1001);
   assert.equal(product.subTitle, '当季新米 · 产地直发');
@@ -123,7 +122,6 @@ test('adaptSpu：sliderPicUrls 多图透传，空数组归一为 undefined', () 
     marketPrice: 120,
     stock: 1,
     salesCount: 0,
-    deliveryTypes: [1],
   };
   assert.deepEqual(adaptSpu({ ...base, sliderPicUrls: ['a.png', 'b.png'] }).sliderPicUrls, [
     'a.png',
@@ -146,7 +144,6 @@ test('adaptSpu / adaptSku：内网绝对地址在适配层就被归一化为相�
     marketPrice: 120,
     stock: 1,
     salesCount: 0,
-    deliveryTypes: [1],
   });
   assert.equal(spu.picUrl, '/admin-api/infra/file/29/get/a.png');
   assert.deepEqual(spu.sliderPicUrls, ['/admin-api/infra/file/29/get/b.png']);
@@ -217,7 +214,6 @@ test('adaptProductPage：分页透传并逐项适配', () => {
         marketPrice: 120,
         stock: 5,
         salesCount: 3,
-        deliveryTypes: [1],
       },
     ],
     total: 42,
@@ -377,8 +373,6 @@ test('adaptOrderDetail：字段改名 + 地址拼接', () => {
     receiverAreaId: null,
     receiverAreaName: '浙江省杭州市',
     receiverDetailAddress: '文一西路 969 号',
-    pickUpStoreId: null,
-    pickUpVerifyCode: null,
     refundStatus: null,
     refundPrice: null,
     couponId: null,
@@ -468,8 +462,6 @@ test('adaptOrderDetail：收款状态与已收金额透传', () => {
     receiverAreaId: null,
     receiverAreaName: '',
     receiverDetailAddress: '文一西路 969 号',
-    pickUpStoreId: null,
-    pickUpVerifyCode: null,
     refundStatus: null,
     refundPrice: null,
     couponId: null,

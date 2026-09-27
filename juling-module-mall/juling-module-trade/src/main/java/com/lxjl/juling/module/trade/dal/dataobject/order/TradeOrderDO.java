@@ -4,7 +4,6 @@ import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
 import com.lxjl.juling.framework.mybatis.core.type.LongListTypeHandler;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
-import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryPickUpStoreDO;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderCancelTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderRefundStatusEnum;
@@ -238,17 +237,6 @@ public class TradeOrderDO extends BaseDO {
      * 收件人详细地址
      */
     private String receiverDetailAddress;
-
-    /**
-     * 自提门店编号
-     *
-     * 关联 {@link DeliveryPickUpStoreDO#getId()}
-     */
-    private Long pickUpStoreId;
-    /**
-     * 自提核销码
-     */
-    private String pickUpVerifyCode;
 
     // ========== 售后基本信息 ==========
     /**

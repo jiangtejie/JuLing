@@ -55,9 +55,6 @@
               <wd-form-item title="满额包邮(元)" title-width="200rpx" prop="deliveryExpressFreePrice" center>
                 <wd-input-number v-model="formData.deliveryExpressFreePrice" :min="0" :step="0.01" :precision="2" />
               </wd-form-item>
-              <wd-form-item title="启用门店自提" title-width="200rpx" prop="deliveryPickUpEnabled" center>
-                <wd-switch v-model="formData.deliveryPickUpEnabled" />
-              </wd-form-item>
             </wd-cell-group>
           </view>
         </view>
@@ -87,7 +84,6 @@ interface TradeConfigForm {
   afterSaleReturnReasons: string[]
   deliveryExpressFreeEnabled: boolean
   deliveryExpressFreePrice: number
-  deliveryPickUpEnabled: boolean
 }
 
 const CONFIG_TABS = ['售后', '配送'] // 分组 tab
@@ -108,7 +104,6 @@ const formData = ref<TradeConfigForm>({
   afterSaleReturnReasons: [],
   deliveryExpressFreeEnabled: false,
   deliveryExpressFreePrice: 0,
-  deliveryPickUpEnabled: false,
 }) // 表单数据
 const formSchema = createFormSchema({
   deliveryExpressFreePrice: [{ required: true, message: '满额包邮不能为空' }],
@@ -136,7 +131,6 @@ async function loadConfig() {
     afterSaleReturnReasons: data.afterSaleReturnReasons || [],
     deliveryExpressFreeEnabled: !!data.deliveryExpressFreeEnabled,
     deliveryExpressFreePrice: fenToYuan(data.deliveryExpressFreePrice),
-    deliveryPickUpEnabled: !!data.deliveryPickUpEnabled,
   }
 }
 
@@ -158,7 +152,6 @@ async function handleSubmit() {
       afterSaleReturnReasons: trimArray(formData.value.afterSaleReturnReasons),
       deliveryExpressFreeEnabled: formData.value.deliveryExpressFreeEnabled,
       deliveryExpressFreePrice: yuanToFen(formData.value.deliveryExpressFreePrice),
-      deliveryPickUpEnabled: formData.value.deliveryPickUpEnabled,
     })
     toast.success('保存成功')
   } finally {

@@ -35,8 +35,6 @@ CREATE TABLE IF NOT EXISTS "trade_order"
     "receiver_area_id"        int      NOT NULL,
     "receiver_post_code"      int,
     "receiver_detail_address" varchar  NOT NULL,
-    "pick_up_store_id"        long     NULL,
-    "pick_up_verify_code"     varchar  NULL,
     "refund_status"           int      NULL,
     "refund_price"            int      NULL,
     "after_sale_status"       int      NULL,

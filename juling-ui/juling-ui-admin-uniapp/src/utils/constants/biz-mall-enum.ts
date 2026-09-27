@@ -23,7 +23,6 @@ export const TradeOrderStatusEnum = {
  */
 export const DeliveryTypeEnum = {
   EXPRESS: 1, // 快递发货
-  PICK_UP: 2, // 到店自提
 }
 
 /**

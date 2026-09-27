@@ -13,7 +13,6 @@ export namespace MallSpuApi {
     picUrl?: string; // 商品封面图
     sliderPicUrls?: string[]; // 商品轮播图
     introduction?: string; // 商品简介
-    deliveryTypes?: number[]; // 配送方式
     deliveryTemplateId?: number; // 运费模版
     brandId?: number; // 商品品牌编号
     specType?: boolean; // 商品规格

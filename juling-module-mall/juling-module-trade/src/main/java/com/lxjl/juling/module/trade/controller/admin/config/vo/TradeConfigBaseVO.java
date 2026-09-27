@@ -39,8 +39,4 @@ public class TradeConfigBaseVO {
     @PositiveOrZero(message = "全场包邮的最小金额不能是负数")
     private Integer deliveryExpressFreePrice;
 
-    @Schema(description = "是否开启自提", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "是否开启自提不能为空")
-    private Boolean deliveryPickUpEnabled;
-
 }
