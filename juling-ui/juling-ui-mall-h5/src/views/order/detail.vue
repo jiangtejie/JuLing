@@ -73,6 +73,16 @@
 
   /** 还能上传凭证：货款未收齐，且订单不在取消 / 售后等异常态 */
   const canUpload = computed(() => remainAmount.value > 0 && !isAbnormal.value);
+
+  /**
+   * 付款凭证核验中：此时客户可能已经转过账，不允许取消订单（后端同样会拦），
+   * 前端提前把「为什么不能取消」讲清楚，避免点下去才报错。
+   */
+  const proofUnderReview = computed(() => order.value?.paymentProofStatus === 1);
+  /** 允许取消：待收款且没有正在核验的凭证 */
+  const canCancel = computed(
+    () => order.value?.status === 'UNPAID' && !proofUnderReview.value,
+  );
   const uploadText = computed(() =>
     proofs.value.length ? '重新上传付款凭证' : '上传付款凭证',
   );
@@ -296,6 +306,17 @@
             </div>
           </div>
 
+          <!-- 核验中：说明为什么暂时不能取消，客户不必去点按钮撞报错 -->
+          <van-notice-bar
+            v-if="proofUnderReview"
+            class="order-detail__notice"
+            left-icon="info-o"
+            color="var(--app-warning-color)"
+            background="#fffbe8"
+            wrapable
+            text="付款凭证核验中，暂不能取消订单；如需取消请联系客服"
+          />
+
           <!-- 驳回原因：用 notice-bar 直接带出后台核验意见，引导客户重传 -->
           <van-notice-bar
             v-if="rejectedProof"
@@ -432,7 +453,7 @@
           @click="toPayment"
         />
         <van-action-bar-button
-          v-if="order.status === 'UNPAID'"
+          v-if="canCancel"
           type="danger"
           text="取消订单"
           :loading="acting"
