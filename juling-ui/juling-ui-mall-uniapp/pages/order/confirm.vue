@@ -211,6 +211,8 @@
         </view>
         <button
           class="ss-reset-button ui-BG-Main-Gradient ss-r-40 submit-btn ui-Shadow-Main"
+          :disabled="submitting"
+          :loading="submitting"
           @tap="onConfirm"
         >
           提交订单
@@ -252,6 +254,9 @@
     receiverMobile: '', // 收件人手机
   });
 
+  // 防重复提交：连点两次「提交订单」会生成两笔订单
+  const submitting = ref(false);
+
   // ========== 积分 ==========
   /**
    * 使用积分抵扣
@@ -269,7 +274,10 @@
   }
 
   // 提交订单
-  function onConfirm() {
+  async function onConfirm() {
+    if (submitting.value) {
+      return;
+    }
     if (addressState.value.deliveryType === 1 && !addressState.value.addressInfo.id) {
       sheep.$helper.toast('请选择收货地址');
       return;
@@ -292,7 +300,12 @@
         return;
       }
     }
-    submitOrder();
+    submitting.value = true;
+    try {
+      await submitOrder();
+    } finally {
+      submitting.value = false;
+    }
   }
 
   // 创建订单&跳转

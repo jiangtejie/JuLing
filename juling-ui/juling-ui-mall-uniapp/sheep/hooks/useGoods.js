@@ -340,6 +340,19 @@ export function fen2yuan(price) {
 }
 
 /**
+ * 将元转成分
+ *
+ * 用 Math.round 而不是 * 100，避免 0.29 * 100 = 28.999999999999996
+ * 被后端按 Integer 截断成 28 分
+ *
+ * @param price 元，例如说 1.00 元
+ * @returns {number} 分，例如说 100 分
+ */
+export function yuan2fen(price) {
+  return Math.round(Number(price) * 100);
+}
+
+/**
  * 将分转成元
  *
  * 如果没有小数点，则不展示小数点部分
@@ -411,12 +424,15 @@ export function appendSettlementProduct(spus, settlementInfos) {
   for (const spu of spus) {
     const settlementInfo = settlementInfos.find((info) => info.spuId === spu.id);
     if (!settlementInfo) {
-      return;
+      // 注意：这里必须是 continue，用 return 会导致后续商品全部不再计算促销价
+      continue;
     }
     // 选择价格最小的 SKU 设置到 SPU 上
     const settlementSku = settlementInfo.skus
       .filter((sku) => sku.promotionPrice > 0)
-      .reduce((prev, curr) => (prev.promotionPrice < curr.promotionPrice ? prev : curr), []);
+      // 初值用 null 是为了区分「没有任何促销 SKU」（返回 null，跳过赋值）；
+      // 因此首轮必须容忍 prev 为 null，不能直接读 prev.promotionPrice
+      .reduce((prev, curr) => (!prev || curr.promotionPrice < prev.promotionPrice ? curr : prev), null);
     if (settlementSku) {
       spu.promotionType = settlementSku.promotionType;
       spu.promotionPrice = settlementSku.promotionPrice;

@@ -167,7 +167,7 @@
   import { onBeforeMount, reactive, computed } from 'vue';
   import sheep from '@/sheep';
   import accountTypeSelect from './components/account-type-select.vue';
-  import { fen2yuan } from '@/sheep/hooks/useGoods';
+  import { fen2yuan, yuan2fen } from '@/sheep/hooks/useGoods';
   import TradeConfigApi from '@/sheep/api/trade/config';
   import BrokerageApi from '@/sheep/api/trade/brokerage';
   import DictApi from '@/sheep/api/system/dict';
@@ -215,12 +215,18 @@
   // 提交提现
   const onConfirm = async () => {
     // 参数校验
-    if (
-      !state.accountInfo.price ||
-      state.accountInfo.price > state.brokerageInfo.price ||
-      state.accountInfo.price <= 0
-    ) {
+    // 注意：accountInfo.price 单位是元，brokerageInfo.brokeragePrice 单位是分，必须先换算再比较
+    const withdrawPriceFen = yuan2fen(state.accountInfo.price);
+    if (!state.accountInfo.price || withdrawPriceFen <= 0) {
       sheep.$helper.toast('请输入正确的提现金额');
+      return;
+    }
+    if (withdrawPriceFen > state.brokerageInfo.brokeragePrice) {
+      sheep.$helper.toast('提现金额不能超过可提现余额');
+      return;
+    }
+    if (state.minPrice > 0 && withdrawPriceFen < state.minPrice) {
+      sheep.$helper.toast(`最低提现金额为 ${fen2yuan(state.minPrice)} 元`);
       return;
     }
     if (!state.accountInfo.type) {
@@ -240,7 +246,7 @@
     // 提交请求
     const data = {
       ...state.accountInfo,
-      price: state.accountInfo.price * 100,
+      price: withdrawPriceFen,
     };
     if (state.accountInfo.type === '5') {
       data.userAccount = openid;

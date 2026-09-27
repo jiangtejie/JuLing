@@ -59,7 +59,7 @@
   import { computed, reactive } from 'vue';
   import sheep from '@/sheep';
   import { onLoad } from '@dcloudio/uni-app';
-  import { fen2yuan } from '@/sheep/hooks/useGoods';
+  import { fen2yuan, yuan2fen } from '@/sheep/hooks/useGoods';
   import PayWalletApi from '@/sheep/api/pay/wallet';
   import { WxaSubscribeTemplate } from '@/sheep/helper/const';
 
@@ -91,7 +91,7 @@
     const { code, data } = await PayWalletApi.createWalletRecharge({
       packageId: state.packageList.find((item) => fen2yuan(item.payPrice) === state.recharge_money)
         ?.id,
-      payPrice: state.recharge_money * 100,
+      payPrice: yuan2fen(state.recharge_money),
     });
     if (code !== 0) {
       return;

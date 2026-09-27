@@ -45,11 +45,10 @@
               :img="item.spu.picUrl || item.goods.image"
               :price="item.sku.price"
               :skuText="
-                item.sku.properties.length > 1
-                  ? item.sku.properties.reduce(
-                      (items2, items) => items2.valueName + ' ' + items.valueName,
-                    )
-                  : item.sku.properties[0].valueName
+                (item.sku.properties || [])
+                  .map((p) => p.valueName)
+                  .filter(Boolean)
+                  .join(' ')
               "
               :title="item.spu.name"
               :titleWidth="400"

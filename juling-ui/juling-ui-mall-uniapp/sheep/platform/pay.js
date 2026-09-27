@@ -103,19 +103,25 @@ export default class SheepPay {
       }
       // 发起预支付 API 调用
       PayOrderApi.submitOrder(data).then((res) => {
-        // 成功时
-        res.code === 0 && resolve(res);
-        // 失败时
-        if (res.code !== 0 && res.msg.indexOf('无效的openid') >= 0) {
-          // 特殊逻辑：微信公众号、小程序支付时，必须传入 openid 不正确的情况
-          if (
-            res.msg.indexOf('无效的openid') >= 0 || // 获取的 openid 不正确时，或者随便输入了个 openid
-            res.msg.indexOf('下单账号与支付账号不一致') >= 0
-          ) {
-            // https://developers.weixin.qq.com/community/develop/doc/00008c53c347804beec82aed051c00
-            this.bindWeixin();
-          }
+        // 注意：请求层失败时可能返回 false/undefined。必须兜底，否则一是 res.msg 会抛
+        // TypeError，二是本 Promise 既不 resolve 也不 reject，表现为点「立即支付」后卡死。
+        if (!res || typeof res !== 'object') {
+          resolve({ code: -1, msg: '发起支付失败，请稍后重试' });
+          return;
         }
+        // 成功时
+        if (res.code === 0) {
+          resolve(res);
+          return;
+        }
+        // 失败时：特殊逻辑，微信公众号、小程序支付时 openid 不正确的情况
+        const msg = res.msg || '';
+        if (msg.indexOf('无效的openid') >= 0 || msg.indexOf('下单账号与支付账号不一致') >= 0) {
+          // https://developers.weixin.qq.com/community/develop/doc/00008c53c347804beec82aed051c00
+          this.bindWeixin();
+        }
+        // 业务失败也交回调用方，由调用方按 code !== 0 处理（保持原有调用约定）
+        resolve(res);
       });
     });
   }
