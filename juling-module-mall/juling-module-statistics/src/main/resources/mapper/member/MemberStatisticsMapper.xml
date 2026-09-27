@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lxjl.juling.module.statistics.dal.mysql.member.MemberStatisticsMapper">
 
@@ -40,12 +40,16 @@
 
     <select id="selectListByCreateTimeBetween"
             resultType="com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberRegisterCountRespVO">
-        SELECT to_char(create_time, 'YYYY-MM-DD') AS date,
-               count(1)                             AS count
+        <!-- 注意：必须返回真正的 date 类型，不能用 to_char。
+             PostgreSQL 下 to_char 产出 TEXT，映射到 MemberRegisterCountRespVO.date（LocalDate）会报
+             "Cannot convert the column of type TEXT to requested type java.time.LocalDate"。
+             CAST(... AS DATE) 在 PostgreSQL / MySQL 下都可用。 -->
+        SELECT CAST(create_time AS DATE) AS date,
+               count(1)                  AS count
         FROM member_user
         WHERE create_time BETWEEN #{beginTime} AND #{endTime}
           AND deleted = 0
-        GROUP BY to_char(create_time, 'YYYY-MM-DD')
+        GROUP BY CAST(create_time AS DATE)
     </select>
 
 </mapper>
