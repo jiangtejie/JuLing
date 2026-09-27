@@ -79,6 +79,13 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       server: {
         host: true,
         port,
+        // Windows 上 DSH / 部分编辑器保存文件采用「临时目录 + 原子改名」，会短暂产生
+        // 形如 `.<name>.ts.<pid>.<guid>.tmpdir/<name>.ts.tmp` 的路径；Vite 的 fs.watch
+        // 会尝试监听这个转瞬即逝且被占用的临时文件，抛 EBUSY 后整个 dev server 退出。
+        // 该数组会追加到 Vite 内置默认忽略项之后（见 resolveChokidarOptions）。
+        watch: {
+          ignored: ['**/*.tmpdir/**', '**/*.tmp'],
+        },
         warmup: {
           // 预热文件
           clientFiles: [

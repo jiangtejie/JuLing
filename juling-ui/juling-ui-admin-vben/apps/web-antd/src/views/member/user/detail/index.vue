@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { MemberUserApi } from '#/api/member/user';
-import type { PayWalletApi } from '#/api/pay/wallet/balance';
 
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -11,14 +10,12 @@ import { useTabs } from '@vben/hooks';
 import { Button, Card, message, TabPane, Tabs } from 'ant-design-vue';
 
 import { getUser } from '#/api/member/user';
-import { getWallet } from '#/api/pay/wallet/balance';
 import { $t } from '#/locales';
 
 import Form from '../modules/form.vue';
 import AccountInfo from './modules/account-info.vue';
 import AddressList from './modules/address-list.vue';
 import AfterSaleList from './modules/after-sale-list.vue';
-import BalanceList from './modules/balance-list.vue';
 import BasicInfo from './modules/basic-info.vue';
 import BrokerageList from './modules/brokerage-list.vue';
 import CouponList from './modules/coupon-list.vue';
@@ -38,7 +35,6 @@ const [FormModal, formModalApi] = useVbenModal({
 
 const userId = Number(route.query.id);
 const user = ref<MemberUserApi.User>();
-const wallet = ref<PayWalletApi.Wallet>();
 
 /** 获取会员详情 */
 async function getUserDetail() {
@@ -48,11 +44,6 @@ async function getUserDetail() {
     return;
   }
   user.value = await getUser(userId);
-  wallet.value = (await getWallet({ userId })) || {
-    balance: 0,
-    totalExpense: 0,
-    totalRecharge: 0,
-  };
 }
 
 /** 编辑会员 */
@@ -77,12 +68,7 @@ onMounted(async () => {
           </Button>
         </template>
       </BasicInfo>
-      <AccountInfo
-        v-if="user && wallet"
-        class="ml-4 w-2/5"
-        :user="user"
-        :wallet="wallet"
-      >
+      <AccountInfo v-if="user" class="ml-4 w-2/5" :user="user">
         <template #title> 账户信息 </template>
       </AccountInfo>
     </div>
@@ -97,9 +83,6 @@ onMounted(async () => {
           </TabPane>
           <TabPane tab="成长值" key="ExperienceRecordList">
             <ExperienceRecordList class="h-full" :user-id="userId" />
-          </TabPane>
-          <TabPane tab="余额" key="BalanceList">
-            <BalanceList class="h-full" :wallet-id="wallet?.id" />
           </TabPane>
           <TabPane tab="收货地址" key="AddressList">
             <AddressList class="h-full" :user-id="userId" />

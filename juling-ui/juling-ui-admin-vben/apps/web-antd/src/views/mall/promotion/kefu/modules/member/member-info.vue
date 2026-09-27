@@ -2,7 +2,6 @@
 <script lang="ts" setup>
 import type { MallKefuConversationApi } from '#/api/mall/promotion/kefu/conversation';
 import type { MemberUserApi } from '#/api/member/user';
-import type { PayWalletApi } from '#/api/pay/wallet/balance';
 
 import { computed, nextTick, ref, toRefs, watch } from 'vue';
 
@@ -12,7 +11,6 @@ import { useScroll } from '@vueuse/core';
 import { Empty, message } from 'ant-design-vue';
 
 import { getUser } from '#/api/member/user';
-import { getWallet } from '#/api/pay/wallet/balance';
 import AccountInfo from '#/views/member/user/detail/modules/account-info.vue';
 import BasicInfo from '#/views/member/user/detail/modules/basic-info.vue';
 
@@ -43,7 +41,6 @@ async function getHistoryList() {
     }
     case '会员信息': {
       await getUserData();
-      await getUserWallet();
       break;
     }
     case '最近浏览': {
@@ -100,24 +97,6 @@ watch(
     }
   },
 );
-
-/** 查询用户钱包信息 */
-const WALLET_INIT_DATA = {
-  balance: 0,
-  totalExpense: 0,
-  totalRecharge: 0,
-} as PayWalletApi.Wallet; // 钱包初始化数据
-const wallet = ref<PayWalletApi.Wallet>(WALLET_INIT_DATA); // 钱包信息
-
-async function getUserWallet() {
-  if (!conversation.value.userId) {
-    wallet.value = WALLET_INIT_DATA;
-    return;
-  }
-  wallet.value =
-    (await getWallet({ userId: conversation.value.userId })) ||
-    WALLET_INIT_DATA;
-}
 
 /** 获得用户 */
 const loading = ref(true); // 加载中
@@ -185,13 +164,7 @@ async function getUserData() {
             </template>
           </BasicInfo>
           <!-- 账户信息 -->
-          <AccountInfo
-            :column="1"
-            :user="user"
-            :wallet="wallet"
-            mode="kefu"
-            class="mt-2"
-          >
+          <AccountInfo :column="1" :user="user" mode="kefu" class="mt-2">
             <template #title>
               <span class="text-sm font-bold">账户信息</span>
             </template>

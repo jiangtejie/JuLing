@@ -14,7 +14,6 @@ import { $t } from '#/locales';
 
 import { CouponSendForm } from '../../mall/promotion/coupon/components';
 import { useGridColumns, useGridFormSchema } from './data';
-import BalanceForm from './modules/balance-form.vue';
 import Form from './modules/form.vue';
 import LevelForm from './modules/level-form.vue';
 import PointForm from './modules/point-form.vue';
@@ -28,11 +27,6 @@ const [FormModal, formModalApi] = useVbenModal({
 
 const [PointFormModal, pointFormModalApi] = useVbenModal({
   connectedComponent: PointForm,
-  destroyOnClose: true,
-});
-
-const [BalanceFormModal, balanceFormModalApi] = useVbenModal({
-  connectedComponent: BalanceForm,
   destroyOnClose: true,
 });
 
@@ -64,11 +58,6 @@ function handleUpdateLevel(row: MemberUserApi.User) {
 /** 修改会员积分 */
 function handleUpdatePoint(row: MemberUserApi.User) {
   pointFormModalApi.setData(row).open();
-}
-
-/** 修改会员余额 */
-function handleUpdateBalance(row: MemberUserApi.User) {
-  balanceFormModalApi.setData(row).open();
 }
 
 /** 发送优惠券 */
@@ -145,7 +134,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
     <FormModal @success="handleRefresh" />
     <PointFormModal @success="handleRefresh" />
-    <BalanceFormModal @success="handleRefresh" />
     <LevelFormModal @success="handleRefresh" />
     <CouponSendFormModal />
     <Grid table-title="会员列表">
@@ -192,12 +180,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
               type: 'link',
               auth: ['member:user:update-point'],
               onClick: handleUpdatePoint.bind(null, row),
-            },
-            {
-              label: '修改余额',
-              type: 'link',
-              auth: ['pay:wallet:update-balance'],
-              onClick: handleUpdateBalance.bind(null, row),
             },
           ]"
         />

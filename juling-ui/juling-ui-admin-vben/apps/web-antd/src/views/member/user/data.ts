@@ -5,7 +5,6 @@ import { h, markRaw } from 'vue';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
-import { convertToInteger, formatToFraction } from '@vben/utils';
 
 import { Tag } from 'ant-design-vue';
 
@@ -372,82 +371,6 @@ export function useLevelFormSchema(): VbenFormSchema[] {
         placeholder: '请输入修改原因',
       },
       rules: 'required',
-    },
-  ];
-}
-
-/** 修改用户余额 */
-export function useBalanceFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      fieldName: 'id',
-      label: '用户编号',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'nickname',
-      label: '用户昵称',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'balance',
-      label: '变动前余额(元)',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'changeType',
-      label: '变动类型',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '增加', value: 1 },
-          { label: '减少', value: -1 },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 1,
-    },
-    {
-      fieldName: 'changeBalance',
-      label: '变动余额(元)',
-      component: 'InputNumber',
-      rules: 'required',
-      componentProps: {
-        class: '!w-full',
-        min: 0,
-        precision: 2,
-        step: 0.1,
-        placeholder: '请输入变动余额',
-      },
-      defaultValue: 0,
-    },
-    {
-      fieldName: 'balanceResult',
-      label: '变动后余额(元)',
-      component: 'Input',
-      dependencies: {
-        triggerFields: ['balance', 'changeBalance', 'changeType'],
-        disabled: true,
-        trigger(values, form) {
-          form.setFieldValue(
-            'balanceResult',
-            formatToFraction(
-              convertToInteger(values.balance) +
-                convertToInteger(values.changeBalance) * values.changeType,
-            ),
-          );
-        },
-      },
     },
   ];
 }

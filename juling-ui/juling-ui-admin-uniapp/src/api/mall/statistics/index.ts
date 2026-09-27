@@ -26,11 +26,6 @@ export interface MemberCountComparison {
   registerUserCount?: number
 }
 
-/** 支付统计 */
-export interface PaySummary {
-  rechargePrice?: number
-}
-
 /** 会员统计 */
 export interface MemberSummary {
   userCount?: number
@@ -100,11 +95,6 @@ export function getTradeOrderCount() {
 /** 获取会员数量对照 */
 export function getMemberUserCountComparison() {
   return http.get<DataComparison<MemberCountComparison>>('/statistics/member/user-count-comparison')
-}
-
-/** 获取钱包充值金额 */
-export function getWalletRechargePrice() {
-  return http.get<PaySummary>('/statistics/pay/summary')
 }
 
 /** 获取会员统计 */

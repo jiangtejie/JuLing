@@ -54,12 +54,6 @@ const menuList = [
     bgColor: 'bg-purple-500',
     routerName: 'PromotionBargainActivity',
   },
-  {
-    name: '佣金提现',
-    icon: 'vaadin:money-withdraw',
-    bgColor: 'bg-rose-500',
-    routerName: 'TradeBrokerageWithdraw',
-  },
 ];
 
 /** 跳转到菜单对应页面 */

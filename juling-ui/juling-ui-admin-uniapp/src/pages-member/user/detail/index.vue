@@ -75,30 +75,6 @@
               成长值
             </view>
           </view>
-          <view>
-            <view class="yd-text-main break-all text-28rpx font-semibold">
-              {{ formatDisplayMoney(walletData?.balance) }}
-            </view>
-            <view class="yd-text-hint mt-4rpx text-22rpx">
-              当前余额
-            </view>
-          </view>
-          <view>
-            <view class="yd-text-main break-all text-28rpx font-semibold">
-              {{ formatDisplayMoney(walletData?.totalExpense) }}
-            </view>
-            <view class="yd-text-hint mt-4rpx text-22rpx">
-              支出金额
-            </view>
-          </view>
-          <view>
-            <view class="yd-text-main break-all text-28rpx font-semibold">
-              {{ formatDisplayMoney(walletData?.totalRecharge) }}
-            </view>
-            <view class="yd-text-hint mt-4rpx text-22rpx">
-              充值金额
-            </view>
-          </view>
         </view>
       </view>
 
@@ -126,7 +102,6 @@
     <PointList v-if="loadedTabs.has('point')" v-show="activeTab === 'point'" class="min-h-0 flex-1" :user-id="props.id" />
     <SignList v-if="loadedTabs.has('sign')" v-show="activeTab === 'sign'" class="min-h-0 flex-1" :user-id="props.id" />
     <ExperienceList v-if="loadedTabs.has('experience')" v-show="activeTab === 'experience'" class="min-h-0 flex-1" :user-id="props.id" />
-    <BalanceList v-if="loadedTabs.has('balance')" v-show="activeTab === 'balance'" class="min-h-0 flex-1" :wallet-id="walletData?.id" />
     <AddressList v-if="loadedTabs.has('address')" v-show="activeTab === 'address'" :user-id="props.id" />
     <OrderList v-if="loadedTabs.has('order')" v-show="activeTab === 'order'" class="min-h-0 flex-1" :user-id="props.id" />
     <AfterSaleList v-if="loadedTabs.has('after-sale')" v-show="activeTab === 'after-sale'" class="min-h-0 flex-1" :user-id="props.id" />
@@ -158,8 +133,6 @@
     <LevelUpdateForm v-model="levelFormVisible" :user-id="props.id" @success="handleActionSuccess" />
     <!-- 修改积分弹窗 -->
     <PointUpdateForm v-model="pointFormVisible" :user-id="props.id" @success="handleActionSuccess" />
-    <!-- 修改余额弹窗 -->
-    <BalanceUpdateForm v-model="balanceFormVisible" :user-id="props.id" @success="handleActionSuccess" />
     <!-- 发送优惠券弹窗 -->
     <CouponSendForm v-model="couponSendVisible" :user-id="props.id" @success="handleActionSuccess" />
   </view>
@@ -167,21 +140,16 @@
 
 <script lang="ts" setup>
 import type { MemberUser } from '@/api/member/user'
-import type { PayWallet } from '@/api/pay/wallet/balance'
 import { onUnload } from '@dcloudio/uni-app'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { getMemberUser } from '@/api/member/user'
-import { getPayWallet } from '@/api/pay/wallet/balance'
 import { useAccess } from '@/hooks/useAccess'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDate, formatDateTime } from '@/utils/date'
-import { formatDisplayMoney } from '@/utils/format'
 import AddressList from './components/address-list.vue'
 import AfterSaleList from './components/after-sale-list.vue'
-import BalanceList from './components/balance-list.vue'
-import BalanceUpdateForm from './components/balance-update-form.vue'
 import BrokerageList from './components/brokerage-list.vue'
 import CouponList from './components/coupon-list.vue'
 import CouponSendForm from './components/coupon-send-form.vue'
@@ -209,7 +177,6 @@ const tabs: { key: string, title: string }[] = [ // 详情分类
   { key: 'point', title: '积分' },
   { key: 'sign', title: '签到' },
   { key: 'experience', title: '成长值' },
-  { key: 'balance', title: '余额' },
   { key: 'address', title: '收货地址' },
   { key: 'order', title: '订单管理' },
   { key: 'after-sale', title: '售后管理' },
@@ -220,13 +187,11 @@ const tabs: { key: string, title: string }[] = [ // 详情分类
 const { hasAccessByCodes } = useAccess()
 const toast = useToast()
 const formData = ref<MemberUser>() // 详情数据
-const walletData = ref<PayWallet>() // 钱包数据
 const tabIndex = ref(0) // 当前详情分类下标
 const loadedTabs = ref(new Set<string>(['basic'])) // 已加载过的分类；懒加载，避免打开详情即并发全部列表请求
 const moreActionVisible = ref(false) // 更多操作菜单
 const levelFormVisible = ref(false) // 修改等级弹窗
 const pointFormVisible = ref(false) // 修改积分弹窗
-const balanceFormVisible = ref(false) // 修改余额弹窗
 const couponSendVisible = ref(false) // 发送优惠券弹窗
 const activeTab = computed(() => tabs[tabIndex.value]?.key || 'basic') // 当前详情分类
 const isPagingTab = computed(() => !['basic', 'address'].includes(activeTab.value)) // 分页详情分类使用固定高布局
@@ -237,9 +202,6 @@ const moreActions = computed(() => { // 更多操作菜单项
   }
   if (hasAccessByCodes(['member:user:update-point'])) {
     actions.push({ name: '修改积分', value: 'update-point' })
-  }
-  if (hasAccessByCodes(['pay:wallet:update-balance'])) {
-    actions.push({ name: '修改余额', value: 'update-balance' })
   }
   if (hasAccessByCodes(['promotion:coupon:send'])) {
     actions.push({ name: '发送优惠券', value: 'send-coupon' })
@@ -263,13 +225,7 @@ async function getDetail() {
   }
   try {
     toast.loading('加载中...')
-    const userId = Number(props.id)
-    const [user, wallet] = await Promise.all([
-      getMemberUser(userId),
-      getPayWallet({ userId }),
-    ])
-    formData.value = user
-    walletData.value = wallet
+    formData.value = await getMemberUser(Number(props.id))
   } finally {
     toast.close()
   }
@@ -288,8 +244,6 @@ function openMoreActionForm(value: string) {
     levelFormVisible.value = true
   } else if (value === 'update-point') {
     pointFormVisible.value = true
-  } else if (value === 'update-balance') {
-    balanceFormVisible.value = true
   } else if (value === 'send-coupon') {
     couponSendVisible.value = true
   }

@@ -112,7 +112,6 @@ import {
   getTradeOrderComparison,
   getTradeOrderCount,
   getTradeStatisticsList,
-  getWalletRechargePrice,
 } from '@/api/mall/statistics'
 import { getDictLabel } from '@/hooks/useDict'
 import { navigateBackPlus } from '@/utils'
@@ -180,8 +179,6 @@ const operationCards = ref([
   { key: 'productForSale', label: '上架商品', value: '-', route: '/pages-mall/product/spu/index' },
   { key: 'productWarehouse', label: '仓库商品', value: '-', route: '/pages-mall/product/spu/index' },
   { key: 'productAlertStock', label: '库存预警', value: '-', route: '/pages-mall/product/spu/index' },
-  { key: 'withdrawAuditing', label: '提现待审核', value: '-', route: '/pages-mall/trade/brokerage/withdraw/index' },
-  { key: 'rechargePrice', label: '账户充值', value: '-', route: '/pages-mall/trade/order/index' },
 ]) // 运营数据
 
 const terminalSection: StatisticsSection = {
@@ -261,12 +258,11 @@ function updateOperationCard(key: string, value: string | number) {
 
 /** 加载仪表盘顶部：核心数据 + 运营数据 */
 async function loadBase() {
-  const [order, user, orderCount, productCount, paySummary] = await Promise.allSettled([
+  const [order, user, orderCount, productCount] = await Promise.allSettled([
     getTradeOrderComparison(),
     getMemberUserCountComparison(),
     getTradeOrderCount(),
     getProductSpuTabsCount(),
-    getWalletRechargePrice(),
   ])
   if (order.status === 'fulfilled') {
     orderComparison.value = order.value || { value: {}, reference: {} }
@@ -278,15 +274,11 @@ async function loadBase() {
     updateOperationCard('undelivered', orderCount.value.undelivered || 0)
     updateOperationCard('afterSaleApply', orderCount.value.afterSaleApply || 0)
     updateOperationCard('pickUp', orderCount.value.pickUp || 0)
-    updateOperationCard('withdrawAuditing', orderCount.value.auditingWithdraw || 0)
   }
   if (productCount.status === 'fulfilled') {
     updateOperationCard('productForSale', productCount.value['0'] || 0)
     updateOperationCard('productWarehouse', productCount.value['1'] || 0)
     updateOperationCard('productAlertStock', productCount.value['3'] || 0)
-  }
-  if (paySummary.status === 'fulfilled') {
-    updateOperationCard('rechargePrice', formatDisplayMoney(paySummary.value.rechargePrice || 0))
   }
 }
 

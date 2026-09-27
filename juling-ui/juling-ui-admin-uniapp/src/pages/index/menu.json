@@ -300,108 +300,6 @@
       ]
     },
     {
-      "key": "pay",
-      "name": "支付管理",
-      "subGroups": [
-        {
-          "key": "trade",
-          "name": "交易管理",
-          "menus": [
-            {
-              "key": "payApp",
-              "name": "应用信息",
-              "icon": "apps",
-              "iconColor": "#fa8c16",
-              "url": "/pages-pay/app/index",
-              "permission": "pay:app:query"
-            },
-            {
-              "key": "payOrder",
-              "name": "支付订单",
-              "icon": "ordered-list",
-              "iconColor": "#faad14",
-              "url": "/pages-pay/order/index",
-              "permission": "pay:order:query"
-            },
-            {
-              "key": "payRefund",
-              "name": "退款订单",
-              "icon": "refresh",
-              "iconColor": "#f5222d",
-              "url": "/pages-pay/refund/index",
-              "permission": "pay:refund:query"
-            },
-            {
-              "key": "payNotify",
-              "name": "回调通知",
-              "icon": "notification",
-              "iconColor": "#722ed1",
-              "url": "/pages-pay/notify/index",
-              "permission": "pay:notify:query"
-            },
-            {
-              "key": "payTransfer",
-              "name": "转账订单",
-              "icon": "send",
-              "iconColor": "#2f54eb",
-              "url": "/pages-pay/transfer/index",
-              "permission": "pay:transfer:query"
-            }
-          ]
-        },
-        {
-          "key": "wallet",
-          "name": "钱包管理",
-          "menus": [
-            {
-              "key": "payWallet",
-              "name": "钱包余额",
-              "icon": "safe",
-              "iconColor": "#13c2c2",
-              "url": "/pages-pay/wallet/balance/index",
-              "permission": "pay:wallet:query"
-            },
-            {
-              "key": "payRechargePackage",
-              "name": "充值套餐",
-              "icon": "archive",
-              "iconColor": "#52c41a",
-              "url": "/pages-pay/wallet/recharge-package/index",
-              "permission": "pay:wallet-recharge-package:query"
-            },
-            {
-              "key": "payWalletTransaction",
-              "name": "钱包流水",
-              "icon": "list",
-              "iconColor": "#36cfc9",
-              "url": "/pages-pay/wallet/transaction/index",
-              "permission": "pay:wallet:query"
-            }
-          ]
-        },
-        {
-          "key": "demo",
-          "name": "接入示例",
-          "menus": [
-            {
-              "key": "payDemoOrder",
-              "name": "示例订单",
-              "icon": "ordered-list",
-              "iconColor": "#eb2f96",
-              "url": "/pages-pay/demo/order/index"
-            },
-            {
-              "key": "payDemoWithdraw",
-              "name": "示例提现",
-              "icon": "safe",
-              "iconColor": "#fa541c",
-              "url": "/pages-pay/demo/withdraw/index"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "bpm",
       "name": "工作流程",
       "subGroups": [
@@ -891,14 +789,6 @@
               "iconColor": "#9254de",
               "url": "/pages-mall/trade/brokerage/record/index",
               "permission": "trade:brokerage-record:query"
-            },
-            {
-              "key": "mallBrokerageWithdraw",
-              "name": "佣金提现",
-              "icon": "safe",
-              "iconColor": "#531dab",
-              "url": "/pages-mall/trade/brokerage/withdraw/index",
-              "permission": "trade:brokerage-withdraw:query"
             }
           ]
         },

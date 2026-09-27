@@ -3,9 +3,9 @@ import type { DescriptionItemSchema } from '#/components/description';
 import { h } from 'vue';
 
 import { DICT_TYPE } from '@vben/constants';
-import { fenToYuan, formatDate } from '@vben/utils';
+import { fenToYuan, formatDate, formatDateTime } from '@vben/utils';
 
-import { Image } from 'ant-design-vue';
+import { Image, ImagePreviewGroup } from 'ant-design-vue';
 
 import { DictTag } from '#/components/dict-tag';
 
@@ -155,6 +155,48 @@ export function useRefundStatusSchema(): DescriptionItemSchema[] {
           type: DICT_TYPE.TRADE_AFTER_SALE_STATUS,
           value: val,
         }),
+    },
+    {
+      field: 'refundChannelCode',
+      label: '退款渠道',
+      render: (val) =>
+        val
+          ? h(DictTag, {
+              type: DICT_TYPE.PAY_CHANNEL_CODE,
+              value: val,
+            })
+          : '-',
+    },
+    {
+      field: 'refundTime',
+      label: '退款时间',
+      render: (val) => (val ? formatDateTime(val) : '-'),
+    },
+    {
+      field: 'refundRemark',
+      label: '退款备注',
+      render: (val) => val || '-',
+    },
+    {
+      field: 'refundProofUrls',
+      label: '退款凭证',
+      render: (val) => {
+        const images = (val || []) as string[];
+        if (images.length === 0) {
+          return '-';
+        }
+        // 缩略图，点击可放大查看（Image 自带预览）
+        return h(ImagePreviewGroup, {}, () =>
+          images.map((url, index) =>
+            h(Image, {
+              key: index,
+              src: url,
+              width: 60,
+              height: 60,
+            }),
+          ),
+        );
+      },
     },
     {
       field: 'reminder',
