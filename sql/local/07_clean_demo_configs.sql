@@ -6,7 +6,7 @@ DELETE FROM infra_file_config WHERE id IN (4, 22, 24, 25, 26, 27, 28, 30, 34, 35
 UPDATE infra_file_config
    SET name = '本地存储',
        master = TRUE,
-       config = '{"@class":"com.lxjl.juling.module.infra.framework.file.core.client.local.LocalFileClientConfig","basePath":"D:/A_ERP/java17/JuLing/run/uploads","domain":"http://127.0.0.1:48080"}',
+       config = '{"@class":"com.lxjl.juling.module.infra.framework.file.core.client.local.LocalFileClientConfig","basePath":"D:/A_ERP/java17/JuLing-yate/run/uploads","domain":"http://127.0.0.1:48080"}',
        updater = '1',
        update_time = NOW()
  WHERE id = 29;
