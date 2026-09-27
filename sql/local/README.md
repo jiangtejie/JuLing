@@ -35,6 +35,8 @@ psql -U root -d yate -f sql/local/16_trade_payment_proof.sql
 psql -U root -d yate -f sql/local/18_remove_pay_module.sql
 # 佣金提现下线：清理提现菜单/字典，提现表归档
 psql -U root -d yate -f sql/local/20_remove_brokerage_withdraw.sql
+# 订单金额列兜底：补默认值 + 回填历史 NULL（避免调价/售后 NPE）
+psql -U root -d yate -f sql/local/21_trade_amount_defaults.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -71,6 +73,7 @@ psql -U root -d yate -f sql/local/20_remove_brokerage_withdraw.sql
 | 11_dict_fresh_install_gaps.sql | 线上库有、基线+本目录没有的字典 3 类(`system_menu_type`、`system_data_scope`、`mes_wm_issue_status`) | 字典 11200+、112000+ |
 | 12_fix_erp_null_counters.sql | 回填 ERP 单据「数量/金额」计数器(`in_count`/`out_count`/`return_count`/`receipt_price`/`payment_price`/`refund_price`)的历史 NULL 为 0,并补 `DEFAULT 0`;修复前快照存入 schema `bak_erp_null_counters` | — |
 | 13_pay_app_seed.sql | 补齐 `pay_app` 支付应用(`mall` 商城应用 / `wallet` 钱包应用)。交易订单创建后置逻辑在 `payPrice > 0` 时无条件建支付单,`TradeOrderProperties.payAppKey` 默认 `mall`,库里没有该 `app_key` 时下单直接抛 `APP_NOT_FOUND`(1007000000「App 不存在」) | 用表序列/默认值 |
+| 21_trade_amount_defaults.sql | 订单/清单项金额列兜底：给 `trade_order_item.adjust_price` 补默认值 0 并回填历史 NULL（NULL 会让首次调价、售后等路径直接 NPE，对外表现为「系统异常」），同时回填 `trade_order` 的 `adjust_price`/`refund_price`/`refund_point`。幂等 | — |
 | 20_remove_brokerage_withdraw.sql | 佣金提现下线：删除提现菜单与 `trade:brokerage-withdraw:*` 权限、删提现状态字典（保留 `brokerage_withdraw_type`，交易配置仍在用）、`trade_brokerage_withdraw` 表重命名为 `zz_deprecated_trade_brokerage_withdraw` 归档。幂等 | — |
 | 19_trade_after_sale_offline_refund.sql | 售后线下退款：`trade_after_sale` 增加 `refund_channel_code`/`refund_proof_urls`/`refund_remark`，配合后台「确认线下退款」登记（原 `pay_refund_id` 保留但不再写入）。幂等 | — |
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |

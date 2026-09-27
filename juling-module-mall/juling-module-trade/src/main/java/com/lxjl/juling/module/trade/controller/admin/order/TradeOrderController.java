@@ -132,7 +132,7 @@ public class TradeOrderController {
     @PutMapping("/update-price")
     @Operation(summary = "订单调价")
     @PreAuthorize("@ss.hasPermission('trade:order:update')")
-    public CommonResult<Boolean> updateOrderPrice(@RequestBody TradeOrderUpdatePriceReqVO reqVO) {
+    public CommonResult<Boolean> updateOrderPrice(@Valid @RequestBody TradeOrderUpdatePriceReqVO reqVO) {
         tradeOrderUpdateService.updateOrderPrice(reqVO);
         return success(true);
     }

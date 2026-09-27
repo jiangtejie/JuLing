@@ -498,10 +498,12 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         if (ObjectUtil.notEqual(order.getStatus(), TradeOrderStatusEnum.UNPAID.getStatus())) {
             throw exception(ORDER_CANCEL_FAIL_STATUS_NOT_UNPAID);
         }
-        // 1.3 校验：存在待核验的付款凭证时不允许取消，避免客户已转账却被取消订单
+        // 1.3 校验：存在待核验的付款凭证时不允许取消，避免客户已转账却被取消订单。
+        //     这里必须用专属错误码——此前复用了「订单不是【待支付】状态」，
+        //     而订单其实正处于待收款状态，提示与事实不符，客户无从判断该怎么办。
         if (TradeOrderReceiveStatusEnum.isPending(order.getPaymentProofStatus())) {
             log.warn("[cancelOrderByMember][order({}) 存在待核验的付款凭证，不支持取消]", order.getId());
-            throw exception(ORDER_CANCEL_FAIL_STATUS_NOT_UNPAID);
+            throw exception(ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF);
         }
 
         // 2. 取消订单
@@ -634,36 +636,43 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         if (order.getPayStatus()) {
             throw exception(ORDER_UPDATE_PRICE_FAIL_PAID);
         }
+        // 注意：adjustPrice / payPrice 在首次调价前可能是 null（下单时未初始化，历史数据里
+        // trade_order_item.adjust_price 就是 NULL），直接相加会 NPE 并对外表现成「系统异常」，
+        // 因此这里统一兜底 0
+        int oldAdjustPrice = ObjectUtil.defaultIfNull(order.getAdjustPrice(), 0);
+        int adjustPrice = ObjectUtil.defaultIfNull(reqVO.getAdjustPrice(), 0);
+
         // 1.2 校验调价金额是否变化
-        if (order.getAdjustPrice() > 0) {
+        if (oldAdjustPrice > 0) {
             throw exception(ORDER_UPDATE_PRICE_FAIL_ALREADY);
         }
         // 1.3 支付价格不能为 0
-        int newPayPrice = order.getPayPrice() + reqVO.getAdjustPrice();
+        int newPayPrice = ObjectUtil.defaultIfNull(order.getPayPrice(), 0) + adjustPrice;
         if (newPayPrice <= 0) {
             throw exception(ORDER_UPDATE_PRICE_FAIL_PRICE_ERROR);
         }
 
         // 2. 更新订单
         tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId())
-                .setAdjustPrice(reqVO.getAdjustPrice() + order.getAdjustPrice()).setPayPrice(newPayPrice));
+                .setAdjustPrice(adjustPrice + oldAdjustPrice).setPayPrice(newPayPrice));
 
         // 3. 更新 TradeOrderItem，需要做 adjustPrice 的分摊
         List<TradeOrderItemDO> orderOrderItems = tradeOrderItemMapper.selectListByOrderId(order.getId());
-        List<Integer> dividePrices = TradePriceCalculatorHelper.dividePrice2(orderOrderItems, reqVO.getAdjustPrice());
+        List<Integer> dividePrices = TradePriceCalculatorHelper.dividePrice2(orderOrderItems, adjustPrice);
         List<TradeOrderItemDO> updateItems = new ArrayList<>();
         for (int i = 0; i < orderOrderItems.size(); i++) {
             TradeOrderItemDO item = orderOrderItems.get(i);
+            int dividePrice = ObjectUtil.defaultIfNull(dividePrices.get(i), 0);
             updateItems.add(new TradeOrderItemDO().setId(item.getId())
-                    .setAdjustPrice(item.getAdjustPrice() + dividePrices.get(i))
-                    .setPayPrice(item.getPayPrice() + dividePrices.get(i)));
+                    .setAdjustPrice(ObjectUtil.defaultIfNull(item.getAdjustPrice(), 0) + dividePrice)
+                    .setPayPrice(ObjectUtil.defaultIfNull(item.getPayPrice(), 0) + dividePrice));
         }
         tradeOrderItemMapper.updateBatch(updateItems);
 
         // 4. 记录订单日志（线下收款无支付单需要同步价格）
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), order.getStatus(),
                 MapUtil.<String, Object>builder().put("oldPayPrice", MoneyUtils.fenToYuanStr(order.getPayPrice()))
-                        .put("adjustPrice", MoneyUtils.fenToYuanStr(reqVO.getAdjustPrice()))
+                        .put("adjustPrice", MoneyUtils.fenToYuanStr(adjustPrice))
                         .put("newPayPrice", MoneyUtils.fenToYuanStr(newPayPrice)).build());
     }
 
