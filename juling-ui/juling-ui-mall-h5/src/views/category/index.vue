@@ -329,8 +329,9 @@
       overflow-y: auto;
       /* 底部预留固定 tabbar 的高度，否则滚到底时最后一项（如「没有更多了」）会被 tabbar 遮挡 */
       padding: 0 12px calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom));
-      /* 浅灰底 + 白色商品卡片：卡片与背景拉开层次，不再是「白底白卡」糊成一片 */
-      background: var(--app-bg-color);
+      /* 白底：左侧选中项也是白底，两者连成一体（美团外卖式）——这条视觉关系别改；
+         商品卡片改由「描边 + 淡阴影」在白底上立起来，不靠背景色差 */
+      background: var(--app-white);
     }
 
     /* 有底部动作栏时，内容区再多留出动作栏高度（50 + 8 间距） */
@@ -368,21 +369,21 @@
       font-weight: 600;
       line-height: 18px;
       color: var(--app-text-color);
-      /* 与内容区同色：二级分组标题读起来是「页面上的分组标签」，白色卡片从它下面滚过 */
-      background: var(--app-bg-color);
+      background: var(--app-white);
     }
 
     /* ===== 商品卡片 =====
-       白卡片 + 浅灰底 + 圆角淡阴影：与页面背景拉开层次，扫视时每条都清楚；
-       骨架屏用默认的白卡片样式即可（灰底上不再「隐形」） */
+       内容区是白底（要与左侧选中项连成一体），所以卡片靠「描边 + 淡阴影」区分，
+       而不是靠背景色差：描边给出清晰边界，阴影补一点层次 */
     &__item {
       display: flex;
       gap: 10px;
       padding: 10px;
       margin-bottom: 8px;
       background: var(--app-white);
+      border: 1px solid var(--app-border-color);
       border-radius: var(--app-radius-md);
-      box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
     }
 
     &__item:active {
