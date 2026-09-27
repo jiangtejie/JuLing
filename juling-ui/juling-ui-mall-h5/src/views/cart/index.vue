@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { AnimatePresence, motion } from 'motion-v';
   import { showToast } from 'vant';
   import { deleteCart, updateCartQuantity } from '@/api/cart';
   import type { CartItem } from '@/types';
@@ -134,51 +135,65 @@
 
     <template v-else>
       <div class="app-scroll cart__list">
-        <!-- 左滑删除（美团 / 京东购物车的通用手势） -->
-        <van-swipe-cell v-for="item in items" :key="item.key" class="cart__swipe">
-          <div class="cart__item app-card" @click="onRowClick(item)">
-            <van-checkbox v-model="item.checked" class="cart__check" @click.stop />
+        <!--
+          左滑删除（美团 / 京东购物车的通用手势）。
+          删除时由 AnimatePresence 播放退出动画：高度与下边距一起收起到 0，
+          否则行项会「瞬间消失」，被删掉的是哪一行看不清楚。
+        -->
+        <AnimatePresence>
+          <motion.div
+            v-for="item in items"
+            :key="item.key"
+            class="cart__swipe-wrap"
+            :exit="{ opacity: 0, height: 0, marginBottom: 0 }"
+            :transition="{ duration: 0.22, ease: 'easeOut' }"
+          >
+            <van-swipe-cell class="cart__swipe">
+            <div class="cart__item app-card" @click="onRowClick(item)">
+              <van-checkbox v-model="item.checked" class="cart__check" @click.stop />
 
-            <van-image
-              class="cart__img"
-              :src="resolveImage(item.picUrl)"
-              fit="cover"
-              radius="6"
-              lazy-load
-            />
+              <van-image
+                class="cart__img"
+                :src="resolveImage(item.picUrl)"
+                fit="cover"
+                radius="6"
+                lazy-load
+              />
 
-            <div class="cart__info">
-              <div class="text-ellipsis-2 cart__name">{{ item.name }}</div>
-              <div class="cart__spec text-ellipsis">{{ item.specText }}</div>
+              <div class="cart__info">
+                <div class="text-ellipsis-2 cart__name">{{ item.name }}</div>
+                <div class="cart__spec text-ellipsis">{{ item.specText }}</div>
 
-              <div class="flex-between mt-1">
-                <PriceText :value="item.price" />
-                <!-- 数量控件自成一区，点它不要触发行点击 -->
-                <span @click.stop>
-                  <van-stepper
-                    :model-value="item.quantity"
-                    :min="item.minOrderQuantity"
-                    :max="item.stock"
-                    integer
-                    button-size="22"
-                    input-width="40"
-                    @change="(value: number | string) => onQuantityChange(item, value)"
-                  />
-                </span>
+                <div class="flex-between mt-1">
+                  <PriceText :value="item.price" />
+                  <!-- 数量控件自成一区，点它不要触发行点击 -->
+                  <span @click.stop>
+                    <van-stepper
+                      :model-value="item.quantity"
+                      :min="item.minOrderQuantity"
+                      :max="item.stock"
+                      integer
+                      button-size="22"
+                      input-width="40"
+                      @change="(value: number | string) => onQuantityChange(item, value)"
+                    />
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <template #right>
-            <van-button
-              square
-              type="danger"
-              class="cart__swipe-del"
-              text="删除"
-              @click="onRemoveOne(item)"
-            />
-          </template>
-        </van-swipe-cell>
+            <template #right>
+              <van-button
+                square
+                type="danger"
+                class="cart__swipe-del"
+                text="删除"
+                @click="onRemoveOne(item)"
+              />
+            </template>
+            </van-swipe-cell>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <!--
@@ -218,10 +233,14 @@
       padding: 12px 12px 60px;
     }
 
-    /* 行间距交给滑动单元，卡片与左滑出来的按钮才能同高 */
-    &__swipe {
+    /* 退出动画需要一个可收起的包裹层：行间距放在这里，收起时一并归零 */
+    &__swipe-wrap {
       margin-bottom: 10px;
+      overflow: hidden;
+    }
 
+    /* 卡片与左滑出来的按钮才能同高 */
+    &__swipe {
       /* 按钮宽度是 vw 换算来的小数，Vant 默认「右移 100%」正好贴在单元格边缘，
          在 dpr=2 下会漏出约 1px 的红边；额外外推 1px 把它完全藏进裁剪区 */
       :deep(.van-swipe-cell__right) {
