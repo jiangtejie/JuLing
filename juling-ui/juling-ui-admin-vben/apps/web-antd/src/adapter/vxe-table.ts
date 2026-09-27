@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 
 import type { ComponentPropsMap, ComponentType } from './component';
 
-import { h } from 'vue';
+import { h, onActivated } from 'vue';
 
 import { IconifyIcon } from '@vben/icons';
 import { $te } from '@vben/locales';
@@ -385,9 +385,48 @@ export const useVbenVxeGrid = <
       TSubmitValues
     >
   >
-) =>
-  useGrid<T, ComponentType, ComponentPropsMap, TFormValues, TSubmitValues>(
-    ...rest,
+) => {
+  const result = useGrid<
+    T,
+    ComponentType,
+    ComponentPropsMap,
+    TFormValues,
+    TSubmitValues
+  >(...rest);
+
+  /**
+   * 页签缓存下的「回到列表自动刷新」。
+   *
+   * vben 的多页签会把已打开的页面 KeepAlive 缓存，列表页从详情页返回时不会重新 mount，
+   * 于是在别的页面改过的数据（订单状态、收款状态、核验结果等）在列表里看不到旧值。
+   * 这里统一在页面重新激活时刷新一次，避免每个列表页各写一遍。
+   *
+   * 注意：
+   * 1. onActivated 在首次挂载后也会触发，用 activatedOnce 跳过，避免首屏重复请求；
+   * 2. 只有配置了 proxyConfig.ajax.query 的表格（真正的远程列表）才刷新，
+   *    详情页里用 setGridOptions 灌数据的静态表格不参与，避免无谓请求与报错。
+   */
+  const hasProxyQuery = Boolean(
+    (rest[0] as undefined | { gridOptions?: VxeTableGridOptions })?.gridOptions
+      ?.proxyConfig?.ajax?.query,
   );
+  if (hasProxyQuery) {
+    let activatedOnce = false;
+    onActivated(() => {
+      if (!activatedOnce) {
+        activatedOnce = true;
+        return;
+      }
+      try {
+        void Promise.resolve(result[1].query()).catch(() => {
+          // 刷新失败由表格自身的错误提示兜住，这里不再打扰用户
+        });
+      } catch {
+        // query 不可用时忽略（例如页面已被销毁）
+      }
+    });
+  }
+  return result;
+};
 
 export type * from '@vben/plugins/vxe-table';
