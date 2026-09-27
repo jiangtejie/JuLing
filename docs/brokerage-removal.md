@@ -11,7 +11,7 @@ SKU 两级佣金、订单推广人、分销统计与分销海报。亚特只做�
 
 判定依据（改造前实测）：`trade_brokerage_user`、`trade_brokerage_record` 均为 0 行；
 `trade_order.brokerage_user_id` 全为 NULL；`trade_statistics` 0 行；分销菜单 0 条角色绑定；
-H5 订货商城 0 处分销界面。即删除不涉及任何真实业务数据。
+H5 订货商城 0 处分销界面。即删除不涉及任何订单/交易数据（仅 16 行 SKU 佣金配置值随之下线）。
 
 ## 2. 后端
 
@@ -57,35 +57,37 @@ H5 订货商城 0 处分销界面。即删除不涉及任何真实业务数据�
 
 ## 4. 数据库
 
-新脚本 `sql/local/22_remove_brokerage.sql`（幂等，可重复执行）：
+脚本 `sql/local/22_remove_brokerage.sql`（幂等，可重复执行）已执行，做的是**物理清除**：
 
 1. 删除分销菜单与角色关联（实测 11 条菜单、0 条角色绑定）；
 2. 删除分销字典 6 类 23 条（`brokerage_enabled_condition`、`brokerage_bind_mode`、
    `brokerage_record_biz_type`、`brokerage_record_status`、`brokerage_withdraw_type`、
    `brokerage_withdraw_status`、`brokerage_bank_name`）；
 3. 删除分销定时任务（佣金解冻 Job）；
-4. 分销表重命名归档：`trade_brokerage_user` → `zz_deprecated_trade_brokerage_user`、
-   `trade_brokerage_record` → `zz_deprecated_trade_brokerage_record`
-   （提现表上一轮已归档为 `zz_deprecated_trade_brokerage_withdraw`）。
+4. `DROP TABLE` 三张分销表（含 20 号脚本归档出的 `zz_deprecated_trade_brokerage_withdraw`）；
+5. `DROP COLUMN` 14 个分销列：`trade_config` 的 10 个 `brokerage_*`、`trade_order.brokerage_user_id`、
+   `product_sku.first_brokerage_price`/`second_brokerage_price`、
+   `trade_statistics.brokerage_settlement_price`。
+
+执行前已确认无数据可丢：三张表均 0 行、`trade_config` 0 行、`trade_order.brokerage_user_id` 全 NULL、
+`trade_statistics` 0 行；只有 `product_sku` 的两级佣金列存有 16 行配置值，随分销下线一并丢弃。
 
 同时清理了基线 `sql/postgresql/juling-baseline.sql` 里 52 行分销数据（菜单、字典、
 定时任务、提现审核演示通知），避免全新安装时又把分销菜单与任务装回来。
 
-## 5. 保留项与回滚
+## 5. 回滚
 
-- **列一律保留、不 DROP**：`trade_config` 的 10 个 `brokerage_*`、`trade_order.brokerage_user_id`、
-  `product_sku.first_brokerage_price`/`second_brokerage_price`、
-  `trade_statistics.brokerage_settlement_price`。这些列均可空、无默认值，代码已不读写。
-  确认无历史依赖后再执行 22 号脚本末尾注释掉的 `ALTER TABLE ... DROP COLUMN`。
-- **表用重命名归档、不 DROP**，回滚即反向改名：
-  `ALTER TABLE zz_deprecated_trade_brokerage_user RENAME TO trade_brokerage_user;`
-- 代码回滚：本改造是独立提交，`git revert` 对应提交即可（数据库侧配合上面的改名）。
+- 代码：本改造是独立提交（`feat(mall)!: 商品分销整体下线`），`git revert` 即可。
+- 数据库：表与列已物理删除，回滚需要重新执行建表/建列 DDL 并恢复业务配置；
+  `product_sku` 两级佣金的历史配置值无法找回，需重新录入。
+- 因此本改造只适合「确定不做分销」的前提；亚特已确认不做，故按物理清除处理。
 
 ## 6. 验收
 
-- 后端：`mvn -DskipTests package` 通过；启动后 H5 下单 → 上传付款凭证 → 后台核验 →
-  发货主链路正常，后台交易统计页可正常打开（无佣金项），订单列表/详情无「推广用户」。
-- 前端：仓库内 `grep -i brokerage`（排除 `target/`、`node_modules/`）为 0 处；
-  vben web-antd 类型检查无新增错误；H5 `pnpm type-check` 0 错误。
-- 数据库：22 号脚本末尾的校验查询全部返回 0，`information_schema` 中只剩
-  `zz_deprecated_trade_brokerage_*` 三张归档表。
+- 后端：`mvn -DskipTests package` 通过；启动后管理端统计（含趋势列表与 Excel 导出）、订单分页/详情、
+  交易配置、商品分页均 `code=0`；分销接口返回「接口不存在」；
+  H5 下单 → 上传付款凭证 → 后台核验 → 发货主链路正常。
+- 前端：仓库内 `grep -i brokerage`（排除 `target/`、`node_modules/`）只剩本文档与迁移脚本；
+  web-antd `vue-tsc` 0 错误；H5 `pnpm type-check` 0 错误。
+- 数据库：22 号脚本末尾的校验查询全部返回 0，`information_schema` 中已无任何 `%brokerage%`
+  表与列（实测 tables_left=0、cols_left=0）。
