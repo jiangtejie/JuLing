@@ -9,7 +9,6 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig, loadEnv, type PluginOption } from 'vite';
 import { compression } from 'vite-plugin-compression2';
 import { VitePWA } from 'vite-plugin-pwa';
-import VueDevTools from 'vite-plugin-vue-devtools';
 
 const projectRoot = fileURLToPath(new URL('./', import.meta.url));
 
@@ -26,13 +25,6 @@ export default defineConfig(({ mode }) => {
   const apiPrefix = env.VITE_API_PREFIX || '/app-api';
   const proxyTarget = env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:48080';
   const enablePwa = env.VITE_PWA === 'true';
-
-// 开发期页内 Vue DevTools 面板：默认关闭。
-// 它的页内客户端会 chrome.runtime.connect 去连 DevTools 宿主，连不上时每秒重试一次，
-// 每次都会刷一条 "Unchecked runtime.lastError: Could not establish connection.
-// Receiving end does not exist."（Chrome 对扩展 API 的提示，不影响应用功能，但控制台会很吵）。
-// 需要页内面板时用 VITE_VUE_DEVTOOLS=true 启动。
-const enableVueDevTools = env.VITE_VUE_DEVTOOLS === 'true';
   const dropConsole = env.VITE_DROP_CONSOLE === 'true';
 
   const plugins: PluginOption[] = [
@@ -82,9 +74,6 @@ const enableVueDevTools = env.VITE_VUE_DEVTOOLS === 'true';
       dts: 'src/types/components.d.ts',
       resolvers: [VantResolver()],
     }),
-
-    // 开发期组件调试面板（默认关闭，见上方 enableVueDevTools 说明）
-    ...(enableVueDevTools ? [VueDevTools()] : []),
 
     // PWA：Workbox 生成 Service Worker，实现离线访问
     VitePWA({
