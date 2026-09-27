@@ -245,15 +245,30 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       title: '买家/收货人',
       formatter: ({ row }) => {
         if (row.deliveryType === DeliveryTypeEnum.EXPRESS.type) {
-          return `买家：${row.user?.nickname} / 收货人： ${row.receiverName} ${row.receiverMobile}${row.receiverAreaName}${row.receiverDetailAddress}`;
+          // 地区名可能为空（App 端下单未选地区），必须过滤，否则会拼出 'null'；
+          // 各段之间也要有分隔，避免手机号与地址粘在一起
+          const receiver = [
+            row.receiverName,
+            row.receiverMobile,
+            row.receiverAreaName,
+            row.receiverDetailAddress,
+          ]
+            .filter(Boolean)
+            .join(' ');
+          return `买家：${row.user?.nickname ?? '-'} / 收货人：${receiver || '-'}`;
         }
         if (row.deliveryType === DeliveryTypeEnum.PICK_UP.type) {
-          return `门店名称：${pickUpStoreList.find((item) => item.id === row.pickUpStoreId)?.name} /
-                  门店手机：${pickUpStoreList.find((item) => item.id === row.pickUpStoreId)?.phone} /
-                  自提门店：${pickUpStoreList.find((item) => item.id === row.pickUpStoreId)?.detailAddress}
-                  `;
+          const store = pickUpStoreList.find(
+            (item) => item.id === row.pickUpStoreId,
+          );
+          const parts = [
+            store?.name && `门店名称：${store.name}`,
+            store?.phone && `门店手机：${store.phone}`,
+            store?.detailAddress && `自提门店：${store.detailAddress}`,
+          ].filter(Boolean);
+          return parts.join(' / ') || '-';
         }
-        return '';
+        return '-';
       },
       minWidth: 180,
     },
