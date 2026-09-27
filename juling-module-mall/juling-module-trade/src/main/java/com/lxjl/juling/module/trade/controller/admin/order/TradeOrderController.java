@@ -3,6 +3,7 @@ package com.lxjl.juling.module.trade.controller.admin.order;
 import cn.hutool.core.collection.CollUtil;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
+import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.member.api.user.MemberUserApi;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.*;
@@ -10,13 +11,16 @@ import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderLogDO;
+import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 import com.lxjl.juling.module.trade.service.order.TradeOrderLogService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderPaymentProofService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +45,8 @@ public class TradeOrderController {
 
     @Resource
     private TradeOrderUpdateService tradeOrderUpdateService;
+    @Resource
+    private TradeOrderPaymentProofService tradeOrderPaymentProofService;
     @Resource
     private TradeOrderQueryService tradeOrderQueryService;
     @Resource
@@ -146,6 +152,23 @@ public class TradeOrderController {
     public CommonResult<Boolean> pickUpOrderById(@RequestParam("id") Long id) {
         tradeOrderUpdateService.pickUpOrderByAdmin(getLoginUserId(), id);
         return success(true);
+    }
+
+    @PutMapping("/payment-proof/audit")
+    @Operation(summary = "核验订单付款凭证", description = "确认收款（可核定实际到账金额）或驳回重传")
+    @PreAuthorize("@ss.hasPermission('trade:order:payment-proof:audit')")
+    public CommonResult<Boolean> auditPaymentProof(@Valid @RequestBody TradeOrderPaymentProofAuditReqVO auditReqVO) {
+        tradeOrderPaymentProofService.auditPaymentProof(getLoginUserId(), auditReqVO);
+        return success(true);
+    }
+
+    @GetMapping("/payment-proof/list")
+    @Operation(summary = "获得订单的付款凭证列表")
+    @Parameter(name = "orderId", description = "交易订单编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('trade:order:query')")
+    public CommonResult<List<TradeOrderPaymentProofRespVO>> getPaymentProofList(@RequestParam("orderId") Long orderId) {
+        List<TradeOrderPaymentProofDO> list = tradeOrderPaymentProofService.getPaymentProofList(orderId);
+        return success(BeanUtils.toBean(list, TradeOrderPaymentProofRespVO.class));
     }
 
     @PutMapping("/pick-up-by-verify-code")

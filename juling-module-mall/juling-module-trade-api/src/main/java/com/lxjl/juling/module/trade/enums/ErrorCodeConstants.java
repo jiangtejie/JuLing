@@ -116,4 +116,10 @@ public interface ErrorCodeConstants {
     ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_MERCHANT_EXISTS = new ErrorCode(1_011_008_008, "提现单更新转账状态失败，转账单的商户订单不匹配");
     ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_CHANNEL_NOT_MATCH = new ErrorCode(1_011_008_009, "提现单更新转账状态失败，转账渠道不匹配");
 
+    // ========== Order 付款凭证（线下收款）1-011-000-000 ==========
+    ErrorCode ORDER_PAYMENT_PROOF_NOT_EXISTS = new ErrorCode(1_011_000_020, "交易订单付款凭证不存在");
+    ErrorCode ORDER_PAYMENT_PROOF_STATUS_NOT_PENDING = new ErrorCode(1_011_000_021, "付款凭证不是【待核验】状态，无法重复核验");
+    ErrorCode ORDER_PAYMENT_PROOF_NOT_BELONG_TO_USER = new ErrorCode(1_011_000_022, "付款凭证不属于当前用户");
+    ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_023, "订单已收齐，无法再上传付款凭证");
+
 }

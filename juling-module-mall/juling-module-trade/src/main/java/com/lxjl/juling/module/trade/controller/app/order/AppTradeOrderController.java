@@ -2,6 +2,7 @@ package com.lxjl.juling.module.trade.controller.app.order;
 
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
+import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.pay.api.notify.dto.PayOrderNotifyReqDTO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.*;
 import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
@@ -10,10 +11,12 @@ import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
+import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import com.lxjl.juling.module.trade.framework.order.config.TradeOrderProperties;
 import com.lxjl.juling.module.trade.service.aftersale.AfterSaleService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderPaymentProofService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import com.lxjl.juling.module.trade.service.price.TradePriceService;
@@ -53,6 +56,8 @@ public class AppTradeOrderController {
     private AfterSaleService afterSaleService;
     @Resource
     private TradePriceService priceService;
+    @Resource
+    private TradeOrderPaymentProofService tradeOrderPaymentProofService;
 
     @Resource
     private TradeOrderProperties tradeOrderProperties;
@@ -85,6 +90,21 @@ public class AppTradeOrderController {
         tradeOrderUpdateService.updateOrderPaid(Long.valueOf(notifyReqDTO.getMerchantOrderId()),
                 notifyReqDTO.getPayOrderId());
         return success(true);
+    }
+
+    @PostMapping("/payment-proof/create")
+    @Operation(summary = "提交订单付款凭证", description = "线下收款：上传付款截图，支持多次上传；核验进度见订单收款状态")
+    public CommonResult<Long> createPaymentProof(@Valid @RequestBody AppTradeOrderPaymentProofCreateReqVO createReqVO) {
+        return success(tradeOrderPaymentProofService.createPaymentProof(getLoginUserId(), createReqVO));
+    }
+
+    @GetMapping("/payment-proof/list")
+    @Operation(summary = "获得订单的付款凭证列表", description = "只能查询自己的订单")
+    @Parameter(name = "orderId", description = "交易订单编号", required = true, example = "1024")
+    public CommonResult<List<AppTradeOrderPaymentProofRespVO>> getPaymentProofList(@RequestParam("orderId") Long orderId) {
+        List<TradeOrderPaymentProofDO> list = tradeOrderPaymentProofService
+                .getPaymentProofListByOrderId(getLoginUserId(), orderId);
+        return success(BeanUtils.toBean(list, AppTradeOrderPaymentProofRespVO.class));
     }
 
     @GetMapping("/get-detail")

@@ -210,6 +210,18 @@ public interface TradeOrderUpdateService {
     void cancelPaidOrder(Long userId, Long orderId, Integer cancelType);
 
     /**
+     * 更新订单为「已收款、待发货」（线下收款用）
+     *
+     * 后台核验付款凭证、累计收款金额达到应收金额时调用；
+     * 后置处理与线上支付成功完全一致（分销、拼团、积分等 handler 照常执行）。
+     *
+     * @param id             订单编号
+     * @param paidAmount     已确认收款金额，单位：分
+     * @param payChannelCode 收款渠道（字典 pay_channel_code 的线下值）
+     */
+    void updateOrderPaidByOffline(Long id, Integer paidAmount, String payChannelCode);
+
+    /**
      * 取消支付订单的退款回调
      *
      * @param id               订单编号

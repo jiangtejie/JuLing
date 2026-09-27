@@ -29,6 +29,8 @@ psql -U root -d juling -f sql/local/12_fix_erp_null_counters.sql
 psql -U root -d juling -f sql/local/13_pay_app_seed.sql
 # 补齐转换时丢失的主键（缺主键会让 PostgreSQL 的「关联查询 + GROUP BY 主键」直接报错）
 psql -U root -d yate -f sql/local/15_add_missing_primary_keys.sql
+# 线下收款（付款凭证）改造：建凭证表 + 订单加收款字段 + 字典 + 收款核验按钮权限
+psql -U root -d yate -f sql/local/16_trade_payment_proof.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -65,6 +67,7 @@ psql -U root -d yate -f sql/local/15_add_missing_primary_keys.sql
 | 11_dict_fresh_install_gaps.sql | 线上库有、基线+本目录没有的字典 3 类(`system_menu_type`、`system_data_scope`、`mes_wm_issue_status`) | 字典 11200+、112000+ |
 | 12_fix_erp_null_counters.sql | 回填 ERP 单据「数量/金额」计数器(`in_count`/`out_count`/`return_count`/`receipt_price`/`payment_price`/`refund_price`)的历史 NULL 为 0,并补 `DEFAULT 0`;修复前快照存入 schema `bak_erp_null_counters` | — |
 | 13_pay_app_seed.sql | 补齐 `pay_app` 支付应用(`mall` 商城应用 / `wallet` 钱包应用)。交易订单创建后置逻辑在 `payPrice > 0` 时无条件建支付单,`TradeOrderProperties.payAppKey` 默认 `mall`,库里没有该 `app_key` 时下单直接抛 `APP_NOT_FOUND`(1007000000「App 不存在」) | 用表序列/默认值 |
+| 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
 
 > `12_fix_erp_null_counters.sql` 作用的对象是 ERP 业务表(`erp_*`)。这些表**不在基线脚本中**

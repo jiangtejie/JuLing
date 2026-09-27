@@ -151,6 +151,18 @@ public class TradeOrderDO extends BaseDO {
      * 对应 PayChannelEnum 枚举
      */
     private String payChannelCode;
+    /**
+     * 已确认收款金额，单位：分
+     *
+     * 线下收款：付款凭证核验通过后的累计金额；收满 {@link #payPrice} 即视为已收款
+     */
+    private Integer paidAmount;
+    /**
+     * 收款状态
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderReceiveStatusEnum}；对应字典 trade_payment_proof_status
+     */
+    private Integer paymentProofStatus;
 
     /**
      * 商品原价，单位：分

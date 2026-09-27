@@ -270,9 +270,10 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
         // 3. 生成预支付
         // 特殊情况：积分兑换时，可能支付金额为零
-        if (order.getPayPrice() > 0) {
-            createPayOrder(order, orderItems);
-        }
+        // 线下收款：不再创建支付单（本定制分支不走线上支付）。
+        // 客户提交订货单后上传付款截图，由后台核验后调用 updateOrderPaidByOffline 置为已收款。
+        // 原实现：if (order.getPayPrice() > 0) { createPayOrder(order, orderItems); }
+        // 保留 createPayOrder 方法仅为减少改动面，pay 模块整体移除时一并删除。
 
         // 4. 插入订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), null, order.getStatus());
@@ -325,6 +326,35 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         tradeOrderHandlers.forEach(handler -> handler.afterPayOrder(order, orderItems));
 
         // 5. 记录订单日志
+        TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), TradeOrderStatusEnum.UNDELIVERED.getStatus());
+        TradeOrderLogUtils.setUserInfo(order.getUserId(), UserTypeEnum.MEMBER.getValue());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.MEMBER_PAY)
+    public void updateOrderPaidByOffline(Long id, Integer paidAmount, String payChannelCode) {
+        // 1. 校验订单存在，且仍未支付
+        TradeOrderDO order = validateOrderExists(id);
+        if (!TradeOrderStatusEnum.isUnpaid(order.getStatus()) || Boolean.TRUE.equals(order.getPayStatus())) {
+            throw exception(ORDER_UPDATE_PAID_STATUS_NOT_UNPAID);
+        }
+
+        // 2. 更新为「已收款、待发货」，记录收款金额与渠道
+        int updateCount = tradeOrderMapper.updateByIdAndStatus(id, order.getStatus(),
+                new TradeOrderDO().setStatus(TradeOrderStatusEnum.UNDELIVERED.getStatus()).setPayStatus(true)
+                        .setPayTime(LocalDateTime.now()).setPayChannelCode(payChannelCode)
+                        .setPaidAmount(paidAmount)
+                        .setPaymentProofStatus(TradeOrderReceiveStatusEnum.PAID.getStatus()));
+        if (updateCount == 0) {
+            throw exception(ORDER_UPDATE_PAID_STATUS_NOT_UNPAID);
+        }
+
+        // 3. 执行 TradeOrderHandler 的后置处理（与线上支付成功保持一致：分销、拼团、积分等）
+        List<TradeOrderItemDO> orderItems = tradeOrderItemMapper.selectListByOrderId(id);
+        tradeOrderHandlers.forEach(handler -> handler.afterPayOrder(order, orderItems));
+
+        // 4. 记录订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), TradeOrderStatusEnum.UNDELIVERED.getStatus());
         TradeOrderLogUtils.setUserInfo(order.getUserId(), UserTypeEnum.MEMBER.getValue());
     }
