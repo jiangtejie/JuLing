@@ -87,6 +87,7 @@ declare global {
   const useNetworkNotice: typeof import('../composables/useNetworkNotice').useNetworkNotice
   const useOnline: typeof import('@vueuse/core').useOnline
   const usePaging: typeof import('../composables/usePaging').usePaging
+  const useReorder: typeof import('../composables/useReorder').useReorder
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
   const useScroll: typeof import('@vueuse/core').useScroll
@@ -199,6 +200,7 @@ declare module 'vue' {
     readonly useNetworkNotice: UnwrapRef<typeof import('../composables/useNetworkNotice')['useNetworkNotice']>
     readonly useOnline: UnwrapRef<typeof import('@vueuse/core')['useOnline']>
     readonly usePaging: UnwrapRef<typeof import('../composables/usePaging')['usePaging']>
+    readonly useReorder: UnwrapRef<typeof import('../composables/useReorder')['useReorder']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useScroll: UnwrapRef<typeof import('@vueuse/core')['useScroll']>

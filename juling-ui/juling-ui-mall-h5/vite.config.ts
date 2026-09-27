@@ -178,6 +178,19 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    /**
+     * 预构建白名单。
+     *
+     * 只被懒加载路由引入的依赖（如 motion-v）如果留给 Vite 在运行中发现，会触发一次
+     * 「重新预构建」：依赖哈希随之变化，已经打开的页面在下一次懒加载新路由时就会拿到
+     * 504 Outdated Optimize Dep，浏览器侧表现为
+     * 「Failed to fetch dynamically imported module」，只能刷新页面才能恢复。
+     * 显式列进来，让它们在 dev server 启动时一次性预构建好。
+     */
+    optimizeDeps: {
+      include: ['motion-v'],
+    },
+
     css: {
       devSourcemap: false,
     },
