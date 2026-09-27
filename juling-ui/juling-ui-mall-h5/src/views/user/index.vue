@@ -64,16 +64,32 @@
     showToast('已退出登录');
   }
 
-  onMounted(() => {
+  /** 拉取订单数量（进入页面、以及每次回到本 tab 时都会调用） */
+  async function refreshOrderCount(): Promise<void> {
     if (!userStore.isLogin) return;
+    try {
+      orderCount.value = await getOrderCount();
+    } catch (error) {
+      console.warn('[user] 拉取订单数量失败:', error);
+    }
+  }
 
-    void getOrderCount()
-      .then((res) => {
-        orderCount.value = res;
-      })
-      .catch((err) => {
-        console.warn('[user] 拉取订单数量失败:', err);
-      });
+  /**
+   * 本页是 keep-alive 的 tab 页：确认收货、下单等操作都发生在别的页面，
+   * 回到本页不会重新 mount，只在 onMounted 拉一次会让「待收货」等角标一直是旧值。
+   * onActivated 在首次挂载后也会触发一次，这里跳过首次，避免与 onMounted 重复请求。
+   */
+  let activatedOnce = false;
+  onActivated(() => {
+    if (!activatedOnce) {
+      activatedOnce = true;
+      return;
+    }
+    void refreshOrderCount();
+  });
+
+  onMounted(() => {
+    void refreshOrderCount();
 
     if (!userStore.userInfo) {
       void userStore.fetchProfile().catch((err) => {
