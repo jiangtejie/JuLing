@@ -40,10 +40,12 @@ export function useOrderInfoSchema(): DescriptionItemSchema[] {
     {
       field: 'userRemark',
       label: '买家留言',
+      render: (val) => val || '-',
     },
     {
       field: 'remark',
       label: '商家备注',
+      render: (val) => val || '-',
     },
     // 线下收款：不再展示「支付单号」（线上支付已切除，该字段恒空）
     {
@@ -58,6 +60,7 @@ export function useOrderInfoSchema(): DescriptionItemSchema[] {
     {
       field: 'brokerageUser.nickname',
       label: '推广用户',
+      render: (val) => val || '-',
     },
   ];
 }
@@ -191,9 +194,13 @@ export function useDeliveryInfoSchema(): DescriptionItemSchema[] {
       label: '联系电话',
     },
     {
-      field: 'receiverAddress',
+      // 注意：后端字段是 receiverDetailAddress，没有 receiverAddress；
+      // 另外地区名可能为 null（App 端下单未选地区），必须过滤，否则会渲染出 "null undefined"
+      field: 'receiverDetailAddress',
       label: '收货地址',
-      render: (val, data) => `${data?.receiverAreaName} ${val}`.trim(),
+      span: 2,
+      render: (val, data) =>
+        [data?.receiverAreaName, val].filter(Boolean).join(' ') || '-',
     },
     {
       field: 'deliveryTime',
@@ -207,9 +214,15 @@ export function useDeliveryInfoSchema(): DescriptionItemSchema[] {
 export function useProductColumns(): VxeTableGridOptions['columns'] {
   return [
     {
+      field: 'picUrl',
+      title: '图片',
+      width: 84,
+      slots: { default: 'spuPic' },
+    },
+    {
       field: 'spuName',
       title: '商品',
-      minWidth: 300,
+      minWidth: 220,
       slots: { default: 'spuName' },
     },
     {

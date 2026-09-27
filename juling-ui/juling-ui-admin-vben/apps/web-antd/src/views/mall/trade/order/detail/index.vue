@@ -97,7 +97,6 @@ const [OrderInfoDescriptions] = useDescription({
   title: '订单信息',
   bordered: false,
   column: 3,
-  class: 'mx-4',
   schema: useOrderInfoSchema(),
 });
 
@@ -105,7 +104,6 @@ const [OrderStatusDescriptions] = useDescription({
   title: '订单状态',
   bordered: false,
   column: 1,
-  class: 'mx-4',
   schema: useOrderStatusSchema(),
 });
 
@@ -113,7 +111,6 @@ const [OrderPriceDescriptions] = useDescription({
   title: '费用信息',
   bordered: false,
   column: 4,
-  class: 'mx-4',
   schema: useOrderPriceSchema(),
 });
 
@@ -126,7 +123,6 @@ const [DeliveryInfoDescriptions] = useDescription({
   title: '收货信息',
   bordered: false,
   column: 3,
-  class: 'mx-4',
   schema: useDeliveryInfoSchema(),
 });
 
@@ -137,7 +133,9 @@ const [ProductGrid, productGridApi] = useVbenVxeGrid({
     },
     columns: useProductColumns(),
     data: [],
-    height: 'auto',
+    // 页签内的表格不要再给 height:'auto'：页签没有确定高度，会被拉伸成一大片空白；
+    // 不给 height 即按内容自适应，行数多时用 maxHeight 内部滚动
+    maxHeight: 460,
     border: true,
     pagerConfig: {
       enabled: false,
@@ -168,6 +166,8 @@ const [OperateLogGrid, operateLogGridApi] = useVbenVxeGrid({
   gridOptions: {
     columns: useOperateLogColumns(),
     data: [],
+    // 日志可能很多条：限制高度、内部滚动
+    maxHeight: 420,
     border: true,
     pagerConfig: {
       enabled: false,
@@ -355,7 +355,7 @@ onMounted(async () => {
     <PaymentProofFormModal @success="getDetail" />
 
     <!-- 概览条：订单状态与收款进度是本页最常看的信息，固定展示在页签上方 -->
-    <Card class="mb-4" size="small">
+    <Card class="mb-4" size="small" :body-style="{ padding: '12px 16px' }">
       <div class="flex flex-wrap items-center gap-x-10 gap-y-3">
         <div class="flex items-center gap-2">
           <span class="text-gray-400">订单状态</span>
@@ -409,7 +409,7 @@ onMounted(async () => {
           <Badge :dot="paymentPending" :offset="[6, -2]">收款信息</Badge>
         </template>
 
-        <Card size="small">
+        <Card size="small" :body-style="{ padding: '12px 16px' }">
           <div class="flex flex-wrap items-baseline gap-x-12 gap-y-3">
             <div>
               <span class="text-gray-400">已确认收款</span>
@@ -516,6 +516,14 @@ onMounted(async () => {
       <!-- 商品与费用 -->
       <TabPane key="goods" tab="商品与费用">
         <ProductGrid table-title="商品信息">
+          <template #spuPic="{ row }">
+            <Image
+              :src="row.picUrl"
+              :width="48"
+              :height="48"
+              class="rounded-md border border-border"
+            />
+          </template>
           <template #spuName="{ row }">
             <div class="flex flex-1 flex-col items-start gap-1 text-left">
               <span class="text-sm">{{ row.spuName }}</span>
@@ -563,6 +571,18 @@ onMounted(async () => {
         </OperateLogGrid>
       </TabPane>
     </Tabs>
-
   </Page>
 </template>
+
+<style lang="scss" scoped>
+  /*
+   * description 组件把内容放进无左右内边距的卡片 body（bodyStyle: 8px 0），
+   * 而卡片标题是 16px 内边距（headStyle: 8px 16px）——不补这一层，
+   * 同一张卡片里「标题在 16px、内容贴着边」会明显错位。
+   * 说明卡片与概览卡/收款卡统一到 16px 左内边距。
+   */
+  :deep(.ant-card-body .ant-descriptions) {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+</style>
