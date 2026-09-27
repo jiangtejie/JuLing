@@ -198,6 +198,10 @@ export interface AppTradeOrderPageItemRespVO {
   createTime: BackendDateTime;
   payOrderId: number | null;
   payPrice: number;
+  /** 已确认收款金额（单位：分） */
+  paidAmount?: number;
+  /** 收款状态（TradeOrderReceiveStatusEnum） */
+  paymentProofStatus?: number;
   deliveryType: number;
   items: AppTradeOrderItemRespVO[];
   combinationRecordId: number | null;
@@ -230,6 +234,10 @@ export interface AppTradeOrderDetailRespVO {
   deliveryPrice: number;
   adjustPrice: number;
   payPrice: number;
+  /** 已确认收款金额（单位：分） */
+  paidAmount?: number;
+  /** 收款状态（TradeOrderReceiveStatusEnum） */
+  paymentProofStatus?: number;
   deliveryType: number;
   logisticsId: number | null;
   logisticsName: string;
@@ -266,6 +274,36 @@ export interface AppTradeOrderCreateItemReqVO {
   count: number;
   /** 购物车项编号（可选，与 skuId+count 二选一） */
   cartId?: number;
+}
+
+/** 付款凭证（GET /trade/order/payment-proof/list） */
+export interface AppTradeOrderPaymentProofRespVO {
+  id: number;
+  orderId: number;
+  urls: string[];
+  amount: number;
+  confirmedAmount: number | null;
+  payerName: string | null;
+  payChannelCode: string | null;
+  transferTime: BackendDateTime | null;
+  remark: string | null;
+  /** 0 待核验 / 1 已确认 / 2 已驳回 */
+  status: number;
+  auditTime: BackendDateTime | null;
+  auditRemark: string | null;
+  createTime: BackendDateTime;
+}
+
+/** 提交付款凭证请求体（POST /trade/order/payment-proof/create） */
+export interface AppTradeOrderPaymentProofCreateReqVO {
+  orderId: number;
+  urls: string[];
+  /** 申报收款金额（单位：分） */
+  amount: number;
+  payerName?: string;
+  payChannelCode?: string;
+  transferTime?: string;
+  remark?: string;
 }
 
 /** 创建订单请求体（AppTradeOrderCreateReqVO extends AppTradeOrderSettlementReqVO） */

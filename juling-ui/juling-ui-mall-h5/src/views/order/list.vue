@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { getOrderPage } from '@/api/order';
-  import { ORDER_STATUS_MAP, ORDER_TABS } from '@/constants';
+  import { ORDER_STATUS_MAP, ORDER_TABS, RECEIVE_STATUS_MAP } from '@/constants';
   import type { Order } from '@/types';
   import { formatDate, formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
@@ -31,6 +31,19 @@
 
   function toDetail(id: number): void {
     void router.push(`/order/${id}`);
+  }
+
+  /**
+   * 是否展示收款状态：已取消的订单不再需要收款，展示只会干扰阅读。
+   * 已收齐（4）且订单已进入发货流程时也无需重复提示。
+   */
+  function showReceive(order: Order): boolean {
+    return order.status !== 'CANCELED' && order.paymentProofStatus !== 4;
+  }
+
+  /** 收款状态展示配置（未知码兜底「待上传凭证」） */
+  function receiveBadge(status: number) {
+    return RECEIVE_STATUS_MAP[status] ?? RECEIVE_STATUS_MAP[0];
   }
 </script>
 
@@ -95,6 +108,22 @@
                 formatDate(order.createTime, 'YYYY-MM-DD HH:mm')
               }}</span>
               <span class="order-list__total"> 实付 <PriceText :value="order.payPrice" /> </span>
+            </div>
+
+            <!-- 线下收款状态：客户一眼看出「还要不要传凭证 / 财务有没有核验」 -->
+            <div v-if="showReceive(order)" class="order-list__receive">
+              <span
+                class="order-list__chip"
+                :style="{
+                  color: receiveBadge(order.paymentProofStatus).color,
+                  borderColor: receiveBadge(order.paymentProofStatus).color,
+                }"
+              >
+                {{ receiveBadge(order.paymentProofStatus).text }}
+              </span>
+              <span v-if="order.paidAmount > 0" class="order-list__paid">
+                已收 ¥{{ formatPrice(order.paidAmount) }}
+              </span>
             </div>
           </div>
         </div>
@@ -193,6 +222,26 @@
       display: flex;
       align-items: baseline;
       gap: 2px;
+    }
+
+    &__receive {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    &__chip {
+      padding: 1px 6px;
+      font-size: 11px;
+      line-height: 16px;
+      border: 1px solid currentcolor;
+      border-radius: 4px;
+    }
+
+    &__paid {
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
     }
   }
 </style>

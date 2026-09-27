@@ -73,6 +73,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '我的订单', auth: true },
   },
   {
+    path: '/order/:id/payment',
+    name: 'OrderPayment',
+    component: () => import('@/views/order/payment.vue'),
+    meta: { title: '上传付款凭证', auth: true },
+  },
+  {
     path: '/order/:id',
     name: 'OrderDetail',
     component: () => import('@/views/order/detail.vue'),

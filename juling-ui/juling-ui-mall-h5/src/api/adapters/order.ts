@@ -2,14 +2,17 @@ import type {
   AppTradeOrderDetailRespVO,
   AppTradeOrderItemRespVO,
   AppTradeOrderPageItemRespVO,
+  AppTradeOrderPaymentProofRespVO,
   BackendPage,
   Order,
   OrderItem,
   OrderStatus,
   PageResult,
+  PaymentProof,
+  ReceiveStatusCode,
 } from '@/types';
 // 带 `.ts` 扩展名：adapter 会被 `node --test` 直接执行，ESM 环境不接受省略扩展名
-import { normalizeOptionalAssetUrl } from '../../utils/asset.ts';
+import { normalizeAssetUrl, normalizeOptionalAssetUrl } from '../../utils/asset.ts';
 
 /**
  * 交易订单域 DTO → 领域模型映射，并集中承载「后端状态码 ↔ 前端 key」。
@@ -74,6 +77,14 @@ export function adaptOrderItem(raw: AppTradeOrderItemRespVO): OrderItem {
   };
 }
 
+/**
+ * 收款状态码归一化：后端未返回（老版本 / 空值）时按「未上传凭证」处理，
+ * 避免视图层拿到 undefined 后在 RECEIVE_STATUS_MAP 里取不到配置。
+ */
+export function adaptReceiveStatus(status?: number | null): ReceiveStatusCode {
+  return (status ?? 0) as ReceiveStatusCode;
+}
+
 /** 后端订单分页 → 前端分页 */
 export function adaptOrderPage(page: BackendPage<AppTradeOrderPageItemRespVO>): PageResult<Order> {
   return {
@@ -83,10 +94,31 @@ export function adaptOrderPage(page: BackendPage<AppTradeOrderPageItemRespVO>): 
       status: adaptOrderStatus(raw.status),
       totalPrice: raw.payPrice ?? 0,
       payPrice: raw.payPrice ?? 0,
+      paidAmount: raw.paidAmount ?? 0,
+      paymentProofStatus: adaptReceiveStatus(raw.paymentProofStatus),
       createTime: raw.createTime,
       items: (raw.items ?? []).map(adaptOrderItem),
     })),
     total: page?.total ?? 0,
+  };
+}
+
+/** 后端付款凭证 → 前端 PaymentProof（多图地址归一化，空串剔除） */
+export function adaptPaymentProof(raw: AppTradeOrderPaymentProofRespVO): PaymentProof {
+  return {
+    id: raw.id,
+    orderId: raw.orderId,
+    urls: (raw.urls ?? []).map((url) => normalizeAssetUrl(url)).filter(Boolean),
+    amount: raw.amount ?? 0,
+    confirmedAmount: raw.confirmedAmount ?? undefined,
+    payerName: raw.payerName ?? undefined,
+    payChannelCode: raw.payChannelCode ?? undefined,
+    transferTime: raw.transferTime ?? undefined,
+    remark: raw.remark ?? undefined,
+    status: raw.status ?? 0,
+    auditTime: raw.auditTime ?? undefined,
+    auditRemark: raw.auditRemark ?? undefined,
+    createTime: raw.createTime,
   };
 }
 
@@ -102,6 +134,8 @@ export function adaptOrderDetail(raw: AppTradeOrderDetailRespVO): Order {
     totalPrice: raw.totalPrice ?? 0,
     discountPrice: raw.discountPrice ?? 0,
     payPrice: raw.payPrice ?? 0,
+    paidAmount: raw.paidAmount ?? 0,
+    paymentProofStatus: adaptReceiveStatus(raw.paymentProofStatus),
     freightPrice: raw.deliveryPrice ?? 0,
     receiverName: raw.receiverName,
     receiverMobile: raw.receiverMobile,

@@ -16,6 +16,8 @@ import {
   adaptOrderItem,
   adaptOrderPage,
   adaptOrderStatus,
+  adaptPaymentProof,
+  adaptReceiveStatus,
   orderStatusKeyToCode,
 } from '../src/api/adapters/order.ts';
 import { adaptLoginResult, adaptUserInfo } from '../src/api/adapters/user.ts';
@@ -393,6 +395,120 @@ test('adaptOrderDetail：字段改名 + 地址拼接', () => {
   assert.equal(order.receiverAddress, '浙江省杭州市 文一西路 969 号');
   assert.equal(order.payTime, 1735689700000);
   assert.equal(order.deliveryTime, undefined);
+});
+
+test('adaptReceiveStatus：未返回收款状态时回落「未上传凭证」', () => {
+  assert.equal(adaptReceiveStatus(undefined), 0);
+  assert.equal(adaptReceiveStatus(null), 0);
+  assert.equal(adaptReceiveStatus(3), 3);
+});
+
+test('adaptOrderPage：收款状态与已收金额透传（旧后端缺字段时不报错）', () => {
+  const base = {
+    id: 90001,
+    no: 'JL202601011001',
+    type: 0,
+    status: 0,
+    productCount: 1,
+    commentStatus: false,
+    createTime: 1735689600000,
+    payOrderId: null,
+    payPrice: 100000,
+    deliveryType: 1,
+    items: [],
+    combinationRecordId: null,
+  };
+  const page = adaptOrderPage({
+    list: [
+      { ...base, paidAmount: 40000, paymentProofStatus: 3 },
+      { ...base, id: 90002 },
+    ],
+    total: 2,
+  });
+  assert.equal(page.list[0].paidAmount, 40000);
+  assert.equal(page.list[0].paymentProofStatus, 3);
+  // 老后端不返回这两个字段：金额按 0、状态按「未上传凭证」，避免视图层拿到 undefined
+  assert.equal(page.list[1].paidAmount, 0);
+  assert.equal(page.list[1].paymentProofStatus, 0);
+});
+
+test('adaptOrderDetail：收款状态与已收金额透传', () => {
+  const order = adaptOrderDetail({
+    id: 90000,
+    no: 'JL202601011000',
+    type: 0,
+    createTime: 1735689600000,
+    userRemark: '',
+    status: 0,
+    productCount: 1,
+    finishTime: null,
+    cancelTime: null,
+    commentStatus: false,
+    payStatus: false,
+    payOrderId: null,
+    payTime: null,
+    payExpireTime: null,
+    payChannelCode: '',
+    payChannelName: '',
+    totalPrice: 100000,
+    discountPrice: 0,
+    deliveryPrice: 0,
+    adjustPrice: 0,
+    payPrice: 100000,
+    paidAmount: 60000,
+    paymentProofStatus: 1,
+    deliveryType: 1,
+    logisticsId: null,
+    logisticsName: '',
+    logisticsNo: '',
+    deliveryTime: null,
+    receiveTime: null,
+    receiverName: '张经理',
+    receiverMobile: '13800138000',
+    receiverAreaId: null,
+    receiverAreaName: '',
+    receiverDetailAddress: '文一西路 969 号',
+    pickUpStoreId: null,
+    pickUpVerifyCode: null,
+    refundStatus: null,
+    refundPrice: null,
+    couponId: null,
+    couponPrice: 0,
+    pointPrice: 0,
+    vipPrice: 0,
+    combinationRecordId: null,
+    items: [],
+  });
+  assert.equal(order.paidAmount, 60000);
+  assert.equal(order.paymentProofStatus, 1);
+});
+
+test('adaptPaymentProof：多图归一化、空串剔除、驳回原因透传', () => {
+  const proof = adaptPaymentProof({
+    id: 1,
+    orderId: 90000,
+    urls: [
+      'http://127.0.0.1:48080/admin-api/infra/file/1/a.png',
+      '',
+      'https://cdn.example.com/b.png',
+    ],
+    amount: 60000,
+    confirmedAmount: null,
+    payerName: null,
+    payChannelCode: 'offline_transfer',
+    transferTime: null,
+    remark: null,
+    status: 2,
+    auditTime: 1735689800000,
+    auditRemark: '金额不符，请重传',
+    createTime: 1735689700000,
+  });
+  assert.deepEqual(proof.urls, ['/admin-api/infra/file/1/a.png', 'https://cdn.example.com/b.png']);
+  assert.equal(proof.amount, 60000);
+  assert.equal(proof.confirmedAmount, undefined);
+  assert.equal(proof.status, 2);
+  assert.equal(proof.auditRemark, '金额不符，请重传');
+  assert.equal(proof.payChannelCode, 'offline_transfer');
 });
 
 /* ------------------------------ 会员适配 ------------------------------ */

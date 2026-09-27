@@ -34,8 +34,9 @@
       return;
     }
 
+    let orderId: number;
     try {
-      await createOrder({
+      orderId = await createOrder({
         items: checkedItems.value.map((item) => ({
           skuId: item.skuId,
           quantity: item.quantity,
@@ -51,7 +52,8 @@
 
     cartStore.clearChecked();
     showSuccessToast('订货单提交成功');
-    await router.replace('/order/list');
+    // 线下收款：下单后引导上传付款截图，核验通过才进入发货
+    await router.replace(`/order/${orderId}/payment`);
   }
 
   const { loading, run } = useSubmit(onSubmit);

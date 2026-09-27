@@ -1,8 +1,13 @@
 <script setup lang="ts">
-  import { showSuccessToast, showToast } from 'vant';
-  import { cancelOrder, confirmOrder, getOrderDetail } from '@/api/order';
-  import { ORDER_STATUS_MAP, ORDER_STATUS_STEPS } from '@/constants';
-  import type { Order } from '@/types';
+  import { showImagePreview, showSuccessToast, showToast } from 'vant';
+  import { cancelOrder, confirmOrder, getOrderDetail, getPaymentProofList } from '@/api/order';
+  import {
+    ORDER_STATUS_MAP,
+    ORDER_STATUS_STEPS,
+    PROOF_STATUS_MAP,
+    RECEIVE_STATUS_MAP,
+  } from '@/constants';
+  import type { Order, PaymentProof } from '@/types';
   import { confirmDialog } from '@/utils/confirm';
   import { formatDate, formatPrice, maskMobile } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
@@ -12,9 +17,12 @@
   defineOptions({ name: 'OrderDetail' });
 
   const route = useRoute();
+  const router = useRouter();
   const orderId = computed(() => Number(route.params.id));
 
   const order = ref<Order | null>(null);
+  /** 付款凭证记录（含历史与驳回记录） */
+  const proofs = ref<PaymentProof[]>([]);
   const loading = ref(true);
   /** 加载失败（网络 / 服务异常）——与「订单不存在」区分，可重试 */
   const loadError = ref(false);
@@ -46,10 +54,40 @@
     () => order.value?.status === 'CANCELED' || order.value?.status === 'AFTER_SALE',
   );
 
+  /** 待收金额：应付 - 已确认收款，负数归零 */
+  const remainAmount = computed(() => {
+    const current = order.value;
+    if (!current) return 0;
+    return Math.max(0, current.payPrice - current.paidAmount);
+  });
+
+  /** 订单维度的收款状态展示配置（未知码兜底「待上传凭证」） */
+  const receiveBadge = computed(
+    () => RECEIVE_STATUS_MAP[order.value?.paymentProofStatus ?? 0] ?? RECEIVE_STATUS_MAP[0],
+  );
+
+  /** 最近一条被驳回的凭证：用于在卡片上直接提示驳回原因 */
+  const rejectedProof = computed(() => proofs.value.find((item) => item.status === 2));
+
+  /** 还能上传凭证：货款未收齐，且订单不在取消 / 售后等异常态 */
+  const canUpload = computed(() => remainAmount.value > 0 && !isAbnormal.value);
+  const uploadText = computed(() =>
+    proofs.value.length ? '重新上传付款凭证' : '上传付款凭证',
+  );
+
+  function toPayment(): void {
+    void router.push(`/order/${orderId.value}/payment`);
+  }
+
   async function load(): Promise<void> {
     loading.value = true;
     try {
-      order.value = await getOrderDetail(orderId.value);
+      const [detail, proofList] = await Promise.all([
+        getOrderDetail(orderId.value),
+        getPaymentProofList(orderId.value),
+      ]);
+      order.value = detail;
+      proofs.value = proofList;
       loadError.value = false;
     } catch (error) {
       // 拦截器已提示。业务错误（订单不存在）与网络异常要区分：后者给重试入口
@@ -144,6 +182,83 @@
           <div class="order-detail__status-tip">订单号 {{ order.orderNo }}</div>
         </div>
 
+        <!-- 线下收款：收款状态 + 应付/已收/待收 + 凭证与驳回原因（客户自助查看核验进度） -->
+        <div class="order-detail__card app-card">
+          <div class="flex-between">
+            <span class="order-detail__title">货款收款</span>
+            <span
+              class="order-detail__chip"
+              :style="{ color: receiveBadge.color, borderColor: receiveBadge.color }"
+            >
+              {{ receiveBadge.text }}
+            </span>
+          </div>
+
+          <div class="order-detail__receive">
+            <div class="order-detail__receive-item">
+              <div class="order-detail__receive-label">应付</div>
+              <div class="order-detail__receive-value">¥{{ formatPrice(order.payPrice) }}</div>
+            </div>
+            <div class="order-detail__receive-item">
+              <div class="order-detail__receive-label">已收</div>
+              <div class="order-detail__receive-value">¥{{ formatPrice(order.paidAmount) }}</div>
+            </div>
+            <div class="order-detail__receive-item">
+              <div class="order-detail__receive-label">待收</div>
+              <div class="order-detail__receive-value order-detail__receive-value--strong">
+                ¥{{ formatPrice(remainAmount) }}
+              </div>
+            </div>
+          </div>
+
+          <div v-if="rejectedProof" class="order-detail__reject">
+            凭证被驳回：{{ rejectedProof.auditRemark || '未填写原因' }}
+          </div>
+
+          <!-- 凭证图片：点击看大图 -->
+          <div v-if="proofs.length" class="order-detail__proofs">
+            <div v-for="proof in proofs" :key="proof.id" class="order-detail__proof">
+              <div class="flex-between order-detail__proof-head">
+                <span>
+                  申报 ¥{{ formatPrice(proof.amount) }}
+                  <template v-if="proof.confirmedAmount != null">
+                    · 核定 ¥{{ formatPrice(proof.confirmedAmount) }}
+                  </template>
+                </span>
+                <span :style="{ color: PROOF_STATUS_MAP[proof.status]?.color }">
+                  {{ PROOF_STATUS_MAP[proof.status]?.text ?? '未知' }}
+                </span>
+              </div>
+              <div class="order-detail__proof-imgs">
+                <van-image
+                  v-for="(url, index) in proof.urls"
+                  :key="index"
+                  class="order-detail__proof-img"
+                  :src="resolveImage(url)"
+                  fit="cover"
+                  radius="4"
+                  @click="showImagePreview({ images: proof.urls, startPosition: index })"
+                />
+              </div>
+              <div class="order-detail__proof-meta">
+                {{ formatDate(proof.createTime, 'YYYY-MM-DD HH:mm') }}
+                <template v-if="proof.payerName"> · {{ proof.payerName }}</template>
+              </div>
+            </div>
+          </div>
+
+          <van-button
+            v-if="canUpload"
+            class="mt-3"
+            type="primary"
+            block
+            round
+            size="small"
+            :text="uploadText"
+            @click="toPayment"
+          />
+        </div>
+
         <!-- 收货信息 -->
         <van-cell-group inset class="order-detail__group">
           <van-cell title="收货人" :value="order.receiverName" />
@@ -200,6 +315,12 @@
       <!-- 底部固定操作栏：无需滚到底即可操作 -->
       <van-action-bar class="order-detail__bar">
         <van-action-bar-button type="default" text="复制订单号" @click="onCopy" />
+        <van-action-bar-button
+          v-if="canUpload"
+          type="primary"
+          text="上传凭证"
+          @click="toPayment"
+        />
         <van-action-bar-button
           v-if="order.status === 'UNPAID'"
           type="danger"
@@ -273,6 +394,82 @@
     &__card {
       margin: 12px;
       padding: 12px;
+    }
+
+    &__chip {
+      padding: 1px 6px;
+      font-size: 11px;
+      line-height: 16px;
+      border: 1px solid currentcolor;
+      border-radius: 4px;
+    }
+
+    &__receive {
+      display: flex;
+      margin-top: 12px;
+    }
+
+    &__receive-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    &__receive-label {
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__receive-value {
+      margin-top: 4px;
+      font-size: 15px;
+      font-weight: 600;
+
+      &--strong {
+        color: var(--app-danger-color);
+      }
+    }
+
+    &__reject {
+      margin-top: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--app-danger-color);
+      background: #fff7f6;
+      border-radius: 8px;
+    }
+
+    &__proofs {
+      margin-top: 4px;
+    }
+
+    &__proof {
+      padding: 10px 0;
+
+      & + & {
+        border-top: 1px solid var(--app-border-color);
+      }
+    }
+
+    &__proof-head {
+      font-size: 13px;
+    }
+
+    &__proof-imgs {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    &__proof-img {
+      width: 72px;
+      height: 72px;
+    }
+
+    &__proof-meta {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
     }
 
     &__title {

@@ -292,14 +292,27 @@ export const http = {
 
   /**
    * 文件上传（multipart/form-data）。
-   * 不显式设置 Content-Type——交给浏览器自动补上 multipart boundary，
-   * 手动写死 `multipart/form-data`（无 boundary）会导致后端解析失败。
+   *
+   * 两个坑都要避开：
+   * 1. 不能手写 `Content-Type: multipart/form-data`——缺 boundary，后端解析不出文件部件；
+   * 2. 也不能沿用实例默认的 `application/json`：axios 1.x 的默认 transformRequest
+   *    一旦发现 JSON Content-Type，就会把 FormData **序列化成 JSON**
+   *    （`JSON.stringify(formDataToJSON(data))`），后端收到的请求体里根本没有文件，
+   *    报「请求参数不正确:文件附件不能为空」。
+   *
+   * 因此这里把该头显式置为 null（axios 合并时会用 null 覆盖默认值，且发送时跳过 null 头），
+   * 交由浏览器自动补上带 boundary 的 multipart 头。
    */
   upload<T = unknown>(url: string, file: File | Blob, extra?: Record<string, string>): Promise<T> {
     const formData = new FormData();
     formData.append('file', file);
     Object.entries(extra ?? {}).forEach(([key, value]) => formData.append(key, value));
-    return request<T>({ url, method: 'POST', data: formData });
+    return request<T>({
+      url,
+      method: 'POST',
+      data: formData,
+      headers: { 'Content-Type': null },
+    });
   },
 
   /** 文件下载：自动保存为本地文件 */

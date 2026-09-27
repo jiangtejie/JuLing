@@ -1,0 +1,446 @@
+<script setup lang="ts">
+  import type { UploaderFileListItem } from 'vant';
+  import {
+    showImagePreview,
+    showSuccessToast,
+    showToast,
+  } from 'vant';
+  import {
+    createPaymentProof,
+    getOrderDetail,
+    getPaymentProofList,
+    uploadPaymentImage,
+  } from '@/api/order';
+  import type { Order, PaymentProof } from '@/types';
+  import { OFFLINE_PAY_CHANNELS, PROOF_STATUS_MAP } from '@/constants';
+  import { formatDate, formatPrice, yuanToFen } from '@/utils/format';
+  import { resolveImage } from '@/utils/image';
+
+  defineOptions({ name: 'OrderPayment' });
+
+  const route = useRoute();
+  const router = useRouter();
+  const orderId = computed(() => Number(route.params.id));
+
+  const order = ref<Order | null>(null);
+  const proofs = ref<PaymentProof[]>([]);
+  const loading = ref(true);
+
+  /** 待收金额：应付 - 已确认收款，负数归零 */
+  const remainAmount = computed(() => {
+    const current = order.value;
+    if (!current) return 0;
+    return Math.max(0, current.payPrice - current.paidAmount);
+  });
+
+  /** 最近一条被驳回的凭证：在表单上方给出驳回原因，引导重传 */
+  const rejectedProof = computed(() => proofs.value.find((item) => item.status === 2));
+
+  const form = reactive({
+    /** 图片地址：上传成功后回填 */
+    urls: [] as string[],
+    /** 本次转账金额（元），提交时转成分 */
+    amountYuan: '',
+    payerName: '',
+    payChannelCode: 'offline_transfer' as string,
+    /** 转账时间（原生 datetime-local 的值，形如 2026-09-27T10:30） */
+    transferTime: '',
+    remark: '',
+  });
+
+  const fileList = ref<UploaderFileListItem[]>([]);
+  const channelName = computed(
+    () => OFFLINE_PAY_CHANNELS.find((item) => item.code === form.payChannelCode)?.name ?? '请选择',
+  );
+  const channelSheet = ref(false);
+
+  function onSelectChannel(action: { code: string }): void {
+    form.payChannelCode = action.code;
+    channelSheet.value = false;
+  }
+
+  /**
+   * 选图后立即上传：拿到后端返回的文件地址再算「有效凭证」。
+   * 上传失败的条目保留在列表里并标记失败，提交时会拦下。
+   */
+  async function onAfterRead(items: UploaderFileListItem | UploaderFileListItem[]): Promise<void> {
+    const list = Array.isArray(items) ? items : [items];
+    for (const item of list) {
+      item.status = 'uploading';
+      item.message = '上传中';
+      try {
+        item.url = await uploadPaymentImage(item.file as File);
+        item.status = 'done';
+        item.message = '';
+      } catch {
+        item.status = 'failed';
+        item.message = '上传失败';
+      }
+    }
+    form.urls = fileList.value
+      .filter((item) => item.status === 'done' && item.url)
+      .map((item) => item.url as string);
+  }
+
+  async function load(): Promise<void> {
+    loading.value = true;
+    try {
+      const [detail, proofList] = await Promise.all([
+        getOrderDetail(orderId.value),
+        getPaymentProofList(orderId.value),
+      ]);
+      order.value = detail;
+      proofs.value = proofList;
+      // 默认带上待收金额与收货人，减少手工输入
+      if (!form.amountYuan) form.amountYuan = String(remainAmount.value / 100);
+      if (!form.payerName) form.payerName = detail.receiverName ?? '';
+    } catch {
+      // 拦截器已提示
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function onSubmit(): Promise<void> {
+    if (!form.urls.length) {
+      showToast('请先上传付款凭证');
+      return;
+    }
+    if (fileList.value.some((item) => item.status !== 'done')) {
+      showToast('有图片未上传成功，请删除后重试');
+      return;
+    }
+    const amount = yuanToFen(form.amountYuan);
+    if (amount <= 0) {
+      showToast('请输入本次转账金额');
+      return;
+    }
+    try {
+      await createPaymentProof({
+        orderId: orderId.value,
+        urls: form.urls,
+        amount,
+        payerName: form.payerName.trim() || undefined,
+        payChannelCode: form.payChannelCode,
+        transferTime: form.transferTime ? `${form.transferTime.replace('T', ' ')}:00` : undefined,
+        remark: form.remark.trim() || undefined,
+      });
+    } catch {
+      return;
+    }
+    showSuccessToast('已提交，等待核验');
+    await router.replace(`/order/${orderId.value}`);
+  }
+
+  const { loading: submitting, run } = useSubmit(onSubmit);
+
+  onMounted(() => {
+    void load();
+  });
+</script>
+
+<template>
+  <div class="app-page order-payment">
+    <AppNavBar title="上传付款凭证" />
+
+    <div v-if="loading" class="order-payment__skeleton">
+      <van-skeleton title :row="4" />
+    </div>
+
+    <template v-else-if="order">
+      <div class="app-scroll">
+        <!-- 订单收款概览：应付 / 已收 / 待收 -->
+        <div class="order-payment__summary">
+          <div class="order-payment__summary-item">
+            <div class="order-payment__summary-label">应付金额</div>
+            <div class="order-payment__summary-value">¥{{ formatPrice(order.payPrice) }}</div>
+          </div>
+          <div class="order-payment__summary-item">
+            <div class="order-payment__summary-label">已确认收款</div>
+            <div class="order-payment__summary-value">¥{{ formatPrice(order.paidAmount) }}</div>
+          </div>
+          <div class="order-payment__summary-item">
+            <div class="order-payment__summary-label">待收</div>
+            <div class="order-payment__summary-value order-payment__summary-value--strong">
+              ¥{{ formatPrice(remainAmount) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- 驳回提示：把后台的核验意见原样带出来，避免客户反复试错 -->
+        <van-notice-bar
+          v-if="rejectedProof"
+          class="order-payment__notice"
+          color="var(--app-danger-color)"
+          background="#fff7f6"
+          left-icon="warning-o"
+          :text="`上次凭证未通过：${rejectedProof.auditRemark || '未填写原因'}，请重新上传`"
+          wrapable
+        />
+
+        <van-notice-bar
+          v-if="remainAmount <= 0"
+          class="order-payment__notice"
+          color="var(--app-success-color)"
+          background="#f2fbf5"
+          left-icon="passed"
+          text="该订单货款已收齐，无需再上传凭证"
+          wrapable
+        />
+
+        <template v-if="remainAmount > 0">
+          <!-- 凭证图片 -->
+          <div class="order-payment__card app-card">
+            <div class="order-payment__label">
+              付款凭证
+              <span class="order-payment__required">*</span>
+            </div>
+            <van-uploader
+              v-model="fileList"
+              :max-count="3"
+              accept="image/*"
+              :after-read="onAfterRead"
+            />
+            <div class="order-payment__tip">请上传转账回单 / 付款截图，最多 3 张</div>
+          </div>
+
+          <van-cell-group inset class="order-payment__group">
+            <van-field
+              v-model="form.amountYuan"
+              label="本次转账金额"
+              type="number"
+              placeholder="请输入金额"
+              input-align="right"
+              required
+            >
+              <template #extra><span class="order-payment__unit">元</span></template>
+            </van-field>
+            <van-field
+              v-model="form.payerName"
+              label="付款人"
+              placeholder="请输入付款人姓名"
+              input-align="right"
+            />
+            <van-field
+              :model-value="channelName"
+              label="收款渠道"
+              input-align="right"
+              readonly
+              is-link
+              @click="channelSheet = true"
+            />
+            <van-field
+              v-model="form.transferTime"
+              label="转账时间"
+              type="datetime-local"
+              input-align="right"
+            />
+            <van-field
+              v-model="form.remark"
+              label="备注"
+              type="textarea"
+              rows="2"
+              autosize
+              maxlength="100"
+              show-word-limit
+              placeholder="如：对公转账，附言 9 月货款"
+            />
+          </van-cell-group>
+
+          <div class="order-payment__hint">
+            提交后由财务核对到账金额，核验通过即进入发货流程；金额不符会被驳回，可重新上传。
+          </div>
+
+          <!-- 历史凭证 -->
+          <div v-if="proofs.length" class="order-payment__card app-card">
+            <div class="order-payment__label">已提交的凭证</div>
+            <div v-for="proof in proofs" :key="proof.id" class="order-payment__proof">
+              <div class="flex-between order-payment__proof-head">
+                <span class="order-payment__proof-amount">
+                  申报 ¥{{ formatPrice(proof.amount) }}
+                  <template v-if="proof.confirmedAmount != null">
+                    · 核定 ¥{{ formatPrice(proof.confirmedAmount) }}
+                  </template>
+                </span>
+                <span :style="{ color: PROOF_STATUS_MAP[proof.status]?.color }">
+                  {{ PROOF_STATUS_MAP[proof.status]?.text ?? '未知' }}
+                </span>
+              </div>
+              <div class="order-payment__proof-imgs">
+                <van-image
+                  v-for="(url, index) in proof.urls"
+                  :key="index"
+                  class="order-payment__proof-img"
+                  :src="resolveImage(url)"
+                  fit="cover"
+                  radius="4"
+                  @click="showImagePreview({ images: proof.urls, startPosition: index })"
+                />
+              </div>
+              <div class="order-payment__proof-meta">
+                {{ formatDate(proof.createTime, 'YYYY-MM-DD HH:mm') }}
+                <template v-if="proof.payerName"> · {{ proof.payerName }}</template>
+              </div>
+              <div v-if="proof.auditRemark" class="order-payment__proof-remark">
+                核验意见：{{ proof.auditRemark }}
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div v-if="remainAmount > 0" class="order-payment__footer">
+        <van-button
+          type="primary"
+          block
+          round
+          :loading="submitting"
+          text="提交付款凭证"
+          @click="run"
+        />
+      </div>
+    </template>
+
+    <van-empty v-else description="订单不存在" />
+
+    <van-action-sheet
+      v-model:show="channelSheet"
+      :actions="OFFLINE_PAY_CHANNELS.map((item) => ({ ...item, name: item.name }))"
+      cancel-text="取消"
+      close-on-click-action
+      @select="onSelectChannel"
+    />
+  </div>
+</template>
+
+<style scoped lang="scss">
+  /* 内容区避让固定提交按钮 */
+  :deep(.app-scroll) {
+    padding-bottom: 72px;
+  }
+
+  .order-payment {
+    &__skeleton {
+      padding: 24px 16px;
+    }
+
+    &__summary {
+      display: flex;
+      padding: 16px;
+      background: var(--app-white);
+    }
+
+    &__summary-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    &__summary-label {
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__summary-value {
+      margin-top: 4px;
+      font-size: 15px;
+      font-weight: 600;
+
+      &--strong {
+        color: var(--app-danger-color);
+      }
+    }
+
+    &__notice {
+      margin-top: 12px;
+    }
+
+    &__card {
+      margin: 12px;
+      padding: 12px;
+    }
+
+    &__group {
+      margin-top: 12px;
+    }
+
+    &__label {
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    &__required {
+      color: var(--app-danger-color);
+    }
+
+    &__tip,
+    &__hint {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__tip {
+      margin-top: 8px;
+    }
+
+    &__hint {
+      padding: 0 16px;
+    }
+
+    &__unit {
+      font-size: 13px;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__proof {
+      padding: 10px 0;
+
+      & + & {
+        border-top: 1px solid var(--app-border-color);
+      }
+    }
+
+    &__proof-head {
+      font-size: 13px;
+    }
+
+    &__proof-amount {
+      font-weight: 600;
+    }
+
+    &__proof-imgs {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    &__proof-img {
+      width: 72px;
+      height: 72px;
+    }
+
+    &__proof-meta {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__proof-remark {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--app-danger-color);
+    }
+
+    &__footer {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 10;
+      padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+      background: var(--app-white);
+      border-top: 1px solid var(--app-border-color);
+    }
+  }
+</style>
