@@ -3,7 +3,6 @@ package com.lxjl.juling.module.trade.controller.app.order;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
-import com.lxjl.juling.module.pay.api.notify.dto.PayOrderNotifyReqDTO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.*;
 import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemRespVO;
@@ -83,15 +82,6 @@ public class AppTradeOrderController {
         return success(new AppTradeOrderCreateRespVO().setId(order.getId()).setPayOrderId(order.getPayOrderId()));
     }
 
-    @PostMapping("/update-paid")
-    @Operation(summary = "更新订单为已支付") // 由 pay-module 支付服务，进行回调，可见 PayNotifyJob
-    @PermitAll
-    public CommonResult<Boolean> updateOrderPaid(@RequestBody PayOrderNotifyReqDTO notifyReqDTO) {
-        tradeOrderUpdateService.updateOrderPaid(Long.valueOf(notifyReqDTO.getMerchantOrderId()),
-                notifyReqDTO.getPayOrderId());
-        return success(true);
-    }
-
     @PostMapping("/payment-proof/create")
     @Operation(summary = "提交订单付款凭证", description = "线下收款：上传付款截图，支持多次上传；核验进度见订单收款状态")
     public CommonResult<Long> createPaymentProof(@Valid @RequestBody AppTradeOrderPaymentProofCreateReqVO createReqVO) {
@@ -109,23 +99,12 @@ public class AppTradeOrderController {
 
     @GetMapping("/get-detail")
     @Operation(summary = "获得交易订单")
-    @Parameters({
-            @Parameter(name = "id", description = "交易订单编号"),
-            @Parameter(name = "sync", description = "是否同步支付状态", example = "true")
-    })
-    public CommonResult<AppTradeOrderDetailRespVO> getOrderDetail(@RequestParam("id") Long id,
-                                                                  @RequestParam(value = "sync", required = false) Boolean sync) {
-        // 1.1 查询订单
+    @Parameter(name = "id", description = "交易订单编号")
+    public CommonResult<AppTradeOrderDetailRespVO> getOrderDetail(@RequestParam("id") Long id) {
+        // 1.1 查询订单（线下收款：没有支付单需要同步）
         TradeOrderDO order = tradeOrderQueryService.getOrder(getLoginUserId(), id);
         if (order == null) {
             return success(null);
-        }
-        // 1.2 sync 仅在等待支付
-        if (Boolean.TRUE.equals(sync)
-                && TradeOrderStatusEnum.isUnpaid(order.getStatus()) && !order.getPayStatus()) {
-            tradeOrderUpdateService.syncOrderPayStatusQuietly(order.getId(), order.getPayOrderId());
-            // 重新查询，因为同步后，可能会有变化
-            order = tradeOrderQueryService.getOrder(id);
         }
 
         // 2.1 查询订单项

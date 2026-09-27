@@ -34,6 +34,14 @@ public enum TradeOrderReceiveStatusEnum implements ArrayValuable<Integer> {
         return Objects.equals(PAID.getStatus(), status);
     }
 
+    public static boolean isPending(Integer status) {
+        return Objects.equals(PENDING.getStatus(), status);
+    }
+
+    public static boolean isPartial(Integer status) {
+        return Objects.equals(PARTIAL.getStatus(), status);
+    }
+
     @Override
     public Integer[] array() {
         return ARRAYS;

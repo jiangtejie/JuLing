@@ -11,11 +11,8 @@ import com.lxjl.juling.module.trade.convert.brokerage.BrokerageUserConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.brokerage.BrokerageUserDO;
 import com.lxjl.juling.module.trade.enums.brokerage.BrokerageRecordBizTypeEnum;
 import com.lxjl.juling.module.trade.enums.brokerage.BrokerageRecordStatusEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageWithdrawStatusEnum;
 import com.lxjl.juling.module.trade.service.brokerage.BrokerageRecordService;
 import com.lxjl.juling.module.trade.service.brokerage.BrokerageUserService;
-import com.lxjl.juling.module.trade.service.brokerage.BrokerageWithdrawService;
-import com.lxjl.juling.module.trade.service.brokerage.bo.BrokerageWithdrawSummaryRespBO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +24,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,7 +31,6 @@ import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertSet;
 import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
 import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
-import static java.util.Arrays.asList;
 
 @Tag(name = "用户 APP - 分销用户")
 @RestController
@@ -48,8 +43,6 @@ public class AppBrokerageUserController {
     private BrokerageUserService brokerageUserService;
     @Resource
     private BrokerageRecordService brokerageRecordService;
-    @Resource
-    private BrokerageWithdrawService brokerageWithdrawService;
     @Resource
     private MemberUserApi memberUserApi;
 
@@ -83,10 +76,8 @@ public class AppBrokerageUserController {
         LocalDateTime endTime = LocalDateTimeUtil.endOfDay(yesterday);
         Integer yesterdayPrice = brokerageRecordService.getSummaryPriceByUserId(userId,
                 BrokerageRecordBizTypeEnum.ORDER, BrokerageRecordStatusEnum.SETTLEMENT, beginTime, endTime);
-        // 统计用户提现的佣金
-        Integer withdrawPrice = brokerageWithdrawService.getWithdrawSummaryListByUserId(Collections.singleton(userId),
-                        asList(BrokerageWithdrawStatusEnum.AUDIT_SUCCESS, BrokerageWithdrawStatusEnum.WITHDRAW_SUCCESS)).stream()
-                .findFirst().map(BrokerageWithdrawSummaryRespBO::getPrice).orElse(0);
+        // 提现功能已下线，提现的佣金固定返回 0
+        Integer withdrawPrice = 0;
         // 统计分销用户数量（一级）
         Long firstBrokerageUserCount = brokerageUserService.getBrokerageUserCountByBindUserId(userId, 1);
         // 统计分销用户数量（二级）

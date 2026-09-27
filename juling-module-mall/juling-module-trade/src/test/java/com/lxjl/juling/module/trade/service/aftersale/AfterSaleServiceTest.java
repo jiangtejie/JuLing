@@ -3,7 +3,6 @@ package com.lxjl.juling.module.trade.service.aftersale;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.test.core.ut.BaseDbUnitTest;
-import com.lxjl.juling.module.pay.api.refund.PayRefundApi;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSalePageReqVO;
 import com.lxjl.juling.module.trade.controller.app.aftersale.vo.AppAfterSaleCreateReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.aftersale.AfterSaleDO;
@@ -58,9 +57,6 @@ public class AfterSaleServiceTest extends BaseDbUnitTest {
     private TradeOrderUpdateService tradeOrderUpdateService;
     @Resource
     private TradeOrderQueryService tradeOrderQueryService;
-
-    @MockitoBean
-    private PayRefundApi payRefundApi;
 
     @MockitoBean
     private TradeOrderProperties tradeOrderProperties;

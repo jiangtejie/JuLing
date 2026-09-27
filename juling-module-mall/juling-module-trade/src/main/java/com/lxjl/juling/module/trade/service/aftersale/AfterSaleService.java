@@ -2,6 +2,7 @@ package com.lxjl.juling.module.trade.service.aftersale;
 
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleDisagreeReqVO;
+import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleOfflineRefundReqVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSalePageReqVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleRefuseReqVO;
 import com.lxjl.juling.module.trade.controller.app.aftersale.vo.AppAfterSaleCreateReqVO;
@@ -100,22 +101,16 @@ public interface AfterSaleService {
     void refuseAfterSale(Long userId, AfterSaleRefuseReqVO refuseReqVO);
 
     /**
-     * 【管理员】确认退款
+     * 【管理员】确认线下退款
+     *
+     * 线下收款没有线上退款单：商家线下把钱退给客户后，登记退款渠道、凭证与备注，
+     * 登记即视为退款完成（售后单转为已完成、订单项售后状态同步）。
      *
      * @param userId 管理员用户编号
      * @param userIp 管理员用户 IP
-     * @param id     售后编号
+     * @param reqVO  线下退款登记信息
      */
-    void refundAfterSale(Long userId, String userIp, Long id);
-
-    /**
-     * 更新售后订单为已退款
-     *
-     * @param id          售后编号
-     * @param orderId     订单编号
-     * @param payRefundId 支付退款编号
-     */
-    void updateAfterSaleRefunded(Long id, Long orderId, Long payRefundId);
+    void refundAfterSaleByOffline(Long userId, String userIp, AfterSaleOfflineRefundReqVO reqVO);
 
     /**
      * 【会员】取消售后

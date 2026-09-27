@@ -9,11 +9,8 @@ import com.lxjl.juling.module.trade.convert.brokerage.BrokerageUserConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.brokerage.BrokerageUserDO;
 import com.lxjl.juling.module.trade.enums.brokerage.BrokerageRecordBizTypeEnum;
 import com.lxjl.juling.module.trade.enums.brokerage.BrokerageRecordStatusEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageWithdrawStatusEnum;
 import com.lxjl.juling.module.trade.service.brokerage.BrokerageRecordService;
 import com.lxjl.juling.module.trade.service.brokerage.BrokerageUserService;
-import com.lxjl.juling.module.trade.service.brokerage.BrokerageWithdrawService;
-import com.lxjl.juling.module.trade.service.brokerage.bo.BrokerageWithdrawSummaryRespBO;
 import com.lxjl.juling.module.trade.service.brokerage.bo.UserBrokerageSummaryRespBO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,7 +27,6 @@ import java.util.Set;
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertMap;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertSet;
-import static java.util.Arrays.asList;
 
 @Tag(name = "管理后台 - 分销用户")
 @RestController
@@ -42,8 +38,6 @@ public class BrokerageUserController {
     private BrokerageUserService brokerageUserService;
     @Resource
     private BrokerageRecordService brokerageRecordService;
-    @Resource
-    private BrokerageWithdrawService brokerageWithdrawService;
 
     @Resource
     private MemberUserApi memberUserApi;
@@ -108,13 +102,9 @@ public class BrokerageUserController {
         Map<Long, Long> brokerageUserCountMap = convertMap(userIds,
                 userId -> userId,
                 userId -> brokerageUserService.getBrokerageUserCountByBindUserId(userId, null));
-        // 合计分佣的提现
-        // TODO @疯狂：如果未来支持了打款这个动作，可能 status 会不对；
-        Map<Long, BrokerageWithdrawSummaryRespBO> withdrawMap = brokerageWithdrawService.getWithdrawSummaryMapByUserId(
-                userIds, asList(BrokerageWithdrawStatusEnum.AUDIT_SUCCESS, BrokerageWithdrawStatusEnum.WITHDRAW_SUCCESS));
-        // 拼接返回
+        // 拼接返回（提现功能已下线，提现相关字段固定返回 0）
         return success(BrokerageUserConvert.INSTANCE.convertPage(pageResult, userMap, brokerageUserCountMap,
-                brokerageOrderSummaryMap, withdrawMap));
+                brokerageOrderSummaryMap));
     }
 
 }

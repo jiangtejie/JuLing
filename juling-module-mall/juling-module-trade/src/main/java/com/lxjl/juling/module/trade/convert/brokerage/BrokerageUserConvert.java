@@ -9,7 +9,6 @@ import com.lxjl.juling.module.trade.controller.app.brokerage.vo.user.AppBrokerag
 import com.lxjl.juling.module.trade.controller.app.brokerage.vo.user.AppBrokerageUserMySummaryRespVO;
 import com.lxjl.juling.module.trade.controller.app.brokerage.vo.user.AppBrokerageUserRankByUserCountRespVO;
 import com.lxjl.juling.module.trade.dal.dataobject.brokerage.BrokerageUserDO;
-import com.lxjl.juling.module.trade.service.brokerage.bo.BrokerageWithdrawSummaryRespBO;
 import com.lxjl.juling.module.trade.service.brokerage.bo.UserBrokerageSummaryRespBO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -33,14 +32,13 @@ public interface BrokerageUserConvert {
 
     List<BrokerageUserRespVO> convertList(List<BrokerageUserDO> list);
 
-    PageResult<BrokerageUserRespVO> convertPage(PageResult<BrokerageUserDO> page, Map<Long, MemberUserRespDTO> userMap, Map<Long, Long> brokerageUserCountMap, Map<Long, UserBrokerageSummaryRespBO> userOrderSummaryMap);
+    PageResult<BrokerageUserRespVO> convertPage(PageResult<BrokerageUserDO> page);
 
     default PageResult<BrokerageUserRespVO> convertPage(PageResult<BrokerageUserDO> pageResult,
                                                         Map<Long, MemberUserRespDTO> userMap,
                                                         Map<Long, Long> brokerageUserCountMap,
-                                                        Map<Long, UserBrokerageSummaryRespBO> userOrderSummaryMap,
-                                                        Map<Long, BrokerageWithdrawSummaryRespBO> withdrawMap) {
-        PageResult<BrokerageUserRespVO> result = convertPage(pageResult, userMap, brokerageUserCountMap, userOrderSummaryMap);
+                                                        Map<Long, UserBrokerageSummaryRespBO> userOrderSummaryMap) {
+        PageResult<BrokerageUserRespVO> result = convertPage(pageResult);
         for (BrokerageUserRespVO userVO : result.getList()) {
             // 用户信息
             copyTo(userMap.get(userVO.getId()), userVO);
@@ -50,10 +48,8 @@ public interface BrokerageUserConvert {
             Optional<UserBrokerageSummaryRespBO> orderSummaryOptional = Optional.ofNullable(userOrderSummaryMap.get(userVO.getId()));
             userVO.setBrokerageOrderCount(orderSummaryOptional.map(UserBrokerageSummaryRespBO::getCount).orElse(0))
                     .setBrokerageOrderPrice(orderSummaryOptional.map(UserBrokerageSummaryRespBO::getPrice).orElse(0));
-            // 已提现次数、已提现金额
-            Optional<BrokerageWithdrawSummaryRespBO> withdrawSummaryOptional = Optional.ofNullable(withdrawMap.get(userVO.getId()));
-            userVO.setWithdrawCount(withdrawSummaryOptional.map(BrokerageWithdrawSummaryRespBO::getCount).orElse(0))
-                    .setWithdrawPrice(withdrawSummaryOptional.map(BrokerageWithdrawSummaryRespBO::getPrice).orElse(0));
+            // 提现功能已下线，已提现次数、已提现金额固定返回 0
+            userVO.setWithdrawCount(0).setWithdrawPrice(0);
         }
         return result;
     }

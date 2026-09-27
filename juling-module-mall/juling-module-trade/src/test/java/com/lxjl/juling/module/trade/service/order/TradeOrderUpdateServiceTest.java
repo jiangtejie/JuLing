@@ -5,9 +5,6 @@ import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.test.core.ut.BaseDbUnitTest;
 import com.lxjl.juling.module.member.api.address.MemberAddressApi;
 import com.lxjl.juling.module.member.api.user.MemberUserApi;
-import com.lxjl.juling.module.pay.api.order.PayOrderApi;
-import com.lxjl.juling.module.pay.api.order.dto.PayOrderRespDTO;
-import com.lxjl.juling.module.pay.enums.order.PayOrderStatusEnum;
 import com.lxjl.juling.module.product.api.comment.ProductCommentApi;
 import com.lxjl.juling.module.product.api.sku.ProductSkuApi;
 import com.lxjl.juling.module.product.api.spu.ProductSpuApi;
@@ -78,8 +75,6 @@ public class TradeOrderUpdateServiceTest extends BaseDbUnitTest {
     //    @MockitoBean
 //    private PriceApi priceApi;
     @MockitoBean
-    private PayOrderApi payOrderApi;
-    @MockitoBean
     private MemberAddressApi addressApi;
     @MockitoBean
     private CouponApi couponApi;
@@ -99,7 +94,6 @@ public class TradeOrderUpdateServiceTest extends BaseDbUnitTest {
 
     @BeforeEach
     public void setUp() {
-        when(tradeOrderProperties.getPayAppKey()).thenReturn("mall");
         when(tradeOrderProperties.getPayExpireTime()).thenReturn(Duration.ofDays(1));
         when(tradeNoRedisDAO.generate(anyString())).thenReturn(IdUtil.randomUUID());
     }
@@ -258,31 +252,9 @@ public class TradeOrderUpdateServiceTest extends BaseDbUnitTest {
 //        }));
 //    }
 
-    @Test
-    public void testUpdateOrderPaid() {
-        // mock 数据（TradeOrder）
-        TradeOrderDO order = randomPojo(TradeOrderDO.class, o -> {
-            o.setId(1L).setStatus(TradeOrderStatusEnum.UNPAID.getStatus());
-            o.setPayOrderId(10L).setPayStatus(false).setPayPrice(100).setPayTime(null);
-        });
-        tradeOrderMapper.insert(order);
-        // 准备参数
-        Long id = 1L;
-        Long payOrderId = 10L;
-        // mock 方法（支付单）
-        when(payOrderApi.getOrder(eq(10L))).thenReturn(randomPojo(PayOrderRespDTO.class,
-                o -> o.setStatus(PayOrderStatusEnum.SUCCESS.getStatus()).setChannelCode("wx_pub")
-                        .setMerchantOrderId("1")).setPrice(100));
-
-        // 调用
-        tradeOrderUpdateService.updateOrderPaid(id, payOrderId);
-        // 断言
-        TradeOrderDO dbOrder = tradeOrderMapper.selectById(id);
-        assertEquals(dbOrder.getStatus(), TradeOrderStatusEnum.UNDELIVERED.getStatus());
-        assertTrue(dbOrder.getPayStatus());
-        assertNotNull(dbOrder.getPayTime());
-        assertEquals(dbOrder.getPayChannelCode(), "wx_pub");
-    }
+    // 说明：原 testUpdateOrderPaid 针对线上支付回调（PayOrderApi）编写，
+    // 本分支已切除线上支付，改用「付款凭证核验 → updateOrderPaidByOffline」的线下流程，
+    // 覆盖见 e2e 线下收款用例（下单 → 上传凭证 → 后台核验 → 已收齐转待发货）。
 
     @Test
     public void testDeliveryOrder() {

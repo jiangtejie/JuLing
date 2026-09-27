@@ -3,18 +3,13 @@ package com.lxjl.juling.module.trade.service.aftersale;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.ObjectUtils;
-import com.lxjl.juling.module.pay.api.refund.PayRefundApi;
-import com.lxjl.juling.module.pay.api.refund.dto.PayRefundCreateReqDTO;
-import com.lxjl.juling.module.pay.api.refund.dto.PayRefundRespDTO;
-import com.lxjl.juling.module.pay.enums.refund.PayRefundStatusEnum;
 import com.lxjl.juling.module.promotion.api.combination.CombinationRecordApi;
 import com.lxjl.juling.module.promotion.api.combination.dto.CombinationRecordRespDTO;
 import com.lxjl.juling.module.promotion.enums.combination.CombinationRecordStatusEnum;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleDisagreeReqVO;
+import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleOfflineRefundReqVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSalePageReqVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleRefuseReqVO;
 import com.lxjl.juling.module.trade.controller.app.aftersale.vo.AppAfterSaleCreateReqVO;
@@ -36,7 +31,6 @@ import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.lxjl.juling.module.trade.framework.aftersale.core.annotations.AfterSaleLog;
 import com.lxjl.juling.module.trade.framework.aftersale.core.utils.AfterSaleLogUtils;
-import com.lxjl.juling.module.trade.framework.order.config.TradeOrderProperties;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
@@ -77,12 +71,7 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     private TradeNoRedisDAO tradeNoRedisDAO;
 
     @Resource
-    private PayRefundApi payRefundApi;
-    @Resource
     private CombinationRecordApi combinationRecordApi;
-
-    @Resource
-    private TradeOrderProperties tradeOrderProperties;
 
     @Override
     public PageResult<AfterSaleDO> getAfterSalePage(AfterSalePageReqVO pageReqVO) {
@@ -343,9 +332,9 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     @AfterSaleLog(operateType = AfterSaleOperateTypeEnum.ADMIN_REFUND)
-    public void refundAfterSale(Long userId, String userIp, Long id) {
-        // 校验售后单的状态，并状态待退款
-        AfterSaleDO afterSale = tradeAfterSaleMapper.selectById(id);
+    public void refundAfterSaleByOffline(Long userId, String userIp, AfterSaleOfflineRefundReqVO reqVO) {
+        // 1. 校验售后单存在，且处于「待退款」
+        AfterSaleDO afterSale = tradeAfterSaleMapper.selectById(reqVO.getId());
         if (afterSale == null) {
             throw exception(AFTER_SALE_NOT_FOUND);
         }
@@ -353,103 +342,22 @@ public class AfterSaleServiceImpl implements AfterSaleService {
             throw exception(AFTER_SALE_REFUND_FAIL_STATUS_NOT_WAIT_REFUND);
         }
 
-        Integer newStatus;
-        if (ObjUtil.equals(afterSale.getRefundPrice(), 0)) {
-            // 特殊：退款为 0 的订单，直接标记为完成（积分商城）。关联案例：上游社区讨论
-            updateAfterSaleStatus(afterSale.getId(), AfterSaleStatusEnum.WAIT_REFUND.getStatus(), new AfterSaleDO()
-                    .setStatus(AfterSaleStatusEnum.COMPLETE.getStatus()).setRefundTime(LocalDateTime.now()));
-            newStatus = AfterSaleStatusEnum.COMPLETE.getStatus();
-        } else {
-            // 发起退款单。注意，需要在事务提交后，再进行发起，避免重复发起
-            createPayRefund(userIp, afterSale);
-            newStatus = afterSale.getStatus();  // 特殊：这里状态不变，而是最终 updateAfterSaleRefunded 处理！！！
-        }
+        // 2. 线下退款：没有线上退款单可发起，商家线下把钱退给客户后来此登记，
+        //    登记即视为退款完成（退款金额、渠道、回执凭证、备注一并落库）
+        updateAfterSaleStatus(afterSale.getId(), AfterSaleStatusEnum.WAIT_REFUND.getStatus(), new AfterSaleDO()
+                .setStatus(AfterSaleStatusEnum.COMPLETE.getStatus())
+                .setRefundTime(LocalDateTime.now())
+                .setRefundChannelCode(reqVO.getRefundChannelCode())
+                .setRefundProofUrls(reqVO.getRefundProofUrls())
+                .setRefundRemark(reqVO.getRefundRemark()));
 
-        // 记录售后日志
-        AfterSaleLogUtils.setAfterSaleInfo(afterSale.getId(), afterSale.getStatus(), newStatus);
+        // 3. 记录售后日志
+        AfterSaleLogUtils.setAfterSaleInfo(afterSale.getId(), afterSale.getStatus(), AfterSaleStatusEnum.COMPLETE.getStatus());
+
+        // 4. 更新交易订单项的售后状态为【已完成】
+        tradeOrderUpdateService.updateOrderItemWhenAfterSaleSuccess(afterSale.getOrderItemId(), afterSale.getRefundPrice());
     }
 
-    private void createPayRefund(String userIp, AfterSaleDO afterSale) {
-        // 创建退款单
-        PayRefundCreateReqDTO createReqDTO = AfterSaleConvert.INSTANCE.convert(userIp, afterSale, tradeOrderProperties)
-                .setUserId(afterSale.getUserId()).setUserType(UserTypeEnum.MEMBER.getValue())
-                .setReason(StrUtil.format("退款【{}】", afterSale.getSpuName()));
-        Long payRefundId = payRefundApi.createRefund(createReqDTO);
-
-        // 更新售后单的退款单号
-        tradeAfterSaleMapper.updateById(new AfterSaleDO().setId(afterSale.getId()).setPayRefundId(payRefundId));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    @AfterSaleLog(operateType = AfterSaleOperateTypeEnum.SYSTEM_REFUND_SUCCESS)
-    public void updateAfterSaleRefunded(Long id, Long orderId, Long payRefundId) {
-        // 1. 校验售后单的状态，并状态待退款
-        AfterSaleDO afterSale = tradeAfterSaleMapper.selectById(id);
-        if (afterSale == null) {
-            throw exception(AFTER_SALE_NOT_FOUND);
-        }
-        if (ObjectUtil.notEqual(afterSale.getStatus(), AfterSaleStatusEnum.WAIT_REFUND.getStatus())) {
-            throw exception(AFTER_SALE_REFUND_FAIL_STATUS_NOT_WAIT_REFUND);
-        }
-
-        // 2. 校验退款单
-        PayRefundRespDTO payRefund = validatePayRefund(afterSale, payRefundId);
-
-        // 3. 处理退款结果
-        if (PayRefundStatusEnum.isSuccess(payRefund.getStatus())) {
-            // 【情况一：退款成功】
-            updateAfterSaleStatus(afterSale.getId(), AfterSaleStatusEnum.WAIT_REFUND.getStatus(), new AfterSaleDO()
-                .setStatus(AfterSaleStatusEnum.COMPLETE.getStatus()).setRefundTime(LocalDateTime.now()));
-
-            // 记录售后日志
-            AfterSaleLogUtils.setAfterSaleInfo(afterSale.getId(), afterSale.getStatus(), AfterSaleStatusEnum.COMPLETE.getStatus());
-
-            // 更新交易订单项的售后状态为【已完成】
-            tradeOrderUpdateService.updateOrderItemWhenAfterSaleSuccess(afterSale.getOrderItemId(), afterSale.getRefundPrice());
-            // 【情况二：退款失败】
-        } else if (PayRefundStatusEnum.isFailure(payRefund.getStatus())) {
-            // 记录售后日志
-            AfterSaleLogUtils.setAfterSaleOperateType(AfterSaleOperateTypeEnum.SYSTEM_REFUND_FAIL);
-            AfterSaleLogUtils.setAfterSaleInfo(afterSale.getId(), afterSale.getStatus(), afterSale.getStatus());
-        }
-    }
-
-    /**
-     * 校验退款单的合法性
-     *
-     * @param afterSale 售后单
-     * @param payRefundId 退款单编号
-     * @return 退款单
-     */
-    private PayRefundRespDTO validatePayRefund(AfterSaleDO afterSale, Long payRefundId) {
-        // 1. 校验退款单是否存在
-        PayRefundRespDTO payRefund = payRefundApi.getRefund(payRefundId);
-        if (payRefund == null) {
-            log.error("[validatePayRefund][afterSale({}) payRefund({}) 不存在，请进行处理！]", afterSale.getId(), payRefundId);
-            throw exception(AFTER_SALE_REFUND_FAIL_REFUND_NOT_FOUND);
-        }
-        // 2.1 校验退款单无退款结果（成功、失败）
-        if (!PayRefundStatusEnum.isSuccess(payRefund.getStatus())
-            && !PayRefundStatusEnum.isFailure(payRefund.getStatus())) {
-            log.error("[validatePayRefund][afterSale({}) payRefund({}) 无退款结果，请进行处理！payRefund 数据是：{}]",
-                    afterSale.getId(), payRefundId, toJsonString(payRefund));
-            throw exception(AFTER_SALE_REFUND_FAIL_REFUND_NOT_SUCCESS_OR_FAILURE);
-        }
-        // 2.2 校验退款金额一致
-        if (ObjectUtil.notEqual(payRefund.getRefundPrice(), afterSale.getRefundPrice())) {
-            log.error("[validatePayRefund][afterSale({}) payRefund({}) 退款金额不匹配，请进行处理！afterSale 数据是：{}，payRefund 数据是：{}]",
-                    afterSale.getId(), payRefundId, toJsonString(afterSale), toJsonString(payRefund));
-            throw exception(AFTER_SALE_REFUND_FAIL_REFUND_PRICE_NOT_MATCH);
-        }
-        // 2.3 校验退款订单匹配（二次）
-        if (ObjectUtil.notEqual(payRefund.getMerchantRefundId(), afterSale.getId().toString())) {
-            log.error("[validatePayRefund][afterSale({}) 退款单不匹配({})，请进行处理！payRefund 数据是：{}]",
-                    afterSale.getId(), payRefundId, toJsonString(payRefund));
-            throw exception(AFTER_SALE_REFUND_FAIL_REFUND_ORDER_ID_ERROR);
-        }
-        return payRefund;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

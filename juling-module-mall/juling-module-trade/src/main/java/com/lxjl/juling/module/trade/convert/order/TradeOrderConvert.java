@@ -11,8 +11,6 @@ import com.lxjl.juling.framework.dict.core.DictFrameworkUtils;
 import com.lxjl.juling.framework.ip.core.utils.AreaUtils;
 import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.pay.api.order.dto.PayOrderCreateReqDTO;
-import com.lxjl.juling.module.pay.enums.DictTypeConstants;
 import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO;
 import com.lxjl.juling.module.product.api.property.dto.ProductPropertyValueDetailRespDTO;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuRespDTO;
@@ -100,22 +98,6 @@ public interface TradeOrderConvert {
         return new ProductSkuUpdateStockReqDTO(items);
     }
 
-    default PayOrderCreateReqDTO convert(TradeOrderDO order, List<TradeOrderItemDO> orderItems,
-                                         TradeOrderProperties orderProperties) {
-        PayOrderCreateReqDTO createReqDTO = new PayOrderCreateReqDTO()
-                .setAppKey(orderProperties.getPayAppKey()).setUserIp(order.getUserIp())
-                .setUserId(order.getUserId()).setUserType(UserTypeEnum.MEMBER.getValue());
-        // 商户相关字段
-        createReqDTO.setMerchantOrderId(String.valueOf(order.getId()));
-        String subject = orderItems.get(0).getSpuName();
-        subject = StrUtils.maxLength(subject, PayOrderCreateReqDTO.SUBJECT_MAX_LENGTH); // 避免超过 32 位
-        createReqDTO.setSubject(subject);
-        createReqDTO.setBody(subject); // TODO 亚特：临时写死
-        // 订单相关字段
-        createReqDTO.setPrice(order.getPayPrice()).setExpireTime(addTime(orderProperties.getPayExpireTime()));
-        return createReqDTO;
-    }
-
     default PageResult<TradeOrderPageItemRespVO> convertPage(PageResult<TradeOrderDO> pageResult,
                                                              List<TradeOrderItemDO> orderItems,
                                                              Map<Long, MemberUserRespDTO> memberUserMap) {
@@ -181,7 +163,8 @@ public interface TradeOrderConvert {
         AppTradeOrderDetailRespVO orderVO = convert3(order, orderItems);
         orderVO.setPayExpireTime(order.getCreateTime().plus(tradeOrderProperties.getPayExpireTime()));
         if (StrUtil.isNotEmpty(order.getPayChannelCode())) {
-            orderVO.setPayChannelName(DictFrameworkUtils.parseDictDataLabel(DictTypeConstants.CHANNEL_CODE, order.getPayChannelCode()));
+            // 收款渠道名取字典 pay_channel_code（线下收款后不再依赖 pay 模块的常量类）
+            orderVO.setPayChannelName(DictFrameworkUtils.parseDictDataLabel("pay_channel_code", order.getPayChannelCode()));
         }
         // 处理收货地址
         orderVO.setReceiverAreaName(AreaUtils.format(order.getReceiverAreaId()));

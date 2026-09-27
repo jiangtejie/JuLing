@@ -169,6 +169,21 @@ public class AfterSaleDO extends BaseDO {
      * 退款时间
      */
     private LocalDateTime refundTime;
+    /**
+     * 线下退款渠道
+     *
+     * 字典 pay_channel_code 的线下值：offline_transfer / offline_wx / offline_alipay / offline_cash
+     */
+    private String refundChannelCode;
+    /**
+     * 线下退款凭证图片（多图，如转账回单）
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<String> refundProofUrls;
+    /**
+     * 线下退款备注
+     */
+    private String refundRemark;
 
     // ========== 退货相关 ==========
     /**

@@ -42,25 +42,6 @@ public interface TradeOrderUpdateService {
     TradeOrderDO createOrder(Long userId, AppTradeOrderCreateReqVO createReqVO);
 
     /**
-     * 更新交易订单已支付
-     *
-     * @param id         交易订单编号
-     * @param payOrderId 支付订单编号
-     */
-    void updateOrderPaid(Long id, Long payOrderId);
-
-    /**
-     * 同步订单的支付状态
-     *
-     * 1. Quietly 表示，即使同步失败，也不会抛出异常
-     * 2. 什么时候回出现异常？因为是主动同步，可能和支付模块的回调通知 {@link #updateOrderPaid(Long, Long)} 存在并发冲突，导致抛出异常
-     *
-     * @param id 订单编号
-     * @param payOrderId 支付订单编号
-     */
-    void syncOrderPayStatusQuietly(Long id, Long payOrderId);
-
-    /**
      * 【管理员】发货交易订单
      *
      * @param deliveryReqVO 发货请求
@@ -220,14 +201,6 @@ public interface TradeOrderUpdateService {
      * @param payChannelCode 收款渠道（字典 pay_channel_code 的线下值）
      */
     void updateOrderPaidByOffline(Long id, Integer paidAmount, String payChannelCode);
-
-    /**
-     * 取消支付订单的退款回调
-     *
-     * @param id               订单编号
-     * @param payRefundId      支付退款编号
-     */
-    void updatePaidOrderRefunded(Long id, Long payRefundId);
 
     /**
      * 更新下单赠送的优惠券编号到订单
