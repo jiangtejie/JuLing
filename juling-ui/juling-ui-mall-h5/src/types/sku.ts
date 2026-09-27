@@ -70,6 +70,8 @@ export interface Product {
   categoryId?: number;
   /** 是否支持阶梯价 */
   supportTierPrice?: boolean;
+  /** 是否多规格（后端 specType：true=多规格，false=单规格）；列表页据此决定「＋」直加还是「选规格」 */
+  specType?: boolean;
   skus?: Sku[];
   specList?: SkuSpec[];
   detailHtml?: string;

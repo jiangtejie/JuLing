@@ -72,6 +72,7 @@ type SpuCommon = Pick<
   | 'salesCount'
   | 'stock'
   | 'categoryId'
+  | 'specType'
 >;
 
 /** 后端 SPU（列表项 / 详情公共字段）→ 前端 Product */
@@ -89,6 +90,8 @@ export function adaptSpu(raw: SpuCommon): Product {
     salesCount: raw.salesCount,
     stock: raw.stock,
     categoryId: raw.categoryId,
+    // 多规格标记：分类页据此决定卡片右下角是「＋」直接加购还是「选规格」跳详情
+    specType: raw.specType,
     // 后端无「阶梯价」概念，恒为 false → 列表页「阶梯价」标签不显示
     supportTierPrice: false,
   };

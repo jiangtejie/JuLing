@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { showToast } from 'vant';
-  import { getCategoryTree, getProductPage } from '@/api/product';
+  import { addCart } from '@/api/cart';
+  import { getCategoryTree, getProductDetail, getProductPage } from '@/api/product';
   import type { Category, Product } from '@/types';
   import { useCartStore } from '@/stores/cart';
+  import { useUserStore } from '@/stores/user';
   import { formatCount } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
 
@@ -10,6 +12,7 @@
 
   const router = useRouter();
   const cartStore = useCartStore();
+  const userStore = useUserStore();
 
   /** 一级分类（带 children，见 api/product.ts 的 getCategoryTree） */
   const categories = ref<Category[]>([]);
@@ -17,6 +20,8 @@
   const activeIndex = ref(0);
   /** 搜索关键词：提交后跳商品列表页展示结果 */
   const keyword = ref('');
+  /** 正在快速加购的商品 id：既防重复点击，也用于按钮的 loading 态 */
+  const addingId = ref<number>();
 
   const { list, loading, finished, error, refreshing, total, onLoad, onRefresh, search } =
     usePaging<Product, { categoryId?: number }>((params) => getProductPage(params), {
@@ -71,13 +76,6 @@
     return sections.filter((section) => section.items.length);
   });
 
-  /** 整个列表的最后一行不留分隔线 */
-  function isLastRow(groupIndex: number, itemIndex: number): boolean {
-    const rows = groups.value;
-    const group = rows[groupIndex];
-    return groupIndex === rows.length - 1 && itemIndex === (group?.items.length ?? 0) - 1;
-  }
-
   /** 订货单非空时才展示底部动作栏（同时决定内容区避让高度） */
   const hasCartItems = computed(() => cartStore.totalKinds > 0);
 
@@ -108,6 +106,39 @@
 
   function toDetail(id: number): void {
     void router.push(`/product/${id}`);
+  }
+
+  /**
+   * 快速加入订货单（卡片右下角按钮）。
+   *
+   * 列表接口不返回 SKU，所以单规格商品这里补一次详情请求取唯一 SKU：
+   * 与详情页共用同一套 addItem + addCart 同步逻辑，保证购物车数据（价格/库存/规格文案）一致。
+   * 多规格商品由模板分流到详情页选规格，缺货商品不可点。
+   */
+  async function onQuickAdd(product: Product): Promise<void> {
+    if (addingId.value) return;
+    addingId.value = product.id;
+    try {
+      const detail = await getProductDetail(product.id);
+      const sku = detail.skus?.[0];
+      if (!sku) {
+        showToast('该商品暂无可订规格');
+        return;
+      }
+      const quantity = sku.minOrderQuantity ?? 1;
+      cartStore.addItem({ spuId: product.id, sku, quantity });
+      if (userStore.isLogin) {
+        void addCart({ skuId: sku.id, count: quantity }).catch((error) => {
+          console.warn('[cart] 同步加入订货单失败:', error);
+        });
+      }
+      showToast('已加入订货单');
+    } catch (err) {
+      // 错误提示由请求层统一处理，这里仅留痕，避免未捕获的 Promise rejection
+      console.warn('[category] 加入订货单失败:', err);
+    } finally {
+      addingId.value = undefined;
+    }
   }
 
   /** 动作栏：查看订货单明细 */
@@ -172,15 +203,14 @@
             <!-- 首屏骨架：列表为空且加载中时用骨架屏代替空白（切换分类同样适用） -->
             <ListSkeleton v-if="!list.length && loading && !refreshing" :rows="4" />
 
-            <div v-for="(group, groupIndex) in groups" :key="group.id" class="category__group">
+            <div v-for="group in groups" :key="group.id" class="category__group">
               <!-- 二级分类标题：吸顶在分类标题下方，滚动时知道当前在哪一组 -->
               <div v-if="grouped" class="category__group-title">{{ group.name }}</div>
 
               <div
-                v-for="(product, index) in group.items"
+                v-for="product in group.items"
                 :key="product.id"
                 class="category__item"
-                :class="{ 'category__item--last': isLastRow(groupIndex, index) }"
                 @click="toDetail(product.id)"
               >
                 <van-image
@@ -204,8 +234,36 @@
                   </div>
 
                   <div class="category__foot">
-                    <PriceText :value="product.price" size="large" />
+                    <PriceText :value="product.price" />
                     <span class="category__unit">/ {{ product.unit ?? '件' }}</span>
+
+                    <!-- 快速加入订货单：单规格直接加、多规格去详情选规格、缺货不可点 -->
+                    <button
+                      v-if="(product.stock ?? 0) <= 0"
+                      type="button"
+                      class="category__add category__add--plane"
+                      disabled
+                      @click.stop
+                    >
+                      缺货
+                    </button>
+                    <button
+                      v-else-if="product.specType"
+                      type="button"
+                      class="category__add category__add--plane"
+                      @click.stop="toDetail(product.id)"
+                    >
+                      选规格
+                    </button>
+                    <button
+                      v-else
+                      type="button"
+                      class="category__add"
+                      :disabled="addingId === product.id"
+                      @click.stop="onQuickAdd(product)"
+                    >
+                      <van-icon :name="addingId === product.id ? 'loading' : 'plus'" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -271,8 +329,8 @@
       overflow-y: auto;
       /* 底部预留固定 tabbar 的高度，否则滚到底时最后一项（如「没有更多了」）会被 tabbar 遮挡 */
       padding: 0 12px calc(12px + var(--app-tabbar-height) + env(safe-area-inset-bottom));
-      /* 白底：与左侧选中项的白底无缝相接，形成「左菜单 + 右内容」连成一体的观感（美团外卖式） */
-      background: var(--app-white);
+      /* 浅灰底 + 白色商品卡片：卡片与背景拉开层次，不再是「白底白卡」糊成一片 */
+      background: var(--app-bg-color);
     }
 
     /* 有底部动作栏时，内容区再多留出动作栏高度（50 + 8 间距） */
@@ -310,36 +368,25 @@
       font-weight: 600;
       line-height: 18px;
       color: var(--app-text-color);
-      background: var(--app-white);
+      /* 与内容区同色：二级分组标题读起来是「页面上的分组标签」，白色卡片从它下面滚过 */
+      background: var(--app-bg-color);
     }
 
-    /* ===== 商品行 =====
-       白底平铺 + 细分隔线（不再用白卡片），让右侧内容区与左侧选中项连成一块白 */
+    /* ===== 商品卡片 =====
+       白卡片 + 浅灰底 + 圆角淡阴影：与页面背景拉开层次，扫视时每条都清楚；
+       骨架屏用默认的白卡片样式即可（灰底上不再「隐形」） */
     &__item {
       display: flex;
       gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--app-border-color);
+      padding: 10px;
+      margin-bottom: 8px;
+      background: var(--app-white);
+      border-radius: var(--app-radius-md);
+      box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
     }
 
     &__item:active {
-      background: var(--van-active-color);
-    }
-
-    &__item--last {
-      border-bottom: 0;
-    }
-
-    /* 骨架屏沿用平铺行（默认的白色卡片在白底内容区里会「隐形」） */
-    :deep(.list-skeleton) {
-      gap: 0;
-      padding: 0;
-    }
-
-    :deep(.list-skeleton__card) {
-      padding: 12px 0;
-      background: transparent;
-      border-radius: 0;
+      background: #fafafa;
     }
 
     &__img {
@@ -379,7 +426,7 @@
 
     &__foot {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 2px;
       margin-top: auto;
       padding-top: 6px;
@@ -388,6 +435,46 @@
     &__unit {
       font-size: 12px;
       color: var(--app-text-color-secondary);
+      /* 卡片信息列窄，价格行整体不换行 */
+      white-space: nowrap;
+    }
+
+    /* 快速加购按钮：单规格是圆形「＋」，多规格/缺货是胶囊文字（美团式） */
+    &__add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      width: 26px;
+      height: 26px;
+      /* 推到卡片右下角；不允许被固定价格挤压（否则「选规格」会折成两行） */
+      margin-left: auto;
+      padding: 0;
+      font-size: 17px;
+      line-height: 1;
+      white-space: nowrap;
+      color: var(--app-white);
+      background: var(--app-primary-color);
+      border: 0;
+      border-radius: 50%;
+    }
+
+    &__add:disabled {
+      opacity: 0.6;
+    }
+
+    &__add--plane {
+      width: auto;
+      height: 22px;
+      padding: 0 10px;
+      font-size: 12px;
+      border-radius: 11px;
+    }
+
+    &__add--plane:disabled {
+      color: var(--app-text-color-secondary);
+      background: #f2f3f5;
+      opacity: 1;
     }
 
     /* 搜索行右侧的「搜索」按钮（与商品列表页保持一致） */

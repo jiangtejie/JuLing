@@ -103,6 +103,8 @@ test('adaptSpu：introduction→subTitle、supportTierPrice=false、字段透传
   assert.equal(product.id, 1001);
   assert.equal(product.subTitle, '当季新米 · 产地直发');
   assert.equal(product.supportTierPrice, false);
+  // 多规格标记要透传：分类页据此决定「+」直加还是「选规格」
+  assert.equal(product.specType, true);
   assert.equal(product.price, 5980);
   assert.equal(product.salesCount, 12860);
 });
