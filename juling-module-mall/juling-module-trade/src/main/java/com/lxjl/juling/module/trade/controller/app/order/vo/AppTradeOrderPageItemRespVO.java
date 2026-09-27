@@ -40,6 +40,13 @@ public class AppTradeOrderPageItemRespVO {
     @Schema(description = "应付金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
     private Integer payPrice;
 
+    @Schema(description = "已确认收款金额（累计），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
+    private Integer paidAmount;
+
+    @Schema(description = "收款状态（TradeOrderReceiveStatusEnum）：0 未上传凭证、1 待核验、2 已驳回、3 部分收款、4 已收齐",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Integer paymentProofStatus;
+
     // ========== 收件 + 物流基本信息 ==========
 
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")

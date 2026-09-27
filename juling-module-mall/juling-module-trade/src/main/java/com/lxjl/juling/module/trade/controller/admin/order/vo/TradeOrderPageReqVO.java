@@ -53,6 +53,9 @@ public class TradeOrderPageReqVO extends PageParam {
     @Schema(description = "支付渠道", example = "wx_lite")
     private String payChannelCode;
 
+    @Schema(description = "收款状态（TradeOrderReceiveStatusEnum）：0 未上传凭证、1 待核验、2 已驳回、3 部分收款、4 已收齐", example = "1")
+    private Integer paymentProofStatus;
+
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
