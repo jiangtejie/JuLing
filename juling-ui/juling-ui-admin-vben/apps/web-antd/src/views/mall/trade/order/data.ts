@@ -169,9 +169,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useGridColumns(): VxeGridPropTypes.Columns {
   return [
     {
+      // 展开列：content 插槽是展开后的明细区域，default 插槽放自定义展开按钮。
+      // vxe 自带的展开按钮在本版本默认隐藏且点击无效，这里显式提供入口。
       type: 'expand',
-      width: 80,
-      slots: { content: 'expand_content' },
+      title: '明细',
+      width: 90,
+      slots: { default: 'expand_toggle', content: 'expand_content' },
       fixed: 'left',
     },
     {
