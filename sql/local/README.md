@@ -27,12 +27,15 @@ psql -U root -d juling -f sql/local/11_dict_fresh_install_gaps.sql
 psql -U root -d juling -f sql/local/12_fix_erp_null_counters.sql
 # 补齐 pay 模块缺失的支付应用（下单报「App 不存在」的直接原因）
 psql -U root -d juling -f sql/local/13_pay_app_seed.sql
+# 补齐转换时丢失的主键（缺主键会让 PostgreSQL 的「关联查询 + GROUP BY 主键」直接报错）
+psql -U root -d yate -f sql/local/15_add_missing_primary_keys.sql
 ```
 
-> 全新环境按 `01 → 13` 顺序执行一遍即可;字典覆盖可用
+> 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
 > `python script/tools/check-dict-coverage.py` 复核(应输出「缺失 0 个 / 无数据行 0 个」)。
 
-> 本地库名统一为 `juling`(见根 README 与 `application-local.yaml`)。
+> 本地库名:切换前为 `juling`,现在 `application-local.yaml` 指向 `yate`(由 `juling` 复制而来);
+> 上面命令里的 `-d juling` 是按旧库名写的,按实际库名替换即可。
 > 管理员密码已改为自定义强密码,不入库;重置用下方「维护脚本」里的 `admin_password_reset.sql` 模板。
 
 所有脚本均为**幂等**、重复执行安全:数据类靠 `ON CONFLICT (id) DO NOTHING`,结构/回填类靠
@@ -62,6 +65,7 @@ psql -U root -d juling -f sql/local/13_pay_app_seed.sql
 | 11_dict_fresh_install_gaps.sql | 线上库有、基线+本目录没有的字典 3 类(`system_menu_type`、`system_data_scope`、`mes_wm_issue_status`) | 字典 11200+、112000+ |
 | 12_fix_erp_null_counters.sql | 回填 ERP 单据「数量/金额」计数器(`in_count`/`out_count`/`return_count`/`receipt_price`/`payment_price`/`refund_price`)的历史 NULL 为 0,并补 `DEFAULT 0`;修复前快照存入 schema `bak_erp_null_counters` | — |
 | 13_pay_app_seed.sql | 补齐 `pay_app` 支付应用(`mall` 商城应用 / `wallet` 钱包应用)。交易订单创建后置逻辑在 `payPrice > 0` 时无条件建支付单,`TradeOrderProperties.payAppKey` 默认 `mall`,库里没有该 `app_key` 时下单直接抛 `APP_NOT_FOUND`(1007000000「App 不存在」) | 用表序列/默认值 |
+| 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
 
 > `12_fix_erp_null_counters.sql` 作用的对象是 ERP 业务表(`erp_*`)。这些表**不在基线脚本中**
 > (由 ERP 模块单独建表),所以全新环境若尚未导入 `erp_*` 表,该脚本会自动跳过缺失的表/列并打印
