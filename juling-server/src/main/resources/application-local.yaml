@@ -10,7 +10,7 @@ spring:
       - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration # 默认 local 环境，不开启 Quartz 的自动配置
       - org.springframework.ai.vectorstore.qdrant.autoconfigure.QdrantVectorStoreAutoConfiguration # 禁用 AI 模块的 Qdrant，手动创建
       - org.springframework.ai.vectorstore.milvus.autoconfigure.MilvusVectorStoreAutoConfiguration # 禁用 AI 模块的 Milvus，手动创建
-      - org.springframework.ai.model.chat.client.autoconfigure.ChatClientAutoConfiguration # 矩灵 AI 模块注册了多家 ChatModel，禁用官方 ChatClient 自动配置（避免多 ChatModel 歧义）
+      - org.springframework.ai.model.chat.client.autoconfigure.ChatClientAutoConfiguration # 亚特 AI 模块注册了多家 ChatModel，禁用官方 ChatClient 自动配置（避免多 ChatModel 歧义）
   # 数据源配置项
   datasource:
     druid: # Druid 【监控】相关的全局配置
@@ -53,7 +53,7 @@ spring:
         master:
           #          url: jdbc:mysql://127.0.0.1:3306/juling?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true # MySQL Connector/J 8.X 连接的示例
           #          url: jdbc:mysql://127.0.0.1:3306/juling?useSSL=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true # MySQL Connector/J 5.X 连接的示例
-          url: jdbc:postgresql://127.0.0.1:5432/juling # PostgreSQL 连接（矩灵本地库）
+          url: jdbc:postgresql://127.0.0.1:5432/yate # PostgreSQL 连接（亚特专属库，由 juling 复制而来）
           #          url: jdbc:oracle:thin:@127.0.0.1:1521:xe # Oracle 连接的示例
           #          url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=juling;SelectMethod=cursor;encrypt=false;rewriteBatchedStatements=true;useUnicode=true;characterEncoding=utf-8 # SQLServer 连接的示例
           #          url: jdbc:dm://127.0.0.1:5236?schema=JULING # DM 连接的示例
@@ -202,7 +202,7 @@ logging:
     com.lxjl.juling.module.iot.service.rule: debug
     com.lxjl.juling.module.ai.dal.mysql: debug
     com.lxjl.juling.module.im.dal.mysql: debug
-    org.springframework.context.support.PostProcessorRegistrationDelegate: ERROR # TODO 棱信矩灵：先禁用，Spring Boot 3.X 存在部分错误的 WARN 提示
+    org.springframework.context.support.PostProcessorRegistrationDelegate: ERROR # TODO 亚特：先禁用，Spring Boot 3.X 存在部分错误的 WARN 提示
 
 debug: false
 
@@ -234,9 +234,9 @@ wx:
       key-prefix: wa # Redis Key 的前缀
       http-client-type: HttpComponents # 采用 HttpComponents（HttpClient 5）请求微信小程序平台
 
---- #################### 矩灵相关配置 ####################
+--- #################### 亚特相关配置 ####################
 
-# 矩灵配置项，设置当前项目所有自定义的配置
+# 亚特配置项，设置当前项目所有自定义的配置
 juling:
   iot:
     tdengine-init: false # 本地未部署 TDengine 时序库，关闭 IoT 设备消息表自动初始化（部署后置 true）

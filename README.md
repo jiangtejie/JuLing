@@ -45,7 +45,9 @@ JuLing/
 
 ```powershell
 # 1) 依赖服务
-#    postgres: 127.0.0.1:5432  库 juling  用户/密码 root/123456
+#    postgres: 127.0.0.1:5432  库 yate    用户/密码 root/123456
+#    （本工作区使用亚特专属库 yate，由 juling 复制而来；主干/发布工作区仍连 juling）
+#    本工作区后端请用计划任务启停：Start-ScheduledTask / Stop-ScheduledTask -TaskName 'JuLing-Backend-Yate'
 #    redis   : 127.0.0.1:6379  密码 123456
 
 # 2) 后端（编译 + 启动）
@@ -114,11 +116,13 @@ Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 - **大文件拦截**（可选，每个克隆执行一次）：`git config core.hooksPath script/git-hooks`。
   提交超过 5MB 的文件会被拒绝（阈值可用环境变量 `LARGE_FILE_LIMIT_MB` 调整，`git commit --no-verify` 可临时绕过）；
   `.gitignore` 同时内置了常见大文件后缀（`*.exe` / `*.zip` / `*.mp4` / `*.psd` / `*.war` 等）。
-- **数据库**：本地库名 `juling`；模块补齐脚本、演示数据清理脚本与维护脚本都在 `sql/local/`，执行顺序见该目录 README。
+- **数据库**：本地库名 `juling`；本工作区（`JuLing-yate`）使用由 `juling` 复制的亚特专属库 `yate`，
+  主干/发布工作区仍连 `juling`；模块补齐脚本、演示数据清理脚本与维护脚本都在 `sql/local/`，执行顺序见该目录 README。
 - **管理员密码**：已改为自定义强密码且不入库，仅存于本机 `script/local/admin-password.txt`；
   重置用模板 `sql/local/admin_password_reset.sql`（仓库内只有占位符，没有真实口令/哈希）。
 - **数据库备份**：`script/backup/backup-postgres.ps1`（`pg_dump -Fc` + 归档校验 + 保留天数），
-  已注册 Windows 计划任务 `JuLing-Postgres-Backup` 每天 02:30 执行；恢复步骤见 `script/backup/README.md`。
+  已注册 Windows 计划任务 `JuLing-Postgres-Backup` 每天 02:30 备份 `juling`，
+  `JuLing-Postgres-Backup-Yate` 每天 02:45 备份 `yate`；恢复步骤见 `script/backup/README.md`。
 - **后端只监听本机**：`application-local.yaml` 中 `server.address: 127.0.0.1`，外部统一经 Nginx 访问；
   `/druid/*`、`/doc.html` 等运维入口不对外代理，Druid 控制台口令存于本机 `script/local/druid-console.txt`（不入库）；
   Nginx 侧片段归档在 `script/nginx/README.md`（线上配置在 Nginx 安装目录，仓库外）。
