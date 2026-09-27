@@ -28,6 +28,8 @@
   const loadError = ref(false);
   /** 取消 / 确认收货进行中：按钮显示 loading，避免重复提交 */
   const acting = ref(false);
+  /** 凭证折叠面板展开项：默认展开最新一条，避免历史凭证把页面撑长 */
+  const activeProofs = ref<string[]>([]);
 
   /** 各步骤对应的发生时间，作为步骤条副标题展示 */
   const stepTimes = computed<Record<string, string | undefined>>(() => {
@@ -75,6 +77,45 @@
     proofs.value.length ? '重新上传付款凭证' : '上传付款凭证',
   );
 
+  /* ---------------------------- 收款进度（van-steps） ---------------------------- */
+
+  /** 收款进度三步：客户上传 → 财务核验 → 收款完成 */
+  const RECEIVE_STEPS = ['上传凭证', '财务核验', '收款完成'] as const;
+
+  /** 由订单收款状态推导当前处于哪一步 */
+  const receiveStepActive = computed(() => {
+    const status = order.value?.paymentProofStatus ?? 0;
+    if (status === 4) return 2; // 已收齐
+    if (status === 1 || status === 3) return 1; // 待核验 / 部分收款：核验环节
+    return 0; // 未上传 / 已驳回：回到上传环节
+  });
+
+  /** 已驳回时进度条用警示色，避免看起来「一切正常」 */
+  const receiveStepColor = computed(() =>
+    order.value?.paymentProofStatus === 2
+      ? 'var(--app-danger-color)'
+      : 'var(--app-primary-color)',
+  );
+
+  /**
+   * 收款进度的时间摘要。
+   *
+   * 刻意不放进 van-step 里：横向步骤条的最后一个步骤是绝对定位且宽度 auto，
+   * 往标题里塞第二行文字会把它撑出容器（表现为内容溢出/边距错乱）。
+   */
+  const receiveHint = computed(() => {
+    const list = [...proofs.value].sort((a, b) => a.id - b.id);
+    if (!list.length) return '';
+    const first = formatDate(list[0]!.createTime, 'MM-DD HH:mm');
+    const audited = list.filter((item) => item.auditTime);
+    const lastAudit = audited.length
+      ? formatDate(audited[audited.length - 1]!.auditTime, 'MM-DD HH:mm')
+      : '';
+    return lastAudit
+      ? `首次提交 ${first} · 最近核验 ${lastAudit}`
+      : `首次提交 ${first} · 等待财务核验`;
+  });
+
   function toPayment(): void {
     void router.push(`/order/${orderId.value}/payment`);
   }
@@ -88,6 +129,10 @@
       ]);
       order.value = detail;
       proofs.value = proofList;
+      // 默认展开最新一条凭证，历史记录收起
+      activeProofs.value = proofList.length
+        ? [String(proofList[proofList.length - 1]!.id)]
+        : [];
       loadError.value = false;
     } catch (error) {
       // 拦截器已提示。业务错误（订单不存在）与网络异常要区分：后者给重试入口
@@ -158,16 +203,17 @@
 
     <template v-else-if="order">
       <div class="app-scroll">
-        <!-- 状态：正向流程用垂直步骤条展示进度（含各节点时间）；取消 / 售后用色块 -->
+        <!-- 订单状态：正向流程用垂直步骤条展示进度（含各节点时间）；取消 / 售后用色块 -->
         <van-steps
           v-if="!isAbnormal"
           direction="vertical"
           :active="activeStep"
           active-color="var(--app-primary-color)"
+          inactive-color="#c8c9cc"
           class="order-detail__steps"
         >
           <van-step v-for="step in ORDER_STATUS_STEPS" :key="step.key">
-            {{ step.text }}
+            <div class="order-detail__step-title">{{ step.text }}</div>
             <div v-if="stepTimes[step.key]" class="order-detail__step-time">
               {{ stepTimes[step.key] }}
             </div>
@@ -182,18 +228,29 @@
           <div class="order-detail__status-tip">订单号 {{ order.orderNo }}</div>
         </div>
 
-        <!-- 线下收款：收款状态 + 应付/已收/待收 + 凭证与驳回原因（客户自助查看核验进度） -->
+        <!-- 货款收款：收款进度（van-steps）+ 金额 + 驳回提示 + 凭证（van-collapse） -->
         <div class="order-detail__card app-card">
           <div class="flex-between">
             <span class="order-detail__title">货款收款</span>
-            <span
-              class="order-detail__chip"
-              :style="{ color: receiveBadge.color, borderColor: receiveBadge.color }"
-            >
-              {{ receiveBadge.text }}
-            </span>
+            <van-tag :color="receiveBadge.color" plain>{{ receiveBadge.text }}</van-tag>
           </div>
 
+          <!-- 收款进度：客户上传 → 财务核验 → 收款完成 -->
+          <van-steps
+            :active="receiveStepActive"
+            :active-color="receiveStepColor"
+            inactive-color="#c8c9cc"
+            class="order-detail__receive-steps"
+          >
+            <van-step v-for="label in RECEIVE_STEPS" :key="label">
+              {{ label }}
+            </van-step>
+          </van-steps>
+          <div v-if="receiveHint" class="order-detail__receive-hint">
+            {{ receiveHint }}
+          </div>
+
+          <!-- 金额：应付 / 已收 / 待收 -->
           <div class="order-detail__receive">
             <div class="order-detail__receive-item">
               <div class="order-detail__receive-label">应付</div>
@@ -205,30 +262,49 @@
             </div>
             <div class="order-detail__receive-item">
               <div class="order-detail__receive-label">待收</div>
-              <div class="order-detail__receive-value order-detail__receive-value--strong">
+              <div
+                class="order-detail__receive-value"
+                :class="{ 'order-detail__receive-value--strong': remainAmount > 0 }"
+              >
                 ¥{{ formatPrice(remainAmount) }}
               </div>
             </div>
           </div>
 
-          <div v-if="rejectedProof" class="order-detail__reject">
-            凭证被驳回：{{ rejectedProof.auditRemark || '未填写原因' }}
-          </div>
+          <!-- 驳回原因：用 notice-bar 直接带出后台核验意见，引导客户重传 -->
+          <van-notice-bar
+            v-if="rejectedProof"
+            class="order-detail__notice"
+            left-icon="warning-o"
+            color="var(--app-danger-color)"
+            background="#fff7f6"
+            wrapable
+            :text="`凭证未通过：${rejectedProof.auditRemark || '未填写原因'}，请重新上传`"
+          />
 
-          <!-- 凭证图片：点击看大图 -->
-          <div v-if="proofs.length" class="order-detail__proofs">
-            <div v-for="proof in proofs" :key="proof.id" class="order-detail__proof">
-              <div class="flex-between order-detail__proof-head">
-                <span>
-                  申报 ¥{{ formatPrice(proof.amount) }}
-                  <template v-if="proof.confirmedAmount != null">
-                    · 核定 ¥{{ formatPrice(proof.confirmedAmount) }}
-                  </template>
-                </span>
-                <span :style="{ color: PROOF_STATUS_MAP[proof.status]?.color }">
-                  {{ PROOF_STATUS_MAP[proof.status]?.text ?? '未知' }}
-                </span>
-              </div>
+          <van-divider v-if="proofs.length" class="order-detail__divider" />
+
+          <!-- 凭证记录：折叠面板，默认展开最新一条，历史可展开查看 -->
+          <van-collapse v-if="proofs.length" v-model="activeProofs" class="order-detail__proofs">
+            <van-collapse-item
+              v-for="proof in proofs"
+              :key="proof.id"
+              :name="String(proof.id)"
+            >
+              <template #title>
+                <div class="order-detail__proof-title">
+                  <span>
+                    申报 ¥{{ formatPrice(proof.amount) }}
+                    <template v-if="proof.confirmedAmount != null">
+                      · 核定 ¥{{ formatPrice(proof.confirmedAmount) }}
+                    </template>
+                  </span>
+                  <van-tag :color="PROOF_STATUS_MAP[proof.status]?.color" plain>
+                    {{ PROOF_STATUS_MAP[proof.status]?.text ?? '未知' }}
+                  </van-tag>
+                </div>
+              </template>
+
               <div class="order-detail__proof-imgs">
                 <van-image
                   v-for="(url, index) in proof.urls"
@@ -244,12 +320,16 @@
                 {{ formatDate(proof.createTime, 'YYYY-MM-DD HH:mm') }}
                 <template v-if="proof.payerName"> · {{ proof.payerName }}</template>
               </div>
-            </div>
-          </div>
+              <div v-if="proof.auditRemark" class="order-detail__proof-remark">
+                核验意见：{{ proof.auditRemark }}
+              </div>
+            </van-collapse-item>
+          </van-collapse>
+          <div v-else class="order-detail__proof-empty">还没有上传付款凭证</div>
 
           <van-button
             v-if="canUpload"
-            class="mt-3"
+            class="order-detail__upload"
             type="primary"
             block
             round
@@ -266,29 +346,22 @@
           <van-cell title="收货地址" :label="order.receiverAddress" />
         </van-cell-group>
 
-        <!-- 商品 -->
+        <!-- 商品信息：用 van-card 展示订单行 -->
         <div class="order-detail__card app-card">
           <div class="order-detail__title">商品信息</div>
-          <div v-for="item in order.items" :key="item.id" class="order-detail__item">
-            <van-image
-              class="order-detail__img"
-              :src="resolveImage(item.picUrl)"
-              fit="cover"
-              radius="6"
-              lazy-load
-            />
-            <div class="order-detail__info">
-              <div class="text-ellipsis-2 order-detail__name">{{ item.name }}</div>
-              <div class="order-detail__spec text-ellipsis">{{ item.specText }}</div>
-            </div>
-            <div class="order-detail__amount">
-              <div>¥{{ formatPrice(item.price) }}</div>
-              <div class="order-detail__qty">× {{ item.quantity }}</div>
-            </div>
-          </div>
+          <van-card
+            v-for="item in order.items"
+            :key="item.id"
+            class="order-detail__goods"
+            :title="item.name"
+            :desc="item.specText"
+            :num="item.quantity"
+            :price="formatPrice(item.price)"
+            :thumb="resolveImage(item.picUrl)"
+          />
         </div>
 
-        <!-- 金额 -->
+        <!-- 金额明细 -->
         <van-cell-group inset class="order-detail__group">
           <van-cell title="商品总额" :value="`¥${formatPrice(order.totalPrice)}`" />
           <van-cell title="运费" :value="`¥${formatPrice(order.freightPrice ?? 0)}`" />
@@ -300,10 +373,11 @@
           </van-cell>
         </van-cell-group>
 
-        <!-- 时间线 -->
+        <!-- 订单信息与时间 -->
         <van-cell-group inset class="order-detail__group">
+          <van-cell title="订单号" :value="order.orderNo" is-link @click="onCopy" />
           <van-cell title="下单时间" :value="formatDate(order.createTime)" />
-          <van-cell v-if="order.payTime" title="支付时间" :value="formatDate(order.payTime)" />
+          <van-cell v-if="order.payTime" title="收款时间" :value="formatDate(order.payTime)" />
           <van-cell
             v-if="order.deliveryTime"
             title="发货时间"
@@ -314,7 +388,7 @@
 
       <!-- 底部固定操作栏：无需滚到底即可操作 -->
       <van-action-bar class="order-detail__bar">
-        <van-action-bar-button type="default" text="复制订单号" @click="onCopy" />
+        <van-action-bar-icon icon="orders-o" text="复制订单号" @click="onCopy" />
         <van-action-bar-button
           v-if="canUpload"
           type="primary"
@@ -360,9 +434,18 @@
       justify-content: center;
     }
 
+    /*
+     * 竖向步骤条的圆点/竖线按 left:-15px 定位，容器左内边距必须保留 Vant 默认值
+     * （--van-padding-xl），改小会被 .van-steps 的 overflow:hidden 裁掉。
+     */
     &__steps {
-      padding: 16px 0;
-      background: #fff;
+      padding: 16px 16px 4px var(--van-padding-xl);
+      background: var(--app-white);
+    }
+
+    &__step-title {
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     &__step-time {
@@ -396,17 +479,29 @@
       padding: 12px;
     }
 
-    &__chip {
-      padding: 1px 6px;
+    &__title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* 横向步骤条：只抵消卡片左右内边距，让进度线与卡片等宽；内边距交给组件自己 */
+    &__receive-steps {
+      margin: 4px -12px 0;
+    }
+
+    /* 进度时间摘要：单行小字，超长省略，避免撑破卡片 */
+    &__receive-hint {
+      overflow: hidden;
       font-size: 11px;
-      line-height: 16px;
-      border: 1px solid currentcolor;
-      border-radius: 4px;
+      color: var(--app-text-color-secondary);
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &__receive {
       display: flex;
-      margin-top: 12px;
+      margin-top: 4px;
     }
 
     &__receive-item {
@@ -429,34 +524,37 @@
       }
     }
 
-    &__reject {
-      margin-top: 10px;
-      padding: 8px 10px;
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--app-danger-color);
-      background: #fff7f6;
-      border-radius: 8px;
+    /* notice-bar 默认自带左右内边距，这里向两侧出血对齐卡片边缘 */
+    &__notice {
+      margin: 8px -12px 0;
     }
 
+    &__divider {
+      margin: 12px 0 4px;
+    }
+
+    /* 折叠面板：去掉组件默认的外边框与背景，融进卡片 */
     &__proofs {
-      margin-top: 4px;
-    }
+      :deep(.van-collapse-item__title) {
+        padding: 10px 0;
+      }
 
-    &__proof {
-      padding: 10px 0;
-
-      & + & {
-        border-top: 1px solid var(--app-border-color);
+      :deep(.van-collapse-item__content) {
+        padding: 0 0 10px;
+        color: inherit;
       }
     }
 
-    &__proof-head {
+    &__proof-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       font-size: 13px;
     }
 
     &__proof-imgs {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       margin-top: 8px;
     }
@@ -472,54 +570,41 @@
       color: var(--app-text-color-secondary);
     }
 
-    &__title {
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 600;
+    &__proof-remark {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--app-danger-color);
     }
 
-    &__item {
-      display: flex;
-      gap: 10px;
+    &__proof-empty {
+      padding: 4px 0 8px;
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__upload {
+      margin-top: 12px;
+    }
+
+    /* van-card 自带背景与内边距，这里融入卡片后只做分隔 */
+    &__goods {
+      background: transparent;
       padding: 8px 0;
 
-      & + & {
-        border-top: 1px solid var(--app-border-color);
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--app-border-color);
       }
-    }
 
-    &__img {
-      flex: none;
-      width: 64px;
-      height: 64px;
-    }
+      :deep(.van-card__thumb) {
+        width: 68px;
+        height: 68px;
+        margin-right: 10px;
+      }
 
-    &__info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    &__name {
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    &__spec {
-      margin-top: 2px;
-      font-size: 12px;
-      color: var(--app-text-color-secondary);
-    }
-
-    &__amount {
-      flex: none;
-      text-align: right;
-      font-size: 13px;
-    }
-
-    &__qty {
-      margin-top: 2px;
-      font-size: 12px;
-      color: var(--app-text-color-secondary);
+      :deep(.van-card__title) {
+        font-size: 14px;
+        line-height: 1.4;
+      }
     }
   }
 </style>
