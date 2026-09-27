@@ -1,6 +1,6 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
+    <view class="yd-text-main yd-border-light border-b px-24rpx py-20rpx text-30rpx font-semibold">
       我的概况
     </view>
 
@@ -72,13 +72,13 @@
     </view>
 
     <!-- 快捷入口：打卡 -->
-    <view v-if="employee" class="border-t border-t-[#f0f0f0] px-24rpx py-20rpx">
+    <view v-if="employee" class="yd-border-light border-t px-24rpx py-20rpx">
       <view
         class="yd-bg-subtle flex items-center justify-between rounded-12rpx px-24rpx py-20rpx"
         @click="goClock"
       >
         <view class="flex items-center gap-16rpx">
-          <view class="h-64rpx w-64rpx flex items-center justify-center rounded-12rpx bg-[#e8f3ff]">
+          <view class="yd-bg-info-soft h-64rpx w-64rpx flex items-center justify-center rounded-12rpx">
             <wd-icon name="location" size="36rpx" color="#1677ff" />
           </view>
           <view>

@@ -12,7 +12,7 @@
         v-if="clearable && !disabled && modelValue"
         name="close-circle"
         size="30rpx"
-        custom-style="color: #c0c4cc;"
+        custom-style="color: var(--yd-text-faint);"
         @click.stop="handleClear"
       />
       <wd-icon v-else name="arrow-right" size="28rpx" color="#c0c4cc" />

@@ -17,7 +17,7 @@
             <view class="flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
                 <view class="mb-12rpx flex items-center">
-                  <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#722ed1]">
+                  <view class="yd-bg-accent-purple mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx">
                     <wd-icon name="folder" size="20px" color="#fff" />
                   </view>
                   <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
@@ -34,7 +34,7 @@
                 </view>
               </view>
               <view v-if="item.children && item.children.length > 0" class="mt-4rpx flex shrink-0 items-center" @click.stop="handleEnterChildren(item)">
-                <text class="text-24rpx text-[#722ed1]">子类型({{ item.children.length }})</text>
+                <text class="yd-text-accent-purple text-24rpx">子类型({{ item.children.length }})</text>
                 <wd-icon name="arrow-right" size="12px" color="#722ed1" />
               </view>
             </view>

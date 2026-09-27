@@ -59,7 +59,7 @@
             :class="{ 'yd-bg-subtle': row.group }"
             :style="{ width: `${leftWidth + timelineWidth}rpx` }"
           >
-            <view class="gantt-left flex shrink-0 bg-white" :class="{ '!bg-[#f7f8fa]': row.group }" :style="{ width: `${leftWidth}rpx` }">
+            <view class="gantt-left flex shrink-0 bg-white" :class="{ '!bg-[var(--yd-surface-subtle)]': row.group }" :style="{ width: `${leftWidth}rpx` }">
               <view class="gantt-cell-name flex items-center" :style="{ paddingLeft: `${12 + row.depth * 24}rpx` }">
                 <wd-icon
                   v-if="hasChildren(row.key)"
@@ -82,7 +82,7 @@
             </view>
             <view class="gantt-timeline relative flex-1" :style="{ width: `${timelineWidth}rpx` }">
               <!-- 今日线 -->
-              <view class="absolute top-0 z-1 h-full w-2rpx bg-[#f5222d]" :style="{ left: `${todayPosition}%` }" />
+              <view class="yd-bg-danger absolute top-0 z-1 h-full w-2rpx" :style="{ left: `${todayPosition}%` }" />
               <!-- 甘特条 -->
               <view
                 class="absolute h-40rpx min-w-24rpx flex items-center justify-center overflow-hidden rounded-8rpx text-22rpx text-white"
@@ -401,22 +401,22 @@ onUnmounted(() => {
 }
 
 .gantt-row {
-  border-bottom: 2rpx solid #f0f0f0;
-  background: #fff;
+  border-bottom: 2rpx solid var(--yd-border-light);
+  background: var(--yd-surface-card);
 }
 
 .gantt-left {
   position: sticky;
   left: 0;
   z-index: 2;
-  border-right: 2rpx solid #f0f0f0;
+  border-right: 2rpx solid var(--yd-border-light);
 }
 
 .gantt-cell-name {
   width: 260rpx;
   padding: 20rpx 16rpx;
   font-size: 26rpx;
-  color: #333;
+  color: var(--yd-text-main);
   overflow: hidden;
 }
 
@@ -424,13 +424,13 @@ onUnmounted(() => {
   width: 130rpx;
   padding: 20rpx 8rpx;
   font-size: 22rpx;
-  color: #666;
-  border-left: 2rpx solid #f0f0f0;
+  color: var(--yd-text-sub);
+  border-left: 2rpx solid var(--yd-border-light);
 }
 
 .gantt-timeline {
   height: 88rpx;
-  background-image: linear-gradient(to right, #f7f7f7 2rpx, transparent 2rpx);
+  background-image: linear-gradient(to right, var(--yd-surface-page) 2rpx, transparent 2rpx);
   background-size: 10% 100%;
 }
 </style>

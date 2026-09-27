@@ -39,7 +39,7 @@
     </view>
 
     <!-- 成员预览 -->
-    <view v-if="selectedTeamId" class="mx-24rpx mb-24rpx rounded-12rpx bg-[#fff7ed] p-20rpx">
+    <view v-if="selectedTeamId" class="yd-bg-warning-soft mx-24rpx mb-24rpx rounded-12rpx p-20rpx">
       <view class="yd-text-main mb-16rpx text-28rpx font-semibold">
         {{ selectedTeamName }} 成员
       </view>
@@ -80,7 +80,7 @@
                 v-for="team in teamOptions"
                 :key="team.id"
                 class="yd-border-light mb-16rpx border rounded-12rpx p-20rpx"
-                :class="selectedTeamIds.includes(Number(team.id)) ? 'border-[#1677ff] bg-[#eef6ff]' : 'bg-white'"
+                :class="selectedTeamIds.includes(Number(team.id)) ? 'yd-border-primary yd-bg-info-soft' : 'bg-white'"
                 @click="toggleTeam(team)"
               >
                 <view class="yd-text-main text-30rpx font-semibold">

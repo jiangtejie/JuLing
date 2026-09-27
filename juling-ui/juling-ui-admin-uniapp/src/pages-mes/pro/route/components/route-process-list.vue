@@ -106,7 +106,7 @@
               <wd-input v-model="formData.colorCode" placeholder="请输入颜色，如 #00AEF3" clearable />
             </wd-form-item>
             <view class="flex flex-wrap gap-12rpx px-24rpx pb-20rpx">
-              <view v-for="color in colorOptions" :key="color" class="h-44rpx w-64rpx border-2rpx rounded-8rpx" :class="formData.colorCode === color ? 'border-[#1677ff]' : 'border-transparent'" :style="{ backgroundColor: color }" @click="formData.colorCode = color" />
+              <view v-for="color in colorOptions" :key="color" class="h-44rpx w-64rpx border-2rpx rounded-8rpx" :class="formData.colorCode === color ? 'yd-border-primary' : 'border-transparent'" :style="{ backgroundColor: color }" @click="formData.colorCode = color" />
             </view>
             <wd-form-item title="备注" title-width="220rpx" prop="remark">
               <wd-textarea v-model="formData.remark" placeholder="请输入备注" :maxlength="200" show-word-limit clearable />

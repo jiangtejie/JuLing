@@ -58,7 +58,7 @@
         <view
           v-for="member in filteredMembers"
           :key="member.userId"
-          class="border-t border-t-[#f2f3f5] px-24rpx py-20rpx"
+          class="yd-border-light border-t px-24rpx py-20rpx"
         >
           <view class="flex items-center gap-16rpx">
             <wd-img

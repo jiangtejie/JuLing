@@ -100,7 +100,7 @@
       <view v-if="isStock" class="yd-bg-warning-soft yd-text-warning mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         执行上架会影响后续库存流程；H5 验证仅到确认提示，不在真实数据上确认执行。
       </view>
-      <view v-if="isCancel" class="yd-bg-danger-soft mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx text-[#cf1322] leading-40rpx">
+      <view v-if="isCancel" class="yd-bg-danger-soft yd-text-danger-strong mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         取消后不可恢复；H5 验证仅到确认提示，不在真实数据上确认取消。
       </view>
       <view class="h-180rpx" />

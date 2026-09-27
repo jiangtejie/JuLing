@@ -48,7 +48,7 @@
       <template v-for="item in list" :key="item.id">
         <view
           v-if="isSystemTip(item)"
-          class="border-b border-b-[#eee] bg-white px-32rpx py-24rpx text-center active:bg-[#f5f5f5]"
+          class="yd-border-light border-b bg-white px-32rpx py-24rpx text-center active:bg-[var(--yd-surface-page)]"
           @click="locateMessage(item)"
         >
           <view class="yd-text-hint text-24rpx">
@@ -60,7 +60,7 @@
         </view>
         <view
           v-else
-          class="flex gap-20rpx border-b border-b-[#eee] bg-white px-24rpx py-22rpx active:bg-[#f5f5f5]"
+          class="yd-border-light flex gap-20rpx border-b bg-white px-24rpx py-22rpx active:bg-[var(--yd-surface-page)]"
           @click="locateMessage(item)"
         >
           <ImAvatar :src="getSenderAvatar(item)" :name="getSenderRealName(item)" :round="false" size="76rpx" />
@@ -113,7 +113,7 @@
           <view
             v-for="member in filteredMembers"
             :key="member.userId"
-            class="flex items-center gap-18rpx border-b border-b-[#eee] bg-white px-24rpx py-18rpx"
+            class="yd-border-light flex items-center gap-18rpx border-b bg-white px-24rpx py-18rpx"
             @click="selectMember(member)"
           >
             <ImAvatar :src="member.avatar" :name="member.nickname" size="72rpx" />

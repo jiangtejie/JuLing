@@ -76,7 +76,7 @@
               <text class="yd-text-hint mr-8rpx shrink-0">业务时间：</text>
               <text class="min-w-0 flex-1 truncate">{{ formatDateTime(item.recordTime) || '-' }}</text>
             </view>
-            <view v-if="getCreateAction(item)" class="flex justify-end border-t border-t-[#f0f0f0] pt-20rpx">
+            <view v-if="getCreateAction(item)" class="yd-border-light flex justify-end border-t pt-20rpx">
               <wd-button size="small" type="primary" @click="handleCreateInspect(item)">
                 {{ getCreateAction(item)?.label }}
               </wd-button>

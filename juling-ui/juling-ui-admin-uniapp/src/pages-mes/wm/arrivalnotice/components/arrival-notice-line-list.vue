@@ -1,6 +1,6 @@
 <template>
   <view class="mt-24rpx bg-white">
-    <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+    <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
       <view class="yd-text-main text-30rpx font-semibold">
         物料信息
       </view>
@@ -26,7 +26,7 @@
         <view
           v-for="item in list"
           :key="item.id || item.itemId"
-          class="border-b border-b-[#f5f5f5] py-20rpx last:border-b-0"
+          class="yd-border-light border-b py-20rpx last:border-b-0"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">
             <view class="min-w-0 flex-1">

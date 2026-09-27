@@ -33,19 +33,19 @@
                   <wd-icon :name="item.icon" size="42rpx" color="#fff" />
                 </view>
                 <view class="min-w-0 flex-1">
-                  <view class="text-26rpx text-[#8c8c8c]">
+                  <view class="yd-text-hint text-26rpx">
                     {{ item.label }}
                   </view>
                   <view class="mt-10rpx flex flex-wrap items-baseline gap-8rpx">
                     <text class="text-42rpx font-semibold leading-none" :style="{ color: item.color }">
                       {{ item.value }}
                     </text>
-                    <text class="text-24rpx text-[#8c8c8c]">
+                    <text class="yd-text-hint text-24rpx">
                       {{ item.unit }}
                     </text>
                   </view>
                   <view class="mt-12rpx flex flex-wrap gap-x-18rpx gap-y-6rpx text-22rpx">
-                    <text v-for="subItem in item.subItems" :key="subItem.label" :style="{ color: subItem.color || '#9ca3af' }">
+                    <text v-for="subItem in item.subItems" :key="subItem.label" :style="{ color: subItem.color || 'var(--yd-text-hint)' }">
                       {{ subItem.label }}
                     </text>
                   </view>
@@ -62,7 +62,7 @@
           <!-- 趋势分析 -->
           <view v-if="activeTab === MES_HOME_TAB.TREND" class="mes-tab-grid mt-24rpx">
             <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
-              <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-28rpx py-24rpx">
+              <view class="yd-border-light flex items-center justify-between border-b px-28rpx py-24rpx">
                 <view class="yd-text-main text-30rpx font-semibold">
                   生产趋势
                 </view>
@@ -71,7 +71,7 @@
                     v-for="item in trendDayOptions"
                     :key="item.value"
                     class="h-48rpx min-w-112rpx flex items-center justify-center px-16rpx text-24rpx"
-                    :class="trendDays === item.value ? 'bg-[#409eff] text-white' : 'text-[#606266]'"
+                    :class="trendDays === item.value ? 'yd-bg-accent-blue-light text-white' : 'yd-text-sub'"
                     @click="handleTrendDaysChange(item.value)"
                   >
                     {{ item.label }}
@@ -88,7 +88,7 @@
             </view>
 
             <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
-              <view class="yd-text-main border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx font-semibold">
+              <view class="yd-text-main yd-border-light border-b px-28rpx py-24rpx text-30rpx font-semibold">
                 工单状态分布
               </view>
               <view class="p-24rpx">
@@ -104,7 +104,7 @@
           <!-- 待办异常 -->
           <view v-else-if="activeTab === MES_HOME_TAB.ALERT" class="mt-24rpx">
             <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
-              <view class="yd-text-main border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx font-semibold">
+              <view class="yd-text-main yd-border-light border-b px-28rpx py-24rpx text-30rpx font-semibold">
                 待办与异常
               </view>
               <view class="px-24rpx py-12rpx">
@@ -128,7 +128,7 @@
                       {{ item.desc }}
                     </view>
                   </view>
-                  <view v-if="item.count > 0" class="min-w-36rpx rounded-999rpx bg-[#f56c6c] px-10rpx py-2rpx text-center text-22rpx text-white">
+                  <view v-if="item.count > 0" class="yd-bg-danger-bright min-w-36rpx rounded-999rpx px-10rpx py-2rpx text-center text-22rpx text-white">
                     {{ item.count }}
                   </view>
                 </view>
@@ -139,7 +139,7 @@
           <!-- 快捷入口 -->
           <view v-else class="mt-24rpx">
             <view class="yd-border-base overflow-hidden border rounded-8rpx bg-white shadow-sm">
-              <view class="yd-text-main border-b border-b-[#f0f0f0] px-28rpx py-24rpx text-30rpx font-semibold">
+              <view class="yd-text-main yd-border-light border-b px-28rpx py-24rpx text-30rpx font-semibold">
                 快捷入口
               </view>
               <view v-if="accessibleShortcuts.length > 0" class="mes-shortcut-grid p-32rpx">
@@ -155,7 +155,7 @@
                   >
                     <wd-icon :name="item.icon" size="44rpx" color="#fff" />
                   </view>
-                  <text class="line-clamp-2 mt-16rpx text-center text-25rpx text-[#606266]">
+                  <text class="yd-text-sub line-clamp-2 mt-16rpx text-center text-25rpx">
                     {{ item.title }}
                   </text>
                 </view>
@@ -167,7 +167,7 @@
           </view>
         </template>
 
-        <view v-if="loadError" class="yd-text-warning yd-bg-warning-soft mt-24rpx border border-[#fa8c16] rounded-8rpx px-24rpx py-16rpx text-24rpx">
+        <view v-if="loadError" class="yd-text-warning yd-bg-warning-soft yd-border-warning mt-24rpx border rounded-8rpx px-24rpx py-16rpx text-24rpx">
           统计数据加载失败，已保留默认值，模块入口仍可继续使用
         </view>
       </view>

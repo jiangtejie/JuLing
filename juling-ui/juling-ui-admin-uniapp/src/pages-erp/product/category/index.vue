@@ -26,7 +26,7 @@
             <view class="flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
                 <view class="mb-12rpx flex items-center">
-                  <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#13c2c2]">
+                  <view class="yd-bg-accent-teal mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx">
                     <wd-icon name="folder" size="20px" color="#fff" />
                   </view>
                   <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
@@ -47,7 +47,7 @@
                 class="mt-4rpx flex shrink-0 items-center"
                 @click.stop="handleEnterChildren(item)"
               >
-                <text class="text-24rpx text-[#13c2c2]">子分类({{ item.children.length }})</text>
+                <text class="yd-text-accent-teal text-24rpx">子分类({{ item.children.length }})</text>
                 <wd-icon name="arrow-right" size="12px" color="#13c2c2" />
               </view>
             </view>

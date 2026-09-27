@@ -15,7 +15,7 @@
     </view>
 
     <!-- 提示 -->
-    <view class="yd-text-warning mx-24rpx mt-24rpx rounded-12rpx bg-[#fffbe6] p-20rpx text-26rpx">
+    <view class="yd-text-warning yd-bg-warning-soft mx-24rpx mt-24rpx rounded-12rpx p-20rpx text-26rpx">
       恢复时会保留此前单独删除的子项；彻底删除后无法恢复。内容最多保留 30 天，之后将被永久删除。
     </view>
 

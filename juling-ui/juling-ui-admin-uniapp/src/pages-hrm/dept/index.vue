@@ -29,7 +29,7 @@
         <view class="p-24rpx" @click="handleDetail(item)">
           <view class="flex items-center justify-between">
             <view class="min-w-0 flex flex-1 items-center">
-              <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#13c2c2]">
+              <view class="yd-bg-accent-teal mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx">
                 <wd-icon name="organization" size="20px" color="#fff" />
               </view>
               <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">

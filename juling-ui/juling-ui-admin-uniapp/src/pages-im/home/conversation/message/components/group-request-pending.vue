@@ -1,11 +1,11 @@
 <template>
   <view
     v-if="count > 0"
-    class="flex items-center gap-16rpx border-b border-b-[#eee] bg-[#fff8e8] px-24rpx py-18rpx"
+    class="yd-border-light yd-bg-warning-soft flex items-center gap-16rpx border-b px-24rpx py-18rpx"
     @click="handleOpen"
   >
     <wd-icon name="user-add" size="32rpx" color="#d48806" />
-    <text class="min-w-0 flex-1 text-26rpx text-[#8f5b00]">{{ count }} 条入群申请待处理</text>
+    <text class="yd-text-warning-deep min-w-0 flex-1 text-26rpx">{{ count }} 条入群申请待处理</text>
     <wd-icon name="arrow-right" size="30rpx" color="#b99a61" />
   </view>
 </template>

@@ -57,7 +57,7 @@
             :key="item.id"
             class="mb-20rpx flex items-center gap-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
             :class="[
-              isTempSelected(item.id) ? 'ring-2 ring-[#1677ff]' : '',
+              isTempSelected(item.id) ? 'ring-2 ring-[var(--yd-text-link)]' : '',
               isDisabled(item.id) ? 'opacity-50' : '',
             ]"
             @click="toggleItem(item)"

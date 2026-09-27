@@ -1,7 +1,7 @@
 <template>
   <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="height: 60vh; border-radius: 24rpx 24rpx 0 0;">
     <view class="h-full flex flex-col bg-white">
-      <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
         <view class="yd-text-main text-32rpx font-semibold">
           @ 成员
         </view>
@@ -9,7 +9,7 @@
           关闭
         </wd-button>
       </view>
-      <view class="border-b border-b-[#f2f3f5] px-20rpx py-12rpx">
+      <view class="yd-border-light border-b px-20rpx py-12rpx">
         <wd-search v-model="keyword" placeholder="搜索群成员" hide-cancel />
       </view>
       <scroll-view class="min-h-0 flex-1" scroll-y>
@@ -96,6 +96,6 @@ watch(visible, (value) => {
   align-items: center;
   gap: 20rpx;
   padding: 20rpx 24rpx;
-  border-top: 1rpx solid #f2f3f5;
+  border-top: 1rpx solid var(--yd-border-light);
 }
 </style>

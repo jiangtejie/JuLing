@@ -48,7 +48,7 @@
                 v-for="day in getOverviewDays(item)"
                 :key="day.date"
                 class="yd-border-light mr-12rpx w-160rpx inline-flex flex-col border rounded-8rpx border-solid px-12rpx py-12rpx align-top"
-                :class="day.overview ? 'yd-bg-subtle' : 'bg-[#fff]'"
+                :class="day.overview ? 'yd-bg-subtle' : 'yd-bg-surface-card'"
                 @click="handleDailyDetail(item, day.date, day.overview)"
               >
                 <view class="yd-text-hint mb-8rpx text-center text-22rpx">

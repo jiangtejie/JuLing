@@ -6,7 +6,7 @@
       class="flex items-center gap-14rpx rounded-12rpx bg-white px-20rpx py-18rpx shadow-[0_2rpx_6rpx_rgba(0,0,0,0.04)]"
       @click="handleTopClick"
     >
-      <view class="i-carbon-pin-filled h-32rpx w-32rpx shrink-0 text-[#f5b800]" />
+      <view class="i-carbon-pin-filled yd-text-im-pin h-32rpx w-32rpx shrink-0" />
       <text class="yd-text-sub max-w-180rpx shrink-0 truncate text-26rpx">
         {{ getSenderName(latestMessage) }}：
       </text>
@@ -38,7 +38,7 @@
           class="mb-12rpx flex items-center gap-14rpx rounded-12rpx bg-white px-20rpx py-18rpx"
           @click="handleLocate(message)"
         >
-          <view class="i-carbon-pin-filled h-32rpx w-32rpx shrink-0 text-[#f5b800]" />
+          <view class="i-carbon-pin-filled yd-text-im-pin h-32rpx w-32rpx shrink-0" />
           <text class="yd-text-sub max-w-180rpx shrink-0 truncate text-26rpx">
             {{ getSenderName(message) }}：
           </text>
@@ -55,7 +55,7 @@
         </view>
       </scroll-view>
       <view class="flex justify-center pt-4rpx" @click="expanded = false">
-        <view class="h-40rpx min-w-88rpx flex items-center justify-center rounded-full bg-[#d8d8d8]">
+        <view class="yd-bg-disabled h-40rpx min-w-88rpx flex items-center justify-center rounded-full">
           <wd-icon name="arrow-up" size="28rpx" color="#666" />
         </view>
       </view>

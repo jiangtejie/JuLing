@@ -151,14 +151,14 @@ function openChat() {
   align-items: center;
   gap: 22rpx;
   padding-left: 28rpx;
-  background: #fff;
+  background: var(--yd-surface-card);
 
   &:active {
-    background: #ececec;
+    background: var(--yd-surface-page);
   }
 
   &.is-top {
-    background: #f5f5f5;
+    background: var(--yd-surface-page);
   }
 }
 
@@ -166,14 +166,14 @@ function openChat() {
   min-width: 0;
   flex: 1;
   padding: 22rpx 28rpx 22rpx 0;
-  border-bottom: 1rpx solid #ededed;
+  border-bottom: 1rpx solid var(--yd-border-light);
 }
 
 .conversation-name {
   min-width: 0;
   flex: 1;
   overflow: hidden;
-  color: #191919;
+  color: var(--yd-text-strong);
   font-size: 34rpx;
   font-weight: 400;
   line-height: 44rpx;
@@ -184,9 +184,9 @@ function openChat() {
 .group-tag {
   flex-shrink: 0;
   padding: 0 7rpx;
-  border: 1rpx solid #1677ff;
+  border: 1rpx solid var(--yd-text-link);
   border-radius: 5rpx;
-  color: #1677ff;
+  color: var(--yd-text-link);
   font-size: 20rpx;
   line-height: 28rpx;
 }
@@ -194,7 +194,7 @@ function openChat() {
 .conversation-time {
   flex-shrink: 0;
   margin-left: 16rpx;
-  color: #b2b2b2;
+  color: var(--yd-text-muted);
   font-size: 23rpx;
   line-height: 34rpx;
 }
@@ -206,10 +206,10 @@ function openChat() {
   min-width: 34rpx;
   height: 34rpx;
   padding: 0 7rpx;
-  border: 2rpx solid #fff;
+  border: 2rpx solid var(--yd-surface-card);
   border-radius: 18rpx;
-  background: #fa5151;
-  color: #fff;
+  background: var(--yd-danger-bright);
+  color: var(--yd-text-inverse);
   font-size: 20rpx;
   line-height: 30rpx;
   text-align: center;

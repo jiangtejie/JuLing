@@ -57,7 +57,7 @@
           :key="detail.skuId || index"
           class="mx-24rpx mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm"
         >
-          <view class="flex items-center justify-between border-b border-b-[#f5f5f5] px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
             <view>
               <view class="yd-text-main text-28rpx font-semibold">
                 {{ detail.itemName || '-' }}

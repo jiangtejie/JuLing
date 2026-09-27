@@ -1,6 +1,6 @@
 <template>
   <view class="mt-24rpx bg-white">
-    <view v-if="showTitle || editable" class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+    <view v-if="showTitle || editable" class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
       <view class="yd-text-main text-30rpx font-semibold">
         <template v-if="showTitle">
           装箱清单

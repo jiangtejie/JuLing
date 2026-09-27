@@ -18,7 +18,7 @@
         <view v-else class="yd-text-hint h-full flex items-center justify-center text-26rpx">
           暂无封面
         </view>
-        <view class="absolute bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.55)] px-20rpx py-12rpx text-28rpx text-white">
+        <view class="yd-bg-overlay absolute bottom-0 left-0 right-0 px-20rpx py-12rpx text-28rpx text-white">
           {{ article.title || '未命名图文' }}
         </view>
       </view>

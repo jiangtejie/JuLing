@@ -12,7 +12,7 @@
         <view v-for="item in list" :key="item.id" class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm" @click="handleDetail(item)">
           <view class="p-24rpx">
             <view class="mb-18rpx flex items-start gap-20rpx">
-              <view class="h-88rpx w-88rpx flex shrink-0 items-center justify-center rounded-12rpx bg-[#f3f6fb]">
+              <view class="yd-bg-subtle h-88rpx w-88rpx flex shrink-0 items-center justify-center rounded-12rpx">
                 <wd-img v-if="item.icon" :src="item.icon" width="88rpx" height="88rpx" radius="12rpx" mode="aspectFill" />
                 <wd-icon v-else name="apps" size="44rpx" color="#4b77f3" />
               </view>

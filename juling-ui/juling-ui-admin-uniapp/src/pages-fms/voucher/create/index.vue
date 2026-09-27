@@ -88,7 +88,7 @@
               <wd-cell title="贷方合计" :value="formatFmsAmount(creditTotal)" />
               <wd-cell title="合计大写" :value="balanced ? formatFmsUppercaseMoney(debitTotal) : '-'" />
               <wd-cell v-if="!balanced" title="平衡状态">
-                <text class="text-28rpx text-[#ee0a24]">借贷不平衡</text>
+                <text class="yd-text-danger text-28rpx">借贷不平衡</text>
               </wd-cell>
             </wd-cell-group>
           </view>

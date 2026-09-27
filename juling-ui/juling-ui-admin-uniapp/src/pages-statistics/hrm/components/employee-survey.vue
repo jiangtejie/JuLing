@@ -1,6 +1,6 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
+    <view class="yd-text-main yd-border-light border-b px-24rpx py-20rpx text-30rpx font-semibold">
       人事概况（{{ currentMonthRange }}）
     </view>
     <view class="grid grid-cols-3 gap-16rpx p-24rpx">

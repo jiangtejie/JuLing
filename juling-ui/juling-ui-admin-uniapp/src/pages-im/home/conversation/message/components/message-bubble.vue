@@ -32,14 +32,14 @@
         {{ formatFileSize(filePayload.size) }}
       </view>
       <view v-if="isUploading" class="mt-12rpx">
-        <view class="h-6rpx overflow-hidden rounded-full bg-[#e5e6eb]">
+        <view class="yd-bg-line h-6rpx overflow-hidden rounded-full">
           <view class="yd-bg-success h-full" :style="{ width: `${normalizedUploadProgress}%` }" />
         </view>
         <view class="yd-text-hint mt-6rpx text-22rpx">
           上传中 {{ normalizedUploadProgress }}%
         </view>
       </view>
-      <view class="yd-text-hint mt-12rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx">
+      <view class="yd-text-hint yd-border-light mt-12rpx border-t pt-10rpx text-22rpx">
         {{ filePayload.url ? '点击查看文件' : '上传失败，请重新选择文件' }}
       </view>
     </view>
@@ -81,7 +81,7 @@
           {{ line }}
         </view>
       </view>
-      <view class="yd-text-hint mt-12rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx">
+      <view class="yd-text-hint yd-border-light mt-12rpx border-t pt-10rpx text-22rpx">
         聊天记录
       </view>
     </view>
@@ -203,8 +203,8 @@ onUnmounted(() => voicePlayer.stop(voiceKey))
 }
 
 .im-message-bubble--self {
-  background: #95ec69;
-  color: #1f1f1f;
+  background: var(--yd-im-green);
+  color: var(--yd-text-strong);
 
   &::after {
     position: absolute;
@@ -212,13 +212,13 @@ onUnmounted(() => voicePlayer.stop(voiceKey))
     right: -8rpx;
     content: '';
     border: 9rpx solid transparent;
-    border-left-color: #95ec69;
+    border-left-color: var(--yd-im-green);
   }
 }
 
 .im-message-bubble--other {
-  background: #fff;
-  color: #333;
+  background: var(--yd-surface-card);
+  color: var(--yd-text-main);
 
   &::after {
     position: absolute;
@@ -226,13 +226,13 @@ onUnmounted(() => voicePlayer.stop(voiceKey))
     left: -8rpx;
     content: '';
     border: 9rpx solid transparent;
-    border-right-color: #fff;
+    border-right-color: var(--yd-surface-card);
   }
 }
 
 .im-message-bubble--centered {
-  background: #fff;
-  color: #333;
+  background: var(--yd-surface-card);
+  color: var(--yd-text-main);
 }
 
 .im-message-bubble--plain,

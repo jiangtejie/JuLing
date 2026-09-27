@@ -31,7 +31,7 @@
           v-for="t in tables"
           :key="t.name"
           class="mb-16rpx flex items-center rounded-12rpx bg-white p-24rpx shadow-sm"
-          :class="selected.includes(t.name) ? 'bg-[#eef4ff]!' : ''"
+          :class="selected.includes(t.name) ? 'bg-[var(--yd-bg-info-soft)]!' : ''"
           @click="toggle(t.name)"
         >
           <view class="min-w-0 flex-1">

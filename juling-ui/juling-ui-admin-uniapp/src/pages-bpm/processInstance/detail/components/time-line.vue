@@ -33,7 +33,7 @@
     <!-- 连接线 -->
     <view
       v-if="index < activityNodes.length - 1"
-      class="absolute bottom-0 left-38rpx top-64rpx w-2rpx bg-[#e5e5e5]"
+      class="yd-bg-line absolute bottom-0 left-38rpx top-64rpx w-2rpx"
     />
 
     <!-- 节点内容 -->
@@ -453,11 +453,11 @@ function getTaskEvidenceReasonLabel(nodeType: number) {
 /** 获取状态文本样式类 */
 function getStatusTextClass(status: number) {
   const colorMap: Record<number, string> = {
-    [BpmTaskStatusEnum.RUNNING]: 'text-[#ff943e]',
-    [BpmTaskStatusEnum.APPROVE]: 'text-[#00b32a]',
-    [BpmTaskStatusEnum.REJECT]: 'text-[#f46b6c]',
-    [BpmTaskStatusEnum.CANCEL]: 'text-[#cccccc]',
-    [BpmTaskStatusEnum.RETURN]: 'text-[#f46b6c]',
+    [BpmTaskStatusEnum.RUNNING]: 'yd-text-bpm-running',
+    [BpmTaskStatusEnum.APPROVE]: 'yd-text-bpm-approve',
+    [BpmTaskStatusEnum.REJECT]: 'yd-text-bpm-reject',
+    [BpmTaskStatusEnum.CANCEL]: 'yd-text-faint',
+    [BpmTaskStatusEnum.RETURN]: 'yd-text-bpm-reject',
   }
   return colorMap[status] || 'yd-text-sub'
 }

@@ -91,7 +91,7 @@
             <view class="yd-text-main line-clamp-2 text-28rpx">
               {{ row.spuName || `商品 #${row.spuId}` }}
             </view>
-            <view class="mt-8rpx text-26rpx text-[#ff3000]">
+            <view class="yd-text-price mt-8rpx text-26rpx">
               ￥{{ row.price }}
             </view>
             <view class="yd-text-hint mt-8rpx text-22rpx">
@@ -142,7 +142,7 @@
           </view>
           <view class="yd-text-hint yd-border-light mt-12rpx flex items-center justify-between border-t pt-12rpx text-24rpx">
             <text>{{ formatDate(order.createTime, 'YYYY-MM-DD HH:mm') }}</text>
-            <text>共 {{ order.productCount || 0 }} 件 实付 <text class="text-[#ff3000]">￥{{ fenToYuan(order.payPrice).toFixed(2) }}</text></text>
+            <text>共 {{ order.productCount || 0 }} 件 实付 <text class="yd-text-price">￥{{ fenToYuan(order.payPrice).toFixed(2) }}</text></text>
           </view>
         </view>
       </view>

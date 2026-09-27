@@ -1,7 +1,7 @@
 <template>
   <view class="yd-page-container yd-page-container-paging">
     <wd-navbar title="库位" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
-    <view v-if="currentLocation" class="yd-bg-info-soft px-24rpx py-16rpx text-26rpx text-[#0958d9]">
+    <view v-if="currentLocation" class="yd-bg-info-soft yd-text-info-strong px-24rpx py-16rpx text-26rpx">
       当前仓库/库区：{{ currentLocation.warehouseName || '-' }} / {{ currentLocation.name || `#${currentLocation.id}` }}
     </view>
     <SearchForm @search="handleQuery" @reset="handleReset" />

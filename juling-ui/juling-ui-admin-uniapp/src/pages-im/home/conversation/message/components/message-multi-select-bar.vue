@@ -1,6 +1,6 @@
 <template>
   <view
-    class="flex shrink-0 items-center justify-around border-t border-t-[#eee] bg-white py-24rpx pb-[calc(24rpx+env(safe-area-inset-bottom))]"
+    class="yd-border-light flex shrink-0 items-center justify-around border-t bg-white py-24rpx pb-[calc(24rpx+env(safe-area-inset-bottom))]"
   >
     <text class="yd-text-sub text-28rpx" @click="multiSelect.exit()">取消</text>
     <text

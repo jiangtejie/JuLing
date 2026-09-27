@@ -1,7 +1,7 @@
 <template>
   <wd-popup v-model="visible" position="bottom" safe-area-inset-bottom root-portal custom-style="height: 80vh; border-radius: 24rpx 24rpx 0 0;">
     <view class="h-full flex flex-col bg-white">
-      <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
         <view class="min-w-0 flex flex-1 items-center gap-16rpx">
           <wd-icon v-if="stack.length > 1" name="arrow-left" size="34rpx" color="#666" @click="handleBack" />
           <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">

@@ -1,6 +1,6 @@
 <template>
   <view
-    class="box-border h-75rpx w-full flex touch-none select-none items-center justify-center text-center text-30rpx font-medium active:bg-[#ededed]"
+    class="box-border h-75rpx w-full flex touch-none select-none items-center justify-center text-center text-30rpx font-medium active:bg-[var(--yd-surface-page)]"
     @contextmenu.prevent
     @touchstart.stop.prevent="handlePressStart"
     @touchmove.stop.prevent="handlePressMove"
@@ -13,31 +13,31 @@
     <wd-root-portal>
       <view
         v-if="pressing"
-        class="pointer-events-none fixed inset-0 z-[90] overflow-hidden bg-[rgba(0,0,0,0.64)]"
+        class="yd-bg-overlay-strong pointer-events-none fixed inset-0 z-[90] overflow-hidden"
       >
         <!-- 录音波形 -->
         <view
           class="absolute left-1/2 top-[46%] h-140rpx w-280rpx flex items-center justify-center rounded-24rpx transition-colors duration-150 -translate-x-1/2 -translate-y-1/2"
-          :class="cancelPending ? 'yd-bg-danger' : 'bg-[#95ec69]'"
+          :class="cancelPending ? 'yd-bg-danger' : 'yd-bg-im-green'"
         >
           <view class="relative z-1 h-58rpx flex items-center gap-6rpx">
             <view
               v-for="(heightClass, index) in voiceWaveHeights"
               :key="index"
               class="w-5rpx animate-pulse rounded-full transition-colors duration-150"
-              :class="[heightClass, cancelPending ? 'bg-white opacity-90' : 'bg-[#237a48] opacity-75']"
+              :class="[heightClass, cancelPending ? 'bg-white opacity-90' : 'yd-bg-success-deep opacity-75']"
             />
           </view>
           <view
             class="absolute bottom-[-8rpx] left-1/2 h-20rpx w-20rpx rotate-45 transition-colors duration-150 -translate-x-1/2"
-            :class="cancelPending ? 'yd-bg-danger' : 'bg-[#95ec69]'"
+            :class="cancelPending ? 'yd-bg-danger' : 'yd-bg-im-green'"
           />
         </view>
 
         <!-- 仅保留上滑取消，不提供转文字入口 -->
         <view
           class="absolute bottom-270rpx left-1/2 whitespace-nowrap rounded-999rpx px-38rpx py-18rpx text-28rpx text-white transition-colors duration-150 -translate-x-1/2"
-          :class="cancelPending ? 'yd-bg-danger' : 'bg-[rgba(0,0,0,0.28)]'"
+          :class="cancelPending ? 'yd-bg-danger' : 'yd-bg-overlay-soft'"
         >
           {{ cancelPending ? '松开取消' : '上滑取消' }}
         </view>
@@ -46,11 +46,11 @@
         <view class="absolute inset-x-0 bottom-0 h-260rpx overflow-hidden">
           <view
             class="absolute bottom-[-80rpx] left-[-15vw] h-320rpx w-[130vw] rounded-t-[50%] transition-colors duration-150"
-            :class="cancelPending ? 'bg-[#fff0f0]' : 'yd-bg-subtle'"
+            :class="cancelPending ? 'yd-bg-danger-soft' : 'yd-bg-subtle'"
           >
             <text
               class="absolute left-1/2 top-70rpx whitespace-nowrap text-30rpx font-medium -translate-x-1/2"
-              :class="cancelPending ? 'text-[#e64340]' : 'yd-text-main'"
+              :class="cancelPending ? 'yd-text-danger-bright' : 'yd-text-main'"
             >
               {{ cancelPending ? '松开 取消' : '松开 发送' }}
             </text>

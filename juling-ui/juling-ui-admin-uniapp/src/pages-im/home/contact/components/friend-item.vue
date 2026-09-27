@@ -1,9 +1,9 @@
 <template>
-  <view class="flex items-center gap-20rpx px-24rpx active:bg-[#f5f5f5]" @click="emit('open', friend)">
+  <view class="flex items-center gap-20rpx px-24rpx active:bg-[var(--yd-surface-page)]" @click="emit('open', friend)">
     <view class="py-16rpx">
       <ImAvatar :src="friend.avatar" :name="friend.nickname" size="84rpx" :round="false" />
     </view>
-    <view class="min-w-0 flex-1 border-b border-b-[#f2f3f5] py-16rpx">
+    <view class="yd-border-light min-w-0 flex-1 border-b py-16rpx">
       <view class="yd-text-strong line-clamp-1 text-30rpx font-medium">
         {{ friend.displayName || friend.nickname }}
       </view>

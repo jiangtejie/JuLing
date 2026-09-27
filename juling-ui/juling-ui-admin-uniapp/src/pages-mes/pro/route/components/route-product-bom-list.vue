@@ -1,5 +1,5 @@
 <template>
-  <view class="mt-20rpx rounded-12rpx bg-[#fff7ed] p-20rpx">
+  <view class="yd-bg-warning-soft mt-20rpx rounded-12rpx p-20rpx">
     <view class="mb-16rpx flex items-center justify-between gap-16rpx">
       <view class="yd-text-main text-28rpx font-semibold">
         产品 BOM 配置

@@ -5,7 +5,7 @@
       <ImAvatar :src="user.avatar" :name="user.nickname" :round="false" size="128rpx" />
       <view class="min-w-0 flex-1">
         <view class="flex items-center gap-12rpx">
-          <text class="line-clamp-1 min-w-0 text-40rpx text-[#1f1f1f] font-medium">{{ resolvedDisplayName }}</text>
+          <text class="yd-text-strong line-clamp-1 min-w-0 text-40rpx font-medium">{{ resolvedDisplayName }}</text>
           <dict-tag v-if="user.sex != null" :type="DICT_TYPE.SYSTEM_USER_SEX" :value="user.sex" />
         </view>
         <view class="yd-text-hint mt-12rpx text-26rpx">

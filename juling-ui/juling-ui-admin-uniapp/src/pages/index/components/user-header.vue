@@ -66,7 +66,7 @@ const description = computed(() => {
 
 <style lang="scss" scoped>
 .avatar-wrapper {
-  border: 3rpx solid #f0f0f0;
+  border: 3rpx solid var(--yd-border-light);
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 </style>

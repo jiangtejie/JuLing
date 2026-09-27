@@ -52,7 +52,7 @@
             v-for="item in list"
             :key="item.id"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="selected?.id === item.id ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="selected?.id === item.id ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="selected = item"
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">

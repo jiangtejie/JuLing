@@ -41,11 +41,11 @@
             正常
           </view>
           <view class="flex items-center gap-8rpx">
-            <view class="h-10rpx w-10rpx rounded-full bg-[#ff4d4f]" />
+            <view class="yd-bg-danger-bright h-10rpx w-10rpx rounded-full" />
             异常
           </view>
           <view class="flex items-center gap-8rpx">
-            <view class="h-10rpx w-10rpx rounded-full bg-[#d9d9d9]" />
+            <view class="yd-bg-disabled h-10rpx w-10rpx rounded-full" />
             休息
           </view>
         </view>
@@ -85,7 +85,7 @@
           <view
             v-for="clock in selectedDayDetail.clockList || []"
             :key="clock.id || `${clock.type}-${clock.clockTime}`"
-            class="mb-16rpx flex items-center justify-between gap-16rpx border-b border-b-[#f5f5f5] pb-16rpx last:mb-0 last:border-b-0 last:pb-0"
+            class="yd-border-light mb-16rpx flex items-center justify-between gap-16rpx border-b pb-16rpx last:mb-0 last:border-b-0 last:pb-0"
           >
             <view class="min-w-0 flex-1">
               <view class="yd-text-main text-28rpx">
@@ -274,15 +274,15 @@ defineExpose({ loadStatistics })
 <style lang="scss" scoped>
 .statistics-calendar {
   :deep(.attendance-day-normal .wd-month__day-bottom) {
-    color: #52c41a;
+    color: var(--yd-text-success);
   }
 
   :deep(.attendance-day-abnormal .wd-month__day-bottom) {
-    color: #ff4d4f;
+    color: var(--yd-danger-bright);
   }
 
   :deep(.attendance-day-rest .wd-month__day-bottom) {
-    color: #d9d9d9;
+    color: var(--yd-disabled);
   }
 }
 </style>

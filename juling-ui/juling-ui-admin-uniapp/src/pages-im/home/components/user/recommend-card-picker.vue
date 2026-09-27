@@ -7,8 +7,8 @@
     @create-group="createGroupAndRecommend"
   >
     <template #footer>
-      <view class="shrink-0 border-t border-t-[#e5e7eb] bg-white px-24rpx pb-[calc(16rpx+env(safe-area-inset-bottom))] pt-16rpx">
-        <view class="flex items-center gap-12rpx rounded-12rpx bg-[#f5f6f7] px-20rpx py-16rpx">
+      <view class="yd-border-base shrink-0 border-t bg-white px-24rpx pb-[calc(16rpx+env(safe-area-inset-bottom))] pt-16rpx">
+        <view class="yd-bg-page flex items-center gap-12rpx rounded-12rpx px-20rpx py-16rpx">
           <wd-icon name="edit" size="30rpx" color="#9ca3af" />
           <wd-input
             v-model="leaveMessage"

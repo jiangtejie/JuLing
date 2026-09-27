@@ -11,7 +11,7 @@
         </view>
       </view>
     </view>
-    <view class="yd-text-hint border-t border-t-[#f2f3f5] px-20rpx py-10rpx text-22rpx">
+    <view class="yd-text-hint yd-border-light border-t px-20rpx py-10rpx text-22rpx">
       {{ isGroup ? '群名片' : '个人名片' }}
     </view>
   </view>

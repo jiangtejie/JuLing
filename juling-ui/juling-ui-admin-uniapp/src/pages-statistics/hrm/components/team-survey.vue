@@ -1,6 +1,6 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
+    <view class="yd-text-main yd-border-light border-b px-24rpx py-20rpx text-30rpx font-semibold">
       团队概况
     </view>
     <view class="p-24rpx space-y-24rpx">

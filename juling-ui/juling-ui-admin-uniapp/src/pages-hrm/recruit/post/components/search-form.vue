@@ -46,7 +46,7 @@
                 v-if="formData.areaId != null"
                 name="close-circle"
                 size="30rpx"
-                custom-style="color: #c0c4cc;"
+                custom-style="color: var(--yd-text-faint);"
                 @click.stop="formData.areaId = undefined"
               />
             </view>

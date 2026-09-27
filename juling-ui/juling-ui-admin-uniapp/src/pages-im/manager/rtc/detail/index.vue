@@ -46,7 +46,7 @@
         <view
           v-for="member in participants"
           :key="member.id"
-          class="flex items-center justify-between border-t border-t-[#f2f3f5] px-24rpx py-16rpx"
+          class="yd-border-light flex items-center justify-between border-t px-24rpx py-16rpx"
         >
           <view class="min-w-0 flex-1">
             <view class="yd-text-main line-clamp-1 text-28rpx">

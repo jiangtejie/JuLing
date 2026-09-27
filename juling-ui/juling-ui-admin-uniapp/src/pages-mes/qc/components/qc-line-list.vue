@@ -60,7 +60,7 @@
               <view class="yd-text-hint text-22rpx">
                 致命
               </view>
-              <view class="mt-4rpx text-26rpx text-[#d93026] font-semibold">
+              <view class="yd-text-danger-strong mt-4rpx text-26rpx font-semibold">
                 {{ formatDisplayValue(item.criticalQuantity) }}
               </view>
             </view>

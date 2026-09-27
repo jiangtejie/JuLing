@@ -182,7 +182,7 @@ async function onRefresh() {
   align-items: center;
   gap: 16rpx;
   padding: 16rpx 24rpx;
-  background: #ededed;
+  background: var(--yd-surface-page);
 }
 
 :deep(.conversation-search) {
@@ -190,7 +190,7 @@ async function onRefresh() {
   flex: 1;
   --wot-search-padding: 0;
   --wot-search-bg: transparent;
-  --wot-search-input-bg: #fff;
+  --wot-search-input-bg: var(--yd-surface-card);
   --wot-search-cover-bg: transparent;
   --wot-search-input-height: 64rpx;
   --wot-search-input-radius: 10rpx;
@@ -206,10 +206,10 @@ async function onRefresh() {
   align-items: center;
   justify-content: center;
   border-radius: 10rpx;
-  background: #fff;
+  background: var(--yd-surface-card);
 
   &:active {
-    background: #e2e2e2;
+    background: var(--yd-surface-page);
   }
 }
 
@@ -218,9 +218,9 @@ async function onRefresh() {
   align-items: center;
   gap: 20rpx;
   padding: 22rpx 28rpx;
-  border-bottom: 1rpx solid #e5e5e5;
-  background: #f7f7f7;
-  color: #737373;
+  border-bottom: 1rpx solid var(--yd-border-base);
+  background: var(--yd-surface-page);
+  color: var(--yd-text-sub);
   font-size: 28rpx;
 }
 </style>

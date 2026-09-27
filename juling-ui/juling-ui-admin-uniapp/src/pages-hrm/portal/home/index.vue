@@ -10,7 +10,7 @@
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <view class="p-24rpx space-y-24rpx">
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
             <text class="yd-text-main text-30rpx font-semibold">
               员工工作台
             </text>

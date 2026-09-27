@@ -53,7 +53,7 @@
             v-for="item in noticeList"
             :key="item.id"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="selectedNotice?.id === item.id ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="selectedNotice?.id === item.id ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="selectedNotice = item"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">

@@ -131,7 +131,7 @@
                   <text class="yd-text-main font-semibold">{{ row.total }}</text>
                 </view>
                 <view
-                  class="h-16rpx flex overflow-hidden rounded-8rpx bg-[#f0f0f0]"
+                  class="yd-bg-page h-16rpx flex overflow-hidden rounded-8rpx"
                 >
                   <view
                     v-for="segment in row.segments"

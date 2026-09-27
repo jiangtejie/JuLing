@@ -1,12 +1,12 @@
 <template>
   <view class="bg-white px-24rpx py-20rpx">
-    <view class="rounded-16rpx bg-[#f6f9ff] p-24rpx">
+    <view class="yd-bg-subtle rounded-16rpx p-24rpx">
       <view class="mb-12rpx flex items-start justify-between gap-16rpx">
         <view class="min-w-0 flex-1">
           <view class="yd-text-main text-30rpx font-semibold">
             {{ isClockIn ? '当前已上工' : '当前未上工' }}
           </view>
-          <view class="mt-8rpx text-24rpx text-[#667085]">
+          <view class="yd-text-slate mt-8rpx text-24rpx">
             {{ statusDescription }}
           </view>
         </view>
@@ -15,7 +15,7 @@
         </wd-tag>
       </view>
 
-      <view v-if="isClockIn" class="mt-18rpx text-26rpx text-[#475467] space-y-8rpx">
+      <view v-if="isClockIn" class="yd-text-slate-strong mt-18rpx text-26rpx space-y-8rpx">
         <view>工作站：{{ current?.workstationCode || '-' }} / {{ current?.workstationName || '-' }}</view>
         <view>上工时间：{{ formatDateTime(current?.clockInTime) || '-' }}</view>
       </view>

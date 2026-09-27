@@ -38,7 +38,7 @@
             v-for="item in lineList"
             :key="item.id"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="selectedLine?.id === item.id ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="selectedLine?.id === item.id ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="selectedLine = item"
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">

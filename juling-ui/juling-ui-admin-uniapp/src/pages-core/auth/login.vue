@@ -10,7 +10,7 @@
         :disabled="Boolean(socialBindingContext) || authLoading"
         :preferred-tenant-id="socialBindingContext?.tenantId"
       />
-      <view v-if="socialBindingContext" class="yd-text-link mb-24rpx rounded-12rpx bg-[#e8f4ff] px-24rpx py-20rpx text-26rpx">
+      <view v-if="socialBindingContext" class="yd-text-link yd-bg-info-soft mb-24rpx rounded-12rpx px-24rpx py-20rpx text-26rpx">
         三方授权成功，请使用账号密码登录完成绑定
       </view>
       <view class="input-item">

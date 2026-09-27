@@ -22,7 +22,7 @@
         </view>
         <view
           class="h-64rpx w-64rpx flex items-center justify-center rounded-full"
-          :class="formData.prompt.trim() && !generating ? 'yd-bg-success' : 'bg-[#d9d9d9]'"
+          :class="formData.prompt.trim() && !generating ? 'yd-bg-success' : 'yd-bg-disabled'"
           @click="generating ? emit('stop') : emit('submit')"
         >
           <wd-icon :name="generating ? 'stop' : 'arrow-up'" size="32rpx" color="#fff" />

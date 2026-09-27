@@ -10,7 +10,7 @@
     @after-enter="resetLocalPaging"
   >
     <view class="h-full flex flex-col bg-white">
-      <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
         <view class="yd-text-main text-32rpx font-semibold">
           消息已读情况
         </view>

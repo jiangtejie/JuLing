@@ -1,6 +1,6 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+    <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
       <text class="yd-text-main text-30rpx font-semibold">
         日历
       </text>
@@ -52,7 +52,7 @@
             class="yd-border-base min-h-96rpx border-b border-r px-8rpx py-8rpx last:border-r-0"
             :class="[
               day.isCurrentMonth ? 'bg-white' : 'yd-bg-subtle',
-              day.date === selectedDate ? 'bg-[#e8f3ff]' : '',
+              day.date === selectedDate ? 'yd-bg-info-soft' : '',
             ]"
             @click="selectDate(day.date)"
           >
@@ -60,7 +60,7 @@
               <text
                 class="text-26rpx font-semibold leading-32rpx"
                 :class="[
-                  day.isCurrentMonth ? 'yd-text-main' : 'text-[#c8c9cc]',
+                  day.isCurrentMonth ? 'yd-text-main' : 'yd-text-faint',
                   day.isWeekend && day.isCurrentMonth ? 'yd-text-danger' : '',
                 ]"
               >
@@ -79,7 +79,7 @@
       </view>
 
       <!-- 选中日期摘要 -->
-      <view class="mt-24rpx flex items-center rounded-12rpx bg-[#e8f3ff] px-24rpx py-20rpx">
+      <view class="yd-bg-info-soft mt-24rpx flex items-center rounded-12rpx px-24rpx py-20rpx">
         <view class="yd-text-main mr-20rpx text-48rpx font-semibold leading-none">
           {{ selectedDayText }}
         </view>

@@ -29,10 +29,10 @@
     <!-- 私聊非好友提示 -->
     <view
       v-if="conversationType === ImConversationType.PRIVATE && friendLoaded && !isFriend"
-      class="flex items-center gap-16rpx border-b border-b-[#eee] bg-[#fff8e8] px-24rpx py-18rpx"
+      class="yd-border-light yd-bg-warning-soft flex items-center gap-16rpx border-b px-24rpx py-18rpx"
     >
       <wd-icon name="exclamation-circle" size="32rpx" color="#d48806" />
-      <text class="min-w-0 flex-1 text-26rpx text-[#8f5b00]">对方还不是你的朋友</text>
+      <text class="yd-text-warning-deep min-w-0 flex-1 text-26rpx">对方还不是你的朋友</text>
       <text class="yd-text-link text-26rpx" @click="openFriendProfile">添加朋友</text>
     </view>
 
@@ -77,7 +77,7 @@
           :id="`msg-${item.id || item.clientMessageId || index}`"
           :key="item.id || item.clientMessageId || index"
           :style="cellStyle"
-          :class="highlightMessageId === item.id ? 'rounded-12rpx bg-[#fff1a8]' : ''"
+          :class="highlightMessageId === item.id ? 'rounded-12rpx yd-bg-im-highlight' : ''"
         >
           <MessageItem
             :message="item"

@@ -32,7 +32,7 @@
             v-for="bom in list"
             :key="bom.id || bom.bomItemId"
             class="mb-20rpx rounded-12rpx bg-white p-20rpx shadow-sm last:mb-0"
-            :class="selectedBom?.bomItemId === bom.bomItemId ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="selectedBom?.bomItemId === bom.bomItemId ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="selectedBom = bom"
           >
             <view class="mb-12rpx flex items-start justify-between gap-16rpx">

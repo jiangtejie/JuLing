@@ -7,7 +7,7 @@
   >
     <view class="h-full flex flex-col bg-white">
       <!-- 头部 -->
-      <view class="flex items-center justify-between border-b border-b-[#f2f3f5] px-24rpx py-20rpx">
+      <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
         <text class="yd-text-hint text-28rpx" @click="visible = false">取消</text>
         <text class="yd-text-main text-32rpx font-semibold">选择会话</text>
         <text
@@ -28,7 +28,7 @@
       <scroll-view class="min-h-0 flex-1" scroll-y>
         <view
           v-if="allowCreateGroup"
-          class="flex items-center gap-20rpx border-b border-b-[#eee] px-24rpx py-18rpx active:bg-[#f5f5f5]"
+          class="yd-border-light flex items-center gap-20rpx border-b px-24rpx py-18rpx active:bg-[var(--yd-surface-page)]"
           @click="createGroup"
         >
           <view class="yd-bg-subtle h-80rpx w-80rpx flex items-center justify-center rounded-12rpx">
@@ -37,7 +37,7 @@
           <text class="yd-text-main min-w-0 flex-1 text-30rpx">新建群聊并转发</text>
         </view>
         <!-- 最近转发 -->
-        <view v-if="!keyword && recentForwardConversations.length" class="border-b border-b-[#eee] px-24rpx py-18rpx">
+        <view v-if="!keyword && recentForwardConversations.length" class="yd-border-light border-b px-24rpx py-18rpx">
           <text class="yd-text-hint mb-16rpx block text-25rpx">最近转发</text>
           <scroll-view scroll-x class="whitespace-nowrap">
             <view class="inline-flex gap-24rpx pr-24rpx">
@@ -72,7 +72,7 @@
         <view
           v-for="item in filteredConversations"
           :key="item.clientConversationId"
-          class="flex items-center gap-20rpx px-24rpx py-16rpx active:bg-[#f5f5f5]"
+          class="flex items-center gap-20rpx px-24rpx py-16rpx active:bg-[var(--yd-surface-page)]"
           @click="toggle(item)"
         >
           <wd-icon

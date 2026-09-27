@@ -48,7 +48,7 @@
         >
           <view
             class="h-40rpx w-40rpx flex shrink-0 items-center justify-center border rounded-full"
-            :class="isSelected(item.id) ? 'border-[#07c160] yd-bg-success' : 'border-[#c8c9cc] bg-white'"
+            :class="isSelected(item.id) ? 'yd-border-wechat-green yd-bg-success' : 'yd-border-faint bg-white'"
           >
             <wd-icon v-if="isSelected(item.id)" name="check" size="28rpx" color="#fff" />
           </view>

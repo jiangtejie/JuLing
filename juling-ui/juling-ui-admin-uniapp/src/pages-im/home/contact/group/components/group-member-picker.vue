@@ -48,7 +48,7 @@
         >
           <view
             class="h-40rpx w-40rpx flex shrink-0 items-center justify-center border rounded-full"
-            :class="isSelected(item.userId) ? 'border-[#07c160] yd-bg-success' : 'border-[#c8c9cc] bg-white'"
+            :class="isSelected(item.userId) ? 'yd-border-wechat-green yd-bg-success' : 'yd-border-faint bg-white'"
           >
             <wd-icon v-if="isSelected(item.userId)" name="check" size="28rpx" color="#fff" />
           </view>
@@ -60,7 +60,7 @@
               </text>
               <text
                 v-if="getGroupMemberRoleLabel(item.role)"
-                class="yd-text-link shrink-0 rounded-6rpx bg-[#edf5ff] px-10rpx py-2rpx text-20rpx"
+                class="yd-text-link yd-bg-info-soft shrink-0 rounded-6rpx px-10rpx py-2rpx text-20rpx"
               >
                 {{ getGroupMemberRoleLabel(item.role) }}
               </text>

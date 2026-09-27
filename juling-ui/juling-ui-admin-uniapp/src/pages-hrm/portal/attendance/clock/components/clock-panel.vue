@@ -195,15 +195,15 @@
               class="mt-8rpx h-16rpx w-16rpx rounded-full"
               :class="
                 item.missCard
-                  ? 'bg-[#ff4d4f]'
+                  ? 'yd-bg-danger-bright'
                   : item.clockTime
                     ? 'yd-bg-success'
-                    : 'bg-[#d9d9d9]'
+                    : 'yd-bg-disabled'
               "
             />
             <view
               v-if="index < (clockDetail?.timeline?.length || 0) - 1"
-              class="mt-8rpx w-2rpx flex-1 bg-[#f0f0f0]"
+              class="yd-bg-page mt-8rpx w-2rpx flex-1"
             />
           </view>
           <view class="min-w-0 flex-1">
@@ -587,16 +587,16 @@ function toRadians(value: number) {
   box-shadow: 0 12rpx 40rpx rgba(22, 119, 255, 0.35);
 
   &.is-primary {
-    background: linear-gradient(180deg, #3b8bff 0%, #1677ff 100%);
+    background: linear-gradient(180deg, var(--yd-accent-blue) 0%, var(--yd-text-link) 100%);
   }
 
   &.is-warn {
-    background: linear-gradient(180deg, #ff9f40 0%, #fa8c16 100%);
+    background: linear-gradient(180deg, var(--yd-bpm-running) 0%, var(--yd-text-warning) 100%);
     box-shadow: 0 12rpx 40rpx rgba(250, 140, 22, 0.35);
   }
 
   &.is-disabled {
-    background: linear-gradient(180deg, #c0c4cc 0%, #909399 100%);
+    background: linear-gradient(180deg, var(--yd-text-faint) 0%, var(--yd-text-hint) 100%);
     box-shadow: none;
   }
 }

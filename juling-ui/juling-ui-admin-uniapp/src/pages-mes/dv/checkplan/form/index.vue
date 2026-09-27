@@ -64,7 +64,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view v-if="props.id" class="yd-bg-info-soft mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-18rpx text-26rpx text-[#0958d9]">
+      <view v-if="props.id" class="yd-bg-info-soft yd-text-info-strong mx-24rpx mt-24rpx rounded-12rpx px-24rpx py-18rpx text-26rpx">
         草稿方案可维护关联设备和保养项目；保存关联会立即写入，请谨慎操作。
       </view>
       <MachineryList v-if="props.id" :plan-id="Number(props.id)" />

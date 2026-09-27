@@ -425,7 +425,7 @@ defineExpose({ teardown })
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 30%, #4c5960, #182025 72%);
+  background: radial-gradient(circle at 50% 30%, var(--yd-surface-dark-glow), var(--yd-surface-dark-deep) 72%);
 }
 
 .rtc-media-stage {

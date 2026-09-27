@@ -362,12 +362,12 @@ function isDailyDetailVisible(item: AttendanceDailyDetail) {
 function getDailyBorderClass(detail?: AttendanceDailyDetail) {
   const state = getHrmAttendanceDayState(detail)
   if (state === 'normal') {
-    return 'border-l-6rpx border-l-[#52c41a]'
+    return 'border-l-6rpx yd-border-success'
   }
   if (state === 'abnormal') {
-    return 'border-l-6rpx border-l-[#ff4d4f]'
+    return 'border-l-6rpx yd-border-danger-bright'
   }
-  return state === 'rest' ? 'border-l-6rpx border-l-[#d9d9d9]' : ''
+  return state === 'rest' ? 'border-l-6rpx yd-border-disabled' : ''
 }
 
 /** 获得考勤结果样式 */

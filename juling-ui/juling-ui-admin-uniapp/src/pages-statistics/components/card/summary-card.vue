@@ -1,6 +1,6 @@
 <template>
   <!-- 单个总结卡片：标签 + 数值 + 环比，复用基础 card 壳 -->
-  <view v-if="!item" class="rounded-12rpx p-20rpx" :class="highlight ? 'bg-[#ecf5ff]' : 'yd-bg-subtle'">
+  <view v-if="!item" class="rounded-12rpx p-20rpx" :class="highlight ? 'yd-bg-info-soft' : 'yd-bg-subtle'">
     <view class="yd-text-hint text-24rpx">
       {{ title }}
     </view>

@@ -12,10 +12,10 @@
       <wd-form ref="formRef" :model="formData" :schema="formSchema">
         <wd-cell-group border>
           <!-- 友情提醒 -->
-          <view class="yd-bg-warning-soft mb-24rpx border border-[#ffd591] rounded-16rpx p-24rpx">
+          <view class="yd-bg-warning-soft yd-border-warning-border mb-24rpx border rounded-16rpx p-24rpx">
             <view class="mb-12rpx flex items-center">
               <wd-icon name="exclamation-circle" color="#faad14" size="32rpx" />
-              <text class="ml-12rpx text-28rpx text-[#faad14] font-bold">友情提醒</text>
+              <text class="yd-text-warning-strong ml-12rpx text-28rpx font-bold">友情提醒</text>
             </view>
             <text class="yd-text-sub text-26rpx">取消后，该审批流程将自动结束。</text>
           </view>

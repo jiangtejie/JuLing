@@ -29,7 +29,7 @@
         <wd-cell title="备注" :value="formData?.remark || '-'" />
         <wd-cell title="创建时间" :value="formatDateTime(formData?.createTime) || '-'" />
       </wd-cell-group>
-      <view class="yd-text-sub mx-24rpx mt-24rpx rounded-12rpx bg-[#f7faff] p-24rpx text-26rpx leading-40rpx">
+      <view class="yd-text-sub yd-bg-subtle mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-40rpx">
         默认打印模板暂不在移动端选择；正式打印和模板维护归入报表/打印专项。
       </view>
     </view>

@@ -19,7 +19,7 @@
         >
           <view
             v-if="index < comments.length - 1"
-            class="absolute bottom-0 left-16rpx top-36rpx w-1rpx bg-[#e5e6eb]"
+            class="yd-bg-line absolute bottom-0 left-16rpx top-36rpx w-1rpx"
           />
           <view
             class="z-1 h-64rpx w-64rpx flex shrink-0 items-center justify-center border-4rpx border-white rounded-full text-26rpx text-white font-bold shadow-sm"
@@ -41,13 +41,13 @@
               <text class="yd-text-main shrink-0 text-26rpx font-semibold">{{ comment.user?.nickname || '系统' }}</text>
               <dict-tag :type="DICT_TYPE.BPM_COMMENT_TYPE" :value="comment.type" />
             </view>
-            <view v-if="comment.task?.name" class="mt-12rpx max-w-full inline-flex items-center border border-[#d9ecff] rounded-8rpx bg-[#ecf5ff] px-12rpx py-6rpx">
-              <text class="mr-8rpx text-22rpx text-[#409eff]">任务</text>
+            <view v-if="comment.task?.name" class="yd-border-info-soft yd-bg-info-soft mt-12rpx max-w-full inline-flex items-center border rounded-8rpx px-12rpx py-6rpx">
+              <text class="yd-text-accent-blue-light mr-8rpx text-22rpx">任务</text>
               <text class="yd-text-main truncate text-24rpx font-semibold">{{ comment.task.name }}</text>
             </view>
             <text class="yd-text-hint mt-10rpx block text-22rpx">{{ formatDateTime(comment.createTime) }}</text>
             <view class="yd-bg-subtle mt-12rpx rounded-8rpx px-20rpx py-16rpx">
-              <text class="whitespace-pre-wrap break-words text-26rpx text-[#606266] leading-40rpx">{{ comment.message }}</text>
+              <text class="yd-text-sub whitespace-pre-wrap break-words text-26rpx leading-40rpx">{{ comment.message }}</text>
             </view>
           </view>
         </view>

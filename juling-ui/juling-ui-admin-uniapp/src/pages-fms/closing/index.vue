@@ -188,7 +188,7 @@
         </view>
         <view
           v-if="canClosePeriod && !canClose"
-          class="pt-12rpx text-center text-24rpx text-[#ed7b2f]"
+          class="yd-text-warning pt-12rpx text-center text-24rpx"
         >
           完成上方结账检查后才可结账
         </view>

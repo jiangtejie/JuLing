@@ -690,7 +690,7 @@ function isEmptyValue(value: any) {
   width: 100vw;
   height: 70vh;
   flex-direction: column;
-  background-color: #fff;
+  background-color: var(--yd-surface-card);
 
   &__header {
     position: relative;
@@ -698,14 +698,14 @@ function isEmptyValue(value: any) {
     height: 88rpx;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1rpx solid #f0f0f0;
+    border-bottom: 1rpx solid var(--yd-border-light);
     padding: 0 24rpx;
   }
 
   &__title {
     max-width: 420rpx;
     overflow: hidden;
-    color: #1f1f1f;
+    color: var(--yd-text-strong);
     font-size: 32rpx;
     font-weight: 600;
     text-align: center;
@@ -718,7 +718,7 @@ function isEmptyValue(value: any) {
     font-size: 28rpx;
 
     &--cancel {
-      color: #8c8c8c;
+      color: var(--yd-text-hint);
     }
 
     &--confirm {
@@ -728,8 +728,8 @@ function isEmptyValue(value: any) {
   }
 
   &__toolbar {
-    border-bottom: 1rpx solid #f5f5f5;
-    background-color: #fff;
+    border-bottom: 1rpx solid var(--yd-border-light);
+    background-color: var(--yd-surface-card);
   }
 
   &__toolbar-actions {
@@ -747,9 +747,9 @@ function isEmptyValue(value: any) {
     display: flex;
     min-height: 88rpx;
     align-items: center;
-    border-bottom: 1rpx solid #f7f7f7;
+    border-bottom: 1rpx solid var(--yd-border-light);
     padding-right: 24rpx;
-    background-color: #fff;
+    background-color: var(--yd-surface-card);
 
     &--disabled {
       opacity: 0.45;
@@ -767,7 +767,7 @@ function isEmptyValue(value: any) {
   &__caret {
     width: 16rpx;
     height: 16rpx;
-    border-color: #8c8c8c;
+    border-color: var(--yd-text-hint);
     border-style: solid;
     border-width: 0 3rpx 3rpx 0;
     transform: rotate(-45deg);
@@ -783,20 +783,20 @@ function isEmptyValue(value: any) {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2rpx solid #d9d9d9;
+    border: 2rpx solid var(--yd-disabled);
     border-radius: 6rpx;
-    color: #fff;
+    color: var(--yd-text-inverse);
     font-size: 24rpx;
     line-height: 1;
 
     &--checked,
     &--half {
-      border-color: var(--wot-color-theme, #2f7dff);
-      background-color: var(--wot-color-theme, #2f7dff);
+      border-color: var(--wot-color-theme, var(--yd-text-link));
+      background-color: var(--wot-color-theme, var(--yd-text-link));
     }
 
     &--disabled {
-      background-color: #f5f5f5;
+      background-color: var(--yd-surface-page);
     }
   }
 
@@ -804,14 +804,14 @@ function isEmptyValue(value: any) {
     width: 18rpx;
     height: 4rpx;
     border-radius: 999rpx;
-    background-color: #fff;
+    background-color: var(--yd-surface-card);
   }
 
   &__checkbox-check {
     width: 10rpx;
     height: 18rpx;
     margin-bottom: 4rpx;
-    border-color: #fff;
+    border-color: var(--yd-surface-card);
     border-style: solid;
     border-width: 0 4rpx 4rpx 0;
     transform: rotate(45deg);
@@ -822,7 +822,7 @@ function isEmptyValue(value: any) {
     flex: 1;
     overflow: hidden;
     margin-left: 20rpx;
-    color: #333;
+    color: var(--yd-text-main);
     font-size: 30rpx;
     text-overflow: ellipsis;
     white-space: nowrap;

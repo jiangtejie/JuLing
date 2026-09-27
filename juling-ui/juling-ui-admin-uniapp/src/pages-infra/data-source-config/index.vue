@@ -20,7 +20,7 @@
             <view class="yd-text-main text-32rpx font-semibold">
               {{ item.name }}
             </view>
-            <view v-if="item.id === 0" class="yd-text-link rounded-4rpx bg-[#e6f7ff] px-12rpx py-4rpx text-24rpx">
+            <view v-if="item.id === 0" class="yd-text-link yd-bg-info-soft rounded-4rpx px-12rpx py-4rpx text-24rpx">
               主数据源
             </view>
           </view>

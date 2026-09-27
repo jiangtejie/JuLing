@@ -156,9 +156,9 @@ const minorStatisticsStatuses: number[] = [ // 次要升级状态
 const statisticsStatusColors: Record<number, string> = { // 升级状态数字颜色
   [IoTOtaTaskRecordStatusEnum.PENDING.value]: 'yd-text-hint',
   [IoTOtaTaskRecordStatusEnum.PUSHED.value]: 'yd-text-link',
-  [IoTOtaTaskRecordStatusEnum.UPGRADING.value]: 'text-[#f59e0b]',
-  [IoTOtaTaskRecordStatusEnum.SUCCESS.value]: 'text-[#16a34a]',
-  [IoTOtaTaskRecordStatusEnum.FAILURE.value]: 'text-[#ef4444]',
+  [IoTOtaTaskRecordStatusEnum.UPGRADING.value]: 'yd-text-warning-strong',
+  [IoTOtaTaskRecordStatusEnum.SUCCESS.value]: 'yd-text-success-strong',
+  [IoTOtaTaskRecordStatusEnum.FAILURE.value]: 'yd-text-danger-bright',
   [IoTOtaTaskRecordStatusEnum.CANCELED.value]: 'yd-text-hint',
 }
 const statisticsCards = computed(() => { // 升级状态统计卡片

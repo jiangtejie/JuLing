@@ -89,7 +89,7 @@
             center
             value-align="center"
             custom-class="!h-94rpx"
-            custom-value-class="!text-32rpx !text-[#fa5151]"
+            custom-value-class="!text-32rpx !text-[var(--yd-danger-bright)]"
             @click="isOwner ? handleDissolve() : handleQuit()"
           >
             {{ isOwner ? '解散群聊' : '退出群聊' }}

@@ -159,7 +159,7 @@
         <SubPackageList :package-id="currentId" :editable="isEditable" />
         <PackageLineList :package-id="currentId" :editable="isEditable" />
       </view>
-      <view v-else class="mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx text-26rpx text-[#8c8c8c] leading-40rpx">
+      <view v-else class="yd-text-hint mx-24rpx mt-24rpx rounded-12rpx bg-white p-24rpx text-26rpx leading-40rpx">
         请先保存装箱单主表，保存后可继续维护子箱和装箱清单。
       </view>
       <view v-if="isFinish" class="yd-bg-success-soft yd-text-success mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx leading-42rpx">

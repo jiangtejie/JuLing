@@ -37,7 +37,7 @@
               </view>
               <view
                 v-if="item.readStatus === 0"
-                class="shrink-0 rounded-6rpx bg-[#ff4d4f] px-12rpx py-4rpx text-22rpx text-white"
+                class="yd-bg-danger-bright shrink-0 rounded-6rpx px-12rpx py-4rpx text-22rpx text-white"
               >
                 新工资条
               </view>

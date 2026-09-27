@@ -92,7 +92,7 @@
         <view class="yd-text-main mb-12rpx text-28rpx font-semibold">
           调拨物料
         </view>
-        <view class="text-26rpx text-[#8c8c8c] leading-40rpx">
+        <view class="yd-text-hint text-26rpx leading-40rpx">
           请先保存转移单主表，保存后可继续维护调拨物料和上架明细。
         </view>
       </view>

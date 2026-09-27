@@ -22,7 +22,7 @@
           v-for="(article, index) in articles"
           :key="index"
           class="border rounded-8rpx px-20rpx py-16rpx"
-          :class="activeIndex === index ? 'border-[#1890ff] bg-[#f0f7ff]' : 'yd-border-base bg-white'"
+          :class="activeIndex === index ? 'yd-border-accent-blue yd-bg-info-soft' : 'yd-border-base bg-white'"
           @click="handleSwitchArticle(index)"
         >
           <view class="flex items-center gap-16rpx">

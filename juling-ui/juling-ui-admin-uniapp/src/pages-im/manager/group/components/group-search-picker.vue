@@ -12,7 +12,7 @@
         v-if="clearable && modelValue"
         name="close-circle"
         size="30rpx"
-        custom-style="color: #c0c4cc;"
+        custom-style="color: var(--yd-text-faint);"
         @click.stop="handleClear"
       />
       <wd-icon v-else name="arrow-right" size="28rpx" color="#c0c4cc" />
@@ -49,7 +49,7 @@
               @click="selected = item"
             >
               <wd-img v-if="item.avatar" :src="item.avatar" width="72rpx" height="72rpx" radius="10rpx" />
-              <view v-else class="yd-text-hint h-72rpx w-72rpx flex items-center justify-center rounded-10rpx bg-[#e8eaed] text-24rpx">
+              <view v-else class="yd-text-hint yd-bg-line h-72rpx w-72rpx flex items-center justify-center rounded-10rpx text-24rpx">
                 群
               </view>
               <view class="min-w-0 flex-1">

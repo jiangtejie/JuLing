@@ -52,7 +52,7 @@
             v-for="item in userList"
             :key="item.id"
             class="mb-20rpx flex items-center gap-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="isTempSelected(item.id) ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="isTempSelected(item.id) ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="toggleItem(item)"
           >
             <view class="shrink-0">
@@ -64,7 +64,7 @@
                 radius="50%"
                 mode="aspectFill"
               />
-              <view v-else class="h-80rpx w-80rpx flex items-center justify-center rounded-full bg-[#f0f0f0]">
+              <view v-else class="yd-bg-page h-80rpx w-80rpx flex items-center justify-center rounded-full">
                 <wd-icon name="user" size="40rpx" color="#999" />
               </view>
             </view>

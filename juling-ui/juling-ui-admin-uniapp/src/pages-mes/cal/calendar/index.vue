@@ -5,7 +5,7 @@
 
     <!-- 视图筛选 -->
     <view class="bg-white px-24rpx py-16rpx">
-      <view class="grid grid-cols-3 overflow-hidden rounded-12rpx bg-[#f5f7fa] p-6rpx">
+      <view class="yd-bg-subtle grid grid-cols-3 overflow-hidden rounded-12rpx p-6rpx">
         <view
           v-for="tab in tabs"
           :key="tab.key"
@@ -69,15 +69,15 @@
       </view>
       <view class="yd-text-sub mt-12rpx flex flex-wrap items-center justify-center gap-x-18rpx gap-y-8rpx text-22rpx">
         <view class="flex items-center gap-8rpx">
-          <text class="h-14rpx w-14rpx rounded-4rpx bg-[#95d475]" />
+          <text class="yd-bg-mes-shift-1 h-14rpx w-14rpx rounded-4rpx" />
           <text>白班</text>
         </view>
         <view class="flex items-center gap-8rpx">
-          <text class="h-14rpx w-14rpx rounded-4rpx bg-[#f0a020]" />
+          <text class="yd-bg-warning-strong h-14rpx w-14rpx rounded-4rpx" />
           <text>中班（三班倒）</text>
         </view>
         <view class="flex items-center gap-8rpx">
-          <text class="h-14rpx w-14rpx rounded-4rpx bg-[#909399]" />
+          <text class="yd-bg-hint h-14rpx w-14rpx rounded-4rpx" />
           <text>中班/夜班</text>
         </view>
         <view class="flex items-center gap-8rpx">
@@ -114,7 +114,7 @@
                 <text
                   class="text-26rpx font-semibold leading-32rpx"
                   :class="[
-                    day.isCurrentMonth ? 'yd-text-main' : 'text-[#c8c9cc]',
+                    day.isCurrentMonth ? 'yd-text-main' : 'yd-text-faint',
                     day.isWeekend && day.isCurrentMonth ? 'yd-text-danger' : '',
                   ]"
                 >
@@ -255,12 +255,12 @@ function getShiftSummary(day: string) {
 function getShiftClass(day: string, sort: number) {
   const shiftType = calendarDayMap.value[day]?.shiftType
   if (sort === 1) {
-    return 'bg-[#95d475]'
+    return 'yd-bg-mes-shift-1'
   }
   if (sort === 2 && shiftType === MesCalShiftTypeEnum.THREE) {
-    return 'bg-[#f0a020]'
+    return 'yd-bg-warning-strong'
   }
-  return 'bg-[#909399]'
+  return 'yd-bg-hint'
 }
 
 /** 当前月范围 */

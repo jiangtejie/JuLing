@@ -17,21 +17,21 @@
     <view class="relative min-h-0 flex-1">
       <scroll-view class="h-full" scroll-y :scroll-into-view="scrollTarget" scroll-with-animation>
         <!-- 新的朋友入口（非搜索态） -->
-        <view v-if="!keyword" class="flex items-center gap-20rpx px-24rpx py-20rpx active:bg-[#f5f5f5]" @click="goRequests">
-          <view class="h-84rpx w-84rpx flex items-center justify-center rounded-12rpx bg-[#fa8c16]">
+        <view v-if="!keyword" class="flex items-center gap-20rpx px-24rpx py-20rpx active:bg-[var(--yd-surface-page)]" @click="goRequests">
+          <view class="yd-bg-warning h-84rpx w-84rpx flex items-center justify-center rounded-12rpx">
             <wd-icon name="user-add" size="44rpx" color="#fff" />
           </view>
-          <view class="yd-text-strong flex-1 border-b border-b-[#f2f3f5] py-10rpx text-30rpx">
+          <view class="yd-text-strong yd-border-light flex-1 border-b py-10rpx text-30rpx">
             新的朋友
           </view>
         </view>
 
         <!-- 群聊入口（非搜索态） -->
-        <view v-if="!keyword" class="flex items-center gap-20rpx px-24rpx py-20rpx active:bg-[#f5f5f5]" @click="goGroupList">
+        <view v-if="!keyword" class="flex items-center gap-20rpx px-24rpx py-20rpx active:bg-[var(--yd-surface-page)]" @click="goGroupList">
           <view class="yd-bg-success h-84rpx w-84rpx flex items-center justify-center rounded-12rpx">
             <wd-icon name="user-group" size="44rpx" color="#fff" />
           </view>
-          <view class="yd-text-strong flex-1 border-b border-b-[#f2f3f5] py-10rpx text-30rpx">
+          <view class="yd-text-strong yd-border-light flex-1 border-b py-10rpx text-30rpx">
             群聊
           </view>
         </view>
@@ -150,7 +150,7 @@ onMounted(async () => {
   align-items: center;
   gap: 16rpx;
   padding: 16rpx 24rpx;
-  background: #ededed;
+  background: var(--yd-surface-page);
 }
 
 :deep(.friend-search) {
@@ -158,7 +158,7 @@ onMounted(async () => {
   flex: 1;
   --wot-search-padding: 0;
   --wot-search-bg: transparent;
-  --wot-search-input-bg: #fff;
+  --wot-search-input-bg: var(--yd-surface-card);
   --wot-search-cover-bg: transparent;
   --wot-search-input-height: 64rpx;
   --wot-search-input-radius: 10rpx;
@@ -174,10 +174,10 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   border-radius: 10rpx;
-  background: #fff;
+  background: var(--yd-surface-card);
 
   &:active {
-    background: #e2e2e2;
+    background: var(--yd-surface-page);
   }
 }
 
@@ -193,7 +193,7 @@ onMounted(async () => {
 
 .index-bar-item {
   padding: 2rpx 8rpx;
-  color: #1677ff;
+  color: var(--yd-text-link);
   font-size: 20rpx;
   line-height: 1.4;
 }

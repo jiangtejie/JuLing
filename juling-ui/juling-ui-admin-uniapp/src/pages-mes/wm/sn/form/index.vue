@@ -20,7 +20,7 @@
           </wd-form-item>
         </wd-cell-group>
       </wd-form>
-      <view class="mx-24rpx mt-24rpx rounded-12rpx bg-[#fffbe6] p-24rpx text-26rpx text-[#8c6d1f]">
+      <view class="yd-bg-warning-soft yd-text-warning-deep mx-24rpx mt-24rpx rounded-12rpx p-24rpx text-26rpx">
         SN 码会由后端按当前规则批量生成。本页只提交物料、批次号和生成数量，最多一次生成 1000 个。
       </view>
     </view>

@@ -12,7 +12,7 @@
     <view class="absolute bottom-20rpx left-20rpx max-w-[calc(100%-40rpx)] flex items-center gap-10rpx rounded-full bg-black/45 px-14rpx py-8rpx">
       <view
         class="h-14rpx w-14rpx flex-shrink-0 rounded-full"
-        :class="member.pending ? 'bg-[#f0ad4e]' : 'yd-bg-success'"
+        :class="member.pending ? 'yd-bg-status-pending' : 'yd-bg-success'"
       />
       <text class="truncate text-22rpx text-white">
         {{ member.nickname }}{{ isLocal ? '（我）' : '' }}{{ member.pending ? ' · 接入中' : '' }}
@@ -99,7 +99,7 @@ onBeforeUnmount(() => {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: #2a3439;
+  background: var(--yd-surface-dark-soft);
 }
 
 :global(.rtc-video-track) {

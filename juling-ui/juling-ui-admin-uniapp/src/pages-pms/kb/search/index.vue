@@ -199,7 +199,7 @@ function highlightSummary(summary: string) {
     return text
   }
   const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  return sanitizeRichText(text.replace(new RegExp(`(${escapedKeyword})`, 'gi'), '<mark style="background:#ffe58f">$1</mark>'))
+  return sanitizeRichText(text.replace(new RegExp(`(${escapedKeyword})`, 'gi'), '<mark style="background:var(--yd-highlight-soft)">$1</mark>'))
 }
 
 /** 打开文档详情 */

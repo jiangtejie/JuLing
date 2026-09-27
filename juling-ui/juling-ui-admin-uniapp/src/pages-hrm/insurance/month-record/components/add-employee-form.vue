@@ -35,7 +35,7 @@
             v-for="item in employeeList"
             :key="item.id"
             class="mb-20rpx flex items-center gap-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="isSelected(item.id) ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="isSelected(item.id) ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="toggleItem(item)"
           >
             <wd-checkbox :model-value="isSelected(item.id)" />

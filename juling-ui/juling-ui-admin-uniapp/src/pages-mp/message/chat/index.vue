@@ -42,7 +42,7 @@
       use-chat-record-mode
       :fixed="false"
       :auto="false"
-      class="min-h-0 flex-1 bg-[#f3f5f7]"
+      class="yd-bg-subtle min-h-0 flex-1"
       :default-page-size="PAGE_SIZE"
       bg-color="#f3f5f7"
       bottom-bg-color="#fff"
@@ -72,7 +72,7 @@
             </view>
             <view
               class="max-w-[560rpx] rounded-12rpx px-20rpx py-16rpx text-28rpx shadow-sm"
-              :class="item.sendFrom === 2 ? 'bg-[#dff5d8] text-[#1f1f1f]' : 'bg-white yd-text-main'"
+              :class="item.sendFrom === 2 ? 'yd-bg-mp-bubble-self yd-text-strong' : 'bg-white yd-text-main'"
             >
               <ReplyContent
                 :type="item.type"

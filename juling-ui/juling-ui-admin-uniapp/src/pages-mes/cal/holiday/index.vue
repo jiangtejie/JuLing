@@ -26,7 +26,7 @@
           <text>工作日</text>
         </view>
         <view class="flex items-center gap-8rpx">
-          <text class="h-18rpx w-18rpx rounded-full bg-[#f56c6c]" />
+          <text class="yd-bg-danger-bright h-18rpx w-18rpx rounded-full" />
           <text>周末</text>
         </view>
       </view>
@@ -56,7 +56,7 @@
               <text
                 class="text-28rpx font-semibold"
                 :class="[
-                  day.isCurrentMonth ? 'yd-text-main' : 'text-[#c8c9cc]',
+                  day.isCurrentMonth ? 'yd-text-main' : 'yd-text-faint',
                   day.isWeekend && day.isCurrentMonth ? 'yd-text-danger' : '',
                 ]"
               >

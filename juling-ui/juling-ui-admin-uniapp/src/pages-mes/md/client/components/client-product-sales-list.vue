@@ -1,6 +1,6 @@
 <template>
   <view class="min-h-0 flex flex-1 flex-col bg-white">
-    <view class="flex items-center border-b border-b-[#f0f0f0] px-24rpx py-20rpx" :class="showTitle ? 'justify-between' : 'justify-end'">
+    <view class="yd-border-light flex items-center border-b px-24rpx py-20rpx" :class="showTitle ? 'justify-between' : 'justify-end'">
       <view v-if="showTitle" class="yd-text-main text-30rpx font-semibold">
         销售出库记录
       </view>
@@ -25,7 +25,7 @@
         <view
           v-for="item in list"
           :key="item.id"
-          class="border-b border-b-[#f5f5f5] py-20rpx last:border-b-0"
+          class="yd-border-light border-b py-20rpx last:border-b-0"
           @click="handleDetail(item)"
         >
           <view class="mb-12rpx flex items-start justify-between gap-16rpx">

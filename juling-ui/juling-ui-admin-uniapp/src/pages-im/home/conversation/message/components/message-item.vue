@@ -28,7 +28,7 @@
         </view>
         <view
           class="flex items-center gap-12rpx rounded-8rpx px-24rpx py-18rpx text-28rpx"
-          :class="isSelf ? 'bg-[#95ec69] yd-text-strong' : 'bg-white yd-text-main'"
+          :class="isSelf ? 'yd-bg-im-green yd-text-strong' : 'bg-white yd-text-main'"
           @click.stop="onRtcRedial"
         >
           <wd-icon name="phone" size="34rpx" />
@@ -102,7 +102,7 @@
               @receipt="onReceipt"
             />
             <text v-else-if="statusText">{{ statusText }}</text>
-            <text v-if="isAtMe" class="yd-text-danger border border-[#fa5151] rounded-5rpx px-8rpx py-2rpx">
+            <text v-if="isAtMe" class="yd-text-danger yd-border-danger-bright border rounded-5rpx px-8rpx py-2rpx">
               @我
             </text>
           </view>

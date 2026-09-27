@@ -13,7 +13,7 @@
         <text class="yd-text-sub w-96rpx truncate text-center text-22rpx">{{ getMemberDisplayName(item) }}</text>
         <text
           v-if="getGroupMemberRoleLabel(item.role)"
-          class="yd-text-link rounded-6rpx bg-[#edf5ff] px-8rpx py-1rpx text-18rpx -mt-4rpx"
+          class="yd-text-link yd-bg-info-soft rounded-6rpx px-8rpx py-1rpx text-18rpx -mt-4rpx"
         >
           {{ getGroupMemberRoleLabel(item.role) }}
         </text>

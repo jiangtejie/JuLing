@@ -28,7 +28,7 @@
             v-if="selectedPlanText"
             name="close-circle"
             size="30rpx"
-            custom-style="color: #c0c4cc;"
+            custom-style="color: var(--yd-text-faint);"
             @click.stop="clearPlan"
           />
         </view>
@@ -48,7 +48,7 @@
             v-if="selectedMachineryText"
             name="close-circle"
             size="30rpx"
-            custom-style="color: #c0c4cc;"
+            custom-style="color: var(--yd-text-faint);"
             @click.stop="clearMachinery"
           />
         </view>

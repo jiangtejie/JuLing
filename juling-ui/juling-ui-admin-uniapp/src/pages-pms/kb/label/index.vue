@@ -132,7 +132,7 @@
               v-for="color in colorPresets"
               :key="color"
               class="h-56rpx w-56rpx rounded-8rpx"
-              :style="{ backgroundColor: color, border: formData.color === color ? '4rpx solid #333' : '4rpx solid transparent' }"
+              :style="{ backgroundColor: color, border: formData.color === color ? '4rpx solid var(--yd-surface-dark)' : '4rpx solid transparent' }"
               @click="formData.color = color"
             />
           </view>

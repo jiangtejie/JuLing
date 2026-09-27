@@ -1,5 +1,5 @@
 <template>
-  <view class="yd-bg-subtle shrink-0 border-t border-t-[#ddd] px-12rpx py-16rpx pb-[calc(16rpx+env(safe-area-inset-bottom))]">
+  <view class="yd-bg-subtle yd-border-base shrink-0 border-t px-12rpx py-16rpx pb-[calc(16rpx+env(safe-area-inset-bottom))]">
     <!-- 禁言 / 退群 / 封禁提示 -->
     <view v-if="disabledTip" class="yd-text-hint py-20rpx text-center text-27rpx">
       {{ disabledTip }}
@@ -29,7 +29,7 @@
           class="h-75rpx w-48rpx flex shrink-0 items-center justify-center"
           @click="voiceMode = !voiceMode"
         >
-          <view class="h-48rpx w-48rpx flex items-center justify-center border-3rpx border-[#333] rounded-full border-solid">
+          <view class="yd-border-main h-48rpx w-48rpx flex items-center justify-center border-3rpx rounded-full border-solid">
             <view
               class="yd-text-main h-32rpx w-32rpx"
               :class="voiceMode ? 'i-carbon-keyboard' : 'i-carbon-volume-up-filled'"
@@ -51,7 +51,7 @@
             compact
             disable-default-padding
             custom-class="!w-full !box-border !px-24rpx !py-18rpx"
-            custom-textarea-class="!max-h-189rpx !min-h-39rpx !overflow-y-auto !text-30rpx !leading-39rpx !text-[#181818]"
+            custom-textarea-class="!max-h-189rpx !min-h-39rpx !overflow-y-auto !text-30rpx !leading-39rpx !text-[var(--yd-text-strong)]"
             @input="handleTextInput"
           />
           <VoiceRecorder v-show="voiceMode" @send="handleSendVoice" />
@@ -675,7 +675,7 @@ onUnmounted(() => {
   align-items: center;
   flex-direction: column;
   gap: 12rpx;
-  color: #777;
+  color: var(--yd-text-sub);
   font-size: 23rpx;
 }
 
@@ -686,6 +686,6 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   border-radius: 18rpx;
-  background: #fff;
+  background: var(--yd-surface-card);
 }
 </style>

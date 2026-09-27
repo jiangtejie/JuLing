@@ -25,7 +25,7 @@
             <view class="min-w-0 flex-1">
               <view class="mb-12rpx flex items-center">
                 <view
-                  class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#fa8c16]"
+                  class="yd-bg-warning mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx"
                 >
                   <wd-icon name="folder" size="20px" color="#fff" />
                 </view>

@@ -34,7 +34,7 @@
           mode="aspectFill"
         />
       </view>
-      <view class="yd-text-hint mt-12rpx flex items-center gap-10rpx border-t border-t-[#f2f3f5] pt-10rpx text-22rpx">
+      <view class="yd-text-hint yd-border-light mt-12rpx flex items-center gap-10rpx border-t pt-10rpx text-22rpx">
         <wd-img
           v-if="sourceChannel?.avatar"
           :src="sourceChannel.avatar"

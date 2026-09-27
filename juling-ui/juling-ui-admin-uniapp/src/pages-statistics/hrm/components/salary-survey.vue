@@ -1,6 +1,6 @@
 <template>
   <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="yd-text-main border-b border-b-[#f0f0f0] px-24rpx py-20rpx text-30rpx font-semibold">
+    <view class="yd-text-main yd-border-light border-b px-24rpx py-20rpx text-30rpx font-semibold">
       上月薪资概况
     </view>
     <view class="grid grid-cols-2 gap-16rpx p-24rpx">
@@ -19,7 +19,7 @@
         </view>
       </view>
     </view>
-    <view class="border-t border-t-[#f0f0f0] px-12rpx pb-12rpx">
+    <view class="yd-border-light border-t px-12rpx pb-12rpx">
       <YdChart
         :option="salaryDeptChartOptions"
         :empty="!survey?.deptProportions?.length"

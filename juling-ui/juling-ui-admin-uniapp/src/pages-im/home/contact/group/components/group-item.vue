@@ -1,9 +1,9 @@
 <template>
-  <view class="flex items-center gap-20rpx px-24rpx active:bg-[#f5f5f5]" @click="emit('open', group)">
+  <view class="flex items-center gap-20rpx px-24rpx active:bg-[var(--yd-surface-page)]" @click="emit('open', group)">
     <view class="py-16rpx">
       <GroupAvatar :group-id="group.id" :src="group.avatar" :name="groupName" size="84rpx" />
     </view>
-    <view class="min-w-0 flex-1 border-b border-b-[#f2f3f5] py-16rpx">
+    <view class="yd-border-light min-w-0 flex-1 border-b py-16rpx">
       <view class="flex items-center gap-10rpx">
         <text class="yd-text-strong line-clamp-1 text-30rpx font-medium">{{ groupName }}</text>
         <wd-tag v-if="group.banned" type="danger" plain custom-class="scale-90">

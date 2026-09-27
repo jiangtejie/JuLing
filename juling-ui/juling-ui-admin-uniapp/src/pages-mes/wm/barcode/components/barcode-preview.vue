@@ -7,10 +7,10 @@
       <dict-tag v-if="format != null" :type="DICT_TYPE.MES_WM_BARCODE_FORMAT" :value="format" />
     </view>
 
-    <view class="flex flex-col items-center rounded-12rpx bg-[#f7faff] p-24rpx">
+    <view class="yd-bg-subtle flex flex-col items-center rounded-12rpx p-24rpx">
       <view
         v-if="content"
-        class="flex items-center justify-center border-2rpx border-[#dbeafe] rounded-12rpx bg-white p-24rpx"
+        class="yd-border-info-soft flex items-center justify-center border-2rpx rounded-12rpx bg-white p-24rpx"
         :class="isQrCode ? 'h-280rpx w-280rpx' : 'h-180rpx w-full'"
       >
         <view v-if="isQrCode" class="grid grid-cols-[repeat(11,1fr)] grid-rows-[repeat(11,1fr)] h-220rpx w-220rpx gap-4rpx">
@@ -18,14 +18,14 @@
             v-for="(dot, index) in qrDots"
             :key="index"
             class="rounded-3rpx"
-            :class="dot ? 'bg-[#111827]' : 'bg-white'"
+            :class="dot ? 'yd-bg-ink' : 'bg-white'"
           />
         </view>
         <view v-else class="h-120rpx w-full flex items-stretch justify-center gap-4rpx">
           <view
             v-for="(bar, index) in barcodeBars"
             :key="index"
-            class="h-full bg-[#111827]"
+            class="yd-bg-ink h-full"
             :style="{ width: `${bar.width}rpx`, opacity: bar.active ? 1 : 0.12 }"
           />
         </view>

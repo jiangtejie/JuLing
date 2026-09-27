@@ -10,7 +10,7 @@
     <!-- 文件选择 + 复制 -->
     <view class="flex items-center gap-16rpx bg-white px-24rpx py-16rpx">
       <view
-        class="min-w-0 flex flex-1 items-center rounded-8rpx bg-[#f5f6f8] px-20rpx py-16rpx"
+        class="yd-bg-subtle min-w-0 flex flex-1 items-center rounded-8rpx px-20rpx py-16rpx"
         @click="filePickerVisible = true"
       >
         <wd-icon name="file" size="32rpx" color="#1677ff" />
@@ -45,7 +45,7 @@
             v-for="(file, index) in files"
             :key="file.filePath"
             class="yd-border-light flex items-center border-b border-solid px-32rpx py-24rpx"
-            :class="index === activeIndex ? 'bg-[#eef4ff]' : ''"
+            :class="index === activeIndex ? 'yd-bg-info-soft' : ''"
             @click="selectFile(index)"
           >
             <view class="min-w-0 flex-1">
@@ -145,7 +145,7 @@ onMounted(() => {
   font-family: 'SF Mono', Menlo, Consolas, Monaco, monospace;
   font-size: 24rpx;
   line-height: 1.6;
-  color: #333;
+  color: var(--yd-text-main);
   white-space: pre;
 }
 </style>

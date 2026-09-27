@@ -7,7 +7,7 @@
       <view class="p-24rpx space-y-24rpx">
         <!-- 操作栏 -->
         <view class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
             <view>
               <view class="yd-text-main text-30rpx font-semibold">
                 IoT 首页
@@ -20,7 +20,7 @@
               刷新
             </wd-button>
           </view>
-          <view v-if="activeLoadError" class="yd-text-warning border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx">
+          <view v-if="activeLoadError" class="yd-text-warning yd-border-light border-t px-24rpx py-16rpx text-24rpx">
             部分统计数据加载失败，请稍后刷新
           </view>
         </view>
@@ -558,12 +558,12 @@ function createInfoWindowContent(device: DeviceLocationItem) {
     content: `
       <div style="padding: 8px; min-width: 180px;">
         <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">${escapeHtml(getDeviceTitle(device))}</div>
-        <div style="color: #666; font-size: 12px; line-height: 1.8;">
+        <div style="color: var(--yd-text-sub); font-size: 12px; line-height: 1.8;">
           <div>产品: ${escapeHtml(device.productName)}</div>
           <div>状态: <span style="color: ${config.color}; font-weight: 500;">${escapeHtml(config.name)}</span></div>
         </div>
-        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
-          <a id="${linkId}" href="javascript:void(0)" style="color: #1677ff; font-size: 12px; text-decoration: none;">点击查看详情</a>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--yd-border-light);">
+          <a id="${linkId}" href="javascript:void(0)" style="color: var(--yd-text-link); font-size: 12px; text-decoration: none;">点击查看详情</a>
         </div>
       </div>
     `,

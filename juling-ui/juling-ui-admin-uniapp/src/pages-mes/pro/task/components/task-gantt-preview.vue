@@ -19,7 +19,7 @@
       <view class="flex">
         <!-- 左侧任务列 -->
         <view class="yd-border-light w-224rpx shrink-0 border-r">
-          <view class="yd-bg-subtle h-74rpx flex items-center px-18rpx text-22rpx text-[#667085] font-semibold">
+          <view class="yd-bg-subtle yd-text-slate h-74rpx flex items-center px-18rpx text-22rpx font-semibold">
             任务
           </view>
           <view
@@ -48,7 +48,7 @@
               <view
                 v-for="day in days"
                 :key="day.value"
-                class="yd-border-light h-74rpx flex shrink-0 flex-col items-center justify-center border-r text-[#475467]"
+                class="yd-border-light yd-text-slate-strong h-74rpx flex shrink-0 flex-col items-center justify-center border-r"
                 :class="{ 'yd-bg-warning-soft': day.weekend, 'yd-text-link': day.today }"
                 :style="{ width: `${DAY_WIDTH}rpx` }"
               >
@@ -72,7 +72,7 @@
                 v-for="day in days"
                 :key="`${row.id}-${day.value}`"
                 class="yd-border-light h-88rpx shrink-0 border-r"
-                :class="{ 'bg-[#fffaf0]': day.weekend }"
+                :class="{ 'yd-bg-warning-soft': day.weekend }"
                 :style="{ width: `${DAY_WIDTH}rpx` }"
               />
               <!-- 任务条 -->
@@ -93,7 +93,7 @@
               >
                 <view
                   v-if="!row.isProject"
-                  class="absolute inset-y-0 left-0 bg-[rgba(255,255,255,0.24)]"
+                  class="yd-bg-overlay-light absolute inset-y-0 left-0"
                   :style="{ width: `${Math.round((row.item.progress || 0) * 100)}%` }"
                 />
                 <view
@@ -123,7 +123,7 @@
             <!-- 今日标记线 -->
             <view
               v-if="todayLeft >= 0"
-              class="absolute bottom-0 top-0 w-3rpx bg-[#f04438] opacity-[0.72]"
+              class="yd-bg-danger-strong absolute bottom-0 top-0 w-3rpx opacity-[0.72]"
               :style="{ left: `${todayLeft}rpx` }"
             />
           </view>

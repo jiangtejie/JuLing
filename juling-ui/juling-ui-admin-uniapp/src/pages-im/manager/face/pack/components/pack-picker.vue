@@ -52,7 +52,7 @@
             v-for="item in list"
             :key="item.id"
             class="mb-20rpx flex items-center gap-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="tempSelected?.id === item.id ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="tempSelected?.id === item.id ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="handleSelect(item)"
           >
             <view class="shrink-0">
@@ -64,7 +64,7 @@
                 radius="12rpx"
                 mode="aspectFill"
               />
-              <view v-else class="yd-text-muted h-80rpx w-80rpx flex items-center justify-center rounded-12rpx bg-[#f0f0f0] text-24rpx">
+              <view v-else class="yd-text-muted yd-bg-page h-80rpx w-80rpx flex items-center justify-center rounded-12rpx text-24rpx">
                 无
               </view>
             </view>

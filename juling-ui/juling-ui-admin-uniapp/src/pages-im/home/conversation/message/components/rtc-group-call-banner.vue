@@ -1,7 +1,7 @@
 <template>
-  <view v-if="activeCall" class="flex items-center gap-16rpx bg-[#e8f7ec] px-24rpx py-18rpx" @click="handleJoin">
+  <view v-if="activeCall" class="yd-bg-success-soft flex items-center gap-16rpx px-24rpx py-18rpx" @click="handleJoin">
     <wd-icon :name="activeCall.mediaType === ImRtcCallMediaType.VIDEO ? 'camera' : 'phone'" size="34rpx" color="#07c160" />
-    <text class="line-clamp-1 min-w-0 flex-1 text-27rpx text-[#16733d]">
+    <text class="yd-text-success-deep line-clamp-1 min-w-0 flex-1 text-27rpx">
       {{ bannerText }}，点击加入
     </text>
     <wd-icon name="arrow-right" size="30rpx" color="#8aa994" />

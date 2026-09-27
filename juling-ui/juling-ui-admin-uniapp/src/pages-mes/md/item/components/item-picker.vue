@@ -63,7 +63,7 @@
             v-for="item in itemList"
             :key="item.id"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="isTempSelected(item.id) ? 'ring-2 ring-[#1677ff]' : isDisabled(item) ? 'opacity-40' : ''"
+            :class="isTempSelected(item.id) ? 'ring-2 ring-[var(--yd-text-link)]' : isDisabled(item) ? 'opacity-40' : ''"
             @click="toggleItem(item)"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">

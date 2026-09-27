@@ -1,6 +1,6 @@
 <template>
   <view
-    class="grid flex-shrink-0 overflow-hidden bg-[#d8d8d8]"
+    class="yd-bg-disabled grid flex-shrink-0 overflow-hidden"
     :class="round ? 'rounded-full' : 'rounded-12rpx'"
     :style="avatarStyle"
   >
