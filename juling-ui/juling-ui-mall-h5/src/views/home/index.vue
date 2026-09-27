@@ -9,8 +9,6 @@
 
   const router = useRouter();
 
-  const keyword = ref('');
-
   const { list, loading, finished, refreshing, total, error, onLoad, onRefresh } = usePaging<
     Product,
     { keyword?: string }
@@ -38,13 +36,6 @@
     { label: '订货单', icon: 'i-carbon-shopping-cart', to: '/cart' },
   ];
 
-  function onSearch(): void {
-    void router.push({
-      path: '/product/list',
-      query: keyword.value ? { keyword: keyword.value } : {},
-    });
-  }
-
   function toDetail(id: number): void {
     void router.push(`/product/${id}`);
   }
@@ -52,16 +43,8 @@
 
 <template>
   <div class="app-page">
-    <!-- 搜索栏 -->
-    <div class="home__search">
-      <van-search
-        v-model="keyword"
-        shape="round"
-        background="transparent"
-        placeholder="搜索商品名称 / 编码"
-        @search="onSearch"
-      />
-    </div>
+    <!-- 顶部安全区留白：原先由搜索栏承担，搜索入口已挪到「商品分类」页 -->
+    <div class="home__safe-top" />
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <div class="app-scroll">
@@ -157,9 +140,10 @@
 
 <style scoped lang="scss">
   .home {
-    &__search {
-      background: var(--app-primary-color);
+    /* 顶部安全区留白（搜索栏挪走后保留品牌底色，避免状态栏区域露白） */
+    &__safe-top {
       padding-top: env(safe-area-inset-top);
+      background: var(--app-primary-color);
     }
 
     &__banner {

@@ -15,6 +15,8 @@
   const categories = ref<Category[]>([]);
   /** van-sidebar 的 v-model 是「索引」而非业务 id */
   const activeIndex = ref(0);
+  /** 搜索关键词：提交后跳商品列表页展示结果 */
+  const keyword = ref('');
 
   const { list, loading, finished, error, refreshing, total, onLoad, onRefresh, search } =
     usePaging<Product, { categoryId?: number }>((params) => getProductPage(params), {
@@ -96,6 +98,14 @@
     await search({ categoryId: category.id });
   }
 
+  /** 搜索商品：跳到商品列表页（该页自带搜索框，可继续改词） */
+  function onSearch(): void {
+    void router.push({
+      path: '/product/list',
+      query: keyword.value ? { keyword: keyword.value } : {},
+    });
+  }
+
   function toDetail(id: number): void {
     void router.push(`/product/${id}`);
   }
@@ -122,6 +132,19 @@
 <template>
   <div class="app-page app-page--fixed">
     <AppNavBar title="商品分类" :left-arrow="false" />
+
+    <!-- 搜索栏：由首页挪来（首页不再放搜索入口）。提交后跳到商品列表页展示结果 -->
+    <van-search
+      v-model="keyword"
+      shape="round"
+      show-action
+      placeholder="搜索商品名称 / 编码"
+      @search="onSearch"
+    >
+      <template #action>
+        <div class="category__search-action" @click="onSearch">搜索</div>
+      </template>
+    </van-search>
 
     <div class="category">
       <!-- 左侧只放一级分类：二级分类在右侧分组呈现（后端分类是 parentId 表达的层级） -->
@@ -365,6 +388,13 @@
     &__unit {
       font-size: 12px;
       color: var(--app-text-color-secondary);
+    }
+
+    /* 搜索行右侧的「搜索」按钮（与商品列表页保持一致） */
+    &__search-action {
+      padding-left: 12px;
+      font-size: 14px;
+      color: var(--app-primary-color);
     }
 
     /* ===== 底部动作栏 ===== */
