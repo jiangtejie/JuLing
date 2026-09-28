@@ -38,7 +38,7 @@
 
 现状冲突：ERP 产品是「一物料一单位」（`erp_product`：name/barCode/categoryId/unitId/standard(规格字符串)/
 purchasePrice/salePrice/minPrice），**没有 SKU**；商城是 SPU + SKU 多规格（`product_spu` + `product_sku`，
-含阶梯价、库存）。两个目录并存无法算准库存与成本。
+含 price/market_price/cost_price 单一定价与库存）。两个目录并存无法算准库存与成本。
 
 **方案（长期）**：统一为「物料 + SKU」两级，SKU 作为库存与单据的最小单位。
 
@@ -58,6 +58,9 @@ purchasePrice/salePrice/minPrice），**没有 SKU**；商城是 SPU + SKU 多�
 ERP 的产品价（成本价/销售价/最低价）作为**基础价**，商城侧的客户等级价、阶梯价、促销价独立成
 「价格政策」表，取价优先级：**客户协议价 > 等级价 > 阶梯价 > 标准售价**。避免把促销逻辑塞进商品主数据。
 
+> 现状更正：商城目前**没有**阶梯价、客户等级价或协议价表（`product_sku` 仅 price/market_price/cost_price
+> 三个单值），上述"价格政策"属于要新建的能力，不是既有功能。
+
 ### 4.4 供应商主数据扩展（采购部门在途需求）
 
 `erp_supplier` 已有 `taxNo / taxPercent / bankName / bankAccount / bankAddress`（单账户），并被 19 个文件
@@ -68,11 +71,22 @@ ERP 的产品价（成本价/销售价/最低价）作为**基础价**，商城�
 即"签订了哪几个组织"）。**新建 `juling-module-erp-api` 暴露 `ErpSupplierApi`**，供报销/财务/计划统一读取，
 不直连表。完整设计（含分期与待确认项）见 [`docs/supplier-master-data-design.md`](./supplier-master-data-design.md)。
 
-### 4.5 其他主数据
+### 4.5 采购成本与价格历史（采购部门在途需求）
+
+金蝶的采购价目表是**档案式**（覆盖写，只剩最新成本），而本系统采购单据明细本就带
+`product_price / tax_percent / tax_price` 与供应商、日期 —— "商品→供应商→日期→价格"的流水一直在库里，
+只是从未被当作价格历史查询。方案是补一张**只追加的价格流水账本** `erp_product_cost_history`
+（含旧价/差额/涨幅、变动原因、变动人、来源单据），四处写入钩子：采购订单审核、采购入库审核、
+商品档案改价、手工调价/成本卡录入。在此之上做三个视图与三张表：历史曲线与跨年趋势（ECharts）、
+成本异动（旧价/新价/差额/涨幅）、波动预警（`erp_cost_alert_rule` + 记录 + 站内信）、降本标记
+（`erp_product_cost_tag`）、成本卡（`erp_cost_card`，标准成本差异）、配送价检查清单。
+完整设计见 [`docs/purchase-price-history-design.md`](./purchase-price-history-design.md)。
+
+### 4.6 其他主数据
 
 仓库与货位、计量单位与换算、商品分类、结算账户（`erp_account`）——均由 ERP 侧维护，商城只引用。
 
-### 4.6 财务主数据与总账（现状澄清）
+### 4.7 财务主数据与总账（现状澄清）
 
 `juling-module-fms` 已是可用总账：会计科目 94 条、账套 1 个、辅助核算类型 7 类、凭证模板与凭证表齐备
 （库里已录 2 张凭证），并有资产负债表/利润表/现金流量表与结账（`Closing*`）。**因此三期不是"从零做总账"**，
