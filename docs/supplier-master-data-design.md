@@ -55,7 +55,9 @@ bank_address / currency / is_default / remark`
 **`erp_supplier_org_contract`（合同 × 组织）**：`supplier_id / org_id / signed / contract_no /
 sign_date / start_date / end_date / file_url / remark`
 > 这是需求里「签订了哪几个组织」的落点：一个供应商在多个组织下各自可能有/没有合同。
-> `org_id` 指向哪张表取决于「组织」的定义（见第 6 节待确认）。
+> **`org_id` 指向 `system_dept.id`**，取公司层节点（128 重庆萍姐品牌管理公司 / 131 亚特萍姐商贸公司 …），
+> 即"这份合同由亚特哪个主体签的"。组织语义已核实关闭，见
+> [`docs/organization-model.md`](./organization-model.md)。
 
 **（三期，按需）`erp_supplier_product` / `erp_supplier_category`**：按商品或品类维护交期、供货比例、
 最小起订量 —— 用于计划侧更精确的排期。
@@ -98,8 +100,8 @@ sign_date / start_date / end_date / file_url / remark`
 
 ## 6. 待确认（影响表结构）
 
-1. **「组织」指什么维度**：多法人公司 / 多租户 / 部门？决定 `org_id` 指向哪张表（现有 `system_dept`、
-   租户表，或需要新建「组织/法人主体」档案）。
+1. ~~「组织」指什么维度~~ **已关闭**：组织 = `system_dept` 部门树节点（加盟店 134–146、公司 128/131…、
+   采购 163 均在树上），合同 `org_id` 直接指向它，不新建组织档案。见 `docs/organization-model.md`。
 2. **报销与计划是否在本系统新建**：当前没有报销模块；计划侧只有 MES 的日历与点检计划，
    没有采购计划/物料需求计划。若对接外部系统，则要改成接口推送方案。
 3. **交期粒度**：供应商统一一个值，还是按商品/品类分别？是否需要记录**实际到货交期**做准时率考核？

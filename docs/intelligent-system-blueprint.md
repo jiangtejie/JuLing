@@ -53,6 +53,14 @@ purchasePrice/salePrice/minPrice），**没有 SKU**；商城是 SPU + SKU 多�
 门店（加盟店）在 ERP 建为客户（`erp_customer`），带业务员、结算方式、账期、信用额度；
 商城会员与客户档案建立一对一关联，下单时校验额度与账期。
 
+**补充（已核实的现状与三面绑定）**：加盟店**本来就维护在部门树上**（`system_dept` 134–146 共 13 家门店，
+公司层 128/131，采购部门 = dept 163），全库没有独立"组织/公司"表。但门店的三张面目前**是断的**：
+`trade_order` 只有 `user_id`、`erp_customer` 没有 `dept_id`、`member_user` 也没有 `dept_id` ——
+"给加盟店开账号去 H5 订货"在数据上链不起来（不知道是哪家店、该记谁的账）。落地即
+**一店三面**：dept 节点（权限/审批归属）+ `erp_customer`（店型/账期/信用/配送价，补 `dept_id`）
++ `member_user`（H5 订货账号，补 `dept_id`/`customer_id`），下单时把两者快照进 `trade_order`。
+详见 [`docs/organization-model.md`](./organization-model.md)。
+
 ### 4.3 价格政策（长期可维护的正道）
 
 ERP 的产品价（成本价/销售价/最低价）作为**基础价**，商城侧的客户等级价、阶梯价、促销价独立成
