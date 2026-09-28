@@ -56,6 +56,14 @@ import {
 
 defineOptions({ name: 'TradeOrderDetail' });
 
+/**
+ * 订单编号来源有两个：
+ * 1. 路由页（/mall/trade/order/detail/:id）—— 读路由参数；
+ * 2. 被 BPM 审批页当作「业务表单」组件嵌入时 —— 走 id 属性（见 CRM 合同页同一范式）。
+ * 之前只读路由参数，嵌入时 Number(undefined) = NaN，后端收到 id=NaN 直接报参数类型错误。
+ */
+const props = defineProps<{ id?: number | string }>();
+
 const route = useRoute();
 const router = useRouter();
 const tabs = useTabs();
@@ -259,7 +267,12 @@ function handleBack() {
 
 /** 初始化 */
 onMounted(async () => {
-  orderId.value = Number(route.params.id);
+  const parsed = Number(props.id ?? route.params.id);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    message.error('订单编号无效，无法加载订单详情');
+    return;
+  }
+  orderId.value = parsed;
   await getDetail();
 });
 </script>
