@@ -39,12 +39,28 @@ export namespace ErpStockBatchApi {
     createTime?: string; // 创建时间
   }
 
+  /** 仓库类型：CENTER 中心库 / STORE 门店仓 */
+  export type WarehouseType = 'CENTER' | 'STORE';
+
   /** 批次库存分页查询参数（后端 ErpStockBatchPageReqVO 支持的字段） */
   export interface StockBatchPageReqVO extends PageParam {
     warehouseId?: number; // 仓库编号
     productId?: number; // 物料编号
     batchNo?: string; // 批次号（模糊）
     sourceBizNo?: string; // 来源单号（模糊）
+    // 仓库类型：传 'STORE' 只看门店仓；不传 = 全部（sql/local/38 脚本引入）
+    warehouseType?: WarehouseType;
+  }
+
+  /** 门店库存汇总（按门店仓聚合，用于门店库存页顶部的门店汇总表） */
+  export interface StoreStockSummary {
+    customerId?: number; // 门店客户编号
+    customerName?: string; // 门店名称
+    warehouseId?: number; // 门店仓编号
+    warehouseName?: string; // 门店仓名称
+    productCount?: number; // 物料数
+    totalCount?: number; // 库存数量合计
+    totalAmount?: number; // 库存金额合计，单位：元
   }
 
   /** 临期 / 过期批次查询参数 */
@@ -71,6 +87,18 @@ export function getStockBatchPage(params: ErpStockBatchApi.StockBatchPageReqVO) 
   return requestClient.get<PageResult<ErpStockBatchApi.StockBatch>>(
     '/erp/stock-batch/page',
     { params },
+  );
+}
+
+/**
+ * 获得门店库存汇总（门店仓维度）
+ *
+ * @param customerId 门店客户编号，可空；为空时返回全部门店的汇总
+ */
+export function getStoreStockSummary(customerId?: number) {
+  return requestClient.get<ErpStockBatchApi.StoreStockSummary[]>(
+    '/erp/stock-batch/store-summary',
+    { params: { customerId } },
   );
 }
 
