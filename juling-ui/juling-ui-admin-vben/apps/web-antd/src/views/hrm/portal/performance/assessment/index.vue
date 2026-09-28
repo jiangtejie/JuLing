@@ -3,7 +3,7 @@ import type { PageParam } from '@vben/request';
 
 import type { HrmPortalPerformanceAssessmentApi } from '#/api/hrm/portal/performance/assessment';
 
-import { computed, onActivated, reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { confirm, Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
@@ -20,6 +20,7 @@ import {
   getPerformanceAssessmentTargetConfirmationTaskPage,
   getPerformanceAssessmentTaskCount,
 } from '#/api/hrm/portal/performance/assessment';
+import { usePageActivateLoad } from '#/utils/usePageActivateLoad';
 import {
   HrmPerformanceAssessmentStageStatus,
   HrmPerformanceStageType,
@@ -306,8 +307,11 @@ function handleStatusTabChange() {
   getList();
 }
 
-/** 页面激活时刷新绩效任务 */
-onActivated(async () => {
+/**
+ * 首屏加载 + 切回页签刷新：首次进入时 KeepAlive 的 include 尚未包含本路由，
+ * onActivated 不会触发，必须由 onMounted 兜底（原因见 usePageActivateLoad 注释）。
+ */
+usePageActivateLoad(async () => {
   accessible.value = await checkHrmPortalAccess(router);
   if (!accessible.value) {
     return;

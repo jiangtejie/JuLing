@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { AttendanceMonthDetail } from '#/api/hrm/portal/attendance/statistics';
 
-import { computed, onActivated, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
@@ -15,6 +15,7 @@ import {
   exportAttendanceMonthDetail,
   getAttendanceMonthDetail,
 } from '#/api/hrm/portal/attendance/statistics';
+import { usePageActivateLoad } from '#/utils/usePageActivateLoad';
 import { checkHrmPortalAccess } from '#/views/hrm/utils/employee';
 import { formatHrmDays } from '#/views/hrm/utils/format';
 
@@ -124,8 +125,11 @@ async function handleExport() {
   }
 }
 
-/** 页面激活时刷新考勤报告 */
-onActivated(async () => {
+/**
+ * 首屏加载 + 切回页签刷新：首次进入时 KeepAlive 的 include 尚未包含本路由，
+ * onActivated 不会触发，必须由 onMounted 兜底（原因见 usePageActivateLoad 注释）。
+ */
+usePageActivateLoad(async () => {
   accessible.value = await checkHrmPortalAccess(router);
   if (!accessible.value) {
     return;

@@ -2,7 +2,7 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { HrmPortalPerformanceAssessmentApi } from '#/api/hrm/portal/performance/assessment';
 
-import { onActivated, ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenDrawer } from '@vben/common-ui';
@@ -11,6 +11,7 @@ import { Tag } from 'ant-design-vue';
 
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getPerformanceAssessmentPage } from '#/api/hrm/portal/performance/assessment';
+import { usePageActivateLoad } from '#/utils/usePageActivateLoad';
 import { checkHrmPortalAccess } from '#/views/hrm/utils/employee';
 
 import { useHistoryGridColumns, useHistoryGridFormSchema } from '../data';
@@ -54,9 +55,14 @@ function openDetail(row: HrmPortalPerformanceAssessmentApi.AssessmentSummary) {
   detailDrawerApi.setData({ row }).open();
 }
 
-onActivated(async () => {
+/** 首屏加载 + 切回页签刷新，原因见 usePageActivateLoad 注释 */
+usePageActivateLoad(async () => {
   accessible.value = await checkHrmPortalAccess(router);
-  if (accessible.value) await gridApi.query();
+  if (!accessible.value) return;
+  // 首屏时表格还挂在 <Page v-if="accessible"> 之下：accessible 变 true 后要等下一次渲染表格才 mount，
+  // 否则此处 gridApi.query() 会因为表格 api 尚未 mount 而静默失效（this.grid.commitProxy is not a function）
+  await nextTick();
+  await gridApi.query();
 });
 </script>
 

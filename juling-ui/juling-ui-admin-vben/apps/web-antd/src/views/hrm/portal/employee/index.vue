@@ -2,7 +2,7 @@
 import type { HrmEmployeeConfigApi } from '#/api/hrm/employee/config';
 import type { HrmPortalEmployeeApi } from '#/api/hrm/portal/employee';
 
-import { onActivated, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal } from '@vben/common-ui';
@@ -12,6 +12,7 @@ import { Button, Card, Spin, Tabs } from 'ant-design-vue';
 
 import { getEmployee } from '#/api/hrm/portal/employee';
 import { getEmployeeFieldConfigList } from '#/api/hrm/portal/employee/field-config';
+import { usePageActivateLoad } from '#/utils/usePageActivateLoad';
 import { checkHrmPortalAccess } from '#/views/hrm/utils/employee';
 
 import EmployeeBaseInfo from './modules/employee-base-info.vue';
@@ -65,8 +66,11 @@ function openEmployeeForm() {
     .open();
 }
 
-/** 页面激活时刷新员工档案 */
-onActivated(async () => {
+/**
+ * 首屏加载 + 切回页签刷新：首次进入时 KeepAlive 的 include 尚未包含本路由，
+ * onActivated 不会触发，必须由 onMounted 兜底（原因见 usePageActivateLoad 注释）。
+ */
+usePageActivateLoad(async () => {
   accessible.value = await checkHrmPortalAccess(router);
   if (!accessible.value) {
     return;

@@ -2,7 +2,7 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { HrmPortalInsuranceRecordApi } from '#/api/hrm/portal/insurance/record';
 
-import { nextTick, onActivated, ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal } from '@vben/common-ui';
@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getInsuranceRecordList } from '#/api/hrm/portal/insurance/record';
 import { DictTag } from '#/components/dict-tag';
+import { usePageActivateLoad } from '#/utils/usePageActivateLoad';
 import { checkHrmPortalAccess } from '#/views/hrm/utils/employee';
 
 import { useGridColumns, useGridFormSchema } from './data';
@@ -61,8 +62,11 @@ function openDetail(record: any) {
   detailModalApi.setData({ id: record.id, month: record.month }).open();
 }
 
-/** 页面激活时刷新参保记录 */
-onActivated(async () => {
+/**
+ * 首屏加载 + 切回页签刷新：首次进入时 KeepAlive 的 include 尚未包含本路由，
+ * onActivated 不会触发，必须由 onMounted 兜底（原因见 usePageActivateLoad 注释）。
+ */
+usePageActivateLoad(async () => {
   accessible.value = await checkHrmPortalAccess(router);
   if (!accessible.value) return;
 

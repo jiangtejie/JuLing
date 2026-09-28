@@ -3,7 +3,7 @@ import type { SalarySlipFilterValues } from './data';
 
 import type { HrmPortalSalarySlipApi } from '#/api/hrm/portal/salary/slip';
 
-import { onActivated, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
@@ -15,6 +15,7 @@ import {
   getSalarySlipList,
   markSalarySlipRead,
 } from '#/api/hrm/portal/salary/slip';
+import { usePageActivateLoad } from '#/utils/usePageActivateLoad';
 import { HrmSalarySlipSort } from '#/views/hrm/utils/constants';
 import { checkHrmPortalAccess } from '#/views/hrm/utils/employee';
 
@@ -62,8 +63,11 @@ const [FilterForm, filterFormApi] = useVbenForm({
   handleReset: () => loadSlips({ sort: HrmSalarySlipSort.RECENT_SEND }),
 });
 
-/** 页面激活时刷新工资条 */
-onActivated(async () => {
+/**
+ * 首屏加载 + 切回页签刷新：首次进入时 KeepAlive 的 include 尚未包含本路由，
+ * onActivated 不会触发，必须由 onMounted 兜底（原因见 usePageActivateLoad 注释）。
+ */
+usePageActivateLoad(async () => {
   accessible.value = await checkHrmPortalAccess(router);
   if (accessible.value) await filterFormApi.submitForm();
 });
