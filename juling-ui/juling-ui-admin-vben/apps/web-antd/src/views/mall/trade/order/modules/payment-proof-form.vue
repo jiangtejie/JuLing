@@ -141,16 +141,22 @@ const [Modal, modalApi] = useVbenModal({
 <template>
   <Modal title="核验收款（付款凭证）" class="w-3/5">
     <div class="mx-4 space-y-4">
-      <Descriptions :column="3" bordered size="small">
-        <DescriptionsItem label="订单号">{{ order?.no }}</DescriptionsItem>
-        <DescriptionsItem label="应付金额">
-          {{ fenToYuan(order?.payPrice ?? 0) }} 元
-        </DescriptionsItem>
-        <DescriptionsItem label="已收 / 待收">
-          {{ fenToYuan(order?.paidAmount ?? 0) }} 元 /
-          <span class="text-red-500">{{ remainYuan.toFixed(2) }} 元</span>
-        </DescriptionsItem>
-      </Descriptions>
+      <!--
+        订单概览（订单号 / 金额）单独包一层：ant-descriptions 自带 margin 归零样式，
+        直接在组件上写 mb-* 会被它覆盖，导致与下方凭证信息"贴在一起"。
+      -->
+      <div class="mb-4">
+        <Descriptions :column="3" bordered size="small">
+          <DescriptionsItem label="订单号">{{ order?.no }}</DescriptionsItem>
+          <DescriptionsItem label="应付金额">
+            {{ fenToYuan(order?.payPrice ?? 0) }} 元
+          </DescriptionsItem>
+          <DescriptionsItem label="已收 / 待收">
+            {{ fenToYuan(order?.paidAmount ?? 0) }} 元 /
+            <span class="text-red-500">{{ remainYuan.toFixed(2) }} 元</span>
+          </DescriptionsItem>
+        </Descriptions>
+      </div>
 
       <Empty v-if="proofs.length === 0" description="该订单还没有提交付款凭证" />
 
