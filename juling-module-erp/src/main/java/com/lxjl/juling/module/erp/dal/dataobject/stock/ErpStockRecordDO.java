@@ -79,4 +79,29 @@ public class ErpStockRecordDO extends BaseDO {
      */
     private String bizNo;
 
+    /**
+     * 批次号
+     *
+     * 出库按 FIFO 拆批后，一行流水对应一个批次；为空表示启用批次管理之前的老流水
+     */
+    private String batchNo;
+    /**
+     * 库存状态
+     *
+     * 枚举 {@link com.lxjl.juling.module.erp.service.stock.ErpStockBatchService} 的 STATE_*
+     */
+    private String stockState;
+    /**
+     * 批次单位成本
+     */
+    private BigDecimal unitCost;
+    /**
+     * 本行成本金额 = count × unitCost（出库为负，即结转成本）
+     */
+    private BigDecimal totalCost;
+    /**
+     * SKU 编号（预留）：空/0 表示按物料记账
+     */
+    private Long skuId;
+
 }

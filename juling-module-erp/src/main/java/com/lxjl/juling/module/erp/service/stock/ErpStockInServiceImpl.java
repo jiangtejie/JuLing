@@ -9,14 +9,16 @@ import com.lxjl.juling.module.erp.controller.admin.stock.vo.in.ErpStockInSaveReq
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockInDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockInItemDO;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockInItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockInMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.purchase.ErpSupplierService;
-import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchInReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +50,7 @@ public class ErpStockInServiceImpl implements ErpStockInService {
     private ErpStockInItemMapper stockInItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -57,7 +59,7 @@ public class ErpStockInServiceImpl implements ErpStockInService {
     @Resource
     private ErpSupplierService supplierService;
     @Resource
-    private ErpStockRecordService stockRecordService;
+    private ErpStockBatchService stockBatchService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -66,8 +68,8 @@ public class ErpStockInServiceImpl implements ErpStockInService {
         List<ErpStockInItemDO> stockInItems = validateStockInItems(createReqVO.getItems());
         // 1.2 校验供应商
         supplierService.validateSupplier(createReqVO.getSupplierId());
-        // 1.3 生成入库单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.STOCK_IN_NO_PREFIX);
+        // 1.3 生成入库单号（单据平台：OTHER_IN → QTRK + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.OTHER_IN, null);
         if (stockInMapper.selectByNo(no) != null) {
             throw exception(STOCK_IN_NO_EXISTS);
         }
@@ -124,15 +126,37 @@ public class ErpStockInServiceImpl implements ErpStockInService {
             throw exception(approve ? STOCK_IN_APPROVE_FAIL : STOCK_IN_PROCESS_FAIL);
         }
 
-        // 3. 变更库存
+        // 3. 变更库存（S2 库存中心：按批次入账 / 冲销；内部同时写库存流水并增量更新 erp_stock.count）
         List<ErpStockInItemDO> stockInItems = stockInItemMapper.selectListByInId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.OTHER_IN.getType()
                 : ErpStockRecordBizTypeEnum.OTHER_IN_CANCEL.getType();
         stockInItems.forEach(stockInItem -> {
-            BigDecimal count = approve ? stockInItem.getCount() : stockInItem.getCount().negate();
-            stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
-                    stockInItem.getProductId(), stockInItem.getWarehouseId(), count,
-                    bizType, stockInItem.getInId(), stockInItem.getId(), stockIn.getNo()));
+            if (approve) {
+                ErpStockBatchInReqBO inReqBO = new ErpStockBatchInReqBO();
+                inReqBO.setWarehouseId(stockInItem.getWarehouseId());
+                inReqBO.setProductId(stockInItem.getProductId());
+                inReqBO.setBatchNo(stockInItem.getBatchNo());
+                inReqBO.setProductionDate(stockInItem.getProductionDate());
+                inReqBO.setExpiryDate(stockInItem.getExpiryDate());
+                // 入库日期取单据的入库时间：FIFO 的「先入库先出」按它排序
+                inReqBO.setInDate(stockIn.getInTime() != null ? stockIn.getInTime().toLocalDate() : null);
+                inReqBO.setCount(stockInItem.getCount());
+                // 成本取入库单价
+                inReqBO.setUnitCost(stockInItem.getProductPrice());
+                inReqBO.setBizType(bizType);
+                inReqBO.setBizId(stockInItem.getInId());
+                inReqBO.setBizItemId(stockInItem.getId());
+                inReqBO.setBizNo(stockIn.getNo());
+                inReqBO.setRemark(stockInItem.getRemark());
+                stockBatchService.receiveBatch(inReqBO);
+            } else {
+                stockBatchService.reverseReceive(new ErpStockBatchReverseReqBO()
+                        .setSourceBizType(ErpStockRecordBizTypeEnum.OTHER_IN.getType())
+                        .setSourceBizItemId(stockInItem.getId())
+                        .setTargetBizType(bizType)
+                        .setBizId(stockInItem.getInId())
+                        .setBizNo(stockIn.getNo()));
+            }
         });
     }
 

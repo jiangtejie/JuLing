@@ -9,9 +9,10 @@ import com.lxjl.juling.module.erp.controller.admin.stock.vo.check.ErpStockCheckS
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockCheckDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockCheckItemDO;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockCheckItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockCheckMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
@@ -48,7 +49,7 @@ public class ErpStockCheckServiceImpl implements ErpStockCheckService {
     private ErpStockCheckItemMapper stockCheckItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -62,8 +63,8 @@ public class ErpStockCheckServiceImpl implements ErpStockCheckService {
     public Long createStockCheck(ErpStockCheckSaveReqVO createReqVO) {
         // 1.1 校验盘点项的有效性
         List<ErpStockCheckItemDO> stockCheckItems = validateStockCheckItems(createReqVO.getItems());
-        // 1.2 生成盘点单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.STOCK_CHECK_NO_PREFIX);
+        // 1.2 生成盘点单号（单据平台：STOCK_CHECK → QCPD + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.STOCK_CHECK, null);
         if (stockCheckMapper.selectByNo(no) != null) {
             throw exception(STOCK_CHECK_NO_EXISTS);
         }

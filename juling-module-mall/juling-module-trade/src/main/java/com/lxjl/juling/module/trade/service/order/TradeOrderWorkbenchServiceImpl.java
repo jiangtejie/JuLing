@@ -10,6 +10,8 @@ import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO;
 import com.lxjl.juling.module.erp.api.customer.enums.StoreTypeEnum;
 import com.lxjl.juling.module.erp.api.product.ErpProductApi;
 import com.lxjl.juling.module.erp.api.product.dto.ErpProductRespDTO;
+import com.lxjl.juling.module.erp.api.stock.ErpStockQtyApi;
+import com.lxjl.juling.module.erp.api.stock.dto.ErpStockAvailableRespDTO;
 import com.lxjl.juling.module.erp.api.storealloc.ErpStoreAllocApi;
 import com.lxjl.juling.module.erp.api.storealloc.dto.ErpCentralDeliveryPushReqDTO;
 import com.lxjl.juling.module.erp.api.storealloc.dto.ErpDirectPurchasePushReqDTO;
@@ -67,10 +69,12 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.*;
 @Validated
 public class TradeOrderWorkbenchServiceImpl implements TradeOrderWorkbenchService {
 
-    /** 可下推数量提示：未分料 */
-    private static final String HINT_UNALLOCATED = "可下推 %s（未分料）";
-    /** 可下推数量提示：已下推 */
-    private static final String HINT_PUSHED = "已下推 %s → %s";
+    /** 可用量提示：未分料 —— ERP 真实可用量（在仓 − 占用 + 在途）+ 可下推数量 */
+    private static final String HINT_UNALLOCATED = "%s可用 %s（在仓 %s − 占用 %s + 在途 %s）；可下推 %s（未分料）";
+    /** 可用量提示：已下推 */
+    private static final String HINT_PUSHED = "已下推 %s → %s；%s可用 %s";
+    /** 无可用量时的兜底文案 */
+    private static final String HINT_STOCK_UNKNOWN = "未配置默认发货仓，无法计算可用量";
 
     @Resource
     private TradeOrderMapper tradeOrderMapper;
@@ -83,6 +87,8 @@ public class TradeOrderWorkbenchServiceImpl implements TradeOrderWorkbenchServic
     private ErpProductApi erpProductApi;
     @Resource
     private ErpStoreAllocApi erpStoreAllocApi;
+    @Resource
+    private ErpStockQtyApi erpStockQtyApi;
     @Resource
     private ProductSkuApi productSkuApi;
 
@@ -135,6 +141,12 @@ public class TradeOrderWorkbenchServiceImpl implements TradeOrderWorkbenchServic
         Map<Long, ErpStoreAllocPushedDTO> pushedMap = erpStoreAllocApi.getPushedList(orderId).stream()
                 .filter(pushed -> pushed.getSourceItemId() != null)
                 .collect(Collectors.toMap(ErpStoreAllocPushedDTO::getSourceItemId, Function.identity(), (a, b) -> a));
+        // 2.1 ERP 真实可用量（库存中心四态：在仓 − 占用 + 在途），按默认发货仓（中心库）统计
+        Long erpWarehouseId = erpStockQtyApi.getDefaultWarehouseId();
+        String erpWarehouseName = erpStockQtyApi.getDefaultWarehouseName();
+        Map<Long, ErpStockAvailableRespDTO> stockMap = erpWarehouseId == null ? Map.of()
+                : erpStockQtyApi.getAvailableSummaryMap(erpWarehouseId,
+                        productMap.values().stream().map(ErpProductRespDTO::getId).collect(Collectors.toSet()));
         // 3. 组装
         return items.stream().map(item -> {
             TradeOrderWorkbenchItemRespVO vo = BeanUtils.toBean(item, TradeOrderWorkbenchItemRespVO.class);
@@ -147,6 +159,14 @@ public class TradeOrderWorkbenchServiceImpl implements TradeOrderWorkbenchServic
                 // 分料属性缺省视为允许（历史物料未维护时不要把工作台卡死）
                 vo.setAllowCentral(!Boolean.FALSE.equals(product.getAllowCentral()));
                 vo.setAllowDirect(!Boolean.FALSE.equals(product.getAllowDirect()));
+                // ERP 真实可用量：在仓 − 占用 + 在途（无批次记录的物料按 0 处理）
+                ErpStockAvailableRespDTO stock = stockMap.get(product.getId());
+                vo.setErpWarehouseId(erpWarehouseId);
+                vo.setErpWarehouseName(erpWarehouseName);
+                vo.setErpOnHandCount(stock != null ? stock.getOnHandCount() : BigDecimal.ZERO);
+                vo.setErpOccupiedCount(stock != null ? stock.getOccupiedCount() : BigDecimal.ZERO);
+                vo.setErpInTransitCount(stock != null ? stock.getTransitCount() : BigDecimal.ZERO);
+                vo.setErpAvailableCount(stock != null ? stock.getAvailableCount() : BigDecimal.ZERO);
             } else {
                 vo.setAllowCentral(false);
                 vo.setAllowDirect(false);
@@ -160,14 +180,34 @@ public class TradeOrderWorkbenchServiceImpl implements TradeOrderWorkbenchServic
             if (pushed != null) {
                 vo.setPushedBillType(pushed.getBillType());
                 vo.setPushedBillNo(pushed.getBillNo());
-                vo.setAvailableHint(String.format(HINT_PUSHED, pushed.getBillNo(), allocModeName(item.getAllocMode())));
+                vo.setAvailableHint(String.format(HINT_PUSHED, pushed.getBillNo(), allocModeName(item.getAllocMode()),
+                        warehousePrefix(vo), amountText(vo.getErpAvailableCount())));
             } else if (product == null) {
                 vo.setAvailableHint("未对应 ERP 物料（条码 " + (sku != null ? sku.getBarCode() : "-") + "），无法下推");
+            } else if (erpWarehouseId == null) {
+                vo.setAvailableHint(HINT_STOCK_UNKNOWN);
             } else {
-                vo.setAvailableHint(String.format(HINT_UNALLOCATED, available.stripTrailingZeros().toPlainString()));
+                vo.setAvailableHint(String.format(HINT_UNALLOCATED, warehousePrefix(vo),
+                        amountText(vo.getErpAvailableCount()), amountText(vo.getErpOnHandCount()),
+                        amountText(vo.getErpOccupiedCount()), amountText(vo.getErpInTransitCount()),
+                        available.stripTrailingZeros().toPlainString()));
             }
             return vo;
         }).toList();
+    }
+
+    /**
+     * 可用量文案的仓库前缀（默认发货仓，当前为中心库）
+     */
+    private String warehousePrefix(TradeOrderWorkbenchItemRespVO vo) {
+        return StrUtil.blankToDefault(vo.getErpWarehouseName(), "ERP");
+    }
+
+    /**
+     * 数量文案：去掉无意义的小数尾巴（150.000000 → 150）
+     */
+    private String amountText(BigDecimal amount) {
+        return (amount == null ? BigDecimal.ZERO : amount).stripTrailingZeros().toPlainString();
     }
 
     // ==================== 下推 ====================

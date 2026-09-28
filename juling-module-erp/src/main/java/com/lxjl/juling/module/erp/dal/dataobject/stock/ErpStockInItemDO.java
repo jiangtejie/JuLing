@@ -69,5 +69,21 @@ public class ErpStockInItemDO extends BaseDO {
      * 备注
      */
     private String remark;
+    /**
+     * 批次号
+     *
+     * 为空时，审核入库按 IN{yyyyMMdd}-{项id} 自动生成
+     */
+    private String batchNo;
+    /**
+     * 生产日期
+     */
+    private java.time.LocalDate productionDate;
+    /**
+     * 到期日期
+     *
+     * 效期预警口径；FIFO 的次级排序键
+     */
+    private java.time.LocalDate expiryDate;
 
 }

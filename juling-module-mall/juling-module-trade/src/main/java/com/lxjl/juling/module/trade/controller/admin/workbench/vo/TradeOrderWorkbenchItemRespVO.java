@@ -54,7 +54,22 @@ public class TradeOrderWorkbenchItemRespVO {
 
     @Schema(description = "可下推数量（= 要货数量 − 已下推数量）", example = "2")
     private BigDecimal availableCount;
-    @Schema(description = "可下推数量提示", example = "可下推 2（未下推）")
+    @Schema(description = "可下推数量 + ERP 真实可用量提示", example = "中心库可用 150（在仓 180 − 占用 30 + 在途 0）；可下推 2")
     private String availableHint;
+
+    // ==================== ERP 真实可用量（S2 库存中心：在仓 − 占用 + 在途） ====================
+
+    @Schema(description = "ERP 可用量统计的仓库编号（默认发货仓，当前为中心库）", example = "2")
+    private Long erpWarehouseId;
+    @Schema(description = "ERP 可用量统计的仓库名称", example = "中心库")
+    private String erpWarehouseName;
+    @Schema(description = "ERP 在仓数量", example = "180.000000")
+    private BigDecimal erpOnHandCount;
+    @Schema(description = "ERP 占用数量", example = "30.000000")
+    private BigDecimal erpOccupiedCount;
+    @Schema(description = "ERP 在途数量", example = "0.000000")
+    private BigDecimal erpInTransitCount;
+    @Schema(description = "ERP 可用量 = 在仓 − 占用 + 在途", example = "150.000000")
+    private BigDecimal erpAvailableCount;
 
 }

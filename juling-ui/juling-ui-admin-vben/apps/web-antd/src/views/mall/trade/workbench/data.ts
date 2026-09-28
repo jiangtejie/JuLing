@@ -1,9 +1,25 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { TradeWorkbenchApi } from '#/api/mall/trade/workbench';
 
 import { DICT_TYPE } from '@vben/constants';
 
 import { getRangePickerDefaultProps } from '#/utils';
+
+/**
+ * 要货单明细行（前端态）
+ *
+ * 在接口类型之上补 ERP 库存中心（S2 切片一）暴露的真实可用量字段：
+ * 可用量 = 在仓 − 占用 + 在途，由后端 ErpStockQtyApi 计算（默认发货仓 = 中心库）。
+ */
+export interface WorkbenchItem extends TradeWorkbenchApi.Item {
+  erpWarehouseId?: number;
+  erpWarehouseName?: string;
+  erpOnHandCount?: number;
+  erpOccupiedCount?: number;
+  erpInTransitCount?: number;
+  erpAvailableCount?: number;
+}
 
 /** 订单工作台 - 列表的搜索表单 */
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -143,10 +159,10 @@ export function useItemColumns(): any[] {
       customRender: ({ text }: any) => (text === undefined || text === null ? '-' : fenToYuanText(text)),
     },
     {
-      title: '可下推提示',
+      title: 'ERP 可用量（在仓 − 占用 + 在途）',
       dataIndex: 'availableHint',
       key: 'availableHint',
-      width: 220,
+      width: 340,
     },
     { title: '分料方式', key: 'allocMode', width: 210, slots: { default: 'allocMode' } },
     { title: '下推数量', key: 'pushCount', width: 140, slots: { default: 'pushCount' } },

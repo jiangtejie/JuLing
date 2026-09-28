@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { WorkbenchItem } from './data';
+
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { TradeWorkbenchApi } from '#/api/mall/trade/workbench';
 
@@ -28,7 +30,7 @@ import {
 /** 已展开明细的订单编号（用于按钮文案：分料 / 收起） */
 const expandedOrderIds = ref<number[]>([]);
 /** 展开后的明细行缓存：orderId -> items */
-const itemsMap = reactive<Record<number, TradeWorkbenchApi.Item[]>>({});
+const itemsMap = reactive<Record<number, WorkbenchItem[]>>({});
 /** 明细加载中 */
 const loadingOrderIds = reactive<Record<number, boolean>>({});
 
@@ -110,7 +112,7 @@ async function toggleExpand(row: TradeWorkbenchApi.Order) {
 async function loadItems(orderId: number) {
   loadingOrderIds[orderId] = true;
   try {
-    const items = await getWorkbenchItems(orderId);
+    const items: WorkbenchItem[] = await getWorkbenchItems(orderId);
     items.forEach((item) => {
       if (item.allocMode) {
         // 已下推：只读展示
@@ -141,8 +143,19 @@ function modeOptions(item: TradeWorkbenchApi.Item) {
 }
 
 /** 该单待下推的行 */
-function pendingItems(orderId: number): TradeWorkbenchApi.Item[] {
+function pendingItems(orderId: number): WorkbenchItem[] {
   return (itemsMap[orderId] ?? []).filter((item) => !item.allocMode);
+}
+
+/**
+ * ERP 真实可用量是否小于本次要货数量（不足时高亮提示）
+ *
+ * 可用量 = 在仓 − 占用 + 在途，由后端按默认发货仓（中心库）统计。
+ */
+function isStockShort(item: WorkbenchItem): boolean {
+  const available = Number(item.erpAvailableCount ?? 0);
+  const need = Number(item.count ?? 0);
+  return available < need;
 }
 
 const pushDisabledReason = (row: TradeWorkbenchApi.Order) => {
@@ -283,7 +296,15 @@ onMounted(async () => {
                   }}
                 </td>
                 <td class="py-2 pr-3">
-                  <span :class="item.allocMode ? 'text-green-600' : 'text-gray-600'">
+                  <span
+                    :class="
+                      item.allocMode
+                        ? 'text-green-600'
+                        : isStockShort(item)
+                          ? 'text-red-500'
+                          : 'text-gray-600'
+                    "
+                  >
                     {{ item.availableHint }}
                   </span>
                 </td>
