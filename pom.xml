@@ -21,6 +21,7 @@
         <module>juling-module-mall</module>
         <module>juling-module-crm</module>
         <module>juling-module-erp-api</module>
+        <module>juling-module-bill</module>
         <module>juling-module-erp</module>
         <module>juling-module-iot</module>
         <module>juling-module-mes</module>

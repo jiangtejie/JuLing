@@ -13,6 +13,10 @@ import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInItemDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseInItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseInMapper;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.api.dto.BillRelationCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
@@ -68,6 +72,8 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
 
     @Resource
     private AdminUserApi adminUserApi;
+    @Resource
+    private com.lxjl.juling.module.bill.api.BillPlatformApi billPlatformApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -78,8 +84,8 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
         List<ErpPurchaseInItemDO> purchaseInItems = validatePurchaseInItems(createReqVO.getItems());
         // 1.3 校验结算账户
         accountService.validateAccount(createReqVO.getAccountId());
-        // 1.4 生成入库单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.PURCHASE_IN_NO_PREFIX);
+        // 1.4 生成入库单号（走单据平台）
+        String no = billPlatformApi.generateNo(BillTypeConstants.PURCHASE_IN, null);
         if (purchaseInMapper.selectByNo(no) != null) {
             throw exception(PURCHASE_IN_NO_EXISTS);
         }
@@ -99,6 +105,17 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
 
         // 3. 更新采购订单的入库数量
         updatePurchaseOrderInCount(createReqVO.getOrderId());
+
+        // 4. 单据平台：登记"采购订单 → 采购入库"下推关联 + 操作日志（供追溯与防重复下推）
+        billPlatformApi.addRelation(new BillRelationCreateReqDTO()
+                .setSourceType(BillTypeConstants.PURCHASE_ORDER).setSourceId(purchaseOrder.getId())
+                .setSourceNo(purchaseOrder.getNo())
+                .setTargetType(BillTypeConstants.PURCHASE_IN).setTargetId(purchaseIn.getId()).setTargetNo(no));
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_IN).setBillId(purchaseIn.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(purchaseIn.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId())
+                .setRemark("由采购订单 " + purchaseOrder.getNo() + " 下推"));
         return purchaseIn.getId();
     }
 

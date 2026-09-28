@@ -107,6 +107,13 @@
             <version>${revision}</version>
         </dependency>
 
+        <!-- 单据平台（单据类型/单号/状态机/关联/日志/扩展字段） -->
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-bill</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- AI 大模型相关模块 -->
         <dependency>
             <groupId>com.lxjl.boot</groupId>

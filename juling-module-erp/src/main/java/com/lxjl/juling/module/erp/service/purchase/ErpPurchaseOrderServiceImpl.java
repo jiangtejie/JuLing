@@ -12,6 +12,9 @@ import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderMapper;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
@@ -56,6 +59,8 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     private ErpSupplierService supplierService;
     @Resource
     private ErpAccountService accountService;
+    @Resource
+    private com.lxjl.juling.module.bill.api.BillPlatformApi billPlatformApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -68,8 +73,8 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         if (createReqVO.getAccountId() != null) {
             accountService.validateAccount(createReqVO.getAccountId());
         }
-        // 1.4 生成订单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.PURCHASE_ORDER_NO_PREFIX);
+        // 1.4 生成订单号（走单据平台：按 bill_type 的编号规则 + 组织 + 期间，事务内原子递增）
+        String no = billPlatformApi.generateNo(BillTypeConstants.PURCHASE_ORDER, null);
         if (purchaseOrderMapper.selectByNo(no) != null) {
             throw exception(PURCHASE_ORDER_NO_EXISTS);
         }
@@ -86,6 +91,12 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         purchaseOrderItems.forEach(o -> o.setOrderId(purchaseOrder.getId())
                 .setInCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         purchaseOrderItemMapper.insertBatch(purchaseOrderItems);
+
+        // 2.3 单据平台：写创建日志（留痕；后续接入状态机与审批时沿用同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_ORDER).setBillId(purchaseOrder.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(purchaseOrder.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return purchaseOrder.getId();
     }
 
