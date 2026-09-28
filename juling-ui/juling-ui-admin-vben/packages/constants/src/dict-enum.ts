@@ -90,6 +90,8 @@ const MALL_DICT = {
   TRADE_ORDER_STATUS: 'trade_order_status', // 订单 - 状态
   TRADE_PAYMENT_PROOF_STATUS: 'trade_payment_proof_status', // 订单 - 收款状态（线下收款）
   TRADE_ORDER_TYPE: 'trade_order_type', // 订单 - 类型
+  TRADE_ORDER_AUDIT_STATUS: 'trade_order_audit_status', // 交易订单 - 门店要货审核状态
+  TRADE_SETTLEMENT_MODE: 'trade_settlement_mode', // 门店 - 结算模式
 
   /** ========== MALL - 营销模块 ========== */
 
@@ -124,6 +126,7 @@ const CRM_DICT = {
 const ERP_DICT = {
   ERP_AUDIT_STATUS: 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE: 'erp_stock_record_biz_type', // 库存明细的业务类型
+  ERP_STORE_TYPE: 'erp_store_type', // ERP 客户/门店 - 店型
 } as const;
 
 /** ========== FMS - 财务管理模块 ========== */

@@ -57,6 +57,35 @@ export function useOrderInfoSchema(): DescriptionItemSchema[] {
           value: val,
         }),
     },
+    // 门店要货：结算模式与审核进度
+    {
+      field: 'settlementMode',
+      label: '结算模式',
+      render: (val) =>
+        h(DictTag, {
+          type: DICT_TYPE.TRADE_SETTLEMENT_MODE,
+          value: val,
+        }),
+    },
+    {
+      field: 'auditStatus',
+      label: '审核状态',
+      render: (val) =>
+        h(DictTag, {
+          type: DICT_TYPE.TRADE_ORDER_AUDIT_STATUS,
+          value: val,
+        }),
+    },
+    {
+      field: 'auditRemark',
+      label: '审核意见',
+      render: (val) => val || '-',
+    },
+    {
+      field: 'auditTime',
+      label: '审核时间',
+      render: (val) => (val ? (formatDateTime(val) as string) : '-'),
+    },
   ];
 }
 

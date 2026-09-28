@@ -5,7 +5,19 @@ export const STORAGE_KEYS = {
   USER_INFO: 'user-info',
   CART: 'cart',
   SEARCH_HISTORY: 'search-history',
+  CURRENT_STORE: 'current-store',
 } as const;
+
+/**
+ * 门店要货审核状态展示配置（后端 TradeOrderAuditStatusEnum）。
+ * 门店订货链 S1：付款收齐后自动提交供应链审核，审核通过才发货。
+ */
+export const AUDIT_STATUS_MAP: Record<number, { text: string; color: string }> = {
+  0: { text: '待提交审核', color: 'var(--app-text-color-secondary)' },
+  10: { text: '审核中', color: 'var(--app-warning-color)' },
+  20: { text: '审核通过', color: 'var(--app-success-color)' },
+  30: { text: '审核驳回', color: 'var(--app-danger-color)' },
+};
 
 /** 订单状态展示配置（色值统一引用 CSS 变量，跟随主题换肤） */
 export const ORDER_STATUS_MAP = {

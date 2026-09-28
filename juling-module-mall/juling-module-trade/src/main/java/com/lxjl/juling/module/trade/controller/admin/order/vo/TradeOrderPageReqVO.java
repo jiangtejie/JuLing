@@ -50,6 +50,15 @@ public class TradeOrderPageReqVO extends PageParam {
     @Schema(description = "收款状态（TradeOrderReceiveStatusEnum）：0 未上传凭证、1 待核验、2 已驳回、3 部分收款、4 已收齐", example = "1")
     private Integer paymentProofStatus;
 
+    @Schema(description = "审核状态（TradeOrderAuditStatusEnum）：0 待提交、10 审核中、20 已通过、30 已驳回", example = "10")
+    private Integer auditStatus;
+
+    @Schema(description = "下单门店客户编号", example = "1")
+    private Long customerId;
+
+    @Schema(description = "下单门店所属部门编号", example = "134")
+    private Long deptId;
+
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;

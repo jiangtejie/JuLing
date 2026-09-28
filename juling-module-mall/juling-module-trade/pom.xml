@@ -40,6 +40,17 @@
         </dependency>
         <dependency>
             <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-erp-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!-- 门店要货审核：走 BPM 审批流 -->
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-bpm</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
             <artifactId>juling-module-system</artifactId>
             <version>${revision}</version>
         </dependency>

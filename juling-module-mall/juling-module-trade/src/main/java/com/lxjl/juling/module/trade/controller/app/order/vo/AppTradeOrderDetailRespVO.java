@@ -86,6 +86,14 @@ public class AppTradeOrderDetailRespVO {
             requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer paymentProofStatus;
 
+    // ========== 门店订货链：审核进度 ==========
+
+    @Schema(description = "审核状态（TradeOrderAuditStatusEnum）：0 待提交、10 审核中、20 已通过、30 已驳回", example = "10")
+    private Integer auditStatus;
+
+    @Schema(description = "审核意见（驳回原因等）", example = "数量需下调")
+    private String auditRemark;
+
     // ========== 收件 + 物流基本信息 ==========
 
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")

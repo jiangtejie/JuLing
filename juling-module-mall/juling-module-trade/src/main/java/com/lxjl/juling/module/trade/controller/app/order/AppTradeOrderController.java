@@ -17,6 +17,7 @@ import com.lxjl.juling.module.trade.service.aftersale.AfterSaleService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderPaymentProofService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderStoreService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import com.lxjl.juling.module.trade.service.price.TradePriceService;
 import com.google.common.collect.Maps;
@@ -57,9 +58,18 @@ public class AppTradeOrderController {
     private TradePriceService priceService;
     @Resource
     private TradeOrderPaymentProofService tradeOrderPaymentProofService;
+    @Resource
+    private TradeOrderStoreService tradeOrderStoreService;
 
     @Resource
     private TradeOrderProperties tradeOrderProperties;
+
+    @GetMapping("/store-list")
+    @Operation(summary = "获得可下单门店列表", description = "门店订货链：代理商账号可切换其名下门店下单")
+    public CommonResult<List<AppTradeOrderStoreRespVO>> getStoreList() {
+        return success(BeanUtils.toBean(tradeOrderStoreService.getStoreList(getLoginUserId()),
+                AppTradeOrderStoreRespVO.class));
+    }
 
     @GetMapping("/settlement")
     @Operation(summary = "获得订单结算信息")

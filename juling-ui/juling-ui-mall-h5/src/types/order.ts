@@ -80,6 +80,14 @@ export interface Order {
   items: OrderItem[];
 }
 
+/** 可下单门店（门店订货链：代理账号可切换名下门店） */
+export interface StoreOption {
+  customerId: number;
+  customerName: string;
+  deptId?: number;
+  settlementMode?: string;
+}
+
 /** 创建订单参数 */
 export interface OrderCreateParam {
   items: Array<{ skuId: number; quantity: number }>;
@@ -87,4 +95,6 @@ export interface OrderCreateParam {
   receiverMobile: string;
   receiverAddress: string;
   remark?: string;
+  /** 下单门店客户编号（不传则用账号绑定门店） */
+  storeCustomerId?: number;
 }

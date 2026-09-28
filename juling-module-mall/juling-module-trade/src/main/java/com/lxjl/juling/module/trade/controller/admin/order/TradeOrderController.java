@@ -13,6 +13,7 @@ import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderLogDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 import com.lxjl.juling.module.trade.service.order.TradeOrderLogService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderAuditService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderPaymentProofService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
@@ -47,6 +48,8 @@ public class TradeOrderController {
     private TradeOrderUpdateService tradeOrderUpdateService;
     @Resource
     private TradeOrderPaymentProofService tradeOrderPaymentProofService;
+    @Resource
+    private TradeOrderAuditService tradeOrderAuditService;
     @Resource
     private TradeOrderQueryService tradeOrderQueryService;
     @Resource
@@ -115,6 +118,14 @@ public class TradeOrderController {
     @PreAuthorize("@ss.hasPermission('trade:order:update')")
     public CommonResult<Boolean> deliveryOrder(@RequestBody TradeOrderDeliveryReqVO deliveryReqVO) {
         tradeOrderUpdateService.deliveryOrder(deliveryReqVO);
+        return success(true);
+    }
+
+    @PutMapping("/submit-audit")
+    @Operation(summary = "提交门店要货审核", description = "把订单提交供应链审核（BPM 审批流），审核通过后才可发货")
+    @PreAuthorize("@ss.hasPermission('trade:order:audit:submit')")
+    public CommonResult<Boolean> submitAudit(@RequestParam("id") Long id) {
+        tradeOrderAuditService.submitAudit(id, getLoginUserId());
         return success(true);
     }
 

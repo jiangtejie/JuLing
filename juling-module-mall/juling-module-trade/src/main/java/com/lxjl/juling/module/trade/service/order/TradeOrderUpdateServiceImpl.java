@@ -12,6 +12,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.util.json.JsonUtils;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.member.api.address.MemberAddressApi;
 import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.product.api.comment.ProductCommentApi;
@@ -44,6 +45,7 @@ import com.lxjl.juling.module.trade.service.cart.CartService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
 import com.lxjl.juling.module.trade.service.message.TradeMessageService;
 import com.lxjl.juling.module.trade.service.message.bo.TradeOrderMessageWhenDeliveryOrderReqBO;
+import com.lxjl.juling.module.trade.service.order.bo.TradeOrderStoreBO;
 import com.lxjl.juling.module.trade.service.order.handler.TradeOrderHandler;
 import com.lxjl.juling.module.trade.service.price.TradePriceService;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
@@ -98,6 +100,10 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     private DeliveryExpressService deliveryExpressService;
     @Resource
     private TradeMessageService tradeMessageService;
+    @Resource
+    private TradeOrderStoreService tradeOrderStoreService;
+    @Resource
+    private TradeOrderAuditService tradeOrderAuditService;
 
     @Resource
     private MemberAddressApi addressApi;
@@ -218,6 +224,11 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
                         .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
             }
         }
+        // 门店订货链 S1：快照下单门店（组织面 deptId + 经营面 customerId / 结算模式），并初始化审核状态
+        TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());
+        order.setCustomerId(store.getCustomerId()).setDeptId(store.getDeptId())
+                .setAgentCustomerId(store.getAgentCustomerId()).setSettlementMode(store.getSettlementMode())
+                .setAuditStatus(TradeOrderAuditStatusEnum.DRAFT.getStatus());
         return order;
     }
 
@@ -284,6 +295,19 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         // 4. 记录订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), TradeOrderStatusEnum.UNDELIVERED.getStatus());
         TradeOrderLogUtils.setUserInfo(order.getUserId(), UserTypeEnum.MEMBER.getValue());
+
+        // 5. 门店订货链 S1：收款收齐后自动提交供应链审核（BPM 流程定义 key：trade-order-store-audit）
+        //    审核未通过前不允许发货；流程定义缺失等异常不阻塞收款，可由后台手工提交审核
+        try {
+            Long operatorUserId = SecurityFrameworkUtils.getLoginUserId();
+            if (operatorUserId != null) {
+                tradeOrderAuditService.submitAudit(order.getId(), operatorUserId);
+            } else {
+                log.warn("[updateOrderPaidByOffline][订单({}) 无登录上下文，跳过自动提交审核]", order.getId());
+            }
+        } catch (Throwable e) {
+            log.error("[updateOrderPaidByOffline][订单({}) 自动提交审核失败，可在后台手工提交]", order.getId(), e);
+        }
     }
 
 
@@ -301,6 +325,8 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     public void deliveryOrder(TradeOrderDeliveryReqVO deliveryReqVO) {
         // 1.1 校验并获得交易订单（可发货）
         TradeOrderDO order = validateOrderDeliverable(deliveryReqVO.getId());
+        // 1.15 门店订货链 S1：门店要货必须通过供应链审核，才允许发货
+        tradeOrderAuditService.validateCanDelivery(order);
         // 1.2 校验 deliveryType 是否为快递，是快递才可以发货
         if (ObjectUtil.notEqual(order.getDeliveryType(), DeliveryTypeEnum.EXPRESS.getType())) {
             throw exception(ORDER_DELIVERY_FAIL_DELIVERY_TYPE_NOT_EXPRESS);

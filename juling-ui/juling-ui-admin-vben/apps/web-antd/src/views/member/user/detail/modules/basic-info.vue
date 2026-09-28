@@ -51,6 +51,17 @@ const [Descriptions] = useDescription({
       field: 'areaName',
       label: '所在地',
     },
+    // 一店三面绑定：门店（部门）与客户编号，后端只有 id，这里直接展示编号
+    {
+      field: 'deptId',
+      label: '所属门店',
+      render: (val) => val ?? '-',
+    },
+    {
+      field: 'customerId',
+      label: '所属客户',
+      render: (val) => val ?? '-',
+    },
     {
       field: 'registerIp',
       label: '注册 IP',

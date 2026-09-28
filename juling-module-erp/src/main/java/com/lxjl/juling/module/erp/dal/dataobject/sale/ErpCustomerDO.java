@@ -87,4 +87,31 @@ public class ErpCustomerDO extends BaseDO {
      */
     private String bankAddress;
 
+    /**
+     * 所属部门（门店节点，system_dept.id）
+     */
+    private Long deptId;
+    /**
+     * 上级代理客户编号（代理 → 多门店）
+     */
+    private Long parentCustomerId;
+    /**
+     * 店型：DIRECT 直营 / FRANCHISE 加盟
+     *
+     * 字典 {@link com.lxjl.juling.module.erp.enums.DictTypeConstants#ERP_STORE_TYPE}
+     */
+    private String storeType;
+    /**
+     * 结算模式：PREPAID 先款后货 / MONTHLY 月结
+     */
+    private String settlementMode;
+    /**
+     * 账期天数（月结时生效）
+     */
+    private Integer creditDays;
+    /**
+     * 信用额度（月结时生效）
+     */
+    private BigDecimal creditLimit;
+
 }

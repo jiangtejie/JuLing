@@ -13,10 +13,10 @@ import {
 } from '@vben/constants';
 import { fenToYuan } from '@vben/utils';
 
-import { Button, Image, List, Tag } from 'ant-design-vue';
+import { Button, Image, List, message, Tag } from 'ant-design-vue';
 
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getOrderPage } from '#/api/mall/trade/order';
+import { getOrderPage, submitOrderAudit } from '#/api/mall/trade/order';
 import { DictTag } from '#/components/dict-tag';
 import { $t } from '#/locales';
 
@@ -106,6 +106,21 @@ function handleRemark(row: MallOrderApi.Order) {
 /** 线下收款：核验客户上传的付款凭证（确认收款 / 驳回） */
 function handleAuditPaymentProof(row: MallOrderApi.Order) {
   paymentProofFormModalApi.setData(row).open();
+}
+
+/** 门店要货：提交审核（待提交 / 已驳回 且 待发货 的订单） */
+async function handleSubmitAudit(row: MallOrderApi.Order) {
+  const hideLoading = message.loading({
+    content: '提交审核中...',
+    duration: 0,
+  });
+  try {
+    await submitOrderAudit(row.id!);
+    message.success('提交审核成功');
+    handleRefresh();
+  } finally {
+    hideLoading();
+  }
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -218,6 +233,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
               auth: ['trade:order:payment-proof:audit'],
               ifShow: () => row.paymentProofStatus === 1,
               onClick: handleAuditPaymentProof.bind(null, row),
+            },
+            {
+              // 门店要货：待提交(0) / 已驳回(30) 且订单待发货时，可提交审核
+              label: '提交审核',
+              type: 'link',
+              auth: ['trade:order:audit:submit'],
+              ifShow: () =>
+                (row.auditStatus === 0 || row.auditStatus === 30) &&
+                row.status === TradeOrderStatusEnum.UNDELIVERED.status,
+              onClick: handleSubmitAudit.bind(null, row),
             },
             {
               label: '发货',

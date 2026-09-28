@@ -31,6 +31,10 @@ public class AppTradeOrderSettlementReqVO {
     @NotNull(message = "是否使用积分不能为空")
     private Boolean pointStatus;
 
+    // ========== 门店订货链：下单门店 ==========
+    @Schema(description = "下单门店客户编号（代理账号切换门店时传；不传则使用账号绑定门店）", example = "1")
+    private Long storeCustomerId;
+
     // ========== 配送相关相关字段 ==========
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @InEnum(value = DeliveryTypeEnum.class, message = "配送方式不正确")

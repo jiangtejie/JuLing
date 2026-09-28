@@ -2,6 +2,7 @@
   import { showSuccessToast, showToast } from 'vant';
   import { createOrder } from '@/api/order';
   import { useCartStore } from '@/stores/cart';
+  import { useStoreStore } from '@/stores/store';
   import { formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
   import { isMobile } from '@/utils/is';
@@ -11,6 +12,18 @@
   const router = useRouter();
   const cartStore = useCartStore();
   const { checkedItems, totalPrice, totalQuantity } = storeToRefs(cartStore);
+
+  // 门店订货链 S1：下单门店（代理账号可能存在多家门店，需显式确认避免下错店）
+  const storeStore = useStoreStore();
+  const { stores, currentStore } = storeToRefs(storeStore);
+  const showStorePicker = ref(false);
+  const pickedStoreId = ref<number | null>(null);
+
+  function onPickStore(customerId: number): void {
+    storeStore.switchStore(customerId);
+    pickedStoreId.value = customerId;
+    showStorePicker.value = false;
+  }
 
   const remark = ref('');
   // 不预填任何示例地址：避免用户未填写就把假收货信息提交到后端
@@ -33,6 +46,10 @@
       showToast('请输入详细收货地址');
       return;
     }
+    if (!currentStore.value) {
+      showToast('当前账号未绑定门店，请联系管理员配置后再下单');
+      return;
+    }
 
     let orderId: number;
     try {
@@ -45,6 +62,8 @@
         receiverMobile: address.mobile.trim(),
         receiverAddress: address.address.trim(),
         remark: remark.value,
+        // 门店订货链：显式携带所选门店，后端校验归属并快照组织/客户
+        storeCustomerId: currentStore.value.customerId,
       });
     } catch {
       return;
@@ -58,10 +77,17 @@
 
   const { loading, run } = useSubmit(onSubmit);
 
-  onMounted(() => {
+  onMounted(async () => {
     // 排序：先展示已勾选商品
     if (!checkedItems.value.length && cartStore.items.length) {
       showToast('请先在订货单中勾选商品');
+    }
+    // 门店订货链：拉取可下单门店（未绑定门店时后端会拦截下单，这里静默失败并给出提示）
+    try {
+      await storeStore.fetchStores();
+      pickedStoreId.value = currentStore.value?.customerId ?? null;
+    } catch {
+      showToast('未能获取下单门店，请联系管理员绑定门店');
     }
   });
 </script>
@@ -71,6 +97,16 @@
     <AppNavBar title="确认订单" />
 
     <div class="app-scroll">
+      <!-- 下单门店：代理账号可能有多家门店，显式展示当前门店避免下错 -->
+      <van-cell-group inset class="order-confirm__group">
+        <van-cell
+          title="下单门店"
+          :value="currentStore?.customerName || '未绑定门店'"
+          :is-link="stores.length > 1"
+          @click="stores.length > 1 && (showStorePicker = true)"
+        />
+      </van-cell-group>
+
       <!-- 收货信息 -->
       <van-cell-group inset class="order-confirm__group">
         <van-field
@@ -146,6 +182,25 @@
       </van-cell-group>
     </div>
 
+    <van-popup v-model:show="showStorePicker" position="bottom" round>
+      <div class="store-picker">
+        <div class="store-picker__title">选择下单门店</div>
+        <van-radio-group v-model="pickedStoreId">
+          <van-cell
+            v-for="item in stores"
+            :key="item.customerId"
+            :title="item.customerName"
+            clickable
+            @click="onPickStore(item.customerId)"
+          >
+            <template #right-icon>
+              <van-radio :name="item.customerId" @click.stop="onPickStore(item.customerId)" />
+            </template>
+          </van-cell>
+        </van-radio-group>
+      </div>
+    </van-popup>
+
     <van-submit-bar
       :price="totalPrice"
       :loading="loading"
@@ -160,6 +215,19 @@
   /* 内容底部避让固定提交栏（van-submit-bar 默认无 placeholder），避免最后一项被遮挡 */
   :deep(.app-scroll) {
     padding-bottom: 52px;
+  }
+
+  .store-picker {
+    max-height: 60vh;
+    padding: 12px 0 20px;
+    overflow-y: auto;
+
+    &__title {
+      padding: 4px 16px 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+    }
   }
 
   .order-confirm {

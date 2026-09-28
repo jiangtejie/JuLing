@@ -94,6 +94,35 @@ public class TradeOrderBaseVO {
             requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer paymentProofStatus;
 
+    // ========== 门店订货链：归属 + 供应链审核基本信息 ==========
+
+    @Schema(description = "下单门店所属部门编号", example = "134")
+    private Long deptId;
+
+    @Schema(description = "下单门店客户编号", example = "1")
+    private Long customerId;
+
+    @Schema(description = "代理客户编号（代理账号切换门店下单时非空）", example = "1")
+    private Long agentCustomerId;
+
+    @Schema(description = "结算模式（TradeSettlementModeEnum）：PREPAID 先款后货、MONTHLY 月结", example = "PREPAID")
+    private String settlementMode;
+
+    @Schema(description = "审核状态（TradeOrderAuditStatusEnum）：0 待提交、10 审核中、20 已通过、30 已驳回", example = "10")
+    private Integer auditStatus;
+
+    @Schema(description = "审核人编号", example = "1")
+    private Long auditUserId;
+
+    @Schema(description = "审核时间")
+    private LocalDateTime auditTime;
+
+    @Schema(description = "审核意见", example = "数量需下调")
+    private String auditRemark;
+
+    @Schema(description = "BPM 审批流程实例编号", example = "0f8e9a1b-...")
+    private String processInstanceId;
+
     // ========== 收件 + 物流基本信息 ==========
 
     @Schema(description = "配送方式", example = "10")

@@ -11,6 +11,7 @@ import type {
   PageResult,
   PaymentProof,
   PaymentProofCreateParam,
+  StoreOption,
 } from '@/types';
 import {
   adaptOrderDetail,
@@ -27,6 +28,14 @@ export interface OrderQuery {
   status?: string;
 }
 
+/**
+ * 获得可下单门店列表（门店订货链 S1）。
+ * 代理账号可切换其名下门店；普通门店账号只有自己。
+ */
+export function getStoreList(): Promise<StoreOption[]> {
+  return http.get<StoreOption[]>('/trade/order/store-list');
+}
+
 /** 提交订单（订货单 → 后端交易订单；返回后端订单编号 id） */
 export async function createOrder(data: OrderCreateParam): Promise<number> {
   const payload: AppTradeOrderCreateReqVO = {
@@ -39,6 +48,8 @@ export async function createOrder(data: OrderCreateParam): Promise<number> {
     receiverDetailAddress: data.receiverAddress,
   };
   if (data.remark) payload.remark = data.remark;
+  // 门店订货链：携带所选门店，后端据此校验归属并快照组织/客户
+  if (data.storeCustomerId) payload.storeCustomerId = data.storeCustomerId;
   const result = await http.post<AppTradeOrderCreateRespVO>('/trade/order/create', payload);
   return result.id;
 }

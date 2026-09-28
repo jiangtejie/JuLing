@@ -314,4 +314,6 @@ export interface AppTradeOrderCreateReqVO {
   receiverDetailAddress?: string;
   addressId?: number;
   remark?: string;
+  /** 下单门店客户编号（门店订货链 S1：代理账号切换门店时传） */
+  storeCustomerId?: number;
 }

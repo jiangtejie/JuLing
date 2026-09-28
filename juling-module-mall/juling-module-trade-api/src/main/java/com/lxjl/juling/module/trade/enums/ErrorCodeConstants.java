@@ -39,6 +39,13 @@ public interface ErrorCodeConstants {
     ErrorCode ORDER_UPDATE_PAID_ORDER_REFUNDED_FAIL_REFUND_STATUS_NOT_SUCCESS = new ErrorCode(1_011_000_035, "交易订单更新支付订单退款状态失败，原因：退款单状态不是【退款成功】");
     ErrorCode ORDER_CREATE_FAIL_INSUFFICIENT_USER_POINTS = new ErrorCode(1_011_000_038, "交易订单创建失败，原因：用户积分不足");
     ErrorCode ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE = new ErrorCode(1_011_000_040, "交易订单创建失败，原因：收货信息不完整，请填写收货人、联系电话和收货地址");
+    // ========== 门店订货链 S1：归属与审核 ==========
+    ErrorCode ORDER_CREATE_FAIL_STORE_NOT_BOUND = new ErrorCode(1_011_000_041, "交易订单创建失败，原因：订货账号未绑定门店，请联系管理员在【会员管理】中配置");
+    ErrorCode ORDER_CREATE_FAIL_STORE_NOT_BELONG = new ErrorCode(1_011_000_042, "交易订单创建失败，原因：所选门店不属于当前订货账号");
+    ErrorCode ORDER_CREATE_FAIL_STORE_NOT_EXISTS = new ErrorCode(1_011_000_043, "交易订单创建失败，原因：门店不存在或已停用");
+    ErrorCode ORDER_AUDIT_FAIL_STATUS = new ErrorCode(1_011_000_044, "交易订单提交审核失败，原因：订单不是【待发货】或【已驳回】状态");
+    ErrorCode ORDER_DELIVERY_FAIL_AUDIT_NOT_APPROVE = new ErrorCode(1_011_000_045, "交易订单发货失败，原因：门店要货未通过审核");
+    ErrorCode ORDER_AUDIT_UPDATE_FAIL_NOT_PROCESS = new ErrorCode(1_011_000_046, "交易订单更新审核结果失败，原因：订单不处于【审核中】状态");
 
     // ========== After Sale 模块 1-011-000-100 ==========
     ErrorCode AFTER_SALE_NOT_FOUND = new ErrorCode(1_011_000_100, "售后单不存在");

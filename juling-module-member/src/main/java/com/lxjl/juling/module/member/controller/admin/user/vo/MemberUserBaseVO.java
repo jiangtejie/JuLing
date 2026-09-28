@@ -69,4 +69,10 @@ public class MemberUserBaseVO {
     @Schema(description = "用户分组编号", example = "1")
     private Long groupId;
 
+    @Schema(description = "所属部门（门店节点）编号", example = "134")
+    private Long deptId;
+
+    @Schema(description = "所属客户（门店 / 代理）编号", example = "1")
+    private Long customerId;
+
 }

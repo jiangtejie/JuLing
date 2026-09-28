@@ -45,6 +45,20 @@ export function useGridFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      fieldName: 'auditStatus',
+      label: '审核状态',
+      component: 'Select',
+      componentProps: {
+        // 含「全部」：选中后为 undefined，qs 会忽略该参数（等价于不过滤）
+        options: [
+          { label: '全部', value: undefined },
+          ...getDictOptions(DICT_TYPE.TRADE_ORDER_AUDIT_STATUS, 'number'),
+        ],
+        placeholder: '请选择审核状态',
+        allowClear: true,
+      },
+    },
+    {
       fieldName: 'createTime',
       label: '创建时间',
       component: 'RangePicker',
@@ -244,6 +258,38 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
         props: { type: DICT_TYPE.TRADE_ORDER_STATUS },
       },
       minWidth: 80,
+    },
+    {
+      // 门店要货：下单的门店客户（后端只返回编号）
+      field: 'customerId',
+      title: '门店客户',
+      formatter: ({ row }) => row.customerId ?? '-',
+      minWidth: 110,
+    },
+    {
+      // 门店要货：门店所属部门（后端只返回编号）
+      field: 'deptId',
+      title: '所属部门',
+      formatter: ({ row }) => row.deptId ?? '-',
+      minWidth: 110,
+    },
+    {
+      field: 'settlementMode',
+      title: '结算模式',
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_SETTLEMENT_MODE },
+      },
+      minWidth: 110,
+    },
+    {
+      field: 'auditStatus',
+      title: '审核状态',
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_ORDER_AUDIT_STATUS },
+      },
+      minWidth: 110,
     },
     {
       title: '操作',

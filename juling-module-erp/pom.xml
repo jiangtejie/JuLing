@@ -20,6 +20,12 @@
     <dependencies>
         <dependency>
             <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-erp-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
             <artifactId>juling-module-system</artifactId>
             <version>${revision}</version>
         </dependency>

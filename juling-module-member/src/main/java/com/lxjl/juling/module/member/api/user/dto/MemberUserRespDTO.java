@@ -56,4 +56,14 @@ public class MemberUserRespDTO {
      */
     private Integer point;
 
+    /**
+     * 所属部门（门店节点）编号
+     */
+    private Long deptId;
+
+    /**
+     * 所属客户（门店 / 代理）编号
+     */
+    private Long customerId;
+
 }

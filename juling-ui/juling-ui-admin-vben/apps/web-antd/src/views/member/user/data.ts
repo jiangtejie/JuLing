@@ -5,13 +5,16 @@ import { h, markRaw } from 'vue';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
+import { handleTree } from '@vben/utils';
 
 import { Tag } from 'ant-design-vue';
 
 import { z } from '#/adapter/form';
+import { getCustomerSimpleList } from '#/api/erp/sale/customer';
 import { getSimpleGroupList } from '#/api/member/group';
 import { getSimpleLevelList } from '#/api/member/level';
 import { getSimpleTagList } from '#/api/member/tag';
+import { getSimpleDeptList } from '#/api/system/dept';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
 
@@ -131,6 +134,32 @@ export function useFormSchema(): VbenFormSchema[] {
         labelField: 'name',
         valueField: 'id',
         placeholder: '请选择用户分组',
+      },
+    },
+    {
+      fieldName: 'deptId',
+      label: '所属门店',
+      component: 'ApiTreeSelect',
+      componentProps: {
+        allowClear: true,
+        api: async () => handleTree(await getSimpleDeptList()),
+        labelField: 'name',
+        valueField: 'id',
+        childrenField: 'children',
+        placeholder: '请选择所属门店',
+        treeDefaultExpandAll: true,
+      },
+    },
+    {
+      fieldName: 'customerId',
+      label: '所属客户',
+      component: 'ApiSelect',
+      componentProps: {
+        api: getCustomerSimpleList,
+        labelField: 'name',
+        valueField: 'id',
+        allowClear: true,
+        placeholder: '请选择所属客户',
       },
     },
     {
@@ -266,6 +295,11 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       field: 'nickname',
       title: '昵称',
       minWidth: 120,
+    },
+    {
+      field: 'customerId',
+      title: '所属客户',
+      minWidth: 100,
     },
     {
       field: 'levelName',

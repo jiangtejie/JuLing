@@ -154,6 +154,54 @@ public class TradeOrderDO extends BaseDO {
      */
     private Integer paymentProofStatus;
 
+    // ========== 门店订货归属 + 供应链审核基本信息（门店订货链 S1） ==========
+    /**
+     * 下单门店所属部门编号（快照）
+     *
+     * 关联 system_dept.id；一店三面：组织面
+     */
+    private Long deptId;
+    /**
+     * 下单门店客户编号（快照）
+     *
+     * 关联 erp_customer.id；一店三面：经营面
+     */
+    private Long customerId;
+    /**
+     * 代理客户编号（快照）
+     *
+     * 代理账号切换门店下单时，记录代理客户；门店自身下单时为空
+     */
+    private Long agentCustomerId;
+    /**
+     * 结算模式快照
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeSettlementModeEnum}
+     */
+    private String settlementMode;
+    /**
+     * 审核状态
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderAuditStatusEnum}
+     */
+    private Integer auditStatus;
+    /**
+     * 审核人编号（审核结束时写入）
+     */
+    private Long auditUserId;
+    /**
+     * 审核时间
+     */
+    private LocalDateTime auditTime;
+    /**
+     * 审核意见（驳回原因等）
+     */
+    private String auditRemark;
+    /**
+     * BPM 审批流程实例编号
+     */
+    private String processInstanceId;
+
     /**
      * 商品原价，单位：分
      *

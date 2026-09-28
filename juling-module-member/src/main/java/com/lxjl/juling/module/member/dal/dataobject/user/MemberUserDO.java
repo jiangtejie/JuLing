@@ -146,4 +146,18 @@ public class MemberUserDO extends TenantBaseDO {
      */
     private Long groupId;
 
+    /**
+     * 所属部门（门店节点）编号
+     *
+     * 关联 {@link com.lxjl.juling.module.system.dal.dataobject.dept.DeptDO#getId()} 字段。
+     * 门店订货链「一店三面」：组织面（部门）+ 经营面（客户）+ 账号面（本表）。
+     */
+    private Long deptId;
+    /**
+     * 所属客户（门店 / 代理）编号
+     *
+     * 关联 ERP 客户，代理账号可切换其名下门店下单。
+     */
+    private Long customerId;
+
 }

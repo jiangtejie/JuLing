@@ -30,6 +30,15 @@ export namespace MallOrderApi {
     payPrice?: number; // 应付金额（总）
     paidAmount?: number; // 已确认收款金额（总）
     paymentProofStatus?: number; // 收款状态（线下收款）
+    deptId?: number; // 所属部门编号（门店所属 system_dept.id）
+    customerId?: number; // 门店客户编号
+    agentCustomerId?: number; // 上级代理客户编号
+    settlementMode?: string; // 结算模式：PREPAID 先款后货、MONTHLY 月结
+    auditStatus?: number; // 门店要货审核状态：0 待提交、10 审核中、20 已通过、30 已驳回
+    auditUserId?: number; // 审核人编号
+    auditTime?: Date; // 审核时间
+    auditRemark?: string; // 审核意见
+    processInstanceId?: string; // 审批流程实例编号
     deliveryType?: number; // 发货方式
     deliveryTemplateId?: number; // 配送模板编号
     logisticsId?: number; // 发货物流公司编号
@@ -218,4 +227,9 @@ export function getPaymentProofList(orderId: number) {
 /** 核验付款凭证（确认收款 / 驳回） */
 export function auditPaymentProof(data: MallOrderApi.PaymentProofAuditReqVO) {
   return requestClient.put('/trade/order/payment-proof/audit', data);
+}
+
+/** 提交门店要货审核 */
+export function submitOrderAudit(id: number) {
+  return requestClient.put('/trade/order/submit-audit', null, { params: { id } });
 }
