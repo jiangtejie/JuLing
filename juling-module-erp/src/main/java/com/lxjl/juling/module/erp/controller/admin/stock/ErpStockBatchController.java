@@ -1,9 +1,13 @@
 package com.lxjl.juling.module.erp.controller.admin.stock;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.collection.MapUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.module.erp.api.stock.ErpStoreStockApi;
+import com.lxjl.juling.module.erp.api.stock.dto.ErpStoreStockSummaryRespDTO;
 import com.lxjl.juling.module.erp.controller.admin.product.vo.product.ErpProductRespVO;
 import com.lxjl.juling.module.erp.controller.admin.stock.vo.batch.ErpStockBatchPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.stock.vo.batch.ErpStockBatchRespVO;
@@ -76,13 +80,42 @@ public class ErpStockBatchController {
     private ErpProductService productService;
     @Resource
     private ErpWarehouseService warehouseService;
+    @Resource
+    private ErpStoreStockApi storeStockApi;
 
     @GetMapping("/page")
     @Operation(summary = "获得批次库存分页")
     @PreAuthorize("@ss.hasPermission('erp:stock:query')")
     public CommonResult<PageResult<ErpStockBatchRespVO>> getBatchPage(@Valid ErpStockBatchPageReqVO pageReqVO) {
+        // 门店库存页（按门店过滤）：先解析出该门店的门店仓，再交给批次库存分页
+        if (pageReqVO.getCustomerId() != null) {
+            Long storeWarehouseId = storeStockApi.getStoreWarehouseId(pageReqVO.getCustomerId());
+            if (storeWarehouseId == null) {
+                return success(PageResult.empty());
+            }
+            pageReqVO.setWarehouseIds(List.of(storeWarehouseId));
+        }
+        // 门店库存页：按仓库类型（STORE 门店仓 / CENTER 中心库）先解析出仓库编号集合，
+        // 再交给批次库存分页；没有匹配的仓库时直接返回空页，避免生成非法的 IN () 语句。
+        if (CollUtil.isEmpty(pageReqVO.getWarehouseIds()) && StrUtil.isNotBlank(pageReqVO.getWarehouseType())) {
+            List<Long> warehouseIds = warehouseService.getWarehouseListByType(pageReqVO.getWarehouseType())
+                    .stream().map(ErpWarehouseDO::getId).toList();
+            if (warehouseIds.isEmpty()) {
+                return success(PageResult.empty());
+            }
+            pageReqVO.setWarehouseIds(warehouseIds);
+        }
         PageResult<ErpStockBatchDO> pageResult = stockBatchService.getBatchPage(pageReqVO);
         return success(buildVOPageResult(pageResult));
+    }
+
+    @GetMapping("/store-summary")
+    @Operation(summary = "获得门店库存汇总（一店一仓，按门店客户）")
+    @Parameter(name = "customerId", description = "门店客户编号；不传=全部门店", example = "6")
+    @PreAuthorize("@ss.hasPermission('erp:stock:store:query')")
+    public CommonResult<List<ErpStoreStockSummaryRespDTO>> getStoreSummary(
+            @RequestParam(value = "customerId", required = false) Long customerId) {
+        return success(storeStockApi.getStoreStockSummary(customerId));
     }
 
     @GetMapping("/list")

@@ -57,6 +57,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -298,17 +300,31 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         TradeOrderLogUtils.setUserInfo(order.getUserId(), UserTypeEnum.MEMBER.getValue());
 
         // 5. 门店订货链 S1：收款收齐后自动提交供应链审核（BPM 流程定义 key：trade-order-store-audit）
-        //    审核未通过前不允许发货；流程定义缺失等异常不阻塞收款，可由后台手工提交审核
+        //    审核未通过前不允许发货（发货闸门见 TradeOrderAuditService#validateCanDelivery）。
+        //
+        //    ⚠️ 自动提交必须放在**本事务提交之后**执行，不能就地 try/catch：
+        //    BPM 创建流程实例内部是嵌套事务，抛错会把当前事务标记成 rollback-only，
+        //    就地 catch 吞掉后外层提交时照样抛 UnexpectedRollbackException（操作人只看到"系统异常"，
+        //    失败原因还丢了，订单悄悄停在"已收款未提交审核"）。放到提交后执行则：
+        //    收款核验一定成功落库；审核提交失败时订单仍是「待发货 + 待提交审核」，
+        //    发货闸门关闭，可在订单详情页手工重新提交。
         if (tradeOrderStoreService.isFranchiseStore(order.getCustomerId())) {
-            try {
-                Long operatorUserId = SecurityFrameworkUtils.getLoginUserId();
-                if (operatorUserId != null) {
-                    tradeOrderAuditService.submitAudit(order.getId(), operatorUserId);
-                } else {
-                    log.warn("[updateOrderPaidByOffline][订单({}) 无登录上下文，跳过自动提交审核]", order.getId());
-                }
-            } catch (Throwable e) {
-                log.error("[updateOrderPaidByOffline][订单({}) 自动提交审核失败，可在后台手工提交]", order.getId(), e);
+            Long operatorUserId = SecurityFrameworkUtils.getLoginUserId();
+            if (operatorUserId == null) {
+                log.warn("[updateOrderPaidByOffline][订单({}) 无登录上下文，跳过自动提交审核]", order.getId());
+            } else {
+                Long orderId = order.getId();
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        try {
+                            tradeOrderAuditService.submitAuditAfterCommit(orderId, operatorUserId);
+                        } catch (Throwable e) {
+                            log.error("[updateOrderPaidByOffline][订单({}) 收款核验后自动提交审核失败，"
+                                    + "订单已收款但停在「待提交审核」，请在订单详情页手工提交]", orderId, e);
+                        }
+                    }
+                });
             }
         } else {
             log.info("[updateOrderPaidByOffline][订单({}) 直营门店免审，直接进入订单工作台待发货]", order.getId());

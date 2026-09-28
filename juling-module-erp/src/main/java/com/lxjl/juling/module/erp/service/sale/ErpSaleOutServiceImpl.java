@@ -9,7 +9,16 @@ import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.bill.api.BillPlatformApi;
 import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.dal.dataobject.BillRelationDO;
 import com.lxjl.juling.module.bill.enums.BillTypeConstants;
+import com.lxjl.juling.module.erp.api.customer.ErpCustomerAccountApi;
+import com.lxjl.juling.module.erp.api.customer.ErpCustomerApi;
+import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerAccountRecordReqDTO;
+import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO;
+import com.lxjl.juling.module.erp.api.customer.enums.CustomerAccountBizTypeEnum;
+import com.lxjl.juling.module.erp.api.stock.ErpStoreStockApi;
+import com.lxjl.juling.module.erp.api.storealloc.event.ErpStoreDeliveryAuditedEvent;
+import com.lxjl.juling.module.erp.api.storealloc.event.ErpStoreDeliveryCancelledEvent;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.out.ErpSaleOutPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.out.ErpSaleOutSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -31,12 +40,15 @@ import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -87,6 +99,27 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
 
     @Resource
     private AdminUserApi adminUserApi;
+
+    /**
+     * 门店库存出口：用于判断该客户是不是「门店」（配了门店仓才走门店收货 + 门店往来）
+     */
+    @Resource
+    private ErpStoreStockApi storeStockApi;
+    /**
+     * 门店往来台账：配送出库审核 → 挂门店应收；反审核 → 冲销应收
+     */
+    @Resource
+    private ErpCustomerAccountApi customerAccountApi;
+    /**
+     * 门店客户主数据：取门店所属部门，落到往来台账上（后台按部门筛选要用）
+     */
+    @Resource
+    private ErpCustomerApi erpCustomerApi;
+    /**
+     * 同步事件发布：出库审核后通知商城交易模块「订单转已发货 + 生成门店收货单」
+     */
+    @Resource
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -228,6 +261,82 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
                 reverseSaleOutItemStock(saleOutItem, saleOut, bizType);
             }
         });
+
+        // 4. 门店业务联动：门店往来（应收 / 冲销）+ 通知商城交易模块（订单发货 / 作废收货单）
+        handleStoreBusiness(saleOut, saleOutItems, approve);
+    }
+
+    /**
+     * 门店业务联动（配送出库单审核 / 反审核）
+     *
+     * 判据是「该客户有没有门店仓」而不是「有没有 store_type」：代理商客户也有店型，
+     * 但只有真正配了门店仓的门店才需要收货单与门店往来台账（见 docs/store-receipt-and-receivables-design.md）。
+     *
+     * 三件事：
+     *   1) 门店应收：审核 → 记配送应收（正数）；反审核 → 记配送应收冲销（负数）。
+     *      幂等键是 (bizType, DELIVERY_OUT, saleOutId)，反复审核不会重复挂账。
+     *   2) 发布「配送出库已审核 / 已反审核」事件 —— 只在出库单能追溯到门店要货单
+     *      （bill_relation：STORE_REQUISITION → DELIVERY_OUT）时发布，手工出库单不涉及门店订货链。
+     *   3) 事件用**同步**监听（@EventListener）：出库扣库存、订单转已发货、建收货单同事务提交。
+     */
+    private void handleStoreBusiness(ErpSaleOutDO saleOut, List<ErpSaleOutItemDO> saleOutItems, boolean approve) {
+        if (saleOut.getCustomerId() == null || storeStockApi.getStoreWarehouseId(saleOut.getCustomerId()) == null) {
+            return;
+        }
+        // 1. 门店往来（应收 / 冲销）：按「目标净额 − 已挂账净额」补差额记账
+        //    —— 不能用 (bizType, source) 唯一键去重：那样「审核 → 反审核 → 重新审核」的第三步
+        //    会被当成重复而漏记，门店应收缩水。差额法下第三步 delta 正好等于第一笔金额，账自然对。
+        BigDecimal totalPrice = saleOut.getTotalPrice() == null ? BigDecimal.ZERO : saleOut.getTotalPrice();
+        BigDecimal targetAmount = approve ? totalPrice : BigDecimal.ZERO;
+        BigDecimal postedAmount = customerAccountApi.getPostedAmount(BillTypeConstants.DELIVERY_OUT, saleOut.getId());
+        BigDecimal delta = targetAmount.subtract(postedAmount);
+        if (delta.compareTo(BigDecimal.ZERO) != 0) {
+            ErpCustomerRespDTO customer = erpCustomerApi.getCustomer(saleOut.getCustomerId());
+            customerAccountApi.record(new ErpCustomerAccountRecordReqDTO()
+                    .setCustomerId(saleOut.getCustomerId())
+                    .setDeptId(customer == null ? null : customer.getDeptId())
+                    .setBizType(delta.compareTo(BigDecimal.ZERO) > 0
+                            ? CustomerAccountBizTypeEnum.DELIVERY_AR.getType()
+                            : CustomerAccountBizTypeEnum.DELIVERY_AR_CANCEL.getType())
+                    .setAmount(delta)
+                    .setBillTime(LocalDateTime.now())
+                    .setSourceType(BillTypeConstants.DELIVERY_OUT)
+                    .setSourceId(saleOut.getId())
+                    .setSourceNo(saleOut.getNo())
+                    .setRemark(delta.compareTo(BigDecimal.ZERO) > 0 ? "配送出库应收" : "配送出库反审核冲销"));
+        }
+        // 2. 门店要货来源（没有上游关联 = 手工出库单，不触发商城侧联动）
+        List<BillRelationDO> upstreamList = billPlatformApi.getUpstreamList(BillTypeConstants.DELIVERY_OUT,
+                saleOut.getId());
+        if (CollUtil.isEmpty(upstreamList)) {
+            log.info("[handleStoreBusiness][出库单({}) 无上游要货单关联，跳过商城联动]", saleOut.getNo());
+            return;
+        }
+        BillRelationDO relation = upstreamList.get(0);
+        if (approve) {
+            ErpStoreDeliveryAuditedEvent event = new ErpStoreDeliveryAuditedEvent()
+                    .setSaleOutId(saleOut.getId()).setSaleOutNo(saleOut.getNo())
+                    .setCustomerId(saleOut.getCustomerId())
+                    .setSourceOrderId(relation.getSourceId()).setSourceOrderNo(relation.getSourceNo())
+                    .setTotalPrice(totalPrice).setDeliveryTime(LocalDateTime.now())
+                    .setItems(new ArrayList<>());
+            for (ErpSaleOutItemDO item : saleOutItems) {
+                event.getItems().add(new ErpStoreDeliveryAuditedEvent.Item()
+                        .setSourceItemId(item.getSourceItemId())
+                        .setProductId(item.getProductId())
+                        .setCount(item.getCount())
+                        .setUnitPrice(item.getProductPrice()));
+            }
+            eventPublisher.publishEvent(event);
+            log.info("[handleStoreBusiness][出库单({}) 审核 → 发布门店配送事件，要货单({})]",
+                    saleOut.getNo(), relation.getSourceNo());
+        } else {
+            eventPublisher.publishEvent(new ErpStoreDeliveryCancelledEvent()
+                    .setSaleOutId(saleOut.getId()).setSaleOutNo(saleOut.getNo())
+                    .setSourceOrderId(relation.getSourceId()).setSourceOrderNo(relation.getSourceNo()));
+            log.info("[handleStoreBusiness][出库单({}) 反审核 → 发布门店配送作废事件，要货单({})]",
+                    saleOut.getNo(), relation.getSourceNo());
+        }
     }
 
     /**

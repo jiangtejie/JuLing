@@ -10,6 +10,8 @@ import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
@@ -40,6 +42,24 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
 
     @Override
     public void submitAudit(Long orderId, Long userId) {
+        doSubmitAudit(orderId, userId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void submitAuditAfterCommit(Long orderId, Long userId) {
+        try {
+            doSubmitAudit(orderId, userId);
+        } catch (Throwable e) {
+            // 只记日志、不向上抛：收款核验已经提交，不能因为审核没提交上而回滚收款。
+            // 订单此时仍是「待发货 + 待提交审核」，发货闸门对加盟门店是关闭的，可在后台手工提交。
+            log.error("[submitAuditAfterCommit][订单({}) 收款核验后自动提交审核失败，请在订单详情页手工提交，"
+                    + "或检查 BPM 流程定义({})是否已部署、发起人是否有权限]",
+                    orderId, BPM_PROCESS_DEFINITION_KEY, e);
+        }
+    }
+
+    private void doSubmitAudit(Long orderId, Long userId) {
         // 1. 校验订单存在，且处于「待发货」+「待提交/已驳回」
         TradeOrderDO order = tradeOrderMapper.selectById(orderId);
         if (order == null) {

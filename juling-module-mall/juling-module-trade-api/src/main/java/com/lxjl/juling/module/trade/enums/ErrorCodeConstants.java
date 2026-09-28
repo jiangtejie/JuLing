@@ -110,4 +110,18 @@ public interface ErrorCodeConstants {
     ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_043, "订单已收齐，无法再上传付款凭证");
     ErrorCode ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF = new ErrorCode(1_011_000_044, "订单已提交付款凭证，核验中暂不能取消，如需取消请联系客服");
 
+    // ========== Order 门店收货（配送出库 → 门店确认收货 → 门店库存 / 门店往来）1-011-000-060 ==========
+    ErrorCode ORDER_RECEIPT_NOT_EXISTS = new ErrorCode(1_011_000_060, "门店收货单不存在");
+    ErrorCode ORDER_RECEIPT_STATUS_NOT_PENDING = new ErrorCode(1_011_000_061, "门店收货单不是【待确认】状态，无法提交或作废");
+    ErrorCode ORDER_RECEIPT_ORDER_NOT_DELIVERED = new ErrorCode(1_011_000_062, "确认收货失败，原因：订单尚未发货");
+    ErrorCode ORDER_RECEIPT_ITEM_NOT_BELONG = new ErrorCode(1_011_000_063, "收货单行({})不属于该收货单");
+    ErrorCode ORDER_RECEIPT_COUNT_ILLEGAL = new ErrorCode(1_011_000_064, "商品【{}】的实收数量({})不合法：不能为负数");
+    ErrorCode ORDER_RECEIPT_DIFF_REASON_REQUIRED = new ErrorCode(1_011_000_065, "商品【{}】的实收数量与发货数量不一致（差异 {}），必须填写差异原因");
+    ErrorCode ORDER_RECEIPT_ALREADY_CONFIRMED = new ErrorCode(1_011_000_066, "该订单已确认收货，不能重复提交");
+    ErrorCode ORDER_RECEIPT_CANCEL_FAIL_CONFIRMED = new ErrorCode(1_011_000_067, "收货单已确认收货，无法作废");
+    ErrorCode ORDER_RECEIPT_DELIVERY_CANCEL_FAIL = new ErrorCode(1_011_000_068, "配送出库单({})反审核失败：门店已确认收货，请先作废收货单或走退货流程");
+    ErrorCode ORDER_RECEIPT_NO_EXISTS = new ErrorCode(1_011_000_069, "生成门店收货单号失败，请重新提交");
+    ErrorCode ORDER_RECEIPT_NO_DELIVERED_ITEM = new ErrorCode(1_011_000_070, "确认收货失败，原因：该订单没有已发货的商品行");
+    ErrorCode ORDER_RECEIPT_ITEM_DUPLICATE = new ErrorCode(1_011_000_071, "确认收货失败，原因：收货明细里的商品行({})重复");
+
 }

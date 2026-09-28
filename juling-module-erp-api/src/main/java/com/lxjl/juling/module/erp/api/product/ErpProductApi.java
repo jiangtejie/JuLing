@@ -32,4 +32,12 @@ public interface ErpProductApi {
      */
     ErpProductRespDTO getProduct(Long id);
 
+    /**
+     * 批量获得物料（按编号，用于列表页回显物料名称）
+     *
+     * @param ids 物料编号集合
+     * @return 物料列表（不存在的编号不会返回）
+     */
+    List<ErpProductRespDTO> getProductList(Collection<Long> ids);
+
 }

@@ -32,4 +32,26 @@ public interface ErpWarehouseMapper extends BaseMapperX<ErpWarehouseDO> {
         return selectList(ErpWarehouseDO::getStatus, status);
     }
 
+    /**
+     * 按仓库类型查询（CENTER 中心库 / STORE 门店仓）
+     */
+    default List<ErpWarehouseDO> selectListByType(String warehouseType) {
+        return selectList(new LambdaQueryWrapperX<ErpWarehouseDO>()
+                .eq(ErpWarehouseDO::getWarehouseType, warehouseType)
+                .orderByAsc(ErpWarehouseDO::getId));
+    }
+
+    /**
+     * 按门店客户查询门店仓（一店一仓，唯一）
+     */
+    default ErpWarehouseDO selectByStoreCustomerId(Long storeCustomerId) {
+        if (storeCustomerId == null) {
+            return null;
+        }
+        return selectOne(new LambdaQueryWrapperX<ErpWarehouseDO>()
+                .eq(ErpWarehouseDO::getStoreCustomerId, storeCustomerId)
+                .orderByAsc(ErpWarehouseDO::getId)
+                .last("LIMIT 1"));
+    }
+
 }

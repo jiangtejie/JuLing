@@ -277,6 +277,13 @@ public class TradeOrderDO extends BaseDO {
      */
     private LocalDateTime receiveTime;
     /**
+     * 收货状态（订单维度聚合）
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderReceiptStatusEnum}：
+     * 0 未收货 / 10 部分收货 / 20 已收货。由门店在 H5 确认收货（trade_order_receipt）后聚合回写。
+     */
+    private Integer receiptStatus;
+    /**
      * 收件人名称
      */
     private String receiverName;

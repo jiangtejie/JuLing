@@ -123,7 +123,10 @@ public class ErpStoreAllocApiImpl implements ErpStoreAllocApi {
         List<ErpSaleOutItemDO> saleOutItems = convertList(reqDTO.getItems(), item ->
                 BeanUtils.toBean(item, ErpSaleOutItemDO.class, o -> {
                     ErpProductDO product = validateProduct(productMap, item.getProductId());
-                    o.setWarehouseId(warehouseId).setProductUnitId(product.getUnitId());
+                    // 行级血缘：要货单行 → 出库单行。出库单审核后据此回写「哪条要货单行发了多少货」，
+                    // 并生成对应的门店收货单行（bill_relation 只有单据级关联，粒度不够）
+                    o.setWarehouseId(warehouseId).setProductUnitId(product.getUnitId())
+                            .setSourceItemId(item.getSourceItemId());
                     o.setTotalPrice(MoneyUtils.priceMultiply(o.getProductPrice(), o.getCount()));
                     if (o.getTotalPrice() != null && o.getTaxPercent() != null) {
                         o.setTaxPrice(MoneyUtils.priceMultiplyPercent(o.getTotalPrice(), o.getTaxPercent()));

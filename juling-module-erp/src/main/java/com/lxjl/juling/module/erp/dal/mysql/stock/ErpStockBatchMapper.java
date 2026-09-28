@@ -26,6 +26,8 @@ public interface ErpStockBatchMapper extends BaseMapperX<ErpStockBatchDO> {
     default PageResult<ErpStockBatchDO> selectPage(ErpStockBatchPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<ErpStockBatchDO>()
                 .eqIfPresent(ErpStockBatchDO::getWarehouseId, reqVO.getWarehouseId())
+                // 门店库存页：Controller 已按 warehouseType 把门店仓编号解析进 warehouseIds
+                .inIfPresent(ErpStockBatchDO::getWarehouseId, reqVO.getWarehouseIds())
                 .eqIfPresent(ErpStockBatchDO::getProductId, reqVO.getProductId())
                 .likeIfPresent(ErpStockBatchDO::getBatchNo, reqVO.getBatchNo())
                 .eqIfPresent(ErpStockBatchDO::getSourceBizNo, reqVO.getSourceBizNo())
@@ -127,6 +129,22 @@ public interface ErpStockBatchMapper extends BaseMapperX<ErpStockBatchDO> {
                 .eq("warehouse_id", warehouseId)
                 .in("product_id", productIds)
                 .groupBy("product_id"));
+    }
+
+    /**
+     * 门店库存汇总：按仓库分组统计「有库存的物料数 / 在仓数量 / 在仓成本」
+     *
+     * @param warehouseIds 仓库编号集合（调用方保证非空，空集合会生成非法的 IN () 语句）
+     */
+    default List<Map<String, Object>> selectStoreSummary(Collection<Long> warehouseIds) {
+        return selectMaps(new QueryWrapper<ErpStockBatchDO>()
+                .select("warehouse_id",
+                        "COUNT(DISTINCT product_id) AS product_count",
+                        "COALESCE(SUM(count), 0) AS total_count",
+                        "COALESCE(SUM(total_cost), 0) AS total_amount")
+                .in("warehouse_id", warehouseIds)
+                .groupBy("warehouse_id")
+                .orderByAsc("warehouse_id"));
     }
 
     /**

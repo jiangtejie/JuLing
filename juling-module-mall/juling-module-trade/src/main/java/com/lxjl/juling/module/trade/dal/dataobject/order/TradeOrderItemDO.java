@@ -186,6 +186,16 @@ public class TradeOrderItemDO extends BaseDO {
      * 分料下推数量（≤ {@link #count}）；为空表示未下推
      */
     private java.math.BigDecimal allocCount;
+    /**
+     * ERP 已发货数量（配送出库单审核后回写）
+     *
+     * 口径：出库单实际发出多少，不含门店收货差异。门店实收数量见 {@link #receiptCount}。
+     */
+    private java.math.BigDecimal deliveredCount;
+    /**
+     * 门店已确认收货数量（门店收货单确认后回写）
+     */
+    private java.math.BigDecimal receiptCount;
 
     /**
      * 商品属性

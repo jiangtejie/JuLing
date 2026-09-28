@@ -36,4 +36,12 @@ public class ErpProductApiImpl implements ErpProductApi {
         return BeanUtils.toBean(productMapper.selectById(id), ErpProductRespDTO.class);
     }
 
+    @Override
+    public List<ErpProductRespDTO> getProductList(Collection<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return List.of();
+        }
+        return BeanUtils.toBean(productMapper.selectByIds(ids), ErpProductRespDTO.class);
+    }
+
 }

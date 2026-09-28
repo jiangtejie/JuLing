@@ -169,4 +169,10 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode FINANCE_RECEIPT_NO_EXISTS = new ErrorCode(1_030_602_004, "生成收款单号失败，请重新提交");
     ErrorCode FINANCE_RECEIPT_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_602_005, "收款单({})已审核，无法修改");
 
+    // ========== ERP 门店往来台账 1-030-800-000 ==========
+    ErrorCode CUSTOMER_ACCOUNT_AMOUNT_ILLEGAL = new ErrorCode(1_030_800_000, "门店往来记账金额不能为 0");
+    ErrorCode CUSTOMER_ACCOUNT_BIZ_TYPE_ILLEGAL = new ErrorCode(1_030_800_001, "门店往来业务类型({})不合法");
+    ErrorCode CUSTOMER_ACCOUNT_CUSTOMER_NOT_EXISTS = new ErrorCode(1_030_800_002, "门店客户({})不存在，无法记账");
+    ErrorCode STORE_WAREHOUSE_NOT_EXISTS = new ErrorCode(1_030_800_010, "门店({})还没有门店仓，请先在「仓库」里为该门店配置门店仓");
+
 }

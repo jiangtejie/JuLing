@@ -74,6 +74,14 @@ public interface ErpWarehouseService {
     List<ErpWarehouseDO> getWarehouseListByStatus(Integer status);
 
     /**
+     * 获得指定类型的仓库列表（CENTER 中心库 / STORE 门店仓）
+     *
+     * @param warehouseType 仓库类型
+     * @return 仓库列表
+     */
+    List<ErpWarehouseDO> getWarehouseListByType(String warehouseType);
+
+    /**
      * 获得仓库列表
      *
      * @param ids 编号数组
