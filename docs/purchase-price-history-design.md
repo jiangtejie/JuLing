@@ -85,8 +85,10 @@
 采购价上涨（或倒挂）时，自动生成"待检查价格清单"：取该商品对应的配送价（商城 `product_sku.price` /
 ERP `erp_product.sale_price`），命中条件：新采购价 ×（1 + 目标毛利率）> 配送价，或 配送价 < 采购价。
 清单支持一键跳转商品/商城改价；改价动作同样写回流水（`price_type = 配送价`），形成"成本→售价"的联动闭环。
-> 落地前需确认"配送价"指代：本仓库里 `deliveryPrice` 是**运费**；若指给门店的配送/供货价，
-> 落点是 `product_sku.price`（商城）与 `erp_product.sale_price`（ERP）。见第 5 节。
+> **"配送价"的指代已确认**：指给门店的配送/供货价（门店在 H5 下单看到并支付的价格 = 商城
+> `product_sku.price`，企业侧对应 `erp_product.sale_price`；本仓库的 `deliveryPrice` 是运费，与本需求无关）。
+> 该清单的完整设计（配送价目表、价差毛利率、毛利异常提醒、历史售价）见
+> [`docs/delivery-price-list-design.md`](./delivery-price-list-design.md)。
 
 ## 3. 分期落地
 
@@ -106,8 +108,9 @@ ERP `erp_product.sale_price`），命中条件：新采购价 ×（1 + 目标毛
 
 ## 5. 待确认（影响表结构与口径）
 
-1. **"配送价"指什么**：给门店的配送/供货价（对应 `product_sku.price` / `erp_product.sale_price`），
-   还是运费（`deliveryPrice`）？决定需求 6 的比对对象。
+1. ~~"配送价"指什么~~ **已关闭**：指给门店的配送/供货价（商城 `product_sku.price` = 门店实付价，
+   ERP `erp_product.sale_price` 为企业侧对应值），运费另有字段 `deliveryPrice`，与本需求无关。
+   详见 `docs/delivery-price-list-design.md`。
 2. **"成本卡"指什么**：标准成本（目标成本，用于算节约/超支），还是配方/BOM 成本卡（MES `mes_md_product_bom`）？
 3. **价格口径**：以采购订单价（约定）还是入库价（实际，含运费/税）为准？两者不一致时建议都留痕并标记来源。
 4. **预警阈值与通知方式**：全局一个阈值还是按商品/分类分别？命中后走站内信还是仅列表提示？

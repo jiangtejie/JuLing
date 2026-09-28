@@ -68,6 +68,10 @@ ERP 的产品价（成本价/销售价/最低价）作为**基础价**，商城�
 
 > 现状更正：商城目前**没有**阶梯价、客户等级价或协议价表（`product_sku` 仅 price/market_price/cost_price
 > 三个单值），上述"价格政策"属于要新建的能力，不是既有功能。
+>
+> **配送价目表（采购部门需求：价差/毛利率、毛利异常提醒、历史售价）**：`erp_delivery_price` 版本化主表
+> + 与采购成本账本按日期 join 出历史毛利曲线 + `erp_price_alert_record` 统一预警（成本涨幅/毛利过低/倒挂）。
+> 完整设计见 [`docs/delivery-price-list-design.md`](./delivery-price-list-design.md)。
 
 ### 4.4 供应商主数据扩展（采购部门在途需求）
 
