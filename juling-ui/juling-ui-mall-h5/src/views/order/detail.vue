@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { motion } from 'motion-v';
   import { showImagePreview, showSuccessToast, showToast } from 'vant';
-  import { cancelOrder, confirmOrder, getOrderDetail, getPaymentProofList } from '@/api/order';
+  import { cancelOrder, getOrderDetail, getPaymentProofList } from '@/api/order';
   import {
     ORDER_STATUS_MAP,
     ORDER_STATUS_STEPS,
@@ -189,18 +189,14 @@
     }
   }
 
-  async function onReceive(): Promise<void> {
-    if (!(await confirmDialog('确认已收到货物？'))) return;
-    acting.value = true;
-    try {
-      await confirmOrder(orderId.value);
-      showSuccessToast('已确认收货');
-      await load();
-    } catch {
-      // 拦截器已提示
-    } finally {
-      acting.value = false;
-    }
+  /**
+   * 确认收货：进入门店收货页逐行登记实收数量（多收 / 少收 / 破损）。
+   *
+   * 这里不再走「一键确认收货」的老接口：实收数量与差异原因必须逐行登记，
+   * 后端据此写入门店仓库存与门店往来账。
+   */
+  function toReceipt(): void {
+    void router.push(`/order/receipt-confirm/${orderId.value}`);
   }
 
   function onCopy(): void {
@@ -478,9 +474,8 @@
         <van-action-bar-button
           v-if="order.status === 'SHIPPED'"
           type="primary"
-          :loading="acting"
           text="确认收货"
-          @click="onReceive"
+          @click="toReceipt"
         />
         <!-- 已完成 / 已取消：一键把商品重新加入订货单 -->
         <van-action-bar-button

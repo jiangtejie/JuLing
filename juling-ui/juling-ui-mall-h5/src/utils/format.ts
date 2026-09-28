@@ -24,6 +24,16 @@ export function formatPrice(fen: number | string | undefined, digits = 2): strin
   return digits > 0 ? `${withSeparator}.${decimal}` : withSeparator;
 }
 
+/**
+ * 数量展示：最多保留 3 位小数（后端 numeric(24,6) 的货物数量），
+ * 并去掉无意义的尾随 0 —— 10.000 -> 10、9.500 -> 9.5。
+ */
+export function formatQuantity(value: number | string | undefined, digits = 3): string {
+  const num = Number(value ?? 0);
+  if (!Number.isFinite(num)) return '0';
+  return String(Number(num.toFixed(digits)));
+}
+
 /** 大数字缩写：12800 -> '1.28万' */
 export function formatCount(count: number): string {
   if (count < 10000) return String(count);

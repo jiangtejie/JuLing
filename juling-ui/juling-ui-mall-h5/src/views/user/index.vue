@@ -46,6 +46,11 @@
   }
 
   function toOrderList(status?: string): void {
+    // 待收货：直接进入门店收货列表（逐行确认实收，含多收 / 少收 / 破损）
+    if (status === 'SHIPPED') {
+      void router.push('/order/receipt-list');
+      return;
+    }
     void router.push({ path: '/order/list', query: status ? { status } : {} });
   }
 

@@ -35,6 +35,11 @@
     void router.push(`/order/${id}`);
   }
 
+  /** 已发货（待收货）订单：进入门店收货页逐行登记实收数量（多收 / 少收 / 破损） */
+  function toReceipt(order: Order): void {
+    void router.push(`/order/receipt-confirm/${order.id}`);
+  }
+
   /** 已完成 / 已取消订单支持「再来一单」：按当前商品重新加入订货单 */
   const { canReorder, reorder, reordering } = useReorder();
 
@@ -122,9 +127,19 @@
               <span class="order-list__total"> 实付 <PriceText :value="order.payPrice" /> </span>
             </div>
 
-            <!-- 已完成 / 已取消：美团式「再来一单」，一键把商品重新加入订货单 -->
-            <div v-if="canReorder(order)" class="order-list__actions">
+            <!-- 卡片底部操作：待收货 → 逐行登记实收；已完成 / 已取消 → 再来一单 -->
+            <div v-if="canReorder(order) || order.status === 'SHIPPED'" class="order-list__actions">
               <van-button
+                v-if="order.status === 'SHIPPED'"
+                size="small"
+                round
+                type="primary"
+                @click.stop="toReceipt(order)"
+              >
+                确认收货
+              </van-button>
+              <van-button
+                v-if="canReorder(order)"
                 size="small"
                 round
                 plain

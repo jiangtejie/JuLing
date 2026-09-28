@@ -48,6 +48,35 @@ export const PROOF_STATUS_MAP: Record<number, { text: string; color: string }> =
   2: { text: '已驳回', color: 'var(--app-danger-color)' },
 };
 
+/**
+ * 门店收货单状态展示配置（后端 TradeStoreReceiptStatusEnum）。
+ * 门店订货链 S2：配送出库 → 门店逐行确认实收（多收 / 少收 / 破损）。
+ */
+export const RECEIPT_STATUS_MAP: Record<number, { text: string; color: string }> = {
+  0: { text: '待确认', color: 'var(--app-warning-color)' },
+  10: { text: '已确认', color: 'var(--app-success-color)' },
+  20: { text: '已作废', color: 'var(--app-text-color-secondary)' },
+};
+
+/** 收货差异类型展示配置（后端 diff_type：0 无差异 / 1 少收 / 2 多收 / 3 破损 / 4 混合） */
+export const RECEIPT_DIFF_TYPE_MAP: Record<number, { text: string; color: string }> = {
+  0: { text: '无差异', color: 'var(--app-success-color)' },
+  1: { text: '少收', color: 'var(--app-danger-color)' },
+  2: { text: '多收', color: 'var(--app-warning-color)' },
+  3: { text: '破损', color: 'var(--app-danger-color)' },
+  4: { text: '混合', color: 'var(--app-warning-color)' },
+};
+
+/**
+ * 行级差异类型可选项。
+ * 少收 / 多收由「实收 − 应收」自动预选，破损需要门店人工选择（数量上看不出来）。
+ */
+export const RECEIPT_DIFF_TYPE_OPTIONS = [
+  { value: 1, label: '少收' },
+  { value: 2, label: '多收' },
+  { value: 3, label: '破损' },
+] as const;
+
 /** 线下收款渠道（字典 pay_channel_code 中的线下部分） */
 export const OFFLINE_PAY_CHANNELS = [
   { code: 'offline_transfer', name: '银行转账' },

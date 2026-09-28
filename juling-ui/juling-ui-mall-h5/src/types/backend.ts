@@ -317,3 +317,115 @@ export interface AppTradeOrderCreateReqVO {
   /** 下单门店客户编号（门店订货链 S1：代理账号切换门店时传） */
   storeCustomerId?: number;
 }
+
+/* ------------------------------- 门店收货 ------------------------------- */
+
+/**
+ * 门店收货单分页项（GET /trade/order/store-receipt/pending-page）。
+ * 配送出库单审核通过后由后端生成，门店在 H5 逐行确认实收。
+ */
+export interface AppTradeStoreReceiptPageItemRespVO {
+  id: number;
+  /** 收货单号 */
+  no: string;
+  orderId: number;
+  orderNo: string;
+  customerName: string;
+  /** 应收数量合计 */
+  totalCount: number;
+  /** 应收金额合计（单位：分） */
+  totalPrice: number;
+  receiveTime: BackendDateTime | null;
+  /** 配送出库单号 */
+  saleOutNo: string;
+  /** 状态（TradeStoreReceiptStatusEnum：0 待确认 / 10 已确认 / 20 已作废） */
+  status: number;
+  statusName: string;
+  /** 差异类型（0 无差异 / 1 少收 / 2 多收 / 3 破损 / 4 混合） */
+  diffType: number;
+  diffTypeName: string;
+}
+
+/** 门店收货单行项（AppTradeStoreReceiptItemRespVO） */
+export interface AppTradeStoreReceiptItemRespVO {
+  id: number;
+  /** 原订单行编号（提交实收数量时按它回填） */
+  orderItemId: number;
+  spuId: number;
+  skuId: number;
+  spuName: string;
+  /** 规格文本（后端为 varchar 快照，老数据可能是属性数组，由 adapter 兼容） */
+  properties: string;
+  picUrl: string;
+  /** ERP 商品编号 / 名称 */
+  productId: number;
+  productName: string;
+  /** 配送价（门店进货单价，单位：分） */
+  price: number;
+  /** 应收数量（来自配送出库单） */
+  expectCount: number;
+  receiptCount: number;
+  /** 差异数量（实收 − 应收，正数=多收） */
+  diffCount: number;
+  /** 差异金额（单位：分） */
+  diffAmount: number;
+  diffReason: string | null;
+  batchNo: string | null;
+  productionDate: BackendDateTime | null;
+  expiryDate: BackendDateTime | null;
+}
+
+/** 门店收货单详情（GET /trade/order/store-receipt/get?orderId=） */
+export interface AppTradeStoreReceiptRespVO {
+  id: number;
+  no: string;
+  orderId: number;
+  orderNo: string;
+  customerName: string;
+  saleOutNo: string;
+  status: number;
+  statusName: string;
+  /** 差异类型（0 无差异 / 1 少收 / 2 多收 / 3 破损 / 4 混合） */
+  diffType: number;
+  diffTypeName: string;
+  totalCount: number;
+  receiptCount: number;
+  diffCount: number;
+  /** 应收金额合计（单位：分） */
+  totalPrice: number;
+  /** 实收金额合计（单位：分） */
+  receiptPrice: number;
+  /** 差异金额（单位：分） */
+  diffAmount: number;
+  receiverName: string | null;
+  receiverMobile: string | null;
+  /**
+   * 收货凭证图片。
+   *
+   * 注意：后端 app 端 VO 下发的是 **JSON 数组字符串**（trade_order_receipt.file_urls
+   * 是文本列，落库时 JsonUtils.toJsonString），并非数组；adapter 统一归一为 string[]。
+   */
+  fileUrls: string | string[] | null;
+  remark: string | null;
+  receiveTime: BackendDateTime | null;
+  items: AppTradeStoreReceiptItemRespVO[];
+}
+
+/** 门店收货请求项（只提交实收数量与差异原因，应收/差异由后端按出库单核对） */
+export interface AppTradeStoreReceiptCreateItemReqVO {
+  orderItemId: number;
+  /** 实收数量 */
+  receiptCount: number;
+  /** 差异原因（实收 ≠ 应收时必填） */
+  diffReason?: string;
+}
+
+/** 提交门店收货请求体（POST /trade/order/store-receipt/create） */
+export interface AppTradeStoreReceiptCreateReqVO {
+  orderId: number;
+  receiverName?: string;
+  receiverMobile?: string;
+  fileUrls?: string[];
+  remark?: string;
+  items: AppTradeStoreReceiptCreateItemReqVO[];
+}
