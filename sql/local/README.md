@@ -87,6 +87,8 @@ psql -U root -d yate -f sql/local/25_trade_config_default.sql
 | 23_remove_pick_up.sql | 门店自提下线（物理清除）：删除自提菜单 9 条与角色关联、`trade_delivery_type` 的「用户自提」字典数据；`DROP TABLE trade_delivery_pick_up_store`；删列 `trade_config.delivery_pick_up_enabled`、`trade_order.pick_up_store_id`/`pick_up_verify_code`、`product_spu.delivery_types`。幂等 | — |
 | 24_fix_system_dept_sequence.sql | 修复 `system_dept_seq` 落后于数据（新增部门报 `duplicate key ... pk_system_dept`）：把序列推进到 `max(id)+1`。附全库序列排查脚本（比对 `pg_sequences.last_value` 与各表 `max(id)`） | — |
 | 25_trade_config_default.sql | 交易配置（`trade_config`）初始化：表里没有未删除的配置行时插入一行默认值（包邮开关/满额包邮金额、售后理由清单）。幂等 | — |
+| 27_merge_tenant123_into_yate.sql | 合并历史租户「亚特餐饮(123)」到「亚特(1)」：47 个真实部门（萍姐/卤校长/直营门店/中心库及下属公司、职能部门、13 家门店）与贺玲/张新宇账号（含亚特的「供应链」角色）、2 个供应链岗位转为亚特数据；清除 123 的角色/菜单绑定/账号/日志/重复分类品牌、tenant_id=0 的全局残留、租户本体与套餐。受影响行先备份到 schema `bak_tenant123_20260928`。幂等 | 用现有 id |
+| 28_fix_all_sequences.sql | 全库序列体检与修复：补丁脚本用"显式 id 插入"不推进序列，会让之后的界面新增报 `duplicate key ... pk_xxx`（「新增部门」踩过）。脚本遍历所有 `表名_seq`，把落后于 `max(id)` 的推进到位并打印明细。幂等 | — |
 | 26_store_order_org_audit.sql | 门店订货链 S1（一店三面 + 订单归属 + 供应链审核）：`erp_customer` 加 所属部门/上级代理/店型/结算模式/账期/信用额度，`member_user` 加 所属部门/所属客户，`trade_order` 加 部门/客户/代理快照 + 结算模式 + 审核状态(0/10/20/30) + BPM 实例号；字典 `trade_settlement_mode`/`erp_store_type`/`trade_order_audit_status`；按钮权限 `trade:order:audit:submit`；存量订单回填为"已通过"以免新审核闸门卡住历史数据。幂等 | 字典 11500+、菜单 11530 |
 | 19_trade_after_sale_offline_refund.sql | 售后线下退款：`trade_after_sale` 增加 `refund_channel_code`/`refund_proof_urls`/`refund_remark`，配合后台「确认线下退款」登记（原 `pay_refund_id` 保留但不再写入）。幂等 | — |
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
