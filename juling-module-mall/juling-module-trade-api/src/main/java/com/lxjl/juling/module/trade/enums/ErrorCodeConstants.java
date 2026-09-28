@@ -46,6 +46,15 @@ public interface ErrorCodeConstants {
     ErrorCode ORDER_AUDIT_FAIL_STATUS = new ErrorCode(1_011_000_044, "交易订单提交审核失败，原因：订单不是【待发货】或【已驳回】状态");
     ErrorCode ORDER_DELIVERY_FAIL_AUDIT_NOT_APPROVE = new ErrorCode(1_011_000_045, "交易订单发货失败，原因：门店要货未通过审核");
     ErrorCode ORDER_AUDIT_UPDATE_FAIL_NOT_PROCESS = new ErrorCode(1_011_000_046, "交易订单更新审核结果失败，原因：订单不处于【审核中】状态");
+    // ========== 门店订货链 S2：订单工作台 + 分料（统配 / 直拨） ==========
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ORDER_STATUS = new ErrorCode(1_011_000_050, "下推失败，原因：订单不是【待发货】或未通过审核（直营门店免审）");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ITEM_NOT_BELONG = new ErrorCode(1_011_000_051, "下推失败，原因：订单行({})不属于该订单");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ITEM_PUSHED = new ErrorCode(1_011_000_052, "下推失败，原因：订单行【{}】已下推过（{}），不能重复下推");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ALLOC_MODE_INVALID = new ErrorCode(1_011_000_053, "下推失败，原因：分料方式({})不合法，只能是 CENTRAL 统配 / DIRECT 直拨");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_MODE_NOT_ALLOWED = new ErrorCode(1_011_000_054, "下推失败，原因：物料【{}】不允许{}");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_COUNT_EXCEED = new ErrorCode(1_011_000_055, "下推失败，原因：物料【{}】的下推数量({})必须大于 0 且不超过要货数量({})");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_PRODUCT_NOT_MATCH = new ErrorCode(1_011_000_056, "下推失败，原因：商品【{}】未对应到 ERP 物料（条码 {} 未建档），请先在 ERP 维护物料");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_SUPPLIER_REQUIRED = new ErrorCode(1_011_000_057, "下推失败，原因：直拨行【{}】必须指定供应商");
 
     // ========== After Sale 模块 1-011-000-100 ==========
     ErrorCode AFTER_SALE_NOT_FOUND = new ErrorCode(1_011_000_100, "售后单不存在");

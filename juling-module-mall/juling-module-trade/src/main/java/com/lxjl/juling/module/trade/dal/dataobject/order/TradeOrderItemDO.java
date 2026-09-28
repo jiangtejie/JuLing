@@ -173,6 +173,20 @@ public class TradeOrderItemDO extends BaseDO {
      */
     private Integer afterSaleStatus;
 
+    // ========== 门店订货链：分料（订单工作台） ==========
+
+    /**
+     * 分料方式
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderItemAllocModeEnum}；
+     * 为空表示「未分料」（订单工作台待处理），非空表示该行已下推过 ERP 单据。
+     */
+    private String allocMode;
+    /**
+     * 分料下推数量（≤ {@link #count}）；为空表示未下推
+     */
+    private java.math.BigDecimal allocCount;
+
     /**
      * 商品属性
      */

@@ -91,6 +91,7 @@ const MALL_DICT = {
   TRADE_PAYMENT_PROOF_STATUS: 'trade_payment_proof_status', // 订单 - 收款状态（线下收款）
   TRADE_ORDER_TYPE: 'trade_order_type', // 订单 - 类型
   TRADE_ORDER_AUDIT_STATUS: 'trade_order_audit_status', // 交易订单 - 门店要货审核状态
+  TRADE_ORDER_ITEM_ALLOC_MODE: 'trade_order_item_alloc_mode', // 交易订单行 - 分料方式（统配/直拨）
   TRADE_SETTLEMENT_MODE: 'trade_settlement_mode', // 门店 - 结算模式
 
   /** ========== MALL - 营销模块 ========== */

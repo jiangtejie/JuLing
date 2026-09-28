@@ -45,35 +45,41 @@ SELECT (SELECT COALESCE(MAX(id),0) FROM erp_product_category) + row_number() OVE
 FROM (VALUES ('素菜类'), ('冻品类'), ('调味品类'), ('酒水饮料'), ('一次性用品')) AS c(name)
 WHERE NOT EXISTS (SELECT 1 FROM erp_product_category p WHERE p.name = c.name AND p.tenant_id = 1 AND p.deleted = 0);
 -- ---------- B2) 餐饮食材商品（18 个，含规格/保质期/进价/售价/最低价）----------
+-- alloc 列：物料的分料属性（门店订货链 S2 —— 订单工作台按此决定统配/直拨）
+--   BOTH = 统配 + 直拨都允许（默认）；CENTRAL = 只统配；DIRECT = 只直拨
 INSERT INTO erp_product (id, name, bar_code, category_id, unit_id, status, standard, remark, expiry_day, weight,
-                         purchase_price, sale_price, min_price, tenant_id, creator, create_time, updater, update_time, deleted)
+                         purchase_price, sale_price, min_price, allow_central, allow_direct,
+                         tenant_id, creator, create_time, updater, update_time, deleted)
 SELECT (SELECT COALESCE(MAX(id),0) FROM erp_product) + row_number() OVER (ORDER BY v.name),
        v.name, 'DS' || lpad((row_number() OVER (ORDER BY v.name))::text, 4, '0'),
        (SELECT c.id FROM erp_product_category c WHERE c.name = v.cat AND c.tenant_id = 1 AND c.deleted = 0 LIMIT 1),
        (SELECT u.id FROM erp_product_unit u WHERE u.name = v.unit AND u.tenant_id = 1 AND u.deleted = 0 LIMIT 1),
-       0, v.standard, 'demo-seed', v.expiry, 0, v.purchase, v.sale, v.min_price, 1, '1', now(), '1', now(), 0
+       0, v.standard, 'demo-seed', v.expiry, 0, v.purchase, v.sale, v.min_price,
+       v.alloc <> 'DIRECT',   -- allow_central
+       v.alloc <> 'CENTRAL',  -- allow_direct
+       1, '1', now(), '1', now(), 0
 FROM (VALUES
-    ('鲜毛肚',     '荤菜类',   '斤', '净重 500g/份', 3,   38.00, 52.00, 45.00),
-    ('鸭肠',       '荤菜类',   '斤', '净重 500g/份', 3,   22.00, 30.00, 28.00),
-    ('肥牛卷',     '冻品类',   '斤', '2.5kg/袋',     180, 35.00, 48.00, 45.00),
-    ('鲜牛肉',     '荤菜类',   '斤', '冷鲜',         3,   42.00, 55.00, 50.00),
-    ('猪黄喉',     '荤菜类',   '斤', '净重 500g/份', 3,   28.00, 38.00, 35.00),
-    ('午餐肉',     '冻品类',   '箱', '24 罐/箱',     365, 85.00, 110.00, 100.00),
-    ('藕片',       '素菜类',   '斤', '净菜',         7,    4.00,  6.00,  5.50),
-    ('青笋',       '素菜类',   '斤', '净菜',         5,    3.00,  4.50,  4.00),
-    ('豆皮',       '素菜类',   '斤', '干制',         10,   5.00,  7.00,  6.50),
-    ('金针菇',     '素菜类',   '袋', '200g/袋',      15,   3.50,  5.00,  4.50),
-    ('虾滑',       '冻品类',   '袋', '500g/袋',      180, 18.00, 26.00, 24.00),
-    ('蟹柳',       '冻品类',   '袋', '500g/袋',      180,  9.00, 14.00, 12.00),
-    ('速冻丸子',   '冻品类',   '袋', '500g/袋',      180, 12.00, 18.00, 16.00),
-    ('牛油火锅底料', '调味品类', '袋', '500g/袋',    365, 28.00, 38.00, 35.00),
-    ('香油',       '调味品类', '瓶', '5L/瓶',        540, 15.00, 22.00, 20.00),
-    ('豆瓣酱',     '调味品类', '桶', '5kg/桶',       365, 45.00, 60.00, 55.00),
-    ('山城啤酒',   '酒水饮料', '箱', '24 瓶/箱',     270, 48.00, 68.00, 65.00),
-    ('唯怡豆奶',   '酒水饮料', '箱', '12 瓶/箱',     180, 52.00, 72.00, 68.00),
-    ('打包盒',     '一次性用品', '箱', '300 个/箱',  0,   35.00, 45.00, 42.00),
-    ('餐巾纸',     '一次性用品', '箱', '20 提/箱',   0,   60.00, 80.00, 75.00)
-) AS v(name, cat, unit, standard, expiry, purchase, sale, min_price);
+    ('鲜毛肚',     '荤菜类',   '斤', '净重 500g/份', 3,   38.00, 52.00, 45.00, 'DIRECT'),
+    ('鸭肠',       '荤菜类',   '斤', '净重 500g/份', 3,   22.00, 30.00, 28.00, 'DIRECT'),
+    ('肥牛卷',     '冻品类',   '斤', '2.5kg/袋',     180, 35.00, 48.00, 45.00, 'BOTH'),
+    ('鲜牛肉',     '荤菜类',   '斤', '冷鲜',         3,   42.00, 55.00, 50.00, 'DIRECT'),
+    ('猪黄喉',     '荤菜类',   '斤', '净重 500g/份', 3,   28.00, 38.00, 35.00, 'BOTH'),
+    ('午餐肉',     '冻品类',   '箱', '24 罐/箱',     365, 85.00, 110.00, 100.00, 'BOTH'),
+    ('藕片',       '素菜类',   '斤', '净菜',         7,    4.00,  6.00,  5.50, 'BOTH'),
+    ('青笋',       '素菜类',   '斤', '净菜',         5,    3.00,  4.50,  4.00, 'BOTH'),
+    ('豆皮',       '素菜类',   '斤', '干制',         10,   5.00,  7.00,  6.50, 'BOTH'),
+    ('金针菇',     '素菜类',   '袋', '200g/袋',      15,   3.50,  5.00,  4.50, 'BOTH'),
+    ('虾滑',       '冻品类',   '袋', '500g/袋',      180, 18.00, 26.00, 24.00, 'BOTH'),
+    ('蟹柳',       '冻品类',   '袋', '500g/袋',      180,  9.00, 14.00, 12.00, 'BOTH'),
+    ('速冻丸子',   '冻品类',   '袋', '500g/袋',      180, 12.00, 18.00, 16.00, 'BOTH'),
+    ('牛油火锅底料', '调味品类', '袋', '500g/袋',    365, 28.00, 38.00, 35.00, 'BOTH'),
+    ('香油',       '调味品类', '瓶', '5L/瓶',        540, 15.00, 22.00, 20.00, 'BOTH'),
+    ('豆瓣酱',     '调味品类', '桶', '5kg/桶',       365, 45.00, 60.00, 55.00, 'BOTH'),
+    ('山城啤酒',   '酒水饮料', '箱', '24 瓶/箱',     270, 48.00, 68.00, 65.00, 'BOTH'),
+    ('唯怡豆奶',   '酒水饮料', '箱', '12 瓶/箱',     180, 52.00, 72.00, 68.00, 'BOTH'),
+    ('打包盒',     '一次性用品', '箱', '300 个/箱',  0,   35.00, 45.00, 42.00, 'CENTRAL'),
+    ('餐巾纸',     '一次性用品', '箱', '20 提/箱',   0,   60.00, 80.00, 75.00, 'CENTRAL')
+) AS v(name, cat, unit, standard, expiry, purchase, sale, min_price, alloc);
 
 -- ---------- C) 供应商 ----------
 INSERT INTO erp_supplier (id, name, contact, mobile, telephone, email, fax, remark, status, sort, tax_no, tax_percent, bank_name, bank_account, bank_address, tenant_id, creator, create_time, updater, update_time, deleted)

@@ -108,6 +108,9 @@ public class TradeOrderBaseVO {
     @Schema(description = "结算模式（TradeSettlementModeEnum）：PREPAID 先款后货、MONTHLY 月结", example = "PREPAID")
     private String settlementMode;
 
+    @Schema(description = "店型快照：DIRECT 直营（免审）/ FRANCHISE 加盟（需审核）", example = "FRANCHISE")
+    private String storeType;
+
     @Schema(description = "审核状态（TradeOrderAuditStatusEnum）：0 待提交、10 审核中、20 已通过、30 已驳回", example = "10")
     private Integer auditStatus;
 

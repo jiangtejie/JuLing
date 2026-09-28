@@ -180,6 +180,13 @@ public class TradeOrderDO extends BaseDO {
      */
     private String settlementMode;
     /**
+     * 店型快照：DIRECT 直营 / FRANCHISE 加盟
+     *
+     * 门店订货链：加盟店需审核（auditStatus 必须 20）才进订单工作台；直营店免审。
+     * 快照后可避免订单列表/工作台查询跨模块 join erp_customer。
+     */
+    private String storeType;
+    /**
      * 审核状态
      *
      * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderAuditStatusEnum}

@@ -142,6 +142,28 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      fieldName: 'allowCentral',
+      label: '允许统配',
+      component: 'Switch',
+      componentProps: {
+        checkedChildren: '允许',
+        unCheckedChildren: '禁止',
+      },
+      rules: z.boolean().default(true),
+      help: '统配 = 中心库配送出库 → 门店收货（订单工作台可选统配）',
+    },
+    {
+      fieldName: 'allowDirect',
+      label: '允许直拨',
+      component: 'Switch',
+      componentProps: {
+        checkedChildren: '允许',
+        unCheckedChildren: '禁止',
+      },
+      rules: z.boolean().default(true),
+      help: '直拨 = 中心库下采购订单、供应商直送门店（不入中心库）',
+    },
+    {
       fieldName: 'remark',
       label: '备注',
       component: 'Textarea',
@@ -179,6 +201,32 @@ export function useGridFormSchema(): VbenFormSchema[] {
         childrenField: 'children',
         placeholder: '请选择分类',
         treeDefaultExpandAll: true,
+      },
+    },
+    {
+      fieldName: 'allowCentral',
+      label: '允许统配',
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: '允许', value: true },
+          { label: '禁止', value: false },
+        ],
+        placeholder: '请选择',
+        allowClear: true,
+      },
+    },
+    {
+      fieldName: 'allowDirect',
+      label: '允许直拨',
+      component: 'Select',
+      componentProps: {
+        options: [
+          { label: '允许', value: true },
+          { label: '禁止', value: false },
+        ],
+        placeholder: '请选择',
+        allowClear: true,
       },
     },
   ];
@@ -229,6 +277,34 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       title: '最低价格',
       minWidth: 100,
       formatter: 'formatAmount2',
+    },
+    {
+      field: 'allowCentral',
+      title: '允许统配',
+      minWidth: 100,
+      cellRender: {
+        name: 'CellSwitch',
+        props: {
+          checkedValue: true,
+          unCheckedValue: false,
+          checkedChildren: '允许',
+          unCheckedChildren: '禁止',
+        },
+      },
+    },
+    {
+      field: 'allowDirect',
+      title: '允许直拨',
+      minWidth: 100,
+      cellRender: {
+        name: 'CellSwitch',
+        props: {
+          checkedValue: true,
+          unCheckedValue: false,
+          checkedChildren: '允许',
+          unCheckedChildren: '禁止',
+        },
+      },
     },
     {
       field: 'status',

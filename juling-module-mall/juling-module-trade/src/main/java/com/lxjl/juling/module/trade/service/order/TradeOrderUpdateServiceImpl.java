@@ -228,6 +228,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());
         order.setCustomerId(store.getCustomerId()).setDeptId(store.getDeptId())
                 .setAgentCustomerId(store.getAgentCustomerId()).setSettlementMode(store.getSettlementMode())
+                .setStoreType(store.getStoreType())
                 .setAuditStatus(TradeOrderAuditStatusEnum.DRAFT.getStatus());
         return order;
     }

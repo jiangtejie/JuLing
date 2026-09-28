@@ -29,6 +29,11 @@
 
 - **采购订单**（`ErpPurchaseOrderServiceImpl`）：单号改由平台生成（规则 CGDD + yyyyMMdd + 4 位流水），创建后写 `bill_log`；
 - **采购入库**（`ErpPurchaseInServiceImpl`）：单号平台生成（CGRK…），带订单下推时写 `bill_relation`（PURCHASE_ORDER → PURCHASE_IN）与日志。
+- **门店要货工作台下推**（`ErpStoreAllocApiImpl`，2026-09-28 新增）：统配 → 配送出库单（DELIVERY_OUT/XSCK…，落 `erp_sale_out`）、
+  直拨 → 采购订单（PURCHASE_ORDER/CGDD…，落 `erp_purchase_order`）；源单类型用 `STORE_REQUISITION`（门店要货申请单）**行级**
+  关联到目标单，并写 `bill_log`。**遗留**：`erp_sale_out` 的"手工新建"入口（`ErpSaleOutServiceImpl#createSaleOut`）仍走
+  `ErpNoRedisDAO`（Redis 序列），与平台的 `bill_no_seq` 不是同一个序列 —— 同日两条入口并存时理论上可能撞号
+  （下推侧已用 `selectByNo` 兜底报错）；把销售出库单号整体迁到平台时一并清理。
 
 端到端验证（48081 + 真实接口）：
 ① 试生成单号 CGDD202609280001 → ② 建采购订单得 CGDD202609280002、日志 CREATE →

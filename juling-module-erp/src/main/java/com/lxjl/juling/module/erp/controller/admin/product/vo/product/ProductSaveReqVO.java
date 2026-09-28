@@ -55,4 +55,10 @@ public class ProductSaveReqVO {
     @Schema(description = "最低价格，单位：元", example = "161.87")
     private BigDecimal minPrice;
 
+    @Schema(description = "是否允许统配（中心库配送出库）", example = "true")
+    private Boolean allowCentral;
+
+    @Schema(description = "是否允许直拨（下采购订单、供应商直送门店）", example = "true")
+    private Boolean allowDirect;
+
 }

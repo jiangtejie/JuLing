@@ -100,8 +100,8 @@ H5 下单时后端依次执行（任一失败即拦截并给出可读原因）�
 > 店型取 `erp_customer.store_type`（DIRECT / FRANCHISE）。详见
 > [`as-is-process-and-gaps.md`](./as-is-process-and-gaps.md)（§2 关键规则、G1）。
 >
-> 另：图上"订单工作台"是中心库侧的操作中枢，"分料属性（统配 / 直配）"是其分支条件 —— 本系统尚无这两个概念，
-> 已列入 S2（订单行增加分料方式，工作台据此下推配送出库或采购订单）。
+> 另：图上"订单工作台"是中心库侧的操作中枢，"分料属性（统配 / 直配）"是其分支条件 —— **S2 切片一已落地**，
+> 见下方「第 3.5 段」；下单即分料（H5 端选统配/直拨）、缺货分配与门店收货仍属后续切片。
 >
 > **审批页的业务表单约定（2026-09-28 修复）**：BPM 的 `formCustomViewPath` 必须是**组件全路径**（如
 > `/mall/trade/order/detail/modules/approval-summary.vue`），且该组件必须**接受 `id` 属性**
@@ -124,6 +124,42 @@ H5 下单时后端依次执行（任一失败即拦截并给出可读原因）�
 **审批边界**：金额/数量偏离阈值内（可配，如 ±10%）供应链审核即放行；超阈值或新门店首单 → 加签财务/负责人。
 （BPM 引擎已在库，落地方式是 `bpmProcessInstanceApi.createProcessInstance` + 监听
 `BpmProcessInstanceStatusEvent`，与 CRM 合同、HRM 请假同一套路。）
+
+### 第 3.5 段 订单工作台与分料（统配 / 直拨）——S2 切片一，已落地
+
+> 落地范围：**要货单（商城交易订单）→ 分料 → 生成 ERP 单据**这一段端到端可跑；库存口径未动。
+> 数据脚本 `sql/local/33_workbench_alloc.sql`，页面 `views/mall/trade/workbench`，接口 `/trade/workbench/*`。
+
+**物料属性（开关式，可同时开启，由工作台选）**：`erp_product.allow_central` / `allow_direct`
+（默认都允许；演示数据里一次性用品只统配、鲜货只直拨，其余都允许）。产品表单与列表已带这两个开关。
+
+**订单行分料**：`trade_order_item.alloc_mode`（`CENTRAL` 统配 / `DIRECT` 直拨；空 = 未分料）+
+`alloc_count`（本次下推数量）。订单还新增 `store_type` 快照，工作台据此判定"直营免审"（不必跨模块 join
+`erp_customer`）。
+
+**工作台待处理口径**（`TradeOrderMapper#selectWorkbenchPage`）：订单状态 = 待发货(10) 且
+（店型 ≠ FRANCHISE 或 `audit_status` = 20）且**至少一行未分料**；已全部下推的订单自动移出列表。
+
+**下推落点**：
+
+| 分料方式 | ERP 单据 | 单据平台类型 / 前缀 | 落表 | 说明 |
+|---|---|---|---|---|
+| 统配 CENTRAL | 配送出库单 | `DELIVERY_OUT` / XSCK… | `erp_sale_out` + `erp_sale_out_items` | 单据平台里"配送出库单"的编号前缀本就是 XSCK（`31_bill_platform_fix.sql` 已对齐），ERP 侧对应实体即销售出库单；审核后按 `SALE_OUT` 扣中心库在仓量 |
+| 直拨 DIRECT | 采购订单 | `PURCHASE_ORDER` / CGDD… | `erp_purchase_order` + `erp_purchase_order_items` | 中心库向供应商下单、供应商直送门店（不入中心库）；供应商由工作台指定 |
+
+下推一律：单据平台生成单号 → 写 `bill_relation`（源类型 `STORE_REQUISITION` 行级 → 目标单）→ 写 `bill_log`；
+生成单据状态为**待审核**，本切片**不触发库存变动**（审核出库/入库才动库存）。
+
+**幂等**：同一订单行重复下推被拒（`ORDER_WORKBENCH_PUSH_FAIL_ITEM_PUSHED`，提示已下推的目标单号）。
+判据是"该行是否已有 bill_relation"，因为 `uk_bill_relation` 的唯一键含 `target_id`，
+新目标单不会撞索引，唯一索引只能兜住"同目标单"的并发重复。
+
+**商城 SKU ↔ ERP 物料**：用 `product_sku.bar_code = erp_product.bar_code` 对齐（种子数据即如此建），
+不新增映射表；取不到物料时工作台明确提示"未对应 ERP 物料（条码 …），无法下推"。
+
+**本切片没做的（后续）**：采购入库与门店收货（入库仓 = 门店）、门店库存账、库存四态（在仓/在途/待检/占用）
+与可用量分配、缺货登记与补发、收货差异、工作台改量拆单与指定收货仓、待办通知；工作台"可发数量提示"
+目前只表达"未下推数量"，真实可用量待库存四态落地。
 
 ### 第 4 段 库存分配（缺货与补发）
 

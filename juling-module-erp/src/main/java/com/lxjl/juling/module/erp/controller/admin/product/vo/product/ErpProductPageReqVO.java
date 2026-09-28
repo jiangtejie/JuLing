@@ -24,4 +24,10 @@ public class ErpProductPageReqVO extends PageParam {
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 
+    @Schema(description = "是否允许统配", example = "true")
+    private Boolean allowCentral;
+
+    @Schema(description = "是否允许直拨", example = "true")
+    private Boolean allowDirect;
+
 }

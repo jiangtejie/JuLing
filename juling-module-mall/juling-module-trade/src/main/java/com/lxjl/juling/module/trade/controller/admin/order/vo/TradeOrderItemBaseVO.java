@@ -64,4 +64,12 @@ public class TradeOrderItemBaseVO {
     @Schema(description = "售后状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer afterSaleStatus;
 
+    // ========== 门店订货链：分料（订单工作台） ==========
+
+    @Schema(description = "分料方式：CENTRAL 统配 / DIRECT 直拨；空=未分料", example = "CENTRAL")
+    private String allocMode;
+
+    @Schema(description = "分料下推数量", example = "2")
+    private java.math.BigDecimal allocCount;
+
 }

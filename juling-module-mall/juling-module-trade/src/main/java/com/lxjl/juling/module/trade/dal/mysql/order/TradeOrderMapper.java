@@ -5,9 +5,13 @@ import com.lxjl.juling.framework.mybatis.core.mapper.BaseMapperX;
 import com.lxjl.juling.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lxjl.juling.framework.mybatis.core.query.MPJLambdaWrapperX;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderPageReqVO;
+import com.lxjl.juling.module.trade.controller.admin.workbench.vo.TradeOrderWorkbenchPageReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderPageReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
+import com.lxjl.juling.module.trade.enums.order.TradeOrderAuditStatusEnum;
+import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
+import com.lxjl.juling.module.erp.api.customer.enums.StoreTypeEnum;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -45,6 +49,29 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
                 .eqIfPresent(TradeOrderDO::getLogisticsId, reqVO.getLogisticsId())
                 .betweenIfPresent(TradeOrderDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TradeOrderDO::getId));
+    }
+
+    /**
+     * 订单工作台：待处理要货单分页
+     *
+     * 口径：待发货(10) + 审核闸门（加盟店须 audit_status=20，直营店免审）+ 至少一行未分料。
+     * 「未分料」用 exists 子查询而不是 join：join 会让分页总数被行数放大。
+     */
+    default PageResult<TradeOrderDO> selectWorkbenchPage(TradeOrderWorkbenchPageReqVO reqVO) {
+        LambdaQueryWrapperX<TradeOrderDO> query = new LambdaQueryWrapperX<>();
+        query.eq(TradeOrderDO::getStatus, TradeOrderStatusEnum.UNDELIVERED.getStatus())
+                .likeIfPresent(TradeOrderDO::getNo, reqVO.getNo())
+                .eqIfPresent(TradeOrderDO::getCustomerId, reqVO.getCustomerId())
+                .betweenIfPresent(TradeOrderDO::getCreateTime, reqVO.getCreateTime());
+        // 审核闸门：加盟店须审核通过；直营（或历史订单未快照店型）免审 —— 与发货闸门口径一致
+        query.and(w -> w.ne(TradeOrderDO::getStoreType, StoreTypeEnum.FRANCHISE.getType())
+                .or().isNull(TradeOrderDO::getStoreType)
+                .or().eq(TradeOrderDO::getAuditStatus, TradeOrderAuditStatusEnum.APPROVE.getStatus()));
+        // 至少一行未分料（用 exists 而不是 join，避免分页总数被行数放大）
+        query.exists("SELECT 1 FROM trade_order_item i WHERE i.order_id = trade_order.id"
+                + " AND i.deleted = 0 AND i.alloc_mode IS NULL");
+        query.orderByDesc(TradeOrderDO::getId);
+        return selectPage(reqVO, query);
     }
 
     // TODO @疯狂：如果用 map 返回，要不这里直接用 TradeOrderSummaryRespVO 返回？也算合理，就当  sql 查询出这么个玩意~~

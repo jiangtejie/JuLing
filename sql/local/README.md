@@ -45,6 +45,8 @@ psql -U root -d yate -f sql/local/23_remove_pick_up.sql
 psql -U root -d yate -f sql/local/24_fix_system_dept_sequence.sql
 # 交易配置初始化：库里没有配置行时补一行默认值（否则「交易配置」页是空白）
 psql -U root -d yate -f sql/local/25_trade_config_default.sql
+# 门店订货链 S2 切片一：物料分料属性（允许统配/允许直拨）+ 订单行 alloc_mode + 订单店型快照 + 「订单工作台」菜单
+psql -U root -d yate -f sql/local/33_workbench_alloc.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -90,6 +92,7 @@ psql -U root -d yate -f sql/local/25_trade_config_default.sql
 | 32_bpm_approver_permissions.sql | 门店要货两级审批（供应链 → 财务出纳）配套授权：给「供应链(157)」「财务(156)」角色授 BPM 菜单与按钮权限（含 `bpm:task:query`/`bpm:task:update`）。此前这两个角色**没有任何 bpm 权限**，任务虽分派到人、成员一审批即 403。脚本幂等；直接执行后需重启或走一次 `/system/permission/assign-role-menu` 刷新权限缓存 | 沿用角色菜单 id |
 | 31_bill_platform_fix.sql | 单据基座修复：流水位数与旧生成器对齐（统一 6 位）；ERP 已有单据的前缀与旧口径对齐（XSCK/QCDB/QCPD/QCKD/FKD/SKD）并补注册销售订单(XSDD)/销售退货(XSTH)；**按当天已有单号回填 `bill_no_seq` 流水起点**（防切换日"单号已存在"，GREATEST 幂等）；注册权限 `bill:platform:query` | 菜单 11540、类型 27/28 |
 | 30_bill_platform.sql | **单据基座**：新建 5 张平台表（`bill_type` 类型注册 / `bill_no_seq` 单号流水 / `bill_relation` 单据关联防重复下推 / `bill_log` 操作日志 / `bill_ext` 扩展字段）+ 5 个序列，并注册 26 类单据（与金蝶蓝图流程一一对应，含编号规则、是否审批、是否影响库存/核算）。含主键幂等兜底 | 类型 id 1–26 |
+| 33_workbench_alloc.sql | **门店订货链 S2 切片一（订单工作台 + 分料）**：`erp_product` 加 `allow_central`/`allow_direct`（物料是否允许统配/直拨），`trade_order_item` 加 `alloc_mode`（CENTRAL 统配 / DIRECT 直拨，空=未分料）与 `alloc_count`，`trade_order` 加 `store_type` 快照（工作台判定"直营免审"）；回填 demo 物料分料属性（一次性用品只统配、鲜货只直拨，其余都允许）；字典 `trade_order_item_alloc_mode`；菜单「订单工作台」+ `trade:workbench:query`/`trade:workbench:push` 并授权供应链/财务角色。幂等 | 字典 11560、菜单 11550+ |
 | 29_seed_demo_data.sql | **P0 模拟测试数据**（全带 `demo-seed` 标记、可重复执行）：组织树对齐组织架构图（恢复根节点「重庆亚特餐饮发展有限公司」并把萍姐/直营门店/中心库/卤校长四支挂上去）；主数据 20 个餐饮食材商品（含规格/保质期/进价/售价/最低价）、6 单位、5 分类、3 家供应商；13 家门店客户（8 直营 / 5 加盟）+ 1 个代理客户（名下 3 家门店）；4 个订货账号（手机号 190000001xx）；中心库 + 门店虚拟仓与期初库存；10 个商城 SPU/SKU 使 H5 可下单 | 用表内 max(id)+n |
 | 27_merge_tenant123_into_yate.sql | 合并历史租户「亚特餐饮(123)」到「亚特(1)」：47 个真实部门（萍姐/卤校长/直营门店/中心库及下属公司、职能部门、13 家门店）与贺玲/张新宇账号（含亚特的「供应链」角色）、2 个供应链岗位转为亚特数据；清除 123 的角色/菜单绑定/账号/日志/重复分类品牌、tenant_id=0 的全局残留、租户本体与套餐。受影响行先备份到 schema `bak_tenant123_20260928`。幂等 | 用现有 id |
 | 28_fix_all_sequences.sql | 全库序列体检与修复：补丁脚本用"显式 id 插入"不推进序列，会让之后的界面新增报 `duplicate key ... pk_xxx`（「新增部门」踩过）。脚本遍历所有 `表名_seq`，把落后于 `max(id)` 的推进到位并打印明细。幂等 | — |

@@ -69,6 +69,14 @@ public class ErpProductRespVO {
     @ExcelProperty("最低价格，单位：元")
     private BigDecimal minPrice;
 
+    @Schema(description = "是否允许统配（中心库配送出库）", example = "true")
+    @ExcelProperty("允许统配")
+    private Boolean allowCentral;
+
+    @Schema(description = "是否允许直拨（下采购订单、供应商直送门店）", example = "true")
+    @ExcelProperty("允许直拨")
+    private Boolean allowDirect;
+
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
     private LocalDateTime createTime;
