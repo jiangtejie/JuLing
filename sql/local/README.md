@@ -43,6 +43,8 @@ psql -U root -d yate -f sql/local/22_remove_brokerage.sql
 psql -U root -d yate -f sql/local/23_remove_pick_up.sql
 # 修复 system_dept 序列落后导致「新增部门」撞主键（迁移库常见问题）
 psql -U root -d yate -f sql/local/24_fix_system_dept_sequence.sql
+# 交易配置初始化：库里没有配置行时补一行默认值（否则「交易配置」页是空白）
+psql -U root -d yate -f sql/local/25_trade_config_default.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -84,6 +86,7 @@ psql -U root -d yate -f sql/local/24_fix_system_dept_sequence.sql
 | 22_remove_brokerage.sql | 商品分销整体下线（物理清除）：删除分销菜单 11 条与角色关联、分销字典 6 类 23 条、分销定时任务；`DROP TABLE` 三张分销表、`DROP COLUMN` 14 个分销列。幂等 | — |
 | 23_remove_pick_up.sql | 门店自提下线（物理清除）：删除自提菜单 9 条与角色关联、`trade_delivery_type` 的「用户自提」字典数据；`DROP TABLE trade_delivery_pick_up_store`；删列 `trade_config.delivery_pick_up_enabled`、`trade_order.pick_up_store_id`/`pick_up_verify_code`、`product_spu.delivery_types`。幂等 | — |
 | 24_fix_system_dept_sequence.sql | 修复 `system_dept_seq` 落后于数据（新增部门报 `duplicate key ... pk_system_dept`）：把序列推进到 `max(id)+1`。附全库序列排查脚本（比对 `pg_sequences.last_value` 与各表 `max(id)`） | — |
+| 25_trade_config_default.sql | 交易配置（`trade_config`）初始化：表里没有未删除的配置行时插入一行默认值（包邮开关/满额包邮金额、售后理由清单）。幂等 | — |
 | 19_trade_after_sale_offline_refund.sql | 售后线下退款：`trade_after_sale` 增加 `refund_channel_code`/`refund_proof_urls`/`refund_remark`，配合后台「确认线下退款」登记（原 `pay_refund_id` 保留但不再写入）。幂等 | — |
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
