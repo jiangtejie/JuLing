@@ -11,8 +11,10 @@ import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInItemDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
+import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockBatchDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseInItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseInMapper;
+import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockBatchMapper;
 import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
 import com.lxjl.juling.module.bill.api.dto.BillRelationCreateReqDTO;
 import com.lxjl.juling.module.bill.enums.BillTypeConstants;
@@ -21,10 +23,14 @@ import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
+import com.lxjl.juling.module.erp.service.stock.ErpStockBatchService;
 import com.lxjl.juling.module.erp.service.stock.ErpStockRecordService;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchInReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +51,13 @@ import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 /**
  * ERP 采购入库 Service 实现类
  *
+ * S2 库存中心（切片二）：审核通过时逐行按批次入账（{@link ErpStockBatchService#receiveBatch}），
+ * 反审核按原批次冲回；批次记账内部会写带批次/成本的库存流水并增量更新 erp_stock.count（双写），
+ * 因此不再直接调用 {@link ErpStockRecordService#createStockRecord}，只有历史单据才退回旧口径。
+ *
  * @author 亚特
  */
+@Slf4j
 @Service
 @Validated
 public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
@@ -66,6 +77,14 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     private ErpAccountService accountService;
     @Resource
     private ErpStockRecordService stockRecordService;
+    @Resource
+    private ErpStockBatchService stockBatchService;
+    /**
+     * 只用于「反审核时判断来源项在批次表里有没有批次」：
+     * 没有 = 接批次之前审核的历史单据，反审核要退回旧口径（只冲 erp_stock）
+     */
+    @Resource
+    private ErpStockBatchMapper stockBatchMapper;
 
     @Resource
     private AdminUserApi adminUserApi;
@@ -195,16 +214,70 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
             throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
         }
 
-        // 3. 变更库存
+        // 3. 变更库存（S2 库存中心：按批次入账 / 冲销；内部同时写库存流水并增量更新 erp_stock.count）
         List<ErpPurchaseInItemDO> purchaseInItems = purchaseInItemMapper.selectListByInId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.PURCHASE_IN.getType()
                 : ErpStockRecordBizTypeEnum.PURCHASE_IN_CANCEL.getType();
         purchaseInItems.forEach(purchaseInItem -> {
-            BigDecimal count = approve ? purchaseInItem.getCount() : purchaseInItem.getCount().negate();
-            stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
-                    purchaseInItem.getProductId(), purchaseInItem.getWarehouseId(), count,
-                    bizType, purchaseInItem.getInId(), purchaseInItem.getId(), purchaseIn.getNo()));
+            if (approve) {
+                receivePurchaseInItemBatch(purchaseInItem, purchaseIn);
+            } else {
+                reversePurchaseInItemBatch(purchaseInItem, purchaseIn, bizType);
+            }
         });
+    }
+
+    /**
+     * 采购入库项入账：按 仓库 × 物料 × 批次 记一批库存（幂等键 = 采购入库/入库项）
+     *
+     * 批次号/生产日期/到期日期取入库项字段（为空时按 IN{yyyyMMdd}-{项id} 自动生成）；
+     * in_date 取单据的入库时间（FIFO 的「先入库先出」按它排序）；unit_cost 取入库单价。
+     */
+    private void receivePurchaseInItemBatch(ErpPurchaseInItemDO purchaseInItem, ErpPurchaseInDO purchaseIn) {
+        ErpStockBatchInReqBO inReqBO = new ErpStockBatchInReqBO();
+        inReqBO.setWarehouseId(purchaseInItem.getWarehouseId());
+        inReqBO.setProductId(purchaseInItem.getProductId());
+        inReqBO.setBatchNo(purchaseInItem.getBatchNo());
+        inReqBO.setProductionDate(purchaseInItem.getProductionDate());
+        inReqBO.setExpiryDate(purchaseInItem.getExpiryDate());
+        // 入库日期取单据的入库时间：FIFO 的「先入库先出」按它排序
+        inReqBO.setInDate(purchaseIn.getInTime() != null ? purchaseIn.getInTime().toLocalDate() : null);
+        inReqBO.setCount(purchaseInItem.getCount());
+        // 成本取采购入库单价
+        inReqBO.setUnitCost(purchaseInItem.getProductPrice());
+        inReqBO.setBizType(ErpStockRecordBizTypeEnum.PURCHASE_IN.getType());
+        inReqBO.setBizId(purchaseInItem.getInId());
+        inReqBO.setBizItemId(purchaseInItem.getId());
+        inReqBO.setBizNo(purchaseIn.getNo());
+        inReqBO.setRemark(purchaseInItem.getRemark());
+        stockBatchService.receiveBatch(inReqBO);
+    }
+
+    /**
+     * 采购入库项反审核：按原批次冲回（既有可逆机制，批次已被出库导致余额不足时明确报错拒绝）
+     *
+     * 历史兼容：接批次之前审核的采购入库单，批次表里没有来源批次，无从冲回；
+     * 此时退回旧口径只写 erp_stock 流水，并打告警日志——这是 erp_stock 与 erp_stock_batch
+     * 已知偏差的来源之一，判据见 docs/stock-center.md §6。
+     */
+    private void reversePurchaseInItemBatch(ErpPurchaseInItemDO purchaseInItem, ErpPurchaseInDO purchaseIn,
+                                            Integer cancelBizType) {
+        ErpStockBatchDO sourceBatch = stockBatchMapper.selectBySource(
+                ErpStockRecordBizTypeEnum.PURCHASE_IN.getType(), purchaseInItem.getId());
+        if (sourceBatch != null) {
+            stockBatchService.reverseReceive(new ErpStockBatchReverseReqBO()
+                    .setSourceBizType(ErpStockRecordBizTypeEnum.PURCHASE_IN.getType())
+                    .setSourceBizItemId(purchaseInItem.getId())
+                    .setTargetBizType(cancelBizType)
+                    .setBizId(purchaseInItem.getInId())
+                    .setBizNo(purchaseIn.getNo()));
+            return;
+        }
+        stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
+                purchaseInItem.getProductId(), purchaseInItem.getWarehouseId(), purchaseInItem.getCount().negate(),
+                cancelBizType, purchaseInItem.getInId(), purchaseInItem.getId(), purchaseIn.getNo()));
+        log.warn("[updatePurchaseInStatus][历史单据({}) 入库项({}) 在批次表无来源批次，反审核按旧口径仅冲减 erp_stock({} 个)，"
+                        + "不产生批次流水]", purchaseIn.getNo(), purchaseInItem.getId(), purchaseInItem.getCount());
     }
 
     @Override

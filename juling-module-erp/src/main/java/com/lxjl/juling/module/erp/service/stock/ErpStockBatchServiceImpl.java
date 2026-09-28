@@ -26,7 +26,9 @@ import org.springframework.validation.annotation.Validated;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,8 +159,11 @@ public class ErpStockBatchServiceImpl implements ErpStockBatchService {
             log.info("[reverseReceive][来源({}/{})已冲销，幂等跳过]", reqBO.getSourceBizType(), reqBO.getSourceBizItemId());
             return false;
         }
-        // 2. 冲销数量 = 原入库流水之和（批次可能已被部分出库，用流水而非批次余额更准确）
-        BigDecimal received = sumRecordCount(reqBO.getSourceBizType(), reqBO.getSourceBizItemId(), true);
+        // 2. 冲销数量 = 本次（尚未被冲销的那一次）入库量，而不是该来源项历史入库流水之和：
+        //    「审核 → 反审核 → 重新审核 → 再反审核」时，历史入库流水有两条正数，
+        //    求和会把两次入库量叠加（120），必然大于批次余额（60）而误报"已发生出库无法反审核"。
+        BigDecimal received = calcCurrentReceivedCount(reqBO.getSourceBizType(), reqBO.getTargetBizType(),
+                reqBO.getSourceBizItemId());
         if (received.compareTo(BigDecimal.ZERO) <= 0) {
             received = nvl(batch.getCount());
         }
@@ -414,23 +419,29 @@ public class ErpStockBatchServiceImpl implements ErpStockBatchService {
     }
 
     /**
-     * 汇总某来源的流水数量
+     * 计算「本次入库量」：按流水 id 顺序扫描该来源项的入库（正数）与冲销（负数）记录，
+     * 每遇到一条冲销流水就把累计值归零 —— 即只统计**最后一次审核之后**的入库量。
      *
-     * @param positive true 只累加正数（入库），false 只累加负数绝对值（出库）
+     * 为什么要这样算：反审核是「整单冲销」语义，一次审核对应一次冲销；
+     * 若简单把正数流水求和，则「审核 → 反审核 → 重新审核」后会出现两条正数流水（60 + 60 = 120），
+     * 第二次反审核会拿 120 去冲一个只有 60 的批次，误报「已发生出库，无法反审核」。
+     *
+     * @param sourceBizType 原业务类型（入库），例如 PURCHASE_IN
+     * @param cancelBizType 冲销业务类型，例如 PURCHASE_IN_CANCEL；为空则只统计入库流水
      */
-    private BigDecimal sumRecordCount(Integer bizType, Long bizItemId, boolean positive) {
-        List<ErpStockRecordDO> records = stockRecordService.getStockRecordListByBizItem(bizType, bizItemId);
-        BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal calcCurrentReceivedCount(Integer sourceBizType, Integer cancelBizType, Long sourceBizItemId) {
+        List<ErpStockRecordDO> records = new ArrayList<>(
+                stockRecordService.getStockRecordListByBizItem(sourceBizType, sourceBizItemId));
+        if (cancelBizType != null) {
+            records.addAll(stockRecordService.getStockRecordListByBizItem(cancelBizType, sourceBizItemId));
+        }
+        records.sort(Comparator.comparing(ErpStockRecordDO::getId));
+        BigDecimal received = BigDecimal.ZERO;
         for (ErpStockRecordDO record : records) {
             BigDecimal count = nvl(record.getCount());
-            if (positive && count.compareTo(BigDecimal.ZERO) > 0) {
-                total = total.add(count);
-            }
-            if (!positive && count.compareTo(BigDecimal.ZERO) < 0) {
-                total = total.add(count.abs());
-            }
+            received = count.compareTo(BigDecimal.ZERO) > 0 ? received.add(count) : BigDecimal.ZERO;
         }
-        return total;
+        return received;
     }
 
     /**

@@ -151,6 +151,18 @@ MES（质检/生产，本项目用不到生产）、BPM（Flowable 完整）。�
 | 期末处理 | 期末结存、成本重算、期间锁定（与 FMS 结账联动）| 无 |
 | 三方仓 | 复用 WMS 模块（13 张表全空）对接三方仓批次与库存 | 未启用 |
 
+### 6.1 进度（2026-09-29 更新）
+
+| 切片 | 内容 | 状态 |
+|---|---|---|
+| S2-切片一 | 批次库存表 `erp_stock_batch`（四态分列 + 批次/效期 + 成本）、`ErpStockBatchService`（`receiveBatch` / `issueByFifo` / `reverseReceive` / `reverseIssue`）、期初批次回填、工作台真实可用量、批次库存页面与菜单（`sql/local/35_stock_center.sql`、`37_stock_batch_menu.sql`、`docs/stock-center.md` §1–§10） | 已完成 |
+| **S2-切片二** | **把「采购入库」与「销售出库（= 配送出库）」接上批次账**：采购入库审核逐行 `receiveBatch`（批次号/生产日期/效期取入库项、`in_date` 取单据入库时间、`unit_cost` 取入库单价）、反审核 `reverseReceive`；销售出库审核逐行 `issueByFifo`（FIFO 扣减 + 成本结转）、反审核 `reverseIssue`；**订单工作台统配下推生成的配送出库单（XSCK…）因此同链路扣批次**；建列脚本 `sql/local/36_batch_wiring.sql`；顺带修掉 `reverseReceive` 冲销数量重复计数（"审核→反审核→重新审核→再反审核"误报）的缺陷（`docs/stock-center.md` §11） | 已完成（实测 A/B/C 三条链路全 PASS） |
+| S2-切片三（待做） | 调拨 / 盘点 / 采购退货 / 销售退货接批次；库存占用（`occupied_count`）与在途（`transit_count`）的真实业务写入；期末成本重算与凭证事件 | 未开始 |
+
+**当前批次账的已知偏差**：已接入 4 条链路（其它入/出库、采购入库、销售出库），未接入的 4 条
+（调拨、盘点、采购退货、销售退货）仍单边改 `erp_stock`；核对 SQL 与逐笔归因见 `docs/stock-center.md` §11.3
+（实测样本：产品 3 批次 121 vs `erp_stock` 123，偏差 −2 = 接线前采购入库 +2 ＋ 销售退货 +1 ＋ 采购退货 −1）。
+
 ## 7. 订货与订配链（"进销存 + 订货"的订货）
 
 S1 已完成：一店三面绑定、代理商多门店切换、订单归属快照、**加盟审核 / 直营免审**分流、发货闸门。

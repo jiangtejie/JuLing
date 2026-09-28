@@ -92,4 +92,23 @@ public class ErpPurchaseInItemDO extends BaseDO {
      */
     private String remark;
 
+    // ==================== 批次库存（S2 切片二：sql/local/36_batch_wiring.sql 新增列） ====================
+
+    /**
+     * 批次号
+     *
+     * 为空时，审核入库按 IN{yyyyMMdd}-{项id} 自动生成（{@link com.lxjl.juling.module.erp.service.stock.ErpStockBatchService#receiveBatch}）
+     */
+    private String batchNo;
+    /**
+     * 生产日期（可空）
+     */
+    private java.time.LocalDate productionDate;
+    /**
+     * 到期日期（可空）
+     *
+     * 效期预警口径；FIFO 的次级排序键
+     */
+    private java.time.LocalDate expiryDate;
+
 }

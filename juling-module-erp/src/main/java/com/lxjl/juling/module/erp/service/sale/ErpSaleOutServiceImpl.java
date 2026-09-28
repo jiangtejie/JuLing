@@ -2,6 +2,7 @@ package com.lxjl.juling.module.erp.service.sale;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
@@ -15,16 +16,21 @@ import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOrderDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutItemDO;
+import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockRecordDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOutItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOutMapper;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
+import com.lxjl.juling.module.erp.service.stock.ErpStockBatchService;
 import com.lxjl.juling.module.erp.service.stock.ErpStockRecordService;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchOutReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +51,16 @@ import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 /**
  * ERP 销售出库 Service 实现类
  *
+ * S2 库存中心（切片二）：审核通过时逐行按批次 FIFO 扣减并结转成本（{@link ErpStockBatchService#issueByFifo}），
+ * 反审核按原出库流水逐批回滚；批次记账内部会写「一行一批次」的库存流水并增量更新 erp_stock.count（双写），
+ * 因此不再直接调用 {@link ErpStockRecordService#createStockRecord}，只有历史单据才退回旧口径。
+ *
+ * 注意：门店要货工作台的「统配下推」（ErpStoreAllocApiImpl#pushCentralDelivery）生成的正是本表的
+ * 配送出库单（XSCK…），所以接入这里等于把工作台下推也接上了批次库存账。
+ *
  * @author 亚特
  */
+@Slf4j
 @Service
 @Validated
 public class ErpSaleOutServiceImpl implements ErpSaleOutService {
@@ -68,6 +82,8 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
     private ErpAccountService accountService;
     @Resource
     private ErpStockRecordService stockRecordService;
+    @Resource
+    private ErpStockBatchService stockBatchService;
 
     @Resource
     private AdminUserApi adminUserApi;
@@ -201,16 +217,70 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
             throw exception(approve ? SALE_OUT_APPROVE_FAIL : SALE_OUT_PROCESS_FAIL);
         }
 
-        // 3. 变更库存
+        // 3. 变更库存（S2 库存中心：按批次 FIFO 扣减并结转成本；反审核按原流水逐批回滚）
         List<ErpSaleOutItemDO> saleOutItems = saleOutItemMapper.selectListByOutId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.SALE_OUT.getType()
                 : ErpStockRecordBizTypeEnum.SALE_OUT_CANCEL.getType();
         saleOutItems.forEach(saleOutItem -> {
-            BigDecimal count = approve ? saleOutItem.getCount().negate() : saleOutItem.getCount();
-            stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
-                    saleOutItem.getProductId(), saleOutItem.getWarehouseId(), count,
-                    bizType, saleOutItem.getOutId(), saleOutItem.getId(), saleOut.getNo()));
+            if (approve) {
+                issueSaleOutItemByFifo(saleOutItem, saleOut);
+            } else {
+                reverseSaleOutItemStock(saleOutItem, saleOut, bizType);
+            }
         });
+    }
+
+    /**
+     * 销售出库项出库：按批次 FIFO（先入库先出，同入库日期先到期先出）扣减并结转成本
+     *
+     * 返回值即 FIFO 扣减明细（批次 / 数量 / 单位成本 / 结转金额），供后续成本核算使用；
+     * 批次库存不足时抛异常，整个事务回滚（不会出现扣了一半的情况，erp_stock 也一并回滚）。
+     */
+    private void issueSaleOutItemByFifo(ErpSaleOutItemDO saleOutItem, ErpSaleOutDO saleOut) {
+        ErpStockBatchOutReqBO outReqBO = new ErpStockBatchOutReqBO();
+        outReqBO.setWarehouseId(saleOutItem.getWarehouseId());
+        outReqBO.setProductId(saleOutItem.getProductId());
+        outReqBO.setCount(saleOutItem.getCount());
+        outReqBO.setBizType(ErpStockRecordBizTypeEnum.SALE_OUT.getType());
+        outReqBO.setBizId(saleOutItem.getOutId());
+        outReqBO.setBizItemId(saleOutItem.getId());
+        outReqBO.setBizNo(saleOut.getNo());
+        outReqBO.setRemark(saleOutItem.getRemark());
+        stockBatchService.issueByFifo(outReqBO);
+    }
+
+    /**
+     * 销售出库项反审核：按原出库流水（一行一批次）逐批回滚数量与成本
+     *
+     * 历史兼容：接批次之前审核的出库单，流水里没有批次号，reverseIssue 无从回滚；
+     * 此时退回旧口径只回补 erp_stock，并打告警日志——这是 erp_stock 与 erp_stock_batch
+     * 已知偏差的来源之一，判据见 docs/stock-center.md §6。
+     */
+    private void reverseSaleOutItemStock(ErpSaleOutItemDO saleOutItem, ErpSaleOutDO saleOut, Integer cancelBizType) {
+        int rolled = stockBatchService.reverseIssue(new ErpStockBatchReverseReqBO()
+                .setSourceBizType(ErpStockRecordBizTypeEnum.SALE_OUT.getType())
+                .setSourceBizItemId(saleOutItem.getId())
+                .setTargetBizType(cancelBizType)
+                .setBizId(saleOutItem.getOutId())
+                .setBizNo(saleOut.getNo()));
+        if (rolled > 0) {
+            return;
+        }
+        // 判断是「本来就是旧口径的流水」还是「压根没有出库流水」：只有前者才需要按旧口径回补 erp_stock
+        List<ErpStockRecordDO> records = stockRecordService.getStockRecordListByBizItem(
+                ErpStockRecordBizTypeEnum.SALE_OUT.getType(), saleOutItem.getId());
+        boolean legacyIssued = records.stream().anyMatch(record -> record.getCount() != null
+                && record.getCount().compareTo(BigDecimal.ZERO) < 0 && StrUtil.isBlank(record.getBatchNo()));
+        if (!legacyIssued) {
+            log.warn("[updateSaleOutStatus][出库单({}) 出库项({}) 无可回滚的批次流水，跳过库存回滚]",
+                    saleOut.getNo(), saleOutItem.getId());
+            return;
+        }
+        stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
+                saleOutItem.getProductId(), saleOutItem.getWarehouseId(), saleOutItem.getCount(),
+                cancelBizType, saleOutItem.getOutId(), saleOutItem.getId(), saleOut.getNo()));
+        log.warn("[updateSaleOutStatus][历史单据({}) 出库项({}) 的流水无批次号，反审核按旧口径仅回补 erp_stock({} 个)，"
+                        + "不产生批次流水]", saleOut.getNo(), saleOutItem.getId(), saleOutItem.getCount());
     }
 
     @Override
