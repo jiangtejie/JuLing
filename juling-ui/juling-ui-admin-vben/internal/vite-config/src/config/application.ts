@@ -79,16 +79,11 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       server: {
         host: true,
         port,
-        // Windows 上 DSH / 部分编辑器保存文件采用「临时目录 + 原子改名」，会短暂产生
-        // 形如 `.<name>.ts.<pid>.<guid>.tmpdir/<name>.ts.tmp` 的路径；Vite 的 fs.watch
-        // 会尝试监听这个转瞬即逝且被占用的临时文件，抛 EBUSY 后整个 dev server 退出。
-        //
-        // 注意：必须写成正则。Vite 8 用的 chokidar 4 已不再支持 glob——ignored 里的字符串
-        // 会被 normalizeIgnored 当成普通路径（相对 cwd 解析），`**/*.tmpdir/**` 永远匹配不上，
-        // dev server 照样崩（H5 用的是 Vite 7 + chokidar 3，那边 glob 仍然有效）。
-        watch: {
-          ignored: [/\.tmpdir([\\/]|$)/, /\.tmp$/],
-        },
+        // 关于 server.watch.ignored（忽略「临时目录 + 原子改名」产生的 .tmpdir/.tmp，
+        // 否则 Windows 上 fs.watch 抛 EBUSY 会直接搞挂 dev server）：
+        // 该键写在这里**不生效**——实测解析后的 server.watch 为 undefined（warmup 却保留），
+        // 会被后续 mergeConfig 丢掉。请写在各自 app 的 vite.config.ts 里，
+        // 参考 apps/web-antd/vite.config.ts 的 server.watch.ignored（用函数，不能用 glob）。
         warmup: {
           // 预热文件
           clientFiles: [
