@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,12 +42,14 @@ public class BillPlatformController {
     @Resource
     private BillPlatformApi billPlatformApi;
 
+    @PreAuthorize("@ss.hasPermission('bill:platform:query')")
     @GetMapping("/type-list")
     @Operation(summary = "获得单据类型清单")
     public CommonResult<List<BillTypeDO>> getTypeList() {
         return success(billTypeMapper.selectList());
     }
 
+    @PreAuthorize("@ss.hasPermission('bill:platform:query')")
     @GetMapping("/type")
     @Operation(summary = "获得单据类型配置")
     @Parameter(name = "code", description = "单据类型编码", required = true, example = "PURCHASE_ORDER")
@@ -54,13 +57,7 @@ public class BillPlatformController {
         return success(billPlatformApi.getType(code));
     }
 
-    @GetMapping("/no/generate")
-    @Operation(summary = "试生成单据号（联调用，会消耗流水）")
-    public CommonResult<String> generateNo(@RequestParam("code") String code,
-                                           @RequestParam(value = "orgId", required = false) Long orgId) {
-        return success(billPlatformApi.generateNo(code, orgId));
-    }
-
+    @PreAuthorize("@ss.hasPermission('bill:platform:query')")
     @GetMapping("/relation/downstream")
     @Operation(summary = "获得下游单据（我下推了谁）")
     public CommonResult<Object> getDownstream(@RequestParam("sourceType") String sourceType,
@@ -68,6 +65,7 @@ public class BillPlatformController {
         return success(billPlatformApi.getDownstreamList(sourceType, sourceId));
     }
 
+    @PreAuthorize("@ss.hasPermission('bill:platform:query')")
     @GetMapping("/relation/upstream")
     @Operation(summary = "获得上游单据（我是谁下推来的）")
     public CommonResult<Object> getUpstream(@RequestParam("targetType") String targetType,
@@ -75,6 +73,7 @@ public class BillPlatformController {
         return success(billPlatformApi.getUpstreamList(targetType, targetId));
     }
 
+    @PreAuthorize("@ss.hasPermission('bill:platform:query')")
     @GetMapping("/log/list")
     @Operation(summary = "获得单据操作日志")
     public CommonResult<List<BillLogDO>> getLogList(@RequestParam("billType") String billType,
@@ -85,6 +84,7 @@ public class BillPlatformController {
                 .orderByDesc(BillLogDO::getId)));
     }
 
+    @PreAuthorize("@ss.hasPermission('bill:platform:query')")
     @GetMapping("/ext/list")
     @Operation(summary = "获得单据扩展字段")
     public CommonResult<Map<String, String>> getExtList(@RequestParam("billType") String billType,

@@ -19,6 +19,12 @@ import java.time.LocalDateTime;
 @Repository
 public class ErpNoRedisDAO {
 
+    // 注意：采购订单(CGDD)、采购入库(CGRK) 的单号已迁移到「单据平台」（bill_type 表为唯一真相来源，
+    // 规则：前缀 + yyyyMMdd + 6 位流水）。本类的常量与 generate() 仅服务于尚未迁移的单据；
+    // 迁移一张就从这里删一个常量，避免两处定义同一前缀。
+
+
+
     /**
      * 其它入库 {@link com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockInDO}
      */

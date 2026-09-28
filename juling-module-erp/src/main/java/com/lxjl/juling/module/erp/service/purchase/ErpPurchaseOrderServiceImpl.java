@@ -15,7 +15,6 @@ import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderMapper;
 import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
 import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
@@ -50,8 +49,6 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Resource
     private ErpPurchaseOrderItemMapper purchaseOrderItemMapper;
 
-    @Resource
-    private ErpNoRedisDAO noRedisDAO;
 
     @Resource
     private ErpProductService productService;

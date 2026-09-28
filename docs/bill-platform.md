@@ -35,6 +35,20 @@
 ③ 审核订单 → ④ 由订单建入库单得 CGRK202609280001、关联 PURCHASE_ORDER(CGDD…) → PURCHASE_IN(CGRK…)、
 日志备注"由采购订单 CGDD… 下推" → ⑤ `/bill/platform/relation/downstream` 能查到关联 → ⑥ `bill_no_seq` 按类型/期间各记 1、2。
 
+## 3.5 复核后的稳健修复（2026-09-28）
+
+| 问题 | 现象（已实证） | 修法 |
+|---|---|---|
+| 取号并发不可用 | 10 个并发生成只有 1 个成功，日志两连击：`duplicate key uk_bill_no_seq` → `current transaction is aborted` | 改为**事务级咨询锁** `pg_advisory_xact_lock(hashtext(类型:组织:期间))` 后再"查—插/更新"。**不能**用 "catch(DuplicateKeyException) 后重试"：PostgreSQL 语句失败即把事务置为 aborted，同事务内后续 SQL 一律被拒。修复后同样场景 **10/10 成功、单号连续、无重号** |
+| 单号位数与旧生成器不一致 | 旧格式 `CGDD20260920000001`（6 位）vs 平台初版 `CGDD202609280002`（4 位） | `bill_type.no_seq_length` 统一 **6 位**；脚本 31 号另做**切换日流水回填**（按当天已有单号的最大流水接上，`GREATEST` 保护、幂等） |
+| 前缀双真相 | `ErpNoRedisDAO` 常量与 `bill_type.no_prefix` 各定义一份 | ERP 已有单据的前缀以旧口径为准对齐（XSCK/QCDB/QCPD/QCKD/FKD/SKD），并补注册销售订单(XSDD)、销售退货(XSTH)；`ErpNoRedisDAO` 加注释：迁移一张删一个常量 |
+| 写操作挂在 GET 且无权限 | `GET /bill/platform/no/generate` 会消耗流水 | 直接**删除**该联调接口；读接口加 `@PreAuthorize('bill:platform:query')`（超管天然可用，其它角色在菜单里勾选） |
+| 关联/扩展字段的同类事务风险 | `catch(DuplicateKeyException)` 后继续执行 | 改成**先查后写**；真撞上时抛明确业务异常让外层整体回滚（`1_100_000_003/004`） |
+
+另外两个实施坑（已修）：`pg_advisory_xact_lock` 返回 void，MyBatis 无法映射（`No constructor found in void`），
+需包一层 `SELECT 1 FROM (SELECT pg_advisory_xact_lock(...)) t`；**打包前必须先停运行中的实例**，
+否则 jar 被占用会让 `mvn package` 直接 BUILD FAILURE。
+
 ## 4. 还没接的部分（按顺序）
 
 1. **状态机接管各单据的 status 字段**（现在 ERP 单据仍用 `ErpAuditStatus`，日志里的状态值是它）——迁移时一个单据一个单据换，不动历史数据；
