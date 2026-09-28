@@ -32,5 +32,18 @@ public class TradeOrderStoreBO {
      * 结算模式
      */
     private String settlementMode;
+    /**
+     * 店型：DIRECT 直营 / FRANCHISE 加盟
+     *
+     * 门店订货链：加盟店要货需财务审核后才进入订单工作台，直营店直接流转（见 CY-001 整体业务流程）。
+     */
+    private String storeType;
+
+    /**
+     * 是否加盟门店（加盟店要货需审核，直营店免审）
+     */
+    public boolean isFranchise() {
+        return "FRANCHISE".equals(storeType);
+    }
 
 }

@@ -65,7 +65,17 @@ public class TradeOrderStoreServiceImpl implements TradeOrderStoreService {
                 ? member.getCustomerId() : store.getParentCustomerId());
         bo.setSettlementMode(store.getSettlementMode() != null
                 ? store.getSettlementMode() : TradeSettlementModeEnum.DEFAULT_MODE);
+        bo.setStoreType(store.getStoreType());
         return bo;
+    }
+
+    @Override
+    public boolean isFranchiseStore(Long customerId) {
+        if (customerId == null) {
+            return false;
+        }
+        ErpCustomerRespDTO customer = erpCustomerApi.getCustomer(customerId);
+        return customer != null && "FRANCHISE".equals(customer.getStoreType());
     }
 
     @Override
@@ -93,6 +103,7 @@ public class TradeOrderStoreServiceImpl implements TradeOrderStoreService {
                             ? member.getCustomerId() : customer.getParentCustomerId());
                     bo.setSettlementMode(customer.getSettlementMode() != null
                             ? customer.getSettlementMode() : TradeSettlementModeEnum.DEFAULT_MODE);
+                    bo.setStoreType(customer.getStoreType());
                     return bo;
                 }).toList();
     }

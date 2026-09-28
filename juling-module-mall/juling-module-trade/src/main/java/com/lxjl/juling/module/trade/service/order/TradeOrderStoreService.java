@@ -31,4 +31,14 @@ public interface TradeOrderStoreService {
      */
     java.util.List<TradeOrderStoreBO> getStoreList(Long userId);
 
+    /**
+     * 是否加盟门店
+     *
+     * 门店订货链：加盟店要货需财务审核后才进入订单工作台，直营店直接流转。
+     *
+     * @param customerId 门店客户编号
+     * @return true 加盟 / false 直营或未设置
+     */
+    boolean isFranchiseStore(Long customerId);
+
 }

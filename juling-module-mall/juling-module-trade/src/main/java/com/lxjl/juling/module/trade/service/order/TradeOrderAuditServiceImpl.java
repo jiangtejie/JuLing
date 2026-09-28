@@ -35,6 +35,8 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
     private TradeOrderMapper tradeOrderMapper;
     @Resource
     private BpmProcessInstanceApi bpmProcessInstanceApi;
+    @Resource
+    private com.lxjl.juling.module.erp.api.customer.ErpCustomerApi erpCustomerApi;
 
     @Override
     public void submitAudit(Long orderId, Long userId) {
@@ -85,9 +87,24 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
 
     @Override
     public void validateCanDelivery(TradeOrderDO order) {
+        // 直营门店：直接流转，不设审核闸门（CY-001 整体业务流程：加盟门店需财务审核进入订单工作台，直营门店则直接）
+        if (!isFranchise(order)) {
+            return;
+        }
         if (!TradeOrderAuditStatusEnum.isApprove(order.getAuditStatus())) {
             throw exception(ORDER_DELIVERY_FAIL_AUDIT_NOT_APPROVE);
         }
+    }
+
+    /**
+     * 是否加盟门店（店型取客户主数据；未设置店型时按直营处理，避免历史数据被卡住）
+     */
+    private boolean isFranchise(TradeOrderDO order) {
+        if (order.getCustomerId() == null) {
+            return false;
+        }
+        var customer = erpCustomerApi.getCustomer(order.getCustomerId());
+        return customer != null && Objects.equals(customer.getStoreType(), "FRANCHISE");
     }
 
     private static Integer convertBpmStatus(Integer bpmStatus) {

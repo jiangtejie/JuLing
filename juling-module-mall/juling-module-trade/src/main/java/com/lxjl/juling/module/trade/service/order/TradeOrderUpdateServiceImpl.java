@@ -298,15 +298,19 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
         // 5. 门店订货链 S1：收款收齐后自动提交供应链审核（BPM 流程定义 key：trade-order-store-audit）
         //    审核未通过前不允许发货；流程定义缺失等异常不阻塞收款，可由后台手工提交审核
-        try {
-            Long operatorUserId = SecurityFrameworkUtils.getLoginUserId();
-            if (operatorUserId != null) {
-                tradeOrderAuditService.submitAudit(order.getId(), operatorUserId);
-            } else {
-                log.warn("[updateOrderPaidByOffline][订单({}) 无登录上下文，跳过自动提交审核]", order.getId());
+        if (tradeOrderStoreService.isFranchiseStore(order.getCustomerId())) {
+            try {
+                Long operatorUserId = SecurityFrameworkUtils.getLoginUserId();
+                if (operatorUserId != null) {
+                    tradeOrderAuditService.submitAudit(order.getId(), operatorUserId);
+                } else {
+                    log.warn("[updateOrderPaidByOffline][订单({}) 无登录上下文，跳过自动提交审核]", order.getId());
+                }
+            } catch (Throwable e) {
+                log.error("[updateOrderPaidByOffline][订单({}) 自动提交审核失败，可在后台手工提交]", order.getId(), e);
             }
-        } catch (Throwable e) {
-            log.error("[updateOrderPaidByOffline][订单({}) 自动提交审核失败，可在后台手工提交]", order.getId(), e);
+        } else {
+            log.info("[updateOrderPaidByOffline][订单({}) 直营门店免审，直接进入订单工作台待发货]", order.getId());
         }
     }
 
