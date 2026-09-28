@@ -1,20 +1,35 @@
 <script lang="ts" setup>
   import type { MenuRecordRaw } from '@vben/types';
 
-  import { computed } from 'vue';
+  import type { BpmTaskApi } from '#/api/bpm/task';
 
+  import { computed, onMounted, ref } from 'vue';
+
+  import { useAccess } from '@vben/access';
   import { Page } from '@vben/common-ui';
   import { IconifyIcon } from '@vben/icons';
   import { useAccessStore, useUserStore } from '@vben/stores';
 
-  import { Avatar, Card, Col, Empty, Row, Tag } from 'ant-design-vue';
-
   import { useNow } from '@vueuse/core';
+  import {
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Empty,
+    Row,
+    Spin,
+    Tag,
+  } from 'ant-design-vue';
+
+  import { getTaskTodoPage } from '#/api/bpm/task';
+  import { router } from '#/router';
 
   defineOptions({ name: 'Home' });
 
   const userStore = useUserStore();
   const accessStore = useAccessStore();
+  const { hasAccessByCodes } = useAccess();
 
   /** 本页路径（快捷入口里排除自己） */
   const HOME_PATH = '/home';
@@ -94,6 +109,65 @@
     '商城订单收到客户转账凭证后，需要在「商城系统 → 订单列表」核验收款，订单才会进入发货流程。',
     '遇到「系统异常」时记下操作时间，管理员可据此定位后端日志。',
   ];
+
+  /**
+   * 我的审批待办：只查当前登录人自己的待办任务，作为快捷入口用。
+   * - 没有 bpm:task:query 权限的账号整张卡片不渲染，避免点进去 403；
+   * - 进入首页只加载一次，其余靠卡片右上角的刷新按钮，不做轮询。
+   */
+  const TODO_PAGE_SIZE = 5;
+  const TODO_PATH = '/bpm/task/todo';
+
+  const canQueryTodo = computed(() => hasAccessByCodes(['bpm:task:query']));
+  const todoList = ref<BpmTaskApi.Task[]>([]);
+  const todoTotal = ref(0);
+  const todoLoading = ref(false);
+  const todoFailed = ref(false);
+
+  /** 发起时间：后端给的是时间戳，这里只到分钟，卡片位置窄 */
+  const formatDateTime = (value?: null | number | string) => {
+    if (!value) return '-';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '-';
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  };
+
+  async function loadTodos() {
+    if (!canQueryTodo.value || todoLoading.value) return;
+    todoLoading.value = true;
+    todoFailed.value = false;
+    try {
+      const data = await getTaskTodoPage({
+        pageNo: 1,
+        pageSize: TODO_PAGE_SIZE,
+      });
+      todoList.value = data?.list ?? [];
+      todoTotal.value = data?.total ?? todoList.value.length;
+    } catch {
+      // 待办只是首页的一块小入口，失败不影响其它区块，卡片内给一句提示即可
+      todoList.value = [];
+      todoTotal.value = 0;
+      todoFailed.value = true;
+    } finally {
+      todoLoading.value = false;
+    }
+  }
+
+  /** 办理任务：与「待办任务」页面保持同一套跳转方式 */
+  function openTodo(task: BpmTaskApi.Task) {
+    if (!task.processInstance?.id) return;
+    router.push({
+      name: 'BpmProcessInstanceDetail',
+      query: {
+        id: task.processInstance.id,
+        taskId: task.id,
+      },
+    });
+  }
+
+  onMounted(() => {
+    loadTodos();
+  });
 </script>
 
 <template>
@@ -170,6 +244,68 @@
             <ul class="home__tips">
               <li v-for="tip in tips" :key="tip">{{ tip }}</li>
             </ul>
+          </Card>
+
+          <!-- 我的审批待办：只查当前登录人自己的待办，作为快捷入口 -->
+          <Card
+            v-if="canQueryTodo"
+            :bordered="false"
+            class="home__todo-card"
+            size="small"
+          >
+            <template #title>
+              <span class="home__todo-title">我的审批待办</span>
+              <span v-if="!todoFailed" class="home__todo-count">
+                {{ todoTotal }}
+              </span>
+            </template>
+            <template #extra>
+              <Button
+                :loading="todoLoading"
+                size="small"
+                type="link"
+                @click="loadTodos"
+              >
+                刷新
+              </Button>
+            </template>
+
+            <div v-if="todoFailed" class="home__todo-hint">
+              待办加载失败，可点右上角「刷新」重试。
+            </div>
+            <div v-else-if="todoLoading && todoList.length === 0" class="home__todo-loading">
+              <Spin size="small" />
+            </div>
+            <!-- 深色主题下 antd 的空状态插图是近黑色，这里只用文字，保持卡片干净 -->
+            <Empty
+              v-else-if="todoList.length === 0"
+              :image="false"
+              description="暂无待办"
+            />
+            <ul v-else class="home__todo-list">
+              <li v-for="task in todoList" :key="task.id">
+                <button
+                  class="home__todo-item"
+                  type="button"
+                  @click="openTodo(task)"
+                >
+                  <span class="home__todo-item-head">
+                    <span class="home__todo-item-name">{{ task.name }}</span>
+                    <span class="home__todo-item-time">
+                      {{ formatDateTime(task.processInstance?.createTime) }}
+                    </span>
+                  </span>
+                  <span class="home__todo-item-meta">
+                    {{ task.processInstance?.name || '未命名流程' }} ·
+                    {{ task.processInstance?.startUser?.nickname || '未知发起人' }}
+                  </span>
+                </button>
+              </li>
+            </ul>
+
+            <div class="home__todo-more">
+              <RouterLink :to="TODO_PATH">查看全部</RouterLink>
+            </div>
           </Card>
         </Col>
       </Row>
@@ -280,5 +416,101 @@
     line-height: 1.9;
     color: hsl(var(--muted-foreground));
     list-style: disc;
+  }
+
+  .home__todo-card {
+    margin-top: 16px;
+  }
+
+  .home__todo-count {
+    display: inline-block;
+    min-width: 20px;
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    color: hsl(var(--primary));
+    text-align: center;
+    background-color: hsl(var(--primary) / 12%);
+    border-radius: 9px;
+  }
+
+  .home__todo-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li + li {
+      margin-top: 2px;
+    }
+  }
+
+  .home__todo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: hsl(var(--foreground));
+    text-align: left;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+
+  .home__todo-item:hover {
+    background-color: hsl(var(--primary) / 12%);
+  }
+
+  .home__todo-item-head {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .home__todo-item-name {
+    overflow: hidden;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .home__todo-item-time {
+    flex: none;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .home__todo-item-meta {
+    overflow: hidden;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .home__todo-more {
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    text-align: center;
+    border-top: 1px solid hsl(var(--border) / 60%);
+  }
+
+  .home__todo-hint,
+  .home__todo-loading {
+    padding: 12px 0;
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    text-align: center;
+  }
+
+  .home__todo-card :deep(.ant-empty) {
+    margin: 0;
+    font-size: 13px;
   }
 </style>

@@ -89,6 +89,7 @@ psql -U root -d yate -f sql/local/33_workbench_alloc.sql
 | 23_remove_pick_up.sql | 门店自提下线（物理清除）：删除自提菜单 9 条与角色关联、`trade_delivery_type` 的「用户自提」字典数据；`DROP TABLE trade_delivery_pick_up_store`；删列 `trade_config.delivery_pick_up_enabled`、`trade_order.pick_up_store_id`/`pick_up_verify_code`、`product_spu.delivery_types`。幂等 | — |
 | 24_fix_system_dept_sequence.sql | 修复 `system_dept_seq` 落后于数据（新增部门报 `duplicate key ... pk_system_dept`）：把序列推进到 `max(id)+1`。附全库序列排查脚本（比对 `pg_sequences.last_value` 与各表 `max(id)`） | — |
 | 25_trade_config_default.sql | 交易配置（`trade_config`）初始化：表里没有未删除的配置行时插入一行默认值（包邮开关/满额包邮金额、售后理由清单）。幂等 | — |
+| 34_role_menu_ancestors.sql | 递归补全角色的**祖先菜单**授权：yudao 会剔除"父菜单未授权"的节点（MenuServiceImpl.isMenuDisabled），只授深层权限会导致该权限不出现在 /system/auth/get-permission-info — 前端拿不到权限、菜单无入口，但后端 @PreAuthorize 仍能通过（"接口能调、界面看不到"）。当前默认对 156 财务 / 157 供应链 生效 | 沿用角色菜单 id |
 | 32_bpm_approver_permissions.sql | 门店要货两级审批（供应链 → 财务出纳）配套授权：给「供应链(157)」「财务(156)」角色授 BPM 菜单与按钮权限（含 `bpm:task:query`/`bpm:task:update`）。此前这两个角色**没有任何 bpm 权限**，任务虽分派到人、成员一审批即 403。脚本幂等；直接执行后需重启或走一次 `/system/permission/assign-role-menu` 刷新权限缓存 | 沿用角色菜单 id |
 | 31_bill_platform_fix.sql | 单据基座修复：流水位数与旧生成器对齐（统一 6 位）；ERP 已有单据的前缀与旧口径对齐（XSCK/QCDB/QCPD/QCKD/FKD/SKD）并补注册销售订单(XSDD)/销售退货(XSTH)；**按当天已有单号回填 `bill_no_seq` 流水起点**（防切换日"单号已存在"，GREATEST 幂等）；注册权限 `bill:platform:query` | 菜单 11540、类型 27/28 |
 | 30_bill_platform.sql | **单据基座**：新建 5 张平台表（`bill_type` 类型注册 / `bill_no_seq` 单号流水 / `bill_relation` 单据关联防重复下推 / `bill_log` 操作日志 / `bill_ext` 扩展字段）+ 5 个序列，并注册 26 类单据（与金蝶蓝图流程一一对应，含编号规则、是否审批、是否影响库存/核算）。含主键幂等兜底 | 类型 id 1–26 |
