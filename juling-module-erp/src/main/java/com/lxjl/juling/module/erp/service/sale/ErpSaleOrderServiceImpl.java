@@ -5,6 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.order.ErpSaleOrderPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.order.ErpSaleOrderSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -12,7 +16,6 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOrderDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOrderItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOrderItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOrderMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
@@ -49,7 +52,7 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
     private ErpSaleOrderItemMapper saleOrderItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -76,8 +79,8 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         if (createReqVO.getSaleUserId() != null) {
             adminUserApi.validateUser(createReqVO.getSaleUserId());
         }
-        // 1.5 生成订单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.SALE_ORDER_NO_PREFIX);
+        // 1.5 生成订单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.SALE_ORDER, null);
         if (saleOrderMapper.selectByNo(no) != null) {
             throw exception(SALE_ORDER_NO_EXISTS);
         }
@@ -94,6 +97,12 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         saleOrderItems.forEach(o -> o.setOrderId(saleOrder.getId())
                 .setOutCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         saleOrderItemMapper.insertBatch(saleOrderItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.SALE_ORDER).setBillId(saleOrder.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(saleOrder.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return saleOrder.getId();
     }
 

@@ -36,4 +36,8 @@ public interface BillTypeConstants {
     String OTHER_IN = "OTHER_IN";
     String OTHER_OUT = "OTHER_OUT";
 
+    // ERP 原生单据（31_bill_platform_fix.sql 注册的 code；单号前缀 XSDD / XSTH）
+    String SALE_ORDER = "SALE_ORDER";
+    String SALE_RETURN = "SALE_RETURN";
+
 }

@@ -5,6 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.returns.ErpPurchaseReturnPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.returns.ErpPurchaseReturnSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -13,7 +17,6 @@ import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseReturnDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseReturnItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseReturnItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseReturnMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
@@ -53,7 +56,7 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
     private ErpPurchaseReturnItemMapper purchaseReturnItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -74,8 +77,8 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
         List<ErpPurchaseReturnItemDO> purchaseReturnItems = validatePurchaseReturnItems(createReqVO.getItems());
         // 1.3 校验结算账户
         accountService.validateAccount(createReqVO.getAccountId());
-        // 1.4 生成退货单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.PURCHASE_RETURN_NO_PREFIX);
+        // 1.4 生成退货单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.PURCHASE_RETURN, null);
         if (purchaseReturnMapper.selectByNo(no) != null) {
             throw exception(PURCHASE_RETURN_NO_EXISTS);
         }
@@ -92,6 +95,12 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
         // 2.2 插入退货项
         purchaseReturnItems.forEach(o -> o.setReturnId(purchaseReturn.getId()));
         purchaseReturnItemMapper.insertBatch(purchaseReturnItems);
+
+        // 2.3 单据平台：写创建日志（留痕；与采购订单/入库单同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_RETURN).setBillId(purchaseReturn.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(purchaseReturn.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新采购订单的退货数量
         updatePurchaseOrderReturnCount(createReqVO.getOrderId());

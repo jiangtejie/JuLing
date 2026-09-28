@@ -5,6 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.out.ErpSaleOutPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.out.ErpSaleOutSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -13,7 +17,6 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOutItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOutMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
@@ -54,7 +57,7 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
     private ErpSaleOutItemMapper saleOutItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -82,8 +85,11 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
         if (createReqVO.getSaleUserId() != null) {
             adminUserApi.validateUser(createReqVO.getSaleUserId());
         }
-        // 1.5 生成出库单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.SALE_OUT_NO_PREFIX);
+        // 1.5 生成出库单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        // 注意：ERP 销售出库与「配送出库单」是同一张单（同一张 erp_sale_out、同为 XSCK 前缀），
+        // 单据平台里已注册的类型就是 DELIVERY_OUT（31_bill_platform_fix.sql 把前缀对齐为 XSCK），
+        // 故此处复用 DELIVERY_OUT，而不是另注册一个 SALE_OUT —— 否则同一张表会有两个序列，重新引入撞号风险。
+        String no = billPlatformApi.generateNo(BillTypeConstants.DELIVERY_OUT, null);
         if (saleOutMapper.selectByNo(no) != null) {
             throw exception(SALE_OUT_NO_EXISTS);
         }
@@ -100,6 +106,12 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
         // 2.2 插入出库项
         saleOutItems.forEach(o -> o.setOutId(saleOut.getId()));
         saleOutItemMapper.insertBatch(saleOutItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.DELIVERY_OUT).setBillId(saleOut.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(saleOut.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新销售订单的出库数量
         updateSaleOrderOutCount(createReqVO.getOrderId());

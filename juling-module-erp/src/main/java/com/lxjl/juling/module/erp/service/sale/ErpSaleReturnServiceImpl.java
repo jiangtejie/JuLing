@@ -5,6 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.returns.ErpSaleReturnPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.returns.ErpSaleReturnSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -13,7 +17,6 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleReturnDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleReturnItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleReturnItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleReturnMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
@@ -54,7 +57,7 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
     private ErpSaleReturnItemMapper saleReturnItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -82,8 +85,8 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
         if (createReqVO.getSaleUserId() != null) {
             adminUserApi.validateUser(createReqVO.getSaleUserId());
         }
-        // 1.5 生成退货单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.SALE_RETURN_NO_PREFIX);
+        // 1.5 生成退货单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.SALE_RETURN, null);
         if (saleReturnMapper.selectByNo(no) != null) {
             throw exception(SALE_RETURN_NO_EXISTS);
         }
@@ -100,6 +103,12 @@ public class ErpSaleReturnServiceImpl implements ErpSaleReturnService {
         // 2.2 插入退货项
         saleReturnItems.forEach(o -> o.setReturnId(saleReturn.getId()));
         saleReturnItemMapper.insertBatch(saleReturnItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.SALE_RETURN).setBillId(saleReturn.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(saleReturn.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新销售订单的退货数量
         updateSaleOrderReturnCount(createReqVO.getOrderId());
