@@ -110,6 +110,13 @@ H5 下单时后端依次执行（任一失败即拦截并给出可读原因）�
 > `Number(undefined)=NaN`，后端报 `Failed to convert "NaN" to Long`。
 > 现订单详情页已支持 `id` 属性 + NaN 兜底；审批页改用**只读摘要组件**（只展示门店/金额/收款/状态与商品行，
 > 不暴露发货、核验等操作入口，避免审批人误操作）。
+>
+> **用接口手工改流程模型时，simpleModel 必须带全设计器字段**（2026-09-28 踩坑）：审批节点除
+> `candidateStrategy/candidateParam/approveType/approveMethod/rejectHandler/timeoutHandler/assignEmptyHandler` 外，
+> 还必须有 `fieldsPermission`、`buttonsSetting`（通过/拒绝/转办/委派/加签/退回 六项）以及
+> `taskCreateListener / taskAssignListener / taskCompleteListener`（`{enable:false,path:null,header:[],body:[]}`）。
+> 缺这些字段时流程模型在**流程设计器里打不开/无法编辑**（对比设计器自己生成的 `test` 模型字段即可发现）。
+> 另：`/bpm/model/export` 对任何模型都返回空 bpmnXml，不能用来判断流程图数据是否完整。
 
 **供应链审核**（必走）：可在审批中改数量/删行/拆分订单、指定收货仓与预计到货日；通过后**重算金额并快照应收**；
 金额下降 → 差额入余款（或原路退回留痕），金额上升 → 补充付款要求。
