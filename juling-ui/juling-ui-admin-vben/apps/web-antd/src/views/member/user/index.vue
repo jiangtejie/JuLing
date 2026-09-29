@@ -16,9 +16,7 @@ import { $t } from '#/locales';
 import { CouponSendForm } from '../../mall/promotion/coupon/components';
 import { useGridColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
-import LevelForm from './modules/level-form.vue';
 import OrderAccountForm from './modules/order-account-form.vue';
-import PointForm from './modules/point-form.vue';
 import ResetPasswordForm from './modules/reset-password-form.vue';
 
 const router = useRouter();
@@ -30,16 +28,6 @@ const { hasAccessByCodes } = useAccess();
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
-  destroyOnClose: true,
-});
-
-const [PointFormModal, pointFormModalApi] = useVbenModal({
-  connectedComponent: PointForm,
-  destroyOnClose: true,
-});
-
-const [LevelFormModal, levelFormModalApi] = useVbenModal({
-  connectedComponent: LevelForm,
   destroyOnClose: true,
 });
 
@@ -63,7 +51,7 @@ function handleRefresh() {
   gridApi.query();
 }
 
-/** 编辑会员 */
+/** 编辑订货账号 */
 function handleEdit(row: MemberUserApi.User) {
   formModalApi.setData(row).open();
 }
@@ -76,16 +64,6 @@ function handleCreateOrderAccount() {
 /** 重置订货账号密码（重置后该账号会被强制下线） */
 function handleResetPassword(row: MemberUserApi.User) {
   resetPasswordFormModalApi.setData(row).open();
-}
-
-/** 修改会员等级 */
-function handleUpdateLevel(row: MemberUserApi.User) {
-  levelFormModalApi.setData(row).open();
-}
-
-/** 修改会员积分 */
-function handleUpdatePoint(row: MemberUserApi.User) {
-  pointFormModalApi.setData(row).open();
 }
 
 /** 发送优惠券 */
@@ -106,7 +84,7 @@ function handleRowCheckboxChange({
   checkedIds.value = records.map((item) => item.id!);
 }
 
-/** 查看会员详情 */
+/** 查看订货账号详情 */
 function handleViewDetail(row: MemberUserApi.User) {
   router.push({
     name: 'MemberUserDetail',
@@ -155,18 +133,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
   <Page auto-content-height>
     <template #doc>
       <DocAlert
-        title="会员用户、标签、分组"
+        title="订货账号"
         url="https://github.com/jiangtejie/JuLing#readme"
       />
     </template>
 
     <FormModal @success="handleRefresh" />
-    <PointFormModal @success="handleRefresh" />
-    <LevelFormModal @success="handleRefresh" />
     <OrderAccountFormModal @success="handleRefresh" />
     <ResetPasswordFormModal @success="handleRefresh" />
     <CouponSendFormModal />
-    <Grid table-title="会员列表">
+    <Grid table-title="订货账号列表">
       <template #toolbar-tools>
         <div class="flex items-center gap-2">
           <TableAction
@@ -211,18 +187,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
               type: 'link',
               auth: ['member:user:update'],
               onClick: handleEdit.bind(null, row),
-            },
-            {
-              label: '修改等级',
-              type: 'link',
-              auth: ['member:user:update-level'],
-              onClick: handleUpdateLevel.bind(null, row),
-            },
-            {
-              label: '修改积分',
-              type: 'link',
-              auth: ['member:user:update-point'],
-              onClick: handleUpdatePoint.bind(null, row),
             },
             {
               label: '重置密码',

@@ -17,8 +17,8 @@ const emit = defineEmits(['success']);
 const formData = ref<MemberUserApi.User>();
 const getTitle = computed(() => {
   return formData.value?.id
-    ? $t('ui.actionTitle.edit', ['会员'])
-    : $t('ui.actionTitle.create', ['会员']);
+    ? $t('ui.actionTitle.edit', ['订货账号'])
+    : $t('ui.actionTitle.create', ['订货账号']);
 });
 
 const [Form, formApi] = useVbenForm({

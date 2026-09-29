@@ -24,11 +24,11 @@ const [Descriptions] = useDescription({
   schema: [
     {
       field: 'name',
-      label: '用户名',
+      label: '真实姓名',
     },
     {
       field: 'nickname',
-      label: '昵称',
+      label: '联系人',
     },
     {
       field: 'mobile',
@@ -51,34 +51,9 @@ const [Descriptions] = useDescription({
       field: 'areaName',
       label: '所在地',
     },
-    // 一店三面绑定：门店（部门）与客户编号，后端只有 id，这里直接展示编号
-    {
-      field: 'deptId',
-      label: '所属门店',
-      render: (val) => val ?? '-',
-    },
-    {
-      field: 'customerId',
-      label: '所属客户',
-      render: (val) => val ?? '-',
-    },
-    {
-      field: 'registerIp',
-      label: '注册 IP',
-    },
     {
       field: 'birthday',
       label: '生日',
-      render: (val) => formatDate(val)?.toString() || '-',
-    },
-    {
-      field: 'createTime',
-      label: '注册时间',
-      render: (val) => formatDate(val)?.toString() || '-',
-    },
-    {
-      field: 'loginDate',
-      label: '最后登录时间',
       render: (val) => formatDate(val)?.toString() || '-',
     },
   ],
