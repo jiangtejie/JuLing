@@ -16,7 +16,11 @@ import { getOrderPage, submitOrderAudit } from '#/api/mall/trade/order';
 import { DictTag } from '#/components/dict-tag';
 import { $t } from '#/locales';
 
-import { useGridColumns, useGridFormSchema } from './data';
+import {
+  parseBusinessStatus,
+  useGridColumns,
+  useGridFormSchema,
+} from './data';
 import RemarkForm from './modules/remark-form.vue';
 
 const { push } = useRouter();
@@ -114,10 +118,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }, formValues) => {
+          // 「订单状态」筛选是业务状态（status[:auditStatus] 组合），这里拆成后端参数，
+          // 保证筛选口径与列表展示的 deriveOrderStatus 一致
+          const { status, ...rest } = formValues ?? {};
           return await getOrderPage({
             pageNo: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...rest,
+            ...parseBusinessStatus(status),
           });
         },
       },

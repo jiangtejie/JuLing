@@ -15,6 +15,46 @@ import { getRangePickerDefaultProps } from '#/utils';
 
 import { deriveOrderStatus } from './status';
 
+/**
+ * 「业务状态」筛选：与列表展示口径一致（见 {@link deriveOrderStatus}）
+ *
+ * 值用 `status:auditStatus` 组合编码，查询时由 {@link parseBusinessStatus} 拆成后端参数：
+ * - `0` → status=0（待支付）
+ * - `10:0` / `10:10` / `10:30` / `10:20` → status=10 + 对应审核状态（待提交审核 / 审核中 / 审核已驳回 / 待发货）
+ * - `20` / `30` / `40` → status=20 / 30 / 40
+ *
+ * 为什么不用字典 trade_order_status 直接筛：status=10 同时覆盖「审核中 / 已驳回 / 已通过」，
+ * 筛「待发货」会把还在审批的单也带出来，与列表展示的「审核中」自相矛盾。
+ */
+export const BUSINESS_STATUS_OPTIONS = [
+  { label: '待支付', value: '0' },
+  { label: '待提交审核', value: '10:0' },
+  { label: '审核中', value: '10:10' },
+  { label: '审核已驳回', value: '10:30' },
+  { label: '待发货', value: '10:20' },
+  { label: '已发货', value: '20' },
+  { label: '已完成', value: '30' },
+  { label: '已取消', value: '40' },
+];
+
+/** 把「业务状态」筛选值拆成后端的分页查询参数（空值返回空对象，等价于不过滤） */
+export function parseBusinessStatus(value?: number | string): {
+  auditStatus?: number;
+  status?: number;
+} {
+  if (value === undefined || value === null || value === '') {
+    return {};
+  }
+  const [status, auditStatus] = String(value).split(':');
+  return {
+    status: status === undefined || status === '' ? undefined : Number(status),
+    auditStatus:
+      auditStatus === undefined || auditStatus === ''
+        ? undefined
+        : Number(auditStatus),
+  };
+}
+
 /** 列表的搜索表单 */
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
@@ -23,7 +63,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: '订单状态',
       component: 'Select',
       componentProps: {
-        options: getDictOptions(DICT_TYPE.TRADE_ORDER_STATUS, 'number'),
+        options: BUSINESS_STATUS_OPTIONS,
         placeholder: '请选择订单状态',
         allowClear: true,
       },
@@ -45,20 +85,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
       componentProps: {
         options: getDictOptions(DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS, 'number'),
         placeholder: '请选择收款状态',
-        allowClear: true,
-      },
-    },
-    {
-      fieldName: 'auditStatus',
-      label: '审核状态',
-      component: 'Select',
-      componentProps: {
-        // 含「全部」：选中后为 undefined，qs 会忽略该参数（等价于不过滤）
-        options: [
-          { label: '全部', value: undefined },
-          ...getDictOptions(DICT_TYPE.TRADE_ORDER_AUDIT_STATUS, 'number'),
-        ],
-        placeholder: '请选择审核状态',
         allowClear: true,
       },
     },
