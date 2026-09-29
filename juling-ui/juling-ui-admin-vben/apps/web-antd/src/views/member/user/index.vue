@@ -2,18 +2,15 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MemberUserApi } from '#/api/member/user';
 
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
 import { DocAlert, Page, useVbenModal } from '@vben/common-ui';
-import { isEmpty } from '@vben/utils';
 
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getUserPage } from '#/api/member/user';
 import { $t } from '#/locales';
 
-import { CouponSendForm } from '../../mall/promotion/coupon/components';
 import { useGridColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
 import OrderAccountForm from './modules/order-account-form.vue';
@@ -28,11 +25,6 @@ const { hasAccessByCodes } = useAccess();
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
-  destroyOnClose: true,
-});
-
-const [CouponSendFormModal, couponSendFormModalApi] = useVbenModal({
-  connectedComponent: CouponSendForm,
   destroyOnClose: true,
 });
 
@@ -64,24 +56,6 @@ function handleCreateOrderAccount() {
 /** 重置订货账号密码（重置后该账号会被强制下线） */
 function handleResetPassword(row: MemberUserApi.User) {
   resetPasswordFormModalApi.setData(row).open();
-}
-
-/** 发送优惠券 */
-async function handleSendCoupon() {
-  couponSendFormModalApi
-    .setData({
-      userIds: checkedIds.value,
-    })
-    .open();
-}
-
-const checkedIds = ref<number[]>([]);
-function handleRowCheckboxChange({
-  records,
-}: {
-  records: MemberUserApi.User[];
-}) {
-  checkedIds.value = records.map((item) => item.id!);
 }
 
 /** 查看订货账号详情 */
@@ -122,10 +96,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       search: true,
     },
   } as VxeTableGridOptions<MemberUserApi.User>,
-  gridEvents: {
-    checkboxAll: handleRowCheckboxChange,
-    checkboxChange: handleRowCheckboxChange,
-  },
 });
 </script>
 
@@ -141,34 +111,19 @@ const [Grid, gridApi] = useVbenVxeGrid({
     <FormModal @success="handleRefresh" />
     <OrderAccountFormModal @success="handleRefresh" />
     <ResetPasswordFormModal @success="handleRefresh" />
-    <CouponSendFormModal />
     <Grid table-title="订货账号列表">
       <template #toolbar-tools>
-        <div class="flex items-center gap-2">
-          <TableAction
-            v-if="hasAccessByCodes(['member:user:create'])"
-            :actions="[
-              {
-                label: '开订货账号',
-                type: 'primary',
-                icon: 'lucide:user-plus',
-                onClick: handleCreateOrderAccount,
-              },
-            ]"
-          />
-          <TableAction
-            :actions="[
-              {
-                label: '发送优惠券',
-                type: 'primary',
-                icon: 'lucide:mouse-pointer-2',
-                disabled: isEmpty(checkedIds),
-                auth: ['promotion:coupon:send'],
-                onClick: handleSendCoupon,
-              },
-            ]"
-          />
-        </div>
+        <TableAction
+          v-if="hasAccessByCodes(['member:user:create'])"
+          :actions="[
+            {
+              label: '开订货账号',
+              type: 'primary',
+              icon: 'lucide:user-plus',
+              onClick: handleCreateOrderAccount,
+            },
+          ]"
+        />
       </template>
 
       <template #actions="{ row }">

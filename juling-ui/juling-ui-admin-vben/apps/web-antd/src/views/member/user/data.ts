@@ -231,10 +231,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useGridColumns(): VxeTableGridOptions['columns'] {
   return [
     {
-      type: 'checkbox',
-      width: 50,
-    },
-    {
       field: 'username',
       title: '订货账号',
       minWidth: 140,
