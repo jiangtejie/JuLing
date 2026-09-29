@@ -26,12 +26,14 @@ public class TradePriceCalculateReqBO {
     /**
      * 优惠劵编号
      *
-     * 对应 CouponDO 的 id 编号
+     * 对应 CouponDO 的 id 编号。本轮保留：优惠劵促销仍在消费该字段
      */
     private Long couponId;
 
     /**
      * 是否使用积分
+     *
+     * 会员中心已下线，恒为 false、不再消费；仅为兼容 H5 保留字段
      */
     @NotNull(message = "是否使用积分不能为空")
     private Boolean pointStatus;
@@ -45,7 +47,7 @@ public class TradePriceCalculateReqBO {
     /**
      * 收货地址编号
      *
-     * 对应 MemberAddressDO 的 id 编号
+     * 会员中心（含会员地址簿）已下线，恒为空、不再消费；仅为兼容 H5 保留字段
      */
     private Long addressId;
     /**

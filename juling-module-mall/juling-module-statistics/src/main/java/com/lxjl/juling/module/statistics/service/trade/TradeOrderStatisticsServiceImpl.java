@@ -8,7 +8,7 @@ import com.lxjl.juling.module.statistics.controller.admin.trade.vo.TradeOrderTre
 import com.lxjl.juling.module.statistics.controller.admin.trade.vo.TradeOrderTrendRespVO;
 import com.lxjl.juling.module.statistics.dal.mysql.trade.TradeOrderStatisticsMapper;
 import com.lxjl.juling.module.statistics.enums.TimeRangeTypeEnum;
-import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
+import com.lxjl.juling.module.statistics.service.trade.bo.MemberAreaStatisticsRespBO;
 import com.lxjl.juling.module.statistics.service.trade.bo.TradeOrderSummaryRespBO;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;

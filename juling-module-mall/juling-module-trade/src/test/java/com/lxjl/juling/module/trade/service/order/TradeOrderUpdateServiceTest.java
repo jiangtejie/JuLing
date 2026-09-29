@@ -3,7 +3,6 @@ package com.lxjl.juling.module.trade.service.order;
 import cn.hutool.core.util.IdUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.test.core.ut.BaseDbUnitTest;
-import com.lxjl.juling.module.member.api.address.MemberAddressApi;
 import com.lxjl.juling.module.member.api.user.MemberUserApi;
 import com.lxjl.juling.module.product.api.comment.ProductCommentApi;
 import com.lxjl.juling.module.product.api.sku.ProductSkuApi;
@@ -75,8 +74,6 @@ public class TradeOrderUpdateServiceTest extends BaseDbUnitTest {
     //    @MockitoBean
 //    private PriceApi priceApi;
     @MockitoBean
-    private MemberAddressApi addressApi;
-    @MockitoBean
     private CouponApi couponApi;
 
     @MockitoBean
@@ -123,10 +120,6 @@ public class TradeOrderUpdateServiceTest extends BaseDbUnitTest {
 //        ProductSpuRespDTO spu02 = randomPojo(ProductSpuRespDTO.class, o -> o.setId(21L)
 //                .setStatus(ProductSpuStatusEnum.ENABLE.getStatus()));
 //        when(productSpuApi.getSpuList(eq(asSet(11L, 21L)))).thenReturn(Arrays.asList(spu01, spu02));
-//        // mock 方法（用户收件地址的校验）
-//        MemberAddressRespDTO addressRespDTO = new MemberAddressRespDTO().setId(10L).setUserId(userId).setName("亚特")
-//                .setMobile("15601691300").setAreaId(3306).setDetailAddress("土豆村");
-//        when(addressApi.getAddress(eq(10L), eq(userId))).thenReturn(addressRespDTO);
 //        // mock 方法（价格计算）
 //        PriceCalculateRespDTO.OrderItem priceOrderItem01 = new PriceCalculateRespDTO.OrderItem()
 //                .setSpuId(11L).setSkuId(1L).setCount(3).setOriginalPrice(150).setOriginalUnitPrice(50)

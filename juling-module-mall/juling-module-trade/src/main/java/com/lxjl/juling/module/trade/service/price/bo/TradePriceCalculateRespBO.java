@@ -56,15 +56,21 @@ public class TradePriceCalculateRespBO {
 
     /**
      * 会员剩余积分
+     *
+     * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
      */
     private Integer totalPoint;
     /**
      * 使用的积分
+     *
+     * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
      */
     private Integer usePoint;
 
     /**
      * 赠送的积分
+     *
+     * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
      */
     private Integer givePoint;
 
@@ -122,10 +128,14 @@ public class TradePriceCalculateRespBO {
          * 积分抵扣的金额，单位：分
          *
          * 对应 taobao 的 trade.point_fee 字段
+         *
+         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
          */
         private Integer pointPrice;
         /**
          * VIP 减免金额，单位：分
+         *
+         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
          */
         private Integer vipPrice;
         /**
@@ -196,14 +206,20 @@ public class TradePriceCalculateRespBO {
          * 积分抵扣的金额，单位：分
          *
          * 对应 taobao 的 trade.point_fee 字段
+         *
+         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
          */
         private Integer pointPrice;
         /**
          * 使用的积分
+         *
+         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
          */
         private Integer usePoint;
         /**
          * VIP 减免金额，单位：分
+         *
+         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
          */
         private Integer vipPrice;
         /**
@@ -260,6 +276,8 @@ public class TradePriceCalculateRespBO {
 
         /**
          * 赠送的积分
+         *
+         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
          */
         private Integer givePoint;
 

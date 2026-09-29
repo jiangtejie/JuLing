@@ -24,10 +24,12 @@ public class AppTradeOrderSettlementReqVO {
     @NotEmpty(message = "商品不能为空")
     private List<Item> items;
 
+    // 本轮保留：优惠劵促销仍在消费该字段
     @Schema(description = "优惠劵编号", example = "1024")
     private Long couponId;
 
-    @Schema(description = "是否使用积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
+    // 会员中心已下线，恒为 false、不再消费；仅为兼容 H5（前端仍会传 pointStatus=false）保留字段
+    @Schema(description = "是否使用积分（会员中心已下线，恒为 false）", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
     @NotNull(message = "是否使用积分不能为空")
     private Boolean pointStatus;
 
@@ -40,7 +42,8 @@ public class AppTradeOrderSettlementReqVO {
     @InEnum(value = DeliveryTypeEnum.class, message = "配送方式不正确")
     private Integer deliveryType;
 
-    @Schema(description = "收件地址编号", example = "1")
+    // 会员中心（含会员地址簿）已下线，恒为空、不再消费；仅为兼容 H5 保留字段
+    @Schema(description = "收件地址编号（会员中心已下线，恒为空）", example = "1")
     private Long addressId;
 
     @Schema(description = "收件人名称", example = "亚特")

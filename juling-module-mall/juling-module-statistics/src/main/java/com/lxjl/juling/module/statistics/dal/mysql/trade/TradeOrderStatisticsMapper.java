@@ -4,7 +4,7 @@ import com.lxjl.juling.framework.mybatis.core.mapper.BaseMapperX;
 import com.lxjl.juling.module.statistics.controller.admin.trade.vo.TradeOrderSummaryRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.trade.vo.TradeOrderTrendRespVO;
 import com.lxjl.juling.module.statistics.dal.dataobject.trade.TradeStatisticsDO;
-import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
+import com.lxjl.juling.module.statistics.service.trade.bo.MemberAreaStatisticsRespBO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

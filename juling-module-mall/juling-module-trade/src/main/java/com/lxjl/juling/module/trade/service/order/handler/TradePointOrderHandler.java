@@ -2,8 +2,6 @@ package com.lxjl.juling.module.trade.service.order.handler;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import com.lxjl.juling.module.member.api.user.MemberUserApi;
-import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
 import com.lxjl.juling.module.promotion.api.point.PointActivityApi;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
@@ -15,9 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 
-import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_INSUFFICIENT_USER_POINTS;
-
 /**
  * 积分商城活动订单的 {@link TradeOrderHandler} 实现类
  *
@@ -28,8 +23,6 @@ public class TradePointOrderHandler implements TradeOrderHandler {
 
     @Resource
     private PointActivityApi pointActivityApi;
-    @Resource
-    private MemberUserApi memberUserApi;
 
     @Override
     public void beforeOrderCreate(TradeOrderDO order, List<TradeOrderItemDO> orderItems) {
@@ -38,11 +31,7 @@ public class TradePointOrderHandler implements TradeOrderHandler {
         }
         // 明确校验一下
         Assert.isTrue(orderItems.size() == 1, "积分商城活动兑换商品兑换时，只允许选择一个商品");
-        // 校验用户剩余积分是否足够兑换商品
-        MemberUserRespDTO user = memberUserApi.getUser(order.getUserId());
-        if (user.getPoint() < order.getUsePoint()) {
-            throw exception(ORDER_CREATE_FAIL_INSUFFICIENT_USER_POINTS);
-        }
+        // 注意：会员中心（会员积分账户）已下线，不再校验用户积分余额；订单的 usePoint 恒为 0
 
         // 扣减积分商城活动的库存
         pointActivityApi.updatePointStockDecr(order.getPointActivityId(),

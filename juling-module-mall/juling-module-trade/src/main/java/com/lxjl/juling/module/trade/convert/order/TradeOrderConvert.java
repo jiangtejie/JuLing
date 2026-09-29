@@ -9,7 +9,6 @@ import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
 import com.lxjl.juling.framework.common.util.string.StrUtils;
 import com.lxjl.juling.framework.dict.core.DictFrameworkUtils;
 import com.lxjl.juling.framework.ip.core.utils.AreaUtils;
-import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
 import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO;
 import com.lxjl.juling.module.product.api.property.dto.ProductPropertyValueDetailRespDTO;
@@ -222,15 +221,15 @@ public interface TradeOrderConvert {
         return reqBO;
     }
 
-    default AppTradeOrderSettlementRespVO convert(TradePriceCalculateRespBO calculate, MemberAddressRespDTO address) {
-        AppTradeOrderSettlementRespVO respVO = convert0(calculate, address);
-        if (address != null) {
-            respVO.getAddress().setAreaName(AreaUtils.format(address.getAreaId()));
-        }
-        return respVO;
+    default AppTradeOrderSettlementRespVO convert(TradePriceCalculateRespBO calculate) {
+        return convert0(calculate);
     }
 
-    AppTradeOrderSettlementRespVO convert0(TradePriceCalculateRespBO calculate, MemberAddressRespDTO address);
+    /**
+     * 会员中心（含会员地址簿）已下线，结算返回不再携带收货地址，address 恒为 null
+     */
+    @Mapping(target = "address", ignore = true)
+    AppTradeOrderSettlementRespVO convert0(TradePriceCalculateRespBO calculate);
 
     List<AppOrderExpressTrackRespDTO> convertList02(List<ExpressTrackRespDTO> list);
 

@@ -26,13 +26,14 @@ public class AppTradeOrderSettlementRespVO {
     @Schema(description = "费用", requiredMode = Schema.RequiredMode.REQUIRED)
     private Price price;
 
-    @Schema(description = "收件地址", requiredMode = Schema.RequiredMode.REQUIRED)
+    // 会员中心（含会员地址簿）已下线，恒为 null、不再消费；仅为兼容 H5 保留字段
+    @Schema(description = "收件地址（会员中心已下线，恒为 null）", requiredMode = Schema.RequiredMode.REQUIRED)
     private Address address;
 
-    @Schema(description = "已使用的积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
+    @Schema(description = "已使用的积分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
     private Integer usePoint;
 
-    @Schema(description = "总积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
+    @Schema(description = "总积分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
     private Integer totalPoint;
 
     /**
@@ -95,10 +96,10 @@ public class AppTradeOrderSettlementRespVO {
         @Schema(description = "优惠劵减免金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
         private Integer couponPrice;
 
-        @Schema(description = "积分抵扣的金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
+        @Schema(description = "积分抵扣的金额，单位：分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
         private Integer pointPrice;
 
-        @Schema(description = "VIP 减免金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "30")
+        @Schema(description = "VIP 减免金额，单位：分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "30")
         private Integer vipPrice;
 
         @Schema(description = "实际支付金额（总），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "450")

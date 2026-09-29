@@ -13,8 +13,6 @@ import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.util.json.JsonUtils;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
-import com.lxjl.juling.module.member.api.address.MemberAddressApi;
-import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.product.api.comment.ProductCommentApi;
 import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO;
 import com.lxjl.juling.module.promotion.api.combination.CombinationRecordApi;
@@ -108,8 +106,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     private TradeOrderAuditService tradeOrderAuditService;
 
     @Resource
-    private MemberAddressApi addressApi;
-    @Resource
     private ProductCommentApi productCommentApi;
     @Resource
     public SocialClientApi socialClientApi;
@@ -123,31 +119,11 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
     @Override
     public AppTradeOrderSettlementRespVO settlementOrder(Long userId, AppTradeOrderSettlementReqVO settlementReqVO) {
-        // 1. 获得收货地址
-        MemberAddressRespDTO address = getAddress(userId, settlementReqVO.getAddressId());
-        if (address != null) {
-            settlementReqVO.setAddressId(address.getId());
-        }
-
-        // 2. 计算价格
+        // 1. 计算价格
         TradePriceCalculateRespBO calculateRespBO = calculatePrice(userId, settlementReqVO);
 
-        // 3. 拼接返回
-        return TradeOrderConvert.INSTANCE.convert(calculateRespBO, address);
-    }
-
-    /**
-     * 获得用户地址
-     *
-     * @param userId    用户编号
-     * @param addressId 地址编号
-     * @return 地址
-     */
-    private MemberAddressRespDTO getAddress(Long userId, Long addressId) {
-        if (addressId != null) {
-            return addressApi.getAddress(addressId, userId);
-        }
-        return addressApi.getDefaultAddress(userId);
+        // 2. 拼接返回
+        return TradeOrderConvert.INSTANCE.convert(calculateRespBO);
     }
 
     /**
@@ -209,22 +185,13 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         // 物流信息
         order.setDeliveryType(createReqVO.getDeliveryType());
         if (Objects.equals(createReqVO.getDeliveryType(), DeliveryTypeEnum.EXPRESS.getType())) {
-            // 情况一：已选择收件地址簿中的地址，以地址簿为准
-            if (createReqVO.getAddressId() != null) {
-                MemberAddressRespDTO address = addressApi.getAddress(createReqVO.getAddressId(), userId);
-                Assert.notNull(address, "地址({}) 不能为空", createReqVO.getAddressId()); // 价格计算时，已经计算
-                order.setReceiverName(address.getName()).setReceiverMobile(address.getMobile())
-                        .setReceiverAreaId(address.getAreaId()).setReceiverDetailAddress(address.getDetailAddress());
-            } else {
-                // 情况二：未选择收件地址，回退使用请求中手填的收货信息（订货商城场景：允许不维护地址簿）
-                // 注意：该情况下价格计算不会走快递模板，即不计运费（见 TradeDeliveryPriceCalculator#calculateExpress）
-                if (StrUtil.hasBlank(createReqVO.getReceiverName(), createReqVO.getReceiverMobile(),
-                        createReqVO.getReceiverDetailAddress())) {
-                    throw exception(ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE);
-                }
-                order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile())
-                        .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
+            // 会员中心（含会员地址簿）已下线：收货信息一律以请求中手填的为准
+            if (StrUtil.hasBlank(createReqVO.getReceiverName(), createReqVO.getReceiverMobile(),
+                    createReqVO.getReceiverDetailAddress())) {
+                throw exception(ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE);
             }
+            order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile())
+                    .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
         }
         // 门店订货链 S1：快照下单门店（组织面 deptId + 经营面 customerId / 结算模式），并初始化审核状态
         TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());

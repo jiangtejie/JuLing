@@ -9,12 +9,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 /**
- * 会员用户 Base VO，提供给添加、修改、详细的子 VO 使用
+ * 订货账号 Base VO，提供给添加、修改、详细的子 VO 使用
  * 如果子 VO 存在差异的字段，请不要添加到这里，影响 Swagger 文档生成
  */
 @Data
@@ -62,15 +61,6 @@ public class MemberUserBaseVO {
 
     @Schema(description = "会员备注", example = "我是小备注")
     private String mark;
-
-    @Schema(description = "会员标签", example = "[1, 2]")
-    private List<Long> tagIds;
-
-    @Schema(description = "会员等级编号", example = "1")
-    private Long levelId;
-
-    @Schema(description = "用户分组编号", example = "1")
-    private Long groupId;
 
     @Schema(description = "订货主体的所属部门：门店账号=门店部门，代理人账号=代理部门",
             example = "134")

@@ -2,7 +2,7 @@ package com.lxjl.juling.module.statistics.service.trade;
 
 import com.lxjl.juling.module.statistics.controller.admin.common.vo.DataComparisonRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.trade.vo.*;
-import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
+import com.lxjl.juling.module.statistics.service.trade.bo.MemberAreaStatisticsRespBO;
 import com.lxjl.juling.module.statistics.service.trade.bo.TradeOrderSummaryRespBO;
 
 import java.time.LocalDateTime;

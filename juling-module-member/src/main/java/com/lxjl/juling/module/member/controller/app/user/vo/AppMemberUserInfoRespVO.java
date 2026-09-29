@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "用户 APP - 用户个人信息 Response VO")
+@Schema(description = "用户 APP - 订货账号个人信息 Response VO")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,32 +31,5 @@ public class AppMemberUserInfoRespVO {
 
     @Schema(description = "用户性别", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer sex;
-
-    @Schema(description = "积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-    private Integer point;
-
-    @Schema(description = "经验值", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Integer experience;
-
-    @Schema(description = "用户等级")
-    private Level level;
-
-    @Schema(description = "用户 App - 会员等级")
-    @Data
-    public static class Level {
-
-        @Schema(description = "等级编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "等级名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
-        private String name;
-
-        @Schema(description = "等级", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Integer level;
-
-        @Schema(description = "等级图标", example = "https://github.com/jiangtejie/JuLing")
-        private String icon;
-
-    }
 
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 用户信息 Response DTO
+ * 订货账号信息 Response DTO
  *
  * @author 亚特
  */
@@ -44,17 +44,7 @@ public class MemberUserRespDTO {
      */
     private LocalDateTime createTime;
 
-    // ========== 其它信息 ==========
-
-    /**
-     * 会员级别编号
-     */
-    private Long levelId;
-
-    /**
-     * 积分
-     */
-    private Integer point;
+    // ========== 订货主体 ==========
 
     /**
      * 所属部门（门店节点）编号

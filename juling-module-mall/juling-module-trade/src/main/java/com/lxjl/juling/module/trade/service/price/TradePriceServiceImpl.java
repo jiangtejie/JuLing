@@ -2,20 +2,15 @@ package com.lxjl.juling.module.trade.service.price;
 
 import cn.hutool.core.collection.CollUtil;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
-import com.lxjl.juling.module.member.api.level.dto.MemberLevelRespDTO;
 import com.lxjl.juling.module.product.api.sku.ProductSkuApi;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuRespDTO;
 import com.lxjl.juling.module.product.api.spu.ProductSpuApi;
 import com.lxjl.juling.module.product.api.spu.dto.ProductSpuRespDTO;
-import com.lxjl.juling.module.promotion.api.discount.DiscountActivityApi;
-import com.lxjl.juling.module.promotion.api.discount.dto.DiscountProductRespDTO;
 import com.lxjl.juling.module.promotion.api.reward.RewardActivityApi;
 import com.lxjl.juling.module.promotion.api.reward.dto.RewardActivityMatchRespDTO;
-import com.lxjl.juling.module.promotion.enums.common.PromotionTypeEnum;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeProductSettlementRespVO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
-import com.lxjl.juling.module.trade.service.price.calculator.TradeDiscountActivityPriceCalculator;
 import com.lxjl.juling.module.trade.service.price.calculator.TradePriceCalculator;
 import com.lxjl.juling.module.trade.service.price.calculator.TradePriceCalculatorHelper;
 import jakarta.annotation.Resource;
@@ -47,15 +42,10 @@ public class TradePriceServiceImpl implements TradePriceService {
     @Resource
     private ProductSpuApi productSpuApi;
     @Resource
-    private DiscountActivityApi discountActivityApi;
-    @Resource
     private RewardActivityApi rewardActivityApi;
 
     @Resource
     private List<TradePriceCalculator> priceCalculators;
-
-    @Resource
-    private TradeDiscountActivityPriceCalculator discountActivityPriceCalculator;
 
     @Override
     public TradePriceCalculateRespBO calculateOrderPrice(TradePriceCalculateReqBO calculateReqBO) {
@@ -106,44 +96,15 @@ public class TradePriceServiceImpl implements TradePriceService {
         // 1.1 获得 SPU 与 SKU 的映射
         List<ProductSkuRespDTO> allSkuList = productSkuApi.getSkuListBySpuId(spuIds);
         Map<Long, List<ProductSkuRespDTO>> spuIdAndSkuListMap = convertMultiMap(allSkuList, ProductSkuRespDTO::getSpuId);
-        // 1.2 获得会员等级
-        MemberLevelRespDTO level = discountActivityPriceCalculator.getMemberLevel(userId);
-        // 1.3 获得限时折扣活动
-        Map<Long, DiscountProductRespDTO> skuIdAndDiscountMap = convertMap(
-                discountActivityApi.getMatchDiscountProductListBySkuIds(convertSet(allSkuList, ProductSkuRespDTO::getId)),
-                DiscountProductRespDTO::getSkuId);
-        // 1.4 获得满减送活动
-       List<RewardActivityMatchRespDTO> rewardActivityMap = rewardActivityApi.getMatchRewardActivityListBySpuIds(spuIds);
+        // 1.2 获得满减送活动
+        List<RewardActivityMatchRespDTO> rewardActivityMap = rewardActivityApi.getMatchRewardActivityListBySpuIds(spuIds);
 
         // 2. 价格计算
         return convertList(spuIds, spuId -> {
             AppTradeProductSettlementRespVO spuVO = new AppTradeProductSettlementRespVO().setSpuId(spuId);
-            // 2.1 优惠价格
+            // 2.1 商品 SKU
             List<ProductSkuRespDTO> skuList = spuIdAndSkuListMap.get(spuId);
-            List<AppTradeProductSettlementRespVO.Sku> skuVOList = convertList(skuList, sku -> {
-                AppTradeProductSettlementRespVO.Sku skuVO = new AppTradeProductSettlementRespVO.Sku()
-                        .setId(sku.getId());
-                TradePriceCalculateRespBO.OrderItem orderItem = new TradePriceCalculateRespBO.OrderItem()
-                        .setPayPrice(sku.getPrice()).setCount(1);
-                // 计算限时折扣的优惠价格
-                DiscountProductRespDTO discountProduct = skuIdAndDiscountMap.get(sku.getId());
-                Integer discountPrice = discountActivityPriceCalculator.calculateActivityPrice(discountProduct, orderItem);
-                // 计算 VIP 优惠金额
-                Integer vipPrice = discountActivityPriceCalculator.calculateVipPrice(level, orderItem);
-                if (discountPrice <= 0 && vipPrice <= 0) {
-                    return skuVO;
-                }
-                // 选择一个大的优惠
-                if (discountPrice > vipPrice) {
-                    return skuVO.setPromotionPrice(sku.getPrice() - discountPrice)
-                            .setPromotionType(PromotionTypeEnum.DISCOUNT_ACTIVITY.getType())
-                            .setPromotionId(discountProduct.getId()).setPromotionEndTime(discountProduct.getActivityEndTime());
-                } else {
-                    return skuVO.setPromotionPrice(sku.getPrice() - vipPrice)
-                            .setPromotionType(PromotionTypeEnum.MEMBER_LEVEL.getType());
-                }
-            });
-            spuVO.setSkus(skuVOList);
+            spuVO.setSkus(convertList(skuList, sku -> new AppTradeProductSettlementRespVO.Sku().setId(sku.getId())));
             // 2.2 满减送活动
             RewardActivityMatchRespDTO rewardActivity = CollUtil.findOne(rewardActivityMap,
                     activity -> CollUtil.contains(activity.getSpuIds(), spuId));
