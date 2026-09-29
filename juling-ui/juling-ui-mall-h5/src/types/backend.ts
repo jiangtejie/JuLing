@@ -111,15 +111,7 @@ export interface AppAuthLoginRespVO {
   openid: string | null;
 }
 
-/** 会员等级 */
-export interface AppMemberUserLevelRespVO {
-  id: number;
-  name: string;
-  level: number;
-  icon: string;
-}
-
-/** 会员信息（GET /member/user/get） */
+/** 会员信息（GET /member/user/get；会员中心已下线，只剩订货账号相关字段） */
 export interface AppMemberUserInfoRespVO {
   id: number;
   nickname: string;
@@ -131,9 +123,6 @@ export interface AppMemberUserInfoRespVO {
   email: string;
   /** 性别 */
   sex: number;
-  point: number;
-  experience: number;
-  level: AppMemberUserLevelRespVO | null;
 }
 
 /* -------------------------------- 购物车 -------------------------------- */

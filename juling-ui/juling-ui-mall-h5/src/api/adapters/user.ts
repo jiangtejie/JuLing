@@ -7,7 +7,7 @@ import { normalizeOptionalAssetUrl } from '../../utils/asset.ts';
  *
  * 注意：后端 `AppMemberUserInfoRespVO` **不提供** `customerId` / `customerName` / `verified`
  * （订货客户认证标识），前端领域模型保留这些可选字段但恒为空——见计划 D2。
- * `level` 对象在此拍平为 `levelName`。
+ * 会员等级 / 积分 / 经验已随会员中心物理下线，这里不再映射。
  * `username`（订货账号）与 `mobile` 均为可空字段（mobile 已非必填），空值归一为 `undefined`。
  */
 
@@ -35,6 +35,5 @@ export function adaptUserInfo(raw: AppMemberUserInfoRespVO): UserInfo {
     avatar: normalizeOptionalAssetUrl(raw.avatar),
     mobile: optionalText(raw.mobile),
     username: optionalText(raw.username),
-    levelName: raw.level?.name,
   };
 }

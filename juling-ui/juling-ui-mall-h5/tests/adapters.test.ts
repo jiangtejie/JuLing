@@ -751,7 +751,7 @@ test('adaptLoginResult：expiresTime 归一为 number', () => {
   assert.equal(result.expiresTime, 1735689600000);
 });
 
-test('adaptUserInfo：level 拍平为 levelName，未提供字段留空', () => {
+test('adaptUserInfo：基础字段映射，未提供的订货客户字段留空', () => {
   const user = adaptUserInfo({
     id: 1,
     nickname: '张经理',
@@ -759,41 +759,19 @@ test('adaptUserInfo：level 拍平为 levelName，未提供字段留空', () => 
     mobile: '13800138000',
     email: '',
     sex: 1,
-    point: 0,
-    experience: 0,
-    level: { id: 1, name: '金牌经销商', level: 3, icon: '' },
   });
   assert.equal(user.nickname, '张经理');
-  assert.equal(user.levelName, '金牌经销商');
   assert.equal(user.customerName, undefined);
   assert.equal(user.verified, undefined);
 });
 
-test('adaptUserInfo：level 为 null 时不报错', () => {
-  const user = adaptUserInfo({
-    id: 1,
-    nickname: 'n',
-    avatar: '',
-    mobile: '',
-    email: '',
-    sex: 0,
-    point: 0,
-    experience: 0,
-    level: null,
-  });
-  assert.equal(user.levelName, undefined);
-});
-
-/** 会员信息最小字段集：只覆盖本组用例关心的可空字段 */
+/** 会员信息最小字段集：只覆盖本组用例关心的可空字段（会员中心已下线，无等级/积分/经验） */
 const baseMemberVO = {
   id: 1,
   nickname: '亚特总店',
   avatar: '',
   email: '',
   sex: 0,
-  point: 0,
-  experience: 0,
-  level: null,
 };
 
 test('adaptUserInfo：username（订货账号）透传，空串 / 缺失归一为 undefined', () => {

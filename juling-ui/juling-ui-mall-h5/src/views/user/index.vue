@@ -39,11 +39,7 @@
     { label: '我的订货单', icon: 'i-carbon-receipt', to: '/order/list' },
     // 我的账：门店往来台账（只读），名下多门店时可按门店看逐笔明细
     { label: '我的账', icon: 'i-carbon-wallet', to: '/user/account' },
-    { label: '收货地址', icon: 'i-carbon-location', to: '' },
-    { label: '企业资料', icon: 'i-carbon-building', to: '' },
-    { label: '联系客服', icon: 'i-carbon-headset', to: '' },
     { label: '修改密码', icon: 'i-carbon-password', to: '/user/password' },
-    { label: '系统设置', icon: 'i-carbon-settings', to: '' },
   ];
 
   /**
@@ -70,13 +66,9 @@
     void router.push({ path: '/order/list', query: status ? { status } : {} });
   }
 
-  /** 菜单点击：已接入的直接跳转；未接入的（地址簿 / 企业资料 / 客服 / 设置）给出明确反馈 */
+  /** 菜单点击：本页菜单全部已接入（会员中心已下线，不再有占位入口） */
   function onMenuClick(menu: { label: string; to: string }): void {
-    if (menu.to) {
-      void router.push(menu.to);
-      return;
-    }
-    showToast('功能开发中，敬请期待');
+    void router.push(menu.to);
   }
 
   async function onLogout(): Promise<void> {
@@ -139,10 +131,8 @@
         <template v-if="userStore.isLogin">
           <div class="user__name">{{ userStore.nickname }}</div>
           <div class="user__sub">
-            <!-- 后端未提供订货客户认证标识（verified / customerName），降级展示会员等级 -->
-            <van-tag v-if="userStore.userInfo?.levelName" type="success" plain>
-              {{ userStore.userInfo.levelName }}
-            </van-tag>
+            <!-- 会员等级已随会员中心下线，这里只展示订货账号（= 订货人姓名） -->
+            <van-tag v-if="displayAccount" type="success" plain>{{ displayAccount }}</van-tag>
           </div>
         </template>
         <template v-else>

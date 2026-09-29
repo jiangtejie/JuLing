@@ -38,8 +38,6 @@ export interface UserInfo {
   mobile?: string;
   /** 订货账号（总部下发的登录账号，旧数据可能为空） */
   username?: string;
-  /** 会员等级名称 */
-  levelName?: string;
   /** 客户（门店 / 经销商）ID，订货业务常用 */
   customerId?: number;
   customerName?: string;
