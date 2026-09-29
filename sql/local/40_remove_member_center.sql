@@ -81,6 +81,11 @@ DELETE FROM system_role_menu WHERE menu_id IN (SELECT id FROM tmp_menu_to_delete
 DELETE FROM system_menu WHERE id IN (SELECT id FROM tmp_menu_to_delete);
 DROP TABLE tmp_menu_to_delete;
 
+-- 2317（订货账号）子树是被保留的，但它下面还挂着两个指向已下线能力的按钮权限：
+-- 2335 用户等级修改 member:user:update-level、2363 用户积分修改 member:user:update-point —— 一并删除
+DELETE FROM system_role_menu WHERE menu_id IN (2335, 2363);
+DELETE FROM system_menu WHERE id IN (2335, 2363);
+
 -- 会员管理 → 订货账号（连同按钮文案）
 UPDATE system_menu SET name = '订货账号', icon = 'lucide:key-round', sort = 1, updater = 'script40', update_time = now()
 WHERE id = 2317 AND deleted = 0;
