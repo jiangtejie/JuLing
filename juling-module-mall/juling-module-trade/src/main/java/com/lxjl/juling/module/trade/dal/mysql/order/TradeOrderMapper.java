@@ -10,7 +10,6 @@ import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderPageReq
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderAuditStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
-import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.lxjl.juling.module.erp.api.customer.enums.StoreTypeEnum;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -97,15 +96,13 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<TradeOrderDO>()
                 .eq(TradeOrderDO::getUserId, userId)
                 .eqIfPresent(TradeOrderDO::getStatus, reqVO.getStatus())
-                .eqIfPresent(TradeOrderDO::getCommentStatus, reqVO.getCommentStatus())
                 .orderByDesc(TradeOrderDO::getId)); // TODO 亚特：未来不同的 status，不同的排序
     }
 
-    default Long selectCountByUserIdAndStatus(Long userId, Integer status, Boolean commentStatus) {
+    default Long selectCountByUserIdAndStatus(Long userId, Integer status) {
         return selectCount(new LambdaQueryWrapperX<TradeOrderDO>()
                 .eq(TradeOrderDO::getUserId, userId)
-                .eqIfPresent(TradeOrderDO::getStatus, status)
-                .eqIfPresent(TradeOrderDO::getCommentStatus, commentStatus));
+                .eqIfPresent(TradeOrderDO::getStatus, status));
     }
 
     default TradeOrderDO selectOrderByIdAndUserId(Long orderId, Long loginUserId) {
@@ -124,40 +121,6 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
         return selectList(new LambdaUpdateWrapper<TradeOrderDO>()
                 .eq(TradeOrderDO::getStatus, status)
                 .lt(TradeOrderDO::getDeliveryTime, deliveryTime));
-    }
-
-    default List<TradeOrderDO> selectListByStatusAndReceiveTimeLt(Integer status, LocalDateTime receive,
-                                                                  Boolean commentStatus) {
-        return selectList(new LambdaUpdateWrapper<TradeOrderDO>()
-                .eq(TradeOrderDO::getStatus, status)
-                .lt(TradeOrderDO::getReceiveTime, receive)
-                .eq(TradeOrderDO::getCommentStatus, commentStatus));
-    }
-
-    default List<TradeOrderDO> selectListByUserIdAndActivityId(Long userId, Long activityId, TradeOrderTypeEnum type) {
-        LambdaQueryWrapperX<TradeOrderDO> queryWrapperX = new LambdaQueryWrapperX<>();
-        queryWrapperX.eq(TradeOrderDO::getUserId, userId);
-        if (TradeOrderTypeEnum.isSeckill(type.getType())) {
-            queryWrapperX.eq(TradeOrderDO::getSeckillActivityId, activityId);
-        }
-        if (TradeOrderTypeEnum.isBargain(type.getType())) {
-            queryWrapperX.eq(TradeOrderDO::getBargainActivityId, activityId);
-        }
-        if (TradeOrderTypeEnum.isCombination(type.getType())) {
-            queryWrapperX.eq(TradeOrderDO::getCombinationActivityId, activityId);
-        }
-        if (TradeOrderTypeEnum.isPoint(type.getType())) {
-            queryWrapperX.eq(TradeOrderDO::getPointActivityId, activityId);
-        }
-        return selectList(queryWrapperX);
-    }
-
-    default TradeOrderDO selectByUserIdAndCombinationActivityIdAndStatus(Long userId, Long combinationActivityId, Integer status) {
-        return selectOne(new LambdaQueryWrapperX<TradeOrderDO>()
-                .eq(TradeOrderDO::getUserId, userId)
-                .eq(TradeOrderDO::getStatus, status)
-                .eq(TradeOrderDO::getCombinationActivityId, combinationActivityId)
-        );
     }
 
 }

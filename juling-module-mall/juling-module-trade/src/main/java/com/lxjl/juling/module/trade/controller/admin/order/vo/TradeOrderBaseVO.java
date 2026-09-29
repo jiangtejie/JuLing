@@ -166,19 +166,5 @@ public class TradeOrderBaseVO {
     @Schema(description = "退款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
     private Integer refundPrice;
 
-    // ========== 营销基本信息 ==========
-
-    @Schema(description = "优惠劵编号", example = "1024")
-    private Long couponId;
-
-    @Schema(description = "优惠劵减免金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer couponPrice;
-
-    @Schema(description = "积分抵扣的金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer pointPrice;
-
-    @Schema(description = "VIP 减免金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "888")
-    private Integer vipPrice;
-
 
 }

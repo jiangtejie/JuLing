@@ -33,8 +33,7 @@ public class DefaultController {
     }
 
     @RequestMapping(value = { "/admin-api/product/**", // 商品中心
-            "/admin-api/trade/**", // 交易中心
-            "/admin-api/promotion/**" }) // 营销中心
+            "/admin-api/trade/**" }) // 交易中心
     public CommonResult<Boolean> mall404() {
         return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                 "[商城系统 juling-module-mall 未启用或接口不存在][模块启停见 README「模块启停」章节]");

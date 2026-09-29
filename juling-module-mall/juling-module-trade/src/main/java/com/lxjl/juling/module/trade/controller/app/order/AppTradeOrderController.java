@@ -4,7 +4,6 @@ import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.trade.controller.app.order.vo.*;
-import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemRespVO;
 import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
@@ -192,19 +191,16 @@ public class AppTradeOrderController {
     public CommonResult<Map<String, Long>> getOrderCount() {
         Map<String, Long> orderCount = Maps.newLinkedHashMapWithExpectedSize(5);
         // 全部
-        orderCount.put("allCount", tradeOrderQueryService.getOrderCount(getLoginUserId(), null, null));
+        orderCount.put("allCount", tradeOrderQueryService.getOrderCount(getLoginUserId(), null));
         // 待付款（未支付）
         orderCount.put("unpaidCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.UNPAID.getStatus(), null));
+                TradeOrderStatusEnum.UNPAID.getStatus()));
         // 待发货
         orderCount.put("undeliveredCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.UNDELIVERED.getStatus(), null));
+                TradeOrderStatusEnum.UNDELIVERED.getStatus()));
         // 待收货
         orderCount.put("deliveredCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.DELIVERED.getStatus(), null));
-        // 待评价
-        orderCount.put("uncommentedCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.COMPLETED.getStatus(), false));
+                TradeOrderStatusEnum.DELIVERED.getStatus()));
         // 售后数量
         orderCount.put("afterSaleCount", afterSaleService.getApplyingAfterSaleCount(getLoginUserId()));
         return success(orderCount);
@@ -242,12 +238,6 @@ public class AppTradeOrderController {
     public CommonResult<AppTradeOrderItemRespVO> getOrderItem(@RequestParam("id") Long id) {
         TradeOrderItemDO item = tradeOrderQueryService.getOrderItem(getLoginUserId(), id);
         return success(TradeOrderConvert.INSTANCE.convert03(item));
-    }
-
-    @PostMapping("/item/create-comment")
-    @Operation(summary = "创建交易订单项的评价")
-    public CommonResult<Long> createOrderItemComment(@RequestBody AppTradeOrderItemCommentCreateReqVO createReqVO) {
-        return success(tradeOrderUpdateService.createOrderItemCommentByMember(getLoginUserId(), createReqVO));
     }
 
 }

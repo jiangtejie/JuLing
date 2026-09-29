@@ -7,11 +7,8 @@ import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderUpdatePr
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderSettlementReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderSettlementRespVO;
-import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 /**
  * 交易订单【写】Service 接口
@@ -133,32 +130,6 @@ public interface TradeOrderUpdateService {
     void updateOrderItemWhenAfterSaleCancel(@NotNull Long id);
 
     /**
-     * 【会员】创建订单项的评论
-     *
-     * @param userId      用户编号
-     * @param createReqVO 创建请求
-     * @return 得到评价 id
-     */
-    Long createOrderItemCommentByMember(Long userId, AppTradeOrderItemCommentCreateReqVO createReqVO);
-
-    /**
-     * 【系统】创建订单项的评论
-     *
-     * @return 被评论的订单数
-     */
-    int createOrderItemCommentBySystem();
-
-    /**
-     * 更新拼团相关信息到订单
-     *
-     * @param orderId             订单编号
-     * @param activityId          拼团活动编号
-     * @param combinationRecordId 拼团记录编号
-     * @param headId              团长编号
-     */
-    void updateOrderCombinationInfo(Long orderId, Long activityId, Long combinationRecordId, Long headId);
-
-    /**
      * 取消支付订单
      *
      * @param userId           用户编号
@@ -171,21 +142,12 @@ public interface TradeOrderUpdateService {
      * 更新订单为「已收款、待发货」（线下收款用）
      *
      * 后台核验付款凭证、累计收款金额达到应收金额时调用；
-     * 后置处理与线上支付成功完全一致（拼团、积分等 handler 照常执行）。
+     * 后置处理与线上支付成功完全一致（订单 handler 照常执行）。
      *
      * @param id             订单编号
      * @param paidAmount     已确认收款金额，单位：分
      * @param payChannelCode 收款渠道（字典 pay_channel_code 的线下值）
      */
     void updateOrderPaidByOffline(Long id, Integer paidAmount, String payChannelCode);
-
-    /**
-     * 更新下单赠送的优惠券编号到订单
-     *
-     * @param userId        用户编号
-     * @param orderId       订单编号
-     * @param giveCouponIds 赠送的优惠券编号列表
-     */
-    void updateOrderGiveCouponIds(Long userId, Long orderId, List<Long> giveCouponIds);
 
 }

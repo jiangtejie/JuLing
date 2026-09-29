@@ -126,7 +126,7 @@ DROP TABLE tmp_del_menu;
 -- ---------------------------------------------------------------------------
 DELETE FROM system_dict_data WHERE dict_type LIKE 'promotion%';
 DELETE FROM system_dict_type WHERE type LIKE 'promotion%';
-DELETE FROM infra_job WHERE handler_name IN ('combinationRecordExpireJob', 'couponExpireJob');
+DELETE FROM infra_job WHERE handler_name IN ('combinationRecordExpireJob', 'couponExpireJob', 'tradeOrderAutoCommentJob');
 
 -- ---------------------------------------------------------------------------
 -- 6. 自检
@@ -149,6 +149,6 @@ FROM system_menu WHERE deleted=0 AND parent_id = 2362 AND type IN (1,2)
 UNION ALL
 SELECT 'promotion 字典残留', COALESCE(count(*)::text, '0') FROM system_dict_type WHERE type LIKE 'promotion%'
 UNION ALL
-SELECT '营销定时任务残留', COALESCE(count(*)::text, '0') FROM infra_job WHERE handler_name IN ('combinationRecordExpireJob','couponExpireJob');
+SELECT '营销/评论定时任务残留', COALESCE(count(*)::text, '0') FROM infra_job WHERE handler_name IN ('combinationRecordExpireJob','couponExpireJob','tradeOrderAutoCommentJob');
 
 COMMIT;

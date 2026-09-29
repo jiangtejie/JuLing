@@ -14,7 +14,4 @@ public class AppTradeOrderPageReqVO extends PageParam {
     @InEnum(value = TradeOrderStatusEnum.class, message = "订单状态必须是 {value}")
     private Integer status;
 
-    @Schema(description = "是否评价", example = "true")
-    private Boolean commentStatus;
-
 }

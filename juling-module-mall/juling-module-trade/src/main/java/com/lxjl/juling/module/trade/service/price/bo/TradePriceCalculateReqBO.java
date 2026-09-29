@@ -24,21 +24,6 @@ public class TradePriceCalculateReqBO {
     private Long userId;
 
     /**
-     * 优惠劵编号
-     *
-     * 对应 CouponDO 的 id 编号。本轮保留：优惠劵促销仍在消费该字段
-     */
-    private Long couponId;
-
-    /**
-     * 是否使用积分
-     *
-     * 会员中心已下线，恒为 false、不再消费；仅为兼容 H5 保留字段
-     */
-    @NotNull(message = "是否使用积分不能为空")
-    private Boolean pointStatus;
-
-    /**
      * 配送方式
      *
      * 枚举 {@link DeliveryTypeEnum}
@@ -55,35 +40,6 @@ public class TradePriceCalculateReqBO {
      */
     @NotNull(message = "商品数组不能为空")
     private List<Item> items;
-
-    // ========== 秒杀活动相关字段 ==========
-    /**
-     * 秒杀活动编号
-     */
-    private Long seckillActivityId;
-
-    // ========== 拼团活动相关字段 ==========
-    /**
-     * 拼团活动编号
-     */
-    private Long combinationActivityId;
-
-    /**
-     * 拼团团长编号
-     */
-    private Long combinationHeadId;
-
-    // ========== 砍价活动相关字段 ==========
-    /**
-     * 砍价记录编号
-     */
-    private Long bargainRecordId;
-
-    // ========== 积分商城活动相关字段 ==========
-    /**
-     * 积分商城活动编号
-     */
-    private Long pointActivityId;
 
     /**
      * 商品 SKU

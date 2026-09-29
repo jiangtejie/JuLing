@@ -79,10 +79,6 @@ public class TradeOrderRespDTO {
      * 商家备注
      */
     private String remark;
-    /**
-     * 是否评价
-     */
-    private Boolean commentStatus;
 
     // ========== 价格 + 支付基本信息 ==========
     /**

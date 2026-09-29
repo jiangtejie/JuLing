@@ -63,8 +63,6 @@ export interface AppProductSkuDetailRespVO {
   /** 销售价，单位：分 */
   price: number;
   marketPrice: number;
-  /** VIP 价，单位：分 */
-  vipPrice: number;
   picUrl: string;
   stock: number;
   /** 重量，kg */

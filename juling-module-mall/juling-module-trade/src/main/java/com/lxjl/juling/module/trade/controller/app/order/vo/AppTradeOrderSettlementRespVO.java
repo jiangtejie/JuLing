@@ -1,13 +1,11 @@
 package com.lxjl.juling.module.trade.controller.app.order.vo;
 
 import com.lxjl.juling.module.trade.controller.app.base.property.AppProductPropertyValueDetailRespVO;
-import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Schema(description = "用户 App - 交易订单结算信息 Response VO")
@@ -20,28 +18,12 @@ public class AppTradeOrderSettlementRespVO {
     @Schema(description = "购物项数组", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<Item> items;
 
-    @Schema(description = "优惠劵数组", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<Coupon> coupons; // 可用 + 不可用
-
     @Schema(description = "费用", requiredMode = Schema.RequiredMode.REQUIRED)
     private Price price;
 
     // 会员中心（含会员地址簿）已下线，恒为 null、不再消费；仅为兼容 H5 保留字段
     @Schema(description = "收件地址（会员中心已下线，恒为 null）", requiredMode = Schema.RequiredMode.REQUIRED)
     private Address address;
-
-    @Schema(description = "已使用的积分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-    private Integer usePoint;
-
-    @Schema(description = "总积分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-    private Integer totalPoint;
-
-    /**
-     * 营销活动数组
-     *
-     * 只对应 {@link TradePriceCalculateRespBO.Price#items} 商品匹配的活动
-     */
-    private List<TradePriceCalculateRespBO.Promotion> promotions;
 
     @Schema(description = "购物项")
     @Data
@@ -93,15 +75,6 @@ public class AppTradeOrderSettlementRespVO {
         @Schema(description = "运费金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
         private Integer deliveryPrice;
 
-        @Schema(description = "优惠劵减免金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-        private Integer couponPrice;
-
-        @Schema(description = "积分抵扣的金额，单位：分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
-        private Integer pointPrice;
-
-        @Schema(description = "VIP 减免金额，单位：分（会员中心已下线，恒为 0）", requiredMode = Schema.RequiredMode.REQUIRED, example = "30")
-        private Integer vipPrice;
-
         @Schema(description = "实际支付金额（总），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "450")
         private Integer payPrice;
 
@@ -130,45 +103,6 @@ public class AppTradeOrderSettlementRespVO {
 
         @Schema(description = "是否默认收件地址", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
         private Boolean defaultStatus;
-
-    }
-
-    @Schema(description = "优惠劵信息")
-    @Data
-    public static class Coupon {
-
-        @Schema(description = "优惠劵编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "优惠劵名", requiredMode = Schema.RequiredMode.REQUIRED, example = "春节送送送")
-        private String name;
-
-        @Schema(description = "是否设置满多少金额可用", requiredMode = Schema.RequiredMode.REQUIRED, example = "100") // 单位：分；0 - 不限制
-        private Integer usePrice;
-
-        @Schema(description = "固定日期 - 生效开始时间")
-        private LocalDateTime validStartTime;
-
-        @Schema(description = "固定日期 - 生效结束时间")
-        private LocalDateTime validEndTime;
-
-        @Schema(description = "优惠类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Integer discountType;
-
-        @Schema(description = "折扣百分比", example = "80") //  例如说，80% 为 80
-        private Integer discountPercent;
-
-        @Schema(description = "优惠金额", example = "10")
-        private Integer discountPrice;
-
-        @Schema(description = "折扣上限", example = "100") // 单位：分，仅在 discountType 为 PERCENT 使用
-        private Integer discountLimitPrice;
-
-        @Schema(description = "是否可用", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-        private Boolean match;
-
-        @Schema(description = "不可用原因", example = "优惠劵已过期")
-        private String mismatchReason;
 
     }
 

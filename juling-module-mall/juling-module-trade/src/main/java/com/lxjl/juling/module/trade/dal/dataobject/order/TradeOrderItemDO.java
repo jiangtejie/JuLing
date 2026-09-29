@@ -81,13 +81,6 @@ public class TradeOrderItemDO extends BaseDO {
      * 购买数量
      */
     private Integer count;
-    /**
-     * 是否评价
-     *
-     * true - 已评价
-     * false - 未评价
-     */
-    private Boolean commentStatus;
 
     // ========== 价格 + 支付基本信息 ==========
 
@@ -118,45 +111,11 @@ public class TradeOrderItemDO extends BaseDO {
      * 应付金额（总），单位：分
      *
      * = {@link #price} * {@link #count}
-     * - {@link #couponPrice}
-     * - {@link #pointPrice}
      * - {@link #discountPrice}
      * + {@link #deliveryPrice}
      * + {@link #adjustPrice}
-     * - {@link #vipPrice}
      */
     private Integer payPrice;
-
-    // ========== 营销基本信息 ==========
-
-    /**
-     * 优惠劵减免金额，单位：分
-     *
-     * 对应 taobao 的 trade.coupon_fee 字段
-     */
-    private Integer couponPrice;
-    /**
-     * 积分抵扣的金额，单位：分
-     *
-     * 对应 taobao 的 trade.point_fee 字段
-     */
-    private Integer pointPrice;
-    /**
-     * 使用的积分
-     *
-     * 目的：用于后续取消或者售后订单时，需要归还赠送
-     */
-    private Integer usePoint;
-    /**
-     * 赠送的积分
-     *
-     * 目的：用于后续取消或者售后订单时，需要扣减赠送
-     */
-    private Integer givePoint;
-    /**
-     * VIP 减免金额，单位：分
-     */
-    private Integer vipPrice;
 
     // ========== 售后基本信息 ==========
 

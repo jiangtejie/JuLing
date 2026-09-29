@@ -189,7 +189,6 @@ logging:
     com.lxjl.juling.module.tool.dal.mysql: debug
     com.lxjl.juling.module.member.dal.mysql: debug
     com.lxjl.juling.module.trade.dal.mysql: debug
-    com.lxjl.juling.module.promotion.dal.mysql: debug
     com.lxjl.juling.module.statistics.dal.mysql: debug
     com.lxjl.juling.module.crm.dal.mysql: debug
     com.lxjl.juling.module.erp.dal.mysql: debug

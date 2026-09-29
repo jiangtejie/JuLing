@@ -2,7 +2,6 @@ package com.lxjl.juling.module.trade.dal.dataobject.order;
 
 import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
-import com.lxjl.juling.framework.mybatis.core.type.LongListTypeHandler;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderCancelTypeEnum;
@@ -10,14 +9,10 @@ import com.lxjl.juling.module.trade.enums.order.TradeOrderRefundStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 交易订单 DO
@@ -104,13 +99,6 @@ public class TradeOrderDO extends BaseDO {
      * 商家备注
      */
     private String remark;
-    /**
-     * 是否评价
-     *
-     * true - 已评价
-     * false - 未评价
-     */
-    private Boolean commentStatus;
 
     // ========== 价格 + 支付基本信息 ==========
 
@@ -237,12 +225,9 @@ public class TradeOrderDO extends BaseDO {
      * 应付金额（总），单位：分
      *
      * = {@link #totalPrice}
-     * - {@link #couponPrice}
-     * - {@link #pointPrice}
      * - {@link #discountPrice}
      * + {@link #deliveryPrice}
      * + {@link #adjustPrice}
-     * - {@link #vipPrice}
      */
     private Integer payPrice;
 
@@ -314,103 +299,5 @@ public class TradeOrderDO extends BaseDO {
      * 也就说，一个订单最终产生多少金额的收入 = payPrice - refundPrice
      */
     private Integer refundPrice;
-
-    // ========== 营销基本信息 ==========
-    /**
-     * 优惠劵编号
-     */
-    private Long couponId;
-    /**
-     * 优惠劵减免金额，单位：分
-     *
-     * 对应 taobao 的 trade.coupon_fee 字段
-     */
-    private Integer couponPrice;
-    /**
-     * 使用的积分
-     */
-    private Integer usePoint;
-    /**
-     * 积分抵扣的金额，单位：分
-     *
-     * 对应 taobao 的 trade.point_fee 字段
-     */
-    private Integer pointPrice;
-    /**
-     * 赠送的积分
-     */
-    private Integer givePoint;
-    /**
-     * 退还的使用的积分
-     */
-    private Integer refundPoint;
-    /**
-     * VIP 减免金额，单位：分
-     */
-    private Integer vipPrice;
-
-    /**
-     * 赠送的优惠劵
-     *
-     * key: 优惠劵模版编号
-     * value：对应的优惠券数量
-     *
-     * 目的：用于订单支付后赠送优惠券
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<Long, Integer> giveCouponTemplateCounts;
-    /**
-     * 赠送的优惠劵编号
-     *
-     * 目的：用于后续取消或者售后订单时，需要扣减赠送
-     */
-    @TableField(typeHandler = LongListTypeHandler.class)
-    private List<Long> giveCouponIds;
-
-    /**
-     * 秒杀活动编号
-     *
-     * 关联 SeckillActivityDO 的 id 字段
-     */
-    private Long seckillActivityId;
-
-    /**
-     * 砍价活动编号
-     *
-     * 关联 BargainActivityDO 的 id 字段
-     */
-    private Long bargainActivityId;
-    /**
-     * 砍价记录编号
-     *
-     * 关联 BargainRecordDO 的 id 字段
-     */
-    private Long bargainRecordId;
-
-    /**
-     * 拼团活动编号
-     *
-     * 关联 CombinationActivityDO 的 id 字段
-     */
-    private Long combinationActivityId;
-    /**
-     * 拼团团长编号
-     *
-     * 关联 CombinationRecordDO 的 headId 字段
-     */
-    private Long combinationHeadId;
-    /**
-     * 拼团记录编号
-     *
-     * 关联 CombinationRecordDO 的 id 字段
-     */
-    private Long combinationRecordId;
-
-    /**
-     * 积分商城活动的编号
-     *
-     * 关联 PointActivityDO 的 id 字段
-     */
-    private Long pointActivityId;
 
 }

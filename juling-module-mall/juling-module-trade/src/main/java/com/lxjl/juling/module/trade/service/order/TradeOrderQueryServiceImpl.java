@@ -75,11 +75,6 @@ public class TradeOrderQueryServiceImpl implements TradeOrderQueryService {
     }
 
     @Override
-    public TradeOrderDO getOrderByUserIdAndStatusAndCombination(Long userId, Long combinationActivityId, Integer status) {
-        return tradeOrderMapper.selectByUserIdAndCombinationActivityIdAndStatus(userId, combinationActivityId, status);
-    }
-
-    @Override
     public List<TradeOrderDO> getOrderList(Collection<Long> ids) {
         if (CollUtil.isEmpty(ids)) {
             return Collections.emptyList();
@@ -149,8 +144,8 @@ public class TradeOrderQueryServiceImpl implements TradeOrderQueryService {
     }
 
     @Override
-    public Long getOrderCount(Long userId, Integer status, Boolean commentStatus) {
-        return tradeOrderMapper.selectCountByUserIdAndStatus(userId, status, commentStatus);
+    public Long getOrderCount(Long userId, Integer status) {
+        return tradeOrderMapper.selectCountByUserIdAndStatus(userId, status);
     }
 
     @Override
@@ -173,18 +168,6 @@ public class TradeOrderQueryServiceImpl implements TradeOrderQueryService {
         }
         // 查询物流
         return getExpressTrackList(order);
-    }
-
-    @Override
-    public int getActivityProductCount(Long userId, Long activityId, TradeOrderTypeEnum type) {
-        // 获得订单列表
-        List<TradeOrderDO> orders = tradeOrderMapper.selectListByUserIdAndActivityId(userId, activityId, type);
-        orders.removeIf(order -> TradeOrderStatusEnum.isCanceled(order.getStatus())); // 过滤掉【已取消】的订单
-        if (CollUtil.isEmpty(orders)) {
-            return 0;
-        }
-        // 获得订单项列表
-        return tradeOrderItemMapper.selectProductSumByOrderId(convertSet(orders, TradeOrderDO::getId));
     }
 
     /**

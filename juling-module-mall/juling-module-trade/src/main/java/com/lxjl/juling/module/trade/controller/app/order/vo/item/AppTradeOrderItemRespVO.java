@@ -37,9 +37,6 @@ public class AppTradeOrderItemRespVO {
     @Schema(description = "购买数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer count;
 
-    @Schema(description = "是否评价", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean commentStatus;
-
     // ========== 价格 + 支付基本信息 ==========
 
     @Schema(description = "商品原价（单）", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
@@ -47,10 +44,6 @@ public class AppTradeOrderItemRespVO {
 
     @Schema(description = "应付金额（总），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
     private Integer payPrice;
-
-    // ========== 营销基本信息 ==========
-
-    // TODO 亚特：在捉摸一下
 
     // ========== 售后基本信息 ==========
 

@@ -26,9 +26,6 @@ public class AppTradeOrderPageItemRespVO {
     @Schema(description = "购买的商品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
     private Integer productCount;
 
-    @Schema(description = "是否评价", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean commentStatus;
-
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime createTime;
 
@@ -70,10 +67,5 @@ public class AppTradeOrderPageItemRespVO {
      * 订单项数组
      */
     private List<AppTradeOrderItemRespVO> items;
-
-    // ========== 营销基本信息 ==========
-
-    @Schema(description = "拼团记录编号", example = "100")
-    private Long combinationRecordId;
 
 }

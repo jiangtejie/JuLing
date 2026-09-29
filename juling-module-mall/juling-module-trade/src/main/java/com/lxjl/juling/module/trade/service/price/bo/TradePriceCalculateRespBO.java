@@ -1,13 +1,10 @@
 package com.lxjl.juling.module.trade.service.price.bo;
 
 import com.lxjl.juling.module.product.api.property.dto.ProductPropertyValueDetailRespDTO;
-import com.lxjl.juling.module.promotion.enums.common.PromotionTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 价格计算 Response BO
@@ -39,60 +36,9 @@ public class TradePriceCalculateRespBO {
     private List<OrderItem> items;
 
     /**
-     * 营销活动数组
-     *
-     * 只对应 {@link Price#items} 商品匹配的活动
-     */
-    private List<Promotion> promotions;
-
-    /**
-     * 使用的优惠劵编号
-     */
-    private Long couponId;
-    /**
-     * 用户的优惠劵列表（可用 + 不可用）
-     */
-    private List<Coupon> coupons;
-
-    /**
-     * 会员剩余积分
-     *
-     * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-     */
-    private Integer totalPoint;
-    /**
-     * 使用的积分
-     *
-     * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-     */
-    private Integer usePoint;
-
-    /**
-     * 赠送的积分
-     *
-     * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-     */
-    private Integer givePoint;
-
-    /**
-     * 砍价活动编号
-     */
-    private Long bargainActivityId;
-
-    /**
      * 是否包邮
      */
     private Boolean freeDelivery;
-
-    /**
-     * 赠送的优惠劵
-     *
-     * key: 优惠劵模版编号
-     * value：对应的优惠券数量
-     *
-     * 目的：用于订单支付后赠送优惠券
-     */
-    private Map<Long, Integer> giveCouponTemplateCounts;
 
     /**
      * 订单价格
@@ -119,34 +65,11 @@ public class TradePriceCalculateRespBO {
          */
         private Integer deliveryPrice;
         /**
-         * 优惠劵减免金额（总），单位：分
-         *
-         * 对应 taobao 的 trade.coupon_fee 字段
-         */
-        private Integer couponPrice;
-        /**
-         * 积分抵扣的金额，单位：分
-         *
-         * 对应 taobao 的 trade.point_fee 字段
-         *
-         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-         */
-        private Integer pointPrice;
-        /**
-         * VIP 减免金额，单位：分
-         *
-         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-         */
-        private Integer vipPrice;
-        /**
          * 最终购买金额（总），单位：分
          *
          * = {@link #totalPrice}
-         * - {@link #couponPrice}
-         * - {@link #pointPrice}
          * - {@link #discountPrice}
          * + {@link #deliveryPrice}
-         * - {@link #vipPrice}
          */
         private Integer payPrice;
 
@@ -197,40 +120,11 @@ public class TradePriceCalculateRespBO {
          */
         private Integer deliveryPrice;
         /**
-         * 优惠劵减免金额，单位：分
-         *
-         * 对应 taobao 的 trade.coupon_fee 字段
-         */
-        private Integer couponPrice;
-        /**
-         * 积分抵扣的金额，单位：分
-         *
-         * 对应 taobao 的 trade.point_fee 字段
-         *
-         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-         */
-        private Integer pointPrice;
-        /**
-         * 使用的积分
-         *
-         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-         */
-        private Integer usePoint;
-        /**
-         * VIP 减免金额，单位：分
-         *
-         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-         */
-        private Integer vipPrice;
-        /**
          * 应付金额（总），单位：分
          *
          * = {@link #price} * {@link #count}
-         * - {@link #couponPrice}
-         * - {@link #pointPrice}
          * - {@link #discountPrice}
          * + {@link #deliveryPrice}
-         * - {@link #vipPrice}
          */
         private Integer payPrice;
 
@@ -274,143 +168,6 @@ public class TradePriceCalculateRespBO {
          */
         private List<ProductPropertyValueDetailRespDTO> properties;
 
-        /**
-         * 赠送的积分
-         *
-         * 会员中心已下线，恒为 0、不再消费；仅为兼容 H5 保留字段
-         */
-        private Integer givePoint;
-
     }
-
-    /**
-     * 营销明细
-     */
-    @Data
-    public static class Promotion {
-
-        /**
-         * 营销编号
-         *
-         * 例如说：营销活动的编号、优惠劵的编号
-         */
-        private Long id;
-        /**
-         * 营销名字
-         */
-        private String name;
-        /**
-         * 营销类型
-         *
-         * 枚举 {@link PromotionTypeEnum}
-         */
-        private Integer type;
-        /**
-         * 计算时的原价（总），单位：分
-         */
-        private Integer totalPrice;
-        /**
-         * 计算时的优惠（总），单位：分
-         */
-        private Integer discountPrice;
-        /**
-         * 匹配的商品 SKU 数组
-         */
-        private List<PromotionItem> items;
-
-        // ========== 匹配情况 ==========
-
-        /**
-         * 是否满足优惠条件
-         */
-        private Boolean match;
-        /**
-         * 满足条件的提示
-         *
-         * 如果 {@link #match} = true 满足，则提示“圣诞价:省 150.00 元”
-         * 如果 {@link #match} = false 不满足，则提示“购满 85 元，可减 40 元”
-         */
-        private String description;
-
-    }
-
-    /**
-     * 营销匹配的商品 SKU
-     */
-    @Data
-    public static class PromotionItem {
-
-        /**
-         * 商品 SKU 编号
-         */
-        private Long skuId;
-        /**
-         * 计算时的原价（总），单位：分
-         */
-        private Integer totalPrice;
-        /**
-         * 计算时的优惠（总），单位：分
-         */
-        private Integer discountPrice;
-
-    }
-
-    /**
-     * 优惠劵信息
-     */
-    @Data
-    public static class Coupon {
-
-        /**
-         * 优惠劵编号
-         */
-        private Long id;
-        /**
-         * 优惠劵名
-         */
-        private String name;
-
-        /**
-         * 是否设置满多少金额可用，单位：分
-         */
-        private Integer usePrice;
-
-        /**
-         * 生效开始时间
-         */
-        private LocalDateTime validStartTime;
-        /**
-         * 生效结束时间
-         */
-        private LocalDateTime validEndTime;
-
-        /**
-         * 优惠类型
-         */
-        private Integer discountType;
-        /**
-         * 折扣百分比
-         */
-        private Integer discountPercent;
-        /**
-         * 优惠金额，单位：分
-         */
-        private Integer discountPrice;
-        /**
-         * 折扣上限，单位：分
-         */
-        private Integer discountLimitPrice;
-
-        /**
-         * 是否匹配
-         */
-        private Boolean match;
-        /**
-         * 不匹配的原因
-         */
-        private String mismatchReason;
-
-    }
-
 
 }

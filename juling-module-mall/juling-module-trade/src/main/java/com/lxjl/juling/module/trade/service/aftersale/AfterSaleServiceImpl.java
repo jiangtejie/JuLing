@@ -5,9 +5,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.ObjectUtils;
-import com.lxjl.juling.module.promotion.api.combination.CombinationRecordApi;
-import com.lxjl.juling.module.promotion.api.combination.dto.CombinationRecordRespDTO;
-import com.lxjl.juling.module.promotion.enums.combination.CombinationRecordStatusEnum;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleDisagreeReqVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleOfflineRefundReqVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSalePageReqVO;
@@ -28,7 +25,6 @@ import com.lxjl.juling.module.trade.enums.aftersale.AfterSaleTypeEnum;
 import com.lxjl.juling.module.trade.enums.aftersale.AfterSaleWayEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderItemAfterSaleStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
-import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.lxjl.juling.module.trade.framework.aftersale.core.annotations.AfterSaleLog;
 import com.lxjl.juling.module.trade.framework.aftersale.core.utils.AfterSaleLogUtils;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
@@ -69,9 +65,6 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     private AfterSaleMapper tradeAfterSaleMapper;
     @Resource
     private TradeNoRedisDAO tradeNoRedisDAO;
-
-    @Resource
-    private CombinationRecordApi combinationRecordApi;
 
     @Override
     public PageResult<AfterSaleDO> getAfterSalePage(AfterSalePageReqVO pageReqVO) {
@@ -145,14 +138,6 @@ public class AfterSaleServiceImpl implements AfterSaleService {
         if (createReqVO.getWay().equals(AfterSaleWayEnum.RETURN_AND_REFUND.getWay())
                 && !TradeOrderStatusEnum.haveDelivered(order.getStatus())) {
             throw exception(AFTER_SALE_CREATE_FAIL_ORDER_STATUS_NO_DELIVERED);
-        }
-        // 如果是拼团订单，则进行中不允许售后
-        if (TradeOrderTypeEnum.isCombination(order.getType())) {
-            CombinationRecordRespDTO combinationRecord = combinationRecordApi.getCombinationRecordByOrderId(
-                    order.getUserId(), order.getId());
-            if (combinationRecord != null && CombinationRecordStatusEnum.isInProgress(combinationRecord.getStatus())) {
-                throw exception(AFTER_SALE_CREATE_FAIL_ORDER_STATUS_COMBINATION_IN_PROGRESS);
-            }
         }
         return orderItem;
     }
