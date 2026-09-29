@@ -176,7 +176,6 @@ export interface AppTradeOrderItemRespVO {
   picUrl: string;
   /** 购买数量（前端用作 quantity） */
   count: number;
-  commentStatus: boolean;
   price: number;
   payPrice: number;
   afterSaleId: number | null;
@@ -196,7 +195,6 @@ export interface AppTradeOrderPageItemRespVO {
   /** 订单状态（TradeOrderStatusEnum：0/10/20/30/40） */
   status: number;
   productCount: number;
-  commentStatus: boolean;
   createTime: BackendDateTime;
   payOrderId: number | null;
   payPrice: number;
@@ -214,7 +212,6 @@ export interface AppTradeOrderPageItemRespVO {
   /** 门店订货链：审核状态（TradeOrderAuditStatusEnum）0 待提交 / 10 审核中 / 20 已通过 / 30 已驳回 */
   auditStatus?: number | null;
   items: AppTradeOrderItemRespVO[];
-  combinationRecordId: number | null;
 }
 
 /** 订单详情（GET /trade/order/get-detail） */
@@ -231,7 +228,6 @@ export interface AppTradeOrderDetailRespVO {
   productCount: number;
   finishTime: BackendDateTime | null;
   cancelTime: BackendDateTime | null;
-  commentStatus: boolean;
   payStatus: boolean;
   payOrderId: number | null;
   payTime: BackendDateTime | null;
@@ -273,11 +269,6 @@ export interface AppTradeOrderDetailRespVO {
   receiverDetailAddress: string;
   refundStatus: number | null;
   refundPrice: number | null;
-  couponId: number | null;
-  couponPrice: number;
-  pointPrice: number;
-  vipPrice: number;
-  combinationRecordId: number | null;
   items: AppTradeOrderItemRespVO[];
 }
 
@@ -329,8 +320,6 @@ export interface AppTradeOrderPaymentProofCreateReqVO {
 /** 创建订单请求体（AppTradeOrderCreateReqVO extends AppTradeOrderSettlementReqVO） */
 export interface AppTradeOrderCreateReqVO {
   items: AppTradeOrderCreateItemReqVO[];
-  /** 是否使用积分（必填 @NotNull） */
-  pointStatus: boolean;
   /** 配送方式（必填，DeliveryTypeEnum：1 快递发货） */
   deliveryType: number;
   receiverName?: string;

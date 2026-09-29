@@ -40,8 +40,7 @@ export function getStoreList(): Promise<StoreOption[]> {
 export async function createOrder(data: OrderCreateParam): Promise<number> {
   const payload: AppTradeOrderCreateReqVO = {
     items: data.items.map((item) => ({ skuId: item.skuId, count: item.quantity })),
-    // 后端结算必填项：不使用积分；配送方式固定「快递发货」
-    pointStatus: false,
+    // 配送方式固定「快递发货」（积分/优惠券等营销字段已随营销模块下线）
     deliveryType: 1,
     receiverName: data.receiverName,
     receiverMobile: data.receiverMobile,
@@ -124,8 +123,6 @@ export interface OrderCountMap {
   undeliveredCount: number;
   /** 待收货 */
   deliveredCount: number;
-  /** 待评价 */
-  uncommentedCount: number;
   /** 售后中 */
   afterSaleCount: number;
 }
