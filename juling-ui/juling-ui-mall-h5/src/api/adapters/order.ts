@@ -59,6 +59,28 @@ export function orderStatusKeyToCode(key?: string): number | undefined {
   return code === undefined || code < 0 ? undefined : code;
 }
 
+/**
+ * 订单页签 → 后端查询参数（门店订货链的业务口径）
+ *
+ * 后端 status=待发货(10) 同时覆盖「审核中 / 已驳回 / 已通过」，光看 status 分不出能不能发货，
+ * 所以：
+ * - 「处理中」(REVIEWING)：status=10 且 auditPassed=false（审核未完成，含被驳回的单，门店需重传凭证）
+ * - 「待发货」(PAID)：status=10 且 auditPassed=true（已通过两级审批，或直营门店免审）
+ * - 其它页签（all / UNPAID / SHIPPED / COMPLETED）按原状态码，不加审核条件
+ */
+export function orderTabToQuery(tab?: string): {
+  auditPassed?: boolean;
+  status?: number;
+} {
+  if (tab === 'REVIEWING') {
+    return { status: orderStatusKeyToCode('PAID'), auditPassed: false };
+  }
+  if (tab === 'PAID') {
+    return { status: orderStatusKeyToCode('PAID'), auditPassed: true };
+  }
+  return { status: orderStatusKeyToCode(tab) };
+}
+
 /** 属性数组 → 规格文本，如「红色 M」 */
 function propertiesToSpecText(properties?: Array<{ valueName?: string }> | null): string {
   return (properties ?? [])

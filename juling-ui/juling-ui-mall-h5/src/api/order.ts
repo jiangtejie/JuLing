@@ -17,7 +17,7 @@ import {
   adaptOrderDetail,
   adaptOrderPage,
   adaptPaymentProof,
-  orderStatusKeyToCode,
+  orderTabToQuery,
 } from '@/api/adapters';
 import { http } from '@/utils/request';
 
@@ -53,12 +53,12 @@ export async function createOrder(data: OrderCreateParam): Promise<number> {
   return result.id;
 }
 
-/** 订单分页（前端 key 自动转后端状态码） */
+/** 订单分页（前端 key 自动转后端状态码；「处理中 / 待发货」还要带审核是否通过） */
 export async function getOrderPage(params: OrderQuery): Promise<PageResult<Order>> {
   const page = await http.get<BackendPage<AppTradeOrderPageItemRespVO>>('/trade/order/page', {
     pageNo: params.pageNo,
     pageSize: params.pageSize,
-    status: orderStatusKeyToCode(params.status),
+    ...orderTabToQuery(params.status),
   });
   return adaptOrderPage(page);
 }

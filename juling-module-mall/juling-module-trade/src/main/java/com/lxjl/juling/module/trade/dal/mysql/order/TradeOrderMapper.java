@@ -93,10 +93,19 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
     }
 
     default PageResult<TradeOrderDO> selectPage(AppTradeOrderPageReqVO reqVO, Long userId) {
-        return selectPage(reqVO, new LambdaQueryWrapperX<TradeOrderDO>()
+        LambdaQueryWrapperX<TradeOrderDO> query = new LambdaQueryWrapperX<TradeOrderDO>()
                 .eq(TradeOrderDO::getUserId, userId)
-                .eqIfPresent(TradeOrderDO::getStatus, reqVO.getStatus())
-                .orderByDesc(TradeOrderDO::getId)); // TODO 亚特：未来不同的 status，不同的排序
+                .eqIfPresent(TradeOrderDO::getStatus, reqVO.getStatus());
+        // 门店要货：审核通过（audit_status=20，含直营免审）才是真正「待发货」；
+        // 其余（待提交 0 / 审核中 10 / 已驳回 30）在门店端归入「处理中」
+        if (reqVO.getAuditPassed() != null) {
+            if (Boolean.TRUE.equals(reqVO.getAuditPassed())) {
+                query.eq(TradeOrderDO::getAuditStatus, TradeOrderAuditStatusEnum.APPROVE.getStatus());
+            } else {
+                query.ne(TradeOrderDO::getAuditStatus, TradeOrderAuditStatusEnum.APPROVE.getStatus());
+            }
+        }
+        return selectPage(reqVO, query.orderByDesc(TradeOrderDO::getId)); // TODO 亚特：未来不同的 status，不同的排序
     }
 
     default Long selectCountByUserIdAndStatus(Long userId, Integer status) {

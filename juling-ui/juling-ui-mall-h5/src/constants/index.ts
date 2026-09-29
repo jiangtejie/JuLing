@@ -150,10 +150,22 @@ export const OFFLINE_PAY_CHANNELS = [
   { code: 'offline_cash', name: '现金' },
 ] as const;
 
-/** 订单状态筛选项 */
+/**
+ * 订单状态筛选项（门店订货链的业务口径）
+ *
+ * - 待付款：下单后还没提交付款凭证；
+ * - **处理中**：已提交凭证但两级审批还没走完（待提交 / 审核中 / 已驳回）——被驳回的单停在这里，
+ *   门店需要重新上传凭证；
+ * - 待发货：审批已通过（或直营免审），等仓库配送出库；
+ * - 待收货 / 已完成：出库后到签收的收尾阶段。
+ *
+ * 说明：后端 status=待发货(10) 这个状态位同时覆盖「审核中 / 已驳回 / 已通过」，
+ * 所以「处理中」与「待发货」两个页签在请求里靠 auditPassed 区分（见 api/order.ts 的 orderTabToQuery）。
+ */
 export const ORDER_TABS = [
   { key: 'all', title: '全部' },
   { key: 'UNPAID', title: '待付款' },
+  { key: 'REVIEWING', title: '处理中' },
   { key: 'PAID', title: '待发货' },
   { key: 'SHIPPED', title: '待收货' },
   { key: 'COMPLETED', title: '已完成' },
