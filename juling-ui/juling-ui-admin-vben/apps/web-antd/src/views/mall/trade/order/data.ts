@@ -221,15 +221,6 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       minWidth: 160,
     },
     {
-      field: 'type',
-      title: '订单类型',
-      cellRender: {
-        name: 'CellDict',
-        props: { type: DICT_TYPE.TRADE_ORDER_TYPE },
-      },
-      minWidth: 80,
-    },
-    {
       field: 'payPrice',
       title: '实际支付',
       formatter: 'formatFenToYuanAmount',
