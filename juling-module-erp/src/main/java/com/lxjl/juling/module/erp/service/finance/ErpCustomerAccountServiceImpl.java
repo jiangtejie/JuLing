@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -116,8 +117,20 @@ public class ErpCustomerAccountServiceImpl implements ErpCustomerAccountService 
     @Override
     public List<ErpCustomerAccountSummaryBO> getSummaryList(Long customerId, Long deptId) {
         List<Long> customerIds = customerId == null ? null : List.of(customerId);
-        List<ErpCustomerAccountSummaryBO> result = new ArrayList<>();
-        for (Map<String, Object> row : customerAccountMapper.selectSummaryGroupByCustomer(customerIds, deptId)) {
+        return convertSummary(customerAccountMapper.selectSummaryGroupByCustomer(customerIds, deptId));
+    }
+
+    @Override
+    public List<ErpCustomerAccountSummaryBO> getSummaryListByCustomerIds(Collection<Long> customerIds) {
+        if (customerIds == null || customerIds.isEmpty()) {
+            return List.of();
+        }
+        return convertSummary(customerAccountMapper.selectSummaryGroupByCustomer(customerIds, null));
+    }
+
+    private List<ErpCustomerAccountSummaryBO> convertSummary(List<Map<String, Object>> rows) {
+        List<ErpCustomerAccountSummaryBO> result = new ArrayList<>(rows.size());
+        for (Map<String, Object> row : rows) {
             Object id = row.get("customer_id");
             if (id == null) {
                 continue;

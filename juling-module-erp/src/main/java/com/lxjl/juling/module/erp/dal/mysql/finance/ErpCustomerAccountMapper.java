@@ -26,6 +26,7 @@ public interface ErpCustomerAccountMapper extends BaseMapperX<ErpCustomerAccount
     default PageResult<ErpCustomerAccountDO> selectPage(ErpCustomerAccountPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<ErpCustomerAccountDO>()
                 .eqIfPresent(ErpCustomerAccountDO::getCustomerId, reqVO.getCustomerId())
+                .inIfPresent(ErpCustomerAccountDO::getCustomerId, reqVO.getCustomerIds())
                 .eqIfPresent(ErpCustomerAccountDO::getDeptId, reqVO.getDeptId())
                 .eqIfPresent(ErpCustomerAccountDO::getBizType, reqVO.getBizType())
                 .likeIfPresent(ErpCustomerAccountDO::getSourceNo, reqVO.getSourceNo())

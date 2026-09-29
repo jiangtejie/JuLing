@@ -62,6 +62,9 @@ public class AppTradeOrderController {
     private TradeOrderStoreService tradeOrderStoreService;
 
     @Resource
+    private com.lxjl.juling.module.erp.api.customer.ErpCustomerApi erpCustomerApi;
+
+    @Resource
     private TradeOrderProperties tradeOrderProperties;
 
     @GetMapping("/store-list")
@@ -122,8 +125,12 @@ public class AppTradeOrderController {
         // 2.2 查询物流公司
         DeliveryExpressDO express = order.getLogisticsId() != null && order.getLogisticsId() > 0 ?
                 deliveryExpressService.getDeliveryExpress(order.getLogisticsId()) : null;
-        // 2.3 最终组合
-        return success(TradeOrderConvert.INSTANCE.convert02(order, orderItems, tradeOrderProperties, express));
+        // 2.3 最终组合（并补门店名：详情页要显示"这是哪家店的订单"）
+        AppTradeOrderDetailRespVO detail = TradeOrderConvert.INSTANCE.convert02(order, orderItems,
+                tradeOrderProperties, express);
+        fillCustomerName(java.util.Collections.singletonList(detail),
+                AppTradeOrderDetailRespVO::getCustomerId, AppTradeOrderDetailRespVO::setCustomerName);
+        return success(detail);
     }
 
     @GetMapping("/get-express-track-list")
@@ -143,7 +150,41 @@ public class AppTradeOrderController {
         List<TradeOrderItemDO> orderItems = tradeOrderQueryService.getOrderItemListByOrderId(
                 convertSet(pageResult.getList(), TradeOrderDO::getId));
         // 最终组合
-        return success(TradeOrderConvert.INSTANCE.convertPage02(pageResult, orderItems));
+        PageResult<AppTradeOrderPageItemRespVO> result = TradeOrderConvert.INSTANCE.convertPage02(pageResult, orderItems);
+        // 门店名不在 trade_order 上（只有 customer_id 快照），补一次客户主数据查询：
+        // 代理人账号管多家门店，列表必须能看出每单是哪家店的
+        fillCustomerName(result.getList(), AppTradeOrderPageItemRespVO::getCustomerId,
+                AppTradeOrderPageItemRespVO::setCustomerName);
+        return success(result);
+    }
+
+    /**
+     * 批量补齐门店名称（门店订货链：订单只快照了 customer_id）
+     *
+     * @param list     待补的 VO 列表
+     * @param getter   取门店编号
+     * @param setter   写门店名称
+     */
+    private <T> void fillCustomerName(List<T> list, java.util.function.Function<T, Long> getter,
+                                      java.util.function.BiConsumer<T, String> setter) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        Map<Long, String> nameMap = erpCustomerApi
+                .getCustomerList(convertSet(list, getter)).stream()
+                .filter(customer -> customer.getId() != null && customer.getName() != null)
+                .collect(java.util.stream.Collectors.toMap(
+                        com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO::getId,
+                        com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO::getName, (a, b) -> a));
+        if (nameMap.isEmpty()) {
+            return;
+        }
+        list.forEach(item -> {
+            Long customerId = getter.apply(item);
+            if (customerId != null) {
+                setter.accept(item, nameMap.get(customerId));
+            }
+        });
     }
 
     @GetMapping("/get-count")

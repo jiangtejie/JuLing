@@ -2,6 +2,8 @@ package com.lxjl.juling.module.trade.controller.app.order.vo.item;
 
 import com.lxjl.juling.module.trade.controller.app.base.property.AppProductPropertyValueDetailRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.math.BigDecimal;
 import lombok.Data;
 
 import java.util.List;
@@ -57,5 +59,13 @@ public class AppTradeOrderItemRespVO {
 
     @Schema(description = "售后状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer afterSaleStatus;
+
+    // ========== 门店订货链：数量进度（下单 → 已发货 → 门店已收） ==========
+
+    @Schema(description = "ERP 已发货数量（配送出库单审核后回写）", example = "10")
+    private BigDecimal deliveredCount;
+
+    @Schema(description = "门店已确认收货数量", example = "9")
+    private BigDecimal receiptCount;
 
 }

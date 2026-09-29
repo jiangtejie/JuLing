@@ -47,4 +47,11 @@ public interface ErpCustomerAccountService {
      */
     List<ErpCustomerAccountSummaryBO> getSummaryList(Long customerId, Long deptId);
 
+    /**
+     * 按门店集合查余额汇总（订货 H5「我的账」用：一个账号可管多家门店）
+     *
+     * @param customerIds 门店客户编号集合
+     */
+    List<ErpCustomerAccountSummaryBO> getSummaryListByCustomerIds(java.util.Collection<Long> customerIds);
+
 }

@@ -20,6 +20,9 @@ public class ErpCustomerAccountPageReqVO extends PageParam {
     @Schema(description = "门店客户编号", example = "6")
     private Long customerId;
 
+    @Schema(hidden = true)
+    private java.util.List<Long> customerIds;
+
     @Schema(description = "门店部门编号", example = "134")
     private Long deptId;
 

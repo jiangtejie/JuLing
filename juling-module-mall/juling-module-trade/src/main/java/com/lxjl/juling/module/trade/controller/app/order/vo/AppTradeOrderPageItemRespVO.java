@@ -52,6 +52,20 @@ public class AppTradeOrderPageItemRespVO {
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer deliveryType;
 
+    // ========== 门店订货链：下单门店与审核（列表卡片要展示"这是哪家店的单"） ==========
+
+    @Schema(description = "下单门店（客户）编号", example = "6")
+    private Long customerId;
+
+    @Schema(description = "下单门店名称", example = "耙二哥双碑店")
+    private String customerName;
+
+    @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "DIRECT")
+    private String storeType;
+
+    @Schema(description = "审核状态：0 待提交 / 10 审核中 / 20 已通过 / 30 已驳回", example = "10")
+    private Integer auditStatus;
+
     /**
      * 订单项数组
      */
