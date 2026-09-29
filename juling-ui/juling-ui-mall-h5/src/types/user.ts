@@ -1,6 +1,6 @@
 /** 登录请求参数（POST /member/auth/login） */
 export interface LoginParam {
-  /** 订货账号（总部下发，通常为门店名；2-64 位） */
+  /** 订货账号（总部下发，就是订货人姓名；2-64 位） */
   account: string;
   /** 密码 */
   password: string;

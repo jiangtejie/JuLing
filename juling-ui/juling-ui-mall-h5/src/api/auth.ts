@@ -15,7 +15,7 @@ import { http } from '@/utils/request';
  * 刻意**不加** `silent` —— 登录失败（如「登录失败，账号密码不正确」）必须把后端的
  * 业务 msg 经全局拦截器展示出来，否则用户点击登录后毫无反馈。
  *
- * 入参由 `{ mobile, password }` 改为 `{ account, password }`（订货账号，通常为门店名）；
+ * 入参由 `{ mobile, password }` 改为 `{ account, password }`（订货账号 = 订货人姓名）；
  * 后端仍兼容 mobile 字段，但前端只传 account。
  */
 export async function login(data: LoginParam): Promise<LoginResult> {

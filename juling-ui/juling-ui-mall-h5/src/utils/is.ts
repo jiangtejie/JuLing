@@ -25,7 +25,7 @@ export function isEmpty(value: unknown): boolean {
 export const isMobile = (value: string): boolean => /^1[3-9]\d{9}$/.test(value);
 
 /**
- * 订货账号：总部下发的门店登录账号（通常就是门店名）。
+ * 订货账号：总部下发给订货人的登录账号，就是订货人姓名（如「张三」）。
  * 允许中文 / 字母 / 数字，长度 2-64 位（与后端校验对齐），前后空白自动忽略。
  */
 export function isAccount(value: string): boolean {

@@ -36,9 +36,9 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         allowClear: true,
         maxlength: 64,
-        placeholder: '请输入订货账号（登录名，通常就是门店名）',
+        placeholder: '请输入订货账号（订货人名字，登录用）',
       },
-      help: '门店登录用的账号名，2-64 位且不能与其它账号重复；清空表示不修改',
+      help: '订货人登录用的账号名，填订货人名字（如「张三」），2-64 位且不能与其它账号重复；清空表示不修改',
       rules: z
         .string()
         .min(2, '订货账号长度为 2-64 位')
@@ -88,7 +88,7 @@ export function useFormSchema(): VbenFormSchema[] {
         allowClear: true,
         placeholder: '请输入用户昵称',
       },
-      help: '门店订货账号的展示名；开账号时为空则取订货账号',
+      help: '订货账号的展示名；开账号时为空则取订货账号',
     },
     {
       fieldName: 'avatar',
@@ -591,9 +591,9 @@ export function useOrderAccountFormSchema(options: {
       componentProps: {
         allowClear: true,
         maxlength: 64,
-        placeholder: '请输入订货账号（通常就是门店名）',
+        placeholder: '请输入订货账号（订货人名字，如「张三」）',
       },
-      help: '门店登录用的账号名，2-64 位且必须唯一',
+      help: '订货人登录用的账号名，填订货人名字，2-64 位且必须唯一',
       rules: z
         .string()
         .min(2, '订货账号长度为 2-64 位')
@@ -736,7 +736,7 @@ export function useResetPasswordFormSchema(): VbenFormSchema[] {
         disabled: true,
         placeholder: '（该会员还没有订货账号）',
       },
-      help: '重置后该账号会被强制下线，门店需要用新密码重新登录',
+      help: '重置后该账号会被强制下线，订货人需要用新密码重新登录',
     },
     {
       fieldName: 'nickname',

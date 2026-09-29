@@ -125,8 +125,8 @@ const [Modal, modalApi] = useVbenModal({
       await createUser(buildPayload(values));
       await modalApi.close();
       emit('success');
-      // 密码只在这里出现一次，提示管理员转告门店
-      message.success('账号已创建，请把账号和密码告知门店');
+      // 密码只在这里出现一次，提示管理员转告订货人
+      message.success('账号已创建，请把账号和密码告知订货人');
     } finally {
       modalApi.unlock();
     }
@@ -146,8 +146,8 @@ const [Modal, modalApi] = useVbenModal({
   <Modal title="开订货账号" class="w-1/2">
     <Form class="mx-4" />
     <div class="text-muted-foreground mx-4 mt-2 text-[13px]">
-      订货账号就是门店登录用的账号名（通常就是门店名）；创建后请把「账号 +
-      初始密码」告知门店，门店用账号名 + 密码登录订货端。
+      订货账号就是订货人登录用的账号名（填订货人名字，如「张三」）；创建后请把「账号 +
+      初始密码」告知订货人，订货人用账号名 + 密码登录订货端。
     </div>
   </Modal>
 </template>

@@ -64,7 +64,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     @Override
     public AppAuthLoginRespVO login(AppAuthLoginReqVO reqVO) {
         // 使用「订货账号（或手机号）+ 密码」进行登录。
-        // 私域订货 H5 不开放给 C 端：加盟客户用门店名当账号登录，account 为主、mobile 兼容。
+        // 私域订货 H5 不开放给 C 端：订货人用名字当账号登录，account 为主、mobile 兼容。
         String loginName = StrUtil.blankToDefault(reqVO.getAccount(), reqVO.getMobile());
         MemberUserDO user = login0(loginName, reqVO.getPassword());
 
@@ -195,7 +195,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         if (StrUtil.isBlank(loginName)) {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
-        // 1. 先按订货账号找（账号名通常就是门店名），找不到再按手机号找（兼容历史账号）
+        // 1. 先按订货账号找（账号名就是订货人名字），找不到再按手机号找（兼容历史账号）
         MemberUserDO user = userService.getUserByUsername(loginName);
         if (user == null) {
             user = userService.getUserByMobile(loginName);

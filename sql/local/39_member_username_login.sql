@@ -5,6 +5,7 @@
 --   之前 member_user 只有手机号一个身份键，且 3 个订货账号的密码是空的 → 根本登不进去。
 --
 -- 口径：
+--   · 订货账号 = 订货人名字（如「张三」），不是门店名；门店只体现在"所属客户/部门"上；
 --   · username 是**独立列**，不复用 mobile —— mobile 在会员体系里是身份键
 --     （短信登录 / 社交绑定 / createUserIfAbsent 都按它找人），复用会破坏语义；
 --   · 登录：先按 username 找，找不到再按 mobile 找（兼容历史账号）；
@@ -14,12 +15,13 @@
 -- ============================================================================
 
 ALTER TABLE member_user ADD COLUMN IF NOT EXISTS username varchar(64);
-COMMENT ON COLUMN member_user.username IS '订货账号（私域加盟客户的登录名，通常就是门店名；唯一）';
+COMMENT ON COLUMN member_user.username IS '订货账号（订货人的登录名，就是订货人名字，如张三；唯一）';
 
 CREATE UNIQUE INDEX IF NOT EXISTS uk_member_user_username
     ON member_user (username) WHERE deleted = 0 AND username IS NOT NULL;
 
--- 回填 1：绑了门店的会员，账号名 = 门店名（去掉「（门店）」后缀），更符合"用名字登录"的习惯
+-- 回填 1：历史账号里没有订货人姓名可用，只能拿门店名兜底（去掉「（门店）」后缀）。
+--         **仅用于历史数据**；新开账号请在后台填订货人名字（如「张三」）。
 UPDATE member_user u
 SET username = replace(c.name, '（门店）', '')
 FROM erp_customer c

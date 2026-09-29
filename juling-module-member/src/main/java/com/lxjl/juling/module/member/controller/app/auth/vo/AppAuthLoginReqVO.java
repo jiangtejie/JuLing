@@ -25,7 +25,7 @@ public class AppAuthLoginReqVO {
     @Mobile
     private String mobile;
 
-    @Schema(description = "订货账号（私域订货 H5 的登录名，通常就是门店名）", example = "耙二哥双碑店")
+    @Schema(description = "订货账号（私域订货 H5 的登录名，就是订货人名字）", example = "张三")
     private String account;
 
     @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED, example = "buzhidao")

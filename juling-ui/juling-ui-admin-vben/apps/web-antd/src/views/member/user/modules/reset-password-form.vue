@@ -18,7 +18,7 @@ defineOptions({ name: 'MemberResetPasswordForm' });
 
 const emit = defineEmits(['success']);
 
-/** 重置成功后的明文结果：管理员要转告门店，所以重置成功后先明文展示再关窗 */
+/** 重置成功后的明文结果：管理员要转告订货人，所以重置成功后先明文展示再关窗 */
 const result = ref<null | { password: string; username: string }>(null);
 /** 当前会员（取列表行数据，避免为了取账号名再多打一次接口） */
 const user = ref<MemberUserApi.User>();
@@ -53,7 +53,7 @@ function confirmReset(username: string): Promise<boolean> {
   });
 }
 
-/** 复制新密码（管理员要转告门店） */
+/** 复制新密码（管理员要转告订货人） */
 async function handleCopyPassword() {
   if (!result.value) {
     return;
@@ -98,7 +98,7 @@ const [Modal, modalApi] = useVbenModal({
       });
       // 重置已经落库：先刷新列表，避免管理员用右上角关闭时列表还是旧数据
       emit('success');
-      message.success('密码已重置，请把新密码告知门店');
+      message.success('密码已重置，请把新密码告知订货人');
     } finally {
       modalApi.unlock();
     }
@@ -148,7 +148,7 @@ const [Modal, modalApi] = useVbenModal({
         <Button type="link" @click="handleCopyPassword">复制</Button>
       </div>
       <div class="text-muted-foreground text-[13px]">
-        请把新密码告知门店（关闭本窗口后将不再显示明文密码）。
+        请把新密码告知订货人（关闭本窗口后将不再显示明文密码）。
       </div>
     </div>
   </Modal>

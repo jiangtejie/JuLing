@@ -117,7 +117,7 @@ export interface AppMemberUserInfoRespVO {
   avatar: string;
   /** 手机号（会员手机号已非必填，可能为空） */
   mobile?: string | null;
-  /** 订货账号（总部下发的门店登录账号，旧数据可能不返回） */
+  /** 订货账号（订货人的登录名，就是订货人姓名；旧数据可能不返回） */
   username?: string | null;
   email: string;
   /** 性别 */

@@ -6,7 +6,7 @@ export namespace MemberUserApi {
   /** 会员用户信息 */
   export interface User {
     id?: number;
-    /** 订货账号（登录名，通常就是门店名；C 端历史会员可能为空） */
+    /** 订货账号（登录名 = 订货人名字；C 端历史会员可能为空） */
     username?: string;
     avatar?: string;
     birthday?: number;
@@ -38,7 +38,7 @@ export namespace MemberUserApi {
 
   /** 开订货账号请求信息（后台给加盟客户开「账号名 + 初始密码 + 绑定门店」） */
   export interface UserCreateReqVO {
-    /** 订货账号（登录名，通常就是门店名）：2-64 位，必填 */
+    /** 订货账号（登录名 = 订货人名字）：2-64 位，必填 */
     username: string;
     /** 初始密码：6-32 位，必填 */
     password: string;
@@ -90,7 +90,7 @@ export function getUser(id: number) {
 }
 
 /**
- * 开订货账号（私域加盟客户：账号名 + 初始密码 + 绑定门店）
+ * 开订货账号（私域加盟客户：订货人账号名 + 初始密码 + 绑定门店）
  *
  * 返回新会员编号
  */

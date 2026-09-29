@@ -20,7 +20,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @Data
 public class MemberUserBaseVO {
 
-    @Schema(description = "订货账号（登录名，通常就是门店名）", example = "耙二哥双碑店")
+    @Schema(description = "订货账号（订货人的登录名，就是订货人名字）", example = "张三")
     @Size(max = 64, message = "订货账号长度不能超过 64 个字符")
     private String username;
 

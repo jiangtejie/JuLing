@@ -50,7 +50,7 @@ public class MemberUserDO extends TenantBaseDO {
     /**
      * 订货账号（登录名）
      *
-     * 私域订货 H5 不开放给 C 端，加盟客户用「门店名 + 密码」登录，所以登录名是独立字段，
+     * 私域订货 H5 不开放给 C 端，订货人用「名字 + 密码」登录，所以登录名是独立字段，
      * **不复用 mobile**：mobile 在会员体系里是身份键（短信登录 / 社交绑定 / createUserIfAbsent
      * 都按它找人），复用会破坏语义，也无法与将来的 C 端账号共存。
      * 唯一性由部分唯一索引 uk_member_user_username 保证（见 sql/local/39）。

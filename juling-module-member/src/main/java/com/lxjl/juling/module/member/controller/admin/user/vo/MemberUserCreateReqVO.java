@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 /**
  * 管理后台 - 开订货账号 Request VO
  *
- * 私域订货场景：由后台给加盟客户开账号（账号名通常就是门店名）+ 初始密码 + 绑定门店。
+ * 私域订货场景：由后台给订货人开账号（账号名填订货人名字）+ 初始密码 + 绑定门店。
  * 刻意**不继承** {@link MemberUserBaseVO}：C 端那套「昵称/头像/性别/生日/等级」对订货账号没意义，
  * 也不想把父类的 @NotNull 校验（如昵称）强加给开账号流程。
  *
@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.Length;
 @Data
 public class MemberUserCreateReqVO {
 
-    @Schema(description = "订货账号（登录名，通常就是门店名）", requiredMode = Schema.RequiredMode.REQUIRED, example = "耙二哥双碑店")
+    @Schema(description = "订货账号（订货人的登录名，填订货人名字）", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
     @NotEmpty(message = "订货账号不能为空")
     @Length(min = 2, max = 64, message = "订货账号长度为 2-64 位")
     private String username;
