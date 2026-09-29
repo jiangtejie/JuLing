@@ -28,8 +28,8 @@ export namespace MallOrderApi {
     deliveryPrice?: number; // 运费金额
     adjustPrice?: number; // 订单调价（总）
     payPrice?: number; // 应付金额（总）
-    paidAmount?: number; // 已确认收款金额（总）
-    paymentProofStatus?: number; // 收款状态（线下收款）
+    paidAmount?: number; // 门店申报收款金额（总）：未被驳回的付款凭证申报金额合计
+    paymentProofStatus?: number; // 收款状态（线下收款）：0 未上传凭证、2 已驳回、3 部分收款、4 已收齐（1「待核验」已不再产生）
     deptId?: number; // 所属部门编号（门店所属 system_dept.id）
     customerId?: number; // 门店客户编号
     agentCustomerId?: number; // 上级代理客户编号
@@ -134,24 +134,16 @@ export namespace MallOrderApi {
     id?: number; // 凭证编号
     orderId?: number; // 交易订单编号
     urls?: string[]; // 付款凭证图片地址（多图）
-    amount?: number; // 申报收款金额，单位：分
-    confirmedAmount?: number; // 核定的收款金额，单位：分
+    amount?: number; // 门店申报收款金额，单位：分
+    confirmedAmount?: number; // 财务审批认定金额，单位：分（审批通过 = 申报金额）
     payerName?: string; // 付款人姓名
     payChannelCode?: string; // 收款渠道
     transferTime?: Date; // 转账时间
     remark?: string; // 客户备注
-    status?: number; // 单条凭证状态：0 待核验、1 已确认、2 已驳回
-    auditTime?: Date; // 核验时间
-    auditRemark?: string; // 核验意见（驳回原因）
+    status?: number; // 单条凭证状态：0 待审核（上传即此值）、1 已认定（审批通过）、2 已驳回（审批驳回）
+    auditTime?: Date; // 审批时间
+    auditRemark?: string; // 审批意见（驳回原因）
     createTime?: Date; // 提交时间
-  }
-
-  /** 付款凭证核验请求 */
-  export interface PaymentProofAuditReqVO {
-    id: number; // 凭证编号
-    approved: boolean; // 是否确认收款：true 确认、false 驳回
-    confirmedAmount?: number; // 核定收款金额，单位：分
-    auditRemark?: string; // 核验意见
   }
 
   /** 订单地址请求 */
@@ -222,11 +214,6 @@ export function getPaymentProofList(orderId: number) {
     '/trade/order/payment-proof/list',
     { params: { orderId } },
   );
-}
-
-/** 核验付款凭证（确认收款 / 驳回） */
-export function auditPaymentProof(data: MallOrderApi.PaymentProofAuditReqVO) {
-  return requestClient.put('/trade/order/payment-proof/audit', data);
 }
 
 /** 提交门店要货审核 */

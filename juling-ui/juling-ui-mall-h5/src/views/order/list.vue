@@ -56,7 +56,10 @@
 
   /**
    * 是否展示收款状态：已取消的订单不再需要收款，展示只会干扰阅读。
-   * 已收齐（4）且订单已进入发货流程时也无需重复提示。
+   * 已收齐（4）时收款已完成，也无需重复提示。
+   *
+   * 新流程下提交凭证的订单收款状态是 3（部分收款）或 4（已收齐），判断口径不用变：
+   * 未上传（0）/ 已提交待审核（1，历史单兜底）/ 已驳回（2）/ 部分收款（3）都继续露出 chip。
    */
   function showReceive(order: Order): boolean {
     return order.status !== 'CANCELED' && order.paymentProofStatus !== 4;
@@ -247,7 +250,7 @@
               </van-button>
             </div>
 
-            <!-- 线下收款状态：客户一眼看出「还要不要传凭证 / 财务有没有核验」 -->
+            <!-- 线下收款状态：客户一眼看出「还要不要传凭证 / 审核结果如何」 -->
             <div v-if="showReceive(order)" class="order-list__receive">
               <span
                 class="order-list__chip"

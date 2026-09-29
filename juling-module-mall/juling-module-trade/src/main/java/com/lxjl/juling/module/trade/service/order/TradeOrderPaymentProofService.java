@@ -1,6 +1,5 @@
 package com.lxjl.juling.module.trade.service.order;
 
-import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderPaymentProofAuditReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderPaymentProofCreateReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 
@@ -9,14 +8,15 @@ import java.util.List;
 /**
  * 交易订单付款凭证 Service 接口
  *
- * 线下收款：客户上传付款截图，后台核验；金额可分批、可与申报不一致（以核定金额为准）。
+ * 门店订货链（不再有后台「收款核验」）：客户在 H5 提交付款凭证即视为已付款并进入两级审批，
+ * 凭证金额按客户申报记账；审批通过 = 认定，审批驳回 = 门店重新上传。
  *
  * @author 亚特
  */
 public interface TradeOrderPaymentProofService {
 
     /**
-     * 客户提交付款凭证
+     * 客户提交付款凭证（提交后直接进入审核，无需后台核验）
      *
      * @param userId      当前会员编号
      * @param createReqVO 凭证信息
@@ -40,15 +40,5 @@ public interface TradeOrderPaymentProofService {
      * @return 凭证列表
      */
     List<TradeOrderPaymentProofDO> getPaymentProofList(Long orderId);
-
-    /**
-     * 后台核验付款凭证：确认收款 / 驳回重传
-     *
-     * 确认后会重算订单已收金额；收满应收金额时把订单置为「已收款、待发货」。
-     *
-     * @param auditUserId 核验人编号
-     * @param auditReqVO  核验信息
-     */
-    void auditPaymentProof(Long auditUserId, TradeOrderPaymentProofAuditReqVO auditReqVO);
 
 }

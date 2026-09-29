@@ -104,10 +104,9 @@ public interface ErrorCodeConstants {
     // ========== Order 付款凭证（线下收款）1-011-000-000 ==========
     // 注意：付款凭证的错误码从 040 起，避免与上面订单的 020-039 撞号
     ErrorCode ORDER_PAYMENT_PROOF_NOT_EXISTS = new ErrorCode(1_011_000_040, "交易订单付款凭证不存在");
-    ErrorCode ORDER_PAYMENT_PROOF_STATUS_NOT_PENDING = new ErrorCode(1_011_000_041, "付款凭证不是【待核验】状态，无法重复核验");
     ErrorCode ORDER_PAYMENT_PROOF_NOT_BELONG_TO_USER = new ErrorCode(1_011_000_042, "付款凭证不属于当前用户");
-    ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_043, "订单已收齐，无法再上传付款凭证");
-    ErrorCode ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF = new ErrorCode(1_011_000_044, "订单已提交付款凭证，核验中暂不能取消，如需取消请联系客服");
+    ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_043, "订单已进入审核流程，无法再上传付款凭证（如需补充请联系总部驳回后重传）");
+    ErrorCode ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF = new ErrorCode(1_011_000_073, "订单正在审核中，暂不能取消，如需取消请联系总部");
 
     // ========== Order 门店收货（配送出库 → 门店确认收货 → 门店库存 / 门店往来）1-011-000-060 ==========
     ErrorCode ORDER_RECEIPT_NOT_EXISTS = new ErrorCode(1_011_000_060, "门店收货单不存在");

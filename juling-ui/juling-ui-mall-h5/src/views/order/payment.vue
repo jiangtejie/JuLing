@@ -36,6 +36,15 @@
   /** 最近一条被驳回的凭证：在表单上方给出驳回原因，引导重传 */
   const rejectedProof = computed(() => proofs.value.find((item) => item.status === 2));
 
+  /**
+   * 当前不允许再提交凭证：审核中（10）或已通过（20）
+   * 与后端 TradeOrderPaymentProofServiceImpl#canUploadProof 保持一致，
+   * 避免门店把表单填完才被后端拦（1_011_000_043「订单已通过审核，无法再上传付款凭证」）
+   */
+  const uploadBlocked = computed(
+    () => order.value?.auditStatus === 10 || order.value?.auditStatus === 20,
+  );
+
   const form = reactive({
     /** 图片地址：上传成功后回填 */
     urls: [] as string[],
@@ -173,7 +182,7 @@
     } catch {
       return;
     }
-    showSuccessToast('已提交，等待核验');
+    showSuccessToast('已提交，等待审核');
     await router.replace(`/order/${orderId.value}`);
   }
 
@@ -221,14 +230,14 @@
           </div>
         </div>
 
-        <!-- 驳回提示：把后台的核验意见原样带出来，避免客户反复试错 -->
+        <!-- 驳回提示：把审批意见原样带出来，避免客户反复试错（重传后后端会自动再次提交审批） -->
         <van-notice-bar
           v-if="rejectedProof"
           class="order-payment__notice"
           color="var(--app-danger-color)"
           background="#fff7f6"
           left-icon="warning-o"
-          :text="`上次凭证未通过：${rejectedProof.auditRemark || '未填写原因'}，请重新上传`"
+          :text="`上次凭证审核未通过：${rejectedProof.auditRemark || '未填写原因'}，请重新上传`"
           wrapable
         />
 
@@ -242,7 +251,21 @@
           wrapable
         />
 
-        <template v-if="remainAmount > 0">
+        <van-notice-bar
+          v-else-if="uploadBlocked"
+          class="order-payment__notice"
+          color="var(--app-primary-color)"
+          background="#f2f7ff"
+          left-icon="info-o"
+          :text="
+            order?.auditStatus === 10
+              ? '订单已提交审核，审核期间不能再补充凭证；如需修改请联系总部驳回后重传'
+              : '订单已通过审批，收款金额已认定，无需再上传凭证'
+          "
+          wrapable
+        />
+
+        <template v-if="remainAmount > 0 && !uploadBlocked">
           <!-- 凭证图片 -->
           <div class="order-payment__card app-card">
             <div class="order-payment__label">
@@ -305,7 +328,7 @@
           </van-cell-group>
 
           <div class="order-payment__hint">
-            提交后由财务核对到账金额，核验通过即进入发货流程；金额不符会被驳回，可重新上传。
+            提交后直接进入供应链 / 财务两级审批，审批通过即安排发货；金额不符会被驳回，可重新上传。
           </div>
 
           <!-- 历史凭证 -->
@@ -339,14 +362,14 @@
                 <template v-if="proof.payerName"> · {{ proof.payerName }}</template>
               </div>
               <div v-if="proof.auditRemark" class="order-payment__proof-remark">
-                核验意见：{{ proof.auditRemark }}
+                审批意见：{{ proof.auditRemark }}
               </div>
             </div>
           </div>
         </template>
       </div>
 
-      <div v-if="remainAmount > 0" class="order-payment__footer">
+      <div v-if="remainAmount > 0 && !uploadBlocked" class="order-payment__footer">
         <!-- 主操作按钮加轻微点按反馈：移动端点下去「有回应」 -->
         <motion.div :while-tap="{ scale: 0.97 }" :transition="{ duration: 0.1 }">
           <van-button

@@ -7,7 +7,13 @@
 export type OrderStatus =
   'UNPAID' | 'PAID' | 'SHIPPED' | 'COMPLETED' | 'CANCELED' | 'AFTER_SALE' | 'UNKNOWN';
 
-/** 订单收款状态（后端 TradeOrderReceiveStatusEnum）：0 未上传凭证 / 1 待核验 / 2 已驳回 / 3 部分收款 / 4 已收齐 */
+/**
+ * 订单收款状态（后端 TradeOrderReceiveStatusEnum）：
+ * 0 未上传凭证 / 1 凭证已提交待审核 / 2 已驳回 / 3 部分收款 / 4 已收齐。
+ *
+ * 门店提交凭证后订单直接进入「待发货」并自动提交两级审批，因此 1「待核验」不再下发
+ * （字典项停用），保留在类型里只为兼容历史订单。
+ */
 export type ReceiveStatusCode = 0 | 1 | 2 | 3 | 4;
 
 /**
@@ -32,17 +38,17 @@ export interface PaymentProof {
   urls: string[];
   /** 申报金额（单位：分） */
   amount: number;
-  /** 后台核定的收款金额（单位：分），未核验时为空 */
+  /** 审批认定的收款金额（单位：分），未认定时为空 */
   confirmedAmount?: number;
   payerName?: string;
   /** 收款渠道（字典 pay_channel_code 的线下值） */
   payChannelCode?: string;
   transferTime?: string | number;
   remark?: string;
-  /** 单条凭证状态：0 待核验 / 1 已确认 / 2 已驳回 */
+  /** 单条凭证状态：0 待审核（上传即此值）/ 1 已认定（审批通过）/ 2 已驳回（审批驳回） */
   status: number;
   auditTime?: string | number;
-  /** 核验意见（驳回原因） */
+  /** 审批意见（驳回原因） */
   auditRemark?: string;
   createTime: string | number;
 }

@@ -1,20 +1,27 @@
 package com.lxjl.juling.module.trade.service.order;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.module.bpm.api.task.BpmProcessInstanceApi;
 import com.lxjl.juling.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import com.lxjl.juling.module.bpm.enums.task.BpmProcessInstanceStatusEnum;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
+import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 import com.lxjl.juling.module.trade.dal.mysql.order.TradeOrderMapper;
+import com.lxjl.juling.module.trade.dal.mysql.order.TradeOrderPaymentProofMapper;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderAuditStatusEnum;
+import com.lxjl.juling.module.trade.enums.order.TradeOrderPaymentProofStatusEnum;
+import com.lxjl.juling.module.trade.enums.order.TradeOrderReceiveStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -39,6 +46,17 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
     private BpmProcessInstanceApi bpmProcessInstanceApi;
     @Resource
     private com.lxjl.juling.module.erp.api.customer.ErpCustomerApi erpCustomerApi;
+    @Resource
+    private TradeOrderPaymentProofMapper paymentProofMapper;
+
+    /**
+     * 自动提交审核时的流程发起人编号
+     *
+     * <p>门店在 H5 提交凭证就触发审批，而门店账号（会员）没有该流程定义的发起权限（定义里 start_user_ids = 1），
+     * 所以自动提交统一用这个「系统发起人」，手工提交仍用当前登录的管理员。
+     */
+    @Value("${juling.trade.order-audit.start-user-id:1}")
+    private Long autoSubmitUserId;
 
     @Override
     public void submitAudit(Long orderId, Long userId) {
@@ -51,11 +69,23 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
         try {
             doSubmitAudit(orderId, userId);
         } catch (Throwable e) {
-            // 只记日志、不向上抛：收款核验已经提交，不能因为审核没提交上而回滚收款。
-            // 订单此时仍是「待发货 + 待提交审核」，发货闸门对加盟门店是关闭的，可在后台手工提交。
-            log.error("[submitAuditAfterCommit][订单({}) 收款核验后自动提交审核失败，请在订单详情页手工提交，"
+            // 只记日志、不向上抛：收款已经落库，不能因为审核没提交上而回滚收款。
+            // 订单此时是「待发货 + 待提交审核」，发货闸门对加盟门店是关闭的，可在后台手工提交。
+            log.error("[submitAuditAfterCommit][订单({}) 自动提交门店要货审核失败，请在订单详情页手工提交，"
                     + "或检查 BPM 流程定义({})是否已部署、发起人是否有权限]",
                     orderId, BPM_PROCESS_DEFINITION_KEY, e);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void submitAuditAutoAfterCommit(Long orderId) {
+        try {
+            doSubmitAudit(orderId, autoSubmitUserId);
+        } catch (Throwable e) {
+            log.error("[submitAuditAutoAfterCommit][订单({}) 自动提交门店要货审核失败（发起人={}），"
+                    + "请在订单详情页手工提交，或检查 BPM 流程定义({})是否已部署]",
+                    orderId, autoSubmitUserId, BPM_PROCESS_DEFINITION_KEY, e);
         }
     }
 
@@ -83,6 +113,7 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateAuditStatus(Long orderId, Integer bpmStatus) {
         // 1. 校验订单处于审核中
         TradeOrderDO order = tradeOrderMapper.selectById(orderId);
@@ -101,8 +132,34 @@ public class TradeOrderAuditServiceImpl implements TradeOrderAuditService {
             log.warn("[updateAuditStatus][订单({}) 收到不处理的 BPM 状态({})]", orderId, bpmStatus);
             return;
         }
+        boolean approved = TradeOrderAuditStatusEnum.isApprove(auditStatus);
+
+        // 3. 审批结果回写付款凭证：通过 = 已认定（按申报金额认定），驳回 = 已驳回（门店需重新上传）
+        LocalDateTime now = LocalDateTime.now();
+        paymentProofMapper.selectListByOrderId(orderId).stream()
+                .filter(proof -> TradeOrderPaymentProofStatusEnum.isPending(proof.getStatus()))
+                .forEach(proof -> paymentProofMapper.updateById(new TradeOrderPaymentProofDO().setId(proof.getId())
+                        .setStatus(approved ? TradeOrderPaymentProofStatusEnum.CONFIRMED.getStatus()
+                                : TradeOrderPaymentProofStatusEnum.REJECTED.getStatus())
+                        .setConfirmedAmount(approved ? proof.getAmount() : null)
+                        .setAuditTime(now)
+                        .setAuditRemark(approved ? "" : ObjectUtil.defaultIfNull(order.getAuditRemark(), ""))));
+
+        // 4. 按「未被驳回的凭证申报金额」重算订单收款进度（驳回后归零，门店可重新上传并自动再提交审批）
+        List<TradeOrderPaymentProofDO> proofs = paymentProofMapper.selectListByOrderId(orderId);
+        int declaredAmount = proofs.stream()
+                .filter(proof -> !TradeOrderPaymentProofStatusEnum.isRejected(proof.getStatus()))
+                .map(TradeOrderPaymentProofDO::getAmount)
+                .filter(Objects::nonNull)
+                .reduce(0, Integer::sum);
+        boolean paid = order.getPayPrice() != null && declaredAmount >= order.getPayPrice();
+        int receiveStatus = paid ? TradeOrderReceiveStatusEnum.PAID.getStatus()
+                : declaredAmount > 0 ? TradeOrderReceiveStatusEnum.PARTIAL.getStatus()
+                : approved ? TradeOrderReceiveStatusEnum.NONE.getStatus()
+                : TradeOrderReceiveStatusEnum.REJECTED.getStatus();
         tradeOrderMapper.updateById(new TradeOrderDO().setId(orderId)
-                .setAuditStatus(auditStatus).setAuditTime(LocalDateTime.now()));
+                .setAuditStatus(auditStatus).setAuditTime(now)
+                .setPaidAmount(declaredAmount).setPaymentProofStatus(receiveStatus));
     }
 
     @Override

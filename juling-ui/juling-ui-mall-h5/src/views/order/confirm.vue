@@ -82,7 +82,7 @@
 
     cartStore.clearChecked();
     showSuccessToast('订货单提交成功');
-    // 线下收款：下单后引导上传付款截图，核验通过才进入发货
+    // 线下收款：下单后引导上传付款截图，提交后自动进入供应链 / 财务审批
     await router.replace(`/order/${orderId}/payment`);
   }
 

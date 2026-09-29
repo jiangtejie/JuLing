@@ -27,6 +27,7 @@ import {
   adaptCartListResult,
   adaptInvalidCartItem,
 } from '../src/api/adapters/cart.ts';
+import { PROOF_STATUS_MAP, RECEIVE_STATUS_MAP } from '../src/constants/index.ts';
 
 /* ------------------------------ 商品适配 ------------------------------ */
 
@@ -612,6 +613,8 @@ test('adaptReceiveStatus：未返回收款状态时回落「未上传凭证」',
   assert.equal(adaptReceiveStatus(undefined), 0);
   assert.equal(adaptReceiveStatus(null), 0);
   assert.equal(adaptReceiveStatus(3), 3);
+  // 1「待核验」新流程已不再下发（提交凭证后直接进两级审批），历史订单仍原样透传
+  assert.equal(adaptReceiveStatus(1), 1);
 });
 
 test('adaptOrderPage：收款状态与已收金额透传（旧后端缺字段时不报错）', () => {
@@ -664,7 +667,8 @@ test('adaptOrderDetail：收款状态与已收金额透传', () => {
     adjustPrice: 0,
     payPrice: 100000,
     paidAmount: 60000,
-    paymentProofStatus: 1,
+    // 提交凭证后的正常态：申报金额 < 应收 → 部分收款（3）；1「待核验」已不再下发
+    paymentProofStatus: 3,
     deliveryType: 1,
     logisticsId: null,
     logisticsName: '',
@@ -681,7 +685,7 @@ test('adaptOrderDetail：收款状态与已收金额透传', () => {
     items: [],
   });
   assert.equal(order.paidAmount, 60000);
-  assert.equal(order.paymentProofStatus, 1);
+  assert.equal(order.paymentProofStatus, 3);
 });
 
 test('adaptPaymentProof：多图归一化、空串剔除、驳回原因透传', () => {
@@ -710,6 +714,24 @@ test('adaptPaymentProof：多图归一化、空串剔除、驳回原因透传', 
   assert.equal(proof.status, 2);
   assert.equal(proof.auditRemark, '金额不符，请重传');
   assert.equal(proof.payChannelCode, 'offline_transfer');
+});
+
+/**
+ * 收款 / 凭证文案（门店提交凭证后直接进入供应链 → 财务两级审批，不再有「收款核验」环节）。
+ * 文案是门店侧唯一的口径出口，用测试钉住，避免后续改动把「核验」措辞带回来。
+ */
+test('RECEIVE_STATUS_MAP：1 不再是「待核验」，而是「凭证已提交，待审核」', () => {
+  assert.equal(RECEIVE_STATUS_MAP[0]!.text, '待上传凭证');
+  assert.equal(RECEIVE_STATUS_MAP[1]!.text, '凭证已提交，待审核');
+  assert.equal(RECEIVE_STATUS_MAP[2]!.text, '凭证已驳回');
+  assert.equal(RECEIVE_STATUS_MAP[3]!.text, '部分收款');
+  assert.equal(RECEIVE_STATUS_MAP[4]!.text, '已收齐');
+});
+
+test('PROOF_STATUS_MAP：上传即待审核、审批通过为已认定、驳回为已驳回', () => {
+  assert.equal(PROOF_STATUS_MAP[0]!.text, '待审核');
+  assert.equal(PROOF_STATUS_MAP[1]!.text, '已认定');
+  assert.equal(PROOF_STATUS_MAP[2]!.text, '已驳回');
 });
 
 /* ------------------------------ 会员适配 ------------------------------ */

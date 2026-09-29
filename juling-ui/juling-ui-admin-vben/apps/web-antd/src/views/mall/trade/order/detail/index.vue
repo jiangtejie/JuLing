@@ -16,8 +16,6 @@ import { useTabs } from '@vben/hooks';
 import { fenToYuan, formatDateTime } from '@vben/utils';
 
 import {
-  Badge,
-  Button,
   Card,
   Divider,
   Image,
@@ -41,7 +39,6 @@ import { TableAction } from '#/components/table-action';
 
 import AddressForm from '../modules/address-form.vue';
 import DeliveryForm from '../modules/delivery-form.vue';
-import PaymentProofForm from '../modules/payment-proof-form.vue';
 import PriceForm from '../modules/price-form.vue';
 import RemarkForm from '../modules/remark-form.vue';
 import {
@@ -73,7 +70,7 @@ const orderId = ref(0);
 const order = ref<MallOrderApi.Order>({
   logs: [],
 });
-/** 付款凭证（线下收款，含历史与驳回记录） */
+/** 付款凭证（门店 H5 上传，含历史与驳回记录）：本页只读展示，审批结果由 BPM 财务节点回写 */
 const proofs = ref<MallOrderApi.PaymentProof[]>([]);
 
 /**
@@ -82,15 +79,13 @@ const proofs = ref<MallOrderApi.PaymentProof[]>([]);
  * 凭证维度只有 3 个值且仅本页展示，避免为一个纯展示字段新增一套字典数据。
  */
 const PROOF_STATUS_MAP: Record<number, { color: string; text: string }> = {
-  0: { color: 'warning', text: '待核验' },
-  1: { color: 'success', text: '已确认' },
+  0: { color: 'warning', text: '待审核' },
+  1: { color: 'success', text: '已认定' },
   2: { color: 'error', text: '已驳回' },
 };
 
 /** 当前页签：默认展示订单信息 */
 const activeTab = ref('order');
-/** 是否存在待核验的付款凭证：给「收款信息」页签加红点 */
-const paymentPending = computed(() => order.value.paymentProofStatus === 1);
 
 const deliveryExpressList = ref<MallDeliveryExpressApi.DeliveryExpress[]>([]);
 const expressTrackList = ref<any[]>([]);
@@ -115,7 +110,12 @@ const [OrderPriceDescriptions] = useDescription({
   schema: useOrderPriceSchema(),
 });
 
-/** 待收货款（应付 - 已确认收款，负数归零） */
+/**
+ * 待收货款（应收 - 门店申报金额，负数归零）。
+ *
+ * paidAmount 在新流程里是「门店申报金额」口径（未被驳回的凭证申报金额合计）：
+ * 审批驳回后申报金额归零，此处即整笔应收；审批通过后也不会再回填核定额。
+ */
 const remainAmount = computed(() =>
   Math.max(0, (order.value.payPrice ?? 0) - (order.value.paidAmount ?? 0)),
 );
@@ -200,11 +200,6 @@ const [PriceFormModal, priceFormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
-const [PaymentProofFormModal, paymentProofFormModalApi] = useVbenModal({
-  connectedComponent: PaymentProofForm,
-  destroyOnClose: true,
-});
-
 /** 获得详情 */
 async function getDetail() {
   loading.value = true;
@@ -218,7 +213,7 @@ async function getDetail() {
     order.value = res;
     productGridApi.setGridOptions({ data: res.items || [] });
     operateLogGridApi.setGridOptions({ data: res.logs || [] });
-    // 线下收款：付款凭证（核验进度与驳回原因）
+    // 线下收款：付款凭证（审批进度与驳回原因，本页只读）
     proofs.value = await getPaymentProofList(orderId.value);
 
     // 如果配送方式为快递，则查询物流公司
@@ -252,12 +247,6 @@ const handleUpdateAddress = () => {
 const handleUpdatePrice = () => {
   priceFormModalApi.setData(order.value).open();
 };
-
-/** 线下收款：核验付款凭证 */
-const handleAuditPaymentProof = () => {
-  paymentProofFormModalApi.setData(order.value).open();
-};
-
 
 /** 返回列表页 */
 function handleBack() {
@@ -295,12 +284,6 @@ onMounted(async () => {
             ifShow: order.status === TradeOrderStatusEnum.UNPAID.status,
           },
           {
-            label: '核验收款',
-            type: 'primary',
-            onClick: handleAuditPaymentProof,
-            ifShow: order.paymentProofStatus === 1,
-          },
-          {
             label: '备注',
             type: 'primary',
             onClick: handleRemark,
@@ -330,7 +313,6 @@ onMounted(async () => {
     <RemarkFormModal @success="getDetail" />
     <AddressFormModal @success="getDetail" />
     <PriceFormModal @success="getDetail" />
-    <PaymentProofFormModal @success="getDetail" />
 
     <!-- 概览条：订单状态与收款进度是本页最常看的信息，固定展示在页签上方 -->
     <Card class="mb-4" size="small" :body-style="{ padding: '12px 16px' }">
@@ -347,7 +329,7 @@ onMounted(async () => {
           />
         </div>
         <div>
-          <span class="text-gray-400">已收货款</span>
+          <span class="text-gray-400">门店申报金额</span>
           <span class="ml-2 font-semibold">
             ¥{{ fenToYuan(order.paidAmount ?? 0) }}
           </span>
@@ -381,16 +363,12 @@ onMounted(async () => {
         </div>
       </TabPane>
 
-      <!-- 线下收款：待核验时页签带红点，避免财务漏看 -->
-      <TabPane key="payment">
-        <template #tab>
-          <Badge :dot="paymentPending" :offset="[6, -2]">收款信息</Badge>
-        </template>
-
+      <!-- 线下收款：门店上传凭证 → BPM 审批结果回写，本页只读展示（核验收款入口已随流程改造下线） -->
+      <TabPane key="payment" tab="收款信息">
         <Card size="small" :body-style="{ padding: '12px 16px' }">
           <div class="flex flex-wrap items-baseline gap-x-12 gap-y-3">
             <div>
-              <span class="text-gray-400">已确认收款</span>
+              <span class="text-gray-400">门店申报金额</span>
               <span class="ml-2 text-base font-semibold">
                 ¥{{ fenToYuan(order.paidAmount ?? 0) }}
               </span>
@@ -417,21 +395,18 @@ onMounted(async () => {
                 />
               </span>
             </div>
-            <div class="ml-auto">
-              <Button
-                type="primary"
-                :disabled="!paymentPending"
-                @click="handleAuditPaymentProof"
-              >
-                核验收款
-              </Button>
-            </div>
           </div>
 
           <Divider class="!my-3" />
 
+          <!-- 核验收款入口已下线：认定动作在 BPM 审批节点完成，这里只做只读展示 -->
+          <div class="mb-2 text-xs text-gray-400">
+            门店在 H5 提交凭证后订单直接进入待发货，并自动提交「供应链 → 财务」两级审批；
+            审批通过即按门店申报金额认定收款，驳回则门店需重新上传（重传后自动再次提交审批）。
+          </div>
+
           <div v-if="proofs.length === 0" class="py-2 text-gray-400">
-            客户尚未上传付款凭证
+            门店尚未上传付款凭证
           </div>
           <div v-else class="flex flex-col gap-3">
             <div
@@ -444,7 +419,7 @@ onMounted(async () => {
                   {{ PROOF_STATUS_MAP[proof.status ?? 0]?.text }}
                 </Tag>
                 <span>
-                  申报
+                  门店申报
                   <span class="font-medium">
                     ¥{{ fenToYuan(proof.amount ?? 0) }}
                   </span>
@@ -455,7 +430,7 @@ onMounted(async () => {
                     proof.confirmedAmount !== undefined
                   "
                 >
-                  核定
+                  认定金额
                   <span class="font-medium">
                     ¥{{ fenToYuan(proof.confirmedAmount) }}
                   </span>
@@ -484,7 +459,7 @@ onMounted(async () => {
                 </Space>
               </Image.PreviewGroup>
               <div v-if="proof.auditRemark" class="mt-2 text-xs text-red-500">
-                核验意见：{{ proof.auditRemark }}
+                审批意见：{{ proof.auditRemark }}
               </div>
             </div>
           </div>

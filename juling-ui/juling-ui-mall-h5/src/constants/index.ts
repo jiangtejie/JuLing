@@ -58,20 +58,28 @@ export const ORDER_STATUS_MAP = {
 
 /**
  * 订单收款状态展示配置（后端 TradeOrderReceiveStatusEnum，订单维度）。
- * 线下收款流程：未上传凭证 → 待核验 → 部分收款 / 已收齐（驳回后可重传）。
+ *
+ * 门店提交付款凭证后**直接进入**供应链 / 财务两级审批（不再有后台人工核验收款，
+ * 核收款的职责由财务审批节点承接）：未上传凭证 → 凭证已提交，待审核 →
+ * 部分收款 / 已收齐（审批驳回后可重新上传，后端会自动再次提交审批）。
+ *
+ * 注：1「待核验」后端已不再下发（该字典项停用），这里保留字面仅作历史订单兜底。
  */
 export const RECEIVE_STATUS_MAP: Record<number, { text: string; color: string }> = {
   0: { text: '待上传凭证', color: 'var(--app-danger-color)' },
-  1: { text: '凭证待核验', color: 'var(--app-warning-color)' },
+  1: { text: '凭证已提交，待审核', color: 'var(--app-warning-color)' },
   2: { text: '凭证已驳回', color: 'var(--app-danger-color)' },
   3: { text: '部分收款', color: 'var(--app-warning-color)' },
   4: { text: '已收齐', color: 'var(--app-success-color)' },
 };
 
-/** 单条付款凭证状态（后端 TradeOrderPaymentProofStatusEnum） */
+/**
+ * 单条付款凭证状态（后端 TradeOrderPaymentProofStatusEnum）。
+ * 上传即「待审核」；审批通过置「已认定」（confirmed_amount = 申报金额），驳回置「已驳回」。
+ */
 export const PROOF_STATUS_MAP: Record<number, { text: string; color: string }> = {
-  0: { text: '待核验', color: 'var(--app-warning-color)' },
-  1: { text: '已确认', color: 'var(--app-success-color)' },
+  0: { text: '待审核', color: 'var(--app-warning-color)' },
+  1: { text: '已认定', color: 'var(--app-success-color)' },
   2: { text: '已驳回', color: 'var(--app-danger-color)' },
 };
 

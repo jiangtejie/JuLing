@@ -93,6 +93,9 @@ export function adaptOrderItem(raw: AppTradeOrderItemRespVO): OrderItem {
 /**
  * 收款状态码归一化：后端未返回（老版本 / 空值）时按「未上传凭证」处理，
  * 避免视图层拿到 undefined 后在 RECEIVE_STATUS_MAP 里取不到配置。
+ *
+ * 值域不变（0-4），只是 1「待核验」在新流程下不再产生——门店提交凭证后订单直接进入
+ * 「待发货」并自动提交两级审批；仍有历史订单可能是 1，故原样透传，由文案兜底。
  */
 export function adaptReceiveStatus(status?: number | null): ReceiveStatusCode {
   return (status ?? 0) as ReceiveStatusCode;
@@ -121,7 +124,7 @@ export function adaptOrderPage(page: BackendPage<AppTradeOrderPageItemRespVO>): 
   };
 }
 
-/** 后端付款凭证 → 前端 PaymentProof（多图地址归一化，空串剔除） */
+/** 后端付款凭证 → 前端 PaymentProof（多图地址归一化，空串剔除；状态 0 待审核 / 1 已认定 / 2 已驳回） */
 export function adaptPaymentProof(raw: AppTradeOrderPaymentProofRespVO): PaymentProof {
   return {
     id: raw.id,

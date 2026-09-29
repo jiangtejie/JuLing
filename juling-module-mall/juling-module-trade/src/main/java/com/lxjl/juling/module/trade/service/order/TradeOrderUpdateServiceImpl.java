@@ -12,7 +12,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.util.json.JsonUtils;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
-import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.system.api.social.SocialClientApi;
 import com.lxjl.juling.module.system.api.social.dto.SocialWxaSubscribeMessageSendReqDTO;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderDeliveryReqVO;
@@ -218,7 +217,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         }
 
         // 3. 线下收款：不创建支付单（本分支已切除线上支付模块）。
-        //    客户提交订货单后上传付款截图，后台核验通过后调用 updateOrderPaidByOffline 置为已收款。
+        //    客户提交订货单后上传付款截图，提交即调用 updateOrderPaidByOffline 置为已收款并进入两级审批。
 
         // 4. 插入订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), null, order.getStatus());
@@ -254,7 +253,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), TradeOrderStatusEnum.UNDELIVERED.getStatus());
         TradeOrderLogUtils.setUserInfo(order.getUserId(), UserTypeEnum.MEMBER.getValue());
 
-        // 5. 门店订货链 S1：收款收齐后自动提交供应链审核（BPM 流程定义 key：trade-order-store-audit）
+        // 5. 门店订货链 S1：提交付款凭证后直接提交两级审批（供应链 → 财务出纳；BPM 流程定义 key：trade-order-store-audit）
         //    审核未通过前不允许发货（发货闸门见 TradeOrderAuditService#validateCanDelivery）。
         //
         //    ⚠️ 自动提交必须放在**本事务提交之后**执行，不能就地 try/catch：
@@ -264,24 +263,20 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         //    收款核验一定成功落库；审核提交失败时订单仍是「待发货 + 待提交审核」，
         //    发货闸门关闭，可在订单详情页手工重新提交。
         if (tradeOrderStoreService.isFranchiseStore(order.getCustomerId())) {
-            Long operatorUserId = SecurityFrameworkUtils.getLoginUserId();
-            if (operatorUserId == null) {
-                log.warn("[updateOrderPaidByOffline][订单({}) 无登录上下文，跳过自动提交审核]", order.getId());
-            } else {
-                Long orderId = order.getId();
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        try {
-                            tradeOrderAuditService.submitAuditAfterCommit(orderId, operatorUserId);
-                        } catch (Throwable e) {
-                            log.error("[updateOrderPaidByOffline][订单({}) 收款核验后自动提交审核失败，"
-                                    + "订单已收款但停在「待提交审核」，请在订单详情页手工提交]", orderId, e);
-                        }
-                    }
-                });
-            }
+            Long orderId = order.getId();
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 发起人用系统配置账号：门店在 H5 提交凭证时登录身份是会员，没有该流程定义的发起权限
+                    tradeOrderAuditService.submitAuditAutoAfterCommit(orderId);
+                }
+            });
         } else {
+            // 直营门店免审：把审核状态留痕为「已通过」，避免订单永远停在「待提交」看起来像没人处理
+            tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId())
+                    .setAuditStatus(TradeOrderAuditStatusEnum.APPROVE.getStatus())
+                    .setAuditTime(LocalDateTime.now())
+                    .setAuditRemark("直营门店免审：提交付款凭证后直接进入待发货"));
             log.info("[updateOrderPaidByOffline][订单({}) 直营门店免审，直接进入订单工作台待发货]", order.getId());
         }
     }
@@ -490,11 +485,10 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         if (ObjectUtil.notEqual(order.getStatus(), TradeOrderStatusEnum.UNPAID.getStatus())) {
             throw exception(ORDER_CANCEL_FAIL_STATUS_NOT_UNPAID);
         }
-        // 1.3 校验：存在待核验的付款凭证时不允许取消，避免客户已转账却被取消订单。
-        //     这里必须用专属错误码——此前复用了「订单不是【待支付】状态」，
-        //     而订单其实正处于待收款状态，提示与事实不符，客户无从判断该怎么办。
-        if (TradeOrderReceiveStatusEnum.isPending(order.getPaymentProofStatus())) {
-            log.warn("[cancelOrderByMember][order({}) 存在待核验的付款凭证，不支持取消]", order.getId());
+        // 1.3 校验：审核中的订单不允许门店自行取消（可能已转账并进入审批，要走总部或售后处理）。
+        //     注：提交付款凭证后订单会立即转为「待发货」，正常走不到这里，此校验用于兜底。
+        if (Objects.equals(order.getAuditStatus(), TradeOrderAuditStatusEnum.PROCESS.getStatus())) {
+            log.warn("[cancelOrderByMember][order({}) 正在审核中，不支持取消]", order.getId());
             throw exception(ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF);
         }
 
@@ -533,10 +527,9 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     @Transactional(rollbackFor = Exception.class)
     @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.SYSTEM_CANCEL)
     public void cancelOrderBySystem(TradeOrderDO order) {
-        // 线下收款：已上传凭证（待核验 / 部分收款 / 已收齐）的订单涉及真实货款，不能按超时自动取消
-        if (TradeOrderReceiveStatusEnum.isPending(order.getPaymentProofStatus())
-                || TradeOrderReceiveStatusEnum.isPartial(order.getPaymentProofStatus())
-                || TradeOrderReceiveStatusEnum.isPaid(order.getPaymentProofStatus())) {
+        // 线下收款：只要门店提交过付款凭证（收款状态不再是「未上传凭证」）就涉及真实货款，不能按超时自动取消
+        if (Boolean.TRUE.equals(order.getPayStatus())
+                || ObjectUtil.notEqual(order.getPaymentProofStatus(), TradeOrderReceiveStatusEnum.NONE.getStatus())) {
             log.info("[cancelOrderBySystem][order({}) 已有收款进展({})，跳过超时自动取消]", order.getId(), order.getPaymentProofStatus());
             return;
         }

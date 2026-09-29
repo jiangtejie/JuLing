@@ -153,14 +153,6 @@ public class TradeOrderController {
         return success(true);
     }
 
-    @PutMapping("/payment-proof/audit")
-    @Operation(summary = "核验订单付款凭证", description = "确认收款（可核定实际到账金额）或驳回重传")
-    @PreAuthorize("@ss.hasPermission('trade:order:payment-proof:audit')")
-    public CommonResult<Boolean> auditPaymentProof(@Valid @RequestBody TradeOrderPaymentProofAuditReqVO auditReqVO) {
-        tradeOrderPaymentProofService.auditPaymentProof(getLoginUserId(), auditReqVO);
-        return success(true);
-    }
-
     @GetMapping("/payment-proof/list")
     @Operation(summary = "获得订单的付款凭证列表")
     @Parameter(name = "orderId", description = "交易订单编号", required = true, example = "1024")

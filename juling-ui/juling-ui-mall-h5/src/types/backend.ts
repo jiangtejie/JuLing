@@ -296,7 +296,7 @@ export interface AppTradeOrderPaymentProofRespVO {
   payChannelCode: string | null;
   transferTime: BackendDateTime | null;
   remark: string | null;
-  /** 0 待核验 / 1 已确认 / 2 已驳回 */
+  /** 0 待审核（上传即此值）/ 1 已认定（审批通过）/ 2 已驳回（审批驳回） */
   status: number;
   auditTime: BackendDateTime | null;
   auditRemark: string | null;

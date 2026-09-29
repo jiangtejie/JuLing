@@ -215,8 +215,10 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       minWidth: 110,
     },
     {
+      // 新流程里 paidAmount 是「门店申报金额」口径（未被驳回的凭证申报金额合计），
+      // 「核验收款」下线后后台不再回写核定额
       field: 'paidAmount',
-      title: '已确认收款',
+      title: '门店申报金额',
       formatter: 'formatFenToYuanAmount',
       minWidth: 120,
     },

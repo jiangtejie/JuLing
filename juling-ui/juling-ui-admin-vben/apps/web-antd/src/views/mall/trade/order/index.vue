@@ -22,7 +22,6 @@ import { $t } from '#/locales';
 
 import { useGridColumns, useGridFormSchema } from './data';
 import DeliveryForm from './modules/delivery-form.vue';
-import PaymentProofForm from './modules/payment-proof-form.vue';
 import RemarkForm from './modules/remark-form.vue';
 
 const { push } = useRouter();
@@ -34,11 +33,6 @@ const [DeliveryFormModal, deliveryFormModalApi] = useVbenModal({
 
 const [RemarkFormModal, remarkFormModalApi] = useVbenModal({
   connectedComponent: RemarkForm,
-  destroyOnClose: true,
-});
-
-const [PaymentProofFormModal, paymentProofFormModalApi] = useVbenModal({
-  connectedComponent: PaymentProofForm,
   destroyOnClose: true,
 });
 
@@ -101,11 +95,6 @@ function handleDelivery(row: MallOrderApi.Order) {
 /** 备注 */
 function handleRemark(row: MallOrderApi.Order) {
   remarkFormModalApi.setData(row).open();
-}
-
-/** 线下收款：核验客户上传的付款凭证（确认收款 / 驳回） */
-function handleAuditPaymentProof(row: MallOrderApi.Order) {
-  paymentProofFormModalApi.setData(row).open();
 }
 
 /** 门店要货：提交审核（待提交 / 已驳回 且 待发货 的订单） */
@@ -175,7 +164,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
     <DeliveryFormModal @success="handleRefresh" />
     <RemarkFormModal @success="handleRefresh" />
-    <PaymentProofFormModal @success="handleRefresh" />
     <Grid table-title="订单列表">
       <template #expand_toggle="{ row }">
         <Button type="link" size="small" @click.stop="toggleExpand(row)">
@@ -227,13 +215,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
             },
           ]"
           :drop-down-actions="[
-            {
-              label: '核验收款',
-              type: 'link',
-              auth: ['trade:order:payment-proof:audit'],
-              ifShow: () => row.paymentProofStatus === 1,
-              onClick: handleAuditPaymentProof.bind(null, row),
-            },
             {
               // 门店要货：待提交(0) / 已驳回(30) 且订单待发货时，可提交审核
               label: '提交审核',

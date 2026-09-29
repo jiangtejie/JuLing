@@ -348,6 +348,11 @@ juling:
       pay-expire-time: 2h # 支付的过期时间
       receive-expire-time: 14d # 收货的过期时间
       status-sync-to-wxa-enable: true # 是否同步订单状态到微信小程序
+    # 门店要货两级审批（供应链 → 财务出纳）：门店在 H5 提交付款凭证即自动提交审核，
+    # 此时登录身份是会员、没有该流程定义的发起权限（start_user_ids 只配了超管），
+    # 所以自动提交统一用下面这个「系统发起人」；后台手工「提交审核」仍用当前登录管理员。
+    order-audit:
+      start-user-id: 1
     express:
       client: kd_100
       kd-niao:

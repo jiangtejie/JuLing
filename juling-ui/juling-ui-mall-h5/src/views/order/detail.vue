@@ -82,14 +82,25 @@
   /** 最近一条被驳回的凭证：用于在卡片上直接提示驳回原因 */
   const rejectedProof = computed(() => proofs.value.find((item) => item.status === 2));
 
-  /** 还能上传凭证：货款未收齐，且订单不在取消 / 售后等异常态 */
-  const canUpload = computed(() => remainAmount.value > 0 && !isAbnormal.value);
+  /**
+   * 还能上传凭证：货款未收齐、订单不在取消/售后异常态，且后端允许补传
+   * （后端只允许「待支付」或「待发货且审核状态为 待提交/已驳回」时上传：
+   *   审核中(10) 不允许追加，避免重复上传把申报金额叠高；已通过(20) 则收款已认定）
+   */
+  const canUpload = computed(
+    () =>
+      remainAmount.value > 0 &&
+      !isAbnormal.value &&
+      order.value?.auditStatus !== 10 &&
+      order.value?.auditStatus !== 20,
+  );
 
   /**
-   * 付款凭证核验中：此时客户可能已经转过账，不允许取消订单（后端同样会拦），
+   * 订单审核中（auditStatus = 10）：门店提交付款凭证后后端自动提交审批，此时不允许取消
+   * （后端同样会拦，提示「订单正在审核中，暂不能取消，如需取消请联系总部」），
    * 前端提前把「为什么不能取消」讲清楚，避免点下去才报错。
    */
-  const proofUnderReview = computed(() => order.value?.paymentProofStatus === 1);
+  const auditInProgress = computed(() => order.value?.auditStatus === 10);
   /** 已完成 / 已取消订单：支持「再来一单」 */
   const { canReorder, reorder, reordering } = useReorder();
 
@@ -97,8 +108,8 @@
     if (order.value) void reorder(order.value);
   }
 
-  /** 允许取消：待收款且没有正在核验的凭证 */
-  const canCancel = computed(() => order.value?.status === 'UNPAID' && !proofUnderReview.value);
+  /** 允许取消：只有「待支付」且不在审核中的订单（审核中不可取消） */
+  const canCancel = computed(() => order.value?.status === 'UNPAID' && !auditInProgress.value);
   const uploadText = computed(() => (proofs.value.length ? '重新上传付款凭证' : '上传付款凭证'));
 
   /* ------------------- 门店订货链：归属 · 审核 · 数量进度 ------------------- */
@@ -136,8 +147,8 @@
         return '审核未通过，请按上方意见调整后重新提交，或联系总部处理。';
       default:
         return isDirectStore.value
-          ? '直营门店免审核：收款核验通过后直接进入待发货。'
-          : '收款核验通过后系统会自动提交审核（也可由总部手工提交）。';
+          ? '直营门店免审核，提交凭证后直接进入待发货。'
+          : '提交付款凭证后系统会自动提交供应链/财务审批。';
     }
   });
 
@@ -194,15 +205,19 @@
 
   /* ---------------------------- 收款进度（van-steps） ---------------------------- */
 
-  /** 收款进度三步：客户上传 → 财务核验 → 收款完成 */
-  const RECEIVE_STEPS = ['上传凭证', '财务核验', '收款完成'] as const;
+  /**
+   * 收款进度两步：上传凭证 → 等待发货。
+   *
+   * 门店提交凭证后订单立刻进入「待发货」并自动提交两级审批，收款不再是独立的核验环节，
+   * 所以不再有「财务核验 / 收款完成」两步。
+   */
+  const RECEIVE_STEPS = ['上传凭证', '等待发货'] as const;
 
   /** 由订单收款状态推导当前处于哪一步 */
   const receiveStepActive = computed(() => {
     const status = order.value?.paymentProofStatus ?? 0;
-    if (status === 4) return 2; // 已收齐
-    if (status === 1 || status === 3) return 1; // 待核验 / 部分收款：核验环节
-    return 0; // 未上传 / 已驳回：回到上传环节
+    if (status === 0 || status === 2) return 0; // 未上传 / 已驳回：回到上传环节
+    return 1; // 已提交（1 为历史单兜底）/ 部分收款 / 已收齐：等待发货
   });
 
   /** 已驳回时进度条用警示色，避免看起来「一切正常」 */
@@ -224,9 +239,7 @@
     const lastAudit = audited.length
       ? formatDate(audited[audited.length - 1]!.auditTime, 'MM-DD HH:mm')
       : '';
-    return lastAudit
-      ? `首次提交 ${first} · 最近核验 ${lastAudit}`
-      : `首次提交 ${first} · 等待财务核验`;
+    return lastAudit ? `首次提交 ${first} · 最近审核 ${lastAudit}` : `首次提交 ${first} · 等待审核`;
   });
 
   /**
@@ -388,7 +401,7 @@
             </van-tag>
           </div>
 
-          <!-- 收款进度：客户上传 → 财务核验 → 收款完成 -->
+          <!-- 收款进度：上传凭证 → 等待发货（提交后直接进入两级审批） -->
           <van-steps
             :active="receiveStepActive"
             :active-color="receiveStepColor"
@@ -424,18 +437,18 @@
             </div>
           </div>
 
-          <!-- 核验中：说明为什么暂时不能取消，客户不必去点按钮撞报错 -->
+          <!-- 审核中：说明为什么暂时不能取消，客户不必去点按钮撞报错 -->
           <van-notice-bar
-            v-if="proofUnderReview"
+            v-if="auditInProgress"
             class="order-detail__notice"
             left-icon="info-o"
             color="var(--app-warning-color)"
             background="#fffbe8"
             wrapable
-            text="付款凭证核验中，暂不能取消订单；如需取消请联系总部"
+            text="订单审核中，暂不能取消订单；如需取消请联系总部"
           />
 
-          <!-- 驳回原因：用 notice-bar 直接带出后台核验意见，引导客户重传 -->
+          <!-- 驳回原因：用 notice-bar 直接带出审批意见，引导客户重传（重传后自动再次提交审批） -->
           <van-notice-bar
             v-if="rejectedProof"
             class="order-detail__notice"
@@ -443,7 +456,7 @@
             color="var(--app-danger-color)"
             background="#fff7f6"
             wrapable
-            :text="`凭证未通过：${rejectedProof.auditRemark || '未填写原因'}，请重新上传`"
+            :text="`凭证审核未通过：${rejectedProof.auditRemark || '未填写原因'}，请重新上传`"
           />
 
           <van-divider v-if="proofs.length" class="order-detail__divider" />
@@ -486,7 +499,7 @@
                 <template v-if="proof.payerName"> · {{ proof.payerName }}</template>
               </div>
               <div v-if="proof.auditRemark" class="order-detail__proof-remark">
-                核验意见：{{ proof.auditRemark }}
+                审批意见：{{ proof.auditRemark }}
               </div>
             </van-collapse-item>
           </van-collapse>
