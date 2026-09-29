@@ -58,7 +58,7 @@ public class LogRecordServiceImpl implements ILogRecordService {
     }
 
     public static void fillModuleFields(OperateLogCreateReqDTO reqDTO, LogRecord logRecord) {
-        reqDTO.setType(logRecord.getType()); // 大模块类型，例如：CRM 客户
+        reqDTO.setType(logRecord.getType()); // 大模块类型，例如：ERP 采购订单
         reqDTO.setSubType(logRecord.getSubType());// 操作名称，例如：转移客户
         reqDTO.setBizId(Long.parseLong(logRecord.getBizNo())); // 业务编号，例如：客户编号
         reqDTO.setAction(logRecord.getAction());// 操作内容，例如：修改编号为 1 的用户信息，将性别从男改成女，将姓名从亚特改成源码。

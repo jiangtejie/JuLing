@@ -1,6 +1,6 @@
 # 亚特 管理系统
 
-面向 **亚特** 自有业务的一体化管理平台：进销存、财务、生产制造、人力资源、项目与客户管理。
+面向 **亚特** 自有业务的一体化管理平台：进销存（ERP/WMS）、财务（FMS）、私域订货商城、审批（BPM）与单据平台。
 
 - 后端：Spring Boot 3.5 + JDK 17 + MyBatis-Plus + PostgreSQL 15 + Redis + Flowable + Quartz
 - 前端：Vue3 + Vben5 + Ant Design Vue（`juling-ui/juling-ui-admin-vben`），生产环境经 Nginx 发布
@@ -18,14 +18,11 @@ JuLing/
 ├─ juling-module-infra/         基础设施(代码生成/文件/定时任务/日志/配置…)
 ├─ juling-module-member/        会员中心
 ├─ juling-module-bpm/           工作流(Flowable)
-├─ juling-module-mp/            微信公众号
-├─ juling-module-mall/          商城(商品/促销/交易/统计)
-├─ juling-module-crm/           客户关系
+├─ juling-module-mall/          商城(商品/交易/统计)
 ├─ juling-module-erp/           进销存
-├─ juling-module-iot/           物联网
-├─ juling-module-mes/ wms/      生产制造 / 仓储
-├─ juling-module-hrm/ fms/ pms/ 人力资源 / 财务 / 项目管理
-├─ juling-module-im/            即时通讯(WebSocket 实时消息)
+├─ juling-module-wms/           仓储
+├─ juling-module-fms/           财务
+├─ juling-module-bill/          单据平台
 ├─ juling-module-ai/            AI 能力(大模型/知识库/绘图…)
 ├─ sql/                        数据库脚本(见下)
 ├─ script/                     运维与迁移脚本(备份/自检工具/本地补丁)
@@ -87,8 +84,10 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 ```
 
-**未启用的模块不会注册任何 Controller**，此时请求该模块的路径会被
-`DefaultController` 兜底，返回 `code=501` 的可读提示（而不是 404）。
+**已从本仓库移除的模块**（`pay` 支付、`report` 报表）不会注册任何 Controller，
+请求它们的路径由 `DefaultController` 兜底，返回 `code=501` 的可读提示（说明为何没有该能力）。
+而**工程内已有模块**的路径写错时，返回的是标准 `404 请求地址不存在`——不再被兜底伪装成「模块未启用」，
+便于排查拼错的接口地址。
 
 启用某个模块的步骤：
 
@@ -103,12 +102,10 @@ Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 
 | 模块 | 额外依赖 / 说明 |
 |---|---|
-| `juling-module-iot` | 设备时序数据需要 TDengine；未部署时 `iot/statistics/*` 等接口会报错 |
-| `juling-module-mp` | 需要微信公众号的 appId/secret 等配置，未配置时公众号相关接口不可用 |
 | `juling-module-ai` | 需要各家大模型的 API Key（`juling.ai.*`，默认关闭） |
 
 > **数据报表**：本仓库**不包含**报表设计器模块。固定口径的业务报表（FMS 资产负债表/利润表/现金流量表、
-> HRM 考勤报表、MES/WMS 等）由各业务模块自带页面提供；如需业务人员自助拖拽做看板，
+> ERP/WMS 库存与进销存报表等）由各业务模块自带页面提供；如需业务人员自助拖拽做看板，
 > 建议独立部署 BI 工具（Metabase / Superset / Grafana）直连 PostgreSQL，用只读账号 + 视图/行级安全隔离数据。
 
 ## 仓库约定

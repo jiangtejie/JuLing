@@ -199,7 +199,7 @@ public class UserController {
         return success(userService.importUserList(list, updateSupport));
     }
 
-    // ==================== 免鉴权接口（用于 IM 点头像弹名片、加好友搜索等场景） ====================
+    // ==================== 免鉴权接口（用于点头像弹名片、按昵称搜索用户等场景） ====================
 
     @GetMapping("/get-simple")
     @Operation(summary = "获得用户精简信息", description = "用于点头像弹名片等场景；免鉴权")

@@ -29,12 +29,6 @@ public class RedisStreamMessageCleanupJob {
     public static final String DEFAULT_CLEANUP_LOCK_KEY = "redis:stream:message-cleanup:lock";
 
     /**
-     * IoT Redis 总线清理任务使用的分布式锁（须与 {@link #DEFAULT_CLEANUP_LOCK_KEY} 区分，否则会共抢一把锁，
-     * 同一时刻只有一侧能执行 XTRIM，另一侧 Stream 可能无限积压）
-     */
-    public static final String IOT_CLEANUP_LOCK_KEY = "redis:stream:message-cleanup:lock:iot";
-
-    /**
      * 保留的消息数量，默认保留最近 10000 条消息
      */
     private static final long MAX_COUNT = 10000;

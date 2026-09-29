@@ -162,7 +162,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         userMapper.updateById(updateObj);
         // 2.2 更新岗位
         updateUserPost(updateReqVO, updateObj);
-        // 2.3 昵称 / 头像变化时，发送消息供下游订阅（如 IM 模块推 FRIEND_INFO_UPDATED）
+        // 2.3 昵称 / 头像变化时，发送消息供下游订阅（供下游订阅方分发）
         publishUserProfileUpdatedIfChanged(oldUser, updateReqVO.getNickname(), updateReqVO.getAvatar());
 
         // 3. 记录操作日志上下文
@@ -202,7 +202,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         // 2. 执行更新
         userMapper.updateById(BeanUtils.toBean(reqVO, AdminUserDO.class).setId(id));
 
-        // 3. 昵称 / 头像变化时，发送消息供下游订阅（如 IM 模块推 FRIEND_INFO_UPDATED）
+        // 3. 昵称 / 头像变化时，发送消息供下游订阅（供下游订阅方分发）
         publishUserProfileUpdatedIfChanged(oldUser, reqVO.getNickname(), reqVO.getAvatar());
     }
 

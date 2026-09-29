@@ -75,15 +75,6 @@ spring:
 #          url: jdbc:mysql://127.0.0.1:3306/juling?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
 #          username: root
 #          password: 123456
-#        tdengine: # IoT 数据库（需要 IoT 物联网再开启噢！）
-#          lazy: true # 开启懒加载，保证启动速度
-#          url: jdbc:TAOS-WS://127.0.0.1:6041/juling?varcharAsString=true&enableAutoReconnect=true # IoT 时序库连接（开启 TDengine 自动重连）
-#          driver-class-name: com.taosdata.jdbc.ws.WebSocketDriver
-#          username: root
-#          password: taosdata
-#          druid:
-#            validation-query: SELECT SERVER_STATUS() # TDengine 数据源的有效性检查 SQL
-
   # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
   data:
     redis:
@@ -190,15 +181,9 @@ logging:
     com.lxjl.juling.module.member.dal.mysql: debug
     com.lxjl.juling.module.trade.dal.mysql: debug
     com.lxjl.juling.module.statistics.dal.mysql: debug
-    com.lxjl.juling.module.crm.dal.mysql: debug
     com.lxjl.juling.module.erp.dal.mysql: debug
-    com.lxjl.juling.module.mes.dal.mysql: debug
     com.lxjl.juling.module.wms.dal.mysql: debug
-    com.lxjl.juling.module.iot.dal.mysql: debug
-    com.lxjl.juling.module.iot.dal.tdengine: DEBUG
-    com.lxjl.juling.module.iot.service.rule: debug
     com.lxjl.juling.module.ai.dal.mysql: debug
-    com.lxjl.juling.module.im.dal.mysql: debug
     org.springframework.context.support.PostProcessorRegistrationDelegate: ERROR # TODO 亚特：先禁用，Spring Boot 3.X 存在部分错误的 WARN 提示
 
 debug: false
@@ -235,8 +220,6 @@ wx:
 
 # 亚特配置项，设置当前项目所有自定义的配置
 juling:
-  iot:
-    tdengine-init: false # 本地未部署 TDengine 时序库，关闭 IoT 设备消息表自动初始化（部署后置 true）
   captcha:
     enable: false # 本地环境，暂时关闭图片验证码，方便登录等接口的测试；
   security:

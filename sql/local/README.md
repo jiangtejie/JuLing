@@ -47,6 +47,15 @@ psql -U root -d yate -f sql/local/24_fix_system_dept_sequence.sql
 psql -U root -d yate -f sql/local/25_trade_config_default.sql
 # 门店订货链 S2 切片一：物料分料属性（允许统配/允许直拨）+ 订单行 alloc_mode + 订单店型快照 + 「订单工作台」菜单
 psql -U root -d yate -f sql/local/33_workbench_alloc.sql
+# 门店收货/往来台账 → 订货账号 → 会员中心/营销/支付归档 → 7 个用不到的模块整体下线
+psql -U root -d yate -f sql/local/38_store_receipt_and_receivables.sql
+psql -U root -d yate -f sql/local/39_member_username_login.sql
+psql -U root -d yate -f sql/local/40_remove_member_center.sql
+psql -U root -d yate -f sql/local/41_fix_order_account_menu.sql
+psql -U root -d yate -f sql/local/42_move_order_account_to_mall.sql
+psql -U root -d yate -f sql/local/43_remove_promotion_and_comment.sql
+psql -U root -d yate -f sql/local/44_cleanup_archived_pay_and_dead_role.sql
+psql -U root -d yate -f sql/local/45_remove_unused_modules.sql
 ```
 
 > 全新环境按 `01 → 15` 顺序执行一遍即可;字典覆盖可用
@@ -92,7 +101,7 @@ psql -U root -d yate -f sql/local/33_workbench_alloc.sql
 | 42_move_order_account_to_mall.sql | **把「订货账号」归位到「商城系统」下**：订货账号是门店/代理人的订货身份（谁能下单、以哪家门店下单、订单归属哪家店），与「订单中心 / 订单工作台 / 门店收货单」同属一条订货链，使用者是总部运营而不是 IT，因此把 41 临时给的顶层入口改挂到「商城系统」(2362) 下（path 相对段 `order-account`，sort 62，紧邻订单中心）；并给「已授订货账号但没授商城系统」的角色补商城系统及其祖先链（yudao 会剔除父菜单未授权的节点）。幂等 | 菜单 12140 |
 | 41_fix_order_account_menu.sql | **修 40 脚本留下的菜单孤儿**：40 删掉了顶层「会员中心」(2262)，但保留了它的子菜单「会员管理」(2317)，导致 2317 的父菜单不存在、**侧边栏里看不到「订货账号」**。本脚本补一个顶层目录「订货账号」(12140) 把它挂回去并改名「订货账号列表」，授给已有 2317 的角色并补祖先链；同时清掉 2317 下两个指向已下线能力的按钮权限 2335 `member:user:update-level` / 2363 `member:user:update-point`。幂等 | 菜单 12140 |
 | 44_cleanup_archived_pay_and_dead_role.sql | **清理全局遗留（一）**：支付/钱包下线时重命名归档的 14 张 `zz_deprecated_pay_*` 表（代码零引用，仅 wallet 剩 21 行历史余额）先整表备份到 `bak_pay_archive_20260929` 再 DROP；顺手删掉 0 用户的种子角色「CRM 管理员」（它给 MES 等模块的授权是死授权）。幂等 | — |
-| 45_remove_unused_modules.sql | **物理删除 7 个用不到的 yudao 模块**（MES 133 表/61 页、PMS 33/13、CRM 21/23、HRM 50/36、IM 17/14、IoT 15/11、公众号 8/11）：依据是按菜单授权递归统计——除超管外全库只有「供应链」(3 人) 与「财务」(1 人) 两个真实角色，这 7 个模块的菜单没有授权给任何真实角色（MES 只授给了 0 用户的种子角色）。**277 张表先整表备份到 `bak_unused_modules_20260929` 再 DROP**（实测这 7 个模块的数据量：crm/im/mes/mp 各 0 行、hrm 1、iot 2、pms 4；保留模块指向它们的外键 0 条）；删 7 棵菜单子树与角色授权、约 180 个模块字典、6 个定时任务（IoT 2 / HRM 3 / PMS 1）。保留 ERP/商城/FMS(财务，替代金蝶)/WMS/AI(deepseek)/BPM/系统/基础设施/单据平台。幂等 | 菜单 5100 等 7 棵 |
+| 45_remove_unused_modules.sql | **物理删除 7 个用不到的 yudao 模块**（MES 133 表/61 页、PMS 33/13、CRM 21/23、HRM 50/36、IM 17/14、IoT 15/11、公众号 8/11）：依据是按菜单授权递归统计——除超管外全库只有「供应链」(3 人) 与「财务」(1 人) 两个真实角色，这 7 个模块的菜单没有授权给任何真实角色（MES 只授给了 0 用户的种子角色）。**277 张表先整表备份到 `bak_unused_modules_20260929` 再 DROP**（实测这 7 个模块的数据量：crm/im/mes/mp 各 0 行、hrm 1、iot 2、pms 4；保留模块指向它们的外键 0 条）；删 7 棵菜单子树共 859 条菜单与 44 条角色授权、字典 188 类型 / 899 数据、6 个定时任务（含 IoT/HRM/PMS 模块任务）。保留 ERP/商城/FMS(财务，替代金蝶)/WMS/AI(deepseek)/BPM/系统/基础设施/单据平台。幂等 | 菜单 5100 等 7 棵 |
 | 43_remove_promotion_and_comment.sql | **物理删除 C 端营销体系与商品评价**：24 张营销/评价表（秒杀/拼团/砍价/满减/限时折扣/优惠券/积分商城/装修/文章/Banner/客服 + product_comment）先备份到 `bak_promotion_20260929` 再 DROP；删 `trade_order`(17 列)与 `trade_order_item`(6 列)上的营销/评价字段（实测这 6 张订单里这些值全为 0/NULL）；删「营销中心」(2030)/「客服中心」(2797)/「商品评论」(2336) 三棵菜单子树与角色授权；删 `promotion_*` 字典与 2 个定时任务（拼团过期/优惠券过期）。幂等 | 菜单 2030 子树 |
 | 40_remove_member_center.sql | **物理删除「会员中心」，只留「订货账号」**：先整表备份 11 张会员中心表到 schema `bak_member_center_20260929`，再 DROP（`member_user` 保留）；删「会员中心」菜单子树（2262）与「会员统计」（2374）共 34 条 + 对应角色授权，**保留**会员管理 2317 子树并把 2317/2318/2319 改名为「订货账号」；删 `member_*` 字典 15 条数据 + 2 个类型；`member_user` 摘掉只服务于会员中心的 5 列（`level_id`/`experience`/`point`/`group_id`/`tag_ids`）。幂等 | 菜单沿用 2317 |
 | 39_member_username_login.sql | **订货账号（会员登录名）**：`member_user` 加 `username`（订货账号，独立列，不复用 mobile）+ 部分唯一索引；按「绑了门店的用门店名（去掉『（门店）』后缀）、其余用手机号」回填历史账号；配套登录改造（账号优先、手机号兜底）与后台「开订货账号」「重置密码」两个按钮权限 `member:user:create` / `member:user:reset-password`（菜单 12130/12131，挂在会员管理 2317 下并授给已有该父菜单的角色）。幂等 | 菜单 12130+ |
@@ -127,7 +136,8 @@ psql -U root -d yate -f sql/local/33_workbench_alloc.sql
 > 因缺科目 560107 报错并回滚)。数据按《小企业会计准则(2013)》+ 默认编码规则 4-2-2-2 重构,覆盖
 > 结账模板/方案预置引用的全部科目编码;拿到完整种子数据后可 `TRUNCATE fms_subject_template` 后改用官方版本。
 
-> 另:字典 `system_data_scope`、`system_menu_type`、`mes_wm_issue_status` 基线脚本只有数据行、没有
+> 另:`mes_wm_issue_status` 由 `11_dict_fresh_install_gaps.sql` 补齐后又随 MES 模块在 `45` 中删除,
+> 该字典现已不存在(下方注释仅存档)。字典 `system_data_scope`、`system_menu_type` 基线脚本只有数据行、没有
 > 类型行(字典管理界面看不到、`check-dict-coverage` 会判缺失),已由 `11_dict_fresh_install_gaps.sql`
 > 补齐类型行(id 11200+/11210+/11220+,数据行 112000+)。线上库早前是手工补的,类型 id 用的
 > 11000/11010/11020,与脚本里的 id 不同但语义一致(脚本按 `ON CONFLICT (id) DO NOTHING` 幂等执行)。
@@ -139,6 +149,12 @@ psql -U root -d yate -f sql/local/33_workbench_alloc.sql
 - **cms**(内容管理):菜单 43 页 + 187 按钮、字典 5 类、定时任务 5 个 —— 后端无 `juling-module-cms`,前端无 `views/cms`;
 - **oa**(办公):菜单 6 页 + 20 按钮 —— 同样无模块/页面;
 - **report**(报表):菜单 3 页 + 6 按钮 —— 报表模块已在 `pom.xml` 中移除。
+
+另有 7 个模块**曾导入、现已物理下线**:MES(质检/生产)、HRM(人事)、IoT(物联网)、PMS(项目)、IM(即时通讯)、
+CRM(客户)、MP(公众号)。它们由 `01/02/04/05` 等脚本补入菜单与字典,与金蝶替代路线无关且全部 0–4 行数据,
+已在 `45_remove_unused_modules.sql` 中连表(备份到 `bak_unused_modules_20260929`)、菜单、字典、定时任务一起删除;
+后端 7 个 Maven 模块与前端 `views/{mes,hrm,iot,pms,im,crm,mp}` 页面同步移除。**新环境无需再执行 01/02/05 里与这 7 个模块相关的部分**
+(脚本保留原样以便追溯,执行后由 `45` 统一收敛)。
 
 > 另:官方脚本里的 5 张演示表 `juling_demo01_contact` / `juling_demo02_category` /
 > `juling_demo03_course|grade|student` 与其序列已从基线脚本中删除,对应的演示模块代码

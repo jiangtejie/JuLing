@@ -441,65 +441,35 @@ public class GlobalExceptionHandler {
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[工作流模块 juling-module-bpm - 表结构未导入][参考项目 README 开启]");
         }
-        // 2. 微信公众号
-        if (message.contains("mp_")) {
-            log.error("[微信公众号 juling-module-mp - 表结构未导入][参考项目 README 开启]");
-            return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                    "[微信公众号 juling-module-mp - 表结构未导入][参考项目 README 开启]");
-        }
-        // 3. 商城系统
+        // 2. 商城系统
         if (StrUtil.containsAny(message, "product_", "promotion_", "trade_")) {
             log.error("[商城系统 juling-module-mall - 已禁用][参考项目 README 开启]");
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[商城系统 juling-module-mall - 已禁用][参考项目 README 开启]");
         }
-        // 4. ERP 系统
+        // 3. ERP 系统
         if (message.contains("erp_")) {
             log.error("[ERP 系统 juling-module-erp - 表结构未导入][参考项目 README 开启]");
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[ERP 系统 juling-module-erp - 表结构未导入][参考项目 README 开启]");
         }
-        // 5. WMS 仓库管理系统
+        // 4. WMS 仓库管理系统
         if (message.contains("wms_")) {
             log.error("[WMS 仓库管理系统 juling-module-wms - 表结构未导入][参考项目 README 开启]");
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[WMS 仓库管理系统 juling-module-wms - 表结构未导入][参考项目 README 开启]");
         }
-        // 6. CRM 系统
-        if (message.contains("crm_")) {
-            log.error("[CRM 系统 juling-module-crm - 表结构未导入][参考项目 README 开启]");
-            return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                    "[CRM 系统 juling-module-crm - 表结构未导入][参考项目 README 开启]");
-        }
-        // 7. MES 系统
-        if (message.contains("mes_")) {
-            log.error("[MES 系统 juling-module-mes - 表结构未导入][参考项目 README 开启]");
-            return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                    "[MES 系统 juling-module-mes - 表结构未导入][参考项目 README 开启]");
-        }
-        // 8. IM 即时通讯
-        if (message.contains("im_")) {
-            log.error("[IM 即时通讯 juling-module-im - 表结构未导入][参考项目 README 开启]");
-            return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                    "[IM 即时通讯 juling-module-im - 表结构未导入][参考项目 README 开启]");
-        }
-        // 9. 支付平台
+        // 5. 支付平台
         if (message.contains("pay_")) {
             log.error("[支付模块 juling-module-pay - 表结构未导入][参考项目 README 开启]");
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[支付模块 juling-module-pay - 表结构未导入][参考项目 README 开启]");
         }
-        // 10. AI 大模型
+        // 6. AI 大模型
         if (message.contains("ai_")) {
             log.error("[AI 大模型 juling-module-ai - 表结构未导入][参考项目 README 开启]");
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[AI 大模型 juling-module-ai - 表结构未导入][参考项目 README 开启]");
-        }
-        // 11. IoT 物联网
-        if (message.contains("iot_")) {
-            log.error("[IoT 物联网 juling-module-iot - 表结构未导入][参考项目 README 开启]");
-            return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                    "[IoT 物联网 juling-module-iot - 表结构未导入][参考项目 README 开启]");
         }
         return null;
     }

@@ -52,7 +52,7 @@ public class AreaConvert implements Converter<Object> {
      *
      * 说明：此前只实现了读（导入），写会走 {@link Converter} 接口的默认实现，抛
      * UnsupportedOperationException: The current operation is not supported by the current converter，
-     * 导致所有含地区列的导入模板下载失败（HRM 员工导入、CRM 客户导入等）。
+     * 导致所有含地区列的导入模板下载失败。
      *
      * 分隔符用 "/"：与 {@link AreaUtils#parseArea(String)} 的拆分方式一致，
      * 保证模板里的示例值可以原样回填导入。

@@ -64,13 +64,6 @@
             <version>${revision}</version>
         </dependency>
 
-        <!-- 微信公众号模块 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-mp</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
         <!-- 商城相关模块 -->
         <dependency>
             <groupId>com.lxjl.boot</groupId>
@@ -85,13 +78,6 @@
         <dependency>
             <groupId>com.lxjl.boot</groupId>
             <artifactId>juling-module-statistics</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <!-- CRM 相关模块 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-crm</artifactId>
             <version>${revision}</version>
         </dependency>
 
@@ -116,20 +102,6 @@
             <version>${revision}</version>
         </dependency>
 
-        <!-- IoT 物联网相关模块(juling-module-iot 为聚合模块,实际引入 biz) -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-iot-biz</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <!-- MES 制造执行系统相关模块 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-mes</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
         <!-- WMS 仓库管理模块 -->
         <dependency>
             <groupId>com.lxjl.boot</groupId>
@@ -137,31 +109,10 @@
             <version>${revision}</version>
         </dependency>
 
-        <!-- HRM 人力资源管理模块 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-hrm</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
         <!-- FMS 财务管理模块 -->
         <dependency>
             <groupId>com.lxjl.boot</groupId>
             <artifactId>juling-module-fms</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <!-- PMS 项目管理模块 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-pms</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <!-- IM 相关模块 -->
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-im</artifactId>
             <version>${revision}</version>
         </dependency>
 

@@ -105,7 +105,7 @@ H5 下单时后端依次执行（任一失败即拦截并给出可读原因）�
 >
 > **审批页的业务表单约定（2026-09-28 修复）**：BPM 的 `formCustomViewPath` 必须是**组件全路径**（如
 > `/mall/trade/order/detail/modules/approval-summary.vue`），且该组件必须**接受 `id` 属性**
-> （BPM 传入 `businessKey` = 订单编号），仅在缺省时回退路由参数 —— 与 CRM 合同页同一范式。
+> （BPM 传入 `businessKey` = 订单编号），仅在缺省时回退路由参数 —— 与库内其他嵌入审批页同一范式。
 > 早前把路由路径填进该字段、且详情页只读 `route.params.id`，导致嵌入审批页时
 > `Number(undefined)=NaN`，后端报 `Failed to convert "NaN" to Long`。
 > 现订单详情页已支持 `id` 属性 + NaN 兜底；审批页改用**只读摘要组件**（只展示门店/金额/收款/状态与商品行，
@@ -123,7 +123,7 @@ H5 下单时后端依次执行（任一失败即拦截并给出可读原因）�
 **财务审核**（按结算模式）：先款后货核对到账与应收一致；月结校验信用额度。
 **审批边界**：金额/数量偏离阈值内（可配，如 ±10%）供应链审核即放行；超阈值或新门店首单 → 加签财务/负责人。
 （BPM 引擎已在库，落地方式是 `bpmProcessInstanceApi.createProcessInstance` + 监听
-`BpmProcessInstanceStatusEvent`，与 CRM 合同、HRM 请假同一套路。）
+`BpmProcessInstanceStatusEvent`，与库内既有 BPM 接入同一套路。）
 
 ### 第 3.5 段 订单工作台与分料（统配 / 直拨）——S2 切片一，已落地
 
