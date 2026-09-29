@@ -3,15 +3,18 @@
   import { showImagePreview, showSuccessToast, showToast } from 'vant';
   import { cancelOrder, getOrderDetail, getPaymentProofList } from '@/api/order';
   import {
+    AUDIT_STATUS_MAP,
+    ORDER_RECEIPT_STATUS_MAP,
     ORDER_STATUS_MAP,
     ORDER_STATUS_STEPS,
     PROOF_STATUS_MAP,
     RECEIVE_STATUS_MAP,
+    STORE_TYPE_MAP,
   } from '@/constants';
-  import type { Order, PaymentProof } from '@/types';
+  import type { Order, OrderItem, PaymentProof } from '@/types';
   import { useReorder } from '@/composables/useReorder';
   import { confirmDialog } from '@/utils/confirm';
-  import { formatDate, formatPrice, maskMobile } from '@/utils/format';
+  import { formatDate, formatPrice, formatQuantity, maskMobile } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
   import { copyText } from '@/utils/index';
   import { BizError } from '@/utils/request';
@@ -53,9 +56,15 @@
     return index < 0 ? 0 : index;
   });
 
-  /** 已取消 / 售后中不属于正向流程，用步骤条展示会误导，改回色块 */
+  /**
+   * 已取消 / 售后中 / 未识别状态（UNKNOWN）不属于正向流程，用步骤条展示会误导，改回色块。
+   * UNKNOWN 是「后端新增了前端还没识别的状态码」，文案由 ORDER_STATUS_MAP 给中性结论。
+   */
   const isAbnormal = computed(
-    () => order.value?.status === 'CANCELED' || order.value?.status === 'AFTER_SALE',
+    () =>
+      order.value?.status === 'CANCELED' ||
+      order.value?.status === 'AFTER_SALE' ||
+      order.value?.status === 'UNKNOWN',
   );
 
   /** 待收金额：应付 - 已确认收款，负数归零 */
@@ -89,12 +98,99 @@
   }
 
   /** 允许取消：待收款且没有正在核验的凭证 */
-  const canCancel = computed(
-    () => order.value?.status === 'UNPAID' && !proofUnderReview.value,
+  const canCancel = computed(() => order.value?.status === 'UNPAID' && !proofUnderReview.value);
+  const uploadText = computed(() => (proofs.value.length ? '重新上传付款凭证' : '上传付款凭证'));
+
+  /* ------------------- 门店订货链：归属 · 审核 · 数量进度 ------------------- */
+
+  /** 下单门店类型文案（DIRECT 直营 / FRANCHISE 加盟）；未知值原样展示，不猜 */
+  const storeTypeText = computed(() => {
+    const type = order.value?.storeType;
+    if (!type) return '';
+    return STORE_TYPE_MAP[type] ?? type;
+  });
+
+  /** 直营门店免审核闸门（后端 TradeOrderAuditService#validateCanDelivery 同口径） */
+  const isDirectStore = computed(() => order.value?.storeType === 'DIRECT');
+
+  /**
+   * 要货审核状态（粗粒度结论）。
+   *
+   * 后端未下发（null，历史订单 / 老接口）时按「待提交」展示 —— 与后端
+   * TradeOrderAuditStatusEnum.isDraft 同口径，避免详情页出现空白。
+   * 展示纪律：只给「待提交 / 审核中 / 已通过 / 已驳回」，不展示审批人、审批节点、
+   * 当前在谁手里，文案也不出现具体岗位或人名。
+   */
+  const auditBadge = computed(
+    () => AUDIT_STATUS_MAP[order.value?.auditStatus ?? 0] ?? AUDIT_STATUS_MAP[0]!,
   );
-  const uploadText = computed(() =>
-    proofs.value.length ? '重新上传付款凭证' : '上传付款凭证',
-  );
+
+  /** 审核状态的一句话说明：中性、可执行 */
+  const auditHint = computed(() => {
+    switch (order.value?.auditStatus ?? 0) {
+      case 10:
+        return '订单已提交审核，审核结果会更新在这里；审核通过后安排发货。';
+      case 20:
+        return '审核已通过，等待发货。';
+      case 30:
+        return '审核未通过，请按上方意见调整后重新提交，或联系总部处理。';
+      default:
+        return isDirectStore.value
+          ? '直营门店免审核：收款核验通过后直接进入待发货。'
+          : '收款核验通过后系统会自动提交审核（也可由总部手工提交）。';
+    }
+  });
+
+  /**
+   * 已付款但还没发货（订单处于「待发货」，含审核中）。
+   *
+   * 这一阶段门店侧没有自助取消入口（后端同样会拦），必须给出明确的下一步，
+   * 否则门店只会看到「没有任何按钮」而不知道该怎么办。
+   */
+  const waitingDelivery = computed(() => order.value?.status === 'PAID');
+
+  /** 数量兜底：后端 decimal 可能为 null / 字符串 */
+  function toQuantity(value: number | string | null | undefined): number {
+    const num = Number(value ?? 0);
+    return Number.isFinite(num) ? num : 0;
+  }
+
+  /**
+   * 商品行数量进度：下单 / 已发 / 已收。
+   *
+   * - 已发数量为 0 时不展示（未发货的单每行都挂「已发 0」只会干扰阅读）；
+   * - 已收在「已发货」之后才展示，这样发货以后的行必然是「下单 · 已发 · 已收」三个数量，
+   *   未发货的行只留「下单 N」，读起来干净。
+   */
+  const itemProgress = computed<
+    Record<
+      number,
+      { delivered: number; received: number; showDelivered: boolean; showReceived: boolean }
+    >
+  >(() => {
+    const map: Record<
+      number,
+      { delivered: number; received: number; showDelivered: boolean; showReceived: boolean }
+    > = {};
+    (order.value?.items ?? []).forEach((item: OrderItem) => {
+      const delivered = toQuantity(item.deliveredCount);
+      const received = toQuantity(item.receiptCount);
+      map[item.id] = {
+        delivered,
+        received,
+        showDelivered: delivered > 0,
+        showReceived: delivered > 0 || received > 0,
+      };
+    });
+    return map;
+  });
+
+  /** 订单收货进度（0 未收货 / 10 部分收货 / 20 已收货）：未收货不占一行 */
+  const receiptBadge = computed(() => {
+    const status = order.value?.receiptStatus;
+    if (status == null || status === 0) return null;
+    return ORDER_RECEIPT_STATUS_MAP[status] ?? null;
+  });
 
   /* ---------------------------- 收款进度（van-steps） ---------------------------- */
 
@@ -111,9 +207,7 @@
 
   /** 已驳回时进度条用警示色，避免看起来「一切正常」 */
   const receiveStepColor = computed(() =>
-    order.value?.paymentProofStatus === 2
-      ? 'var(--app-danger-color)'
-      : 'var(--app-primary-color)',
+    order.value?.paymentProofStatus === 2 ? 'var(--app-danger-color)' : 'var(--app-primary-color)',
   );
 
   /**
@@ -163,9 +257,7 @@
       order.value = detail;
       proofs.value = proofList;
       // 默认展开最新一条凭证，历史记录收起
-      activeProofs.value = proofList.length
-        ? [String(proofList[proofList.length - 1]!.id)]
-        : [];
+      activeProofs.value = proofList.length ? [String(proofList[proofList.length - 1]!.id)] : [];
       loadError.value = false;
     } catch (error) {
       // 拦截器已提示。业务错误（订单不存在）与网络异常要区分：后者给重试入口
@@ -267,6 +359,26 @@
           <div class="order-detail__status-tip">订单号 {{ order.orderNo }}</div>
         </div>
 
+        <!--
+          已付款但还没发货（待发货 / 审核中）：门店侧没有自助取消入口（后端同样会拦），
+          这里必须明确给出下一步，不能静默地「没有任何操作」
+        -->
+        <van-notice-bar
+          v-if="waitingDelivery"
+          class="order-detail__notice order-detail__notice--standalone"
+          left-icon="info-o"
+          color="var(--app-warning-color)"
+          background="#fffbe8"
+          wrapable
+          text="订单已付款、等待发货；如需取消订单请联系总部"
+        />
+
+        <!-- 下单门店：代理人账号管多家门店，详情页必须能看出这是哪家店的单 -->
+        <van-cell-group inset class="order-detail__group">
+          <van-cell title="下单门店" :value="order.customerName || '未关联门店'" />
+          <van-cell v-if="storeTypeText" title="门店类型" :value="storeTypeText" />
+        </van-cell-group>
+
         <!-- 货款收款：收款进度（van-steps）+ 金额 + 驳回提示 + 凭证（van-collapse） -->
         <div class="order-detail__card app-card">
           <div class="flex-between">
@@ -320,7 +432,7 @@
             color="var(--app-warning-color)"
             background="#fffbe8"
             wrapable
-            text="付款凭证核验中，暂不能取消订单；如需取消请联系客服"
+            text="付款凭证核验中，暂不能取消订单；如需取消请联系总部"
           />
 
           <!-- 驳回原因：用 notice-bar 直接带出后台核验意见，引导客户重传 -->
@@ -338,11 +450,7 @@
 
           <!-- 凭证记录：折叠面板，默认展开最新一条，历史可展开查看 -->
           <van-collapse v-if="proofs.length" v-model="activeProofs" class="order-detail__proofs">
-            <van-collapse-item
-              v-for="proof in proofs"
-              :key="proof.id"
-              :name="String(proof.id)"
-            >
+            <van-collapse-item v-for="proof in proofs" :key="proof.id" :name="String(proof.id)">
               <template #title>
                 <div class="order-detail__proof-title">
                   <span>
@@ -402,6 +510,29 @@
           </motion.div>
         </div>
 
+        <!--
+          要货审核：门店侧只给粗粒度结论（待提交 / 审核中 / 已通过 / 已驳回），
+          不展示审批人、审批节点、当前在谁手里；驳回时把审核意见原样带出来
+        -->
+        <div class="order-detail__card app-card">
+          <div class="flex-between">
+            <span class="order-detail__title">要货审核</span>
+            <van-tag class="order-detail__tag" :color="auditBadge.color" plain round>
+              {{ auditBadge.text }}
+            </van-tag>
+          </div>
+          <div class="order-detail__audit-hint">{{ auditHint }}</div>
+          <van-notice-bar
+            v-if="order.auditStatus === 30 && order.auditRemark"
+            class="order-detail__notice"
+            left-icon="warning-o"
+            color="var(--app-danger-color)"
+            background="#fff7f6"
+            wrapable
+            :text="`驳回原因：${order.auditRemark}`"
+          />
+        </div>
+
         <!-- 收货信息 -->
         <van-cell-group inset class="order-detail__group">
           <van-cell title="收货人" :value="order.receiverName" />
@@ -409,7 +540,7 @@
           <van-cell title="收货地址" :label="order.receiverAddress" />
         </van-cell-group>
 
-        <!-- 商品信息：用 van-card 展示订单行 -->
+        <!-- 商品信息：van-card 展示订单行 + 数量进度（下单 / 已发 / 已收） -->
         <div class="order-detail__card app-card">
           <div class="order-detail__title">商品信息</div>
           <van-card
@@ -418,10 +549,30 @@
             class="order-detail__goods"
             :title="item.name"
             :desc="item.specText"
-            :num="item.quantity"
             :price="formatPrice(item.price)"
             :thumb="resolveImage(item.picUrl)"
-          />
+          >
+            <!-- 数量进度：已发为 0 时不展示；已收在发货后才出现，保证一行的数量口径一致 -->
+            <template #tags>
+              <div class="order-detail__progress">
+                <span class="order-detail__progress-item">
+                  下单 {{ formatQuantity(item.quantity) }}
+                </span>
+                <span
+                  v-if="itemProgress[item.id]?.showDelivered"
+                  class="order-detail__progress-item"
+                >
+                  已发 {{ formatQuantity(itemProgress[item.id]!.delivered) }}
+                </span>
+                <span
+                  v-if="itemProgress[item.id]?.showReceived"
+                  class="order-detail__progress-item order-detail__progress-item--received"
+                >
+                  已收 {{ formatQuantity(itemProgress[item.id]!.received) }}
+                </span>
+              </div>
+            </template>
+          </van-card>
         </div>
 
         <!-- 金额明细 -->
@@ -447,6 +598,7 @@
             </template>
           </van-cell>
           <van-cell title="下单时间" :value="formatDate(order.createTime)" />
+          <van-cell v-if="receiptBadge" title="收货进度" :value="receiptBadge.text" />
           <van-cell v-if="order.payTime" title="收款时间" :value="formatDate(order.payTime)" />
           <van-cell
             v-if="order.deliveryTime"
@@ -458,12 +610,7 @@
 
       <!-- 底部固定操作栏：无需滚到底即可操作 -->
       <van-action-bar v-if="hasActions" class="order-detail__bar">
-        <van-action-bar-button
-          v-if="canUpload"
-          type="primary"
-          text="上传凭证"
-          @click="toPayment"
-        />
+        <van-action-bar-button v-if="canUpload" type="primary" text="上传凭证" @click="toPayment" />
         <van-action-bar-button
           v-if="canCancel"
           type="danger"
@@ -603,6 +750,37 @@
     /* notice-bar 默认自带左右内边距，这里向两侧出血对齐卡片边缘 */
     &__notice {
       margin: 8px -12px 0;
+    }
+
+    /* 卡片外的 notice-bar（已付款待发货提示）：不做负边距出血，与卡片列表左右对齐 */
+    &__notice--standalone {
+      margin: 12px 0 0;
+    }
+
+    /* 审核状态说明：一句话讲清当前处于哪一步、下一步是什么 */
+    &__audit-hint {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--app-text-color-secondary);
+    }
+
+    /* 商品行数量进度：下单 / 已发 / 已收 */
+    &__progress {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__progress-item {
+      white-space: nowrap;
+
+      &--received {
+        color: var(--app-success-color);
+      }
     }
 
     &__divider {

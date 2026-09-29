@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { getStoreList } from '@/api/order';
+import { useCartStore } from '@/stores/cart';
 import { STORAGE_KEYS } from '@/constants';
 import type { StoreOption } from '@/types';
+import { confirmDialog } from '@/utils/confirm';
 import { persistKey } from '@/utils/persist';
 
 /**
@@ -40,8 +42,38 @@ export const useStoreStore = defineStore(
       }
     }
 
-    function switchStore(customerId: number): void {
+    /**
+     * 切换下单门店。
+     *
+     * 下错门店 = 把 A 店的货下到 B 店（订单会快照客户 / 组织，后续发货与对账都跟着走），
+     * 所以这里做两件事：
+     * 1. **二次确认**：明确告知切到哪家店，避免误触；切到同一门店时直接返回，不打扰；
+     * 2. **清理与该门店相关的脏状态**：订货单里的单价按门店取（配送价目表按客户 / 门店），
+     *    切店后旧行项的价格可能不适用，直接清空，避免拿别家门店的价格下单。
+     *
+     * 注：确认弹窗放在 store 里，是因为调用方（下单页）不在本次改动范围内；
+     * 调用方应 await 本方法，未确认时不要自行把「已选门店」置为新门店。
+     *
+     * @returns 是否真的发生了切换（用户取消 / 同门店 → false）
+     */
+    async function switchStore(
+      customerId: number,
+      options?: { skipConfirm?: boolean },
+    ): Promise<boolean> {
+      if (currentStoreId.value === customerId) return false;
+      const target = stores.value.find((item) => item.customerId === customerId);
+      const storeName = target?.customerName || `门店 ${customerId}`;
+      if (!options?.skipConfirm) {
+        const confirmed = await confirmDialog(
+          `确认把下单门店切换为「${storeName}」？切换门店会清空当前订货单。`,
+          '切换下单门店',
+        );
+        if (!confirmed) return false;
+      }
       currentStoreId.value = customerId;
+      // 门店相关的脏状态：订货单价格随门店变化，切店后必须失效
+      useCartStore().clear();
+      return true;
     }
 
     function reset(): void {

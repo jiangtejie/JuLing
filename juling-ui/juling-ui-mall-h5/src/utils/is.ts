@@ -1,11 +1,5 @@
 const toString = Object.prototype.toString;
 
-export const isString = (value: unknown): value is string => typeof value === 'string';
-export const isNumber = (value: unknown): value is number =>
-  typeof value === 'number' && !Number.isNaN(value);
-export const isBoolean = (value: unknown): value is boolean => typeof value === 'boolean';
-export const isFunction = (value: unknown): value is (...args: never[]) => unknown =>
-  typeof value === 'function';
 export const isArray = Array.isArray;
 export const isDate = (value: unknown): value is Date => toString.call(value) === '[object Date]';
 
@@ -32,5 +26,3 @@ export function isAccount(value: string): boolean {
   const account = value.trim();
   return account.length >= 2 && account.length <= 64;
 }
-
-export const isExternal = (path: string): boolean => /^(https?:|mailto:|tel:)/.test(path);

@@ -30,7 +30,7 @@ export const ORDER_STATUS_CODE_TO_KEY: Record<number, OrderStatus> = {
   40: 'CANCELED',
 };
 
-/** 前端 key → 后端订单状态码（`AFTER_SALE` 后端无对应，映射为 -1） */
+/** 前端 key → 后端订单状态码（`AFTER_SALE` / `UNKNOWN` 后端无对应，映射为 -1） */
 export const ORDER_STATUS_KEY_TO_CODE: Record<OrderStatus, number> = {
   UNPAID: 0,
   PAID: 10,
@@ -38,11 +38,18 @@ export const ORDER_STATUS_KEY_TO_CODE: Record<OrderStatus, number> = {
   COMPLETED: 30,
   CANCELED: 40,
   AFTER_SALE: -1,
+  UNKNOWN: -1,
 };
 
-/** 后端状态码 → 前端 key（未知码兜底 CANCELED） */
+/**
+ * 后端状态码 → 前端 key。
+ *
+ * 未知码**不再兜底为 `CANCELED`**：后端一旦新增状态（例如新的审核 / 退款节点），
+ * 门店端会看到与事实相反的「已取消」。现在返回显式的 `UNKNOWN`，
+ * 由视图层按中性文案展示（`ORDER_STATUS_MAP` 需补一项 UNKNOWN）。
+ */
 export function adaptOrderStatus(code: number): OrderStatus {
-  return ORDER_STATUS_CODE_TO_KEY[code] ?? 'CANCELED';
+  return ORDER_STATUS_CODE_TO_KEY[code] ?? 'UNKNOWN';
 }
 
 /** 前端筛选 key → 后端状态码；`all` / 未知 / 无对应（AFTER_SALE）返回 undefined */
@@ -73,7 +80,13 @@ export function adaptOrderItem(raw: AppTradeOrderItemRespVO): OrderItem {
     specText: propertiesToSpecText(raw.properties),
     price,
     quantity: count,
-    totalPrice: price * count,
+    // 行小计优先用后端 payPrice（应付金额·总）：后台改价 / 优惠后它与 price×count 不一致，
+    // 自算会让「商品金额」与「实付」对不上；后端未下发时才回退自算。
+    totalPrice: raw.payPrice ?? price * count,
+    // 数量进度：下单 → 已发（ERP 出库审核回写）→ 已收（门店确认）。后端 decimal 可能是字符串，
+    // 原样透传，由消费方统一 Number(x) || 0。
+    deliveredCount: raw.deliveredCount ?? null,
+    receiptCount: raw.receiptCount ?? null,
   };
 }
 
@@ -98,6 +111,11 @@ export function adaptOrderPage(page: BackendPage<AppTradeOrderPageItemRespVO>): 
       paymentProofStatus: adaptReceiveStatus(raw.paymentProofStatus),
       createTime: raw.createTime,
       items: (raw.items ?? []).map(adaptOrderItem),
+      // 门店订货链：代理人账号管多家门店，列表必须能看出每单是哪家店的；审核状态只给粗粒度
+      customerId: raw.customerId ?? null,
+      customerName: raw.customerName ?? null,
+      storeType: raw.storeType ?? null,
+      auditStatus: raw.auditStatus ?? null,
     })),
     total: page?.total ?? 0,
   };
@@ -144,6 +162,15 @@ export function adaptOrderDetail(raw: AppTradeOrderDetailRespVO): Order {
     createTime: raw.createTime,
     payTime: raw.payTime ?? undefined,
     deliveryTime: raw.deliveryTime ?? undefined,
+    // 订单「已完成」节点的时间（此前漏适配，详情页始终没有时间）
+    finishTime: raw.finishTime ?? undefined,
     items: (raw.items ?? []).map(adaptOrderItem),
+    // 门店订货链：详情页要显示「这是哪家店的订单」与粗粒度审核结果（不含审批人/节点）
+    customerId: raw.customerId ?? null,
+    customerName: raw.customerName ?? null,
+    storeType: raw.storeType ?? null,
+    auditStatus: raw.auditStatus ?? null,
+    auditRemark: raw.auditRemark ?? null,
+    receiptStatus: raw.receiptStatus ?? null,
   };
 }

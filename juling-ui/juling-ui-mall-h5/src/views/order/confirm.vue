@@ -6,8 +6,12 @@
   import { formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
   import { isMobile } from '@/utils/is';
+  import { withSilentRequest } from '@/utils/request';
 
   defineOptions({ name: 'OrderConfirm' });
+
+  /** 可下单门店接口地址：与 api 层 getStoreList() 一致（该调用链无法透传 silent 配置） */
+  const STORE_LIST_URL = '/trade/order/store-list';
 
   const router = useRouter();
   const cartStore = useCartStore();
@@ -19,8 +23,15 @@
   const showStorePicker = ref(false);
   const pickedStoreId = ref<number | null>(null);
 
-  function onPickStore(customerId: number): void {
-    storeStore.switchStore(customerId);
+  /**
+   * 切换下单门店。
+   *
+   * switchStore 内部有二次确认（切换会清空当前订货单），因此必须 await：
+   * 用户在确认框点「取消」时不能把单选态改掉，否则弹窗里的选中项会与 currentStore 不一致。
+   */
+  async function onPickStore(customerId: number): Promise<void> {
+    const switched = await storeStore.switchStore(customerId);
+    if (!switched) return;
     pickedStoreId.value = customerId;
     showStorePicker.value = false;
   }
@@ -84,7 +95,9 @@
     }
     // 门店订货链：拉取可下单门店（未绑定门店时后端会拦截下单，这里静默失败并给出提示）
     try {
-      await storeStore.fetchStores();
+      // 失败提示由本页负责（「请联系管理员绑定门店」比后端原始文案更有业务含义），
+      // 因此声明该请求静默：否则拦截器先弹一条、这里再弹一条，同一次失败出现两条 toast
+      await withSilentRequest(STORE_LIST_URL, () => storeStore.fetchStores());
       pickedStoreId.value = currentStore.value?.customerId ?? null;
     } catch {
       showToast('未能获取下单门店，请联系管理员绑定门店');

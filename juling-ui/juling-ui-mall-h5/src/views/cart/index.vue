@@ -2,7 +2,7 @@
   import { AnimatePresence, motion } from 'motion-v';
   import { showToast } from 'vant';
   import { deleteCart, updateCartQuantity } from '@/api/cart';
-  import type { CartItem } from '@/types';
+  import type { CartItem, InvalidCartItem } from '@/types';
   import { useCartStore } from '@/stores/cart';
   import { useUserStore } from '@/stores/user';
   import { confirmDialog } from '@/utils/confirm';
@@ -13,7 +13,7 @@
   const router = useRouter();
   const cartStore = useCartStore();
   const userStore = useUserStore();
-  const { items, totalPrice, totalQuantity, allChecked } = storeToRefs(cartStore);
+  const { items, invalidItems, totalPrice, totalQuantity, allChecked } = storeToRefs(cartStore);
 
   /**
    * 管理模式（京东 / 美团购物车的「管理」态）：
@@ -91,6 +91,27 @@
     void removeItems([item], `确认删除「${item.name}」？`);
   }
 
+  /* ------------------------------- 失效商品 ------------------------------- */
+
+  /**
+   * 失效商品（后端 invalidList）。
+   *
+   * 单独成组、灰显并给出失效原因：门店才能明白「为什么少了一件」而不是莫名少了。
+   * 这批行项不参与勾选与结算（adapter 已强制 checked: false），只提供「移除」。
+   */
+  function onRemoveInvalidOne(item: InvalidCartItem): void {
+    // SPU 已被删除时 name 可能为空，退回规格文案兜底，避免出现「确认移除「」？」
+    const label = item.name || item.specText || '该商品';
+    void removeItems([item], `确认从订货单移除「${label}」？`);
+  }
+
+  /** 一键清空失效商品（确认后本地 + 服务端一起删） */
+  function onRemoveInvalid(): void {
+    const count = invalidItems.value.length;
+    if (!count) return;
+    void removeItems([...invalidItems.value], `确认移除全部 ${count} 件失效商品？`);
+  }
+
   /** 管理态：删除已勾选行项 */
   function onRemoveChecked(): void {
     const checked = cartStore.checkedItems;
@@ -127,14 +148,18 @@
       </template>
     </AppNavBar>
 
-    <div v-if="!items.length" class="cart__empty">
+    <!-- 有效项与失效项都没有才算空；只剩失效商品时也要展示分组（否则「为什么空了」无从解释） -->
+    <div v-if="!items.length && !invalidItems.length" class="cart__empty">
       <van-empty description="订货单还是空的">
         <van-button round type="primary" size="small" to="/home">去选购</van-button>
       </van-empty>
     </div>
 
     <template v-else>
-      <div class="app-scroll cart__list">
+      <div
+        class="app-scroll cart__list"
+        :class="{ 'cart__list--with-invalid': invalidItems.length }"
+      >
         <!--
           左滑删除（美团 / 京东购物车的通用手势）。
           删除时由 AnimatePresence 播放退出动画：高度与下边距一起收起到 0，
@@ -149,51 +174,89 @@
             :transition="{ duration: 0.22, ease: 'easeOut' }"
           >
             <van-swipe-cell class="cart__swipe">
-            <div class="cart__item app-card" @click="onRowClick(item)">
-              <van-checkbox v-model="item.checked" class="cart__check" @click.stop />
+              <div class="cart__item app-card" @click="onRowClick(item)">
+                <van-checkbox v-model="item.checked" class="cart__check" @click.stop />
 
-              <van-image
-                class="cart__img"
-                :src="resolveImage(item.picUrl)"
-                fit="cover"
-                radius="6"
-                lazy-load
-              />
+                <van-image
+                  class="cart__img"
+                  :src="resolveImage(item.picUrl)"
+                  fit="cover"
+                  radius="6"
+                  lazy-load
+                />
 
-              <div class="cart__info">
-                <div class="text-ellipsis-2 cart__name">{{ item.name }}</div>
-                <div class="cart__spec text-ellipsis">{{ item.specText }}</div>
+                <div class="cart__info">
+                  <div class="text-ellipsis-2 cart__name">{{ item.name }}</div>
+                  <div class="cart__spec text-ellipsis">{{ item.specText }}</div>
 
-                <div class="flex-between mt-1">
-                  <PriceText :value="item.price" />
-                  <!-- 数量控件自成一区，点它不要触发行点击 -->
-                  <span @click.stop>
-                    <van-stepper
-                      :model-value="item.quantity"
-                      :min="item.minOrderQuantity"
-                      :max="item.stock"
-                      integer
-                      button-size="22"
-                      input-width="40"
-                      @change="(value: number | string) => onQuantityChange(item, value)"
-                    />
-                  </span>
+                  <div class="flex-between mt-1">
+                    <PriceText :value="item.price" />
+                    <!-- 数量控件自成一区，点它不要触发行点击 -->
+                    <span @click.stop>
+                      <van-stepper
+                        :model-value="item.quantity"
+                        :min="item.minOrderQuantity"
+                        :max="item.stock"
+                        integer
+                        button-size="22"
+                        input-width="40"
+                        @change="(value: number | string) => onQuantityChange(item, value)"
+                      />
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <template #right>
-              <van-button
-                square
-                type="danger"
-                class="cart__swipe-del"
-                text="删除"
-                @click="onRemoveOne(item)"
-              />
-            </template>
+              <template #right>
+                <van-button
+                  square
+                  type="danger"
+                  class="cart__swipe-del"
+                  text="删除"
+                  @click="onRemoveOne(item)"
+                />
+              </template>
             </van-swipe-cell>
           </motion.div>
         </AnimatePresence>
+
+        <!--
+          失效商品分组（京东 / 美团购物车同款）：灰显 + 失效原因 + 移除。
+          这些商品不能下单，所以不参与勾选与结算，只在底部提示「已排除 N 件」。
+        -->
+        <div v-if="invalidItems.length" class="cart__invalid">
+          <div class="flex-between cart__invalid-head">
+            <span class="cart__invalid-title">失效商品 {{ invalidItems.length }} 件</span>
+            <span class="cart__invalid-clear" @click="onRemoveInvalid">清空失效商品</span>
+          </div>
+
+          <div v-for="item in invalidItems" :key="item.key" class="cart__invalid-item app-card">
+            <van-image
+              class="cart__img cart__invalid-img"
+              :src="resolveImage(item.picUrl)"
+              fit="cover"
+              radius="6"
+              lazy-load
+            />
+            <div class="cart__info">
+              <div class="cart__invalid-name-row">
+                <span class="cart__invalid-tag">失效</span>
+                <span class="text-ellipsis-2 cart__name cart__invalid-name">{{ item.name }}</span>
+              </div>
+              <div class="cart__spec text-ellipsis">{{ item.specText }}</div>
+              <div class="cart__invalid-reason">{{ item.invalidReason }}</div>
+            </div>
+            <van-button
+              class="cart__invalid-remove"
+              size="mini"
+              round
+              plain
+              type="danger"
+              text="移除"
+              @click.stop="onRemoveInvalidOne(item)"
+            />
+          </div>
+        </div>
       </div>
 
       <!--
@@ -201,6 +264,7 @@
         管理态下不显示金额，按钮换成「删除(N)」并只在有勾选时可用。
       -->
       <van-submit-bar
+        v-if="items.length"
         class="cart__submit"
         :price="managing ? undefined : totalPrice"
         :button-text="managing ? `删除(${checkedCount})` : `提交订货单(${totalQuantity})`"
@@ -209,6 +273,12 @@
         label="合计："
         @submit="onSubmit"
       >
+        <!-- 结算按钮上方说明差额来源：少的那几件是失效商品，不是被系统吞了 -->
+        <template #top>
+          <div v-if="invalidItems.length" class="cart__invalid-tip">
+            有 {{ invalidItems.length }} 件失效商品已排除，不参与本次结算
+          </div>
+        </template>
         <van-checkbox v-model="allChecked">全选</van-checkbox>
       </van-submit-bar>
     </template>
@@ -285,6 +355,87 @@
       margin-top: 2px;
       font-size: 12px;
       color: var(--app-text-color-secondary);
+    }
+
+    /* 底部多了「失效商品已排除」提示行时，列表再往上让出这行高度 */
+    &__list--with-invalid {
+      padding-bottom: 88px;
+    }
+
+    /* ------------------------------ 失效商品分组 ------------------------------ */
+
+    &__invalid {
+      padding-top: 4px;
+    }
+
+    &__invalid-head {
+      align-items: baseline;
+      padding: 8px 2px;
+    }
+
+    &__invalid-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    &__invalid-clear {
+      font-size: 12px;
+      color: var(--app-primary-color);
+    }
+
+    &__invalid-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 12px;
+    }
+
+    /* 失效商品整体降饱和，一眼与可下单行项区分开 */
+    &__invalid-img {
+      opacity: 0.45;
+      filter: grayscale(1);
+    }
+
+    &__invalid-name-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    &__invalid-name {
+      flex: 1;
+      min-width: 0;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__invalid-tag {
+      flex: none;
+      padding: 0 4px;
+      font-size: 10px;
+      line-height: 15px;
+      color: var(--app-text-color-secondary);
+      border: 1px solid var(--app-border-color);
+      border-radius: 4px;
+    }
+
+    &__invalid-reason {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--app-danger-color);
+    }
+
+    &__invalid-remove {
+      flex: none;
+    }
+
+    /* 结算栏上方：说明「少了的商品去哪了」 */
+    &__invalid-tip {
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--app-warning-color);
+      text-align: center;
+      background: #fffbe8;
     }
 
     &__submit {

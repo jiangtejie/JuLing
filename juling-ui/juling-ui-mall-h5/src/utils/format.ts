@@ -1,4 +1,6 @@
-import { isEmpty } from './is';
+// 带 `.ts` 扩展名：本文件会被 `node --test` 直接执行（tests/format.test.ts），
+// 该环境按 ESM 解析、不接受省略扩展名（与 utils/asset.ts 的约定一致）
+import { isEmpty } from './is.ts';
 
 /**
  * 金额统一以「分」为最小单位在后端流转，避免浮点误差。
@@ -64,26 +66,6 @@ export function formatDate(
     ss: pad(date.getSeconds()),
   };
   return pattern.replace(/YYYY|MM|DD|HH|mm|ss/g, (key) => map[key] ?? key);
-}
-
-/** 相对时间：刚刚 / 5 分钟前 / 3 天前 */
-export function formatRelativeTime(value: Date | string | number): string {
-  const date =
-    value instanceof Date
-      ? value
-      : typeof value === 'number'
-        ? new Date(value)
-        : new Date(String(value).replace(/-/g, '/'));
-  if (Number.isNaN(date.getTime())) return '';
-  const diff = Date.now() - date.getTime();
-  const minute = 60 * 1000;
-  const hour = 60 * minute;
-  const day = 24 * hour;
-  if (diff < minute) return '刚刚';
-  if (diff < hour) return `${Math.floor(diff / minute)} 分钟前`;
-  if (diff < day) return `${Math.floor(diff / hour)} 小时前`;
-  if (diff < 30 * day) return `${Math.floor(diff / day)} 天前`;
-  return formatDate(date, 'YYYY-MM-DD');
 }
 
 /** 手机号脱敏：138****8000 */

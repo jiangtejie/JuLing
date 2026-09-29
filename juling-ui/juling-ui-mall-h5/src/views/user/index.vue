@@ -34,7 +34,11 @@
   }
 
   const menus = [
-    { label: '我的订货单', icon: 'i-carbon-shopping-cart', to: '/cart' },
+    // 「我的订货单」= 已提交的门店订货单，落点应是订单列表；
+    // 原先指向 /cart（底部「订货单」tab 的购物车），文案与落点不符，这里改到 /order/list
+    { label: '我的订货单', icon: 'i-carbon-receipt', to: '/order/list' },
+    // 我的账：门店往来台账（只读），名下多门店时可按门店看逐笔明细
+    { label: '我的账', icon: 'i-carbon-wallet', to: '/user/account' },
     { label: '收货地址', icon: 'i-carbon-location', to: '' },
     { label: '企业资料', icon: 'i-carbon-building', to: '' },
     { label: '联系客服', icon: 'i-carbon-headset', to: '' },

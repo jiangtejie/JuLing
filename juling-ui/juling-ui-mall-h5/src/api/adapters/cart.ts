@@ -1,4 +1,10 @@
-import type { AppCartItemRespVO, AppCartListRespVO, CartItem } from '@/types';
+import type {
+  AppCartItemRespVO,
+  AppCartListRespVO,
+  CartItem,
+  CartListResult,
+  InvalidCartItem,
+} from '@/types';
 import { adaptProperties } from './product.ts';
 // 带 `.ts` 扩展名：adapter 会被 `node --test` 直接执行，ESM 环境不接受省略扩展名
 import { normalizeAssetUrl } from '../../utils/asset.ts';
@@ -50,7 +56,47 @@ export function adaptCartItem(raw: AppCartItemRespVO): CartItem {
   };
 }
 
-/** 购物车列表 → 行项数组（只取有效项） */
+/** 商品下架状态（后端 ProductSpuStatusEnum：0 下架 / 1 上架） */
+const SPU_STATUS_DISABLED = 0;
+
+/**
+ * 推导失效原因：与后端 `TradeCartConvert` 把行项塞进 invalidList 的判定口径一致
+ * （SPU 不存在 / 非上架 / SPU 库存 <= 0），保证页面文案说的就是它失效的真实原因。
+ * 后端不下发原因字段，只认 SPU 状态 0（下架），状态缺失时不臆断「已下架」。
+ */
+function resolveInvalidReason(raw: AppCartItemRespVO): string {
+  const spu = raw.spu;
+  if (!spu) return '商品已下架或不存在';
+  if (spu.status === SPU_STATUS_DISABLED) return '商品已下架';
+  if (Number(spu.stock ?? 0) <= 0) return '库存不足';
+  return '商品已失效';
+}
+
+/**
+ * 失效行项：结构与有效项一致，额外带上 `invalid` 标记与 `invalidReason`。
+ * 强制 `checked: false`——失效商品不可下单，避免被一起提交（后端也会拒绝）。
+ */
+export function adaptInvalidCartItem(raw: AppCartItemRespVO): InvalidCartItem {
+  return {
+    ...adaptCartItem(raw),
+    invalid: true,
+    checked: false,
+    invalidReason: resolveInvalidReason(raw),
+  };
+}
+
+/**
+ * 购物车列表 → 有效行项数组。
+ * 保留该签名（store 等调用方在用）；需要失效项请用 `adaptCartListResult`。
+ */
 export function adaptCartList(raw: AppCartListRespVO): CartItem[] {
   return (raw?.validList ?? []).map(adaptCartItem);
+}
+
+/** 购物车列表 → 聚合结果（有效项 + 失效项），页面据此展示「失效商品」分组 */
+export function adaptCartListResult(raw: AppCartListRespVO): CartListResult {
+  return {
+    items: (raw?.validList ?? []).map(adaptCartItem),
+    invalidItems: (raw?.invalidList ?? []).map(adaptInvalidCartItem),
+  };
 }

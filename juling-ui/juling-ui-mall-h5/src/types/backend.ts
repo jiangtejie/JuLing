@@ -12,6 +12,15 @@
 /** 后端时间字段：毫秒时间戳（number）或格式化字符串 */
 export type BackendDateTime = number | string;
 
+/**
+ * 后端 decimal（BigDecimal / numeric 列）。
+ *
+ * Jackson 未对 BigDecimal 定制序列化，正常下发 JSON number；但数量/金额列一旦
+ * 启用 ToStringSerializer（或经网关转字符串）就会变成 string，故统一声明为
+ * `number | string | null`，由 adapter 归一为 number。
+ */
+export type BackendDecimal = number | string | null;
+
 /** 后端统一分页响应 */
 export interface BackendPage<T> {
   list: T[];
@@ -183,6 +192,10 @@ export interface AppTradeOrderItemRespVO {
   payPrice: number;
   afterSaleId: number | null;
   afterSaleStatus: number | null;
+  /** 门店订货链：ERP 已发货数量（配送出库单审核后回写） */
+  deliveredCount?: BackendDecimal;
+  /** 门店订货链：门店已确认收货数量 */
+  receiptCount?: BackendDecimal;
 }
 
 /** 订单分页项（GET /trade/order/page） */
@@ -203,6 +216,14 @@ export interface AppTradeOrderPageItemRespVO {
   /** 收款状态（TradeOrderReceiveStatusEnum） */
   paymentProofStatus?: number;
   deliveryType: number;
+  /** 门店订货链：下单门店（客户）编号 */
+  customerId?: number | null;
+  /** 门店订货链：下单门店名称（后端按 customerId 补客户主数据） */
+  customerName?: string | null;
+  /** 门店订货链：店型（DIRECT 直营 / FRANCHISE 加盟） */
+  storeType?: string | null;
+  /** 门店订货链：审核状态（TradeOrderAuditStatusEnum）0 待提交 / 10 审核中 / 20 已通过 / 30 已驳回 */
+  auditStatus?: number | null;
   items: AppTradeOrderItemRespVO[];
   combinationRecordId: number | null;
 }
@@ -238,6 +259,18 @@ export interface AppTradeOrderDetailRespVO {
   paidAmount?: number;
   /** 收款状态（TradeOrderReceiveStatusEnum） */
   paymentProofStatus?: number;
+  /** 门店订货链：审核状态（TradeOrderAuditStatusEnum） */
+  auditStatus?: number | null;
+  /** 门店订货链：审核意见（驳回原因等） */
+  auditRemark?: string | null;
+  /** 门店订货链：下单门店（客户）编号 */
+  customerId?: number | null;
+  /** 门店订货链：下单门店名称 */
+  customerName?: string | null;
+  /** 门店订货链：店型（DIRECT 直营 / FRANCHISE 加盟） */
+  storeType?: string | null;
+  /** 门店订货链：收货状态 0 未收货 / 10 部分收货 / 20 已收货 */
+  receiptStatus?: number | null;
   deliveryType: number;
   logisticsId: number | null;
   logisticsName: string;
@@ -431,4 +464,54 @@ export interface AppTradeStoreReceiptCreateReqVO {
   fileUrls?: string[];
   remark?: string;
   items: AppTradeStoreReceiptCreateItemReqVO[];
+}
+
+/* ------------------------------- 门店往来 ------------------------------- */
+
+/**
+ * 门店往来余额汇总项（GET /trade/store-account/summary）。
+ *
+ * 字段与 `ErpCustomerAccountSummaryRespDTO` 一一对应；**金额单位是元**（ERP 台账
+ * BigDecimal 口径，不是商城的「分」），前端不做分→元换算。
+ * 正数 = 门店欠总部。
+ */
+export interface AppStoreAccountSummaryRespVO {
+  /** 门店客户编号 */
+  customerId: number;
+  /** 门店名称（后端按 customerId 补客户主数据，可能为空） */
+  customerName?: string | null;
+  /** 门店部门编号 */
+  deptId?: number | null;
+  /** 累计应收（元） */
+  totalReceivable?: BackendDecimal;
+  /** 累计已收 / 冲减（元） */
+  totalReceived?: BackendDecimal;
+  /** 当前余额（元，正数 = 门店欠总部） */
+  balance?: BackendDecimal;
+}
+
+/**
+ * 门店往来明细项（GET /trade/store-account/page）。
+ * 字段与 `ErpCustomerAccountDetailRespDTO` 一一对应，金额单位同样是元。
+ */
+export interface AppStoreAccountDetailRespVO {
+  id: number;
+  customerId: number;
+  customerName?: string | null;
+  /** 业务类型：1 配送应收 / 3 收款 / 4 收货差异调整 / 11 配送应收冲销 … */
+  bizType?: number | null;
+  /** 业务类型名称 */
+  bizTypeName?: string | null;
+  /** 金额（元，正数 = 门店欠总部增加） */
+  amount?: BackendDecimal;
+  /** 记账后余额快照（元） */
+  balance?: BackendDecimal;
+  /** 业务时间 */
+  billTime?: BackendDateTime | null;
+  /** 来源单据类型 */
+  sourceType?: string | null;
+  /** 来源单号 */
+  sourceNo?: string | null;
+  /** 备注 */
+  remark?: string | null;
 }

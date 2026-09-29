@@ -4,22 +4,48 @@ export const STORAGE_KEYS = {
   REFRESH_TOKEN: 'refresh-token',
   USER_INFO: 'user-info',
   CART: 'cart',
-  SEARCH_HISTORY: 'search-history',
   CURRENT_STORE: 'current-store',
 } as const;
 
 /**
- * 门店要货审核状态展示配置（后端 TradeOrderAuditStatusEnum）。
- * 门店订货链 S1：付款收齐后自动提交供应链审核，审核通过才发货。
+ * 门店要货审核状态展示配置（后端 TradeOrderAuditStatusEnum：DRAFT/PROCESS/APPROVE/REJECT）。
+ *
+ * 展示纪律：门店侧**只给粗粒度结论**——不展示审批人、审批节点、当前在谁手里；
+ * 文案只用中性词（待提交 / 审核中 / 已通过 / 已驳回），不出现具体岗位或人名。
+ * 后端未下发（null）时按「待提交」展示（后端 TradeOrderAuditStatusEnum.isDraft 同口径）。
  */
 export const AUDIT_STATUS_MAP: Record<number, { text: string; color: string }> = {
-  0: { text: '待提交审核', color: 'var(--app-text-color-secondary)' },
+  0: { text: '待提交', color: 'var(--app-text-color-secondary)' },
   10: { text: '审核中', color: 'var(--app-warning-color)' },
-  20: { text: '审核通过', color: 'var(--app-success-color)' },
-  30: { text: '审核驳回', color: 'var(--app-danger-color)' },
+  20: { text: '已通过', color: 'var(--app-success-color)' },
+  30: { text: '已驳回', color: 'var(--app-danger-color)' },
 };
 
-/** 订单状态展示配置（色值统一引用 CSS 变量，跟随主题换肤） */
+/**
+ * 审核轻标记：列表卡片只给「需要门店关注」的两态，
+ * 已通过 / 待提交不挂标签，避免每张卡片都多一个无信息量的角标（也不占用主状态位）。
+ */
+export const AUDIT_TAG_STATUSES: readonly number[] = [10, 30];
+
+/** 店型展示配置（后端 erp_customer.store_type；直营门店免审核闸门） */
+export const STORE_TYPE_MAP: Record<string, string> = {
+  DIRECT: '直营',
+  FRANCHISE: '加盟',
+};
+
+/** 订单收货状态展示配置（后端 receiptStatus：0 未收货 / 10 部分收货 / 20 已收货） */
+export const ORDER_RECEIPT_STATUS_MAP: Record<number, { text: string; color: string }> = {
+  0: { text: '未收货', color: 'var(--app-text-color-secondary)' },
+  10: { text: '部分收货', color: 'var(--app-warning-color)' },
+  20: { text: '已收货', color: 'var(--app-success-color)' },
+};
+
+/**
+ * 订单状态展示配置（色值统一引用 CSS 变量，跟随主题换肤）。
+ *
+ * `UNKNOWN`：后端下发了前端未识别的状态码时的兜底，文案必须是中性词
+ * （不能用「已取消」之类会误导门店的结论）。
+ */
 export const ORDER_STATUS_MAP = {
   UNPAID: { text: '待付款', type: 'danger', color: 'var(--app-danger-color)' },
   PAID: { text: '待发货', type: 'warning', color: 'var(--app-warning-color)' },
@@ -27,6 +53,7 @@ export const ORDER_STATUS_MAP = {
   COMPLETED: { text: '已完成', type: 'success', color: 'var(--app-success-color)' },
   CANCELED: { text: '已取消', type: 'default', color: 'var(--app-text-color-secondary)' },
   AFTER_SALE: { text: '售后中', type: 'default', color: 'var(--app-text-color-secondary)' },
+  UNKNOWN: { text: '处理中', type: 'default', color: 'var(--app-text-color-secondary)' },
 } as const;
 
 /**

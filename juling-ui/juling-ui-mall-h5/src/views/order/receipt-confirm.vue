@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { motion } from 'motion-v';
-  import { showSuccessToast, showToast } from 'vant';
+  import { showDialog, showToast } from 'vant';
   import type { UploaderFileListItem } from 'vant';
   import {
     createStoreReceipt,
@@ -147,6 +147,27 @@
 
   /** 有差异的行数与差异数量合计，用于提交前的二次确认文案 */
   const diffRowCount = computed(() => rows.value.filter(hasDiff).length);
+
+  /**
+   * 是否有差异：待确认时按当前输入实时判断；已确认 / 已作废按后端落库的差异类型。
+   */
+  const hasAnyDiff = computed(() =>
+    editable.value ? diffRowCount.value > 0 : (receipt.value?.diffType ?? 0) !== 0,
+  );
+
+  /**
+   * 差异后的下一步引导。
+   *
+   * 差异不是「填完就算了」：它会按配送价计入门店往来账（多收增加应付、少收冲减应付），
+   * 门店需要立刻知道后续该找谁补货 / 退货，所以这里把去向和动作都写清楚。
+   */
+  const diffGuideText = computed(() => {
+    if (editable.value) {
+      return `本次有 ${diffRowCount.value} 项差异：提交后差异会计入门店往来账（多收增加应付、少收冲减应付），如需补货 / 退货请联系总部。`;
+    }
+    return '本单存在收货差异：差异已同步到门店往来账，如需补货 / 退货请联系总部。';
+  });
+
   /** 多收行：确认框里额外说明「会增加门店应付」 */
   const overRows = computed(() => rows.value.filter(isOverReceipt));
   const diffCount = computed(() =>
@@ -311,7 +332,20 @@
       return;
     }
 
-    showSuccessToast('收货确认成功');
+    // 提交成功后的下一步说明：不能只弹一个「成功」就把人送走 ——
+    // 差异写入门店往来账后，门店要知道该找谁补货 / 退货。
+    const resultTip = diffRowCount.value
+      ? `本次有 ${diffRowCount.value} 项差异，已记录并同步到门店往来账（多收增加应付、少收冲减应付）；如需补货 / 退货请联系总部。`
+      : '实收数量已写入门店仓库存；如需补货请联系总部。';
+    try {
+      await showDialog({
+        title: '收货提交成功',
+        message: resultTip,
+        confirmButtonText: '知道了',
+      });
+    } catch {
+      // 点遮罩 / 返回关闭弹窗时 Vant 会 reject，此时提交已经成功，照常进列表
+    }
     await router.replace('/order/receipt-list');
   }
 
@@ -412,6 +446,17 @@
         <div class="receipt-confirm__hint">
           实收数量默认按应收带出，请按实际到货核对修改；实收与应收不一致时，必须选择差异类型并填写原因。多收部分会按配送价增加门店应付。
         </div>
+
+        <!-- 差异引导：有差异就明确讲清差异去了哪、下一步找谁，不留白 -->
+        <van-notice-bar
+          v-if="hasAnyDiff"
+          class="receipt-confirm__notice"
+          left-icon="info-o"
+          color="var(--app-warning-color)"
+          background="#fffbe8"
+          wrapable
+          :text="diffGuideText"
+        />
 
         <!-- 逐行收货：商品 / 应收数量 / 实收数量 / 差异原因 -->
         <div v-for="row in rows" :key="row.item.id" class="receipt-confirm__item app-card">

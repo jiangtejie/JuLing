@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { login as loginApi, logout as logoutApi, getProfile } from '@/api/auth';
 import { STORAGE_KEYS } from '@/constants';
 import type { LoginParam, UserInfo } from '@/types';
-import { clearTokens, getToken, setTokens } from '@/utils/auth';
+import { clearTokens, getToken, resetSessionState, setTokens } from '@/utils/auth';
 import { persistKey } from '@/utils/persist';
 
 /**
@@ -26,6 +26,9 @@ export const useUserStore = defineStore(
     /** 订货账号 + 密码登录 */
     async function login(param: LoginParam): Promise<void> {
       const result = await loginApi(param);
+      // 换账号登录：先清掉上一个会话残留的会员信息 / 购物车 / 当前门店，
+      // 否则 A 掉线后 B 登录会继承 A 的购物车与门店（防串号与下错店）
+      await resetSessionState();
       // 成对写入 accessToken + refreshToken（后者用于 401 静默刷新）
       setTokens(result.accessToken, result.refreshToken);
       await fetchProfile();
@@ -45,10 +48,12 @@ export const useUserStore = defineStore(
       } catch {
         // 忽略：本地状态必须清理
       } finally {
-        reset();
+        // 统一会话重置：token + userInfo + 购物车 + 当前门店（见 utils/auth.resetSessionState）
+        await resetSessionState();
       }
     }
 
+    /** 仅重置本 store（会话级重置请用 utils/auth 的 resetSessionState） */
     function reset(): void {
       userInfo.value = null;
       clearTokens();

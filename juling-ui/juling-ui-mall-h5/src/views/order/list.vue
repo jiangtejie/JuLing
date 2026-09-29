@@ -2,7 +2,14 @@
   import { motion } from 'motion-v';
   import { getOrderPage } from '@/api/order';
   import { useReorder } from '@/composables/useReorder';
-  import { ORDER_STATUS_MAP, ORDER_TABS, RECEIVE_STATUS_MAP } from '@/constants';
+  import {
+    AUDIT_STATUS_MAP,
+    AUDIT_TAG_STATUSES,
+    ORDER_STATUS_MAP,
+    ORDER_TABS,
+    RECEIVE_STATUS_MAP,
+  } from '@/constants';
+  import { useStoreStore } from '@/stores/store';
   import type { Order } from '@/types';
   import { formatDate, formatPrice } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
@@ -59,6 +66,72 @@
   function receiveBadge(status: number) {
     return RECEIVE_STATUS_MAP[status] ?? RECEIVE_STATUS_MAP[0];
   }
+
+  /* ------------------------------ 门店（下单方） ------------------------------ */
+
+  /**
+   * 门店筛选。
+   *
+   * 代理人账号管多家门店，订单混在一起看不出是哪家店的。后端 `/trade/order/page`
+   * 目前只支持 status 过滤（AppTradeOrderPageReqVO 没有 customerId），所以这里按
+   * **已加载的分页数据**做前端筛选：继续下滑会把后面的页加载进来一起参与筛选。
+   * （若后续数据量大，需要后端在分页接口上支持 customerId 才能真正做到服务端过滤。）
+   */
+  const ALL_STORES = 0;
+  const storeStore = useStoreStore();
+  const { stores } = storeToRefs(storeStore);
+  const filterStoreId = ref<number>(ALL_STORES);
+
+  const visibleList = computed(() =>
+    filterStoreId.value === ALL_STORES
+      ? list.value
+      : list.value.filter((order) => order.customerId === filterStoreId.value),
+  );
+
+  const storeFilterOptions = computed(() => [
+    { text: '全部门店', value: ALL_STORES },
+    ...stores.value.map((store) => ({ text: store.customerName, value: store.customerId })),
+  ]);
+
+  const filterStoreName = computed(
+    () =>
+      stores.value.find((store) => store.customerId === filterStoreId.value)?.customerName ?? '',
+  );
+
+  /** 列表计数：筛选态下说清「筛的是已加载数据」，未加载完提示继续下滑 */
+  const countText = computed(() => {
+    if (filterStoreId.value === ALL_STORES) return `共 ${total.value} 笔订单`;
+    const base = `筛选「${filterStoreName.value || '当前门店'}」：${visibleList.value.length} 笔`;
+    return finished.value ? base : `${base}（继续下滑加载更多）`;
+  });
+
+  const emptyText = computed(() =>
+    filterStoreId.value === ALL_STORES ? '暂无相关订单' : '该门店暂无可显示的订单',
+  );
+
+  /**
+   * 审核轻标记：只给「审核中 / 已驳回」两态（门店需要关注的），
+   * 已通过 / 待提交不挂标签 —— 既避免每张卡片多一个无信息量的角标，
+   * 也不占用主状态位（主状态位归订单状态）。
+   */
+  const auditTags = computed<Record<number, { text: string; color: string }>>(() => {
+    const map: Record<number, { text: string; color: string }> = {};
+    list.value.forEach((order) => {
+      const status = order.auditStatus;
+      if (status == null || !AUDIT_TAG_STATUSES.includes(status)) return;
+      const badge = AUDIT_STATUS_MAP[status];
+      if (badge) map[order.id] = badge;
+    });
+    return map;
+  });
+
+  onMounted(() => {
+    // 门店账号只有一家店（后端只返回自己），此时不展示筛选项；
+    // 拉取失败（未绑定门店 / 网络异常）静默降级为「不展示筛选」，不影响订单列表本身
+    void storeStore.fetchStores().catch((error) => {
+      console.warn('[order-list] 拉取门店列表失败，门店筛选不可用:', error);
+    });
+  });
 </script>
 
 <template>
@@ -68,6 +141,11 @@
     <van-tabs v-model:active="activeTab" sticky @change="onTabChange">
       <van-tab v-for="tab in ORDER_TABS" :key="tab.key" :title="tab.title" />
     </van-tabs>
+
+    <!-- 门店筛选：代理人账号管多家门店，先按门店收敛再看单（门店账号只有自己，不展示） -->
+    <van-dropdown-menu v-if="stores.length > 1" class="order-list__filter">
+      <van-dropdown-item v-model="filterStoreId" :options="storeFilterOptions" title="全部门店" />
+    </van-dropdown-menu>
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list
@@ -81,10 +159,10 @@
       >
         <!-- 首屏骨架：列表为空且首屏加载中时用骨架屏代替空白；下拉刷新（refreshing）时不显示，避免高度跳动 -->
         <ListSkeleton v-if="!list.length && loading && !refreshing" variant="order" :rows="3" />
-        <div v-if="list.length" class="order-list__count">共 {{ total }} 笔订单</div>
-        <div v-if="list.length" class="order-list__wrap">
+        <div v-if="visibleList.length" class="order-list__count">{{ countText }}</div>
+        <div v-if="visibleList.length" class="order-list__wrap">
           <motion.div
-            v-for="(order, index) in list"
+            v-for="(order, index) in visibleList"
             :key="order.id"
             class="order-list__item app-card"
             :initial="{ opacity: 0, y: 12 }"
@@ -99,6 +177,24 @@
                 :style="{ color: ORDER_STATUS_MAP[order.status].color }"
               >
                 {{ ORDER_STATUS_MAP[order.status].text }}
+              </span>
+            </div>
+
+            <!-- 下单门店：订单只快照 customerId，代理人账号必须能看出这是哪家店的单 -->
+            <div class="order-list__store">
+              <van-icon name="shop-o" class="order-list__store-icon" />
+              <span class="text-ellipsis order-list__store-name">
+                {{ order.customerName || '未关联门店' }}
+              </span>
+              <span
+                v-if="auditTags[order.id]"
+                class="order-list__chip"
+                :style="{
+                  color: auditTags[order.id]!.color,
+                  borderColor: auditTags[order.id]!.color,
+                }"
+              >
+                {{ auditTags[order.id]!.text }}
               </span>
             </div>
 
@@ -170,7 +266,7 @@
         </div>
       </van-list>
 
-      <van-empty v-if="!loading && !list.length" description="暂无相关订单" />
+      <van-empty v-if="!loading && !visibleList.length" :description="emptyText" />
     </van-pull-refresh>
   </div>
 </template>
@@ -206,6 +302,35 @@
 
     &__status {
       font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* 门店筛选：贴住 tabs，去掉组件默认投影，避免看起来像浮在上面的一层 */
+    &__filter {
+      :deep(.van-dropdown-menu__bar) {
+        height: 44px;
+        border-bottom: 1px solid var(--app-border-color);
+        box-shadow: none;
+      }
+    }
+
+    /* 下单门店行：门店名 + 审核轻标记（审核中 / 已驳回） */
+    &__store {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-top: 10px;
+      font-size: 13px;
+    }
+
+    &__store-icon {
+      flex: none;
+      color: var(--app-primary-color);
+    }
+
+    &__store-name {
+      flex: 1;
+      min-width: 0;
       font-weight: 600;
     }
 

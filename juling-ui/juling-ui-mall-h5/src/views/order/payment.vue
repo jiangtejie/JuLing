@@ -1,11 +1,7 @@
 <script setup lang="ts">
   import { motion } from 'motion-v';
   import type { UploaderFileListItem } from 'vant';
-  import {
-    showImagePreview,
-    showSuccessToast,
-    showToast,
-  } from 'vant';
+  import { showImagePreview, showSuccessToast, showToast } from 'vant';
   import {
     createPaymentProof,
     getOrderDetail,
@@ -16,6 +12,7 @@
   import { OFFLINE_PAY_CHANNELS, PROOF_STATUS_MAP } from '@/constants';
   import { formatDate, formatPrice, yuanToFen } from '@/utils/format';
   import { resolveImage } from '@/utils/image';
+  import { BizError } from '@/utils/request';
 
   defineOptions({ name: 'OrderPayment' });
 
@@ -26,6 +23,8 @@
   const order = ref<Order | null>(null);
   const proofs = ref<PaymentProof[]>([]);
   const loading = ref(true);
+  /** 加载失败（网络 / 服务异常）——与「订单不存在」区分，可重试 */
+  const loadError = ref(false);
 
   /** 待收金额：应付 - 已确认收款，负数归零 */
   const remainAmount = computed(() => {
@@ -137,8 +136,11 @@
       // 默认带上待收金额与收货人，减少手工输入
       if (!form.amountYuan) form.amountYuan = String(remainAmount.value / 100);
       if (!form.payerName) form.payerName = detail.receiverName ?? '';
-    } catch {
-      // 拦截器已提示
+      loadError.value = false;
+    } catch (error) {
+      // 拦截器已提示。业务错误（订单不存在）与网络异常要区分：后者给重试入口，
+      // 否则 order 为 null 会直接渲染成「订单不存在」，把网络故障说成订单没了
+      loadError.value = !(error instanceof BizError);
     } finally {
       loading.value = false;
     }
@@ -188,6 +190,15 @@
 
     <div v-if="loading" class="order-payment__skeleton">
       <van-skeleton title :row="4" />
+    </div>
+
+    <!-- 加载失败：网络 / 服务异常，给一个重试入口（与「订单不存在」区分开） -->
+    <div v-else-if="loadError" class="order-payment__error">
+      <van-empty image="error" description="加载失败，请检查网络后重试">
+        <van-button round type="primary" size="small" class="mt-3" @click="load">
+          重新加载
+        </van-button>
+      </van-empty>
     </div>
 
     <template v-else-if="order">
@@ -388,6 +399,13 @@
   .order-payment {
     &__skeleton {
       padding: 24px 16px;
+    }
+
+    &__error {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
     }
 
     &__summary {

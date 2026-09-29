@@ -1,8 +1,28 @@
-/** 订单状态 */
-export type OrderStatus = 'UNPAID' | 'PAID' | 'SHIPPED' | 'COMPLETED' | 'CANCELED' | 'AFTER_SALE';
+/**
+ * 订单状态。
+ *
+ * `UNKNOWN`：后端返回了前端尚未识别的状态码（后端新增状态时的兜底）。
+ * 语义中性，视图层必须按「处理中」这类中性文案展示，**绝不能**渲染成「已取消」。
+ */
+export type OrderStatus =
+  'UNPAID' | 'PAID' | 'SHIPPED' | 'COMPLETED' | 'CANCELED' | 'AFTER_SALE' | 'UNKNOWN';
 
 /** 订单收款状态（后端 TradeOrderReceiveStatusEnum）：0 未上传凭证 / 1 待核验 / 2 已驳回 / 3 部分收款 / 4 已收齐 */
 export type ReceiveStatusCode = 0 | 1 | 2 | 3 | 4;
+
+/**
+ * 要货审核状态（后端 TradeOrderAuditStatusEnum）：0 待提交 / 10 审核中 / 20 已通过 / 30 已驳回。
+ *
+ * 展示纪律：门店侧**只给粗粒度结论**——不展示审批人、审批节点、当前在谁手里，
+ * 文案也不出现具体岗位 / 人名（见 constants 的 AUDIT_STATUS_MAP）。
+ */
+export type OrderAuditStatus = 0 | 10 | 20 | 30;
+
+/** 订单收货状态（后端 receiptStatus）：0 未收货 / 10 部分收货 / 20 已收货 */
+export type OrderReceiptStatus = 0 | 10 | 20;
+
+/** 店型（后端 erp_customer.store_type）：DIRECT 直营 / FRANCHISE 加盟（直营门店免审核闸门） */
+export type StoreType = 'DIRECT' | 'FRANCHISE';
 
 /** 付款凭证（线下转账的一次上传记录；驳回后重新上传会新增一条，历史保留） */
 export interface PaymentProof {
@@ -51,6 +71,14 @@ export interface OrderItem {
   quantity: number;
   /** 小计（单位：分） */
   totalPrice: number;
+  /**
+   * 门店订货链数量进度（后端 decimal，可能为 null / 字符串）。
+   * 消费方统一按「Number(x) || 0」处理：
+   * - deliveredCount：ERP 配送出库单审核后回写的已发货数量；
+   * - receiptCount：门店在 H5 确认的实收数量。
+   */
+  deliveredCount?: number | string | null;
+  receiptCount?: number | string | null;
 }
 
 /** 订单 */
@@ -77,7 +105,22 @@ export interface Order {
   createTime: string | number;
   payTime?: string | number;
   deliveryTime?: string | number;
+  /** 完成时间（后端 finishTime，订单「已完成」节点的时间） */
+  finishTime?: string | number;
   items: OrderItem[];
+  /* ---------------------- 门店订货链：归属 · 审核 · 收货 ---------------------- */
+  /** 下单门店（客户）编号；代理人账号管多家门店，订单只快照 customerId */
+  customerId?: number | null;
+  /** 下单门店名称（后端补客户主数据，可能为空） */
+  customerName?: string | null;
+  /** 店型（DIRECT 直营 / FRANCHISE 加盟） */
+  storeType?: string | null;
+  /** 要货审核状态（OrderAuditStatus）；后端未下发时为 null，按「待提交」展示 */
+  auditStatus?: number | null;
+  /** 审核意见（驳回原因），仅详情接口下发 */
+  auditRemark?: string | null;
+  /** 收货状态（OrderReceiptStatus），仅详情接口下发 */
+  receiptStatus?: number | null;
 }
 
 /** 可下单门店（门店订货链：代理账号可切换名下门店） */
@@ -86,6 +129,8 @@ export interface StoreOption {
   customerName: string;
   deptId?: number;
   settlementMode?: string;
+  /** 店型（DIRECT 直营 / FRANCHISE 加盟），后端已有则透传 */
+  storeType?: string | null;
 }
 
 /** 创建订单参数 */
