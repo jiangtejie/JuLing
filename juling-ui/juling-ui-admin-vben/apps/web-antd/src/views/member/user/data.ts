@@ -1,4 +1,4 @@
-import type { VbenFormSchema } from '#/adapter/form';
+import type { VbenFormApi, VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
 import { h, markRaw } from 'vue';
@@ -30,13 +30,33 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      fieldName: 'username',
+      label: '订货账号',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 64,
+        placeholder: '请输入订货账号（登录名，通常就是门店名）',
+      },
+      help: '门店登录用的账号名，2-64 位且不能与其它账号重复；清空表示不修改',
+      rules: z
+        .string()
+        .min(2, '订货账号长度为 2-64 位')
+        .max(64, '订货账号长度不能超过 64 位')
+        .or(z.literal(''))
+        .optional(),
+    },
+    {
       fieldName: 'mobile',
       label: '手机号',
       component: 'Input',
       componentProps: {
-        placeholder: '请输入手机号',
+        allowClear: true,
+        maxlength: 20,
+        placeholder: '选填，不填则只能用订货账号登录',
       },
-      rules: 'required',
+      help: '选填。不填则只能用账号名登录，填了就必须唯一',
+      rules: 'mobile',
     },
     {
       fieldName: 'email',
@@ -65,8 +85,10 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '用户昵称',
       component: 'Input',
       componentProps: {
+        allowClear: true,
         placeholder: '请输入用户昵称',
       },
+      help: '门店订货账号的展示名；开账号时为空则取订货账号',
     },
     {
       fieldName: 'avatar',
@@ -177,6 +199,15 @@ export function useFormSchema(): VbenFormSchema[] {
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
+      fieldName: 'username',
+      label: '订货账号',
+      component: 'Input',
+      componentProps: {
+        placeholder: '请输入订货账号',
+        allowClear: true,
+      },
+    },
+    {
       fieldName: 'nickname',
       label: '用户昵称',
       component: 'Input',
@@ -282,9 +313,17 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       },
     },
     {
+      field: 'username',
+      title: '订货账号',
+      minWidth: 140,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
       field: 'mobile',
       title: '手机号',
       minWidth: 120,
+      // 私域订货场景手机号可选，历史 C 端会员也可能没有手机号
+      formatter: ({ cellValue }) => cellValue || '-',
     },
     {
       field: 'email',
@@ -484,3 +523,244 @@ export function usePointFormSchema(): VbenFormSchema[] {
     },
   ];
 }
+
+/** 开订货账号表单值 */
+export interface OrderAccountFormValues {
+  customerId?: number;
+  deptId?: number;
+  email?: string;
+  mark?: string;
+  mobile?: string;
+  nickname?: string;
+  password?: string;
+  status?: number;
+  username?: string;
+}
+
+/** 客户（门店）精简列表项：deptId 由后端 RespVO 提供，精简列表未透出时留空 */
+export interface OrderAccountCustomer {
+  deptId?: number;
+  id?: number;
+  name?: string;
+}
+
+/**
+ * 订货账号默认建议密码：`yt@` + 手机号后 6 位；没填手机号时用账号名后 6 位
+ * （账号名不足 6 位就用账号名本身），长度与后端 6-32 位的校验对齐。
+ */
+export function suggestOrderPassword(
+  mobile?: string,
+  username?: string,
+): string {
+  const mobileText = (mobile ?? '').trim();
+  let password: string;
+  if (mobileText) {
+    const digits = mobileText.replace(/\D/g, '');
+    password = `yt@${(digits || mobileText).slice(-6)}`;
+  } else {
+    const usernameText = (username ?? '').trim();
+    if (!usernameText) {
+      return '';
+    }
+    password = `yt@${usernameText.slice(-6)}`;
+  }
+  // 账号名只有 2-3 位时拼出来不足 6 位会被后端拒绝，这里补足到最小长度
+  return password.padEnd(6, '0');
+}
+
+/** 开订货账号表单（工具栏「开订货账号」弹窗） */
+export function useOrderAccountFormSchema(options: {
+  /** 客户（门店）下拉数据源 */
+  getCustomerList: () => Promise<OrderAccountCustomer[]>;
+  /** 选中客户后的联动：能拿到 deptId 就自动带出所属部门 */
+  onCustomerChange?: (
+    values: Partial<OrderAccountFormValues>,
+    form: VbenFormApi,
+  ) => Promise<void> | void;
+  /** 账号名 / 手机号变化后刷新默认建议密码 */
+  onPasswordSourceChange?: (
+    values: Partial<OrderAccountFormValues>,
+    form: VbenFormApi,
+  ) => void;
+}): VbenFormSchema[] {
+  return [
+    {
+      fieldName: 'username',
+      label: '订货账号',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 64,
+        placeholder: '请输入订货账号（通常就是门店名）',
+      },
+      help: '门店登录用的账号名，2-64 位且必须唯一',
+      rules: z
+        .string()
+        .min(2, '订货账号长度为 2-64 位')
+        .max(64, '订货账号长度不能超过 64 位'),
+    },
+    {
+      fieldName: 'password',
+      label: '初始密码',
+      component: 'InputPassword',
+      componentProps: {
+        allowClear: true,
+        maxlength: 32,
+        placeholder: '请输入 6-32 位初始密码',
+      },
+      help: '默认「yt@ + 手机号后 6 位」；没填手机号时取账号名后 6 位，可自行修改',
+      rules: z
+        .string()
+        .min(6, '密码长度为 6-32 位')
+        .max(32, '密码长度为 6-32 位'),
+      dependencies: {
+        triggerFields: ['mobile', 'username'],
+        trigger(values, _actions, controller) {
+          options.onPasswordSourceChange?.(
+            values as Partial<OrderAccountFormValues>,
+            controller,
+          );
+        },
+      },
+    },
+    {
+      fieldName: 'customerId',
+      label: '所属客户',
+      component: 'ApiSelect',
+      componentProps: {
+        api: options.getCustomerList,
+        labelField: 'name',
+        valueField: 'id',
+        allowClear: true,
+        placeholder: '请选择所属客户（门店）',
+      },
+      help: '订货账号必须绑定门店，否则门店下单会被拦下',
+      rules: 'selectRequired',
+      dependencies: {
+        triggerFields: ['customerId'],
+        trigger(values, _actions, controller) {
+          options.onCustomerChange?.(
+            values as Partial<OrderAccountFormValues>,
+            controller,
+          );
+        },
+      },
+    },
+    {
+      fieldName: 'deptId',
+      label: '所属部门',
+      component: 'ApiTreeSelect',
+      componentProps: {
+        allowClear: true,
+        api: async () => handleTree(await getSimpleDeptList()),
+        labelField: 'name',
+        valueField: 'id',
+        childrenField: 'children',
+        placeholder: '请选择所属部门（门店节点）',
+        treeDefaultExpandAll: true,
+      },
+      help: '选中客户后会自动带出门店部门，可手动调整',
+    },
+    {
+      fieldName: 'nickname',
+      label: '联系人',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 30,
+        placeholder: '请输入联系人（不填则取订货账号）',
+      },
+    },
+    {
+      fieldName: 'mobile',
+      label: '手机号',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 20,
+        placeholder: '选填，不填则只能用订货账号登录',
+      },
+      help: '选填；填了会校验格式且必须唯一',
+      rules: 'mobile',
+    },
+    {
+      fieldName: 'email',
+      label: '邮箱',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 50,
+        placeholder: '请输入邮箱',
+      },
+      rules: z.string().email('邮箱格式不正确').or(z.literal('')).optional(),
+    },
+    {
+      fieldName: 'mark',
+      label: '备注',
+      component: 'Textarea',
+      componentProps: {
+        placeholder: '请输入备注',
+      },
+      formItemClass: 'col-span-2',
+    },
+    {
+      fieldName: 'status',
+      label: '状态',
+      component: 'RadioGroup',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.COMMON_STATUS, 'number'),
+        buttonStyle: 'solid',
+        optionType: 'button',
+      },
+      rules: z.number().default(CommonStatusEnum.ENABLE).optional(),
+    },
+  ];
+}
+
+/** 重置订货账号密码表单（行操作「重置密码」弹窗） */
+export function useResetPasswordFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      fieldName: 'id',
+      label: '会员编号',
+      component: 'Input',
+      componentProps: {
+        disabled: true,
+      },
+    },
+    {
+      fieldName: 'username',
+      label: '订货账号',
+      component: 'Input',
+      componentProps: {
+        disabled: true,
+        placeholder: '（该会员还没有订货账号）',
+      },
+      help: '重置后该账号会被强制下线，门店需要用新密码重新登录',
+    },
+    {
+      fieldName: 'nickname',
+      label: '联系人',
+      component: 'Input',
+      componentProps: {
+        disabled: true,
+      },
+    },
+    {
+      fieldName: 'password',
+      label: '新密码',
+      component: 'InputPassword',
+      componentProps: {
+        allowClear: true,
+        maxlength: 32,
+        placeholder: '请输入 6-32 位新密码',
+      },
+      help: '默认「yt@ + 手机号后 6 位」（无手机号取账号名后 6 位），可自行修改',
+      rules: z
+        .string()
+        .min(6, '密码长度为 6-32 位')
+        .max(32, '密码长度为 6-32 位'),
+    },
+  ];
+}
+

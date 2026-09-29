@@ -5,6 +5,7 @@ import type { MemberUserApi } from '#/api/member/user';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { useAccess } from '@vben/access';
 import { DocAlert, Page, useVbenModal } from '@vben/common-ui';
 import { isEmpty } from '@vben/utils';
 
@@ -16,9 +17,16 @@ import { CouponSendForm } from '../../mall/promotion/coupon/components';
 import { useGridColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
 import LevelForm from './modules/level-form.vue';
+import OrderAccountForm from './modules/order-account-form.vue';
 import PointForm from './modules/point-form.vue';
+import ResetPasswordForm from './modules/reset-password-form.vue';
 
 const router = useRouter();
+/**
+ * 权限编码与后端 @PreAuthorize 对齐：member:user:create / member:user:reset-password。
+ * 行操作是数组配置项（不支持模板 v-if），所以走 TableAction 的 ifShow + hasAccessByCodes。
+ */
+const { hasAccessByCodes } = useAccess();
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
@@ -40,6 +48,16 @@ const [CouponSendFormModal, couponSendFormModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
+const [OrderAccountFormModal, orderAccountFormModalApi] = useVbenModal({
+  connectedComponent: OrderAccountForm,
+  destroyOnClose: true,
+});
+
+const [ResetPasswordFormModal, resetPasswordFormModalApi] = useVbenModal({
+  connectedComponent: ResetPasswordForm,
+  destroyOnClose: true,
+});
+
 /** 刷新表格 */
 function handleRefresh() {
   gridApi.query();
@@ -48,6 +66,16 @@ function handleRefresh() {
 /** 编辑会员 */
 function handleEdit(row: MemberUserApi.User) {
   formModalApi.setData(row).open();
+}
+
+/** 开订货账号（给加盟/直营门店开「账号名 + 初始密码 + 绑定门店」） */
+function handleCreateOrderAccount() {
+  orderAccountFormModalApi.open();
+}
+
+/** 重置订货账号密码（重置后该账号会被强制下线） */
+function handleResetPassword(row: MemberUserApi.User) {
+  resetPasswordFormModalApi.setData(row).open();
 }
 
 /** 修改会员等级 */
@@ -135,21 +163,36 @@ const [Grid, gridApi] = useVbenVxeGrid({
     <FormModal @success="handleRefresh" />
     <PointFormModal @success="handleRefresh" />
     <LevelFormModal @success="handleRefresh" />
+    <OrderAccountFormModal @success="handleRefresh" />
+    <ResetPasswordFormModal @success="handleRefresh" />
     <CouponSendFormModal />
     <Grid table-title="会员列表">
       <template #toolbar-tools>
-        <TableAction
-          :actions="[
-            {
-              label: '发送优惠券',
-              type: 'primary',
-              icon: 'lucide:mouse-pointer-2',
-              disabled: isEmpty(checkedIds),
-              auth: ['promotion:coupon:send'],
-              onClick: handleSendCoupon,
-            },
-          ]"
-        />
+        <div class="flex items-center gap-2">
+          <TableAction
+            v-if="hasAccessByCodes(['member:user:create'])"
+            :actions="[
+              {
+                label: '开订货账号',
+                type: 'primary',
+                icon: 'lucide:user-plus',
+                onClick: handleCreateOrderAccount,
+              },
+            ]"
+          />
+          <TableAction
+            :actions="[
+              {
+                label: '发送优惠券',
+                type: 'primary',
+                icon: 'lucide:mouse-pointer-2',
+                disabled: isEmpty(checkedIds),
+                auth: ['promotion:coupon:send'],
+                onClick: handleSendCoupon,
+              },
+            ]"
+          />
+        </div>
       </template>
 
       <template #actions="{ row }">
@@ -180,6 +223,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
               type: 'link',
               auth: ['member:user:update-point'],
               onClick: handleUpdatePoint.bind(null, row),
+            },
+            {
+              label: '重置密码',
+              type: 'link',
+              ifShow: () => hasAccessByCodes(['member:user:reset-password']),
+              onClick: handleResetPassword.bind(null, row),
             },
           ]"
         />

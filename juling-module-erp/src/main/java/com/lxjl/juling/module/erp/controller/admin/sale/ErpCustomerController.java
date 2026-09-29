@@ -83,7 +83,11 @@ public class ErpCustomerController {
     @Operation(summary = "获得客户精简列表", description = "只包含被开启的客户，主要用于前端的下拉选项")
     public CommonResult<List<ErpCustomerRespVO>> getCustomerSimpleList() {
         List<ErpCustomerDO> list = customerService.getCustomerListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(convertList(list, customer -> new ErpCustomerRespVO().setId(customer.getId()).setName(customer.getName())));
+        // 除 id/name 外额外透出 deptId 与 storeType：
+        // 「开订货账号」选中门店后要自动带出所属部门，只给 id/name 的话前端还得再查一次详情（且要额外权限）。
+        return success(convertList(list, customer -> new ErpCustomerRespVO()
+                .setId(customer.getId()).setName(customer.getName())
+                .setDeptId(customer.getDeptId()).setStoreType(customer.getStoreType())));
     }
 
     @GetMapping("/export-excel")
