@@ -537,11 +537,37 @@ export interface OrderAccountFormValues {
   username?: string;
 }
 
-/** 客户（门店）精简列表项：deptId 由后端 RespVO 提供，精简列表未透出时留空 */
+/**
+ * 订货主体（门店 / 代理客户）下拉项。
+ *
+ * simple-list 目前透出 id/name/deptId/storeType；parentCustomerId 与 isAgent 是前端补充的：
+ * 被别的客户挂成「上级代理」的客户＝代理客户（名下有门店，H5 可切换名下门店下单）。
+ */
 export interface OrderAccountCustomer {
   deptId?: number;
   id?: number;
+  /** 是否代理客户（名下有门店）：由开账号弹窗拉列表时标注 */
+  isAgent?: boolean;
   name?: string;
+  /** 上级代理客户编号：simple-list 若已透出，可直接本地判定谁是代理 */
+  parentCustomerId?: number;
+  /** 店型：DIRECT 直营 / FRANCHISE 加盟（字典 erp_store_type） */
+  storeType?: string;
+}
+
+/** 订货主体下拉的显示名：代理客户最需要标出来，其次标店型，避免门店账号 / 代理人账号选错 */
+export function formatOrderSubjectLabel(item: OrderAccountCustomer): string {
+  const name = item.name ?? '';
+  if (item.isAgent) {
+    return `${name}（代理）`;
+  }
+  if (item.storeType === 'DIRECT') {
+    return `${name}（直营）`;
+  }
+  if (item.storeType === 'FRANCHISE') {
+    return `${name}（加盟）`;
+  }
+  return name;
 }
 
 /**
@@ -570,9 +596,9 @@ export function suggestOrderPassword(
 
 /** 开订货账号表单（工具栏「开订货账号」弹窗） */
 export function useOrderAccountFormSchema(options: {
-  /** 客户（门店）下拉数据源 */
+  /** 订货主体（门店 / 代理客户）下拉数据源 */
   getCustomerList: () => Promise<OrderAccountCustomer[]>;
-  /** 选中客户后的联动：能拿到 deptId 就自动带出所属部门 */
+  /** 选中订货主体后的联动：能拿到 deptId 就自动带出所属部门 */
   onCustomerChange?: (
     values: Partial<OrderAccountFormValues>,
     form: VbenFormApi,
@@ -625,16 +651,17 @@ export function useOrderAccountFormSchema(options: {
     },
     {
       fieldName: 'customerId',
-      label: '所属客户',
+      label: '订货主体',
       component: 'ApiSelect',
       componentProps: {
         api: options.getCustomerList,
+        labelFn: formatOrderSubjectLabel,
         labelField: 'name',
         valueField: 'id',
         allowClear: true,
-        placeholder: '请选择所属客户（门店）',
+        placeholder: '请选择订货主体（门店 / 代理客户）',
       },
-      help: '订货账号必须绑定门店，否则门店下单会被拦下',
+      help: '选门店＝该账号只管这一家门店；选代理客户＝代理人账号，登录后可在 H5 切换名下门店下单',
       rules: 'selectRequired',
       dependencies: {
         triggerFields: ['customerId'],
@@ -656,10 +683,10 @@ export function useOrderAccountFormSchema(options: {
         labelField: 'name',
         valueField: 'id',
         childrenField: 'children',
-        placeholder: '请选择所属部门（门店节点）',
+        placeholder: '请选择所属部门（门店 / 代理部门）',
         treeDefaultExpandAll: true,
       },
-      help: '选中客户后会自动带出门店部门，可手动调整',
+      help: '门店账号填门店部门；代理人账号填代理部门（仅门店自身没有部门时兜底）。选中订货主体后自动带出，可手动调整',
     },
     {
       fieldName: 'nickname',

@@ -72,10 +72,12 @@ public class MemberUserBaseVO {
     @Schema(description = "用户分组编号", example = "1")
     private Long groupId;
 
-    @Schema(description = "所属部门（门店节点）编号", example = "134")
+    @Schema(description = "订货主体的所属部门：门店账号=门店部门，代理人账号=代理部门",
+            example = "134")
     private Long deptId;
 
-    @Schema(description = "所属客户（门店 / 代理）编号", example = "1")
+    @Schema(description = "订货主体（门店 / 代理客户）编号：填门店=只管这一家，填代理=可切换名下门店下单",
+            example = "1")
     private Long customerId;
 
 }

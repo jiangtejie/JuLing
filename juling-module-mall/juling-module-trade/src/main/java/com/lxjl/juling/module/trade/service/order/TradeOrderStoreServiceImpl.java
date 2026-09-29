@@ -20,6 +20,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_NOT_BELONG;
 import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_NOT_BOUND;
 import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_NOT_EXISTS;
+import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_REQUIRED;
 
 /**
  * 下单门店解析 Service 实现类
@@ -42,13 +43,26 @@ public class TradeOrderStoreServiceImpl implements TradeOrderStoreService {
         if (member == null || member.getCustomerId() == null) {
             throw exception(ORDER_CREATE_FAIL_STORE_NOT_BOUND);
         }
-        // 2. 未指定门店时用账号绑定门店；指定时必须是自身或名下门店（代理切换门店下单）
-        Long storeId = storeCustomerId != null ? storeCustomerId : member.getCustomerId();
-        if (!Objects.equals(storeId, member.getCustomerId())) {
-            List<Long> childIds = erpCustomerApi.getChildCustomerIds(member.getCustomerId());
-            if (!childIds.contains(storeId)) {
+        // 2. 解析下单门店。账号绑定的「订货主体」有两种口径：
+        //    · 没有下级 → 门店账号，只能给自己下单（未指定门店时默认就是它）；
+        //    · 有下级   → 代理人账号，可给名下门店下单，但**代理本身不是收货门店**，
+        //                 所以必须显式选择，不能默认把订单挂到代理头上。
+        List<Long> childIds = erpCustomerApi.getChildCustomerIds(member.getCustomerId());
+        boolean agentAccount = !childIds.isEmpty();
+        Long storeId;
+        if (storeCustomerId != null) {
+            if (agentAccount && Objects.equals(storeCustomerId, member.getCustomerId())) {
+                throw exception(ORDER_CREATE_FAIL_STORE_REQUIRED);
+            }
+            if (!Objects.equals(storeCustomerId, member.getCustomerId()) && !childIds.contains(storeCustomerId)) {
                 throw exception(ORDER_CREATE_FAIL_STORE_NOT_BELONG);
             }
+            storeId = storeCustomerId;
+        } else {
+            if (agentAccount) {
+                throw exception(ORDER_CREATE_FAIL_STORE_REQUIRED);
+            }
+            storeId = member.getCustomerId();
         }
         // 3. 校验门店存在且启用
         ErpCustomerRespDTO store = erpCustomerApi.getCustomer(storeId);
@@ -85,10 +99,13 @@ public class TradeOrderStoreServiceImpl implements TradeOrderStoreService {
         if (member == null || member.getCustomerId() == null) {
             throw exception(ORDER_CREATE_FAIL_STORE_NOT_BOUND);
         }
-        // 2. 可下单门店 = 自身 + 名下门店（代理 → 多门店）
-        List<Long> customerIds = new ArrayList<>();
-        customerIds.add(member.getCustomerId());
-        customerIds.addAll(erpCustomerApi.getChildCustomerIds(member.getCustomerId()));
+        // 2. 可下单门店：
+        //    · 门店账号（绑定的订货主体没有下级）→ 只有自己；
+        //    · 代理人账号（有下级）→ 只列名下门店。**代理本身不出现在列表里**：
+        //      代理是管理主体，不收货、不结算配送，把它当成可下单门店会让订单挂错主体。
+        List<Long> childIds = erpCustomerApi.getChildCustomerIds(member.getCustomerId());
+        List<Long> customerIds = childIds.isEmpty()
+                ? List.of(member.getCustomerId()) : new ArrayList<>(childIds);
         List<ErpCustomerRespDTO> customers = erpCustomerApi.getCustomerList(customerIds);
         // 3. 组装（保持自身在首位作为默认门店）
         return customers.stream()

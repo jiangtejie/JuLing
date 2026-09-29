@@ -123,5 +123,6 @@ public interface ErrorCodeConstants {
     ErrorCode ORDER_RECEIPT_NO_EXISTS = new ErrorCode(1_011_000_069, "生成门店收货单号失败，请重新提交");
     ErrorCode ORDER_RECEIPT_NO_DELIVERED_ITEM = new ErrorCode(1_011_000_070, "确认收货失败，原因：该订单没有已发货的商品行");
     ErrorCode ORDER_RECEIPT_ITEM_DUPLICATE = new ErrorCode(1_011_000_071, "确认收货失败，原因：收货明细里的商品行({})重复");
+    ErrorCode ORDER_CREATE_FAIL_STORE_REQUIRED = new ErrorCode(1_011_000_072, "下单失败，原因：该账号是代理人账号（管理多家门店），请先选择下单门店");
 
 }

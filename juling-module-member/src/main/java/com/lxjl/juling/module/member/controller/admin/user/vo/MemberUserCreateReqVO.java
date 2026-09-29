@@ -9,7 +9,10 @@ import org.hibernate.validator.constraints.Length;
 /**
  * 管理后台 - 开订货账号 Request VO
  *
- * 私域订货场景：由后台给订货人开账号（账号名填订货人名字）+ 初始密码 + 绑定门店。
+ * 私域订货场景：由后台给订货人开账号（账号名填订货人名字）+ 初始密码 + 绑定**订货主体**。
+ * 订货主体有两种口径：
+ *   · 填**门店客户** → 该账号只管这一家门店（门店自己订货）；
+ *   · 填**代理客户** → 该账号是代理人账号，可在 H5 切换其名下门店下单（getStoreList 会返回 自身 + 名下门店）。
  * 刻意**不继承** {@link MemberUserBaseVO}：C 端那套「昵称/头像/性别/生日/等级」对订货账号没意义，
  * 也不想把父类的 @NotNull 校验（如昵称）强加给开账号流程。
  *
@@ -29,11 +32,12 @@ public class MemberUserCreateReqVO {
     @Length(min = 6, max = 32, message = "密码长度为 6-32 位")
     private String password;
 
-    @Schema(description = "所属客户（门店/代理）编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "6")
-    @NotNull(message = "所属客户（门店）不能为空")
+    @Schema(description = "订货主体编号：门店账号填门店客户；代理人账号填代理客户（之后可切换名下门店下单）",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "6")
+    @NotNull(message = "订货主体（门店 / 代理客户）不能为空")
     private Long customerId;
 
-    @Schema(description = "所属部门（门店节点）编号", example = "134")
+    @Schema(description = "订货主体所属部门：门店账号填门店部门；代理人账号填代理部门（仅在门店自身没有部门时兜底）", example = "134")
     private Long deptId;
 
     @Schema(description = "联系人 / 显示名（为空时取订货账号）", example = "李店长")

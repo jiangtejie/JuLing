@@ -68,7 +68,7 @@ function handleEdit(row: MemberUserApi.User) {
   formModalApi.setData(row).open();
 }
 
-/** 开订货账号（订货人账号名 + 初始密码 + 绑定门店） */
+/** 开订货账号（订货人账号名 + 初始密码 + 绑定订货主体：门店或代理客户） */
 function handleCreateOrderAccount() {
   orderAccountFormModalApi.open();
 }
