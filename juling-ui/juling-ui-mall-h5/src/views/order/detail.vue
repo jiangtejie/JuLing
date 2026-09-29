@@ -15,6 +15,7 @@
   import { useReorder } from '@/composables/useReorder';
   import { confirmDialog } from '@/utils/confirm';
   import { formatDate, formatPrice, formatQuantity, maskMobile } from '@/utils/format';
+  import { resolveUploadAction } from '@/utils/order-actions';
   import { resolveImage } from '@/utils/image';
   import { copyText } from '@/utils/index';
   import { BizError } from '@/utils/request';
@@ -92,13 +93,16 @@
    * （后端只允许「待支付」或「待发货且审核状态为 待提交/已驳回」时上传：
    *   审核中(10) 不允许追加，避免重复上传把申报金额叠高；已通过(20) 则收款已认定）
    */
-  const canUpload = computed(
-    () =>
-      remainAmount.value > 0 &&
-      !isAbnormal.value &&
-      order.value?.auditStatus !== 10 &&
-      order.value?.auditStatus !== 20,
+  const uploadAction = computed(() =>
+    resolveUploadAction({
+      auditStatus: order.value?.auditStatus,
+      isAbnormal: isAbnormal.value,
+      proofs: proofs.value,
+      remainAmount: remainAmount.value,
+    }),
   );
+  /** 还能上传/重新上传付款凭证（凭证已提交待审核、审核中、已通过都收起入口） */
+  const canUpload = computed(() => uploadAction.value.visible);
 
   /**
    * 订单审核中（auditStatus = 10）：门店提交付款凭证后后端自动提交审批，此时不允许取消
@@ -115,7 +119,7 @@
 
   /** 允许取消：只有「待支付」且不在审核中的订单（审核中不可取消） */
   const canCancel = computed(() => order.value?.status === 'UNPAID' && !auditInProgress.value);
-  const uploadText = computed(() => (proofs.value.length ? '重新上传付款凭证' : '上传付款凭证'));
+  const uploadText = computed(() => uploadAction.value.text);
 
   /* ------------------- 门店订货链：归属 · 审核 · 数量进度 ------------------- */
 
@@ -628,7 +632,13 @@
 
       <!-- 底部固定操作栏：无需滚到底即可操作 -->
       <van-action-bar v-if="hasActions" class="order-detail__bar">
-        <van-action-bar-button v-if="canUpload" type="primary" text="上传凭证" @click="toPayment" />
+        <!-- 文案随凭证状态变化（已提交过就是「重新上传凭证」），不再写死「上传凭证」 -->
+        <van-action-bar-button
+          v-if="canUpload"
+          type="primary"
+          :text="uploadAction.barText"
+          @click="toPayment"
+        />
         <van-action-bar-button
           v-if="canCancel"
           type="danger"

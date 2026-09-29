@@ -42,7 +42,11 @@
    * 避免门店把表单填完才被后端拦（1_011_000_043「订单已通过审核，无法再上传付款凭证」）
    */
   const uploadBlocked = computed(
-    () => order.value?.auditStatus === 10 || order.value?.auditStatus === 20,
+    () =>
+      order.value?.auditStatus === 10 ||
+      order.value?.auditStatus === 20 ||
+      // 已提交过、还在等审批结果的凭证：同样不该再引导门店提交（后端会拒）
+      proofs.value.some((proof) => proof.status === 0),
   );
 
   const form = reactive({
