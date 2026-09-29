@@ -24,4 +24,13 @@ export function isEmpty(value: unknown): boolean {
 /** 中国大陆手机号 */
 export const isMobile = (value: string): boolean => /^1[3-9]\d{9}$/.test(value);
 
+/**
+ * 订货账号：总部下发的门店登录账号（通常就是门店名）。
+ * 允许中文 / 字母 / 数字，长度 2-64 位（与后端校验对齐），前后空白自动忽略。
+ */
+export function isAccount(value: string): boolean {
+  const account = value.trim();
+  return account.length >= 2 && account.length <= 64;
+}
+
 export const isExternal = (path: string): boolean => /^(https?:|mailto:|tel:)/.test(path);

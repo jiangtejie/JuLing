@@ -115,7 +115,10 @@ export interface AppMemberUserInfoRespVO {
   id: number;
   nickname: string;
   avatar: string;
-  mobile: string;
+  /** 手机号（会员手机号已非必填，可能为空） */
+  mobile?: string | null;
+  /** 订货账号（总部下发的门店登录账号，旧数据可能不返回） */
+  username?: string | null;
   email: string;
   /** 性别 */
   sex: number;

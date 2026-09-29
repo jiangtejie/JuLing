@@ -8,6 +8,7 @@ import { normalizeOptionalAssetUrl } from '../../utils/asset.ts';
  * 注意：后端 `AppMemberUserInfoRespVO` **不提供** `customerId` / `customerName` / `verified`
  * （订货客户认证标识），前端领域模型保留这些可选字段但恒为空——见计划 D2。
  * `level` 对象在此拍平为 `levelName`。
+ * `username`（订货账号）与 `mobile` 均为可空字段（mobile 已非必填），空值归一为 `undefined`。
  */
 
 /** 后端登录响应 → 前端 LoginResult（expiresTime 统一为毫秒时间戳 number） */
@@ -20,13 +21,20 @@ export function adaptLoginResult(raw: AppAuthLoginRespVO): LoginResult {
   };
 }
 
+/** 空串 / 空白 / null 统一归一为 undefined，便于视图层用 `||` 做回退展示 */
+function optionalText(value: string | null | undefined): string | undefined {
+  const text = typeof value === 'string' ? value.trim() : '';
+  return text || undefined;
+}
+
 /** 后端会员信息 → 前端 UserInfo */
 export function adaptUserInfo(raw: AppMemberUserInfoRespVO): UserInfo {
   return {
     id: raw.id,
     nickname: raw.nickname,
     avatar: normalizeOptionalAssetUrl(raw.avatar),
-    mobile: raw.mobile,
+    mobile: optionalText(raw.mobile),
+    username: optionalText(raw.username),
     levelName: raw.level?.name,
   };
 }

@@ -38,8 +38,20 @@
     { label: '收货地址', icon: 'i-carbon-location', to: '' },
     { label: '企业资料', icon: 'i-carbon-building', to: '' },
     { label: '联系客服', icon: 'i-carbon-headset', to: '' },
+    { label: '修改密码', icon: 'i-carbon-password', to: '/user/password' },
     { label: '系统设置', icon: 'i-carbon-settings', to: '' },
   ];
+
+  /**
+   * 展示用账号：优先订货账号（username，总部下发的门店账号），
+   * 旧账号没有 username 时回退打码手机号；两者都没有则整行不展示。
+   */
+  const displayAccount = computed(() => {
+    const info = userStore.userInfo;
+    const username = info?.username?.trim();
+    if (username) return username;
+    return info?.mobile ? maskMobile(info.mobile) : '';
+  });
 
   function toLogin(): void {
     void router.push('/login');
@@ -179,9 +191,7 @@
     <div class="user__footer">
       <van-button v-if="userStore.isLogin" block round @click="onLogout">退出登录</van-button>
       <van-button v-else block round type="primary" @click="toLogin">立即登录</van-button>
-      <div v-if="userStore.userInfo?.mobile" class="user__mobile">
-        账号：{{ maskMobile(userStore.userInfo.mobile) }}
-      </div>
+      <div v-if="displayAccount" class="user__account">账号：{{ displayAccount }}</div>
     </div>
   </div>
 </template>
@@ -288,7 +298,7 @@
       padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
     }
 
-    &__mobile {
+    &__account {
       margin-top: 12px;
       text-align: center;
       font-size: 12px;

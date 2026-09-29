@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { showDialog, showSuccessToast, showToast } from 'vant';
-  import { sendSmsCode } from '@/api/auth';
   import { useUserStore } from '@/stores/user';
-  import { isMobile } from '@/utils/is';
+  import { isAccount } from '@/utils/is';
 
   defineOptions({ name: 'Login' });
 
@@ -10,13 +9,13 @@
   const router = useRouter();
   const userStore = useUserStore();
 
-  /** 登录方式：password 账号密码 / sms 短信验证码 */
-  const mode = ref<'password' | 'sms'>('password');
-
+  /**
+   * 私域订货登录：只有「订货账号 + 密码」一种方式。
+   * 短信渠道未配置，短信登录 tab、验证码输入框与倒计时逻辑已整体移除。
+   */
   const form = reactive({
-    mobile: '',
+    account: '',
     password: '',
-    code: '',
   });
 
   // 默认不勾选：协议需由用户主动确认（合规要求）
@@ -33,58 +32,24 @@
       title: isService ? '用户服务协议' : '隐私政策',
       message: isService
         ? '本协议说明亚特订货商城提供的服务范围、账号使用规则与订单履约方式。\n正式文本以平台发布版本为准。'
-        : '我们仅收集完成订货与配送所必需的信息（手机号、收货人姓名、联系电话、收货地址），不用于其它用途。\n正式文本以平台发布版本为准。',
+        : '我们仅收集完成订货与配送所必需的信息（订货账号、收货人姓名、联系电话、收货地址），不用于其它用途。\n正式文本以平台发布版本为准。',
     });
-  }
-
-  /* ---------------------------- 短信验证码倒计时 ---------------------------- */
-  const SEND_INTERVAL = 60;
-  const countdown = ref(0);
-  let countdownTimer: ReturnType<typeof setInterval> | undefined;
-
-  onUnmounted(() => {
-    if (countdownTimer) clearInterval(countdownTimer);
-  });
-
-  const smsButtonText = computed(() =>
-    countdown.value > 0 ? `${countdown.value}s 后重发` : '获取验证码',
-  );
-
-  async function onSendSms(): Promise<void> {
-    if (countdown.value > 0) return;
-    if (!isMobile(form.mobile)) {
-      showToast('请输入正确的手机号');
-      return;
-    }
-    try {
-      await sendSmsCode(form.mobile);
-    } catch {
-      // 失败提示已由 axios 响应拦截器统一处理
-      return;
-    }
-    showSuccessToast('验证码已发送');
-    countdown.value = SEND_INTERVAL;
-    countdownTimer = setInterval(() => {
-      countdown.value -= 1;
-      if (countdown.value <= 0 && countdownTimer) {
-        clearInterval(countdownTimer);
-        countdownTimer = undefined;
-      }
-    }, 1000);
   }
 
   /* -------------------------------- 提交登录 -------------------------------- */
   async function onSubmit(): Promise<void> {
-    if (!isMobile(form.mobile)) {
-      showToast('请输入正确的手机号');
+    // 账号名可能是中文 / 字母（通常就是门店名），只校验长度，不做手机号格式校验
+    const account = form.account.trim();
+    if (!account) {
+      showToast('请输入订货账号');
       return;
     }
-    if (mode.value === 'password' && !form.password) {
+    if (!isAccount(account)) {
+      showToast('订货账号长度为 2-64 位');
+      return;
+    }
+    if (!form.password) {
       showToast('请输入登录密码');
-      return;
-    }
-    if (mode.value === 'sms' && !form.code) {
-      showToast('请输入短信验证码');
       return;
     }
     if (!agreed.value) {
@@ -93,11 +58,7 @@
     }
 
     try {
-      if (mode.value === 'password') {
-        await userStore.login({ mobile: form.mobile, password: form.password });
-      } else {
-        await userStore.loginBySms({ mobile: form.mobile, code: form.code });
-      }
+      await userStore.login({ account, password: form.password });
     } catch {
       // 错误提示已由 axios 响应拦截器统一处理
       return;
@@ -122,26 +83,19 @@
       <div class="login__subtitle">企业专属订货价 · 登录后可见</div>
     </div>
 
-    <!-- 登录方式切换 -->
-    <van-tabs v-model:active="mode" class="login__tabs" shrink line-width="28">
-      <van-tab title="密码登录" name="password" />
-      <van-tab title="短信登录" name="sms" />
-    </van-tabs>
-
     <van-form class="login__form" @submit="run">
       <van-cell-group inset>
         <van-field
-          v-model="form.mobile"
-          name="mobile"
-          type="tel"
-          label="手机号"
-          placeholder="请输入手机号"
-          maxlength="11"
+          v-model="form.account"
+          name="account"
+          type="text"
+          label="订货账号"
+          placeholder="请输入订货账号"
+          maxlength="64"
           clearable
         />
 
         <van-field
-          v-if="mode === 'password'"
           v-model="form.password"
           name="password"
           type="password"
@@ -149,31 +103,13 @@
           placeholder="请输入登录密码"
           clearable
         />
-
-        <van-field
-          v-else
-          v-model="form.code"
-          name="code"
-          type="digit"
-          label="验证码"
-          placeholder="请输入短信验证码"
-          maxlength="6"
-        >
-          <template #button>
-            <van-button
-              size="small"
-              type="primary"
-              plain
-              :disabled="countdown > 0"
-              @click="onSendSms"
-            >
-              {{ smsButtonText }}
-            </van-button>
-          </template>
-        </van-field>
       </van-cell-group>
 
       <div class="login__tips">
+        请使用总部下发的<b>订货账号</b>登录（通常为门店名称）；忘记密码请联系总部管理员。
+      </div>
+
+      <div class="login__agree">
         <van-checkbox v-model="agreed" icon-size="14px" shape="square">
           我已阅读并同意
           <span class="login__link" @click.stop="showAgreement('service')"> 《用户服务协议》 </span>
@@ -225,15 +161,19 @@
       color: var(--app-text-color-secondary);
     }
 
-    &__tabs {
-      --van-tabs-line-height: 40px;
-    }
-
     &__form {
       margin-top: 8px;
     }
 
+    /** 登录方式说明：账号由总部下发，不提供短信登录 */
     &__tips {
+      padding: 16px 24px 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--app-text-color-secondary);
+    }
+
+    &__agree {
       padding: 16px 24px 0;
       font-size: 12px;
       color: var(--app-text-color-secondary);

@@ -550,3 +550,31 @@ test('adaptUserInfo：level 为 null 时不报错', () => {
   });
   assert.equal(user.levelName, undefined);
 });
+
+/** 会员信息最小字段集：只覆盖本组用例关心的可空字段 */
+const baseMemberVO = {
+  id: 1,
+  nickname: '亚特总店',
+  avatar: '',
+  email: '',
+  sex: 0,
+  point: 0,
+  experience: 0,
+  level: null,
+};
+
+test('adaptUserInfo：username（订货账号）透传，空串 / 缺失归一为 undefined', () => {
+  assert.equal(
+    adaptUserInfo({ ...baseMemberVO, username: '亚特总店', mobile: '13800138000' }).username,
+    '亚特总店',
+  );
+  assert.equal(adaptUserInfo({ ...baseMemberVO, username: '  ' }).username, undefined);
+  assert.equal(adaptUserInfo({ ...baseMemberVO }).username, undefined);
+});
+
+test('adaptUserInfo：mobile 可空（会员手机号已非必填）', () => {
+  assert.equal(adaptUserInfo({ ...baseMemberVO, mobile: '13800138000' }).mobile, '13800138000');
+  assert.equal(adaptUserInfo({ ...baseMemberVO, mobile: '' }).mobile, undefined);
+  assert.equal(adaptUserInfo({ ...baseMemberVO, mobile: null }).mobile, undefined);
+  assert.equal(adaptUserInfo({ ...baseMemberVO }).mobile, undefined);
+});

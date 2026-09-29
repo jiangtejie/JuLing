@@ -93,6 +93,7 @@ declare global {
   const useScroll: typeof import('@vueuse/core').useScroll
   const useSessionStorage: typeof import('@vueuse/core').useSessionStorage
   const useSlots: typeof import('vue').useSlots
+  const useStoreStore: typeof import('../stores/store').useStoreStore
   const useSubmit: typeof import('../composables/useSubmit').useSubmit
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThrottleFn: typeof import('@vueuse/core').useThrottleFn
@@ -206,6 +207,7 @@ declare module 'vue' {
     readonly useScroll: UnwrapRef<typeof import('@vueuse/core')['useScroll']>
     readonly useSessionStorage: UnwrapRef<typeof import('@vueuse/core')['useSessionStorage']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useStoreStore: UnwrapRef<typeof import('../stores/store')['useStoreStore']>
     readonly useSubmit: UnwrapRef<typeof import('../composables/useSubmit')['useSubmit']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly useThrottleFn: UnwrapRef<typeof import('@vueuse/core')['useThrottleFn']>
