@@ -5,7 +5,7 @@
   import {
     AUDIT_STATUS_MAP,
     AUDIT_TAG_STATUSES,
-    ORDER_STATUS_MAP,
+    deriveOrderStatusView,
     ORDER_TABS,
     RECEIVE_STATUS_MAP,
   } from '@/constants';
@@ -177,9 +177,14 @@
               <span class="order-list__no">{{ order.orderNo }}</span>
               <span
                 class="order-list__status"
-                :style="{ color: ORDER_STATUS_MAP[order.status].color }"
+                :style="{
+                  color: deriveOrderStatusView(order.status, order.auditStatus)
+                    .color,
+                }"
               >
-                {{ ORDER_STATUS_MAP[order.status].text }}
+                {{
+                  deriveOrderStatusView(order.status, order.auditStatus).text
+                }}
               </span>
             </div>
 

@@ -74,6 +74,8 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.*;
 public class TradeStoreReceiptServiceImpl implements TradeStoreReceiptService {
 
     @Resource
+    private TradeOrderAuditService tradeOrderAuditService;
+    @Resource
     private TradeOrderReceiptMapper receiptMapper;
     @Resource
     private TradeOrderReceiptItemMapper receiptItemMapper;
@@ -151,9 +153,12 @@ public class TradeStoreReceiptServiceImpl implements TradeStoreReceiptService {
         }
 
         // 3. 订单 → 已发货（已经是已发货/已完成时保留原状态：这是同一订单的第二批配送）
+        //    发货闸门：商城侧的手工「发货」入口已下线，ERP 配送出库审核是唯一的发货落点，
+        //    所以加盟门店「两级审批未通过」必须在这里拦下（抛错让出库审核整体回滚）。
         Integer beforeStatus = order.getStatus();
         boolean statusChanged = TradeOrderStatusEnum.isUndelivered(beforeStatus);
         if (statusChanged) {
+            tradeOrderAuditService.validateCanDelivery(order);
             tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId())
                     .setStatus(TradeOrderStatusEnum.DELIVERED.getStatus())
                     .setDeliveryTime(ObjectUtil.defaultIfNull(event.getDeliveryTime(), LocalDateTime.now()))

@@ -109,7 +109,13 @@ export namespace MallOrderApi {
     afterSalePrice: number; // 退款金额
   }
 
-  /** 订单发货请求 */
+  /**
+   * 订单发货请求。
+   *
+   * 后台已无手工发货入口（门店要货的发货只由 ERP 配送出库单审核承接），
+   * deliveryOrder 函数已随之删除；但该类型仍被 remark-form.vue 的 formData 引用
+   * （历史拷贝遗留），删掉会直接编译报错，故先保留。
+   */
   export interface OrderUpdateDeliveryReqVO {
     id?: number; // 订单编号
     expressType: string; // 发货方式
@@ -186,11 +192,6 @@ export function getOrder(id: number) {
 /** 查询交易订单物流详情 */
 export function getExpressTrackList(id: number) {
   return requestClient.get(`/trade/order/get-express-track-list?id=${id}`);
-}
-
-/** 订单发货 */
-export function deliveryOrder(data: MallOrderApi.OrderUpdateDeliveryReqVO) {
-  return requestClient.put('/trade/order/delivery', data);
 }
 
 /** 订单备注 */

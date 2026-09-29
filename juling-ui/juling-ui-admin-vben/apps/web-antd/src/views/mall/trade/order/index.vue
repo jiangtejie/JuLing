@@ -6,11 +6,7 @@ import { onActivated, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { DocAlert, Page, useVbenModal } from '@vben/common-ui';
-import {
-  DeliveryTypeEnum,
-  DICT_TYPE,
-  TradeOrderStatusEnum,
-} from '@vben/constants';
+import { DICT_TYPE, TradeOrderStatusEnum } from '@vben/constants';
 import { fenToYuan } from '@vben/utils';
 
 import { Button, Image, List, message, Tag } from 'ant-design-vue';
@@ -21,15 +17,9 @@ import { DictTag } from '#/components/dict-tag';
 import { $t } from '#/locales';
 
 import { useGridColumns, useGridFormSchema } from './data';
-import DeliveryForm from './modules/delivery-form.vue';
 import RemarkForm from './modules/remark-form.vue';
 
 const { push } = useRouter();
-
-const [DeliveryFormModal, deliveryFormModalApi] = useVbenModal({
-  connectedComponent: DeliveryForm,
-  destroyOnClose: true,
-});
 
 const [RemarkFormModal, remarkFormModalApi] = useVbenModal({
   connectedComponent: RemarkForm,
@@ -85,11 +75,6 @@ function toggleExpand(row: MallOrderApi.Order) {
 /** 详情 */
 function handleDetail(row: MallOrderApi.Order) {
   push({ name: 'TradeOrderDetail', params: { id: row.id } });
-}
-
-/** 发货 */
-function handleDelivery(row: MallOrderApi.Order) {
-  deliveryFormModalApi.setData(row).open();
 }
 
 /** 备注 */
@@ -162,7 +147,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       />
     </template>
 
-    <DeliveryFormModal @success="handleRefresh" />
     <RemarkFormModal @success="handleRefresh" />
     <Grid table-title="订单列表">
       <template #expand_toggle="{ row }">
@@ -224,15 +208,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
                 (row.auditStatus === 0 || row.auditStatus === 30) &&
                 row.status === TradeOrderStatusEnum.UNDELIVERED.status,
               onClick: handleSubmitAudit.bind(null, row),
-            },
-            {
-              label: '发货',
-              type: 'link',
-              ifShow: () =>
-                row.deliveryType === DeliveryTypeEnum.EXPRESS.type &&
-                (row.status === TradeOrderStatusEnum.UNDELIVERED.status ||
-                  row.status === TradeOrderStatusEnum.DELIVERED.status),
-              onClick: handleDelivery.bind(null, row),
             },
             {
               label: '备注',

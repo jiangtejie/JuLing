@@ -10,8 +10,11 @@
 ## 1. 现状链路（实测，含断点）
 
 ```
-门店 H5 下单 ──► 扣商城 SKU 库存 ──► 线下转账 ──► 上传付款截图 ──► 供应链审批 ──► 财务审批(核收款) ──► 待发货 ──► 发货(快递) ──► 收货 ──► 完成
-   (无组织归属)   (product_sku.stock)  (转账)      (trade_order_payment_proof) (BPM 一级)      (BPM 二级)        (ERP 无联动)  (无签收凭证)
+门店 H5 下单 ──► 扣商城 SKU 库存 ──► 线下转账 ──► 上传付款截图 ──► 供应链审批 ──► 财务审批(核收款) ──► 待发货 ──► ERP 配送出库 ──► 门店收货 ──► 完成
+   (一店三面)      (product_sku.stock)  (转账)      (trade_order_payment_proof) (BPM 一级)      (BPM 二级)        (自动置位)    (回写已发货+收货单)  (差异台账)
+> 注：商城后台**不再提供手工「发货」入口**——发货由 ERP 配送出库单审核承接（审核即回写订单「已发货」并生成
+> 门店待确认收货单，门店确认后订单置「已完成」）；加盟门店未通过两级审批时，出库审核会被发货闸门拦下，
+> 「订单状态」在审批通过前显示为「审核中」。
 ```
 
 **已具备**（可直接复用，不必重做）：
@@ -19,7 +22,8 @@
   status / audit_user_id / audit_time / audit_remark），**门店提交即按申报金额转"待发货"并进入两级审批**，
   审批通过 = 认定收款（confirmed_amount = 申报金额），审批驳回 = 门店重新上传（2026-09 起不再有后台「收款核验」步骤）；
 - 订单操作留痕：`trade_order_log` + 操作类型枚举；改价 `update-price`、改地址 `update-address`、备注 `update-remark`；
-- 发货与物流：`delivery` 接口 + 快递单号（`DeliveryTypeEnum` 现仅快递）；
+- 发货与物流：门店要货由 **ERP 配送出库**承接（`ErpStoreDeliveryAuditedEvent` → 回写订单「已发货」+ 生成门店收货单）；
+  商城侧原来的手工 `delivery` 接口（快递单号）已从后台订单列表/详情下线，仅保留接口备特殊场景；
 - 商城库存：下单即扣 `product_sku.stock`（`TradeProductSkuOrderHandler` → `productSkuApi.updateSkuStock`），
   取消回滚；
 - H5「再来一单」按当前价与库存重取（`useReorder.ts`）。

@@ -1,15 +1,19 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeGridPropTypes } from '#/adapter/vxe-table';
 
-import { markRaw } from 'vue';
+import { h, markRaw } from 'vue';
 
 import { DeliveryTypeEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
 import { convertToInteger, formatToFraction } from '@vben/utils';
 
+import { Tag } from 'ant-design-vue';
+
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
+
+import { deriveOrderStatus } from './status';
 
 /** 列表的搜索表单 */
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -255,9 +259,13 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
     {
       field: 'status',
       title: '订单状态',
-      cellRender: {
-        name: 'CellDict',
-        props: { type: DICT_TYPE.TRADE_ORDER_STATUS },
+      // 门店要货：状态文案不能只靠字典——待发货要按 auditStatus 细分出
+      // 「审核中 / 审核已驳回」（审批通过前不允许发货），统一走 deriveOrderStatus
+      slots: {
+        default: ({ row }) => {
+          const { color, text } = deriveOrderStatus(row);
+          return h(Tag, { color }, () => text);
+        },
       },
       minWidth: 80,
     },
@@ -431,63 +439,6 @@ export function useAddressFormSchema(): VbenFormSchema[] {
         placeholder: '请输入收件人详细地址',
         type: 'textarea',
         rows: 3,
-      },
-      rules: 'required',
-    },
-  ];
-}
-
-/** 订单发货表单配置 */
-export function useDeliveryFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      component: 'Input',
-      fieldName: 'id',
-      dependencies: {
-        triggerFields: [''],
-        show: () => false,
-      },
-    },
-    {
-      fieldName: 'expressType',
-      label: '发货方式',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '快递', value: 'express' },
-          { label: '无需发货', value: 'none' },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 'express',
-    },
-    {
-      fieldName: 'logisticsId',
-      label: '物流公司',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleDeliveryExpressList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择物流公司',
-      },
-      dependencies: {
-        triggerFields: ['expressType'],
-        show: (values) => values.expressType === 'express',
-      },
-      rules: 'required',
-    },
-    {
-      fieldName: 'logisticsNo',
-      label: '物流单号',
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入物流单号',
-      },
-      dependencies: {
-        triggerFields: ['expressType'],
-        show: (values) => values.expressType === 'express',
       },
       rules: 'required',
     },

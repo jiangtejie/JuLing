@@ -4,8 +4,8 @@
   import { cancelOrder, getOrderDetail, getPaymentProofList } from '@/api/order';
   import {
     AUDIT_STATUS_MAP,
+    deriveOrderStatusView,
     ORDER_RECEIPT_STATUS_MAP,
-    ORDER_STATUS_MAP,
     ORDER_STATUS_STEPS,
     PROOF_STATUS_MAP,
     RECEIVE_STATUS_MAP,
@@ -77,6 +77,11 @@
   /** 订单维度的收款状态展示配置（未知码兜底「待上传凭证」） */
   const receiveBadge = computed(
     () => RECEIVE_STATUS_MAP[order.value?.paymentProofStatus ?? 0] ?? RECEIVE_STATUS_MAP[0],
+  );
+
+  /** 展示状态：待发货要按审核状态细分（审核中 / 审核已驳回 / 待发货） */
+  const orderStatusView = computed(() =>
+    deriveOrderStatusView(order.value?.status, order.value?.auditStatus),
   );
 
   /** 最近一条被驳回的凭证：用于在卡片上直接提示驳回原因 */
@@ -366,9 +371,9 @@
         <div
           v-else
           class="order-detail__status"
-          :style="{ background: ORDER_STATUS_MAP[order.status].color }"
+          :style="{ background: orderStatusView.color }"
         >
-          <div class="order-detail__status-text">{{ ORDER_STATUS_MAP[order.status].text }}</div>
+          <div class="order-detail__status-text">{{ orderStatusView.text }}</div>
           <div class="order-detail__status-tip">订单号 {{ order.orderNo }}</div>
         </div>
 

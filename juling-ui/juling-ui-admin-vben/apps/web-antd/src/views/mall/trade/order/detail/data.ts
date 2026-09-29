@@ -6,7 +6,11 @@ import { h } from 'vue';
 import { DICT_TYPE } from '@vben/constants';
 import { fenToYuan, formatDateTime } from '@vben/utils';
 
+import { Tag } from 'ant-design-vue';
+
 import { DictTag } from '#/components/dict-tag';
+
+import { deriveOrderStatus } from '../status';
 
 /** 订单基础信息 schema */
 export function useOrderInfoSchema(): DescriptionItemSchema[] {
@@ -110,11 +114,12 @@ export function useOrderStatusSchema(): DescriptionItemSchema[] {
     {
       field: 'status',
       label: '订单状态',
-      render: (val) =>
-        h(DictTag, {
-          type: DICT_TYPE.TRADE_ORDER_STATUS,
-          value: val,
-        }),
+      // 与概览条同口径：待发货要按审核状态细分（审核中 / 审核已驳回 / 待提交审核），
+      // 避免同一个页面里「概览条=审核中、描述卡=待发货」自相矛盾
+      render: (_val, data) => {
+        const { color, text } = deriveOrderStatus(data ?? {});
+        return h(Tag, { color }, () => text);
+      },
     },
     {
       field: 'reminder',

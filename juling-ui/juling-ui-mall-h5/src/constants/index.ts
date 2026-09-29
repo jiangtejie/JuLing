@@ -1,3 +1,5 @@
+import type { OrderStatus } from '@/types/order';
+
 /** 本地存储 key（最终会拼接 appConfig.storagePrefix 前缀） */
 export const STORAGE_KEYS = {
   TOKEN: 'token',
@@ -55,6 +57,34 @@ export const ORDER_STATUS_MAP = {
   AFTER_SALE: { text: '售后中', type: 'default', color: 'var(--app-text-color-secondary)' },
   UNKNOWN: { text: '处理中', type: 'default', color: 'var(--app-text-color-secondary)' },
 } as const;
+
+/**
+ * 订单「展示状态」：门店提交付款凭证后 status 就进入「待发货」(PAID)，
+ * 但加盟门店在两级审批（供应链 → 财务出纳）通过前不允许发货
+ * （发货由 ERP 配送出库审核承接，未通过审批会被后端闸门拦下），
+ * 所以对外文案按审核状态细分，避免门店看到「待发货」以为已经发货：
+ *   待发货 + 待提交(0) → 待提交审核；待发货 + 审核中(10) → 审核中；
+ *   待发货 + 已驳回(30) → 审核已驳回；待发货 + 已通过(20) → 待发货（BPM 回调自动置位，无需人工操作）；
+ *   直营门店免审：提交凭证即置 20，直接显示「待发货」。
+ */
+export function deriveOrderStatusView(
+  status?: null | OrderStatus,
+  auditStatus?: null | number,
+): { color: string; text: string } {
+  if (status === 'PAID') {
+    if (auditStatus === 10) {
+      return { color: 'var(--app-primary-color)', text: '审核中' };
+    }
+    if (auditStatus === 30) {
+      return { color: 'var(--app-danger-color)', text: '审核已驳回' };
+    }
+    if (auditStatus === 0) {
+      // 自动提交审批失败（BPM 流程定义缺失等）会停在这里，总部可在后台点「提交审核」补交
+      return { color: 'var(--app-warning-color)', text: '待提交审核' };
+    }
+  }
+  return ORDER_STATUS_MAP[status ?? 'UNKNOWN'] ?? ORDER_STATUS_MAP.UNKNOWN;
+}
 
 /**
  * 订单收款状态展示配置（后端 TradeOrderReceiveStatusEnum，订单维度）。

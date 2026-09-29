@@ -38,9 +38,9 @@ import { DictTag } from '#/components/dict-tag';
 import { TableAction } from '#/components/table-action';
 
 import AddressForm from '../modules/address-form.vue';
-import DeliveryForm from '../modules/delivery-form.vue';
 import PriceForm from '../modules/price-form.vue';
 import RemarkForm from '../modules/remark-form.vue';
+import { deriveOrderStatus } from '../status';
 import {
   useDeliveryInfoSchema,
   useExpressTrackColumns,
@@ -120,6 +120,9 @@ const remainAmount = computed(() =>
   Math.max(0, (order.value.payPrice ?? 0) - (order.value.paidAmount ?? 0)),
 );
 
+/** 订单状态（含两级审批细分）：与列表页同一口径，见 ../status.ts */
+const orderStatusInfo = computed(() => deriveOrderStatus(order.value));
+
 const [DeliveryInfoDescriptions] = useDescription({
   title: '收货信息',
   bordered: false,
@@ -180,11 +183,6 @@ const [OperateLogGrid, operateLogGridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions,
 });
 
-const [DeliveryFormModal, deliveryFormModalApi] = useVbenModal({
-  connectedComponent: DeliveryForm,
-  destroyOnClose: true,
-});
-
 const [RemarkFormModal, remarkFormModalApi] = useVbenModal({
   connectedComponent: RemarkForm,
   destroyOnClose: true,
@@ -236,10 +234,6 @@ const handleRemark = () => {
   remarkFormModalApi.setData(order.value).open();
 };
 
-const handleDelivery = () => {
-  deliveryFormModalApi.setData(order.value).open();
-};
-
 const handleUpdateAddress = () => {
   addressFormModalApi.setData(order.value).open();
 };
@@ -289,14 +283,6 @@ onMounted(async () => {
             onClick: handleRemark,
           },
           {
-            label: '发货',
-            type: 'primary',
-            onClick: handleDelivery,
-            ifShow:
-              order.status === TradeOrderStatusEnum.UNDELIVERED.status &&
-              order.deliveryType === DeliveryTypeEnum.EXPRESS.type,
-          },
-          {
             label: '修改地址',
             type: 'primary',
             onClick: handleUpdateAddress,
@@ -309,7 +295,6 @@ onMounted(async () => {
     </template>
 
     <!-- 各种操作的弹窗 -->
-    <DeliveryFormModal @success="getDetail" />
     <RemarkFormModal @success="getDetail" />
     <AddressFormModal @success="getDetail" />
     <PriceFormModal @success="getDetail" />
@@ -319,7 +304,7 @@ onMounted(async () => {
       <div class="flex flex-wrap items-center gap-x-10 gap-y-3">
         <div class="flex items-center gap-2">
           <span class="text-gray-400">订单状态</span>
-          <DictTag :type="DICT_TYPE.TRADE_ORDER_STATUS" :value="order.status" />
+          <Tag :color="orderStatusInfo.color">{{ orderStatusInfo.text }}</Tag>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-gray-400">收款状态</span>
