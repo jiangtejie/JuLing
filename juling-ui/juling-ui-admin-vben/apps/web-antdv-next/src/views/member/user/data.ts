@@ -1,18 +1,12 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
-import { h, markRaw } from 'vue';
+import { markRaw } from 'vue';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
-import { convertToInteger, formatToFraction } from '@vben/utils';
-
-import { Tag } from 'antdv-next';
 
 import { z } from '#/adapter/form';
-import { getSimpleGroupList } from '#/api/member/group';
-import { getSimpleLevelList } from '#/api/member/level';
-import { getSimpleTagList } from '#/api/member/tag';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
 
@@ -112,29 +106,6 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      fieldName: 'tagIds',
-      label: '用户标签',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleTagList,
-        labelField: 'name',
-        valueField: 'id',
-        mode: 'multiple',
-        placeholder: '请选择用户标签',
-      },
-    },
-    {
-      fieldName: 'groupId',
-      label: '用户分组',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleGroupList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择用户分组',
-      },
-    },
-    {
       fieldName: 'mark',
       label: '会员备注',
       component: 'TextArea',
@@ -193,43 +164,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
       },
     },
-    {
-      fieldName: 'tagIds',
-      label: '用户标签',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleTagList,
-        labelField: 'name',
-        valueField: 'id',
-        mode: 'multiple',
-        placeholder: '请选择用户标签',
-        allowClear: true,
-      },
-    },
-    {
-      fieldName: 'levelId',
-      label: '用户等级',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleLevelList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择用户等级',
-        allowClear: true,
-      },
-    },
-    {
-      fieldName: 'groupId',
-      label: '用户分组',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleGroupList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择用户分组',
-        allowClear: true,
-      },
-    },
   ];
 }
 
@@ -269,41 +203,6 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       minWidth: 120,
     },
     {
-      field: 'levelName',
-      title: '等级',
-      minWidth: 100,
-    },
-    {
-      field: 'groupName',
-      title: '分组',
-      minWidth: 100,
-    },
-    {
-      field: 'tagNames',
-      title: '用户标签',
-      minWidth: 150,
-      slots: {
-        default: ({ row }) => {
-          return row.tagNames?.map((tagName: string, index: number) => {
-            return h(
-              Tag,
-              {
-                key: index,
-                class: 'mr-1',
-                color: 'blue',
-              },
-              () => tagName,
-            );
-          });
-        },
-      },
-    },
-    {
-      field: 'point',
-      title: '积分',
-      minWidth: 80,
-    },
-    {
       field: 'status',
       title: '状态',
       minWidth: 80,
@@ -329,201 +228,6 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       width: 200,
       fixed: 'right',
       slots: { default: 'actions' },
-    },
-  ];
-}
-
-/** 修改用户等级 */
-export function useLevelFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      fieldName: 'id',
-      label: '用户编号',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'nickname',
-      label: '用户昵称',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'levelId',
-      label: '用户等级',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleLevelList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择用户等级',
-        allowClear: true,
-      },
-    },
-    {
-      fieldName: 'reason',
-      label: '修改原因',
-      component: 'TextArea',
-      componentProps: {
-        placeholder: '请输入修改原因',
-      },
-      rules: 'required',
-    },
-  ];
-}
-
-/** 修改用户余额 */
-export function useBalanceFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      fieldName: 'id',
-      label: '用户编号',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'nickname',
-      label: '用户昵称',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'balance',
-      label: '变动前余额(元)',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'changeType',
-      label: '变动类型',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '增加', value: 1 },
-          { label: '减少', value: -1 },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 1,
-    },
-    {
-      fieldName: 'changeBalance',
-      label: '变动余额(元)',
-      component: 'InputNumber',
-      rules: 'required',
-      componentProps: {
-        class: '!w-full',
-        min: 0,
-        precision: 2,
-        step: 0.1,
-        placeholder: '请输入变动余额',
-      },
-      defaultValue: 0,
-    },
-    {
-      fieldName: 'balanceResult',
-      label: '变动后余额(元)',
-      component: 'Input',
-      dependencies: {
-        triggerFields: ['balance', 'changeBalance', 'changeType'],
-        disabled: true,
-        trigger(values, form) {
-          form.setFieldValue(
-            'balanceResult',
-            formatToFraction(
-              convertToInteger(values.balance) +
-                convertToInteger(values.changeBalance) * values.changeType,
-            ),
-          );
-        },
-      },
-    },
-  ];
-}
-
-/** 修改用户积分 */
-export function usePointFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      fieldName: 'id',
-      label: '用户编号',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'nickname',
-      label: '用户昵称',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'point',
-      label: '变动前积分',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'changeType',
-      label: '变动类型',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '增加', value: 1 },
-          { label: '减少', value: -1 },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 1,
-    },
-    {
-      fieldName: 'changePoint',
-      label: '变动积分',
-      component: 'InputNumber',
-      rules: 'required',
-      componentProps: {
-        class: '!w-full',
-        min: 0,
-        precision: 0,
-        placeholder: '请输入变动积分',
-      },
-    },
-    {
-      fieldName: 'pointResult',
-      label: '变动后积分',
-      component: 'Input',
-      componentProps: {
-        placeholder: '',
-      },
-      dependencies: {
-        triggerFields: ['point', 'changePoint', 'changeType'],
-        disabled: true,
-        trigger(values, form) {
-          form.setFieldValue(
-            'pointResult',
-            values.point + values.changePoint * values.changeType ||
-              values.point,
-          );
-        },
-      },
-      rules: z.number().min(0),
     },
   ];
 }

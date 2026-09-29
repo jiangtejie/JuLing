@@ -3,12 +3,10 @@ import { onActivated, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { CountTo } from '@vben/common-ui';
-import { fenToYuan } from '@vben/utils';
 
 import { ElCard } from 'element-plus';
 
 import { getTabsCount } from '#/api/mall/product/spu';
-import { getWalletRechargePrice } from '#/api/mall/statistics/pay';
 import { getOrderCount } from '#/api/mall/statistics/trade';
 
 /** 运营数据卡片 */
@@ -36,13 +34,6 @@ const data = reactive({
   productAlertStock: { name: '库存预警', value: 0, routerName: 'ProductSpu' },
   productForSale: { name: '上架商品', value: 0, routerName: 'ProductSpu' },
   productInWarehouse: { name: '仓库商品', value: 0, routerName: 'ProductSpu' },
-  rechargePrice: {
-    name: '账户充值',
-    value: 0,
-    prefix: '￥',
-    decimals: 2,
-    routerName: 'PayWalletRecharge',
-  },
 });
 
 /** 查询订单数据 */
@@ -64,12 +55,6 @@ async function loadProductData() {
   data.productAlertStock.value = productCount['3'] || 0;
 }
 
-/** 查询钱包充值数据 */
-async function loadWalletRechargeData() {
-  const paySummary = await getWalletRechargePrice();
-  data.rechargePrice.value = Number(fenToYuan(paySummary.rechargePrice || 0));
-}
-
 /** 跳转到对应页面 */
 function handleClick(routerName: string) {
   router.push({ name: routerName });
@@ -79,14 +64,12 @@ function handleClick(routerName: string) {
 onActivated(() => {
   loadOrderData();
   loadProductData();
-  loadWalletRechargeData();
 });
 
 /** 初始化 */
 onMounted(() => {
   loadOrderData();
   loadProductData();
-  loadWalletRechargeData();
 });
 </script>
 
