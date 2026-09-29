@@ -109,6 +109,25 @@ public interface MemberUserService {
     void updateUser(@Valid MemberUserUpdateReqVO updateReqVO);
 
     /**
+     * 【管理员】删除订货账号
+     *
+     * 已绑定门店/部门的账号会拒绝删除（历史订单只存 user_id，删掉就失去归属），引导改用「停用」。
+     *
+     * @param id 账号编号
+     */
+    void deleteUser(Long id);
+
+    /**
+     * 【管理员】停用 / 启用订货账号
+     *
+     * 停用后无法登录（登录时会校验状态），但订单与台账仍可追溯。
+     *
+     * @param id     账号编号
+     * @param status 状态：0 开启、1 停用（{@link com.lxjl.juling.framework.common.enums.CommonStatusEnum}）
+     */
+    void updateUserStatus(Long id, Integer status);
+
+    /**
      * 【管理员】获得订货账号分页
      *
      * @param pageReqVO 分页查询

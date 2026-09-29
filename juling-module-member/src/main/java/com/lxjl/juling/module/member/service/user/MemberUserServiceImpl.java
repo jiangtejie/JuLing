@@ -44,6 +44,10 @@ public class MemberUserServiceImpl implements MemberUserService {
     @Resource
     private MemberUserMapper memberUserMapper;
 
+    /** 交易订单 API：删除订货账号前校验该账号是否已有订单 */
+    @Resource
+    private com.lxjl.juling.module.trade.api.order.TradeOrderApi tradeOrderApi;
+
     @Resource
     private OAuth2TokenCommonApi oauth2TokenApi;
 
@@ -149,6 +153,24 @@ public class MemberUserServiceImpl implements MemberUserService {
         // 2. 更新用户
         MemberUserDO updateObj = BeanUtils.toBean(reqVO, MemberUserDO.class).setId(userId);
         memberUserMapper.updateById(updateObj);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        validateUserExists(id);
+        // 已经有订单的账号：订单只存 user_id（收货单/往来台账也按账号串联），删掉会让历史数据失去归属，
+        // 因此引导改用「停用」——停用后登不进来，但历史仍可追溯。
+        Long orderCount = tradeOrderApi.getOrderCountByUserId(id);
+        if (orderCount != null && orderCount > 0) {
+            throw exception(USER_DELETE_FAIL_HAS_ORDER, orderCount);
+        }
+        memberUserMapper.deleteById(id);
+    }
+
+    @Override
+    public void updateUserStatus(Long id, Integer status) {
+        validateUserExists(id);
+        memberUserMapper.updateById(new MemberUserDO().setId(id).setStatus(status));
     }
 
     @Override

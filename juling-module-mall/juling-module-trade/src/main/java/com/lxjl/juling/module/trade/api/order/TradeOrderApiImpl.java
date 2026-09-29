@@ -2,6 +2,7 @@ package com.lxjl.juling.module.trade.api.order;
 
 import com.lxjl.juling.module.trade.api.order.dto.TradeOrderRespDTO;
 import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
+import com.lxjl.juling.module.trade.dal.mysql.order.TradeOrderMapper;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import jakarta.annotation.Resource;
@@ -24,6 +25,8 @@ public class TradeOrderApiImpl implements TradeOrderApi {
     private TradeOrderUpdateService tradeOrderUpdateService;
     @Resource
     private TradeOrderQueryService tradeOrderQueryService;
+    @Resource
+    private TradeOrderMapper tradeOrderMapper;
 
     @Override
     public List<TradeOrderRespDTO> getOrderList(Collection<Long> ids) {
@@ -38,6 +41,11 @@ public class TradeOrderApiImpl implements TradeOrderApi {
     @Override
     public void cancelPaidOrder(Long userId, Long orderId, Integer cancelType) {
         tradeOrderUpdateService.cancelPaidOrder(userId, orderId, cancelType);
+    }
+
+    @Override
+    public Long getOrderCountByUserId(Long userId) {
+        return tradeOrderMapper.selectCountByUserId(userId);
     }
 
 }

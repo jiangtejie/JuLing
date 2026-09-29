@@ -108,6 +108,12 @@ public interface TradeOrderMapper extends BaseMapperX<TradeOrderDO> {
         return selectPage(reqVO, query.orderByDesc(TradeOrderDO::getId)); // TODO 亚特：未来不同的 status，不同的排序
     }
 
+    /** 该会员（订货账号）的订单总数：删除订货账号前校验用 */
+    default Long selectCountByUserId(Long userId) {
+        return selectCount(new LambdaQueryWrapperX<TradeOrderDO>()
+                .eq(TradeOrderDO::getUserId, userId));
+    }
+
     default Long selectCountByUserIdAndStatus(Long userId, Integer status) {
         return selectCount(new LambdaQueryWrapperX<TradeOrderDO>()
                 .eq(TradeOrderDO::getUserId, userId)

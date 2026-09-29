@@ -49,6 +49,26 @@ public class MemberUserController {
         return success(true);
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除订货账号", description = "已绑定门店/部门的账号会拒绝删除，请改用停用")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('member:user:delete')")
+    public CommonResult<Boolean> deleteUser(@RequestParam("id") Long id) {
+        memberUserService.deleteUser(id);
+        return success(true);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "停用 / 启用订货账号", description = "停用后无法登录，订单与台账仍可追溯")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @Parameter(name = "status", description = "状态：0 开启、1 停用", required = true, example = "1")
+    @PreAuthorize("@ss.hasPermission('member:user:update-status')")
+    public CommonResult<Boolean> updateUserStatus(@RequestParam("id") Long id,
+                                                 @RequestParam("status") Integer status) {
+        memberUserService.updateUserStatus(id, status);
+        return success(true);
+    }
+
     @GetMapping("/get")
     @Operation(summary = "获得订货账号")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")

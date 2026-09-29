@@ -87,3 +87,15 @@ export function resetUserPassword(data: MemberUserApi.UserResetPasswordReqVO) {
 export function updateUser(data: MemberUserApi.User) {
   return requestClient.put('/member/user/update', data);
 }
+
+/** 停用 / 启用订货账号（status：0 开启、1 停用；停用后无法登录，历史订单与台账仍可追溯） */
+export function updateUserStatus(id: number, status: number) {
+  return requestClient.put<boolean>(
+    `/member/user/update-status?id=${id}&status=${status}`,
+  );
+}
+
+/** 删除订货账号（已绑定门店/部门的账号后端会拒绝，引导改用停用） */
+export function deleteUser(id: number) {
+  return requestClient.delete<boolean>(`/member/user/delete?id=${id}`);
+}

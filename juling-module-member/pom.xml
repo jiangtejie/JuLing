@@ -81,6 +81,13 @@
             <artifactId>juling-spring-boot-starter-biz-ip</artifactId>
         </dependency>
 
+        <!-- 交易订单 API：删除订货账号前校验是否已有订单（只依赖 api 包，不反向依赖 trade 实现） -->
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-trade-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

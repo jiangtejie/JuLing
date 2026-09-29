@@ -5,10 +5,16 @@ import type { MemberUserApi } from '#/api/member/user';
 import { useRouter } from 'vue-router';
 
 import { useAccess } from '@vben/access';
-import { DocAlert, Page, useVbenModal } from '@vben/common-ui';
+import { confirm, DocAlert, Page, useVbenModal } from '@vben/common-ui';
+
+import { message } from 'ant-design-vue';
 
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getUserPage } from '#/api/member/user';
+import {
+  deleteUser,
+  getUserPage,
+  updateUserStatus,
+} from '#/api/member/user';
 import { $t } from '#/locales';
 
 import { useGridColumns, useGridFormSchema } from './data';
@@ -56,6 +62,34 @@ function handleCreateOrderAccount() {
 /** 重置订货账号密码（重置后该账号会被强制下线） */
 function handleResetPassword(row: MemberUserApi.User) {
   resetPasswordFormModalApi.setData(row).open();
+}
+
+/** 账号展示名：优先订货账号，其次昵称 / 手机号 */
+function accountLabel(row: MemberUserApi.User) {
+  return row.username || row.nickname || row.mobile || `#${row.id}`;
+}
+
+/** 停用 / 启用订货账号（停用后登不进来，但历史订单与往来台账仍可追溯） */
+async function handleUpdateStatus(row: MemberUserApi.User) {
+  const disabled = row.status === 1;
+  await confirm(
+    disabled
+      ? `启用订货账号「${accountLabel(row)}」？启用后该账号可以重新登录下单`
+      : `停用订货账号「${accountLabel(row)}」？停用后无法登录，历史订单与台账不受影响`,
+  );
+  await updateUserStatus(row.id!, disabled ? 0 : 1);
+  message.success(disabled ? '已启用' : '已停用');
+  handleRefresh();
+}
+
+/** 删除订货账号（已绑定门店/部门的账号后端会拒绝删除，请改用停用） */
+async function handleDelete(row: MemberUserApi.User) {
+  await confirm(
+    `删除订货账号「${accountLabel(row)}」？删除后该账号无法登录且不可恢复；如只是暂停使用，请改用「停用」`,
+  );
+  await deleteUser(row.id!);
+  message.success('删除成功');
+  handleRefresh();
 }
 
 /** 查看订货账号详情 */
@@ -148,6 +182,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
               type: 'link',
               ifShow: () => hasAccessByCodes(['member:user:reset-password']),
               onClick: handleResetPassword.bind(null, row),
+            },
+            {
+              // 停用后无法登录，历史订单与台账仍可追溯；启用即恢复登录
+              label: row.status === 1 ? '启用' : '停用',
+              type: 'link',
+              auth: ['member:user:update-status'],
+              onClick: handleUpdateStatus.bind(null, row),
+            },
+            {
+              // 已绑定门店/部门的账号后端会拒绝删除（历史订单会失去归属），提示改用停用
+              label: $t('common.delete'),
+              type: 'link',
+              danger: true,
+              auth: ['member:user:delete'],
+              onClick: handleDelete.bind(null, row),
             },
           ]"
         />

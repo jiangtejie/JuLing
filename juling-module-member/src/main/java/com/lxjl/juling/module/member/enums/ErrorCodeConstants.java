@@ -18,6 +18,7 @@ public interface ErrorCodeConstants {
     ErrorCode USER_OLD_PASSWORD_ERROR = new ErrorCode(1_004_001_006, "原密码不正确");
     ErrorCode USER_STORE_NOT_BOUND = new ErrorCode(1_004_001_007, "订货账号必须绑定门店（所属客户不能为空），否则无法下单");
     ErrorCode USER_USERNAME_BLANK = new ErrorCode(1_004_001_008, "订货账号不能为空");
+    ErrorCode USER_DELETE_FAIL_HAS_ORDER = new ErrorCode(1_004_001_009, "该订货账号已有 {} 笔订单，删除会让历史订单失去归属，请改用「停用」");
 
     // ========== AUTH 模块 1-004-003-000 ==========
     ErrorCode AUTH_LOGIN_BAD_CREDENTIALS = new ErrorCode(1_004_003_000, "登录失败，账号密码不正确");
