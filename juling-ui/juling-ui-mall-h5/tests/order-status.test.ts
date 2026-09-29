@@ -3,30 +3,27 @@ import { test } from 'node:test';
 
 import { deriveOrderStatusView } from '../src/constants/index.ts';
 
-test('待发货 + 审核中 → 审核中', () => {
+test('待发货 + 待提交(0) / 审核中(10) → 统一显示「处理中」（内部细节不外露）', () => {
+  assert.deepEqual(deriveOrderStatusView('PAID', 0), {
+    color: 'var(--app-primary-color)',
+    text: '处理中',
+  });
   assert.deepEqual(deriveOrderStatusView('PAID', 10), {
     color: 'var(--app-primary-color)',
-    text: '审核中',
+    text: '处理中',
   });
 });
 
-test('待发货 + 已驳回 → 审核已驳回', () => {
+test('待发货 + 已驳回 → 审核未通过（需要门店重新上传凭证）', () => {
   assert.deepEqual(deriveOrderStatusView('PAID', 30), {
     color: 'var(--app-danger-color)',
-    text: '审核已驳回',
+    text: '审核未通过',
   });
 });
 
 test('待发货 + 审批通过 / 历史无审核状态 → 显示待发货', () => {
   assert.equal(deriveOrderStatusView('PAID', 20).text, '待发货');
   assert.equal(deriveOrderStatusView('PAID').text, '待发货');
-});
-
-test('待发货 + 待提交(0) → 待提交审核（自动提交审批失败时停在这里）', () => {
-  assert.deepEqual(deriveOrderStatusView('PAID', 0), {
-    color: 'var(--app-warning-color)',
-    text: '待提交审核',
-  });
 });
 
 test('其它状态沿用原订单状态映射', () => {

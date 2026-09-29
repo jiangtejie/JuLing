@@ -3,8 +3,6 @@
   import { getOrderPage } from '@/api/order';
   import { useReorder } from '@/composables/useReorder';
   import {
-    AUDIT_STATUS_MAP,
-    AUDIT_TAG_STATUSES,
     deriveOrderStatusView,
     ORDER_TABS,
     RECEIVE_STATUS_MAP,
@@ -112,22 +110,6 @@
     filterStoreId.value === ALL_STORES ? '暂无相关订单' : '该门店暂无可显示的订单',
   );
 
-  /**
-   * 审核轻标记：只给「审核中 / 已驳回」两态（门店需要关注的），
-   * 已通过 / 待提交不挂标签 —— 既避免每张卡片多一个无信息量的角标，
-   * 也不占用主状态位（主状态位归订单状态）。
-   */
-  const auditTags = computed<Record<number, { text: string; color: string }>>(() => {
-    const map: Record<number, { text: string; color: string }> = {};
-    list.value.forEach((order) => {
-      const status = order.auditStatus;
-      if (status == null || !AUDIT_TAG_STATUSES.includes(status)) return;
-      const badge = AUDIT_STATUS_MAP[status];
-      if (badge) map[order.id] = badge;
-    });
-    return map;
-  });
-
   onMounted(() => {
     // 门店账号只有一家店（后端只返回自己），此时不展示筛选项；
     // 拉取失败（未绑定门店 / 网络异常）静默降级为「不展示筛选」，不影响订单列表本身
@@ -193,16 +175,6 @@
               <van-icon name="shop-o" class="order-list__store-icon" />
               <span class="text-ellipsis order-list__store-name">
                 {{ order.customerName || '未关联门店' }}
-              </span>
-              <span
-                v-if="auditTags[order.id]"
-                class="order-list__chip"
-                :style="{
-                  color: auditTags[order.id]!.color,
-                  borderColor: auditTags[order.id]!.color,
-                }"
-              >
-                {{ auditTags[order.id]!.text }}
               </span>
             </div>
 

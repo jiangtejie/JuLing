@@ -149,15 +149,13 @@
   const auditHint = computed(() => {
     switch (order.value?.auditStatus ?? 0) {
       case 10:
-        return '订单已提交审核，审核结果会更新在这里；审核通过后安排发货。';
+        return '审核中，通过后即可安排发货';
       case 20:
-        return '审核已通过，等待发货。';
+        return '审核已通过，等待发货';
       case 30:
-        return '审核未通过：请重新上传付款凭证（提交后会自动再次发起审批），有疑问请联系总部。';
+        return '审核未通过，请重新上传付款凭证';
       default:
-        return isDirectStore.value
-          ? '直营门店免审核，提交凭证后直接进入待发货。'
-          : '提交付款凭证后系统会自动提交供应链/财务审批。';
+        return isDirectStore.value ? '直营门店免审核' : '已提交，等待审核';
     }
   });
 
@@ -248,7 +246,7 @@
     const lastAudit = audited.length
       ? formatDate(audited[audited.length - 1]!.auditTime, 'MM-DD HH:mm')
       : '';
-    return lastAudit ? `首次提交 ${first} · 最近审核 ${lastAudit}` : `首次提交 ${first} · 等待审核`;
+    return lastAudit ? `提交 ${first} · 审核 ${lastAudit}` : `提交 ${first}`;
   });
 
   /**
