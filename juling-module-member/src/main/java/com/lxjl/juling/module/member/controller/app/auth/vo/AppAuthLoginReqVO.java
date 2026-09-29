@@ -21,10 +21,12 @@ import jakarta.validation.constraints.NotEmpty;
 @Builder
 public class AppAuthLoginReqVO {
 
-    @Schema(description = "手机号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15601691300")
-    @NotEmpty(message = "手机号不能为空")
+    @Schema(description = "手机号（兼容口径：account 为空时用它登录；私域订货场景可留空）", example = "15601691300")
     @Mobile
     private String mobile;
+
+    @Schema(description = "订货账号（私域订货 H5 的登录名，通常就是门店名）", example = "耙二哥双碑店")
+    private String account;
 
     @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED, example = "buzhidao")
     @NotEmpty(message = "密码不能为空")
@@ -51,6 +53,11 @@ public class AppAuthLoginReqVO {
     @AssertTrue(message = "授权 state 不能为空")
     public boolean isSocialState() {
         return socialType == null || StrUtil.isNotEmpty(socialState);
+    }
+
+    @AssertTrue(message = "账号或手机号至少填一个")
+    public boolean isAccountPresent() {
+        return StrUtil.isNotBlank(account) || StrUtil.isNotBlank(mobile);
     }
 
 }

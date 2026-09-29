@@ -9,6 +9,7 @@ import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.module.member.controller.admin.user.vo.MemberUserCreateReqVO;
 import com.lxjl.juling.module.member.controller.admin.user.vo.MemberUserPageReqVO;
 import com.lxjl.juling.module.member.controller.admin.user.vo.MemberUserUpdateReqVO;
 import com.lxjl.juling.module.member.controller.app.user.vo.*;
@@ -69,6 +70,66 @@ public class MemberUserServiceImpl implements MemberUserService {
     @Override
     public MemberUserDO getUserByMobile(String mobile) {
         return memberUserMapper.selectByMobile(mobile);
+    }
+
+    @Override
+    public MemberUserDO getUserByUsername(String username) {
+        return memberUserMapper.selectByUsername(username);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long createOrderUser(MemberUserCreateReqVO createReqVO) {
+        // 1. 订货账号不能为空 + 唯一（部分唯一索引 uk_member_user_username 兜并发）
+        String username = StrUtil.trim(createReqVO.getUsername());
+        if (StrUtil.isBlank(username)) {
+            throw exception(USER_USERNAME_BLANK);
+        }
+        if (memberUserMapper.selectByUsername(username) != null) {
+            throw exception(USER_USERNAME_USED, username);
+        }
+        // 2. 手机号可选；填了就必须唯一（否则「手机兜底登录」会歧义）
+        validateMobileUnique(null, createReqVO.getMobile());
+        // 3. 必须绑门店：订货账号不绑门店，下单时会被 TradeOrderStoreService 直接拦下，不如开号时就挡住
+        if (createReqVO.getCustomerId() == null) {
+            throw exception(USER_STORE_NOT_BOUND);
+        }
+        // 4. 落库（C 端那套昵称/头像/等级对订货账号没意义，只留最小集合）
+        MemberUserDO user = MemberUserDO.builder()
+                .username(username)
+                .nickname(StrUtil.blankToDefault(createReqVO.getNickname(), username))
+                .mobile(StrUtil.trimToNull(createReqVO.getMobile()))
+                .email(StrUtil.trimToNull(createReqVO.getEmail()))
+                .deptId(createReqVO.getDeptId())
+                .customerId(createReqVO.getCustomerId())
+                .mark(createReqVO.getMark())
+                .status(ObjectUtil.defaultIfNull(createReqVO.getStatus(), CommonStatusEnum.ENABLE.getStatus()))
+                .password(encodePassword(createReqVO.getPassword()))
+                .registerIp(getClientIP())
+                .build();
+        memberUserMapper.insert(user);
+        log.info("[createOrderUser][开订货账号({}) 成功，绑定门店({})，会员编号({})]",
+                username, createReqVO.getCustomerId(), user.getId());
+        return user.getId();
+    }
+
+    @Override
+    public void resetUserPasswordByAdmin(Long id, String password) {
+        validateUserExists(id);
+        memberUserMapper.updateById(MemberUserDO.builder().id(id).password(encodePassword(password)).build());
+        // 重置密码后强制下线：否则旧 token 在有效期内仍可继续用，等于没改
+        oauth2TokenApi.removeAccessToken(id, UserTypeEnum.MEMBER.getValue());
+        log.info("[resetUserPasswordByAdmin][会员({}) 密码已被后台重置，已强制下线]", id);
+    }
+
+    @Override
+    public void updateUserPasswordByOld(Long userId, AppMemberUserUpdatePasswordByOldReqVO reqVO) {
+        MemberUserDO user = validateUserExists(userId);
+        if (!isPasswordMatch(reqVO.getOldPassword(), user.getPassword())) {
+            throw exception(USER_OLD_PASSWORD_ERROR);
+        }
+        memberUserMapper.updateById(MemberUserDO.builder().id(userId)
+                .password(encodePassword(reqVO.getNewPassword())).build());
     }
 
     @Override
@@ -244,6 +305,8 @@ public class MemberUserServiceImpl implements MemberUserService {
     public void updateUser(MemberUserUpdateReqVO updateReqVO) {
         // 校验存在
         validateUserExists(updateReqVO.getId());
+        // 校验订货账号唯一（改账号名时不能撞别人）
+        validateUsernameUnique(updateReqVO.getId(), updateReqVO.getUsername());
         // 校验手机唯一
         validateMobileUnique(updateReqVO.getId(), updateReqVO.getMobile());
         // 校验邮箱唯一
@@ -251,6 +314,11 @@ public class MemberUserServiceImpl implements MemberUserService {
 
         // 更新
         MemberUserDO updateObj = MemberUserConvert.INSTANCE.convert(updateReqVO);
+        // 空账号名一律按"不修改"处理：updateById 只忽略 null 不忽略空串，
+        // 直接透传会把账号名清成 ''，门店第二天就登不进来了
+        if (StrUtil.isBlank(updateObj.getUsername())) {
+            updateObj.setUsername(null);
+        }
         memberUserMapper.updateById(updateObj);
 
         // 如果是禁用用户，则删除其 Token 信息
@@ -269,6 +337,17 @@ public class MemberUserServiceImpl implements MemberUserService {
             throw exception(USER_NOT_EXISTS);
         }
         return user;
+    }
+
+    @VisibleForTesting
+    void validateUsernameUnique(Long id, String username) {
+        if (StrUtil.isBlank(username)) {
+            return;
+        }
+        MemberUserDO user = memberUserMapper.selectByUsername(username.trim());
+        if (user != null && !user.getId().equals(id)) {
+            throw exception(USER_USERNAME_USED, username);
+        }
     }
 
     @VisibleForTesting

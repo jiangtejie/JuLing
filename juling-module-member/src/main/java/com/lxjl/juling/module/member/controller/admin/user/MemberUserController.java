@@ -51,6 +51,21 @@ public class MemberUserController {
     @Resource
     private MemberPointRecordService memberPointRecordService;
 
+    @PostMapping("/create")
+    @Operation(summary = "开订货账号（私域加盟客户：账号名 + 初始密码 + 绑定门店）")
+    @PreAuthorize("@ss.hasPermission('member:user:create')")
+    public CommonResult<Long> createUser(@Valid @RequestBody MemberUserCreateReqVO createReqVO) {
+        return success(memberUserService.createOrderUser(createReqVO));
+    }
+
+    @PutMapping("/reset-password")
+    @Operation(summary = "重置订货账号密码（不需要短信验证码，重置后强制下线）")
+    @PreAuthorize("@ss.hasPermission('member:user:reset-password')")
+    public CommonResult<Boolean> resetPassword(@Valid @RequestBody MemberUserResetPasswordReqVO resetReqVO) {
+        memberUserService.resetUserPasswordByAdmin(resetReqVO.getId(), resetReqVO.getPassword());
+        return success(true);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "更新会员用户")
     @PreAuthorize("@ss.hasPermission('member:user:update')")

@@ -19,6 +19,8 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 public class MemberUserPageReqVO extends PageParam {
 
     @Schema(description = "手机号", example = "15601691300")
+    private String username;
+
     private String mobile;
 
     @Schema(description = "邮箱", example = "member@example.com")

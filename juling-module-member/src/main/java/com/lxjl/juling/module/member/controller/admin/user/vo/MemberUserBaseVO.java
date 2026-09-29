@@ -20,8 +20,11 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @Data
 public class MemberUserBaseVO {
 
-    @Schema(description = "手机号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15601691300")
-    @NotNull(message = "手机号不能为空")
+    @Schema(description = "订货账号（登录名，通常就是门店名）", example = "耙二哥双碑店")
+    @Size(max = 64, message = "订货账号长度不能超过 64 个字符")
+    private String username;
+
+    @Schema(description = "手机号（私域订货场景可选，不填则只能用订货账号登录）", example = "15601691300")
     private String mobile;
 
     @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")

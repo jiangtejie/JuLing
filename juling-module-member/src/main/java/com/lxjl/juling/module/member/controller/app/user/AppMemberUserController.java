@@ -67,6 +67,14 @@ public class AppMemberUserController {
         return success(true);
     }
 
+    @PutMapping("/update-password-by-old")
+    @Operation(summary = "用原密码修改密码",
+            description = "私域订货场景没有短信渠道，门店自助改密走这条（校验原密码，不需要验证码）")
+    public CommonResult<Boolean> updateUserPasswordByOld(@RequestBody @Valid AppMemberUserUpdatePasswordByOldReqVO reqVO) {
+        userService.updateUserPasswordByOld(getLoginUserId(), reqVO);
+        return success(true);
+    }
+
     @PutMapping("/reset-password")
     @Operation(summary = "重置密码", description = "用户忘记密码时使用")
     @PermitAll

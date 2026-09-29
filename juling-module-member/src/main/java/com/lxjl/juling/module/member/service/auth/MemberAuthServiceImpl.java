@@ -1,6 +1,7 @@
 package com.lxjl.juling.module.member.service.auth;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
@@ -62,8 +63,10 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
     @Override
     public AppAuthLoginRespVO login(AppAuthLoginReqVO reqVO) {
-        // 使用手机 + 密码，进行登录。
-        MemberUserDO user = login0(reqVO.getMobile(), reqVO.getPassword());
+        // 使用「订货账号（或手机号）+ 密码」进行登录。
+        // 私域订货 H5 不开放给 C 端：加盟客户用门店名当账号登录，account 为主、mobile 兼容。
+        String loginName = StrUtil.blankToDefault(reqVO.getAccount(), reqVO.getMobile());
+        MemberUserDO user = login0(loginName, reqVO.getPassword());
 
         // 如果 socialType 非空，说明需要绑定社交用户
         String openid = null;
@@ -73,7 +76,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         }
 
         // 创建 Token 令牌，记录登录日志
-        return createTokenAfterLoginSuccess(user, reqVO.getMobile(), LoginLogTypeEnum.LOGIN_MOBILE, openid);
+        return createTokenAfterLoginSuccess(user, loginName, LoginLogTypeEnum.LOGIN_USERNAME, openid);
     }
 
     @Override
@@ -180,20 +183,34 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         return socialClientApi.getAuthorizeUrl(type, UserTypeEnum.MEMBER.getValue(), redirectUri);
     }
 
-    private MemberUserDO login0(String mobile, String password) {
-        final LoginLogTypeEnum logTypeEnum = LoginLogTypeEnum.LOGIN_MOBILE;
-        // 校验账号是否存在
-        MemberUserDO user = userService.getUserByMobile(mobile);
+    /**
+     * 账号密码校验（私域订货的主登录路径）
+     *
+     * @param loginName 登录名：订货账号 或 手机号
+     */
+    private MemberUserDO login0(String loginName, String password) {
+        final LoginLogTypeEnum logTypeEnum = LoginLogTypeEnum.LOGIN_USERNAME;
+        // 登录名为空直接判失败：绝不能落到 selectByUsername(null) / selectByMobile(null)，
+        // 那会退化成"随便查一行再比密码"，等于给空账号开了一道门。
+        if (StrUtil.isBlank(loginName)) {
+            throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
+        }
+        // 1. 先按订货账号找（账号名通常就是门店名），找不到再按手机号找（兼容历史账号）
+        MemberUserDO user = userService.getUserByUsername(loginName);
         if (user == null) {
-            createLoginLog(null, mobile, logTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
+            user = userService.getUserByMobile(loginName);
+        }
+        if (user == null) {
+            createLoginLog(null, loginName, logTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
+        // 2. 校验密码
         if (!userService.isPasswordMatch(password, user.getPassword())) {
-            createLoginLog(user.getId(), mobile, logTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
+            createLoginLog(user.getId(), loginName, logTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
-        // 校验是否禁用
-        validateUserStatus(user, mobile, logTypeEnum);
+        // 3. 校验是否禁用
+        validateUserStatus(user, loginName, logTypeEnum);
         return user;
     }
 

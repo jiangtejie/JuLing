@@ -20,7 +20,10 @@ public class AppMemberUserInfoRespVO {
     @Schema(description = "用户头像", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://github.com/jiangtejie/JuLing")
     private String avatar;
 
-    @Schema(description = "用户手机号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15601691300")
+    @Schema(description = "订货账号（登录名，通常就是门店名）", example = "耙二哥双碑店")
+    private String username;
+
+    @Schema(description = "手机号（私域订货场景可为空）", example = "15601691300")
     private String mobile;
 
     @Schema(description = "邮箱", example = "member@example.com")

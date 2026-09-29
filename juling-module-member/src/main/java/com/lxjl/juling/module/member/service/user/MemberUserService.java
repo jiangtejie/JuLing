@@ -3,6 +3,7 @@ package com.lxjl.juling.module.member.service.user;
 import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.validation.Mobile;
+import com.lxjl.juling.module.member.controller.admin.user.vo.MemberUserCreateReqVO;
 import com.lxjl.juling.module.member.controller.admin.user.vo.MemberUserPageReqVO;
 import com.lxjl.juling.module.member.controller.admin.user.vo.MemberUserUpdateReqVO;
 import com.lxjl.juling.module.member.controller.app.user.vo.*;
@@ -26,6 +27,32 @@ public interface MemberUserService {
      * @return 用户对象
      */
     MemberUserDO getUserByMobile(String mobile);
+
+    /**
+     * 按订货账号获得用户（登录名，私域订货的主口径）
+     *
+     * @param username 订货账号
+     * @return 用户；不存在时返回 null
+     */
+    MemberUserDO getUserByUsername(String username);
+
+    /**
+     * 开订货账号（后台给加盟客户开账号：账号名 + 初始密码 + 绑定门店）
+     *
+     * @param createReqVO 开账号信息
+     * @return 会员编号
+     */
+    Long createOrderUser(@Valid MemberUserCreateReqVO createReqVO);
+
+    /**
+     * 后台重置密码（不需要短信验证码；重置后强制下线，旧 token 立即失效）
+     */
+    void resetUserPasswordByAdmin(Long id, String password);
+
+    /**
+     * 用原密码修改密码（H5 自助改密；不依赖短信渠道）
+     */
+    void updateUserPasswordByOld(Long userId, AppMemberUserUpdatePasswordByOldReqVO reqVO);
 
     /**
      * 基于用户昵称，模糊匹配用户列表
