@@ -7,7 +7,7 @@ import com.lxjl.juling.framework.common.util.json.JsonUtils;
  *
  * 对 WebSocketMessageSender 进行封装，提供给其它模块使用
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface WebSocketSenderApi {
 

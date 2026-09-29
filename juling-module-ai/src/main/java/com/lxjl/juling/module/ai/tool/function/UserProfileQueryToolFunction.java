@@ -23,7 +23,7 @@ import java.util.function.BiFunction;
  *
  * 同时，也是展示 ToolContext 上下文的使用
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component("user_profile_query")
 public class UserProfileQueryToolFunction

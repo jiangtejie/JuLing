@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link MailTemplateServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(MailTemplateServiceImpl.class)
 public class MailTemplateServiceImplTest extends BaseDbUnitTest {
@@ -115,7 +115,7 @@ public class MailTemplateServiceImplTest extends BaseDbUnitTest {
         });
         mailTemplateMapper.insert(dbMailTemplate);
         // 测试 name 不匹配
-        mailTemplateMapper.insert(cloneIgnoreId(dbMailTemplate, o -> o.setName("矩灵")));
+        mailTemplateMapper.insert(cloneIgnoreId(dbMailTemplate, o -> o.setName("亚特")));
         // 测试 code 不匹配
         mailTemplateMapper.insert(cloneIgnoreId(dbMailTemplate, o -> o.setCode("test_02")));
         // 测试 accountId 不匹配

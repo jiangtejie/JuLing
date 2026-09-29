@@ -10,7 +10,7 @@ import jakarta.annotation.Resource;
 /**
  * 短信发送 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

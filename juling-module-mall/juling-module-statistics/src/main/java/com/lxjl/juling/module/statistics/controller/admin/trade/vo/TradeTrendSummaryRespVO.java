@@ -28,13 +28,10 @@ public class TradeTrendSummaryRespVO {
     @Schema(description = "订单退款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Integer afterSaleRefundPrice;
 
-    @Schema(description = "支付佣金金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Integer brokerageSettlementPrice;
-
     @Schema(description = "充值金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Integer rechargePrice;
 
     @Schema(description = "支出金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Integer expensePrice; // 余额支付金额 + 支付佣金金额 + 商品退款金额
+    private Integer expensePrice; // 余额支付金额 + 商品退款金额
 
 }

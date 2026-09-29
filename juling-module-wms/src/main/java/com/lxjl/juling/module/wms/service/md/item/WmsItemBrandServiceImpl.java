@@ -25,7 +25,7 @@ import static com.lxjl.juling.module.wms.enums.ErrorCodeConstants.ITEM_BRAND_NOT
 /**
  * WMS 商品品牌 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * 用户每次发起 Chat 聊天时，会创建一个 {@link AiChatConversationDO} 对象，将它的消息关联在一起
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2024/4/14 17:35
  */
 @TableName("ai_chat_conversation")

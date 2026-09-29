@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * HTTP API 签名注解
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Inherited
 @Documented

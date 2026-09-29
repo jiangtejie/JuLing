@@ -61,8 +61,6 @@ export interface TradeOrder {
   adjustPrice?: number
   payPrice?: number
   deliveryType?: number
-  pickUpStoreId?: number
-  pickUpVerifyCode?: string
   deliveryTemplateId?: number
   logisticsId?: number
   logisticsNo?: string
@@ -82,11 +80,6 @@ export interface TradeOrder {
   vipPrice?: number
   items?: TradeOrderItem[]
   user?: {
-    id?: number
-    nickname?: string
-    avatar?: string
-  }
-  brokerageUser?: {
     id?: number
     nickname?: string
     avatar?: string
@@ -140,23 +133,4 @@ export function updateTradeOrderPrice(data: Record<string, any>) {
 /** 更新订单地址 */
 export function updateTradeOrderAddress(data: Record<string, any>) {
   return http.put<boolean>('/trade/order/update-address', data)
-}
-
-/** 订单核销 */
-export function pickUpTradeOrder(id: number) {
-  return http.put<boolean>(`/trade/order/pick-up-by-id?id=${id}`)
-}
-
-/** 根据核销码核销订单 */
-export function pickUpTradeOrderByVerifyCode(pickUpVerifyCode: string) {
-  return http.put<boolean>('/trade/order/pick-up-by-verify-code', undefined, {
-    pickUpVerifyCode,
-  })
-}
-
-/** 根据核销码查询订单 */
-export function getTradeOrderByPickUpVerifyCode(pickUpVerifyCode: string) {
-  return http.get<TradeOrder>('/trade/order/get-by-pick-up-verify-code', {
-    pickUpVerifyCode,
-  })
 }

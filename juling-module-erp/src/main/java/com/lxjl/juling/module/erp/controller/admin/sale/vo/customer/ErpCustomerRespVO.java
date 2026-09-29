@@ -62,7 +62,7 @@ public class ErpCustomerRespVO {
     @ExcelProperty("税率")
     private BigDecimal taxPercent;
 
-    @Schema(description = "开户行", example = "棱信矩灵")
+    @Schema(description = "开户行", example = "亚特")
     @ExcelProperty("开户行")
     private String bankName;
 
@@ -73,6 +73,30 @@ public class ErpCustomerRespVO {
     @Schema(description = "开户地址", example = "兴业银行浦东支行")
     @ExcelProperty("开户地址")
     private String bankAddress;
+
+    @Schema(description = "所属部门（门店节点）编号", example = "134")
+    @ExcelProperty("所属部门编号")
+    private Long deptId;
+
+    @Schema(description = "上级代理客户编号", example = "1")
+    @ExcelProperty("上级代理编号")
+    private Long parentCustomerId;
+
+    @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "FRANCHISE")
+    @ExcelProperty("店型")
+    private String storeType;
+
+    @Schema(description = "结算模式：PREPAID 先款后货 / MONTHLY 月结", example = "PREPAID")
+    @ExcelProperty("结算模式")
+    private String settlementMode;
+
+    @Schema(description = "账期天数", example = "30")
+    @ExcelProperty("账期天数")
+    private Integer creditDays;
+
+    @Schema(description = "信用额度", example = "50000")
+    @ExcelProperty("信用额度")
+    private BigDecimal creditLimit;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")

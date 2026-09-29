@@ -34,7 +34,7 @@ import static com.lxjl.juling.module.ai.enums.ErrorCodeConstants.CHAT_CONVERSATI
 /**
  * AI 聊天对话 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

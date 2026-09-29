@@ -14,7 +14,7 @@ import java.math.RoundingMode;
  *
  * 金额单位：分
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class MoneyConvert implements Converter<Integer> {
 

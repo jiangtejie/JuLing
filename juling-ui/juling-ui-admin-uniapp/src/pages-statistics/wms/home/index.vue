@@ -11,7 +11,7 @@
       <view class="p-24rpx">
         <!-- 统计筛选 -->
         <view class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="flex items-center justify-between border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+          <view class="yd-border-light flex items-center justify-between border-b px-24rpx py-20rpx">
             <view>
               <view class="yd-text-main text-30rpx font-semibold">
                 WMS 首页
@@ -36,7 +36,7 @@
             <text>统计时间</text>
             <text>{{ statTime || '-' }}</text>
           </view>
-          <view v-if="loadError" class="yd-text-warning border-t border-t-[#f5f5f5] px-24rpx py-16rpx text-24rpx">
+          <view v-if="loadError" class="yd-text-warning yd-border-light border-t px-24rpx py-16rpx text-24rpx">
             部分统计数据加载失败，请稍后刷新
           </view>
         </view>
@@ -113,7 +113,7 @@
 
         <!-- 单据趋势 -->
         <view v-if="activeTab === WMS_HOME_TAB.ORDER" class="mt-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
-          <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+          <view class="yd-border-light border-b px-24rpx py-20rpx">
             <view class="mb-16rpx flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
                 <view class="yd-text-main text-30rpx font-semibold">
@@ -123,7 +123,7 @@
                   入库、出库、移库、盘库单据数量
                 </view>
               </view>
-              <view class="flex shrink-0 rounded-8rpx bg-[#f5f7fa] p-4rpx">
+              <view class="yd-bg-subtle flex shrink-0 rounded-8rpx p-4rpx">
                 <view
                   v-for="item in trendDayOptions"
                   :key="item.value"
@@ -190,7 +190,7 @@
                   <text class="yd-text-hint shrink-0">{{ item.quantityText }} · {{ item.percentText }}</text>
                 </view>
                 <view class="yd-bg-subtle h-12rpx overflow-hidden rounded-full">
-                  <view class="h-full rounded-full bg-[#18a058]" :style="{ width: item.percentWidth }" />
+                  <view class="yd-bg-success-strong h-full rounded-full" :style="{ width: item.percentWidth }" />
                 </view>
               </view>
             </view>
@@ -215,7 +215,7 @@
                   <text class="yd-text-hint shrink-0">{{ item.quantityText }}</text>
                 </view>
                 <view class="yd-bg-subtle h-12rpx overflow-hidden rounded-full">
-                  <view class="h-full rounded-full bg-[#2f7df6]" :style="{ width: item.percentWidth }" />
+                  <view class="yd-bg-primary h-full rounded-full" :style="{ width: item.percentWidth }" />
                 </view>
               </view>
             </view>

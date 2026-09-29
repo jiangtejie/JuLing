@@ -5,7 +5,7 @@ import com.lxjl.juling.framework.common.biz.system.permission.dto.DeptDataPermis
 /**
  * 权限 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface PermissionCommonApi {
 

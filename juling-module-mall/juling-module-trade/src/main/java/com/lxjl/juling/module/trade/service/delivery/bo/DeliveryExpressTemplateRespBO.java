@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 运费模板配置 Resp BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class DeliveryExpressTemplateRespBO {
@@ -31,7 +31,7 @@ public class DeliveryExpressTemplateRespBO {
     /**
      * 快递运费模板费用配置 BO
      *
-     * @author 棱信矩灵
+     * @author 亚特
      */
     @Data
     public static class Charge {
@@ -57,7 +57,7 @@ public class DeliveryExpressTemplateRespBO {
     /**
      * 快递运费模板包邮配置 BO
      *
-     * @author 棱信矩灵
+     * @author 亚特
      */
     @Data
     public static class Free {

@@ -10,7 +10,7 @@ import java.util.Set;
 import static com.lxjl.juling.framework.common.util.collection.SetUtils.asSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Disabled // TODO 棱信矩灵：临时注释
+@Disabled // TODO 亚特：临时注释
 public class BpmTaskCandidateUserStrategyTest extends BaseMockitoUnitTest {
 
     @InjectMocks

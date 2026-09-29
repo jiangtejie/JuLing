@@ -5,10 +5,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/bpm/oa',
     name: 'OALeave',
+    // 注意：redirect 必须放在路由记录顶层。放在 meta 里 vue-router 不会读取，
+    // 只会让 /bpm/oa 命中这个没有 component 的父路由，渲染出空白页。
+    // 目标必须是真实存在的子路由地址（子路由定义在下方：path: 'leave'）。
+    redirect: '/bpm/oa/leave',
     meta: {
       title: 'OA请假',
       hideInMenu: true,
-      redirect: '/bpm/oa/leave/index',
     },
     children: [
       {

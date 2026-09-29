@@ -26,7 +26,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
  *
  * @see <a href="https://open.bochaai.com/overview">博查 AI 开放平台</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class AiBoChaWebSearchClient implements AiWebSearchClient {

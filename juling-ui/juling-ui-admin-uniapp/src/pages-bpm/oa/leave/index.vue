@@ -76,7 +76,7 @@
             </view>
             <view
               v-if="item.status === BpmProcessInstanceStatus.RUNNING"
-              class="bpm-action-btn text-[#ff4d4f]!"
+              class="bpm-action-btn text-[var(--yd-danger-bright)]!"
               @click.stop="handleCancel(item)"
             >
               <wd-icon name="close" size="32rpx" color="#ff4d4f" />

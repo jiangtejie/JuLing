@@ -3,7 +3,6 @@ package com.lxjl.juling.module.trade.service.aftersale;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.test.core.ut.BaseDbUnitTest;
-import com.lxjl.juling.module.pay.api.refund.PayRefundApi;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSalePageReqVO;
 import com.lxjl.juling.module.trade.controller.app.aftersale.vo.AppAfterSaleCreateReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.aftersale.AfterSaleDO;
@@ -40,9 +39,9 @@ import static org.mockito.Mockito.when;
 /**
  * {@link AfterSaleService} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(AfterSaleServiceImpl.class)
 public class AfterSaleServiceTest extends BaseDbUnitTest {
 
@@ -58,9 +57,6 @@ public class AfterSaleServiceTest extends BaseDbUnitTest {
     private TradeOrderUpdateService tradeOrderUpdateService;
     @Resource
     private TradeOrderQueryService tradeOrderQueryService;
-
-    @MockitoBean
-    private PayRefundApi payRefundApi;
 
     @MockitoBean
     private TradeOrderProperties tradeOrderProperties;
@@ -120,7 +116,7 @@ public class AfterSaleServiceTest extends BaseDbUnitTest {
             o.setWay(AfterSaleWayEnum.RETURN_AND_REFUND.getWay());
             o.setType(AfterSaleTypeEnum.IN_SALE.getType());
             o.setOrderNo("202211190847450020500011");
-            o.setSpuName("棱信矩灵");
+            o.setSpuName("亚特");
             o.setCreateTime(buildTime(2022, 1, 15));
         });
         tradeAfterSaleMapper.insert(dbAfterSale);

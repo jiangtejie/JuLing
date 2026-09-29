@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * Mail 邮件相关消息的 Producer
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021/4/19 13:33
  */
 @Slf4j

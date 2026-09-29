@@ -15,7 +15,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * ERP 结算账户 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ErpAccountService {
 

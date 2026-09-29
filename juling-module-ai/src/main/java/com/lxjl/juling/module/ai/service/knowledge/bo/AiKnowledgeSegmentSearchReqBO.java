@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotEmpty;
 /**
  * AI 知识库段落搜索 Request BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class AiKnowledgeSegmentSearchReqBO {

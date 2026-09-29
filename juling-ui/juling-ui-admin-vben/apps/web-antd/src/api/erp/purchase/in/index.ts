@@ -44,6 +44,14 @@ export namespace ErpPurchaseInApi {
     totalPrice?: number;
     warehouseId?: number;
     inCount?: number;
+    // 批次台账（erp_purchase_in_item 的 batch_no / production_date / expiry_date）：
+    // 审核入库时按批次入账；batchNo 为空则后端按 IN{yyyyMMdd}-{序号} 自动生成
+    batchNo?: string;
+    // 注意：后端 LocalDate 会序列化成数组（如 [2026,9,25]），而表单里这两个字段是
+    // DatePicker（value-format="YYYY-MM-DD"）绑定的字符串，因此这里按「表单态」声明为
+    // string；回显时由 item-form 的 initRow 用 formatBatchDate 统一归一。
+    productionDate?: string;
+    expiryDate?: string;
   }
 }
 

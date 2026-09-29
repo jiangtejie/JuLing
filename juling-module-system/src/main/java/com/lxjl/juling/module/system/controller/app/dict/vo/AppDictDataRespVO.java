@@ -14,7 +14,7 @@ public class AppDictDataRespVO {
     @Schema(description = "字典数据编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long id;
 
-    @Schema(description = "字典标签", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "字典标签", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String label;
 
     @Schema(description = "字典值", requiredMode = Schema.RequiredMode.REQUIRED, example = "juling")

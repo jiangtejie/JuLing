@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,6 +59,15 @@ public class ErpStockInSaveReqVO {
 
         @Schema(description = "备注", example = "随便")
         private String remark;
+
+        @Schema(description = "批次号：为空时审核入库按 IN{yyyyMMdd}-{项id} 自动生成", example = "IN20260910-101")
+        private String batchNo;
+
+        @Schema(description = "生产日期")
+        private LocalDate productionDate;
+
+        @Schema(description = "到期日期：用于效期预警与 FIFO 次级排序")
+        private LocalDate expiryDate;
 
     }
 

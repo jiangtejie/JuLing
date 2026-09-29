@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 /**
  * ERP 其它入库单项 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_stock_in_item")
 @KeySequence("erp_stock_in_item_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -69,5 +69,21 @@ public class ErpStockInItemDO extends BaseDO {
      * 备注
      */
     private String remark;
+    /**
+     * 批次号
+     *
+     * 为空时，审核入库按 IN{yyyyMMdd}-{项id} 自动生成
+     */
+    private String batchNo;
+    /**
+     * 生产日期
+     */
+    private java.time.LocalDate productionDate;
+    /**
+     * 到期日期
+     *
+     * 效期预警口径；FIFO 的次级排序键
+     */
+    private java.time.LocalDate expiryDate;
 
 }

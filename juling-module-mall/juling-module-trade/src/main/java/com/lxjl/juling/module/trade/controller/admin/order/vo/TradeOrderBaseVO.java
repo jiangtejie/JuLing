@@ -85,16 +85,51 @@ public class TradeOrderBaseVO {
     @Schema(description = "应付金额（总）", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
     private Integer payPrice;
 
+    // ========== 线下收款（付款凭证）基本信息 ==========
+
+    @Schema(description = "已确认收款金额（累计），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
+    private Integer paidAmount;
+
+    @Schema(description = "收款状态（TradeOrderReceiveStatusEnum）：0 未上传凭证、1 待核验、2 已驳回、3 部分收款、4 已收齐",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Integer paymentProofStatus;
+
+    // ========== 门店订货链：归属 + 供应链审核基本信息 ==========
+
+    @Schema(description = "下单门店所属部门编号", example = "134")
+    private Long deptId;
+
+    @Schema(description = "下单门店客户编号", example = "1")
+    private Long customerId;
+
+    @Schema(description = "代理客户编号（代理账号切换门店下单时非空）", example = "1")
+    private Long agentCustomerId;
+
+    @Schema(description = "结算模式（TradeSettlementModeEnum）：PREPAID 先款后货、MONTHLY 月结", example = "PREPAID")
+    private String settlementMode;
+
+    @Schema(description = "店型快照：DIRECT 直营（免审）/ FRANCHISE 加盟（需审核）", example = "FRANCHISE")
+    private String storeType;
+
+    @Schema(description = "审核状态（TradeOrderAuditStatusEnum）：0 待提交、10 审核中、20 已通过、30 已驳回", example = "10")
+    private Integer auditStatus;
+
+    @Schema(description = "审核人编号", example = "1")
+    private Long auditUserId;
+
+    @Schema(description = "审核时间")
+    private LocalDateTime auditTime;
+
+    @Schema(description = "审核意见", example = "数量需下调")
+    private String auditRemark;
+
+    @Schema(description = "BPM 审批流程实例编号", example = "0f8e9a1b-...")
+    private String processInstanceId;
+
     // ========== 收件 + 物流基本信息 ==========
 
     @Schema(description = "配送方式", example = "10")
     private Integer deliveryType;
-
-    @Schema(description = "自提门店", example = "10")
-    private Long pickUpStoreId;
-
-    @Schema(description = "自提核销码", example = "10")
-    private Long pickUpVerifyCode;
 
     @Schema(description = "配送模板编号", example = "1024")
     private Long deliveryTemplateId;
@@ -131,21 +166,5 @@ public class TradeOrderBaseVO {
     @Schema(description = "退款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
     private Integer refundPrice;
 
-    // ========== 营销基本信息 ==========
-
-    @Schema(description = "优惠劵编号", example = "1024")
-    private Long couponId;
-
-    @Schema(description = "优惠劵减免金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer couponPrice;
-
-    @Schema(description = "积分抵扣的金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer pointPrice;
-
-    @Schema(description = "VIP 减免金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "888")
-    private Integer vipPrice;
-
-    @Schema(description = "推广人编号", example = "1")
-    private Long brokerageUserId;
 
 }

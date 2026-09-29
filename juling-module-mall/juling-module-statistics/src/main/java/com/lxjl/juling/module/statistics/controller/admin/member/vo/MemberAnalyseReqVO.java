@@ -1,6 +1,7 @@
 package com.lxjl.juling.module.statistics.controller.admin.member.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +15,7 @@ public class MemberAnalyseReqVO {
 
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     @Schema(description = "时间范围")
+    @NotEmpty(message = "时间范围不能为空") // 不校验会走到 Service 里 NPE（beginTime.minusDays），对外表现为「系统异常」
     private LocalDateTime[] times;
 
 }

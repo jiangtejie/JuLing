@@ -12,7 +12,7 @@ import com.lxjl.juling.module.infra.controller.admin.demo.vo.*;
 /**
  * 分类 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface InfraCategoryMapper extends BaseMapperX<InfraCategoryDO> {

@@ -2,30 +2,22 @@ package com.lxjl.juling.module.trade.dal.dataobject.order;
 
 import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
-import com.lxjl.juling.framework.mybatis.core.type.LongListTypeHandler;
-import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.trade.dal.dataobject.brokerage.BrokerageUserDO;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
-import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryPickUpStoreDO;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderCancelTypeEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderRefundStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 交易订单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "trade_order", autoResultMap = true)
 @KeySequence("trade_order_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -107,20 +99,6 @@ public class TradeOrderDO extends BaseDO {
      * 商家备注
      */
     private String remark;
-    /**
-     * 是否评价
-     *
-     * true - 已评价
-     * false - 未评价
-     */
-    private Boolean commentStatus;
-
-    /**
-     * 推广人编号
-     *
-     * 关联 {@link BrokerageUserDO#getId()} 字段，即 {@link MemberUserRespDTO#getId()} 字段
-     */
-    private Long brokerageUserId;
 
     // ========== 价格 + 支付基本信息 ==========
 
@@ -151,6 +129,73 @@ public class TradeOrderDO extends BaseDO {
      * 对应 PayChannelEnum 枚举
      */
     private String payChannelCode;
+    /**
+     * 已确认收款金额，单位：分
+     *
+     * 线下收款：付款凭证核验通过后的累计金额；收满 {@link #payPrice} 即视为已收款
+     */
+    private Integer paidAmount;
+    /**
+     * 收款状态
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderReceiveStatusEnum}；对应字典 trade_payment_proof_status
+     */
+    private Integer paymentProofStatus;
+
+    // ========== 门店订货归属 + 供应链审核基本信息（门店订货链 S1） ==========
+    /**
+     * 下单门店所属部门编号（快照）
+     *
+     * 关联 system_dept.id；一店三面：组织面
+     */
+    private Long deptId;
+    /**
+     * 下单门店客户编号（快照）
+     *
+     * 关联 erp_customer.id；一店三面：经营面
+     */
+    private Long customerId;
+    /**
+     * 代理客户编号（快照）
+     *
+     * 代理账号切换门店下单时，记录代理客户；门店自身下单时为空
+     */
+    private Long agentCustomerId;
+    /**
+     * 结算模式快照
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeSettlementModeEnum}
+     */
+    private String settlementMode;
+    /**
+     * 店型快照：DIRECT 直营 / FRANCHISE 加盟
+     *
+     * 门店订货链：加盟店需审核（auditStatus 必须 20）才进订单工作台；直营店免审。
+     * 快照后可避免订单列表/工作台查询跨模块 join erp_customer。
+     */
+    private String storeType;
+    /**
+     * 审核状态
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderAuditStatusEnum}
+     */
+    private Integer auditStatus;
+    /**
+     * 审核人编号（审核结束时写入）
+     */
+    private Long auditUserId;
+    /**
+     * 审核时间
+     */
+    private LocalDateTime auditTime;
+    /**
+     * 审核意见（驳回原因等）
+     */
+    private String auditRemark;
+    /**
+     * BPM 审批流程实例编号
+     */
+    private String processInstanceId;
 
     /**
      * 商品原价，单位：分
@@ -180,12 +225,9 @@ public class TradeOrderDO extends BaseDO {
      * 应付金额（总），单位：分
      *
      * = {@link #totalPrice}
-     * - {@link #couponPrice}
-     * - {@link #pointPrice}
      * - {@link #discountPrice}
      * + {@link #deliveryPrice}
      * + {@link #adjustPrice}
-     * - {@link #vipPrice}
      */
     private Integer payPrice;
 
@@ -220,6 +262,13 @@ public class TradeOrderDO extends BaseDO {
      */
     private LocalDateTime receiveTime;
     /**
+     * 收货状态（订单维度聚合）
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderReceiptStatusEnum}：
+     * 0 未收货 / 10 部分收货 / 20 已收货。由门店在 H5 确认收货（trade_order_receipt）后聚合回写。
+     */
+    private Integer receiptStatus;
+    /**
      * 收件人名称
      */
     private String receiverName;
@@ -236,17 +285,6 @@ public class TradeOrderDO extends BaseDO {
      */
     private String receiverDetailAddress;
 
-    /**
-     * 自提门店编号
-     *
-     * 关联 {@link DeliveryPickUpStoreDO#getId()}
-     */
-    private Long pickUpStoreId;
-    /**
-     * 自提核销码
-     */
-    private String pickUpVerifyCode;
-
     // ========== 售后基本信息 ==========
     /**
      * 售后状态
@@ -261,103 +299,5 @@ public class TradeOrderDO extends BaseDO {
      * 也就说，一个订单最终产生多少金额的收入 = payPrice - refundPrice
      */
     private Integer refundPrice;
-
-    // ========== 营销基本信息 ==========
-    /**
-     * 优惠劵编号
-     */
-    private Long couponId;
-    /**
-     * 优惠劵减免金额，单位：分
-     *
-     * 对应 taobao 的 trade.coupon_fee 字段
-     */
-    private Integer couponPrice;
-    /**
-     * 使用的积分
-     */
-    private Integer usePoint;
-    /**
-     * 积分抵扣的金额，单位：分
-     *
-     * 对应 taobao 的 trade.point_fee 字段
-     */
-    private Integer pointPrice;
-    /**
-     * 赠送的积分
-     */
-    private Integer givePoint;
-    /**
-     * 退还的使用的积分
-     */
-    private Integer refundPoint;
-    /**
-     * VIP 减免金额，单位：分
-     */
-    private Integer vipPrice;
-
-    /**
-     * 赠送的优惠劵
-     *
-     * key: 优惠劵模版编号
-     * value：对应的优惠券数量
-     *
-     * 目的：用于订单支付后赠送优惠券
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<Long, Integer> giveCouponTemplateCounts;
-    /**
-     * 赠送的优惠劵编号
-     *
-     * 目的：用于后续取消或者售后订单时，需要扣减赠送
-     */
-    @TableField(typeHandler = LongListTypeHandler.class)
-    private List<Long> giveCouponIds;
-
-    /**
-     * 秒杀活动编号
-     *
-     * 关联 SeckillActivityDO 的 id 字段
-     */
-    private Long seckillActivityId;
-
-    /**
-     * 砍价活动编号
-     *
-     * 关联 BargainActivityDO 的 id 字段
-     */
-    private Long bargainActivityId;
-    /**
-     * 砍价记录编号
-     *
-     * 关联 BargainRecordDO 的 id 字段
-     */
-    private Long bargainRecordId;
-
-    /**
-     * 拼团活动编号
-     *
-     * 关联 CombinationActivityDO 的 id 字段
-     */
-    private Long combinationActivityId;
-    /**
-     * 拼团团长编号
-     *
-     * 关联 CombinationRecordDO 的 headId 字段
-     */
-    private Long combinationHeadId;
-    /**
-     * 拼团记录编号
-     *
-     * 关联 CombinationRecordDO 的 id 字段
-     */
-    private Long combinationRecordId;
-
-    /**
-     * 积分商城活动的编号
-     *
-     * 关联 PointActivityDO 的 id 字段
-     */
-    private Long pointActivityId;
 
 }

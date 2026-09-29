@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 交易订单项 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "trade_order_item", autoResultMap = true)
 @KeySequence("trade_order_item_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -81,13 +81,6 @@ public class TradeOrderItemDO extends BaseDO {
      * 购买数量
      */
     private Integer count;
-    /**
-     * 是否评价
-     *
-     * true - 已评价
-     * false - 未评价
-     */
-    private Boolean commentStatus;
 
     // ========== 价格 + 支付基本信息 ==========
 
@@ -118,45 +111,11 @@ public class TradeOrderItemDO extends BaseDO {
      * 应付金额（总），单位：分
      *
      * = {@link #price} * {@link #count}
-     * - {@link #couponPrice}
-     * - {@link #pointPrice}
      * - {@link #discountPrice}
      * + {@link #deliveryPrice}
      * + {@link #adjustPrice}
-     * - {@link #vipPrice}
      */
     private Integer payPrice;
-
-    // ========== 营销基本信息 ==========
-
-    /**
-     * 优惠劵减免金额，单位：分
-     *
-     * 对应 taobao 的 trade.coupon_fee 字段
-     */
-    private Integer couponPrice;
-    /**
-     * 积分抵扣的金额，单位：分
-     *
-     * 对应 taobao 的 trade.point_fee 字段
-     */
-    private Integer pointPrice;
-    /**
-     * 使用的积分
-     *
-     * 目的：用于后续取消或者售后订单时，需要归还赠送
-     */
-    private Integer usePoint;
-    /**
-     * 赠送的积分
-     *
-     * 目的：用于后续取消或者售后订单时，需要扣减赠送
-     */
-    private Integer givePoint;
-    /**
-     * VIP 减免金额，单位：分
-     */
-    private Integer vipPrice;
 
     // ========== 售后基本信息 ==========
 
@@ -172,6 +131,30 @@ public class TradeOrderItemDO extends BaseDO {
      * 枚举 {@link TradeOrderItemAfterSaleStatusEnum}
      */
     private Integer afterSaleStatus;
+
+    // ========== 门店订货链：分料（订单工作台） ==========
+
+    /**
+     * 分料方式
+     *
+     * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeOrderItemAllocModeEnum}；
+     * 为空表示「未分料」（订单工作台待处理），非空表示该行已下推过 ERP 单据。
+     */
+    private String allocMode;
+    /**
+     * 分料下推数量（≤ {@link #count}）；为空表示未下推
+     */
+    private java.math.BigDecimal allocCount;
+    /**
+     * ERP 已发货数量（配送出库单审核后回写）
+     *
+     * 口径：出库单实际发出多少，不含门店收货差异。门店实收数量见 {@link #receiptCount}。
+     */
+    private java.math.BigDecimal deliveredCount;
+    /**
+     * 门店已确认收货数量（门店收货单确认后回写）
+     */
+    private java.math.BigDecimal receiptCount;
 
     /**
      * 商品属性

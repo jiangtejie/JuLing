@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * BPM 子流程监听器：设置流程的发起人
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @Slf4j

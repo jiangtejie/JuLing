@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeCo
  *
  * 补充：Spring Security 通过 {@link ExceptionTranslationFilter#handleAccessDeniedException(HttpServletRequest, HttpServletResponse, FilterChain, AccessDeniedException)} 方法，调用当前类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @SuppressWarnings("JavadocReference")

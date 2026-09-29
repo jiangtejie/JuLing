@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 邮箱脱敏注解
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Documented
 @Target({ElementType.FIELD})

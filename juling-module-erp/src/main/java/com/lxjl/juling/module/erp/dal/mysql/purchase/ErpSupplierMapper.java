@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ERP 供应商 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpSupplierMapper extends BaseMapperX<ErpSupplierDO> {

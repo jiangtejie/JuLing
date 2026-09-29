@@ -9,7 +9,6 @@ import com.lxjl.juling.module.product.api.spu.dto.ProductSpuRespDTO;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
-import com.lxjl.juling.module.trade.service.price.calculator.TradePriceCalculator;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.when;
 /**
  * {@link TradePriceServiceImpl} 的单元测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TradePriceServiceImplTest extends BaseMockitoUnitTest {
 
@@ -37,15 +36,13 @@ public class TradePriceServiceImplTest extends BaseMockitoUnitTest {
     private ProductSkuApi productSkuApi;
     @Mock
     private ProductSpuApi productSpuApi;
-    @Mock
-    private List<TradePriceCalculator> priceCalculators;
 
     @Test
     public void testCalculatePrice() {
         // 准备参数
         TradePriceCalculateReqBO calculateReqBO = new TradePriceCalculateReqBO()
                 .setUserId(10L)
-                .setCouponId(20L).setAddressId(30L)
+                .setAddressId(30L)
                 .setItems(Arrays.asList(
                         new TradePriceCalculateReqBO.Item().setSkuId(100L).setCount(1).setSelected(true),
                         new TradePriceCalculateReqBO.Item().setSkuId(200L).setCount(3).setSelected(true),
@@ -71,14 +68,10 @@ public class TradePriceServiceImplTest extends BaseMockitoUnitTest {
         TradePriceCalculateRespBO calculateRespBO = tradePriceService.calculateOrderPrice(calculateReqBO);
         // 断言
         assertEquals(TradeOrderTypeEnum.NORMAL.getType(), calculateRespBO.getType());
-        assertEquals(0, calculateRespBO.getPromotions().size());
-        assertNull(calculateRespBO.getCouponId());
         // 断言：订单价格
         assertEquals(7000, calculateRespBO.getPrice().getTotalPrice());
         assertEquals(0, calculateRespBO.getPrice().getDiscountPrice());
         assertEquals(0, calculateRespBO.getPrice().getDeliveryPrice());
-        assertEquals(0, calculateRespBO.getPrice().getCouponPrice());
-        assertEquals(0, calculateRespBO.getPrice().getPointPrice());
         assertEquals(7000, calculateRespBO.getPrice().getPayPrice());
         // 断言：SKU 1
         assertEquals(1001L, calculateRespBO.getItems().get(0).getSpuId());
@@ -89,8 +82,6 @@ public class TradePriceServiceImplTest extends BaseMockitoUnitTest {
         assertEquals(1000, calculateRespBO.getItems().get(0).getPrice());
         assertEquals(0, calculateRespBO.getItems().get(0).getDiscountPrice());
         assertEquals(0, calculateRespBO.getItems().get(0).getDeliveryPrice());
-        assertEquals(0, calculateRespBO.getItems().get(0).getCouponPrice());
-        assertEquals(0, calculateRespBO.getItems().get(0).getPointPrice());
         assertEquals(1000, calculateRespBO.getItems().get(0).getPayPrice());
         assertEquals("小菜", calculateRespBO.getItems().get(0).getSpuName());
         assertEquals("https://t.cn/1.png", calculateRespBO.getItems().get(0).getPicUrl());
@@ -105,8 +96,6 @@ public class TradePriceServiceImplTest extends BaseMockitoUnitTest {
         assertEquals(2000, calculateRespBO.getItems().get(1).getPrice());
         assertEquals(0, calculateRespBO.getItems().get(1).getDiscountPrice());
         assertEquals(0, calculateRespBO.getItems().get(1).getDeliveryPrice());
-        assertEquals(0, calculateRespBO.getItems().get(1).getCouponPrice());
-        assertEquals(0, calculateRespBO.getItems().get(1).getPointPrice());
         assertEquals(6000, calculateRespBO.getItems().get(1).getPayPrice());
         assertEquals("小菜", calculateRespBO.getItems().get(1).getSpuName());
         assertEquals("https://t.cn/2.png", calculateRespBO.getItems().get(1).getPicUrl());
@@ -121,8 +110,6 @@ public class TradePriceServiceImplTest extends BaseMockitoUnitTest {
         assertEquals(3000, calculateRespBO.getItems().get(2).getPrice());
         assertEquals(0, calculateRespBO.getItems().get(2).getDiscountPrice());
         assertEquals(0, calculateRespBO.getItems().get(2).getDeliveryPrice());
-        assertEquals(0, calculateRespBO.getItems().get(2).getCouponPrice());
-        assertEquals(0, calculateRespBO.getItems().get(2).getPointPrice());
         assertEquals(18000, calculateRespBO.getItems().get(2).getPayPrice());
         assertEquals("小菜", calculateRespBO.getItems().get(2).getSpuName());
         assertEquals("https://t.cn/3.png", calculateRespBO.getItems().get(2).getPicUrl());

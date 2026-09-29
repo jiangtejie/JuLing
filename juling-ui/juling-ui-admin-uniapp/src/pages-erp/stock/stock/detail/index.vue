@@ -10,7 +10,7 @@
           <view class="yd-text-hint text-28rpx">
             当前库存
           </view>
-          <view class="mt-8rpx text-48rpx text-[#9254de] font-semibold">
+          <view class="yd-text-accent-purple-light mt-8rpx text-48rpx font-semibold">
             {{ formatCount(formData?.count) }}
           </view>
         </view>

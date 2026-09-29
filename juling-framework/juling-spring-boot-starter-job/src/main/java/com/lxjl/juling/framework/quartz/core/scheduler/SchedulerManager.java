@@ -16,7 +16,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
  *
  * 另外，jobHandlerName 对应到 Spring Bean 的名字，直接调用
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class SchedulerManager {
 

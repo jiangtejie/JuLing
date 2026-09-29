@@ -65,8 +65,6 @@ function createEmptySku(): MallSpuApi.Sku {
     stock: 0,
     weight: 0,
     volume: 0,
-    firstBrokeragePrice: 0,
-    secondBrokeragePrice: 0,
   };
 }
 
@@ -405,30 +403,6 @@ defineExpose({
           />
         </template>
       </VxeColumn>
-      <template v-if="formData?.subCommissionType">
-        <VxeColumn align="center" title="一级返佣(元)" width="168">
-          <template #default="{ row }">
-            <InputNumber
-              v-model:value="row.firstBrokeragePrice"
-              :min="0"
-              :precision="2"
-              :step="0.1"
-              class="w-full"
-            />
-          </template>
-        </VxeColumn>
-        <VxeColumn align="center" title="二级返佣(元)" width="168">
-          <template #default="{ row }">
-            <InputNumber
-              v-model:value="row.secondBrokeragePrice"
-              :min="0"
-              :precision="2"
-              :step="0.1"
-              class="w-full"
-            />
-          </template>
-        </VxeColumn>
-      </template>
       <VxeColumn
         v-if="formData?.specType"
         align="center"
@@ -534,18 +508,6 @@ defineExpose({
           {{ row.volume }}
         </template>
       </VxeColumn>
-      <template v-if="formData?.subCommissionType">
-        <VxeColumn align="center" title="一级返佣(元)" width="80">
-          <template #default="{ row }">
-            {{ formatDetailMoney(row.firstBrokeragePrice) }}
-          </template>
-        </VxeColumn>
-        <VxeColumn align="center" title="二级返佣(元)" width="80">
-          <template #default="{ row }">
-            {{ formatDetailMoney(row.secondBrokeragePrice) }}
-          </template>
-        </VxeColumn>
-      </template>
     </VxeTable>
 
     <!-- 情况三：作为活动组件 -->

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * ERP 采购订单明项目 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpPurchaseOrderItemMapper extends BaseMapperX<ErpPurchaseOrderItemDO> {

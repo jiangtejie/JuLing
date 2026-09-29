@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * FMS 凭证科目发生额 VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class FmsVoucherSubjectAmountVO {

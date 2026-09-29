@@ -266,13 +266,6 @@ const MALL_DICT = {
   TRADE_ORDER_ITEM_AFTER_SALE_STATUS: 'trade_order_item_after_sale_status', // 订单项售后状态
   TRADE_DELIVERY_TYPE: 'trade_delivery_type', // 配送方式
   EXPRESS_CHARGE_MODE: 'trade_delivery_express_charge_mode', // 快递的计费方式
-  BROKERAGE_ENABLED_CONDITION: 'brokerage_enabled_condition', // 分佣模式
-  BROKERAGE_BIND_MODE: 'brokerage_bind_mode', // 分销关系绑定模式
-  BROKERAGE_BANK_NAME: 'brokerage_bank_name', // 佣金提现银行
-  BROKERAGE_WITHDRAW_TYPE: 'brokerage_withdraw_type', // 佣金提现类型
-  BROKERAGE_RECORD_BIZ_TYPE: 'brokerage_record_biz_type', // 佣金业务类型
-  BROKERAGE_RECORD_STATUS: 'brokerage_record_status', // 佣金状态
-  BROKERAGE_WITHDRAW_STATUS: 'brokerage_withdraw_status', // 佣金提现状态
   PROMOTION_BANNER_POSITION: 'promotion_banner_position', // Banner 定位
   PROMOTION_DISCOUNT_TYPE: 'promotion_discount_type', // 优惠类型
   PROMOTION_COUPON_TEMPLATE_VALIDITY_TYPE: 'promotion_coupon_template_validity_type', // 优惠券模板有效期类型

@@ -68,7 +68,7 @@ public class BpmModelController {
 
     @GetMapping("/list")
     @Operation(summary = "获得模型分页")
-    @Parameter(name = "name", description = "模型名称", example = "棱信矩灵")
+    @Parameter(name = "name", description = "模型名称", example = "亚特")
     public CommonResult<List<BpmModelRespVO>> getModelList(@RequestParam(value = "name", required = false) String name) {
         List<Model> list = modelService.getModelList(name);
         if (CollUtil.isEmpty(list)) {
@@ -140,7 +140,7 @@ public class BpmModelController {
     @Parameters({
             @Parameter(name = "file", description = "流程模型 JSON 文件", required = true),
             @Parameter(name = "key", description = "流程标识，替换导入文件中的标识", example = "process_juling"),
-            @Parameter(name = "name", description = "流程名称，替换导入文件中的名称", example = "矩灵")
+            @Parameter(name = "name", description = "流程名称，替换导入文件中的名称", example = "亚特")
     })
     @PreAuthorize("@ss.hasPermission('bpm:model:import')")
     public CommonResult<String> importModel(@RequestParam("file") MultipartFile file,

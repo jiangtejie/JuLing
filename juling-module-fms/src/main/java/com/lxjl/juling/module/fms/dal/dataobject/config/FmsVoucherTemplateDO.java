@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * FMS 凭证模板 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "fms_voucher_template", autoResultMap = true)
 @KeySequence("fms_voucher_template_seq")

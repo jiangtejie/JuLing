@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * FMS 辅助核算项目 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsAuxiliaryItemMapper extends BaseMapperX<FmsAuxiliaryItemDO> {

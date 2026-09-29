@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * AI 知识库-基础信息 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface AiKnowledgeService {
 

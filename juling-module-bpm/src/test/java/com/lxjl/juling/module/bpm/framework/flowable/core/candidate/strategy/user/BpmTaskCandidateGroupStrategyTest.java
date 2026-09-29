@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@Disabled // TODO 棱信矩灵：临时注释
+@Disabled // TODO 亚特：临时注释
 public class BpmTaskCandidateGroupStrategyTest extends BaseMockitoUnitTest {
 
     @InjectMocks

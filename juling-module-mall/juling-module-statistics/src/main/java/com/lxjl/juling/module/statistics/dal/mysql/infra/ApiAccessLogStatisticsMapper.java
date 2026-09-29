@@ -6,11 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 
-// TODO @棱信矩灵：api 访问日志，现在会清理，可能要单独有个偏业务的访问表；
+// TODO @亚特：api 访问日志，现在会清理，可能要单独有个偏业务的访问表；
 /**
  * API 访问日志的统计 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 @SuppressWarnings("rawtypes")

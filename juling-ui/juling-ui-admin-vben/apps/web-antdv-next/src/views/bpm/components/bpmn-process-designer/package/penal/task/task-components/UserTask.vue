@@ -218,7 +218,7 @@ const resetTaskForm = () => {
 const changeCandidateStrategy = () => {
   userTaskForm.value.candidateParam = [];
   deptLevel.value = 1;
-  // 注释 by 棱信矩灵：这个交互很多用户反馈费解，上游社区讨论 所以暂时屏蔽
+  // 注释 by 亚特：这个交互很多用户反馈费解，上游社区讨论 所以暂时屏蔽
   // if (userTaskForm.value.candidateStrategy === CandidateStrategy.FORM_USER) {
   //   // 特殊处理表单内用户字段，当只有发起人选项时应选中发起人
   //   if (!userFieldOnFormOptions.value || userFieldOnFormOptions.value.length <= 1) {

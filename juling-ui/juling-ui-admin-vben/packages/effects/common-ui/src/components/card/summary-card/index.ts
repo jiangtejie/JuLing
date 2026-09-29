@@ -1,3 +1,3 @@
-// add by 棱信矩灵：总结卡片，目前 mall 模块在使用
+// add by 亚特：总结卡片，目前 mall 模块在使用
 export { default as SummaryCard } from './summary-card.vue';
 export * from './types';

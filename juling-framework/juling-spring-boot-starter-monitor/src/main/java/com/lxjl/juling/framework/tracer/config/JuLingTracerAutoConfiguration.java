@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * Tracer 配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AutoConfiguration
 @ConditionalOnClass(name = {

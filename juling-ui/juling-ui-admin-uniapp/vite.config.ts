@@ -30,7 +30,7 @@ import vitePluginEruda from './scripts/vite-plugin-eruda'
 import { createCopyNativeResourcesPlugin } from './vite-plugins/copy-native-resources'
 import syncManifestPlugin from './vite-plugins/sync-manifest-plugins'
 
-/** 矩灵 UI 组件解析器：本地 @/components/juling-ui/* 的组件 */
+/** 亚特 UI 组件解析器：本地 @/components/juling-ui/* 的组件 */
 function JuLingUiResolver(): ComponentResolver {
   return {
     type: 'component',
@@ -106,21 +106,15 @@ export default defineConfig(({ command, mode }) => {
           'src/pages-system', // “系统管理”模块
           'src/pages-infra', // “基础设施”模块
           'src/pages-bpm', // “工作流程”模块
-          'src/pages-crm', // “客户管理”模块
           'src/pages-statistics', // “统计中心”模块
-          'src/pages-iot', // “物联网”模块
-          'src/pages-member', // “会员中心”模块
-          'src/pages-pay', // “支付管理”模块
-          'src/pages-mp', // “公众号管理”模块
+          'src/pages-member', // “订货账号”模块
           'src/pages-mall', // “商城管理”模块
-          'src/pages-mes', // “生产制造”模块
           'src/pages-ai', // “人工智能”模块
-          'src/pages-im', // “即时通讯”模块
           'src/pages-erp', // “ERP 管理”模块
-          'src/pages-hrm', // “人力资源管理”模块
           'src/pages-fms', // “财务会计”模块
           'src/pages-wms', // “仓储管理”模块
-          'src/pages-pms', // “项目管理”模块
+          // 已随模块下线移除：pages-crm / pages-hrm / pages-iot / pages-im / pages-mes / pages-mp /
+          // pages-pms / pages-pay（pay 早前下线时目录已不存在，本次一并清掉配置）
         ],
         dts: 'src/types/uni-pages.d.ts',
       }),
@@ -138,7 +132,6 @@ export default defineConfig(({ command, mode }) => {
         excludePages: [
           '**/components/**/**.*',
           '**/sections/**/**.*',
-          'src/pages-crm/statistics/**',
         ],
       }),
       Uni(),

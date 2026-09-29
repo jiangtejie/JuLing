@@ -88,14 +88,11 @@ const MALL_DICT = {
   TRADE_DELIVERY_TYPE: 'trade_delivery_type', // 配送方式
   TRADE_ORDER_ITEM_AFTER_SALE_STATUS: 'trade_order_item_after_sale_status', // 订单项 - 售后状态
   TRADE_ORDER_STATUS: 'trade_order_status', // 订单 - 状态
+  TRADE_PAYMENT_PROOF_STATUS: 'trade_payment_proof_status', // 订单 - 收款状态（线下收款）
   TRADE_ORDER_TYPE: 'trade_order_type', // 订单 - 类型
-  BROKERAGE_BANK_NAME: 'brokerage_bank_name', // 佣金提现银行
-  BROKERAGE_BIND_MODE: 'brokerage_bind_mode', // 分销关系绑定模式
-  BROKERAGE_ENABLED_CONDITION: 'brokerage_enabled_condition', // 分佣模式
-  BROKERAGE_RECORD_BIZ_TYPE: 'brokerage_record_biz_type', // 佣金业务类型
-  BROKERAGE_RECORD_STATUS: 'brokerage_record_status', // 佣金状态
-  BROKERAGE_WITHDRAW_STATUS: 'brokerage_withdraw_status', // 佣金提现状态
-  BROKERAGE_WITHDRAW_TYPE: 'brokerage_withdraw_type', // 佣金提现类型
+  TRADE_ORDER_AUDIT_STATUS: 'trade_order_audit_status', // 交易订单 - 门店要货审核状态
+  TRADE_ORDER_ITEM_ALLOC_MODE: 'trade_order_item_alloc_mode', // 交易订单行 - 分料方式（统配/直拨）
+  TRADE_SETTLEMENT_MODE: 'trade_settlement_mode', // 门店 - 结算模式
 
   /** ========== MALL - 营销模块 ========== */
 
@@ -130,6 +127,7 @@ const CRM_DICT = {
 const ERP_DICT = {
   ERP_AUDIT_STATUS: 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE: 'erp_stock_record_biz_type', // 库存明细的业务类型
+  ERP_STORE_TYPE: 'erp_store_type', // ERP 客户/门店 - 店型
 } as const;
 
 /** ========== FMS - 财务管理模块 ========== */

@@ -46,8 +46,8 @@
               </view>
             </view>
             <!-- 消息内容 -->
-            <view class="mb-12rpx rounded-8rpx bg-[#f7f8f9] p-20rpx">
-              <view class="line-clamp-1 mb-8rpx text-30rpx text-[#323333] font-bold">
+            <view class="yd-bg-subtle mb-12rpx rounded-8rpx p-20rpx">
+              <view class="yd-text-main line-clamp-1 mb-8rpx text-30rpx font-bold">
                 {{ getDictLabel(DICT_TYPE.SYSTEM_NOTIFY_TEMPLATE_TYPE, item.templateType) }}
               </view>
               <view class="yd-text-sub line-clamp-2 text-28rpx">

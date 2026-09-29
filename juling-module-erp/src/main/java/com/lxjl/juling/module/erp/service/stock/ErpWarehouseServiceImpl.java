@@ -1,6 +1,7 @@
 package com.lxjl.juling.module.erp.service.stock;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
@@ -25,7 +26,7 @@ import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 /**
  * ERP 仓库 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -115,6 +116,14 @@ public class ErpWarehouseServiceImpl implements ErpWarehouseService {
     @Override
     public List<ErpWarehouseDO> getWarehouseList(Collection<Long> ids) {
         return warehouseMapper.selectByIds(ids);
+    }
+
+    @Override
+    public List<ErpWarehouseDO> getWarehouseListByType(String warehouseType) {
+        if (StrUtil.isBlank(warehouseType)) {
+            return Collections.emptyList();
+        }
+        return warehouseMapper.selectListByType(warehouseType);
     }
 
     @Override

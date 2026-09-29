@@ -25,7 +25,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
  * 安全配置独立于 {@link com.lxjl.juling.framework.security.config.JuLingWebSecurityConfigurerAdapter}，
  * 使用 HTTP Basic 认证保护 Admin Server 端点，不影响现有的 Token 认证机制
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Configuration(proxyBeanMethods = false)
 @EnableAdminServer

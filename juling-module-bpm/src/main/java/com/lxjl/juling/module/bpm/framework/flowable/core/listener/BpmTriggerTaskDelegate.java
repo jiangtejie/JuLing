@@ -22,7 +22,7 @@ import static com.lxjl.juling.module.bpm.framework.flowable.core.listener.BpmTri
  * <p>
  * 目前只有 Simple 设计器【触发器节点】使用
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component(BEAN_NAME)
 @Slf4j

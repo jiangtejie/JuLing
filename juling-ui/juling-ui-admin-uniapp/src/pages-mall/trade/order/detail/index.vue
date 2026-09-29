@@ -27,9 +27,6 @@
             <view><text class="yd-text-hint">来源：</text>{{ getDictLabel(DICT_TYPE.TERMINAL, formData.terminal) || '-' }}</view>
             <view><text class="yd-text-hint">类型：</text>{{ getDictLabel(DICT_TYPE.TRADE_ORDER_TYPE, formData.type) || '-' }}</view>
             <view><text class="yd-text-hint">支付：</text>{{ formData.payStatus ? '已支付' : '未支付' }}</view>
-            <view v-if="formData.brokerageUser">
-              <text class="yd-text-hint">推广用户：</text>{{ formData.brokerageUser.nickname || '-' }}
-            </view>
             <view v-if="formData.payOrderId">
               <text class="yd-text-hint">支付单号：</text>{{ formData.payOrderId }}
             </view>
@@ -60,18 +57,12 @@
           </view>
           <view class="yd-text-main text-26rpx space-y-10rpx">
             <view><text class="yd-text-hint">配送方式：</text>{{ getDictLabel(DICT_TYPE.TRADE_DELIVERY_TYPE, formData.deliveryType) || '-' }}</view>
-            <view v-if="formData.deliveryType === DeliveryTypeEnum.PICK_UP">
-              <text class="yd-text-hint">自提门店：</text>{{ pickUpStoreName || '-' }}
-            </view>
             <view v-if="formData.deliveryTime">
               <text class="yd-text-hint">发货时间：</text>{{ formatDateTime(formData.deliveryTime) }}
             </view>
             <view><text class="yd-text-hint">收件人：</text>{{ formData.receiverName || '-' }}</view>
             <view><text class="yd-text-hint">联系电话：</text>{{ formData.receiverMobile || '-' }}</view>
             <view><text class="yd-text-hint">收货地址：</text>{{ formData.receiverAreaName || '' }} {{ formData.receiverDetailAddress || '' }}</view>
-            <view v-if="formData.pickUpVerifyCode">
-              <text class="yd-text-hint">核销码：</text>{{ formData.pickUpVerifyCode }}
-            </view>
             <view v-if="formData.logisticsNo">
               <text class="yd-text-hint">物流单号：</text>{{ formData.logisticsNo }}
             </view>
@@ -136,7 +127,7 @@
     </scroll-view>
 
     <!-- 底部操作按钮：按状态/权限显式展示，每个动作各自的按钮 + 处理函数 -->
-    <view v-if="formData && (canRemark || canPrice || canDelivery || canAddress || canPickUp)" class="yd-detail-footer">
+    <view v-if="formData && (canRemark || canPrice || canDelivery || canAddress)" class="yd-detail-footer">
       <view class="yd-detail-footer-actions">
         <wd-button v-if="canRemark" class="flex-1" type="warning" @click="openRemark">
           备注
@@ -149,9 +140,6 @@
         </wd-button>
         <wd-button v-if="canAddress" class="flex-1" @click="openAddress">
           改地址
-        </wd-button>
-        <wd-button v-if="canPickUp" class="flex-1" type="success" :loading="submitting" @click="handlePickUp">
-          核销
         </wd-button>
       </view>
     </view>
@@ -277,7 +265,6 @@
 <script lang="ts" setup>
 import type { TradeOrder } from '@/api/mall/trade/order'
 import type { DeliveryExpress } from '@/api/mall/trade/delivery/express'
-import { useDialog } from '@wot-ui/ui/components/wd-dialog'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { onShow } from '@dcloudio/uni-app'
 import { computed, reactive, ref } from 'vue'
@@ -285,13 +272,11 @@ import {
   deliveryTradeOrder,
   getTradeOrder,
   getTradeOrderExpressTrackList,
-  pickUpTradeOrder,
   updateTradeOrderAddress,
   updateTradeOrderPrice,
   updateTradeOrderRemark,
 } from '@/api/mall/trade/order'
 import { getSimpleDeliveryExpressList } from '@/api/mall/trade/delivery/express'
-import { getSimpleDeliveryPickUpStoreList } from '@/api/mall/trade/delivery/pick-up-store'
 import { getAreaTree } from '@/api/system/area'
 import { getDictLabel } from '@/hooks/useDict'
 import { useAccess } from '@/hooks/useAccess'
@@ -311,7 +296,6 @@ definePage({
 
 const { hasAccessByCodes } = useAccess()
 const toast = useToast()
-const dialog = useDialog()
 const detailId = computed(() => props.id != null && props.id !== '' ? Number(props.id) : undefined) // 订单编号（路由透传）
 const formData = ref<TradeOrder>() // 订单详情
 const expressTracks = ref<Record<string, any>[]>([]) // 物流轨迹
@@ -329,15 +313,12 @@ const addressForm = reactive<Record<string, any>>({ receiverName: '', receiverMo
 const expressPickerVisible = ref(false) // 快递公司选择器
 const expressList = ref<DeliveryExpress[]>([]) // 快递公司列表
 const expressName = computed(() => expressList.value.find(item => item.id === deliveryForm.logisticsId)?.name || '') // 当前选中快递公司名
-const pickUpStoreList = ref<Record<string, any>[]>([]) // 自提门店列表（解析门店名）
-const pickUpStoreName = computed(() => pickUpStoreList.value.find(item => item.id === formData.value?.pickUpStoreId)?.name || '') // 自提门店名
 
 // 各动作可见性：按权限 + 订单状态 + 配送方式判断
 const canRemark = computed(() => !!formData.value && hasAccessByCodes(['trade:order:update'])) // 备注任意状态可改
 const canPrice = computed(() => canRemark.value && formData.value?.status === TradeOrderStatusEnum.UNPAID) // 待付款可改价
 const canDelivery = computed(() => canRemark.value && formData.value?.status === TradeOrderStatusEnum.UNDELIVERED && formData.value?.deliveryType === DeliveryTypeEnum.EXPRESS) // 待发货 + 快递
 const canAddress = computed(() => canDelivery.value) // 与发货同条件
-const canPickUp = computed(() => !!formData.value && hasAccessByCodes(['trade:order:pick-up']) && formData.value?.status === TradeOrderStatusEnum.UNDELIVERED && formData.value?.deliveryType === DeliveryTypeEnum.PICK_UP) // 待发货 + 自提
 
 /** 返回上一页 */
 function handleBack() {
@@ -452,22 +433,6 @@ async function handleAddress() {
   }
 }
 
-/** 订单核销（自提） */
-async function handlePickUp() {
-  try {
-    await dialog.confirm({ title: '提示', msg: '确定要核销该订单吗？' })
-  } catch {
-    return
-  }
-  submitting.value = true
-  try {
-    await pickUpTradeOrder(Number(detailId.value))
-    await afterSubmit()
-  } finally {
-    submitting.value = false
-  }
-}
-
 /** 初始化 */
 onShow(async () => {
   await Promise.all([
@@ -477,9 +442,6 @@ onShow(async () => {
     }),
     getSimpleDeliveryExpressList().then((list) => {
       expressList.value = list
-    }),
-    getSimpleDeliveryPickUpStoreList().then((list) => {
-      pickUpStoreList.value = list
     }),
   ])
 })

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import { adaptCartList } from '@/api/adapters/cart';
+import { adaptCartListResult } from '@/api/adapters/cart';
 import { getCartList } from '@/api/cart';
 import { STORAGE_KEYS } from '@/constants';
-import type { CartItem, Sku } from '@/types';
+import type { CartItem, InvalidCartItem, Sku } from '@/types';
 import { deepClone } from '@/utils/index';
 import { persistKey } from '@/utils/persist';
 import { resolvePrice } from '@/utils/price';
@@ -22,6 +22,15 @@ export const useCartStore = defineStore(
   'cart',
   () => {
     const items = ref<CartItem[]>([]);
+
+    /**
+     * 失效行项（后端购物车 `invalidList`：下架 / 库存不足等）。
+     *
+     * 单独存一份、且**不参与勾选与结算**（adapter 已强制 checked: false）：
+     * 之前只取 validList，下架的商品在 H5「凭空少了一件」，门店既看不到原因也删不掉。
+     * 不持久化：这批数据是服务端快照，跟着订单列表刷新即可，避免离线时长期展示过期结论。
+     */
+    const invalidItems = ref<InvalidCartItem[]>([]);
 
     /** 已勾选行项 */
     const checkedItems = computed(() => items.value.filter((item) => item.checked));
@@ -110,16 +119,26 @@ export const useCartStore = defineStore(
       item.tierPrice = resolved.isTierPrice;
     }
 
+    /** 删除行项：有效项与失效项一起删（失效商品也要能「移除」，否则它永远留在页面上） */
     function removeItems(skuIds: number[]): void {
       items.value = items.value.filter((item) => !skuIds.includes(item.skuId));
+      invalidItems.value = invalidItems.value.filter((item) => !skuIds.includes(item.skuId));
     }
 
     function clearChecked(): void {
       items.value = items.value.filter((item) => !item.checked);
     }
 
+    /**
+     * 清空订货单。
+     *
+     * 两个统一入口会调用它：会话重置（登出 / 401 掉线，见 utils/auth.resetSessionState）
+     * 与下单门店切换（见 stores/store.switchStore）——避免把上一账号 / 上一门店的
+     * 行项与价格带进新的会话。
+     */
     function clear(): void {
       items.value = [];
+      invalidItems.value = [];
     }
 
     /** 批量覆盖（用于服务端购物车同步 / 演示数据注入） */
@@ -134,11 +153,15 @@ export const useCartStore = defineStore(
      */
     async function loadFromServer(): Promise<void> {
       const resp = await getCartList();
-      setItems(adaptCartList(resp));
+      // validList + invalidList 一起取：失效项由购物车页面单独分组展示（灰显 + 失效原因 + 移除）
+      const result = adaptCartListResult(resp);
+      setItems(result.items);
+      invalidItems.value = result.invalidItems;
     }
 
     return {
       items,
+      invalidItems,
       checkedItems,
       totalQuantity,
       totalPrice,

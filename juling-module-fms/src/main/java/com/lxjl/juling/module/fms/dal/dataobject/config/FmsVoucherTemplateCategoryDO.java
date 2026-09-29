@@ -11,7 +11,7 @@ import lombok.ToString;
 /**
  * FMS 凭证模板分类 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_voucher_template_category")
 @KeySequence("fms_voucher_template_category_seq")

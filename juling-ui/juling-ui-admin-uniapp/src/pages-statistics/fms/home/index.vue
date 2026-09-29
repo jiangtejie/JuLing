@@ -88,7 +88,7 @@ const fmsStore = useFmsStore()
 const loading = ref(false) // 首页加载状态
 const metricLoading = ref(false) // 指标明细加载状态
 const home = ref<FmsHome>() // 首页数据
-const loadError = ref(false) // add by 棱信矩灵：加载失败标记，避免失败后各指标卡片用 || 0 渲染成满屏 0
+const loadError = ref(false) // add by 亚特：加载失败标记，避免失败后各指标卡片用 || 0 渲染成满屏 0
 const metricDetail = ref<FmsHomeMetricDetail>() // 指标明细
 const selectedMetricKey = ref<string>() // 选中的指标标识
 // TODO @AI：不做连续的 metricRequestSequence 校验；
@@ -120,7 +120,7 @@ async function getHome() {
       await selectMetric(firstMetric)
     }
   } catch {
-    // add by 棱信矩灵：此前只有 try/finally，失败后 home 保持 undefined，各卡片用 || 0 兜底渲染成满屏 0，
+    // add by 亚特：此前只有 try/finally，失败后 home 保持 undefined，各卡片用 || 0 兜底渲染成满屏 0，
     // 用户会得出「数据真的是 0」的错误结论，这里改为展示错误态 + 重新加载
     loadError.value = true
   } finally {

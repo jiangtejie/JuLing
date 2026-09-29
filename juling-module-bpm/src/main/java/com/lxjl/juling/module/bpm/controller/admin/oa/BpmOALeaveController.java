@@ -23,8 +23,8 @@ import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtil
 /**
  * OA 请假申请 Controller，用于演示自己存储数据，接入工作流的例子
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  */
 @Tag(name = "管理后台 - OA 请假申请")
 @RestController

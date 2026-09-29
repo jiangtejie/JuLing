@@ -1,10 +1,11 @@
-# 棱信矩灵 管理系统
+# 亚特 管理系统
 
-面向 **棱信矩灵** 自有业务的一体化管理平台：进销存、财务、生产制造、人力资源、项目与客户管理。
+面向 **亚特** 自有业务的一体化管理平台：进销存（ERP/WMS）、财务（FMS）、私域订货商城、审批（BPM）与单据平台。
 
 - 后端：Spring Boot 3.5 + JDK 17 + MyBatis-Plus + PostgreSQL 15 + Redis + Flowable + Quartz
 - 前端：Vue3 + Vben5 + Ant Design Vue（`juling-ui/juling-ui-admin-vben`），生产环境经 Nginx 发布
-- 移动端：uni-app（`juling-ui/juling-ui-admin-uniapp`、`juling-ui/juling-ui-mall-uniapp`）
+- 移动端：uni-app（`juling-ui/juling-ui-admin-uniapp`）
+- 商城收款：**线下转账**（客户下单后上传付款截图，后台核验收款/驳回重传），不接入线上支付
 - 数据库：PostgreSQL 15，库名 `juling`
 
 ## 目录结构
@@ -17,20 +18,16 @@ JuLing/
 ├─ juling-module-infra/         基础设施(代码生成/文件/定时任务/日志/配置…)
 ├─ juling-module-member/        会员中心
 ├─ juling-module-bpm/           工作流(Flowable)
-├─ juling-module-pay/           支付
-├─ juling-module-mp/            微信公众号
-├─ juling-module-mall/          商城(商品/促销/交易/统计)
-├─ juling-module-crm/           客户关系
+├─ juling-module-mall/          商城(商品/交易/统计)
 ├─ juling-module-erp/           进销存
-├─ juling-module-iot/           物联网
-├─ juling-module-mes/ wms/      生产制造 / 仓储
-├─ juling-module-hrm/ fms/ pms/ 人力资源 / 财务 / 项目管理
-├─ juling-module-im/            即时通讯(WebSocket 实时消息)
+├─ juling-module-wms/           仓储
+├─ juling-module-fms/           财务
+├─ juling-module-bill/          单据平台
 ├─ juling-module-ai/            AI 能力(大模型/知识库/绘图…)
 ├─ sql/                        数据库脚本(见下)
 ├─ script/                     运维与迁移脚本(备份/自检工具/本地补丁)
 ├─ run/start-backend.ps1       后端启动脚本
-└─ juling-ui/                   各前端源码(vben / admin-uniapp / mall-uniapp)
+└─ juling-ui/                   各前端源码(vben 管理后台 / admin-uniapp / mall-h5 订货商城)
 ```
 
 数据库脚本：
@@ -45,7 +42,9 @@ JuLing/
 
 ```powershell
 # 1) 依赖服务
-#    postgres: 127.0.0.1:5432  库 juling  用户/密码 root/123456
+#    postgres: 127.0.0.1:5432  库 yate    用户/密码 root/123456
+#    （本工作区使用亚特专属库 yate，由 juling 复制而来；主干/发布工作区仍连 juling）
+#    本工作区后端请用计划任务启停：Start-ScheduledTask / Stop-ScheduledTask -TaskName 'JuLing-Backend-Yate'
 #    redis   : 127.0.0.1:6379  密码 123456
 
 # 2) 后端（编译 + 启动）
@@ -61,7 +60,7 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 # Nginx: location /jl/ → alias 到上面的 dist；/admin-api/ → 48080；/infra/ws → WebSocket
 ```
 
-默认账号 `admin`（租户：棱信矩灵）。初始密码已由 `admin123` 改为自定义强密码，出于安全考虑
+默认账号 `admin`（租户：亚特）。初始密码已由 `admin123` 改为自定义强密码，出于安全考虑
 **不写入仓库**，仅存于本机文件 `script/local/admin-password.txt`（该目录已被 Git 排除）；
 如需重置，使用模板 `sql/local/admin_password_reset.sql`（把 BCrypt 值写回 `system_users`）。
 
@@ -70,7 +69,7 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 - **PostgreSQL 适配**：统计类 Mapper 的 SQL 已由 MySQL 方言改写为 PG 原生
   （`COALESCE` / `to_char` / `EXTRACT` / `STRING_TO_ARRAY`，以及 `deleted = 0` 等）。
   如需换回 MySQL，需自行改写统计类 Mapper 与代码生成模板。
-- **品牌**：界面标题、水印、菜单与提示文案统一为「棱信矩灵 / 矩灵」。
+- **品牌**：界面标题、水印、菜单与提示文案统一为「亚特」。
 - **命名约定**：Maven 坐标 `com.lxjl.boot:juling-*`，Java 包 `com.lxjl.juling.*`，配置键 `juling.*`，
   数据库库名 `juling`；新增业务模块按同一约定命名。
 - **许可**：MIT License，详见 [LICENSE](./LICENSE)。
@@ -85,8 +84,10 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 ```
 
-**未启用的模块不会注册任何 Controller**，此时请求该模块的路径会被
-`DefaultController` 兜底，返回 `code=501` 的可读提示（而不是 404）。
+**已从本仓库移除的模块**（`pay` 支付、`report` 报表）不会注册任何 Controller，
+请求它们的路径由 `DefaultController` 兜底，返回 `code=501` 的可读提示（说明为何没有该能力）。
+而**工程内已有模块**的路径写错时，返回的是标准 `404 请求地址不存在`——不再被兜底伪装成「模块未启用」，
+便于排查拼错的接口地址。
 
 启用某个模块的步骤：
 
@@ -101,12 +102,10 @@ Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 
 | 模块 | 额外依赖 / 说明 |
 |---|---|
-| `juling-module-iot` | 设备时序数据需要 TDengine；未部署时 `iot/statistics/*` 等接口会报错 |
-| `juling-module-mp` | 需要微信公众号的 appId/secret 等配置，未配置时公众号相关接口不可用 |
 | `juling-module-ai` | 需要各家大模型的 API Key（`juling.ai.*`，默认关闭） |
 
 > **数据报表**：本仓库**不包含**报表设计器模块。固定口径的业务报表（FMS 资产负债表/利润表/现金流量表、
-> HRM 考勤报表、MES/WMS 等）由各业务模块自带页面提供；如需业务人员自助拖拽做看板，
+> ERP/WMS 库存与进销存报表等）由各业务模块自带页面提供；如需业务人员自助拖拽做看板，
 > 建议独立部署 BI 工具（Metabase / Superset / Grafana）直连 PostgreSQL，用只读账号 + 视图/行级安全隔离数据。
 
 ## 仓库约定
@@ -114,11 +113,13 @@ Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 - **大文件拦截**（可选，每个克隆执行一次）：`git config core.hooksPath script/git-hooks`。
   提交超过 5MB 的文件会被拒绝（阈值可用环境变量 `LARGE_FILE_LIMIT_MB` 调整，`git commit --no-verify` 可临时绕过）；
   `.gitignore` 同时内置了常见大文件后缀（`*.exe` / `*.zip` / `*.mp4` / `*.psd` / `*.war` 等）。
-- **数据库**：本地库名 `juling`；模块补齐脚本、演示数据清理脚本与维护脚本都在 `sql/local/`，执行顺序见该目录 README。
+- **数据库**：本地库名 `juling`；本工作区（`JuLing-yate`）使用由 `juling` 复制的亚特专属库 `yate`，
+  主干/发布工作区仍连 `juling`；模块补齐脚本、演示数据清理脚本与维护脚本都在 `sql/local/`，执行顺序见该目录 README。
 - **管理员密码**：已改为自定义强密码且不入库，仅存于本机 `script/local/admin-password.txt`；
   重置用模板 `sql/local/admin_password_reset.sql`（仓库内只有占位符，没有真实口令/哈希）。
 - **数据库备份**：`script/backup/backup-postgres.ps1`（`pg_dump -Fc` + 归档校验 + 保留天数），
-  已注册 Windows 计划任务 `JuLing-Postgres-Backup` 每天 02:30 执行；恢复步骤见 `script/backup/README.md`。
+  已注册 Windows 计划任务 `JuLing-Postgres-Backup` 每天 02:30 备份 `juling`，
+  `JuLing-Postgres-Backup-Yate` 每天 02:45 备份 `yate`；恢复步骤见 `script/backup/README.md`。
 - **后端只监听本机**：`application-local.yaml` 中 `server.address: 127.0.0.1`，外部统一经 Nginx 访问；
   `/druid/*`、`/doc.html` 等运维入口不对外代理，Druid 控制台口令存于本机 `script/local/druid-console.txt`（不入库）；
   Nginx 侧片段归档在 `script/nginx/README.md`（线上配置在 Nginx 安装目录，仓库外）。

@@ -217,7 +217,7 @@
       <!-- 底部固定操作栏（van-action-bar 自带 safe-area 与 placeholder 占位） -->
       <van-action-bar class="detail__bar" placeholder safe-area-inset-bottom>
         <van-action-bar-icon
-          icon="shopping-cart-o"
+          icon="cart-o"
           text="订货单"
           :badge="cartStore.totalQuantity"
           :badge-props="{ showZero: false }"
@@ -267,6 +267,11 @@
     }
 
     &__head {
+      /* 这张卡片靠 margin-top: -12px 上压轮播 12px（设计如此，圆角压在图片下沿）。
+         必须显式定位：轮播 .van-swipe 是 position: relative 的定位元素，
+         静态元素按绘制顺序会被它盖住 —— 表现就是图片把卡片顶部的圆角切平了 */
+      position: relative;
+      z-index: 1;
       margin: -12px 12px 0;
       padding: 12px;
     }
@@ -324,6 +329,8 @@
 
     &__bar {
       --van-action-bar-height: 52px;
+      /* 主题色：主按钮（立即订货）用品牌渐变，与分类页动作栏的「去结算」保持一致 */
+      --van-action-bar-button-danger-color: var(--app-primary-gradient);
     }
   }
 </style>

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * AI 聊天角色 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface AiChatRoleMapper extends BaseMapperX<AiChatRoleDO> {

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 /**
  * 文件 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FileApi {
 

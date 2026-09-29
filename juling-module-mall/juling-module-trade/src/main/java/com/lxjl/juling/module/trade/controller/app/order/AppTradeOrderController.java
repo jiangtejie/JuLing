@@ -2,19 +2,21 @@ package com.lxjl.juling.module.trade.controller.app.order;
 
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
-import com.lxjl.juling.module.pay.api.notify.dto.PayOrderNotifyReqDTO;
+import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.trade.controller.app.order.vo.*;
-import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemRespVO;
 import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
+import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderStatusEnum;
 import com.lxjl.juling.module.trade.framework.order.config.TradeOrderProperties;
 import com.lxjl.juling.module.trade.service.aftersale.AfterSaleService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderPaymentProofService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderStoreService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import com.lxjl.juling.module.trade.service.price.TradePriceService;
 import com.google.common.collect.Maps;
@@ -53,9 +55,23 @@ public class AppTradeOrderController {
     private AfterSaleService afterSaleService;
     @Resource
     private TradePriceService priceService;
+    @Resource
+    private TradeOrderPaymentProofService tradeOrderPaymentProofService;
+    @Resource
+    private TradeOrderStoreService tradeOrderStoreService;
+
+    @Resource
+    private com.lxjl.juling.module.erp.api.customer.ErpCustomerApi erpCustomerApi;
 
     @Resource
     private TradeOrderProperties tradeOrderProperties;
+
+    @GetMapping("/store-list")
+    @Operation(summary = "获得可下单门店列表", description = "门店订货链：代理商账号可切换其名下门店下单")
+    public CommonResult<List<AppTradeOrderStoreRespVO>> getStoreList() {
+        return success(BeanUtils.toBean(tradeOrderStoreService.getStoreList(getLoginUserId()),
+                AppTradeOrderStoreRespVO.class));
+    }
 
     @GetMapping("/settlement")
     @Operation(summary = "获得订单结算信息")
@@ -78,34 +94,29 @@ public class AppTradeOrderController {
         return success(new AppTradeOrderCreateRespVO().setId(order.getId()).setPayOrderId(order.getPayOrderId()));
     }
 
-    @PostMapping("/update-paid")
-    @Operation(summary = "更新订单为已支付") // 由 pay-module 支付服务，进行回调，可见 PayNotifyJob
-    @PermitAll
-    public CommonResult<Boolean> updateOrderPaid(@RequestBody PayOrderNotifyReqDTO notifyReqDTO) {
-        tradeOrderUpdateService.updateOrderPaid(Long.valueOf(notifyReqDTO.getMerchantOrderId()),
-                notifyReqDTO.getPayOrderId());
-        return success(true);
+    @PostMapping("/payment-proof/create")
+    @Operation(summary = "提交订单付款凭证", description = "线下收款：上传付款截图，支持多次上传；核验进度见订单收款状态")
+    public CommonResult<Long> createPaymentProof(@Valid @RequestBody AppTradeOrderPaymentProofCreateReqVO createReqVO) {
+        return success(tradeOrderPaymentProofService.createPaymentProof(getLoginUserId(), createReqVO));
+    }
+
+    @GetMapping("/payment-proof/list")
+    @Operation(summary = "获得订单的付款凭证列表", description = "只能查询自己的订单")
+    @Parameter(name = "orderId", description = "交易订单编号", required = true, example = "1024")
+    public CommonResult<List<AppTradeOrderPaymentProofRespVO>> getPaymentProofList(@RequestParam("orderId") Long orderId) {
+        List<TradeOrderPaymentProofDO> list = tradeOrderPaymentProofService
+                .getPaymentProofListByOrderId(getLoginUserId(), orderId);
+        return success(BeanUtils.toBean(list, AppTradeOrderPaymentProofRespVO.class));
     }
 
     @GetMapping("/get-detail")
     @Operation(summary = "获得交易订单")
-    @Parameters({
-            @Parameter(name = "id", description = "交易订单编号"),
-            @Parameter(name = "sync", description = "是否同步支付状态", example = "true")
-    })
-    public CommonResult<AppTradeOrderDetailRespVO> getOrderDetail(@RequestParam("id") Long id,
-                                                                  @RequestParam(value = "sync", required = false) Boolean sync) {
-        // 1.1 查询订单
+    @Parameter(name = "id", description = "交易订单编号")
+    public CommonResult<AppTradeOrderDetailRespVO> getOrderDetail(@RequestParam("id") Long id) {
+        // 1.1 查询订单（线下收款：没有支付单需要同步）
         TradeOrderDO order = tradeOrderQueryService.getOrder(getLoginUserId(), id);
         if (order == null) {
             return success(null);
-        }
-        // 1.2 sync 仅在等待支付
-        if (Boolean.TRUE.equals(sync)
-                && TradeOrderStatusEnum.isUnpaid(order.getStatus()) && !order.getPayStatus()) {
-            tradeOrderUpdateService.syncOrderPayStatusQuietly(order.getId(), order.getPayOrderId());
-            // 重新查询，因为同步后，可能会有变化
-            order = tradeOrderQueryService.getOrder(id);
         }
 
         // 2.1 查询订单项
@@ -113,8 +124,12 @@ public class AppTradeOrderController {
         // 2.2 查询物流公司
         DeliveryExpressDO express = order.getLogisticsId() != null && order.getLogisticsId() > 0 ?
                 deliveryExpressService.getDeliveryExpress(order.getLogisticsId()) : null;
-        // 2.3 最终组合
-        return success(TradeOrderConvert.INSTANCE.convert02(order, orderItems, tradeOrderProperties, express));
+        // 2.3 最终组合（并补门店名：详情页要显示"这是哪家店的订单"）
+        AppTradeOrderDetailRespVO detail = TradeOrderConvert.INSTANCE.convert02(order, orderItems,
+                tradeOrderProperties, express);
+        fillCustomerName(java.util.Collections.singletonList(detail),
+                AppTradeOrderDetailRespVO::getCustomerId, AppTradeOrderDetailRespVO::setCustomerName);
+        return success(detail);
     }
 
     @GetMapping("/get-express-track-list")
@@ -134,7 +149,41 @@ public class AppTradeOrderController {
         List<TradeOrderItemDO> orderItems = tradeOrderQueryService.getOrderItemListByOrderId(
                 convertSet(pageResult.getList(), TradeOrderDO::getId));
         // 最终组合
-        return success(TradeOrderConvert.INSTANCE.convertPage02(pageResult, orderItems));
+        PageResult<AppTradeOrderPageItemRespVO> result = TradeOrderConvert.INSTANCE.convertPage02(pageResult, orderItems);
+        // 门店名不在 trade_order 上（只有 customer_id 快照），补一次客户主数据查询：
+        // 代理人账号管多家门店，列表必须能看出每单是哪家店的
+        fillCustomerName(result.getList(), AppTradeOrderPageItemRespVO::getCustomerId,
+                AppTradeOrderPageItemRespVO::setCustomerName);
+        return success(result);
+    }
+
+    /**
+     * 批量补齐门店名称（门店订货链：订单只快照了 customer_id）
+     *
+     * @param list     待补的 VO 列表
+     * @param getter   取门店编号
+     * @param setter   写门店名称
+     */
+    private <T> void fillCustomerName(List<T> list, java.util.function.Function<T, Long> getter,
+                                      java.util.function.BiConsumer<T, String> setter) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        Map<Long, String> nameMap = erpCustomerApi
+                .getCustomerList(convertSet(list, getter)).stream()
+                .filter(customer -> customer.getId() != null && customer.getName() != null)
+                .collect(java.util.stream.Collectors.toMap(
+                        com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO::getId,
+                        com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO::getName, (a, b) -> a));
+        if (nameMap.isEmpty()) {
+            return;
+        }
+        list.forEach(item -> {
+            Long customerId = getter.apply(item);
+            if (customerId != null) {
+                setter.accept(item, nameMap.get(customerId));
+            }
+        });
     }
 
     @GetMapping("/get-count")
@@ -142,19 +191,16 @@ public class AppTradeOrderController {
     public CommonResult<Map<String, Long>> getOrderCount() {
         Map<String, Long> orderCount = Maps.newLinkedHashMapWithExpectedSize(5);
         // 全部
-        orderCount.put("allCount", tradeOrderQueryService.getOrderCount(getLoginUserId(), null, null));
+        orderCount.put("allCount", tradeOrderQueryService.getOrderCount(getLoginUserId(), null));
         // 待付款（未支付）
         orderCount.put("unpaidCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.UNPAID.getStatus(), null));
+                TradeOrderStatusEnum.UNPAID.getStatus()));
         // 待发货
         orderCount.put("undeliveredCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.UNDELIVERED.getStatus(), null));
+                TradeOrderStatusEnum.UNDELIVERED.getStatus()));
         // 待收货
         orderCount.put("deliveredCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.DELIVERED.getStatus(), null));
-        // 待评价
-        orderCount.put("uncommentedCount", tradeOrderQueryService.getOrderCount(getLoginUserId(),
-                TradeOrderStatusEnum.COMPLETED.getStatus(), false));
+                TradeOrderStatusEnum.DELIVERED.getStatus()));
         // 售后数量
         orderCount.put("afterSaleCount", afterSaleService.getApplyingAfterSaleCount(getLoginUserId()));
         return success(orderCount);
@@ -192,12 +238,6 @@ public class AppTradeOrderController {
     public CommonResult<AppTradeOrderItemRespVO> getOrderItem(@RequestParam("id") Long id) {
         TradeOrderItemDO item = tradeOrderQueryService.getOrderItem(getLoginUserId(), id);
         return success(TradeOrderConvert.INSTANCE.convert03(item));
-    }
-
-    @PostMapping("/item/create-comment")
-    @Operation(summary = "创建交易订单项的评价")
-    public CommonResult<Long> createOrderItemComment(@RequestBody AppTradeOrderItemCommentCreateReqVO createReqVO) {
-        return success(tradeOrderUpdateService.createOrderItemCommentByMember(getLoginUserId(), createReqVO));
     }
 
 }

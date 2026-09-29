@@ -62,9 +62,41 @@ export function isLogin(): boolean {
   return Boolean(accessToken.value);
 }
 
+/**
+ * 统一会话重置入口：token + userInfo + 购物车 + 当前门店。
+ *
+ * 为什么需要：掉线（401）原先只清 token，A 账号持久化在 localStorage 里的
+ * **购物车**与 **currentStoreId** 会留给下一个登录的 B 账号 —— 表现为「串号 / 下错店」。
+ * 登出与掉线都走这里，保证换账号后不残留上一账号的数据。
+ *
+ * 放在 utils 层：axios 拦截器与各 store 都要用，而 store 反向依赖 utils；
+ * stores 用**动态 import** 引入（与 router 同样的手法），避免
+ * user store → utils/auth → user store 的循环依赖。
+ */
+export async function resetSessionState(): Promise<void> {
+  clearTokens();
+  try {
+    const [{ useUserStore }, { useCartStore }, { useStoreStore }] = await Promise.all([
+      import('@/stores/user'),
+      import('@/stores/cart'),
+      import('@/stores/store'),
+    ]);
+    useUserStore().reset();
+    useCartStore().clear();
+    useStoreStore().reset();
+  } catch (error) {
+    // 极端时序（pinia 还没安装好）不能让脏数据留在本地：退化为直接清持久化 key
+    console.warn('[auth] 重置会话状态失败，退化为清理本地持久化数据:', error);
+    storage.remove(STORAGE_KEYS.USER_INFO);
+    storage.remove(STORAGE_KEYS.CART);
+    storage.remove(STORAGE_KEYS.CURRENT_STORE);
+  }
+}
+
 /** 跳转登录页（保留回跳地址），使用动态 import 规避循环依赖 */
 export async function redirectToLogin(redirect?: string): Promise<void> {
-  clearTokens();
+  // 掉线 = 会话结束：token、会员信息、购物车、当前门店一并清掉，避免下一个账号串号
+  await resetSessionState();
   const { router } = await import('@/router');
   const current = redirect ?? router.currentRoute.value.fullPath;
   if (current.startsWith('/login')) return;

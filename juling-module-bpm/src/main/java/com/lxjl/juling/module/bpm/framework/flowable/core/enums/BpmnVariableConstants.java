@@ -5,7 +5,7 @@ import org.flowable.engine.runtime.ProcessInstance;
 /**
  * BPM Variable 通用常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class BpmnVariableConstants {
 

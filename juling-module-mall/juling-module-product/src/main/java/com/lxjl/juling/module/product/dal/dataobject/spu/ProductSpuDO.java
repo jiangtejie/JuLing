@@ -1,7 +1,6 @@
 package com.lxjl.juling.module.product.dal.dataobject.spu;
 
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
-import com.lxjl.juling.framework.mybatis.core.type.IntegerListTypeHandler;
 import com.lxjl.juling.module.product.dal.dataobject.brand.ProductBrandDO;
 import com.lxjl.juling.module.product.dal.dataobject.category.ProductCategoryDO;
 import com.lxjl.juling.module.product.dal.dataobject.sku.ProductSkuDO;
@@ -18,7 +17,7 @@ import java.util.List;
 /**
  * 商品 SPU DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "product_spu", autoResultMap = true)
 @KeySequence("product_spu_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -125,13 +124,6 @@ public class ProductSpuDO extends BaseDO {
     // ========== 物流相关字段 =========
 
     /**
-     * 配送方式数组
-     *
-     * 对应 DeliveryTypeEnum 枚举
-     */
-    @TableField(typeHandler = IntegerListTypeHandler.class)
-    private List<Integer> deliveryTypes;
-    /**
      * 物流配置模板编号
      *
      * 对应 TradeDeliveryExpressTemplateDO 的 id 编号
@@ -144,15 +136,6 @@ public class ProductSpuDO extends BaseDO {
      * 赠送积分
      */
     private Integer giveIntegral;
-
-    // TODO @puhui999：字段估计要改成 brokerageType
-    /**
-     * 分销类型
-     *
-     * false - 默认
-     * true - 自行设置
-     */
-    private Boolean subCommissionType;
 
     // ========== 统计相关字段 =========
 

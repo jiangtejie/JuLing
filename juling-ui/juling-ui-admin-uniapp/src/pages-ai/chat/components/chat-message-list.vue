@@ -123,7 +123,7 @@ function formatMessageTime(time: string) {
     width: 10rpx;
     height: 10rpx;
     border-radius: 50%;
-    background: #999;
+    background: var(--yd-text-hint);
     animation: ai-typing-bounce 1.2s infinite ease-in-out;
   }
 

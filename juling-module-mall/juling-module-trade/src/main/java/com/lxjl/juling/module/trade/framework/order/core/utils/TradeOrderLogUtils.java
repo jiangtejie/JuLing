@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * 交易订单的操作日志 Utils
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TradeOrderLogUtils {
 

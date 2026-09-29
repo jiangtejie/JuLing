@@ -40,9 +40,6 @@ public class AppTradeOrderDetailRespVO {
     @Schema(description = "订单取消时间")
     private LocalDateTime cancelTime;
 
-    @Schema(description = "是否评价", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean commentStatus;
-
     // ========== 价格 + 支付基本信息 ==========
 
     @Schema(description = "是否已支付", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
@@ -77,10 +74,41 @@ public class AppTradeOrderDetailRespVO {
     @Schema(description = "应付金额（总）", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
     private Integer payPrice;
 
+    // ========== 线下收款（付款凭证）基本信息 ==========
+
+    @Schema(description = "已确认收款金额（累计），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
+    private Integer paidAmount;
+
+    @Schema(description = "收款状态（TradeOrderReceiveStatusEnum）：0 未上传凭证、1 待核验、2 已驳回、3 部分收款、4 已收齐",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Integer paymentProofStatus;
+
+    // ========== 门店订货链：审核进度 ==========
+
+    @Schema(description = "审核状态（TradeOrderAuditStatusEnum）：0 待提交、10 审核中、20 已通过、30 已驳回", example = "10")
+    private Integer auditStatus;
+
+    @Schema(description = "审核意见（驳回原因等）", example = "数量需下调")
+    private String auditRemark;
+
     // ========== 收件 + 物流基本信息 ==========
 
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer deliveryType;
+
+    // ========== 门店订货链：下单门店与收货进度 ==========
+
+    @Schema(description = "下单门店（客户）编号", example = "6")
+    private Long customerId;
+
+    @Schema(description = "下单门店名称", example = "耙二哥双碑店")
+    private String customerName;
+
+    @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "DIRECT")
+    private String storeType;
+
+    @Schema(description = "收货状态：0 未收货 / 10 部分收货 / 20 已收货", example = "20")
+    private Integer receiptStatus;
 
     @Schema(description = "发货物流公司编号", example = "10")
     private Long logisticsId;
@@ -112,12 +140,6 @@ public class AppTradeOrderDetailRespVO {
     @Schema(description = "收件人详细地址", requiredMode = Schema.RequiredMode.REQUIRED, example = "中关村大街 1 号")
     private String receiverDetailAddress;
 
-    @Schema(description = "自提门店编号", example = "1088")
-    private Long pickUpStoreId;
-
-    @Schema(description = "自提核销码", example = "40964096")
-    private String pickUpVerifyCode;
-
     // ========== 售后基本信息 ==========
 
     @Schema(description = "售后状态", example = "0")
@@ -125,23 +147,6 @@ public class AppTradeOrderDetailRespVO {
 
     @Schema(description = "退款金额，单位：分", example = "100")
     private Integer refundPrice;
-
-    // ========== 营销基本信息 ==========
-
-    @Schema(description = "优惠劵编号", example = "1024")
-    private Long couponId;
-
-    @Schema(description = "优惠劵减免金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer couponPrice;
-
-    @Schema(description = "积分抵扣的金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-    private Integer pointPrice;
-
-    @Schema(description = "VIP 减免金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "888")
-    private Integer vipPrice;
-
-    @Schema(description = "拼团记录编号", example = "100")
-    private Long combinationRecordId;
 
     /**
      * 订单项数组

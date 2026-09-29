@@ -21,8 +21,8 @@ import java.util.Set;
 /**
  * 流程任务实例 Service 接口
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  */
 public interface BpmTaskService {
 

@@ -40,10 +40,10 @@ import static com.lxjl.juling.framework.web.core.util.WebFrameworkUtils.HEADER_T
  * {@link HandlerMethodArgumentResolver}.
  *
  * 针对 rabbitmq-spring 和 kafka-spring，不存在合适的拓展点，可以实现 Consumer 消费前，读取 Header 中的 tenant-id 设置到 {@link TenantContextHolder} 中
- * TODO 棱信矩灵：持续跟进，看看有没新的拓展点
+ * TODO 亚特：持续跟进，看看有没新的拓展点
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  * @since 4.0
  */
 public class InvocableHandlerMethod extends HandlerMethod {

@@ -1,7 +1,15 @@
 <script lang="ts" setup>
 import type { ModelCategoryInfo } from '#/api/bpm/model';
 
-import { onActivated, reactive, ref, useTemplateRef, watch } from 'vue';
+import {
+  onActivated,
+  onDeactivated,
+  onMounted,
+  reactive,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenModal } from '@vben/common-ui';
@@ -90,8 +98,33 @@ async function getList() {
   }
 }
 
-/** 初始化 */
+/**
+ * 首次挂载时加载。
+ *
+ * 注意：不能只依赖 onActivated。本页面通过 <KeepAlive :include="cachedTabs"> 缓存，
+ * 而 cachedTabs（页签缓存名单）是在路由跳转后由 tabbar store 异步写入的：
+ * 首次进入页面时组件先完成挂载，此时 include 里还没有当前路由名，
+ * KeepAlive 不会把该实例标记为「需要缓存」，Vue 也就不会在挂载时触发 onActivated，
+ * 导致首次进入列表为空；等切到别的页签再切回来时 include 已就绪，
+ * 组件被缓存并激活，onActivated 才触发，数据才出现。
+ */
+onMounted(() => {
+  getList();
+});
+
+/** 是否曾经被页签缓存「冻结」过，用于区分首次挂载与切回页签 */
+let deactivated = false;
+
+onDeactivated(() => {
+  deactivated = true;
+});
+
+/** 从其它页签切回本页时刷新数据（首次挂载已由 onMounted 加载，跳过避免重复请求） */
 onActivated(() => {
+  if (!deactivated) {
+    return;
+  }
+  deactivated = false;
   getList();
 });
 

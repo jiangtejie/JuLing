@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * FMS 初始余额 Excel VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @ExcelIgnoreUnannotated

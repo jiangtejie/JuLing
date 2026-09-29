@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 /**
  * 动态表单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -94,7 +94,7 @@ public class BpmFormServiceImpl implements BpmFormService {
      * @param fields field 数组
      */
     private void validateFields(List<String> fields) {
-        if (true) { // TODO 棱信矩灵：兼容 Vue3 工作流：因为采用了新的表单设计器，所以暂时不校验
+        if (true) { // TODO 亚特：兼容 Vue3 工作流：因为采用了新的表单设计器，所以暂时不校验
             return;
         }
         Map<String, String> fieldMap = new HashMap<>(); // key 是 vModel，value 是 label

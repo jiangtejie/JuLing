@@ -19,7 +19,7 @@ import java.util.Collections;
 /**
  * 安全服务工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class SecurityFrameworkUtils {
 

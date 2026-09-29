@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * FMS 账簿凭证分录 VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class FmsLedgerEntryVO {

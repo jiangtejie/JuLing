@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class SocialClientPageReqVO extends PageParam {
 
-    @Schema(description = "应用名", example = "矩灵商城")
+    @Schema(description = "应用名", example = "亚特商城")
     private String name;
 
     @Schema(description = "社交平台的类型", example = "31")

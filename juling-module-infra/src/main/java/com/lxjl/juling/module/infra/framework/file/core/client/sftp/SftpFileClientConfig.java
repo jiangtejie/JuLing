@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.URL;
 /**
  * Sftp 文件客户端的配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class SftpFileClientConfig implements FileClientConfig {

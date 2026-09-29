@@ -1,5 +1,5 @@
 ﻿<#
-  矩灵 PostgreSQL 备份脚本
+  亚特 PostgreSQL 备份脚本
 
   作用：把 WSL/Docker 中的 PostgreSQL 库导出为 custom-format 归档(.dump)，校验归档完整性，
         并按保留天数清理旧备份。

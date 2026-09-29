@@ -14,7 +14,7 @@ import lombok.ToString;
 /**
  * FMS 利润表配置 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_income_statement_config")
 @KeySequence("fms_income_statement_config_seq")

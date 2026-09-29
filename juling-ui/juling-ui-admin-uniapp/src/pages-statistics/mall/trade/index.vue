@@ -99,9 +99,9 @@ const summaryItems = computed<SummaryItem[]>(() => [
 const trendItems = computed<SummaryItem[]>(() => {
   const value = trend.value.value || {}
   const reference = trend.value.reference || {}
-  // 营业额、商品支付、充值、支出、余额支付、支付佣金、商品退款
-  const props = ['turnoverPrice', 'orderPayPrice', 'rechargePrice', 'expensePrice', 'walletPayPrice', 'brokerageSettlementPrice', 'afterSaleRefundPrice']
-  const labels = ['营业额', '商品支付', '充值', '支出', '余额支付', '支付佣金', '商品退款']
+  // 营业额、商品支付、充值、支出、余额支付、商品退款
+  const props = ['turnoverPrice', 'orderPayPrice', 'rechargePrice', 'expensePrice', 'walletPayPrice', 'afterSaleRefundPrice']
+  const labels = ['营业额', '商品支付', '充值', '支出', '余额支付', '商品退款']
   return props.map((prop, index) => ({
     label: labels[index],
     value: fenToYuan(value[prop]),
@@ -150,7 +150,7 @@ async function loadTab(tab: number) {
     tabError.value = false
     return
   }
-  // add by 棱信矩灵：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
+  // add by 亚特：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
   tabError.value = false
   const params = { times: times.value }
   if (tab === 0) {
@@ -188,7 +188,7 @@ async function handleTabChange({ index }: { index: number }) {
   }
 }
 
-/** add by 棱信矩灵：加载失败后重试当前分组 */
+/** add by 亚特：加载失败后重试当前分组 */
 async function handleRetryTab() {
   delete cache[tabCacheKey(activeTab.value)]
   loading.value = true

@@ -58,9 +58,6 @@
             账户信息
           </view>
           <wd-cell-group border>
-            <wd-cell title="当前余额" :value="`￥${fenToYuan(wallet.balance).toFixed(2)}`" />
-            <wd-cell title="充值金额" :value="`￥${fenToYuan(wallet.totalRecharge).toFixed(2)}`" />
-            <wd-cell title="支出金额" :value="`￥${fenToYuan(wallet.totalExpense).toFixed(2)}`" />
             <wd-cell title="当前积分" :value="member.point != null ? String(member.point) : '-'" />
             <wd-cell title="总积分" :value="member.totalPoint != null ? String(member.totalPoint) : '-'" />
           </wd-cell-group>
@@ -91,7 +88,7 @@
             <view class="yd-text-main line-clamp-2 text-28rpx">
               {{ row.spuName || `商品 #${row.spuId}` }}
             </view>
-            <view class="mt-8rpx text-26rpx text-[#ff3000]">
+            <view class="yd-text-price mt-8rpx text-26rpx">
               ￥{{ row.price }}
             </view>
             <view class="yd-text-hint mt-8rpx text-22rpx">
@@ -142,7 +139,7 @@
           </view>
           <view class="yd-text-hint yd-border-light mt-12rpx flex items-center justify-between border-t pt-12rpx text-24rpx">
             <text>{{ formatDate(order.createTime, 'YYYY-MM-DD HH:mm') }}</text>
-            <text>共 {{ order.productCount || 0 }} 件 实付 <text class="text-[#ff3000]">￥{{ fenToYuan(order.payPrice).toFixed(2) }}</text></text>
+            <text>共 {{ order.productCount || 0 }} 件 实付 <text class="yd-text-price">￥{{ fenToYuan(order.payPrice).toFixed(2) }}</text></text>
           </view>
         </view>
       </view>
@@ -153,11 +150,9 @@
 <script lang="ts" setup>
 import type { PageParam } from '@/http/types'
 import type { MemberUser } from '@/api/member/user'
-import type { PayWallet } from '@/api/pay/wallet/balance'
 import type { TradeOrder } from '@/api/mall/trade/order'
 import { computed, ref } from 'vue'
 import { getMemberUser } from '@/api/member/user'
-import { getPayWallet } from '@/api/pay/wallet/balance'
 import { getProductBrowseHistoryPage } from '@/api/mall/product/browse-history'
 import { getProductSpuDetailList } from '@/api/mall/product/spu'
 import { getTradeOrderPage } from '@/api/mall/trade/order'
@@ -179,7 +174,6 @@ const userId = computed(() => props.userId != null && props.userId !== '' ? Numb
 const activeTab = ref(0) // 当前 tab
 
 const member = ref<MemberUser>({}) // 会员信息
-const wallet = ref<PayWallet>({}) // 钱包信息
 
 interface BrowseRow { id?: number, spuId?: number, spuName?: string, picUrl?: string, price: string, createTime?: string }
 const browseList = ref<BrowseRow[]>([]) // 最近浏览
@@ -192,20 +186,14 @@ function handleBack() {
   navigateBackPlus()
 }
 
-/** 加载会员信息 + 钱包 */
+/** 加载会员信息 */
 async function loadMember() {
   if (!userId.value) {
     return
   }
-  const [memberRes, walletRes] = await Promise.allSettled([
-    getMemberUser(userId.value),
-    getPayWallet({ userId: userId.value }),
-  ])
+  const [memberRes] = await Promise.allSettled([getMemberUser(userId.value)])
   if (memberRes.status === 'fulfilled') {
     member.value = memberRes.value || {}
-  }
-  if (walletRes.status === 'fulfilled') {
-    wallet.value = walletRes.value || {}
   }
 }
 

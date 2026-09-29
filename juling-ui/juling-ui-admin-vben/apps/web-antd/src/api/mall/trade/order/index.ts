@@ -28,9 +28,18 @@ export namespace MallOrderApi {
     deliveryPrice?: number; // 运费金额
     adjustPrice?: number; // 订单调价（总）
     payPrice?: number; // 应付金额（总）
+    paidAmount?: number; // 门店申报收款金额（总）：未被驳回的付款凭证申报金额合计
+    paymentProofStatus?: number; // 收款状态（线下收款）：0 未上传凭证、2 已驳回、3 部分收款、4 已收齐（1「待核验」已不再产生）
+    deptId?: number; // 所属部门编号（门店所属 system_dept.id）
+    customerId?: number; // 门店客户编号
+    agentCustomerId?: number; // 上级代理客户编号
+    settlementMode?: string; // 结算模式：PREPAID 先款后货、MONTHLY 月结
+    auditStatus?: number; // 门店要货审核状态：0 待提交、10 审核中、20 已通过、30 已驳回
+    auditUserId?: number; // 审核人编号
+    auditTime?: Date; // 审核时间
+    auditRemark?: string; // 审核意见
+    processInstanceId?: string; // 审批流程实例编号
     deliveryType?: number; // 发货方式
-    pickUpStoreId?: number; // 自提门店编号
-    pickUpVerifyCode?: string; // 自提核销码
     deliveryTemplateId?: number; // 配送模板编号
     logisticsId?: number; // 发货物流公司编号
     logisticsNo?: string; // 发货物流单号
@@ -55,12 +64,6 @@ export namespace MallOrderApi {
       id?: number; // 用户编号
       nickname?: string; // 用户昵称
     };
-    brokerageUser?: {
-      // 推广用户信息
-      avatar?: string; // 用户头像
-      id?: number; // 用户编号
-      nickname?: string; // 用户昵称
-    }; // 推广用户信息
     logs?: OrderLog[]; // 订单操作日志
   }
 
@@ -106,7 +109,13 @@ export namespace MallOrderApi {
     afterSalePrice: number; // 退款金额
   }
 
-  /** 订单发货请求 */
+  /**
+   * 订单发货请求。
+   *
+   * 后台已无手工发货入口（门店要货的发货只由 ERP 配送出库单审核承接），
+   * deliveryOrder 函数已随之删除；但该类型仍被 remark-form.vue 的 formData 引用
+   * （历史拷贝遗留），删掉会直接编译报错，故先保留。
+   */
   export interface OrderUpdateDeliveryReqVO {
     id?: number; // 订单编号
     expressType: string; // 发货方式
@@ -124,6 +133,23 @@ export namespace MallOrderApi {
   export interface OrderUpdatePriceReqVO {
     id: number; // 订单编号
     adjustPrice: number; // 调整金额，单位：分
+  }
+
+  /** 付款凭证 */
+  export interface PaymentProof {
+    id?: number; // 凭证编号
+    orderId?: number; // 交易订单编号
+    urls?: string[]; // 付款凭证图片地址（多图）
+    amount?: number; // 门店申报收款金额，单位：分
+    confirmedAmount?: number; // 财务审批认定金额，单位：分（审批通过 = 申报金额）
+    payerName?: string; // 付款人姓名
+    payChannelCode?: string; // 收款渠道
+    transferTime?: Date; // 转账时间
+    remark?: string; // 客户备注
+    status?: number; // 单条凭证状态：0 待审核（上传即此值）、1 已认定（审批通过）、2 已驳回（审批驳回）
+    auditTime?: Date; // 审批时间
+    auditRemark?: string; // 审批意见（驳回原因）
+    createTime?: Date; // 提交时间
   }
 
   /** 订单地址请求 */
@@ -168,11 +194,6 @@ export function getExpressTrackList(id: number) {
   return requestClient.get(`/trade/order/get-express-track-list?id=${id}`);
 }
 
-/** 订单发货 */
-export function deliveryOrder(data: MallOrderApi.OrderUpdateDeliveryReqVO) {
-  return requestClient.put('/trade/order/delivery', data);
-}
-
 /** 订单备注 */
 export function updateOrderRemark(data: MallOrderApi.OrderUpdateRemarkReqVO) {
   return requestClient.put('/trade/order/update-remark', data);
@@ -188,22 +209,15 @@ export function updateOrderAddress(data: MallOrderApi.OrderUpdateAddressReqVO) {
   return requestClient.put('/trade/order/update-address', data);
 }
 
-/** 订单核销 */
-export function pickUpOrder(id: number) {
-  return requestClient.put(`/trade/order/pick-up-by-id?id=${id}`);
-}
-
-/** 订单核销 */
-export function pickUpOrderByVerifyCode(pickUpVerifyCode: string) {
-  return requestClient.put('/trade/order/pick-up-by-verify-code', undefined, {
-    params: { pickUpVerifyCode },
-  });
-}
-
-/** 查询核销码对应的订单 */
-export function getOrderByPickUpVerifyCode(pickUpVerifyCode: string) {
-  return requestClient.get<MallOrderApi.Order>(
-    '/trade/order/get-by-pick-up-verify-code',
-    { params: { pickUpVerifyCode } },
+/** 查询订单的付款凭证列表 */
+export function getPaymentProofList(orderId: number) {
+  return requestClient.get<MallOrderApi.PaymentProof[]>(
+    '/trade/order/payment-proof/list',
+    { params: { orderId } },
   );
+}
+
+/** 提交门店要货审核 */
+export function submitOrderAudit(id: number) {
+  return requestClient.put('/trade/order/submit-audit', null, { params: { id } });
 }

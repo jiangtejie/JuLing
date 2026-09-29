@@ -8,14 +8,14 @@
     />
 
     <!-- 使用情况提示 -->
-    <view v-if="!id && parentSubjectUsed" class="yd-text-warning m-24rpx mb-0 rounded-12rpx bg-[#fffbe6] p-24rpx text-26rpx">
+    <view v-if="!id && parentSubjectUsed" class="yd-text-warning yd-bg-warning-soft m-24rpx mb-0 rounded-12rpx p-24rpx text-26rpx">
       {{
         subjectUsage.childCount > 0
           ? '上级科目已有业务数据和下级科目，当前数据状态不允许继续新增下级'
           : `上级科目已有 ${subjectUsage.voucherEntryCount} 条凭证分录、${subjectUsage.initialBalanceCount} 条初始余额和 ${subjectUsage.auxiliaryCombinationCount} 个辅助核算组合，创建后将全部迁移到新科目`
       }}
     </view>
-    <view v-else-if="id && (subjectUsage.used || subjectUsage.childCount > 0)" class="yd-text-warning m-24rpx mb-0 rounded-12rpx bg-[#fffbe6] p-24rpx text-26rpx">
+    <view v-else-if="id && (subjectUsage.used || subjectUsage.childCount > 0)" class="yd-text-warning yd-bg-warning-soft m-24rpx mb-0 rounded-12rpx p-24rpx text-26rpx">
       {{
         subjectUsage.used
           ? '该科目已有业务数据，余额方向和辅助核算不能修改'

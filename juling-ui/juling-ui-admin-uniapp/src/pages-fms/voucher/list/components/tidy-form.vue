@@ -116,7 +116,7 @@ async function handleSubmit() {
     toast.warning('请选择凭证字')
     return
   }
-  // add by 棱信矩灵：整理会重排整期（含已审核）凭证号且不可撤销，补二次确认
+  // add by 亚特：整理会重排整期（含已审核）凭证号且不可撤销，补二次确认
   try {
     await dialog.confirm({
       title: '提示',

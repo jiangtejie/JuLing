@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 /**
  * FMS 现金流量表扩展配置 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_cash_flow_extend_config")
 @KeySequence("fms_cash_flow_extend_config_seq")

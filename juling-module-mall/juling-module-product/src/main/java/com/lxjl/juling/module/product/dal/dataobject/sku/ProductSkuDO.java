@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 商品 SKU DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "product_sku", autoResultMap = true)
 @KeySequence("product_sku_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -77,15 +77,6 @@ public class ProductSkuDO extends BaseDO {
      */
     private Double volume;
 
-    /**
-     * 一级分销的佣金，单位：分
-     */
-    private Integer firstBrokeragePrice;
-    /**
-     * 二级分销的佣金，单位：分
-     */
-    private Integer secondBrokeragePrice;
-
     // ========== 营销相关字段 =========
 
     // ========== 统计相关字段 =========
@@ -131,4 +122,3 @@ public class ProductSkuDO extends BaseDO {
     }
 
 }
-

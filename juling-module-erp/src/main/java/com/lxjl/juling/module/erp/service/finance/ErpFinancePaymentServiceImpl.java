@@ -6,6 +6,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.finance.vo.payment.ErpFinancePaymentPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.finance.vo.payment.ErpFinancePaymentSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.finance.ErpFinancePaymentDO;
@@ -14,7 +18,6 @@ import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseReturnDO;
 import com.lxjl.juling.module.erp.dal.mysql.finance.ErpFinancePaymentItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.finance.ErpFinancePaymentMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.common.ErpBizTypeEnum;
 import com.lxjl.juling.module.erp.service.purchase.ErpPurchaseInService;
@@ -35,12 +38,12 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
+// TODO 亚特：记录操作日志
 
 /**
  * ERP 付款单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -52,7 +55,7 @@ public class ErpFinancePaymentServiceImpl implements ErpFinancePaymentService {
     private ErpFinancePaymentItemMapper financePaymentItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpSupplierService supplierService;
@@ -82,8 +85,8 @@ public class ErpFinancePaymentServiceImpl implements ErpFinancePaymentService {
         if (createReqVO.getFinanceUserId() != null) {
             adminUserApi.validateUser(createReqVO.getFinanceUserId());
         }
-        // 1.5 生成付款单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.FINANCE_PAYMENT_NO_PREFIX);
+        // 1.5 生成付款单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.FINANCE_PAYMENT, null);
         if (financePaymentMapper.selectByNo(no) != null) {
             throw exception(FINANCE_PAYMENT_NO_EXISTS);
         }
@@ -96,6 +99,12 @@ public class ErpFinancePaymentServiceImpl implements ErpFinancePaymentService {
         // 2.2 插入付款单项
         paymentItems.forEach(o -> o.setPaymentId(payment.getId()));
         financePaymentItemMapper.insertBatch(paymentItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.FINANCE_PAYMENT).setBillId(payment.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(payment.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新采购入库、退货的付款金额情况
         updatePurchasePrice(paymentItems);

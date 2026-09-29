@@ -19,6 +19,8 @@ export namespace ErpProductApi {
     purchasePrice: number; // 采购价格，单位：元
     salePrice: number; // 销售价格，单位：元
     minPrice: number; // 最低价格，单位：元
+    allowCentral?: boolean; // 是否允许统配（中心库配送出库）
+    allowDirect?: boolean; // 是否允许直拨（下采购订单、供应商直送门店）
   }
 }
 

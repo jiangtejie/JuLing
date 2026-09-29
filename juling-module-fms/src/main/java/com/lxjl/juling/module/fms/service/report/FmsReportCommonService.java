@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * 负责资产负债、利润和现金流量三大报表共用的账簿余额查询、报表公式解析计算和公式覆盖检查
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FmsReportCommonService {
 

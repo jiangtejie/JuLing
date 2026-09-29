@@ -2,7 +2,7 @@ const env = import.meta.env;
 
 /** 应用级配置：统一从环境变量读取，业务代码不要直接访问 import.meta.env */
 export const appConfig = {
-  title: env.VITE_APP_TITLE || '矩灵订货商城',
+  title: env.VITE_APP_TITLE || '亚特订货商城',
   tenantId: env.VITE_APP_TENANT_ID || '1',
   storagePrefix: env.VITE_STORAGE_PREFIX || 'juling-mall-h5-',
   apiPrefix: env.VITE_API_PREFIX || '/app-api',

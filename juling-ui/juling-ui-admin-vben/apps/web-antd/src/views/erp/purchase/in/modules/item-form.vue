@@ -9,13 +9,14 @@ import {
   erpPriceMultiply,
 } from '@vben/utils';
 
-import { Input, InputNumber, Select } from 'ant-design-vue';
+import { DatePicker, Input, InputNumber, Select } from 'ant-design-vue';
 
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getProductSimpleList } from '#/api/erp/product/product';
 import { getWarehouseStockCount } from '#/api/erp/stock/stock';
 import { getWarehouseSimpleList } from '#/api/erp/stock/warehouse';
 
+import { formatBatchDate } from '../../../stock/batch/data';
 import { useFormItemColumns } from '../data';
 
 interface Props {
@@ -151,7 +152,7 @@ async function handleWarehouseChange(row: ErpPurchaseInApi.PurchaseInItem) {
 
 /** 处理行数据变更 */
 function handleRowChange(row: any) {
-  // TODO 棱信矩灵
+  // TODO 亚特
   const index = tableData.value.findIndex((item) => item.seq === row.seq);
   if (index === -1) {
     tableData.value.push(row);
@@ -163,6 +164,9 @@ function handleRowChange(row: any) {
 
 /** 初始化行数据 */
 function initRow(row: ErpPurchaseInApi.PurchaseInItem) {
+  // 后端把 LocalDate 序列化成数组（如 [2026,9,25]），DatePicker 只认字符串，这里先归一
+  row.productionDate = formatBatchDate(row.productionDate) || undefined;
+  row.expiryDate = formatBatchDate(row.expiryDate) || undefined;
   if (row.productPrice && row.count) {
     row.totalProductPrice = erpPriceMultiply(row.productPrice, row.count) ?? 0;
     row.taxPrice =
@@ -245,6 +249,38 @@ onMounted(async () => {
     <template #remark="{ row }">
       <Input v-if="!disabled" v-model:value="row.remark" class="w-full" />
       <span v-else>{{ row.remark || '-' }}</span>
+    </template>
+    <template #batchNo="{ row }">
+      <Input
+        v-if="!disabled"
+        v-model:value="row.batchNo"
+        placeholder="为空则按日期自动生成"
+        class="w-full"
+        @change="handleRowChange(row)"
+      />
+      <span v-else>{{ row.batchNo || '-' }}</span>
+    </template>
+    <template #productionDate="{ row }">
+      <DatePicker
+        v-if="!disabled"
+        v-model:value="row.productionDate"
+        value-format="YYYY-MM-DD"
+        placeholder="选择生产日期"
+        class="w-full"
+        @change="handleRowChange(row)"
+      />
+      <span v-else>{{ formatBatchDate(row.productionDate) || '-' }}</span>
+    </template>
+    <template #expiryDate="{ row }">
+      <DatePicker
+        v-if="!disabled"
+        v-model:value="row.expiryDate"
+        value-format="YYYY-MM-DD"
+        placeholder="选择有效期"
+        class="w-full"
+        @change="handleRowChange(row)"
+      />
+      <span v-else>{{ formatBatchDate(row.expiryDate) || '-' }}</span>
     </template>
     <template #taxPercent="{ row }">
       <InputNumber

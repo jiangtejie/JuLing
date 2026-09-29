@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 /**
  * ERP 仓库 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_warehouse")
 @KeySequence("erp_warehouse_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -66,5 +66,19 @@ public class ErpWarehouseDO extends BaseDO {
      * 是否默认
      */
     private Boolean defaultStatus;
+    /**
+     * 仓库类型：CENTER 中心库 / STORE 门店仓
+     *
+     * 门店仓由 sql/local/38 脚本按「一店一仓」自动生成，承载门店收货后的门店库存账。
+     */
+    private String warehouseType;
+    /**
+     * 门店客户编号（erp_customer.id）；中心库为空
+     */
+    private Long storeCustomerId;
+    /**
+     * 门店部门编号（system_dept.id）；中心库为空
+     */
+    private Long deptId;
 
 }

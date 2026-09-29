@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 发起人自选 {@link BpmTaskCandidateUserStrategy} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmTaskCandidateStartUserSelectStrategy extends AbstractBpmTaskCandidateDeptLeaderStrategy {

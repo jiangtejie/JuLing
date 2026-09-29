@@ -153,7 +153,7 @@ function handleBack() {
 /** 加载商品概况 */
 async function loadSummary() {
   const key = cacheKey('summary')
-  // add by 棱信矩灵：失败不写缓存，避免一次网络抖动后概况永久为空
+  // add by 亚特：失败不写缓存，避免一次网络抖动后概况永久为空
   const data = await getProductStatisticsAnalyse({ times: times.value }).catch(() => undefined)
   if (data === undefined) {
     return
@@ -168,7 +168,7 @@ async function loadTab(tab: number) {
     tabError.value = false
     return
   }
-  // add by 棱信矩灵：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
+  // add by 亚特：失败不写缓存（否则一次网络抖动后该分组永久显示「暂无统计数据」），改为置错误态
   tabError.value = false
   // 明细金额由分转元，避免金额 ×100
   if (tab === 0) {
@@ -195,7 +195,7 @@ async function loadTab(tab: number) {
   }))
 }
 
-/** add by 棱信矩灵：加载失败后重试当前分组 */
+/** add by 亚特：加载失败后重试当前分组 */
 async function handleRetryTab() {
   delete cache[cacheKey(activeTab.value)]
   loading.value = true

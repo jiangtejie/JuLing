@@ -15,7 +15,7 @@ import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeCo
 /**
  * 演示 Filter，禁止用户发起写操作，避免影响测试数据
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class DemoFilter extends OncePerRequestFilter {
 

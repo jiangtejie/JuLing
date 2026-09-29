@@ -3,7 +3,7 @@ package com.lxjl.juling.framework.common.core;
 /**
  * 可生成 T 数组的接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ArrayValuable<T> {
 

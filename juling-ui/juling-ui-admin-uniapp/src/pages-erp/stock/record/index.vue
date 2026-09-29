@@ -90,10 +90,10 @@ function handleBack() {
 function getCountClass(value?: any) {
   const count = Number(value || 0)
   if (count > 0) {
-    return 'text-[#16a34a]'
+    return 'yd-text-success-strong'
   }
   if (count < 0) {
-    return 'text-[#dc2626]'
+    return 'yd-text-danger-strong'
   }
   return 'yd-text-main'
 }

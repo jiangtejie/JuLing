@@ -6,10 +6,9 @@ import lombok.Data;
 /**
  * 管理员用户资料（昵称 / 头像）变更消息
  * <p>
- * 仅当 nickname 或 avatar 真的发生变化时才发送；订阅方据此做下游分发，
- * 例如 IM 模块向该用户的所有好友推送 FRIEND_INFO_UPDATED 通知
+ * 仅当 nickname 或 avatar 真的发生变化时才发送；订阅方据此做下游分发
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class AdminUserProfileUpdateMessage {

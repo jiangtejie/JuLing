@@ -20,7 +20,7 @@ import static com.lxjl.juling.module.ai.enums.ErrorCodeConstants.API_KEY_NOT_EXI
 /**
  * AI API 密钥 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

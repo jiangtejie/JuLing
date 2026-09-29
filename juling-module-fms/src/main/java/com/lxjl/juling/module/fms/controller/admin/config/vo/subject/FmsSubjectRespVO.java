@@ -18,7 +18,7 @@ import static com.lxjl.juling.module.infra.enums.DictTypeConstants.BOOLEAN_STRIN
 /**
  * FMS 科目 Response VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - FMS 科目 Response VO")
 @Data

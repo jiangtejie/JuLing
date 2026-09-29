@@ -81,7 +81,7 @@
                 <view class="yd-text-main line-clamp-2 text-26rpx">
                   {{ item.title || '商品' }}
                 </view>
-                <view class="mt-8rpx text-26rpx text-[#ff3000]">
+                <view class="yd-text-price mt-8rpx text-26rpx">
                   ￥{{ item.price }}
                 </view>
               </view>
@@ -95,7 +95,7 @@
                 订单号：{{ item.orderNo || '-' }}
               </view>
               <view class="yd-text-hint mt-8rpx text-22rpx">
-                共 {{ item.productCount || 0 }} 件，总金额：<text class="text-[#ff3000]">￥{{ item.payPrice }}</text>
+                共 {{ item.productCount || 0 }} 件，总金额：<text class="yd-text-price">￥{{ item.payPrice }}</text>
               </view>
             </view>
             <!-- 文本消息：客服蓝底白字，用户白底深字 -->
@@ -146,7 +146,7 @@
             <view
               v-for="emoji in KEFU_EMOJIS"
               :key="emoji"
-              class="w-[12.5%] py-12rpx text-center text-44rpx active:bg-[#e6e6e6]"
+              class="w-[12.5%] py-12rpx text-center text-44rpx active:bg-[var(--yd-border-base)]"
               @click="appendEmoji(emoji)"
             >
               {{ emoji }}

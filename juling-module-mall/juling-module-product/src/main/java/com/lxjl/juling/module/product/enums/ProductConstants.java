@@ -3,7 +3,7 @@ package com.lxjl.juling.module.product.enums;
 /**
  * Product 常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ProductConstants {
 

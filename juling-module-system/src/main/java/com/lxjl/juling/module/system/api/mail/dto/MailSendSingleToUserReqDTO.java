@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 邮件发送 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class MailSendSingleToUserReqDTO {

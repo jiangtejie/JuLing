@@ -27,7 +27,7 @@ import static com.lxjl.juling.module.fms.enums.LogRecordConstants.FMS_DIGEST_UPD
 /**
  * FMS 常用摘要 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

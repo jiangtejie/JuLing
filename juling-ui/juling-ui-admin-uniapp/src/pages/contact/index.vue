@@ -36,9 +36,9 @@
 
       <!-- 用户列表 -->
       <view v-if="currentDeptList.length > 0 && currentUserList.length > 0" class="my-24rpx flex items-center">
-        <view class="h-1rpx flex-1 bg-[#ddd]" />
+        <view class="yd-bg-line h-1rpx flex-1" />
         <text class="yd-text-hint mx-16rpx text-24rpx">部门成员</text>
-        <view class="h-1rpx flex-1 bg-[#ddd]" />
+        <view class="yd-bg-line h-1rpx flex-1" />
       </view>
       <view
         v-for="item in currentUserList"

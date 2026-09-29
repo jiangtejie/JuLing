@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * 商品分类 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ProductCategoryApi {
 

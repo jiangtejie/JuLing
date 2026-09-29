@@ -41,6 +41,20 @@ export const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/user/password',
+    name: 'UserPassword',
+    component: () => import('@/views/user/password.vue'),
+    meta: { title: '修改密码', auth: true },
+  },
+  {
+    // 我的账（门店往来）：只读台账，多门店账号可按门店查看逐笔明细
+    path: '/user/account',
+    name: 'UserAccount',
+    component: () => import('@/views/user/account.vue'),
+    meta: { title: '我的账', auth: true },
+  },
+
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
@@ -71,6 +85,25 @@ export const routes: RouteRecordRaw[] = [
     name: 'OrderList',
     component: () => import('@/views/order/list.vue'),
     meta: { title: '我的订单', auth: true },
+  },
+  {
+    path: '/order/receipt-list',
+    name: 'StoreReceiptList',
+    component: () => import('@/views/order/receipt-list.vue'),
+    meta: { title: '待收货', auth: true },
+  },
+  {
+    // 按订单号取收货单（订单与收货单一对一），status=0 可提交，10/20 只读
+    path: '/order/receipt-confirm/:orderId',
+    name: 'StoreReceiptConfirm',
+    component: () => import('@/views/order/receipt-confirm.vue'),
+    meta: { title: '确认收货', auth: true },
+  },
+  {
+    path: '/order/:id/payment',
+    name: 'OrderPayment',
+    component: () => import('@/views/order/payment.vue'),
+    meta: { title: '上传付款凭证', auth: true },
   },
   {
     path: '/order/:id',

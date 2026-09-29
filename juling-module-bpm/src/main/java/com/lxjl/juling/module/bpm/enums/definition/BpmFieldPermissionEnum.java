@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * BPM 表单权限的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

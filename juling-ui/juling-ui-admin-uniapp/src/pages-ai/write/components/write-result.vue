@@ -3,7 +3,7 @@
     <view v-if="content || writing" class="p-28rpx">
       <view class="mb-20rpx flex items-center justify-between">
         <view class="flex items-center gap-12rpx">
-          <view class="h-48rpx w-48rpx flex items-center justify-center rounded-14rpx bg-[#615ced] text-22rpx text-white font-semibold">
+          <view class="yd-bg-accent-indigo h-48rpx w-48rpx flex items-center justify-center rounded-14rpx text-22rpx text-white font-semibold">
             AI
           </view>
           <text class="yd-text-main text-28rpx font-medium">当前文章</text>
@@ -19,7 +19,7 @@
       />
     </view>
     <view v-else class="h-full flex flex-col items-center justify-center px-64rpx text-center">
-      <view class="h-112rpx w-112rpx flex items-center justify-center rounded-32rpx bg-[#eeedff]">
+      <view class="yd-bg-accent-indigo-soft h-112rpx w-112rpx flex items-center justify-center rounded-32rpx">
         <wd-icon name="edit" size="54rpx" color="#615ced" />
       </view>
       <view class="yd-text-main mt-28rpx text-32rpx font-semibold">

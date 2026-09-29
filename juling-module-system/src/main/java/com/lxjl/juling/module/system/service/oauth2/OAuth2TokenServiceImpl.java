@@ -39,7 +39,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * OAuth2.0 Token Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class OAuth2TokenServiceImpl implements OAuth2TokenService {

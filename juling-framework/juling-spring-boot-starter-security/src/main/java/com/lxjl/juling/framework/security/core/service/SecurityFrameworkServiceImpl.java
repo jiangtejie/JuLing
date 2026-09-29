@@ -14,7 +14,7 @@ import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtil
 /**
  * 默认的 {@link SecurityFrameworkService} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {

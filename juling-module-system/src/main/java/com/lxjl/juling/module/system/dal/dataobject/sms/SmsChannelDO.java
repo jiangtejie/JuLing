@@ -13,7 +13,7 @@ import lombok.ToString;
 /**
  * 短信渠道 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021-01-25
  */
 @TableName(value = "system_sms_channel", autoResultMap = true)

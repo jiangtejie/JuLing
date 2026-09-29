@@ -7,27 +7,11 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.util.json.JsonUtils;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
-import com.lxjl.juling.module.member.api.address.MemberAddressApi;
-import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
-import com.lxjl.juling.module.pay.api.order.PayOrderApi;
-import com.lxjl.juling.module.pay.api.order.dto.PayOrderCreateReqDTO;
-import com.lxjl.juling.module.pay.api.order.dto.PayOrderRespDTO;
-import com.lxjl.juling.module.pay.api.refund.PayRefundApi;
-import com.lxjl.juling.module.pay.api.refund.dto.PayRefundCreateReqDTO;
-import com.lxjl.juling.module.pay.api.refund.dto.PayRefundRespDTO;
-import com.lxjl.juling.module.pay.enums.order.PayOrderStatusEnum;
-import com.lxjl.juling.module.pay.enums.refund.PayRefundStatusEnum;
-import com.lxjl.juling.module.product.api.comment.ProductCommentApi;
-import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO;
-import com.lxjl.juling.module.promotion.api.combination.CombinationRecordApi;
-import com.lxjl.juling.module.promotion.api.combination.dto.CombinationRecordRespDTO;
-import com.lxjl.juling.module.promotion.enums.combination.CombinationRecordStatusEnum;
 import com.lxjl.juling.module.system.api.social.SocialClientApi;
 import com.lxjl.juling.module.system.api.social.dto.SocialWxaSubscribeMessageSendReqDTO;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderDeliveryReqVO;
@@ -37,11 +21,9 @@ import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderUpdatePr
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderSettlementReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderSettlementRespVO;
-import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.cart.CartDO;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
-import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryPickUpStoreDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
 import com.lxjl.juling.module.trade.dal.mysql.order.TradeOrderItemMapper;
@@ -54,9 +36,9 @@ import com.lxjl.juling.module.trade.framework.order.core.annotations.TradeOrderL
 import com.lxjl.juling.module.trade.framework.order.core.utils.TradeOrderLogUtils;
 import com.lxjl.juling.module.trade.service.cart.CartService;
 import com.lxjl.juling.module.trade.service.delivery.DeliveryExpressService;
-import com.lxjl.juling.module.trade.service.delivery.DeliveryPickUpStoreService;
 import com.lxjl.juling.module.trade.service.message.TradeMessageService;
 import com.lxjl.juling.module.trade.service.message.bo.TradeOrderMessageWhenDeliveryOrderReqBO;
+import com.lxjl.juling.module.trade.service.order.bo.TradeOrderStoreBO;
 import com.lxjl.juling.module.trade.service.order.handler.TradeOrderHandler;
 import com.lxjl.juling.module.trade.service.price.TradePriceService;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
@@ -68,6 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -86,7 +70,7 @@ import static com.lxjl.juling.module.trade.enums.MessageTemplateConstants.WXA_OR
 /**
  * 交易订单【写】Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 @Service
@@ -112,20 +96,12 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     @Resource
     private TradeMessageService tradeMessageService;
     @Resource
-    private DeliveryPickUpStoreService pickUpStoreService;
+    private TradeOrderStoreService tradeOrderStoreService;
+    @Resource
+    private TradeOrderAuditService tradeOrderAuditService;
 
     @Resource
-    private PayOrderApi payOrderApi;
-    @Resource
-    private MemberAddressApi addressApi;
-    @Resource
-    private ProductCommentApi productCommentApi;
-    @Resource
     public SocialClientApi socialClientApi;
-    @Resource
-    public PayRefundApi payRefundApi;
-    @Resource
-    private CombinationRecordApi combinationRecordApi;
 
     @Resource
     private TradeOrderProperties tradeOrderProperties;
@@ -134,31 +110,11 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
     @Override
     public AppTradeOrderSettlementRespVO settlementOrder(Long userId, AppTradeOrderSettlementReqVO settlementReqVO) {
-        // 1. 获得收货地址
-        MemberAddressRespDTO address = getAddress(userId, settlementReqVO.getAddressId());
-        if (address != null) {
-            settlementReqVO.setAddressId(address.getId());
-        }
-
-        // 2. 计算价格
+        // 1. 计算价格
         TradePriceCalculateRespBO calculateRespBO = calculatePrice(userId, settlementReqVO);
 
-        // 3. 拼接返回
-        return TradeOrderConvert.INSTANCE.convert(calculateRespBO, address);
-    }
-
-    /**
-     * 获得用户地址
-     *
-     * @param userId    用户编号
-     * @param addressId 地址编号
-     * @return 地址
-     */
-    private MemberAddressRespDTO getAddress(Long userId, Long addressId) {
-        if (addressId != null) {
-            return addressApi.getAddress(addressId, userId);
-        }
-        return addressApi.getDefaultAddress(userId);
+        // 2. 拼接返回
+        return TradeOrderConvert.INSTANCE.convert(calculateRespBO);
     }
 
     /**
@@ -212,34 +168,26 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         order.setRefundStatus(TradeOrderRefundStatusEnum.NONE.getStatus());
         order.setProductCount(getSumValue(calculateRespBO.getItems(), TradePriceCalculateRespBO.OrderItem::getCount, Integer::sum));
         order.setUserIp(getClientIP()).setTerminal(getTerminal());
-        // 使用 + 赠送优惠券
-        order.setGiveCouponTemplateCounts(calculateRespBO.getGiveCouponTemplateCounts());
         // 支付 + 退款信息
         order.setAdjustPrice(0).setPayStatus(false);
         order.setRefundStatus(TradeOrderRefundStatusEnum.NONE.getStatus()).setRefundPrice(0);
         // 物流信息
         order.setDeliveryType(createReqVO.getDeliveryType());
         if (Objects.equals(createReqVO.getDeliveryType(), DeliveryTypeEnum.EXPRESS.getType())) {
-            // 情况一：已选择收件地址簿中的地址，以地址簿为准
-            if (createReqVO.getAddressId() != null) {
-                MemberAddressRespDTO address = addressApi.getAddress(createReqVO.getAddressId(), userId);
-                Assert.notNull(address, "地址({}) 不能为空", createReqVO.getAddressId()); // 价格计算时，已经计算
-                order.setReceiverName(address.getName()).setReceiverMobile(address.getMobile())
-                        .setReceiverAreaId(address.getAreaId()).setReceiverDetailAddress(address.getDetailAddress());
-            } else {
-                // 情况二：未选择收件地址，回退使用请求中手填的收货信息（订货商城场景：允许不维护地址簿）
-                // 注意：该情况下价格计算不会走快递模板，即不计运费（见 TradeDeliveryPriceCalculator#calculateExpress）
-                if (StrUtil.hasBlank(createReqVO.getReceiverName(), createReqVO.getReceiverMobile(),
-                        createReqVO.getReceiverDetailAddress())) {
-                    throw exception(ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE);
-                }
-                order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile())
-                        .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
+            // 会员中心（含会员地址簿）已下线：收货信息一律以请求中手填的为准
+            if (StrUtil.hasBlank(createReqVO.getReceiverName(), createReqVO.getReceiverMobile(),
+                    createReqVO.getReceiverDetailAddress())) {
+                throw exception(ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE);
             }
-        } else if (Objects.equals(createReqVO.getDeliveryType(), DeliveryTypeEnum.PICK_UP.getType())) {
-            order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile());
-            order.setPickUpVerifyCode(RandomUtil.randomNumbers(8)); // 随机一个核销码，长度为 8 位
+            order.setReceiverName(createReqVO.getReceiverName()).setReceiverMobile(createReqVO.getReceiverMobile())
+                    .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
         }
+        // 门店订货链 S1：快照下单门店（组织面 deptId + 经营面 customerId / 结算模式），并初始化审核状态
+        TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());
+        order.setCustomerId(store.getCustomerId()).setDeptId(store.getDeptId())
+                .setAgentCustomerId(store.getAgentCustomerId()).setSettlementMode(store.getSettlementMode())
+                .setStoreType(store.getStoreType())
+                .setAuditStatus(TradeOrderAuditStatusEnum.DRAFT.getStatus());
         return order;
     }
 
@@ -251,7 +199,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     /**
      * 订单创建后，执行后置逻辑
      * <p>
-     * 例如说：优惠劵的扣减、积分的扣减、支付单的创建等等
+     * 例如说：支付单的创建等等
      *
      * @param order       订单
      * @param orderItems  订单项
@@ -268,82 +216,71 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
             cartService.deleteCart(order.getUserId(), cartIds);
         }
 
-        // 3. 生成预支付
-        // 特殊情况：积分兑换时，可能支付金额为零
-        if (order.getPayPrice() > 0) {
-            createPayOrder(order, orderItems);
-        }
+        // 3. 线下收款：不创建支付单（本分支已切除线上支付模块）。
+        //    客户提交订货单后上传付款截图，提交即调用 updateOrderPaidByOffline 置为已收款并进入两级审批。
 
         // 4. 插入订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), null, order.getStatus());
-
-        // TODO @LeeYan9: 是可以思考下, 订单的营销优惠记录, 应该记录在哪里, 微信讨论起来!
     }
 
-    private void createPayOrder(TradeOrderDO order, List<TradeOrderItemDO> orderItems) {
-        // 创建支付单，用于后续的支付
-        PayOrderCreateReqDTO payOrderCreateReqDTO = TradeOrderConvert.INSTANCE.convert(
-                order, orderItems, tradeOrderProperties);
-        Long payOrderId = payOrderApi.createOrder(payOrderCreateReqDTO);
 
-        // 更新到交易单上
-        tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId()).setPayOrderId(payOrderId));
-        order.setPayOrderId(payOrderId);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.MEMBER_PAY)
-    public void updateOrderPaid(Long id, Long payOrderId) {
-        // 1.1 校验订单是否存在
+    public void updateOrderPaidByOffline(Long id, Integer paidAmount, String payChannelCode) {
+        // 1. 校验订单存在，且仍未支付
         TradeOrderDO order = validateOrderExists(id);
-        // 1.2 校验订单已支付
-        if (!TradeOrderStatusEnum.isUnpaid(order.getStatus()) || order.getPayStatus()) {
-            // 特殊：支付单号相同，直接返回，说明重复回调
-            if (ObjectUtil.equals(order.getPayOrderId(), payOrderId)) {
-                log.warn("[updateOrderPaid][order({}) 已支付，且支付单号相同({})，直接返回]", order, payOrderId);
-                return;
-            }
-            log.error("[updateOrderPaid][order({}) 支付单不匹配({})，请进行处理！order 数据是：{}]",
-                    id, payOrderId, JsonUtils.toJsonString(order));
-            throw exception(ORDER_UPDATE_PAID_FAIL_PAY_ORDER_ID_ERROR);
+        if (!TradeOrderStatusEnum.isUnpaid(order.getStatus()) || Boolean.TRUE.equals(order.getPayStatus())) {
+            throw exception(ORDER_UPDATE_PAID_STATUS_NOT_UNPAID);
         }
 
-        // 2. 校验支付订单的合法性
-        PayOrderRespDTO payOrder = validatePayOrderPaid(order, payOrderId);
-
-        // 3. 更新 TradeOrderDO 状态为已支付，等待发货
+        // 2. 更新为「已收款、待发货」，记录收款金额与渠道
         int updateCount = tradeOrderMapper.updateByIdAndStatus(id, order.getStatus(),
                 new TradeOrderDO().setStatus(TradeOrderStatusEnum.UNDELIVERED.getStatus()).setPayStatus(true)
-                        .setPayTime(LocalDateTime.now()).setPayChannelCode(payOrder.getChannelCode()));
+                        .setPayTime(LocalDateTime.now()).setPayChannelCode(payChannelCode)
+                        .setPaidAmount(paidAmount)
+                        .setPaymentProofStatus(TradeOrderReceiveStatusEnum.PAID.getStatus()));
         if (updateCount == 0) {
             throw exception(ORDER_UPDATE_PAID_STATUS_NOT_UNPAID);
         }
 
-        // 4. 执行 TradeOrderHandler 的后置处理
+        // 3. 执行 TradeOrderHandler 的后置处理（与线上支付成功保持一致）
         List<TradeOrderItemDO> orderItems = tradeOrderItemMapper.selectListByOrderId(id);
         tradeOrderHandlers.forEach(handler -> handler.afterPayOrder(order, orderItems));
 
-        // 5. 记录订单日志
+        // 4. 记录订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), TradeOrderStatusEnum.UNDELIVERED.getStatus());
         TradeOrderLogUtils.setUserInfo(order.getUserId(), UserTypeEnum.MEMBER.getValue());
+
+        // 5. 门店订货链 S1：提交付款凭证后直接提交两级审批（供应链 → 财务出纳；BPM 流程定义 key：trade-order-store-audit）
+        //    审核未通过前不允许发货（发货闸门见 TradeOrderAuditService#validateCanDelivery）。
+        //
+        //    ⚠️ 自动提交必须放在**本事务提交之后**执行，不能就地 try/catch：
+        //    BPM 创建流程实例内部是嵌套事务，抛错会把当前事务标记成 rollback-only，
+        //    就地 catch 吞掉后外层提交时照样抛 UnexpectedRollbackException（操作人只看到"系统异常"，
+        //    失败原因还丢了，订单悄悄停在"已收款未提交审核"）。放到提交后执行则：
+        //    收款核验一定成功落库；审核提交失败时订单仍是「待发货 + 待提交审核」，
+        //    发货闸门关闭，可在订单详情页手工重新提交。
+        if (tradeOrderStoreService.isFranchiseStore(order.getCustomerId())) {
+            Long orderId = order.getId();
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 发起人用系统配置账号：门店在 H5 提交凭证时登录身份是会员，没有该流程定义的发起权限
+                    tradeOrderAuditService.submitAuditAutoAfterCommit(orderId);
+                }
+            });
+        } else {
+            // 直营门店免审：把审核状态留痕为「已通过」，避免订单永远停在「待提交」看起来像没人处理
+            tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId())
+                    .setAuditStatus(TradeOrderAuditStatusEnum.APPROVE.getStatus())
+                    .setAuditTime(LocalDateTime.now())
+                    .setAuditRemark("直营门店免审：提交付款凭证后直接进入待发货"));
+            log.info("[updateOrderPaidByOffline][订单({}) 直营门店免审，直接进入订单工作台待发货]", order.getId());
+        }
     }
 
-    @Override
-    public void syncOrderPayStatusQuietly(Long id, Long payOrderId) {
-        PayOrderRespDTO payOrder = payOrderApi.getOrder(payOrderId);
-        if (payOrder == null) {
-            return;
-        }
-        if (!PayOrderStatusEnum.isSuccess(payOrder.getStatus())) {
-            return;
-        }
-        try {
-            getSelf().updateOrderPaid(id, payOrderId);
-        } catch (Throwable e) {
-            log.warn("[syncOrderPayStatusQuietly][id({}) payOrderId({}) 同步支付状态失败]", id, payOrderId, e);
-        }
-    }
 
     /**
      * 校验支付订单的合法性
@@ -352,34 +289,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
      * @param payOrderId 支付订单编号
      * @return 支付订单
      */
-    private PayOrderRespDTO validatePayOrderPaid(TradeOrderDO order, Long payOrderId) {
-        // 1. 校验支付单是否存在
-        PayOrderRespDTO payOrder = payOrderApi.getOrder(payOrderId);
-        if (payOrder == null) {
-            log.error("[validatePayOrderPaid][order({}) payOrder({}) 不存在，请进行处理！]", order.getId(), payOrderId);
-            throw exception(ORDER_NOT_FOUND);
-        }
-
-        // 2.1 校验支付单已支付
-        if (!PayOrderStatusEnum.isSuccess(payOrder.getStatus())) {
-            log.error("[validatePayOrderPaid][order({}) payOrder({}) 未支付，请进行处理！payOrder 数据是：{}]",
-                    order.getId(), payOrderId, JsonUtils.toJsonString(payOrder));
-            throw exception(ORDER_UPDATE_PAID_FAIL_PAY_ORDER_STATUS_NOT_SUCCESS);
-        }
-        // 2.2 校验支付金额一致
-        if (ObjectUtil.notEqual(payOrder.getPrice(), order.getPayPrice())) {
-            log.error("[validatePayOrderPaid][order({}) payOrder({}) 支付金额不匹配，请进行处理！order 数据是：{}，payOrder 数据是：{}]",
-                    order.getId(), payOrderId, JsonUtils.toJsonString(order), JsonUtils.toJsonString(payOrder));
-            throw exception(ORDER_UPDATE_PAID_FAIL_PAY_PRICE_NOT_MATCH);
-        }
-        // 2.2 校验支付订单匹配（二次）
-        if (ObjectUtil.notEqual(payOrder.getMerchantOrderId(), order.getId().toString())) {
-            log.error("[validatePayOrderPaid][order({}) 支付单不匹配({})，请进行处理！payOrder 数据是：{}]",
-                    order.getId(), payOrderId, JsonUtils.toJsonString(payOrder));
-            throw exception(ORDER_UPDATE_PAID_FAIL_PAY_ORDER_ID_ERROR);
-        }
-        return payOrder;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -387,6 +296,8 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     public void deliveryOrder(TradeOrderDeliveryReqVO deliveryReqVO) {
         // 1.1 校验并获得交易订单（可发货）
         TradeOrderDO order = validateOrderDeliverable(deliveryReqVO.getId());
+        // 1.15 门店订货链 S1：门店要货必须通过供应链审核，才允许发货
+        tradeOrderAuditService.validateCanDelivery(order);
         // 1.2 校验 deliveryType 是否为快递，是快递才可以发货
         if (ObjectUtil.notEqual(order.getDeliveryType(), DeliveryTypeEnum.EXPRESS.getType())) {
             throw exception(ORDER_DELIVERY_FAIL_DELIVERY_TYPE_NOT_EXPRESS);
@@ -574,13 +485,11 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         if (ObjectUtil.notEqual(order.getStatus(), TradeOrderStatusEnum.UNPAID.getStatus())) {
             throw exception(ORDER_CANCEL_FAIL_STATUS_NOT_UNPAID);
         }
-        // 1.3 校验是否支持延迟（不允许取消）
-        if (TradeOrderStatusEnum.isUnpaid(order.getStatus())) {
-            PayOrderRespDTO payOrder = payOrderApi.getOrder(order.getPayOrderId());
-            if (payOrder != null && PayOrderStatusEnum.isSuccess(payOrder.getStatus())) {
-                log.warn("[cancelOrderByMember][order({}) 支付单已支付（支付回调延迟），不支持取消]", order.getId());
-                throw exception(ORDER_CANCEL_FAIL_STATUS_NOT_UNPAID);
-            }
+        // 1.3 校验：审核中的订单不允许门店自行取消（可能已转账并进入审批，要走总部或售后处理）。
+        //     注：提交付款凭证后订单会立即转为「待发货」，正常走不到这里，此校验用于兜底。
+        if (Objects.equals(order.getAuditStatus(), TradeOrderAuditStatusEnum.PROCESS.getStatus())) {
+            log.warn("[cancelOrderByMember][order({}) 正在审核中，不支持取消]", order.getId());
+            throw exception(ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF);
         }
 
         // 2. 取消订单
@@ -618,13 +527,11 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     @Transactional(rollbackFor = Exception.class)
     @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.SYSTEM_CANCEL)
     public void cancelOrderBySystem(TradeOrderDO order) {
-        // 校验是否支持延迟（不允许取消）
-        if (TradeOrderStatusEnum.isUnpaid(order.getStatus())) {
-            PayOrderRespDTO payOrder = payOrderApi.getOrder(order.getPayOrderId());
-            if (payOrder != null && PayOrderStatusEnum.isSuccess(payOrder.getStatus())) {
-                log.warn("[cancelOrderBySystem][order({}) 支付单已支付（支付回调延迟），不支持取消]", order.getId());
-                return;
-            }
+        // 线下收款：只要门店提交过付款凭证（收款状态不再是「未上传凭证」）就涉及真实货款，不能按超时自动取消
+        if (Boolean.TRUE.equals(order.getPayStatus())
+                || ObjectUtil.notEqual(order.getPaymentProofStatus(), TradeOrderReceiveStatusEnum.NONE.getStatus())) {
+            log.info("[cancelOrderBySystem][order({}) 已有收款进展({})，跳过超时自动取消]", order.getId(), order.getPaymentProofStatus());
+            return;
         }
 
         cancelOrder0(order, TradeOrderCancelTypeEnum.PAY_TIMEOUT);
@@ -714,39 +621,43 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         if (order.getPayStatus()) {
             throw exception(ORDER_UPDATE_PRICE_FAIL_PAID);
         }
+        // 注意：adjustPrice / payPrice 在首次调价前可能是 null（下单时未初始化，历史数据里
+        // trade_order_item.adjust_price 就是 NULL），直接相加会 NPE 并对外表现成「系统异常」，
+        // 因此这里统一兜底 0
+        int oldAdjustPrice = ObjectUtil.defaultIfNull(order.getAdjustPrice(), 0);
+        int adjustPrice = ObjectUtil.defaultIfNull(reqVO.getAdjustPrice(), 0);
+
         // 1.2 校验调价金额是否变化
-        if (order.getAdjustPrice() > 0) {
+        if (oldAdjustPrice > 0) {
             throw exception(ORDER_UPDATE_PRICE_FAIL_ALREADY);
         }
         // 1.3 支付价格不能为 0
-        int newPayPrice = order.getPayPrice() + reqVO.getAdjustPrice();
+        int newPayPrice = ObjectUtil.defaultIfNull(order.getPayPrice(), 0) + adjustPrice;
         if (newPayPrice <= 0) {
             throw exception(ORDER_UPDATE_PRICE_FAIL_PRICE_ERROR);
         }
 
         // 2. 更新订单
         tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId())
-                .setAdjustPrice(reqVO.getAdjustPrice() + order.getAdjustPrice()).setPayPrice(newPayPrice));
+                .setAdjustPrice(adjustPrice + oldAdjustPrice).setPayPrice(newPayPrice));
 
         // 3. 更新 TradeOrderItem，需要做 adjustPrice 的分摊
         List<TradeOrderItemDO> orderOrderItems = tradeOrderItemMapper.selectListByOrderId(order.getId());
-        List<Integer> dividePrices = TradePriceCalculatorHelper.dividePrice2(orderOrderItems, reqVO.getAdjustPrice());
+        List<Integer> dividePrices = TradePriceCalculatorHelper.dividePrice2(orderOrderItems, adjustPrice);
         List<TradeOrderItemDO> updateItems = new ArrayList<>();
         for (int i = 0; i < orderOrderItems.size(); i++) {
             TradeOrderItemDO item = orderOrderItems.get(i);
+            int dividePrice = ObjectUtil.defaultIfNull(dividePrices.get(i), 0);
             updateItems.add(new TradeOrderItemDO().setId(item.getId())
-                    .setAdjustPrice(item.getAdjustPrice() + dividePrices.get(i))
-                    .setPayPrice(item.getPayPrice() + dividePrices.get(i)));
+                    .setAdjustPrice(ObjectUtil.defaultIfNull(item.getAdjustPrice(), 0) + dividePrice)
+                    .setPayPrice(ObjectUtil.defaultIfNull(item.getPayPrice(), 0) + dividePrice));
         }
         tradeOrderItemMapper.updateBatch(updateItems);
 
-        // 4. 更新支付订单
-        payOrderApi.updatePayOrderPrice(order.getPayOrderId(), newPayPrice);
-
-        // 5. 记录订单日志
+        // 4. 记录订单日志（线下收款无支付单需要同步价格）
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), order.getStatus(),
                 MapUtil.<String, Object>builder().put("oldPayPrice", MoneyUtils.fenToYuanStr(order.getPayPrice()))
-                        .put("adjustPrice", MoneyUtils.fenToYuanStr(reqVO.getAdjustPrice()))
+                        .put("adjustPrice", MoneyUtils.fenToYuanStr(adjustPrice))
                         .put("newPayPrice", MoneyUtils.fenToYuanStr(newPayPrice)).build());
     }
 
@@ -765,51 +676,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
         // 记录订单日志
         TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), order.getStatus());
-    }
-
-    @Override
-    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.ADMIN_PICK_UP_RECEIVE)
-    public void pickUpOrderByAdmin(Long userId, Long id) {
-        getSelf().pickUpOrder(userId, tradeOrderMapper.selectById(id));
-    }
-
-    @Override
-    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.ADMIN_PICK_UP_RECEIVE)
-    public void pickUpOrderByAdmin(Long userId, String pickUpVerifyCode) {
-        getSelf().pickUpOrder(userId, tradeOrderMapper.selectOneByPickUpVerifyCode(pickUpVerifyCode));
-    }
-
-    @Override
-    public TradeOrderDO getByPickUpVerifyCode(String pickUpVerifyCode) {
-        return tradeOrderMapper.selectOneByPickUpVerifyCode(pickUpVerifyCode);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void pickUpOrder(Long userId, TradeOrderDO order) {
-        if (order == null) {
-            throw exception(ORDER_NOT_FOUND);
-        }
-        if (ObjUtil.notEqual(DeliveryTypeEnum.PICK_UP.getType(), order.getDeliveryType())) {
-            throw exception(ORDER_RECEIVE_FAIL_DELIVERY_TYPE_NOT_PICK_UP);
-        }
-        if (!TradeOrderStatusEnum.isUndelivered(order.getStatus())) {
-            throw exception(ORDER_PICK_UP_FAIL_STATUS_NOT_UNDELIVERED);
-        }
-        // 情况一：如果是拼团订单，则校验拼团是否成功
-        if (TradeOrderTypeEnum.isCombination(order.getType())) {
-            CombinationRecordRespDTO combinationRecord = combinationRecordApi.getCombinationRecordByOrderId(
-                    order.getUserId(), order.getId());
-            if (!CombinationRecordStatusEnum.isSuccess(combinationRecord.getStatus())) {
-                throw exception(ORDER_PICK_UP_FAIL_COMBINATION_NOT_SUCCESS);
-            }
-        }
-        DeliveryPickUpStoreDO deliveryPickUpStore = pickUpStoreService.getDeliveryPickUpStore(order.getPickUpStoreId());
-        if (deliveryPickUpStore == null
-                || !CollUtil.contains(deliveryPickUpStore.getVerifyUserIds(), userId)) {
-            throw exception(ORDER_PICK_UP_FAIL_NOT_VERIFY_USER);
-        }
-
-        receiveOrder0(order);
     }
 
     // =================== Order Item ===================
@@ -832,15 +698,17 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         TradeOrderDO order = tradeOrderMapper.selectById(orderItem.getOrderId());
         tradeOrderHandlers.forEach(handler -> handler.afterCancelOrderItem(order, orderItem));
 
-        // 2.1 更新订单的退款金额、积分
-        Integer orderRefundPrice = order.getRefundPrice() + refundPrice;
-        Integer orderRefundPoint = order.getRefundPoint() + orderItem.getUsePoint();
+        // 2.1 更新订单的退款金额
+        // 注意：refundPrice 在首次售后前可能为 null（下单时不会初始化），
+        // 这里必须兜底 0，否则第一笔售后成功时直接 NPE（Cannot invoke "Integer.intValue()"）
+        Integer orderRefundPrice = ObjectUtil.defaultIfNull(order.getRefundPrice(), 0)
+                + ObjectUtil.defaultIfNull(refundPrice, 0);
         Integer refundStatus = isAllOrderItemAfterSaleSuccess(order.getId()) ?
                 TradeOrderRefundStatusEnum.ALL.getStatus() // 如果都售后成功，则需要取消订单
                 : TradeOrderRefundStatusEnum.PART.getStatus();
         tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId())
                 .setRefundStatus(refundStatus)
-                .setRefundPrice(orderRefundPrice).setRefundPoint(orderRefundPoint));
+                .setRefundPrice(orderRefundPrice));
         // 2.2 如果全部退款，则进行取消订单
         getSelf().cancelOrderByAfterSale(order, orderRefundPrice);
     }
@@ -876,72 +744,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.MEMBER_COMMENT)
-    public Long createOrderItemCommentByMember(Long userId, AppTradeOrderItemCommentCreateReqVO createReqVO) {
-        // 1.1 先通过订单项 ID，查询订单项是否存在
-        TradeOrderItemDO orderItem = tradeOrderItemMapper.selectByIdAndUserId(createReqVO.getOrderItemId(), userId);
-        if (orderItem == null) {
-            throw exception(ORDER_ITEM_NOT_FOUND);
-        }
-        // 1.2 校验订单相关状态
-        TradeOrderDO order = tradeOrderMapper.selectOrderByIdAndUserId(orderItem.getOrderId(), userId);
-        if (order == null) {
-            throw exception(ORDER_NOT_FOUND);
-        }
-        if (ObjectUtil.notEqual(order.getStatus(), TradeOrderStatusEnum.COMPLETED.getStatus())) {
-            throw exception(ORDER_COMMENT_FAIL_STATUS_NOT_COMPLETED);
-        }
-        if (ObjectUtil.notEqual(order.getCommentStatus(), Boolean.FALSE)) {
-            throw exception(ORDER_COMMENT_STATUS_NOT_FALSE);
-        }
-
-        // 2. 创建评价
-        Long commentId = createOrderItemComment0(orderItem, createReqVO);
-
-        // 3. 如果订单项都评论了，则更新订单评价状态
-        List<TradeOrderItemDO> orderItems = tradeOrderItemMapper.selectListByOrderId(order.getId());
-        if (!anyMatch(orderItems, item -> Objects.equals(item.getCommentStatus(), Boolean.FALSE))) {
-            tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId()).setCommentStatus(Boolean.TRUE)
-                    .setFinishTime(LocalDateTime.now()));
-            // 增加订单日志。注意：只有在所有订单项都评价后，才会增加
-            TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), order.getStatus());
-        }
-        return commentId;
-    }
-
-    @Override
-    public int createOrderItemCommentBySystem() {
-        // 1. 查询过期的待支付订单
-        LocalDateTime expireTime = minusTime(tradeOrderProperties.getCommentExpireTime());
-        List<TradeOrderDO> orders = tradeOrderMapper.selectListByStatusAndReceiveTimeLt(
-                TradeOrderStatusEnum.COMPLETED.getStatus(), expireTime, false);
-        if (CollUtil.isEmpty(orders)) {
-            return 0;
-        }
-
-        // 2. 遍历执行，逐个取消
-        int count = 0;
-        for (TradeOrderDO order : orders) {
-            try {
-                getSelf().createOrderItemCommentBySystemBySystem(order);
-                count++;
-            } catch (Throwable e) {
-                log.error("[createOrderItemCommentBySystem][order({}) 过期订单异常]", order.getId(), e);
-            }
-        }
-        return count;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateOrderCombinationInfo(Long orderId, Long activityId, Long combinationRecordId, Long headId) {
-        tradeOrderMapper.updateById(
-                new TradeOrderDO().setId(orderId).setCombinationActivityId(activityId)
-                        .setCombinationRecordId(combinationRecordId).setCombinationHeadId(headId));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void cancelPaidOrder(Long userId, Long orderId, Integer cancelType) {
         // 1.1 这里校验下 cancelType 只允许拼团关闭；
         if (ObjUtil.notEqual(TradeOrderCancelTypeEnum.COMBINATION_CLOSE.getType(), cancelType)) {
@@ -963,94 +765,11 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
         // 2.1 取消订单
         cancelOrder0(order, TradeOrderCancelTypeEnum.COMBINATION_CLOSE);
-        // 2.2 创建退款单
-        payRefundApi.createRefund(new PayRefundCreateReqDTO()
-                .setAppKey(tradeOrderProperties.getPayAppKey())  // 支付应用
-                .setUserIp(NetUtil.getLocalhostStr()) // 使用本机 IP，因为是服务器发起退款的
-                .setUserId(order.getUserId()).setUserType(UserTypeEnum.MEMBER.getValue()) // 用户信息
-                .setMerchantOrderId(String.valueOf(order.getId())) // 支付单号
-                // 特殊：因为订单支持 AfterSale 单个售后退款，也支持整单退款，所以需要通过 order- 进行下区分
-                //      具体可见 AfterSaleController 的 updateAfterSaleRefunded 方法
-                .setMerchantRefundId("order-" + order.getId())
-                .setReason(TradeOrderCancelTypeEnum.COMBINATION_CLOSE.getName()).setPrice(order.getPayPrice())); // 价格信息
+        // 2.2 线下收款：没有线上退款单可发起，已收货款需由商家线下退回。
+        //     订单已是「已取消 + 已收金额 > 0」的组合，后台订单列表可直接筛出来人工退款。
+        log.warn("[cancelPaidOrder][订单({}) 已取消，已收货款({} 分)需线下退回客户]", order.getId(), order.getPaidAmount());
     }
 
-    @Override
-    public void updatePaidOrderRefunded(Long id, Long payRefundId) {
-        PayRefundRespDTO payRefund = payRefundApi.getRefund(payRefundId);
-        if (payRefund == null) {
-            throw exception(ORDER_UPDATE_PAID_ORDER_REFUNDED_FAIL_REFUND_NOT_FOUND);
-        }
-        // 特殊：因为在 cancelPaidOrder 已经进行订单的取消，所以这里必须退款成功！！！
-        if (!PayRefundStatusEnum.isSuccess(payRefund.getStatus())) {
-            throw exception(ORDER_UPDATE_PAID_ORDER_REFUNDED_FAIL_REFUND_STATUS_NOT_SUCCESS);
-        }
-    }
-
-    @Override
-    public void updateOrderGiveCouponIds(Long userId, Long orderId, List<Long> giveCouponIds) {
-        // 1. 检验订单存在
-        TradeOrderDO order = tradeOrderMapper.selectOrderByIdAndUserId(orderId, userId);
-        if (order == null) {
-            throw exception(ORDER_NOT_FOUND);
-        }
-
-        // 2. 更新订单赠送的优惠券编号列表
-        tradeOrderMapper.updateById(new TradeOrderDO().setId(orderId).setGiveCouponIds(giveCouponIds));
-    }
-
-    /**
-     * 创建单个订单的评论
-     *
-     * @param order 订单
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.SYSTEM_COMMENT)
-    public void createOrderItemCommentBySystemBySystem(TradeOrderDO order) {
-        // 1. 查询未评论的订单项
-        List<TradeOrderItemDO> orderItems = tradeOrderItemMapper.selectListByOrderIdAndCommentStatus(
-                order.getId(), Boolean.FALSE);
-        if (CollUtil.isEmpty(orderItems)) {
-            return;
-        }
-
-        // 2. 逐个评论
-        for (TradeOrderItemDO orderItem : orderItems) {
-            // 2.1 创建评价
-            AppTradeOrderItemCommentCreateReqVO commentCreateReqVO = new AppTradeOrderItemCommentCreateReqVO()
-                    .setOrderItemId(orderItem.getId()).setAnonymous(false).setContent("")
-                    .setBenefitScores(5).setDescriptionScores(5);
-            createOrderItemComment0(orderItem, commentCreateReqVO);
-
-            // 2.2 更新订单项评价状态
-            tradeOrderItemMapper.updateById(new TradeOrderItemDO().setId(orderItem.getId()).setCommentStatus(Boolean.TRUE));
-        }
-
-        // 3. 所有订单项都评论了，则更新订单评价状态
-        tradeOrderMapper.updateById(new TradeOrderDO().setId(order.getId()).setCommentStatus(Boolean.TRUE)
-                .setFinishTime(LocalDateTime.now()));
-        // 增加订单日志。注意：只有在所有订单项都评价后，才会增加
-        TradeOrderLogUtils.setOrderInfo(order.getId(), order.getStatus(), order.getStatus());
-    }
-
-    /**
-     * 创建订单项的评论的核心实现
-     *
-     * @param orderItem   订单项
-     * @param createReqVO 评论内容
-     * @return 评论编号
-     */
-    private Long createOrderItemComment0(TradeOrderItemDO orderItem, AppTradeOrderItemCommentCreateReqVO createReqVO) {
-        // 1. 创建评价
-        ProductCommentCreateReqDTO productCommentCreateReqDTO = TradeOrderConvert.INSTANCE.convert04(createReqVO, orderItem);
-        Long commentId = productCommentApi.createComment(productCommentCreateReqDTO);
-
-        // 2. 更新订单项评价状态
-        tradeOrderItemMapper.updateById(new TradeOrderItemDO().setId(orderItem.getId()).setCommentStatus(Boolean.TRUE));
-        return commentId;
-    }
-
-    // =================== 营销相关的操作 ===================
 
     /**
      * 获得自身的代理对象，解决 AOP 生效问题

@@ -1,12 +1,10 @@
 package com.lxjl.juling.module.trade.controller.admin.aftersale;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.module.member.api.user.MemberUserApi;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.pay.api.notify.dto.PayRefundNotifyReqDTO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.*;
 import com.lxjl.juling.module.trade.convert.aftersale.AfterSaleConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.aftersale.AfterSaleDO;
@@ -16,7 +14,6 @@ import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
 import com.lxjl.juling.module.trade.service.aftersale.AfterSaleLogService;
 import com.lxjl.juling.module.trade.service.aftersale.AfterSaleService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
-import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +23,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +43,6 @@ public class AfterSaleController {
     private AfterSaleService afterSaleService;
     @Resource
     private TradeOrderQueryService tradeOrderQueryService;
-    @Resource
-    private TradeOrderUpdateService tradeOrderUpdateService;
     @Resource
     private AfterSaleLogService afterSaleLogService;
     @Resource
@@ -127,28 +121,10 @@ public class AfterSaleController {
     }
 
     @PutMapping("/refund")
-    @Operation(summary = "确认退款")
-    @Parameter(name = "id", description = "售后编号", required = true, example = "1")
+    @Operation(summary = "确认线下退款", description = "线下收款没有线上退款单：商家线下退款后登记渠道、回执与备注，登记即完成")
     @PreAuthorize("@ss.hasPermission('trade:after-sale:refund')")
-    public CommonResult<Boolean> refundAfterSale(@RequestParam("id") Long id) {
-        afterSaleService.refundAfterSale(getLoginUserId(), getClientIP(), id);
-        return success(true);
-    }
-
-    @PostMapping("/update-refunded")
-    @Operation(summary = "更新售后订单为已退款") // 由 pay-module 支付服务，进行回调，可见 PayNotifyJob
-    @PermitAll // 无需登录，安全由 AfterSaleService 内部校验实现
-    public CommonResult<Boolean> updateAfterSaleRefunded(@RequestBody PayRefundNotifyReqDTO notifyReqDTO) {
-        log.info("[updateAfterRefund][notifyReqDTO({})]", notifyReqDTO);
-        if (StrUtil.startWithAny(notifyReqDTO.getMerchantRefundId(), "order-")) {
-            Long orderId = Long.parseLong(StrUtil.subAfter(notifyReqDTO.getMerchantRefundId(), "order-", true));
-            tradeOrderUpdateService.updatePaidOrderRefunded(orderId, notifyReqDTO.getPayRefundId());
-        } else {
-            afterSaleService.updateAfterSaleRefunded(
-                    Long.parseLong(notifyReqDTO.getMerchantRefundId()),
-                    Long.parseLong(notifyReqDTO.getMerchantOrderId()),
-                    notifyReqDTO.getPayRefundId());
-        }
+    public CommonResult<Boolean> refundAfterSale(@Valid @RequestBody AfterSaleOfflineRefundReqVO reqVO) {
+        afterSaleService.refundAfterSaleByOffline(getLoginUserId(), getClientIP(), reqVO);
         return success(true);
     }
 

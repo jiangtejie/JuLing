@@ -18,7 +18,7 @@ import static com.lxjl.juling.module.system.enums.ErrorCodeConstants.NOTICE_NOT_
 /**
  * 通知公告 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class NoticeServiceImpl implements NoticeService {

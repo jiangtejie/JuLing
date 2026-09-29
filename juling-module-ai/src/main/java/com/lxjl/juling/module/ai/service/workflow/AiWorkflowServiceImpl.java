@@ -26,7 +26,7 @@ import static com.lxjl.juling.module.ai.enums.ErrorCodeConstants.WORKFLOW_NOT_EX
 /**
  * AI 工作流 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

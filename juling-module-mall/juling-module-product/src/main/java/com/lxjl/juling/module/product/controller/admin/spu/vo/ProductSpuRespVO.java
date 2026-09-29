@@ -92,9 +92,6 @@ public class ProductSpuRespVO {
 
     // ========== 物流相关字段 =========
 
-    @Schema(description = "配送方式数组", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    private List<Integer> deliveryTypes;
-
     @Schema(description = "物流配置模板编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "111")
     @ExcelProperty("物流配置模板编号")
     private Long deliveryTemplateId;
@@ -104,10 +101,6 @@ public class ProductSpuRespVO {
     @Schema(description = "赠送积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "111")
     @ExcelProperty("赠送积分")
     private Integer giveIntegral;
-
-    @Schema(description = "分销类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @ExcelProperty("分销类型")
-    private Boolean subCommissionType;
 
     // ========== 统计相关字段 =========
 

@@ -6,7 +6,6 @@ import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderSummaryR
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderPageReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
-import com.lxjl.juling.module.trade.enums.order.TradeOrderTypeEnum;
 import com.lxjl.juling.module.trade.framework.delivery.core.client.dto.ExpressTrackRespDTO;
 
 import java.util.Collection;
@@ -17,7 +16,7 @@ import static java.util.Collections.singleton;
 /**
  * 交易订单【读】 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TradeOrderQueryService {
 
@@ -39,16 +38,6 @@ public interface TradeOrderQueryService {
      * @return 交易订单
      */
     TradeOrderDO getOrder(Long userId, Long id);
-
-    /**
-     * 获得指定用户，指定活动，指定状态的交易订单
-     *
-     * @param userId                用户编号
-     * @param combinationActivityId 活动编号
-     * @param status                订单状态
-     * @return 交易订单
-     */
-    TradeOrderDO getOrderByUserIdAndStatusAndCombination(Long userId, Long combinationActivityId, Integer status);
 
     /**
      * 获得订单列表
@@ -86,12 +75,11 @@ public interface TradeOrderQueryService {
     /**
      * 【会员】获得交易订单数量
      *
-     * @param userId       用户编号
-     * @param status       订单状态。如果为空，则不进行筛选
-     * @param commonStatus 评价状态。如果为空，则不进行筛选
+     * @param userId 用户编号
+     * @param status 订单状态。如果为空，则不进行筛选
      * @return 订单数量
      */
-    Long getOrderCount(Long userId, Integer status, Boolean commonStatus);
+    Long getOrderCount(Long userId, Integer status);
 
     /**
      * 【前台】获得订单的物流轨迹
@@ -109,16 +97,6 @@ public interface TradeOrderQueryService {
      * @return 物流轨迹数组
      */
     List<ExpressTrackRespDTO> getExpressTrackList(Long id);
-
-    /**
-     * 【会员】在指定活动下，用户购买的商品数量
-     *
-     * @param userId     用户编号
-     * @param activityId 活动编号
-     * @param type       订单类型
-     * @return 活动商品数量
-     */
-    int getActivityProductCount(Long userId, Long activityId, TradeOrderTypeEnum type);
 
     // =================== Order Item ===================
 

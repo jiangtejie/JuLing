@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Set<Long> 的类型转换器实现类，对应数据库的 varchar 类型
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(List.class)

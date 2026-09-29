@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * Ftp 文件客户端
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class FtpFileClient extends AbstractFileClient<FtpFileClientConfig> {
 

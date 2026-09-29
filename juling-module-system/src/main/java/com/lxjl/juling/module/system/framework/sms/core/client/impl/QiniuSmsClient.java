@@ -27,7 +27,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 七牛云短信客户端的实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2024/08/26 15:35
  */
 @Slf4j

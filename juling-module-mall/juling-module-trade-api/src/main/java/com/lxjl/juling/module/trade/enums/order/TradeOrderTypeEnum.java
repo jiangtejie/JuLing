@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * 交易订单 - 类型
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @RequiredArgsConstructor
 @Getter

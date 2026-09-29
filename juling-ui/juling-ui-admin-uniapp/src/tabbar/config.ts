@@ -34,7 +34,7 @@ export const nativeTabbarList: NativeTabBarItem[] = [
   {
     iconPath: 'static/tabbar/personal.png',
     selectedIconPath: 'static/tabbar/personalHL.png',
-    pagePath: 'pages/user/index', // edit by 棱信矩灵：原 me 被删除，改为 user 避免 IDE linter 报错
+    pagePath: 'pages/user/index', // edit by 亚特：原 me 被删除，改为 user 避免 IDE linter 报错
     text: '个人',
   },
 ]
@@ -86,7 +86,7 @@ export const customTabbarList: CustomTabBarItem[] = [
   //   icon: '/static/tabbar/home.png',
   //   iconActive: '/static/tabbar/homeHL.png',
   // },
-  // add by 棱信矩灵：图标可到 https://icon-sets.iconify.design/carbon/ 选择。另外，需要在 uno.config.ts 的 safelist 中添加图标类名
+  // add by 亚特：图标可到 https://icon-sets.iconify.design/carbon/ 选择。另外，需要在 uno.config.ts 的 safelist 中添加图标类名
   {
     text: '工作台',
     pagePath: 'pages/index/index',

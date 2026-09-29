@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * 交易中心配置 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface TradeConfigConvert {

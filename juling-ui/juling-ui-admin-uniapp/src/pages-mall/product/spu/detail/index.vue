@@ -102,22 +102,7 @@
         <!-- 物流设置 -->
         <view v-show="activeTab === 2" class="overflow-hidden rounded-12rpx bg-white shadow-sm">
           <wd-cell-group border>
-            <wd-cell title="配送方式">
-              <view v-if="formData.deliveryTypes?.length" class="flex flex-wrap justify-end gap-8rpx">
-                <dict-tag
-                  v-for="type in formData.deliveryTypes"
-                  :key="type"
-                  :type="DICT_TYPE.TRADE_DELIVERY_TYPE"
-                  :value="type"
-                />
-              </view>
-              <text v-else>-</text>
-            </wd-cell>
-            <wd-cell
-              v-if="formData.deliveryTypes?.includes(DeliveryTypeEnum.EXPRESS)"
-              title="运费模板"
-              :value="templateName || '-'"
-            />
+            <wd-cell title="运费模板" :value="templateName || '-'" />
           </wd-cell-group>
         </view>
 
@@ -188,7 +173,7 @@ import { getSimpleDeliveryExpressTemplateList } from '@/api/mall/trade/delivery/
 import { useAccess } from '@/hooks/useAccess'
 import { formatDisplayMoney } from '@/utils/format'
 import { delay, navigateBackPlus } from '@/utils'
-import { DeliveryTypeEnum, DICT_TYPE, ProductSpuStatusEnum } from '@/utils/constants'
+import { DICT_TYPE, ProductSpuStatusEnum } from '@/utils/constants'
 import { formatDateTime } from '@/utils/date'
 
 const props = defineProps<{ id?: number | any }>()
@@ -288,7 +273,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('mall:product-spu:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

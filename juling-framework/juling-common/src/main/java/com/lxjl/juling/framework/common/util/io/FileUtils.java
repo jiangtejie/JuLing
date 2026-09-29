@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * 文件工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class FileUtils {
 

@@ -28,7 +28,7 @@ import java.util.function.Predicate;
 /**
  * 文多多 API
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @see <a href="https://docmee.cn/open-platform/api">PPT 生成 API</a>
  */
 @Slf4j

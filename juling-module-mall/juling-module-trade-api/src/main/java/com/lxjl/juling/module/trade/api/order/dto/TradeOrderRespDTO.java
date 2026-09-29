@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * 订单信息 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class TradeOrderRespDTO {
@@ -79,10 +79,6 @@ public class TradeOrderRespDTO {
      * 商家备注
      */
     private String remark;
-    /**
-     * 是否评价
-     */
-    private Boolean commentStatus;
 
     // ========== 价格 + 支付基本信息 ==========
     /**

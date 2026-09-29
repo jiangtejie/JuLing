@@ -35,7 +35,7 @@ import static com.lxjl.juling.module.fms.enums.ErrorCodeConstants.HOME_METRIC_IN
  *
  * 指标公式复用报表已有表达式：行次公式使用 L1+L2，科目公式使用报表公式 JSON。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

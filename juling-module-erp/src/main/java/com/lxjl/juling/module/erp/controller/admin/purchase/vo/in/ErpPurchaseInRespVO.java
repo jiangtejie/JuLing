@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ErpPurchaseInRespVO {
 
     @Schema(description = "供应商编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
     private Long supplierId;
-    @Schema(description = "供应商名称", example = "矩灵")
+    @Schema(description = "供应商名称", example = "亚特")
     @ExcelProperty("供应商名称")
     private String supplierName;
 
@@ -78,9 +79,9 @@ public class ErpPurchaseInRespVO {
     @ExcelProperty("备注")
     private String remark;
 
-    @Schema(description = "创建人", example = "矩灵")
+    @Schema(description = "创建人", example = "亚特")
     private String creator;
-    @Schema(description = "创建人名称", example = "矩灵")
+    @Schema(description = "创建人名称", example = "亚特")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -124,6 +125,15 @@ public class ErpPurchaseInRespVO {
 
         @Schema(description = "税额，单位：元", example = "100.00")
         private BigDecimal taxPrice;
+
+        @Schema(description = "批次号（审核时按批次入账，FIFO 才有批次可扣）", example = "B20260901")
+        private String batchNo;
+
+        @Schema(description = "生产日期")
+        private LocalDate productionDate;
+
+        @Schema(description = "到期日期")
+        private LocalDate expiryDate;
 
         @Schema(description = "备注", example = "随便")
         private String remark;

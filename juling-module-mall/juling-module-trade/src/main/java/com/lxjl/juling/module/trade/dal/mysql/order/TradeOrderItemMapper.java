@@ -38,12 +38,6 @@ public interface TradeOrderItemMapper extends BaseMapperX<TradeOrderItemDO> {
                 .eq(TradeOrderItemDO::getUserId, loginUserId));
     }
 
-    default List<TradeOrderItemDO> selectListByOrderIdAndCommentStatus(Long orderId, Boolean commentStatus) {
-        return selectList(new LambdaQueryWrapperX<TradeOrderItemDO>()
-                .eq(TradeOrderItemDO::getOrderId, orderId)
-                .eq(TradeOrderItemDO::getCommentStatus, commentStatus));
-    }
-
     default int selectProductSumByOrderId(@Param("orderIds") Set<Long> orderIds) {
         // SQL sum 查询
         List<Map<String, Object>> result = selectMaps(new QueryWrapper<TradeOrderItemDO>()

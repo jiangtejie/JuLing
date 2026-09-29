@@ -8,5 +8,3 @@ import { normalizeAssetUrl } from '@/utils/asset';
 export function resolveImage(url?: string | null): string {
   return normalizeAssetUrl(url) || placeholder;
 }
-
-export { placeholder as placeholderImage };

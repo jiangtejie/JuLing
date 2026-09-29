@@ -34,7 +34,7 @@
         >
           <view
             class="mr-20rpx h-72rpx w-72rpx flex flex-shrink-0 items-center justify-center rounded-14rpx"
-            :style="{ backgroundColor: menu.iconColor ? `${menu.iconColor}20` : '#f5f5f5' }"
+            :style="{ backgroundColor: menu.iconColor ? `${menu.iconColor}20` : 'var(--yd-surface-page)' }"
           >
             <wd-icon :name="menu.icon" size="40rpx" :color="menu.iconColor" />
           </view>

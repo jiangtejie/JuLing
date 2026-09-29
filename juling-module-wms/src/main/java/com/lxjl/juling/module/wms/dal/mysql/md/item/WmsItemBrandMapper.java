@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * WMS 商品品牌 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface WmsItemBrandMapper extends BaseMapperX<WmsItemBrandDO> {

@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
  *
  * 提供用户的登录、登出的能力
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface AdminAuthService {
 

@@ -11,7 +11,7 @@
       @update:model-value="$emit('update:modelValue', $event)"
     />
     <view
-      class="yd-text-link whitespace-nowrap border-l-1rpx border-l-[#e5e5e5] border-l-solid px-20rpx text-28rpx"
+      class="yd-text-link yd-border-base whitespace-nowrap border-l-1rpx border-l-solid px-20rpx text-28rpx"
       @click="handleSendCode"
     >
       <text :class="{ 'text-gray-400': countdown > 0 }">

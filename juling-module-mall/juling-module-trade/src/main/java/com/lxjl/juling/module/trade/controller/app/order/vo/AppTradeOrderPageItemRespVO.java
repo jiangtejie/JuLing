@@ -26,9 +26,6 @@ public class AppTradeOrderPageItemRespVO {
     @Schema(description = "购买的商品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
     private Integer productCount;
 
-    @Schema(description = "是否评价", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean commentStatus;
-
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime createTime;
 
@@ -40,19 +37,35 @@ public class AppTradeOrderPageItemRespVO {
     @Schema(description = "应付金额，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
     private Integer payPrice;
 
+    @Schema(description = "已确认收款金额（累计），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
+    private Integer paidAmount;
+
+    @Schema(description = "收款状态（TradeOrderReceiveStatusEnum）：0 未上传凭证、1 待核验、2 已驳回、3 部分收款、4 已收齐",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Integer paymentProofStatus;
+
     // ========== 收件 + 物流基本信息 ==========
 
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer deliveryType;
 
+    // ========== 门店订货链：下单门店与审核（列表卡片要展示"这是哪家店的单"） ==========
+
+    @Schema(description = "下单门店（客户）编号", example = "6")
+    private Long customerId;
+
+    @Schema(description = "下单门店名称", example = "耙二哥双碑店")
+    private String customerName;
+
+    @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "DIRECT")
+    private String storeType;
+
+    @Schema(description = "审核状态：0 待提交 / 10 审核中 / 20 已通过 / 30 已驳回", example = "10")
+    private Integer auditStatus;
+
     /**
      * 订单项数组
      */
     private List<AppTradeOrderItemRespVO> items;
-
-    // ========== 营销基本信息 ==========
-
-    @Schema(description = "拼团记录编号", example = "100")
-    private Long combinationRecordId;
 
 }

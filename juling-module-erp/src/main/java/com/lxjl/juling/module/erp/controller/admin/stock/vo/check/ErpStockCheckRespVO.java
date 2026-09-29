@@ -51,9 +51,9 @@ public class ErpStockCheckRespVO {
     @Schema(description = "附件 URL", example = "https://github.com/jiangtejie/JuLing")
     private String fileUrl;
 
-    @Schema(description = "创建人", example = "矩灵")
+    @Schema(description = "创建人", example = "亚特")
     private String creator;
-    @Schema(description = "创建人名称", example = "矩灵")
+    @Schema(description = "创建人名称", example = "亚特")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)

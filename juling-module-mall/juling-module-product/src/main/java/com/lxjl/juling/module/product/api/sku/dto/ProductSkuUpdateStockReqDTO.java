@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 商品 SKU 更新库存 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 @Data

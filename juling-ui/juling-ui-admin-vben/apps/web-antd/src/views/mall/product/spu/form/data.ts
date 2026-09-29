@@ -1,7 +1,5 @@
 import type { VbenFormSchema } from '#/adapter/form';
 
-import { DeliveryTypeEnum, DICT_TYPE } from '@vben/constants';
-import { getDictOptions } from '@vben/hooks';
 import { handleTree } from '@vben/utils';
 
 import { getSimpleBrandList } from '#/api/mall/product/brand';
@@ -33,6 +31,7 @@ export function useInfoFormSchema(): VbenFormSchema[] {
       fieldName: 'categoryId',
       label: '分类名称',
       component: 'ApiTreeSelect',
+      help: '可选一级或二级分类；只选一级时，商品直接归属该一级分类',
       componentProps: {
         api: async () => {
           const data = await getCategoryList({});
@@ -116,25 +115,6 @@ export function useSkuFormSchema(
       },
     },
     {
-      fieldName: 'subCommissionType',
-      label: '分销类型',
-      component: 'RadioGroup',
-      componentProps: {
-        allowClear: true,
-        options: [
-          {
-            label: '默认设置',
-            value: false,
-          },
-          {
-            label: '单独设置',
-            value: true,
-          },
-        ],
-      },
-      rules: 'required',
-    },
-    {
       fieldName: 'specType',
       label: '商品规格',
       component: 'RadioGroup',
@@ -213,15 +193,6 @@ export function useDeliveryFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      fieldName: 'deliveryTypes',
-      label: '配送方式',
-      component: 'CheckboxGroup',
-      componentProps: {
-        options: getDictOptions(DICT_TYPE.TRADE_DELIVERY_TYPE, 'number'),
-      },
-      rules: 'required',
-    },
-    {
       fieldName: 'deliveryTemplateId',
       label: '运费模板',
       component: 'ApiSelect',
@@ -229,12 +200,6 @@ export function useDeliveryFormSchema(): VbenFormSchema[] {
         api: getSimpleTemplateList,
         labelField: 'name',
         valueField: 'id',
-      },
-      dependencies: {
-        triggerFields: ['deliveryTypes'],
-        show: (values) =>
-          !!values.deliveryTypes &&
-          values.deliveryTypes.includes(DeliveryTypeEnum.EXPRESS.type),
       },
       rules: 'required',
     },

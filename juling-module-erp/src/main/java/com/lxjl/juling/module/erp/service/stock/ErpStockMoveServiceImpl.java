@@ -9,9 +9,10 @@ import com.lxjl.juling.module.erp.controller.admin.stock.vo.move.ErpStockMoveSav
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockMoveDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockMoveItemDO;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockMoveItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockMoveMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
@@ -32,12 +33,12 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
+// TODO 亚特：记录操作日志
 
 /**
  * ERP 库存调拨单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -49,7 +50,7 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     private ErpStockMoveItemMapper stockMoveItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -63,8 +64,8 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     public Long createStockMove(ErpStockMoveSaveReqVO createReqVO) {
         // 1.1 校验出库项的有效性
         List<ErpStockMoveItemDO> stockMoveItems = validateStockMoveItems(createReqVO.getItems());
-        // 1.2 生成调拨单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.STOCK_MOVE_NO_PREFIX);
+        // 1.2 生成调拨单号（单据平台：STOCK_TRANSFER → QCDB + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.STOCK_TRANSFER, null);
         if (stockMoveMapper.selectByNo(no) != null) {
             throw exception(STOCK_MOVE_NO_EXISTS);
         }

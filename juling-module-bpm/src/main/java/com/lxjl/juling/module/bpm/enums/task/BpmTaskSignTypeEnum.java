@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * 流程任务的加签类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

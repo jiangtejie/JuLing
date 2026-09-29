@@ -30,7 +30,7 @@ import static com.lxjl.juling.module.bpm.enums.ErrorCodeConstants.MODEL_DEPLOY_F
 /**
  * {@link BpmTaskCandidateStrategy} 的调用者，用于调用对应的策略，实现任务的候选人的计算
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class BpmTaskCandidateInvoker {

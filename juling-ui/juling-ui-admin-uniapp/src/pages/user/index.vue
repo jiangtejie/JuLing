@@ -13,7 +13,7 @@
           <wd-img :src="userInfo.avatar" width="120rpx" height="120rpx" mode="aspectFill" round />
         </view>
         <view class="flex-1">
-          <view class="mb-8rpx text-40rpx text-[#323333] font-semibold">
+          <view class="yd-text-main mb-8rpx text-40rpx font-semibold">
             {{ userInfo.nickname || userInfo.username }}
           </view>
           <view class="yd-text-sub text-30rpx">
@@ -195,7 +195,7 @@ async function handleLogout() {
 <style lang="scss" scoped>
 // 顶部渐变背景
 .header-bg {
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
+  background: linear-gradient(135deg, var(--yd-accent-blue) 0%, var(--yd-accent-teal) 100%);
 }
 
 // 用户卡片阴影
@@ -205,7 +205,7 @@ async function handleLogout() {
 
 // 头像边框
 .avatar-wrapper {
-  border: 4rpx solid #f5f5f5;
+  border: 4rpx solid var(--yd-border-light);
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
 }
 

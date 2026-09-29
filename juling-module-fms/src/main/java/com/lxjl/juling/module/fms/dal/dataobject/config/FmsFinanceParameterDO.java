@@ -15,7 +15,7 @@ import lombok.ToString;
 /**
  * FMS 财务参数 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_finance_parameter")
 @KeySequence("fms_finance_parameter_seq")

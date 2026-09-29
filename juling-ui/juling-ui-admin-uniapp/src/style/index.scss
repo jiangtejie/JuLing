@@ -18,7 +18,7 @@ page {
   // --wot-button-primary-bg-color: green;
 
   // ==================== 语义色 token ====================
-  // add by 棱信矩灵：此前全站硬编码了 160+ 种颜色取值（text-[#333] 这类写法用了 8000 处），
+  // add by 亚特：此前全站硬编码了 160+ 种颜色取值（text-[#333] 这类写法用了 8000 处），
   // 主题不可控、也无法接入暗色模式。这里收敛成语义变量，页面改用下方具名类；
   // 后续换肤或做暗色模式只需改这里（或在暗色媒体查询里覆盖这些变量）。
   --yd-text-main: #333333; // 主要文字
@@ -41,6 +41,58 @@ page {
   --yd-bg-success-soft: #f6ffed; // 浅色状态底：成功
   --yd-bg-warning-soft: #fff7e6; // 浅色状态底：警告
   --yd-bg-danger-soft: #fff1f0; // 浅色状态底：危险
+  // ==================== 归集色（第二批：与原硬编码同值，视觉零变化） ====================
+  --yd-accent-blue: #1890ff;
+  --yd-accent-blue-light: #409eff;
+  --yd-accent-indigo: #615ced;
+  --yd-accent-indigo-soft: #eeedff;
+  --yd-accent-purple: #722ed1;
+  --yd-accent-purple-light: #9254de;
+  --yd-accent-teal: #13c2c2;
+  --yd-bpm-approve: #00b32a;
+  --yd-bpm-reject: #f46b6c;
+  --yd-bpm-running: #ff943e;
+  --yd-danger-bright: #ff4d4f;
+  --yd-danger-strong: #dc2626;
+  --yd-disabled: #d9d9d9;
+  --yd-highlight-soft: #ffe58f;
+  --yd-im-green: #95ec69;
+  --yd-im-highlight: #fff1a8;
+  --yd-im-pin: #f5b800;
+  --yd-ink: #111827;
+  --yd-mes-shift-1: #95d475;
+  --yd-mindmap-bg: #f8fcf6;
+  --yd-mindmap-l1: #d9e8d2;
+  --yd-mindmap-l1-strong: #b7dbaa;
+  --yd-mindmap-l2: #95de64;
+  --yd-mindmap-l2-text: #317214;
+  --yd-mindmap-l3: #cfe8c5;
+  --yd-mindmap-l3-faint: #e4efdf;
+  --yd-mindmap-l3-soft: #b7dfaa;
+  --yd-mp-bubble-self: #dff5d8;
+  --yd-overlay: rgba(0, 0, 0, 0.55);
+  --yd-overlay-light: rgba(255, 255, 255, 0.24);
+  --yd-overlay-soft: rgba(0, 0, 0, 0.28);
+  --yd-overlay-strong: rgba(0, 0, 0, 0.64);
+  --yd-status-pending: #f0ad4e;
+  --yd-success-deep: #237a48;
+  --yd-success-strong: #16a34a;
+  --yd-surface-card: #ffffff;
+  --yd-surface-dark: #1f2329;
+  --yd-surface-dark-deep: #182025;
+  --yd-surface-dark-glow: #4c5960;
+  --yd-surface-dark-soft: #2a3439;
+  --yd-text-faint: #c0c4cc;
+  --yd-text-info-strong: #0958d9;
+  --yd-text-inverse: #ffffff;
+  --yd-text-price: #ff3000;
+  --yd-text-slate: #667085;
+  --yd-text-slate-strong: #475467;
+  --yd-text-success-deep: #16733d;
+  --yd-text-warning-deep: #8f5b00;
+  --yd-warning-border: #ffd591;
+  --yd-warning-strong: #f59e0b;
+  --yd-wechat-green: #07c160;
 }
 
 /*
@@ -63,7 +115,7 @@ border-t-1
 // ==================== 全局公共样式 ====================
 
 // ==================== 语义色具名类 ====================
-// add by 棱信矩灵：配合上方 CSS 变量使用，替代 text-[#333] / text-[#666] / text-[#999] 等硬编码写法
+// add by 亚特：配合上方 CSS 变量使用，替代 text-[#333] / text-[#666] / text-[#999] 等硬编码写法
 .yd-text-main {
   color: var(--yd-text-main);
 }
@@ -137,7 +189,7 @@ border-t-1
 }
 
 // 详情页内容底部留白：为固定定位的 .yd-detail-footer 让位，避免末屏内容被永久遮挡
-// add by 棱信矩灵：此前各页自行用 h-160rpx/pb-xxx 零散处理，约一半页面漏加，这里收敛为具名类
+// add by 亚特：此前各页自行用 h-160rpx/pb-xxx 零散处理，约一半页面漏加，这里收敛为具名类
 .yd-page-with-footer {
   padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 }
@@ -152,7 +204,7 @@ border-t-1
   z-index: 10;
   background-color: #fff;
   padding: 24rpx;
-  // add by 棱信矩灵：兼容 iPhone 全面屏，避免主操作按钮落进 Home 指示条手势区
+  // add by 亚特：兼容 iPhone 全面屏，避免主操作按钮落进 Home 指示条手势区
   // 顶部导航统一写了 safe-area-inset-top，底部此前遗漏，此处统一补齐（覆盖全站 500+ 页面）
   padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 
@@ -218,4 +270,172 @@ border-t-1
       @apply mt-16rpx flex justify-end gap-16rpx;
     }
   }
+}
+
+// ==================== 归集色具名类（第二批） ====================
+
+.yd-bg-accent-blue-light {
+  background-color: var(--yd-accent-blue-light);
+}
+.yd-bg-accent-indigo {
+  background-color: var(--yd-accent-indigo);
+}
+.yd-bg-accent-indigo-soft {
+  background-color: var(--yd-accent-indigo-soft);
+}
+.yd-bg-accent-purple {
+  background-color: var(--yd-accent-purple);
+}
+.yd-bg-accent-teal {
+  background-color: var(--yd-accent-teal);
+}
+.yd-bg-danger-bright {
+  background-color: var(--yd-danger-bright);
+}
+.yd-bg-danger-strong {
+  background-color: var(--yd-danger-strong);
+}
+.yd-bg-disabled {
+  background-color: var(--yd-disabled);
+}
+.yd-bg-hint {
+  background-color: var(--yd-text-hint);
+}
+.yd-bg-im-green {
+  background-color: var(--yd-im-green);
+}
+.yd-bg-im-highlight {
+  background-color: var(--yd-im-highlight);
+}
+.yd-bg-ink {
+  background-color: var(--yd-ink);
+}
+.yd-bg-line {
+  background-color: var(--yd-border-base);
+}
+.yd-bg-mes-shift-1 {
+  background-color: var(--yd-mes-shift-1);
+}
+.yd-bg-mp-bubble-self {
+  background-color: var(--yd-mp-bubble-self);
+}
+.yd-bg-overlay {
+  background-color: var(--yd-overlay);
+}
+.yd-bg-overlay-light {
+  background-color: var(--yd-overlay-light);
+}
+.yd-bg-overlay-soft {
+  background-color: var(--yd-overlay-soft);
+}
+.yd-bg-overlay-strong {
+  background-color: var(--yd-overlay-strong);
+}
+.yd-bg-status-pending {
+  background-color: var(--yd-status-pending);
+}
+.yd-bg-success-deep {
+  background-color: var(--yd-success-deep);
+}
+.yd-bg-success-strong {
+  background-color: var(--yd-success-strong);
+}
+.yd-bg-surface-card {
+  background-color: var(--yd-surface-card);
+}
+.yd-bg-warning {
+  background-color: var(--yd-text-warning);
+}
+.yd-bg-warning-strong {
+  background-color: var(--yd-warning-strong);
+}
+.yd-border-accent-blue {
+  border-color: var(--yd-accent-blue);
+}
+.yd-border-danger-bright {
+  border-color: var(--yd-danger-bright);
+}
+.yd-border-disabled {
+  border-color: var(--yd-disabled);
+}
+.yd-border-faint {
+  border-color: var(--yd-text-faint);
+}
+.yd-border-info-soft {
+  border-color: var(--yd-bg-info-soft);
+}
+.yd-border-main {
+  border-color: var(--yd-text-main);
+}
+.yd-border-primary {
+  border-color: var(--yd-text-link);
+}
+.yd-border-success {
+  border-color: var(--yd-text-success);
+}
+.yd-border-warning {
+  border-color: var(--yd-text-warning);
+}
+.yd-border-warning-border {
+  border-color: var(--yd-warning-border);
+}
+.yd-border-wechat-green {
+  border-color: var(--yd-wechat-green);
+}
+.yd-text-accent-blue-light {
+  color: var(--yd-accent-blue-light);
+}
+.yd-text-accent-purple {
+  color: var(--yd-accent-purple);
+}
+.yd-text-accent-purple-light {
+  color: var(--yd-accent-purple-light);
+}
+.yd-text-accent-teal {
+  color: var(--yd-accent-teal);
+}
+.yd-text-bpm-approve {
+  color: var(--yd-bpm-approve);
+}
+.yd-text-bpm-reject {
+  color: var(--yd-bpm-reject);
+}
+.yd-text-bpm-running {
+  color: var(--yd-bpm-running);
+}
+.yd-text-danger-bright {
+  color: var(--yd-danger-bright);
+}
+.yd-text-danger-strong {
+  color: var(--yd-danger-strong);
+}
+.yd-text-faint {
+  color: var(--yd-text-faint);
+}
+.yd-text-im-pin {
+  color: var(--yd-im-pin);
+}
+.yd-text-info-strong {
+  color: var(--yd-text-info-strong);
+}
+.yd-text-price {
+  color: var(--yd-text-price);
+}
+.yd-text-slate {
+  color: var(--yd-text-slate);
+}
+.yd-text-slate-strong {
+  color: var(--yd-text-slate-strong);
+}
+.yd-text-success-deep {
+  color: var(--yd-text-success-deep);
+}
+.yd-text-success-strong {
+  color: var(--yd-success-strong);
+}
+.yd-text-warning-deep {
+  color: var(--yd-text-warning-deep);
+}
+.yd-text-warning-strong {
+  color: var(--yd-warning-strong);
 }

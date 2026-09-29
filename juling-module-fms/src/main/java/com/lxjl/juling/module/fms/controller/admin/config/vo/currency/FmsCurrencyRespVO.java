@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * FMS 币别 Response VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - FMS 币别 Response VO")
 @Data

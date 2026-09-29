@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ERP 产品库存明细 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -48,6 +50,14 @@ public class ErpStockRecordServiceImpl implements ErpStockRecordService {
         ErpStockRecordDO stockRecord = BeanUtils.toBean(createReqBO, ErpStockRecordDO.class)
                 .setTotalCount(totalCount);
         stockRecordMapper.insert(stockRecord);
+    }
+
+    @Override
+    public List<ErpStockRecordDO> getStockRecordListByBizItem(Integer bizType, Long bizItemId) {
+        if (bizType == null || bizItemId == null) {
+            return Collections.emptyList();
+        }
+        return stockRecordMapper.selectListByBizItem(bizType, bizItemId);
     }
 
 }

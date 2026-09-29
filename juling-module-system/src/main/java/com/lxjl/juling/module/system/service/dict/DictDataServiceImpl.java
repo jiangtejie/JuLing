@@ -26,7 +26,7 @@ import static com.lxjl.juling.module.system.enums.ErrorCodeConstants.*;
 /**
  * 字典数据 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

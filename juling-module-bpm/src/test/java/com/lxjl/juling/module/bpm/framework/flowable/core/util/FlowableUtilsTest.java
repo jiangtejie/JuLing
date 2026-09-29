@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * {@link FlowableUtils} 的单元测试。
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 class FlowableUtilsTest {
 

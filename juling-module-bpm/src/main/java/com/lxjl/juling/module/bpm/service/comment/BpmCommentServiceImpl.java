@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 流程评论 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class BpmCommentServiceImpl implements BpmCommentService {

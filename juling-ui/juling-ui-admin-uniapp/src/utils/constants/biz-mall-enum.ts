@@ -23,7 +23,6 @@ export const TradeOrderStatusEnum = {
  */
 export const DeliveryTypeEnum = {
   EXPRESS: 1, // 快递发货
-  PICK_UP: 2, // 到店自提
 }
 
 /**
@@ -38,17 +37,6 @@ export const TradeAfterSaleStatusEnum = {
   BUYER_CANCEL: 61, // 买家取消
   SELLER_DISAGREE: 62, // 商家拒绝
   SELLER_REFUSE_RECEIVE: 63, // 商家拒收货
-}
-
-/**
- * 佣金提现状态枚举
- */
-export const BrokerageWithdrawStatusEnum = {
-  AUDITING: 0, // 审核中
-  AUDIT_SUCCESS: 10, // 审核通过
-  WITHDRAW_SUCCESS: 11, // 提现成功
-  AUDIT_FAIL: 20, // 审核不通过
-  WITHDRAW_FAIL: 21, // 提现失败
 }
 
 /**

@@ -23,7 +23,7 @@ import java.util.Set;
  *
  * 本质上，实现和 {@link BpmParallelMultiInstanceBehavior} 一样，只是继承的类不一样
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Setter
 public class BpmSequentialMultiInstanceBehavior extends SequentialMultiInstanceBehavior {

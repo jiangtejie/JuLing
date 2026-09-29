@@ -15,19 +15,16 @@
     <name>${project.artifactId}</name>
 
     <description>
-        商城大模块，由 product 商品、promotion 营销、trade 交易、statistics 统计等组成
+        商城大模块，由 product 商品、trade 交易、statistics 统计等组成
     </description>
     <modules>
         <module>juling-module-product</module>
-        <module>juling-module-promotion</module>
         <module>juling-module-trade</module>
         <module>juling-module-statistics</module>
         <!--
             特殊：为什么会有 juling-module-trade-api 呢？
-                juling-module-promotion 和 juling-module-trade 之间相互循环依赖，所以抽出 juling-module-trade-api 模块，这样：
-                1. juling-module-promotion 依赖 juling-module-trade-api
-                2. juling-module-trade 依赖 juling-module-promotion
-            从而不存在相互（循环）依赖，即 juling-module-trade => juling-module-promotion => juling-module-trade-api
+                对外暴露交易能力的 API 模块，供其它模块（如 statistics、erp-api 等）依赖，
+                避免它们直接依赖 juling-module-trade 造成循环依赖。
          -->
         <module>juling-module-trade-api</module>
     </modules>

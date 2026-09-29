@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * WebSocket 配置项
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties("juling.websocket")
 @Data

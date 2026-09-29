@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 微信小程序订阅消息发送 Request DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class SocialWxaSubscribeMessageSendReqDTO {

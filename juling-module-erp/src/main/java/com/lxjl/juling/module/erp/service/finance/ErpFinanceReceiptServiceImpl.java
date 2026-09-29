@@ -6,6 +6,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.finance.vo.receipt.ErpFinanceReceiptPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.finance.vo.receipt.ErpFinanceReceiptSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.finance.ErpFinanceReceiptDO;
@@ -14,7 +18,6 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleReturnDO;
 import com.lxjl.juling.module.erp.dal.mysql.finance.ErpFinanceReceiptItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.finance.ErpFinanceReceiptMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.common.ErpBizTypeEnum;
 import com.lxjl.juling.module.erp.service.sale.ErpCustomerService;
@@ -35,12 +38,12 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
+// TODO 亚特：记录操作日志
 
 /**
  * ERP 收款单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -52,7 +55,7 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
     private ErpFinanceReceiptItemMapper financeReceiptItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpCustomerService customerService;
@@ -82,8 +85,8 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
         if (createReqVO.getFinanceUserId() != null) {
             adminUserApi.validateUser(createReqVO.getFinanceUserId());
         }
-        // 1.5 生成收款单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.FINANCE_RECEIPT_NO_PREFIX);
+        // 1.5 生成收款单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.FINANCE_RECEIPT, null);
         if (financeReceiptMapper.selectByNo(no) != null) {
             throw exception(FINANCE_RECEIPT_NO_EXISTS);
         }
@@ -96,6 +99,12 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
         // 2.2 插入收款单项
         receiptItems.forEach(o -> o.setReceiptId(receipt.getId()));
         financeReceiptItemMapper.insertBatch(receiptItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.FINANCE_RECEIPT).setBillId(receipt.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(receipt.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新销售出库、退货的收款金额情况
         updateSalePrice(receiptItems);

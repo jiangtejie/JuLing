@@ -37,12 +37,6 @@ const menuList = [
     routerName: 'TradeAfterSale',
   },
   {
-    name: '分销管理',
-    icon: 'fa-solid:project-diagram',
-    bgColor: 'bg-cyan-500',
-    routerName: 'TradeBrokerageUser',
-  },
-  {
     name: '优惠券',
     icon: 'lucide:ticket',
     bgColor: 'bg-blue-500',
@@ -53,12 +47,6 @@ const menuList = [
     icon: 'lucide:users',
     bgColor: 'bg-purple-500',
     routerName: 'PromotionBargainActivity',
-  },
-  {
-    name: '佣金提现',
-    icon: 'vaadin:money-withdraw',
-    bgColor: 'bg-rose-500',
-    routerName: 'TradeBrokerageWithdraw',
   },
 ];
 

@@ -242,6 +242,24 @@ export function useFormItemColumns(
       slots: { default: 'remark' },
     },
     {
+      field: 'batchNo',
+      title: '批次号',
+      minWidth: 150,
+      slots: { default: 'batchNo' },
+    },
+    {
+      field: 'productionDate',
+      title: '生产日期',
+      minWidth: 150,
+      slots: { default: 'productionDate' },
+    },
+    {
+      field: 'expiryDate',
+      title: '有效期',
+      minWidth: 150,
+      slots: { default: 'expiryDate' },
+    },
+    {
       field: 'totalCount',
       title: '原数量',
       formatter: 'formatAmount3',

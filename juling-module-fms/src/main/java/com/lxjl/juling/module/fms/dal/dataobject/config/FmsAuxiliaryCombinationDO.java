@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * FMS 辅助核算组合 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "fms_assist_combination", autoResultMap = true)
 @KeySequence("fms_assist_combination_seq")

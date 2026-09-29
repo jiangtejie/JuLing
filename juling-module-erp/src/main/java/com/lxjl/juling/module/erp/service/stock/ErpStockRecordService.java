@@ -6,10 +6,12 @@ import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockRecordDO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 /**
  * ERP 产品库存明细 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ErpStockRecordService {
 
@@ -35,5 +37,16 @@ public interface ErpStockRecordService {
      * @param createReqBO 创建库存明细 BO
      */
     void createStockRecord(@Valid ErpStockRecordCreateReqBO createReqBO);
+
+    /**
+     * 按来源（业务类型 + 业务项）查询库存流水
+     *
+     * 批次库存用来做「反审核冲销」：出库按 FIFO 拆批后，一行流水对应一个批次。
+     *
+     * @param bizType   业务类型
+     * @param bizItemId 业务项编号
+     * @return 流水列表（按 id 升序，即发生顺序）
+     */
+    List<ErpStockRecordDO> getStockRecordListByBizItem(Integer bizType, Long bizItemId);
 
 }

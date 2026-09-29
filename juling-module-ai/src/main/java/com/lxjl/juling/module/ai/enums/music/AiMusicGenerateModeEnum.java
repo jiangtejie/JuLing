@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * AI 音乐生成模式的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

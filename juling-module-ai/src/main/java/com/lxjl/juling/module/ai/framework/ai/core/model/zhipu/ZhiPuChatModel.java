@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 /**
  * 智谱 {@link ChatModel} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @RequiredArgsConstructor

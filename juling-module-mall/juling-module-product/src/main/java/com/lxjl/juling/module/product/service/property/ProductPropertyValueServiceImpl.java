@@ -22,7 +22,7 @@ import static com.lxjl.juling.module.product.enums.ErrorCodeConstants.PROPERTY_V
 /**
  * 商品属性值 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

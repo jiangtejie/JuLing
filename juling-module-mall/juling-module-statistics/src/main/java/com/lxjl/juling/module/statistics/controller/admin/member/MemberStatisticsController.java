@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class MemberStatisticsController {
     @GetMapping("/analyse")
     @Operation(summary = "获得会员分析数据")
     @PreAuthorize("@ss.hasPermission('statistics:member:query')")
-    public CommonResult<MemberAnalyseRespVO> getMemberAnalyse(MemberAnalyseReqVO reqVO) {
+    public CommonResult<MemberAnalyseRespVO> getMemberAnalyse(@Valid MemberAnalyseReqVO reqVO) {
         // 1. 查询数据
         LocalDateTime beginTime = ArrayUtil.get(reqVO.getTimes(), 0);
         LocalDateTime endTime = ArrayUtil.get(reqVO.getTimes(), 1);
@@ -106,7 +107,7 @@ public class MemberStatisticsController {
     @GetMapping("/register-count-list")
     @Operation(summary = "获得会员注册数量列表")
     @PreAuthorize("@ss.hasPermission('statistics:member:query')")
-    public CommonResult<List<MemberRegisterCountRespVO>> getMemberRegisterCountList(MemberAnalyseReqVO reqVO) {
+    public CommonResult<List<MemberRegisterCountRespVO>> getMemberRegisterCountList(@Valid MemberAnalyseReqVO reqVO) {
         return success(memberStatisticsService.getMemberRegisterCountList(
                 ArrayUtil.get(reqVO.getTimes(), 0), ArrayUtil.get(reqVO.getTimes(), 1)));
     }

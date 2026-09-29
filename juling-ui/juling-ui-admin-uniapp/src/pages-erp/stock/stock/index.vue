@@ -15,7 +15,7 @@
               <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
                 {{ item.productName || '-' }}
               </view>
-              <view class="yd-bg-subtle rounded-full px-16rpx py-6rpx text-24rpx text-[#475569]">
+              <view class="yd-bg-subtle yd-text-slate-strong rounded-full px-16rpx py-6rpx text-24rpx">
                 {{ item.unitName || '-' }}
               </view>
             </view>
@@ -31,7 +31,7 @@
               <view class="yd-text-hint text-22rpx">
                 当前库存
               </view>
-              <view class="mt-6rpx text-40rpx text-[#9254de] font-semibold">
+              <view class="yd-text-accent-purple-light mt-6rpx text-40rpx font-semibold">
                 {{ formatCount(item.count) }}
               </view>
             </view>

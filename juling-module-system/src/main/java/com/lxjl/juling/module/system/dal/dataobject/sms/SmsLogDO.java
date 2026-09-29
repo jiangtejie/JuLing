@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 短信日志 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021-01-25
  */
 @TableName(value = "system_sms_log", autoResultMap = true)

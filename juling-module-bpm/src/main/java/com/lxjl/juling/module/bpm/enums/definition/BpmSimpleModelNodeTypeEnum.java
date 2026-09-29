@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * 仿钉钉的流程器设计器的模型节点类型
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

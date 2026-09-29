@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 附件类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

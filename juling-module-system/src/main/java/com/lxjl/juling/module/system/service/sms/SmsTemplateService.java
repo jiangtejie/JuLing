@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 短信模板 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021/1/25 9:24
  */
 public interface SmsTemplateService {

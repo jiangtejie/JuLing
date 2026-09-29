@@ -17,24 +17,18 @@
         <module>juling-module-infra</module>
         <module>juling-module-member</module>
         <module>juling-module-bpm</module>
-        <module>juling-module-mp</module>
-        <module>juling-module-pay</module>
         <module>juling-module-mall</module>
-        <module>juling-module-crm</module>
+        <module>juling-module-erp-api</module>
+        <module>juling-module-bill</module>
         <module>juling-module-erp</module>
-        <module>juling-module-iot</module>
-        <module>juling-module-mes</module>
         <module>juling-module-wms</module>
-        <module>juling-module-hrm</module>
         <module>juling-module-fms</module>
-        <module>juling-module-pms</module>
-        <module>juling-module-im</module>
         <!-- 提示：AI 模块需完成模型密钥等配置后再启用 -->
         <module>juling-module-ai</module>
     </modules>
 
     <name>${project.artifactId}</name>
-    <description>棱信矩灵 管理系统</description>
+    <description>亚特 管理系统</description>
     <url>https://gitee.com/</url>
 
     <properties>

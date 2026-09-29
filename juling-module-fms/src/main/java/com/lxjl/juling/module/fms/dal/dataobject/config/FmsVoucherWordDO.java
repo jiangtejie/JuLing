@@ -11,7 +11,7 @@ import lombok.ToString;
 /**
  * FMS 凭证字 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_voucher_word")
 @KeySequence("fms_voucher_word_seq")

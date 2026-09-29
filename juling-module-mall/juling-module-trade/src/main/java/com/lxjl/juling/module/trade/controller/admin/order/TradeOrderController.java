@@ -3,6 +3,7 @@ package com.lxjl.juling.module.trade.controller.admin.order;
 import cn.hutool.core.collection.CollUtil;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
+import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.member.api.user.MemberUserApi;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.*;
@@ -10,13 +11,17 @@ import com.lxjl.juling.module.trade.convert.order.TradeOrderConvert;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderItemDO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderLogDO;
+import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderPaymentProofDO;
 import com.lxjl.juling.module.trade.service.order.TradeOrderLogService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderAuditService;
+import com.lxjl.juling.module.trade.service.order.TradeOrderPaymentProofService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -42,6 +47,10 @@ public class TradeOrderController {
     @Resource
     private TradeOrderUpdateService tradeOrderUpdateService;
     @Resource
+    private TradeOrderPaymentProofService tradeOrderPaymentProofService;
+    @Resource
+    private TradeOrderAuditService tradeOrderAuditService;
+    @Resource
     private TradeOrderQueryService tradeOrderQueryService;
     @Resource
     private TradeOrderLogService tradeOrderLogService;
@@ -60,8 +69,7 @@ public class TradeOrderController {
         }
 
         // 查询用户信息
-        Set<Long> userIds = CollUtil.unionDistinct(convertList(pageResult.getList(), TradeOrderDO::getUserId),
-                convertList(pageResult.getList(), TradeOrderDO::getBrokerageUserId, Objects::nonNull));
+        Set<Long> userIds = convertSet(pageResult.getList(), TradeOrderDO::getUserId);
         Map<Long, MemberUserRespDTO> userMap = memberUserApi.getUserMap(userIds);
         // 查询订单项
         List<TradeOrderItemDO> orderItems = tradeOrderQueryService.getOrderItemListByOrderId(
@@ -92,10 +100,8 @@ public class TradeOrderController {
 
         // 拼接数据
         MemberUserRespDTO user = memberUserApi.getUser(order.getUserId());
-        MemberUserRespDTO brokerageUser = order.getBrokerageUserId() != null ?
-                memberUserApi.getUser(order.getBrokerageUserId()) : null;
         List<TradeOrderLogDO> orderLogs = tradeOrderLogService.getOrderLogListByOrderId(id);
-        return success(TradeOrderConvert.INSTANCE.convert(order, orderItems, orderLogs, user, brokerageUser));
+        return success(TradeOrderConvert.INSTANCE.convert(order, orderItems, orderLogs, user));
     }
 
     @GetMapping("/get-express-track-list")
@@ -115,6 +121,14 @@ public class TradeOrderController {
         return success(true);
     }
 
+    @PutMapping("/submit-audit")
+    @Operation(summary = "提交门店要货审核", description = "把订单提交供应链审核（BPM 审批流），审核通过后才可发货")
+    @PreAuthorize("@ss.hasPermission('trade:order:audit:submit')")
+    public CommonResult<Boolean> submitAudit(@RequestParam("id") Long id) {
+        tradeOrderAuditService.submitAudit(id, getLoginUserId());
+        return success(true);
+    }
+
     @PutMapping("/update-remark")
     @Operation(summary = "订单备注")
     @PreAuthorize("@ss.hasPermission('trade:order:update')")
@@ -126,7 +140,7 @@ public class TradeOrderController {
     @PutMapping("/update-price")
     @Operation(summary = "订单调价")
     @PreAuthorize("@ss.hasPermission('trade:order:update')")
-    public CommonResult<Boolean> updateOrderPrice(@RequestBody TradeOrderUpdatePriceReqVO reqVO) {
+    public CommonResult<Boolean> updateOrderPrice(@Valid @RequestBody TradeOrderUpdatePriceReqVO reqVO) {
         tradeOrderUpdateService.updateOrderPrice(reqVO);
         return success(true);
     }
@@ -139,31 +153,13 @@ public class TradeOrderController {
         return success(true);
     }
 
-    @PutMapping("/pick-up-by-id")
-    @Operation(summary = "订单核销")
-    @Parameter(name = "id", description = "交易订单编号")
-    @PreAuthorize("@ss.hasPermission('trade:order:pick-up')")
-    public CommonResult<Boolean> pickUpOrderById(@RequestParam("id") Long id) {
-        tradeOrderUpdateService.pickUpOrderByAdmin(getLoginUserId(), id);
-        return success(true);
-    }
-
-    @PutMapping("/pick-up-by-verify-code")
-    @Operation(summary = "订单核销")
-    @Parameter(name = "pickUpVerifyCode", description = "自提核销码")
-    @PreAuthorize("@ss.hasPermission('trade:order:pick-up')")
-    public CommonResult<Boolean> pickUpOrderByVerifyCode(@RequestParam("pickUpVerifyCode") String pickUpVerifyCode) {
-        tradeOrderUpdateService.pickUpOrderByAdmin(getLoginUserId(), pickUpVerifyCode);
-        return success(true);
-    }
-
-    @GetMapping("/get-by-pick-up-verify-code")
-    @Operation(summary = "查询核销码对应的订单")
-    @Parameter(name = "pickUpVerifyCode", description = "自提核销码")
+    @GetMapping("/payment-proof/list")
+    @Operation(summary = "获得订单的付款凭证列表")
+    @Parameter(name = "orderId", description = "交易订单编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('trade:order:query')")
-    public CommonResult<TradeOrderDetailRespVO> getByPickUpVerifyCode(@RequestParam("pickUpVerifyCode") String pickUpVerifyCode) {
-        TradeOrderDO tradeOrder = tradeOrderUpdateService.getByPickUpVerifyCode(pickUpVerifyCode);
-        return success(TradeOrderConvert.INSTANCE.convert2(tradeOrder, null));
+    public CommonResult<List<TradeOrderPaymentProofRespVO>> getPaymentProofList(@RequestParam("orderId") Long orderId) {
+        List<TradeOrderPaymentProofDO> list = tradeOrderPaymentProofService.getPaymentProofList(orderId);
+        return success(BeanUtils.toBean(list, TradeOrderPaymentProofRespVO.class));
     }
 
 }

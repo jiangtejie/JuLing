@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * 审批人为空 {@link BpmTaskCandidateStrategy} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmTaskCandidateAssignEmptyStrategy implements BpmTaskCandidateStrategy {

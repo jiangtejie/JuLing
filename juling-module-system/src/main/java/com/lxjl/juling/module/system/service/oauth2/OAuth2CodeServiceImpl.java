@@ -18,7 +18,7 @@ import static com.lxjl.juling.module.system.enums.ErrorCodeConstants.OAUTH2_CODE
 /**
  * OAuth2.0 授权码 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

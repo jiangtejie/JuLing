@@ -32,4 +32,27 @@ if [ "$failed" -ne 0 ]; then
     exit 1
 fi
 
+# ---------------------------------------------------------------------------
+# 门店订货 H5 单测（纯逻辑、无网络无数据库，跑一轮几百毫秒到几秒）
+#
+# 为什么放在这里：本仓库 core.hooksPath = script/git-hooks，.husky/ 下的钩子不会执行，
+# 所以「测试进 pre-commit」只能落在本文件。
+# 只在「本次提交动了该前端工程」且「依赖已安装」时才跑，不影响其它模块的提交。
+# 需要绕过时：git commit --no-verify
+# ---------------------------------------------------------------------------
+H5_DIR="juling-ui/juling-ui-mall-h5"
+if git diff --cached --name-only --diff-filter=ACM | grep -q "^${H5_DIR}/"; then
+    # 单测依赖 Node 的原生 TS 剥离（>= 22.6）。版本不够就跳过，不要把"环境不行"变成"提交被拒"。
+    NODE_MAJOR=$(node -v 2>/dev/null | sed 's/^v//' | cut -d. -f1)
+    if [ -n "$NODE_MAJOR" ] && [ "$NODE_MAJOR" -ge 22 ] && [ -d "${H5_DIR}/node_modules" ]; then
+        if ! (cd "${H5_DIR}" && node --test "tests/*.test.ts" >/dev/null 2>&1); then
+            echo ""
+            echo "提交被拒绝:门店订货 H5 单测未通过。"
+            echo "  · 查看详情:cd ${H5_DIR} && pnpm run test"
+            echo "  · 确需跳过:git commit --no-verify"
+            exit 1
+        fi
+    fi
+fi
+
 exit 0

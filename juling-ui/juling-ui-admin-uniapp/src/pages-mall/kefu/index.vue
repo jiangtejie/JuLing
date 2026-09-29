@@ -13,7 +13,7 @@
         <view
           v-for="item in sortedConversations"
           :key="item.id"
-          class="yd-border-light flex items-center gap-20rpx border-b px-24rpx py-24rpx active:bg-[#f7f8fa]"
+          class="yd-border-light flex items-center gap-20rpx border-b px-24rpx py-24rpx active:bg-[var(--yd-surface-subtle)]"
           :class="item.adminPinned ? 'yd-bg-subtle' : 'bg-white'"
           @click="handleOpen(item)"
           @longpress="handleLongPress(item)"
@@ -30,7 +30,7 @@
             </view>
             <view
               v-if="item.adminUnreadMessageCount"
-              class="absolute min-w-32rpx rounded-16rpx bg-[#fa4350] px-8rpx text-center text-20rpx text-white leading-32rpx -right-8rpx -top-8rpx"
+              class="yd-bg-danger-bright absolute min-w-32rpx rounded-16rpx px-8rpx text-center text-20rpx text-white leading-32rpx -right-8rpx -top-8rpx"
             >
               {{ item.adminUnreadMessageCount > 99 ? '99+' : item.adminUnreadMessageCount }}
             </view>

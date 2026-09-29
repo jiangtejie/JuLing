@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * 商品 SPU 状态
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

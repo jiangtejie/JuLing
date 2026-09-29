@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * Cache 配置项
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties("juling.cache")
 @Data

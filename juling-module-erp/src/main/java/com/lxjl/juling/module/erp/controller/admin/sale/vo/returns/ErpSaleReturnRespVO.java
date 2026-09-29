@@ -29,7 +29,7 @@ public class ErpSaleReturnRespVO {
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
     private Long customerId;
-    @Schema(description = "客户名称", example = "矩灵")
+    @Schema(description = "客户名称", example = "亚特")
     @ExcelProperty("客户名称")
     private String customerName;
 
@@ -81,9 +81,9 @@ public class ErpSaleReturnRespVO {
     @ExcelProperty("备注")
     private String remark;
 
-    @Schema(description = "创建人", example = "矩灵")
+    @Schema(description = "创建人", example = "亚特")
     private String creator;
-    @Schema(description = "创建人名称", example = "矩灵")
+    @Schema(description = "创建人名称", example = "亚特")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)

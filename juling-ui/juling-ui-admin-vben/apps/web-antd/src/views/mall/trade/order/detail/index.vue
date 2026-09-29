@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MallDeliveryExpressApi } from '#/api/mall/trade/delivery/express';
-import type { MallDeliveryPickUpStoreApi } from '#/api/mall/trade/delivery/pickUpStore';
 import type { MallOrderApi } from '#/api/mall/trade/order';
 
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { confirm, Page, useVbenModal } from '@vben/common-ui';
@@ -14,25 +13,34 @@ import {
   TradeOrderStatusEnum,
 } from '@vben/constants';
 import { useTabs } from '@vben/hooks';
+import { fenToYuan, formatDateTime } from '@vben/utils';
 
-import { message, Tag } from 'ant-design-vue';
+import {
+  Card,
+  Divider,
+  Image,
+  message,
+  Space,
+  TabPane,
+  Tabs,
+  Tag,
+} from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
-import { getDeliveryPickUpStore } from '#/api/mall/trade/delivery/pickUpStore';
 import {
   getExpressTrackList,
   getOrder,
-  pickUpOrder,
+  getPaymentProofList,
 } from '#/api/mall/trade/order';
 import { useDescription } from '#/components/description';
 import { DictTag } from '#/components/dict-tag';
 import { TableAction } from '#/components/table-action';
 
 import AddressForm from '../modules/address-form.vue';
-import DeliveryForm from '../modules/delivery-form.vue';
 import PriceForm from '../modules/price-form.vue';
 import RemarkForm from '../modules/remark-form.vue';
+import { deriveOrderStatus } from '../status';
 import {
   useDeliveryInfoSchema,
   useExpressTrackColumns,
@@ -45,6 +53,14 @@ import {
 
 defineOptions({ name: 'TradeOrderDetail' });
 
+/**
+ * 订单编号来源有两个：
+ * 1. 路由页（/mall/trade/order/detail/:id）—— 读路由参数；
+ * 2. 被 BPM 审批页当作「业务表单」组件嵌入时 —— 走 id 属性（见 CRM 合同页同一范式）。
+ * 之前只读路由参数，嵌入时 Number(undefined) = NaN，后端收到 id=NaN 直接报参数类型错误。
+ */
+const props = defineProps<{ id?: number | string }>();
+
 const route = useRoute();
 const router = useRouter();
 const tabs = useTabs();
@@ -54,17 +70,29 @@ const orderId = ref(0);
 const order = ref<MallOrderApi.Order>({
   logs: [],
 });
+/** 付款凭证（门店 H5 上传，含历史与驳回记录）：本页只读展示，审批结果由 BPM 财务节点回写 */
+const proofs = ref<MallOrderApi.PaymentProof[]>([]);
+
+/**
+ * 单条凭证状态（后端 TradeOrderPaymentProofStatusEnum）。
+ * 这里用本地映射而非字典：订单维度已有字典 trade_payment_proof_status，
+ * 凭证维度只有 3 个值且仅本页展示，避免为一个纯展示字段新增一套字典数据。
+ */
+const PROOF_STATUS_MAP: Record<number, { color: string; text: string }> = {
+  0: { color: 'warning', text: '待审核' },
+  1: { color: 'success', text: '已认定' },
+  2: { color: 'error', text: '已驳回' },
+};
+
+/** 当前页签：默认展示订单信息 */
+const activeTab = ref('order');
+
 const deliveryExpressList = ref<MallDeliveryExpressApi.DeliveryExpress[]>([]);
 const expressTrackList = ref<any[]>([]);
-const pickUpStore = ref<
-  MallDeliveryPickUpStoreApi.DeliveryPickUpStore | undefined
->();
-
 const [OrderInfoDescriptions] = useDescription({
   title: '订单信息',
   bordered: false,
   column: 3,
-  class: 'mx-4',
   schema: useOrderInfoSchema(),
 });
 
@@ -72,7 +100,6 @@ const [OrderStatusDescriptions] = useDescription({
   title: '订单状态',
   bordered: false,
   column: 1,
-  class: 'mx-4',
   schema: useOrderStatusSchema(),
 });
 
@@ -80,15 +107,26 @@ const [OrderPriceDescriptions] = useDescription({
   title: '费用信息',
   bordered: false,
   column: 4,
-  class: 'mx-4',
   schema: useOrderPriceSchema(),
 });
+
+/**
+ * 待收货款（应收 - 门店申报金额，负数归零）。
+ *
+ * paidAmount 在新流程里是「门店申报金额」口径（未被驳回的凭证申报金额合计）：
+ * 审批驳回后申报金额归零，此处即整笔应收；审批通过后也不会再回填核定额。
+ */
+const remainAmount = computed(() =>
+  Math.max(0, (order.value.payPrice ?? 0) - (order.value.paidAmount ?? 0)),
+);
+
+/** 订单状态（含两级审批细分）：与列表页同一口径，见 ../status.ts */
+const orderStatusInfo = computed(() => deriveOrderStatus(order.value));
 
 const [DeliveryInfoDescriptions] = useDescription({
   title: '收货信息',
   bordered: false,
   column: 3,
-  class: 'mx-4',
   schema: useDeliveryInfoSchema(),
 });
 
@@ -99,7 +137,9 @@ const [ProductGrid, productGridApi] = useVbenVxeGrid({
     },
     columns: useProductColumns(),
     data: [],
-    height: 'auto',
+    // 页签内的表格不要再给 height:'auto'：页签没有确定高度，会被拉伸成一大片空白；
+    // 不给 height 即按内容自适应，行数多时用 maxHeight 内部滚动
+    maxHeight: 460,
     border: true,
     pagerConfig: {
       enabled: false,
@@ -130,6 +170,8 @@ const [OperateLogGrid, operateLogGridApi] = useVbenVxeGrid({
   gridOptions: {
     columns: useOperateLogColumns(),
     data: [],
+    // 日志可能很多条：限制高度、内部滚动
+    maxHeight: 420,
     border: true,
     pagerConfig: {
       enabled: false,
@@ -139,11 +181,6 @@ const [OperateLogGrid, operateLogGridApi] = useVbenVxeGrid({
       search: true,
     },
   } as VxeTableGridOptions,
-});
-
-const [DeliveryFormModal, deliveryFormModalApi] = useVbenModal({
-  connectedComponent: DeliveryForm,
-  destroyOnClose: true,
 });
 
 const [RemarkFormModal, remarkFormModalApi] = useVbenModal({
@@ -174,6 +211,8 @@ async function getDetail() {
     order.value = res;
     productGridApi.setGridOptions({ data: res.items || [] });
     operateLogGridApi.setGridOptions({ data: res.logs || [] });
+    // 线下收款：付款凭证（审批进度与驳回原因，本页只读）
+    proofs.value = await getPaymentProofList(orderId.value);
 
     // 如果配送方式为快递，则查询物流公司
     if (res.deliveryType === DeliveryTypeEnum.EXPRESS.type) {
@@ -184,11 +223,6 @@ async function getDetail() {
           data: expressTrackList.value || [],
         });
       }
-    } else if (
-      res.deliveryType === DeliveryTypeEnum.PICK_UP.type &&
-      res.pickUpStoreId
-    ) {
-      pickUpStore.value = await getDeliveryPickUpStore(res.pickUpStoreId);
     }
   } finally {
     loading.value = false;
@@ -200,32 +234,12 @@ const handleRemark = () => {
   remarkFormModalApi.setData(order.value).open();
 };
 
-const handleDelivery = () => {
-  deliveryFormModalApi.setData(order.value).open();
-};
-
 const handleUpdateAddress = () => {
   addressFormModalApi.setData(order.value).open();
 };
 
 const handleUpdatePrice = () => {
   priceFormModalApi.setData(order.value).open();
-};
-
-/** 核销 */
-const handlePickUp = async () => {
-  await confirm('确认核销订单吗？');
-  const hideLoading = message.loading({
-    content: '正在处理中...',
-    duration: 0,
-  });
-  try {
-    await pickUpOrder(order.value.id!);
-    message.success('核销成功');
-    await getDetail();
-  } finally {
-    hideLoading();
-  }
 };
 
 /** 返回列表页 */
@@ -236,7 +250,12 @@ function handleBack() {
 
 /** 初始化 */
 onMounted(async () => {
-  orderId.value = Number(route.params.id);
+  const parsed = Number(props.id ?? route.params.id);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    message.error('订单编号无效，无法加载订单详情');
+    return;
+  }
+  orderId.value = parsed;
   await getDetail();
 });
 </script>
@@ -264,14 +283,6 @@ onMounted(async () => {
             onClick: handleRemark,
           },
           {
-            label: '发货',
-            type: 'primary',
-            onClick: handleDelivery,
-            ifShow:
-              order.status === TradeOrderStatusEnum.UNDELIVERED.status &&
-              order.deliveryType === DeliveryTypeEnum.EXPRESS.type,
-          },
-          {
             label: '修改地址',
             type: 'primary',
             onClick: handleUpdateAddress,
@@ -279,71 +290,237 @@ onMounted(async () => {
               order.status === TradeOrderStatusEnum.UNDELIVERED.status &&
               order.deliveryType === DeliveryTypeEnum.EXPRESS.type,
           },
-          {
-            label: '核销',
-            type: 'primary',
-            onClick: handlePickUp,
-            ifShow:
-              order.status === TradeOrderStatusEnum.UNDELIVERED.status &&
-              order.deliveryType === DeliveryTypeEnum.PICK_UP.type,
-          },
         ]"
       />
     </template>
 
     <!-- 各种操作的弹窗 -->
-    <DeliveryFormModal @success="getDetail" />
     <RemarkFormModal @success="getDetail" />
     <AddressFormModal @success="getDetail" />
     <PriceFormModal @success="getDetail" />
 
-    <!-- 订单信息 -->
-    <div class="mb-4">
-      <OrderInfoDescriptions :data="order" />
-    </div>
-    <!-- 订单状态 -->
-    <div class="mb-4">
-      <OrderStatusDescriptions :data="order" />
-    </div>
-    <!-- 商品信息 -->
-    <div class="mb-4">
-      <ProductGrid table-title="商品信息">
-        <template #spuName="{ row }">
-          <div class="flex flex-1 flex-col items-start gap-1 text-left">
-            <span class="text-sm">{{ row.spuName }}</span>
-            <div class="flex flex-wrap gap-1">
-              <Tag
-                v-for="property in row.properties"
-                :key="property.propertyId!"
-                size="small"
+    <!-- 概览条：订单状态与收款进度是本页最常看的信息，固定展示在页签上方 -->
+    <Card class="mb-4" size="small" :body-style="{ padding: '12px 16px' }">
+      <div class="flex flex-wrap items-center gap-x-10 gap-y-3">
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">订单状态</span>
+          <Tag :color="orderStatusInfo.color">{{ orderStatusInfo.text }}</Tag>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">收款状态</span>
+          <DictTag
+            :type="DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS"
+            :value="order.paymentProofStatus ?? 0"
+          />
+        </div>
+        <div>
+          <span class="text-gray-400">门店申报金额</span>
+          <span class="ml-2 font-semibold">
+            ¥{{ fenToYuan(order.paidAmount ?? 0) }}
+          </span>
+        </div>
+        <div>
+          <span class="text-gray-400">待收货款</span>
+          <span
+            class="ml-2 font-semibold"
+            :class="remainAmount > 0 ? 'text-red-500' : 'text-green-600'"
+          >
+            ¥{{ fenToYuan(remainAmount) }}
+          </span>
+        </div>
+        <div>
+          <span class="text-gray-400">应收金额</span>
+          <span class="ml-2">¥{{ fenToYuan(order.payPrice ?? 0) }}</span>
+        </div>
+      </div>
+    </Card>
+
+    <Tabs v-model:activeKey="activeTab">
+      <!-- 订单信息：基础信息 + 状态与操作提示 -->
+      <TabPane key="order" tab="订单信息">
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
+          <div class="xl:col-span-2">
+            <OrderInfoDescriptions :data="order" />
+          </div>
+          <div>
+            <OrderStatusDescriptions :data="order" />
+          </div>
+        </div>
+      </TabPane>
+
+      <!-- 线下收款：门店上传凭证 → BPM 审批结果回写，本页只读展示（核验收款入口已随流程改造下线） -->
+      <TabPane key="payment" tab="收款信息">
+        <Card size="small" :body-style="{ padding: '12px 16px' }">
+          <div class="flex flex-wrap items-baseline gap-x-12 gap-y-3">
+            <div>
+              <span class="text-gray-400">门店申报金额</span>
+              <span class="ml-2 text-base font-semibold">
+                ¥{{ fenToYuan(order.paidAmount ?? 0) }}
+              </span>
+            </div>
+            <div>
+              <span class="text-gray-400">待收货款</span>
+              <span
+                class="ml-2 text-base font-semibold"
+                :class="remainAmount > 0 ? 'text-red-500' : 'text-green-600'"
               >
-                {{ property.propertyName }}: {{ property.valueName }}
-              </Tag>
+                ¥{{ fenToYuan(remainAmount) }}
+              </span>
+            </div>
+            <div>
+              <span class="text-gray-400">应收金额</span>
+              <span class="ml-2">¥{{ fenToYuan(order.payPrice ?? 0) }}</span>
+            </div>
+            <div v-if="order.payChannelCode">
+              <span class="text-gray-400">收款渠道</span>
+              <span class="ml-2">
+                <DictTag
+                  :type="DICT_TYPE.PAY_CHANNEL_CODE"
+                  :value="order.payChannelCode"
+                />
+              </span>
             </div>
           </div>
+
+          <Divider class="!my-3" />
+
+          <!-- 核验收款入口已下线：认定动作在 BPM 审批节点完成，这里只做只读展示 -->
+          <div class="mb-2 text-xs text-gray-400">
+            门店在 H5 提交凭证后订单直接进入待发货，并自动提交「供应链 → 财务」两级审批；
+            审批通过即按门店申报金额认定收款，驳回则门店需重新上传（重传后自动再次提交审批）。
+          </div>
+
+          <div v-if="proofs.length === 0" class="py-2 text-gray-400">
+            门店尚未上传付款凭证
+          </div>
+          <div v-else class="flex flex-col gap-3">
+            <div
+              v-for="proof in proofs"
+              :key="proof.id"
+              class="rounded-md border border-border p-3"
+            >
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <Tag :color="PROOF_STATUS_MAP[proof.status ?? 0]?.color">
+                  {{ PROOF_STATUS_MAP[proof.status ?? 0]?.text }}
+                </Tag>
+                <span>
+                  门店申报
+                  <span class="font-medium">
+                    ¥{{ fenToYuan(proof.amount ?? 0) }}
+                  </span>
+                </span>
+                <span
+                  v-if="
+                    proof.confirmedAmount !== null &&
+                    proof.confirmedAmount !== undefined
+                  "
+                >
+                  认定金额
+                  <span class="font-medium">
+                    ¥{{ fenToYuan(proof.confirmedAmount) }}
+                  </span>
+                </span>
+                <span v-if="proof.payerName" class="text-gray-400">
+                  付款人：{{ proof.payerName }}
+                </span>
+                <DictTag
+                  v-if="proof.payChannelCode"
+                  :type="DICT_TYPE.PAY_CHANNEL_CODE"
+                  :value="proof.payChannelCode"
+                />
+                <span class="text-xs text-gray-400">
+                  {{ formatDateTime(proof.createTime) }}
+                </span>
+              </div>
+              <Image.PreviewGroup>
+                <Space :size="12" wrap class="mt-3">
+                  <Image
+                    v-for="(url, index) in proof.urls"
+                    :key="index"
+                    :src="url"
+                    :width="128"
+                    class="rounded-md border border-border"
+                  />
+                </Space>
+              </Image.PreviewGroup>
+              <div v-if="proof.auditRemark" class="mt-2 text-xs text-red-500">
+                审批意见：{{ proof.auditRemark }}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </TabPane>
+
+      <!-- 商品与费用 -->
+      <TabPane key="goods" tab="商品与费用">
+        <ProductGrid table-title="商品信息">
+          <template #spuPic="{ row }">
+            <Image
+              :src="row.picUrl"
+              :width="48"
+              :height="48"
+              class="rounded-md border border-border"
+            />
+          </template>
+          <template #spuName="{ row }">
+            <div class="flex flex-1 flex-col items-start gap-1 text-left">
+              <span class="text-sm">{{ row.spuName }}</span>
+              <div class="flex flex-wrap gap-1">
+                <Tag
+                  v-for="property in row.properties"
+                  :key="property.propertyId!"
+                  size="small"
+                >
+                  {{ property.propertyName }}: {{ property.valueName }}
+                </Tag>
+              </div>
+            </div>
+          </template>
+        </ProductGrid>
+        <div class="mt-4">
+          <OrderPriceDescriptions :data="order" />
+        </div>
+      </TabPane>
+
+      <!-- 收货与物流 -->
+      <TabPane key="delivery" tab="收货与物流">
+        <DeliveryInfoDescriptions :data="order" />
+        <div v-if="expressTrackList.length > 0" class="mt-4">
+          <ExpressTrackGrid table-title="物流详情" />
+        </div>
+        <div v-else class="mt-4 text-gray-400">
+          暂无物流轨迹（尚未发货或无需物流）
+        </div>
+      </TabPane>
+
+      <!-- 操作日志：页签上带条数 -->
+      <TabPane key="logs">
+        <template #tab>
+          操作日志
+          <span v-if="order.logs?.length" class="text-gray-400">
+            ({{ order.logs.length }})
+          </span>
         </template>
-      </ProductGrid>
-    </div>
-    <!-- 费用信息 -->
-    <div class="mb-4">
-      <OrderPriceDescriptions :data="order" />
-    </div>
-    <!-- 收货信息 -->
-    <div class="mb-4">
-      <DeliveryInfoDescriptions :data="order" />
-    </div>
-    <!-- 物流详情 -->
-    <div v-if="expressTrackList.length > 0" class="mb-4">
-      <ExpressTrackGrid table-title="物流详情" />
-    </div>
-    <!-- 操作日志 -->
-    <div>
-      <OperateLogGrid table-title="操作日志">
-        <template #userType="{ row }">
-          <Tag v-if="row.userType === 0" color="default"> 系统 </Tag>
-          <DictTag v-else :type="DICT_TYPE.USER_TYPE" :value="row.userType" />
-        </template>
-      </OperateLogGrid>
-    </div>
+        <OperateLogGrid table-title="操作日志">
+          <template #userType="{ row }">
+            <Tag v-if="row.userType === 0" color="default"> 系统 </Tag>
+            <DictTag v-else :type="DICT_TYPE.USER_TYPE" :value="row.userType" />
+          </template>
+        </OperateLogGrid>
+      </TabPane>
+    </Tabs>
   </Page>
 </template>
+
+<style lang="scss" scoped>
+  /*
+   * description 组件把内容放进无左右内边距的卡片 body（bodyStyle: 8px 0），
+   * 而卡片标题是 16px 内边距（headStyle: 8px 16px）——不补这一层，
+   * 同一张卡片里「标题在 16px、内容贴着边」会明显错位。
+   * 说明卡片与概览卡/收款卡统一到 16px 左内边距。
+   */
+  :deep(.ant-card-body .ant-descriptions) {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+</style>

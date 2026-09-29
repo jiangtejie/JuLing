@@ -18,7 +18,6 @@ import {
   agreeAfterSale,
   getAfterSale,
   receiveAfterSale,
-  refundAfterSale,
   refuseAfterSale,
 } from '#/api/mall/trade/afterSale';
 import { useDescription } from '#/components/description';
@@ -26,6 +25,7 @@ import { DictTag } from '#/components/dict-tag';
 import { TableAction } from '#/components/table-action';
 
 import DisagreeForm from '../modules/disagree-form.vue';
+import RefundForm from '../modules/refund-form.vue';
 import {
   useAfterSaleInfoSchema,
   useOperateLogSchema,
@@ -111,6 +111,11 @@ const [DisagreeModal, disagreeModalApi] = useVbenModal({
   destroyOnClose: true,
 });
 
+const [RefundModal, refundModalApi] = useVbenModal({
+  connectedComponent: RefundForm,
+  destroyOnClose: true,
+});
+
 /** 获得详情 */
 async function getDetail() {
   loading.value = true;
@@ -184,20 +189,9 @@ async function handleRefuse() {
   }
 }
 
-/** 确认退款 */
-async function handleRefund() {
-  await confirm('是否确认退款？');
-  const hideLoading = message.loading({
-    content: '正在处理中...',
-    duration: 0,
-  });
-  try {
-    await refundAfterSale(afterSale.value.id!);
-    message.success($t('ui.actionMessage.operationSuccess'));
-    await getDetail();
-  } finally {
-    hideLoading();
-  }
+/** 确认退款（线下退款登记） */
+function handleRefund() {
+  refundModalApi.setData({ afterSale: afterSale.value }).open();
 }
 
 /** 返回列表页 */
@@ -262,6 +256,8 @@ onMounted(() => {
 
     <!-- 拒绝售后弹窗 -->
     <DisagreeModal @success="getDetail" />
+    <!-- 确认退款（线下退款登记）弹窗 -->
+    <RefundModal @success="getDetail" />
 
     <!-- 订单信息 -->
     <div class="mb-4">

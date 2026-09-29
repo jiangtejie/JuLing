@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 /**
  * 加密响应 {@link HttpServletResponseWrapper} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ApiEncryptResponseWrapper extends HttpServletResponseWrapper {
 

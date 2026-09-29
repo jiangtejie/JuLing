@@ -28,7 +28,7 @@ import static cn.hutool.core.date.DatePattern.*;
 /**
  * 时间工具类，用于 {@link LocalDate}、{@link LocalDateTime}
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class LocalDateTimeUtils {
 

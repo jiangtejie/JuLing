@@ -12,7 +12,7 @@
         :custom-class="expanded ? 'transition-transform duration-200 rotate-180' : 'transition-transform duration-200'"
       />
     </view>
-    <view class="h-1rpx bg-[#eee]" />
+    <view class="yd-bg-page h-1rpx" />
     <view
       v-if="expanded"
       class="yd-text-sub px-2rpx pb-8rpx pt-18rpx"

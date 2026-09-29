@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import type { MemberUserApi } from '#/api/member/user';
-import type { PayWalletApi } from '#/api/pay/wallet/balance';
 
-import { fenToYuan } from '@vben/utils';
+import { h } from 'vue';
+
+import { DICT_TYPE } from '@vben/constants';
+import { formatDate } from '@vben/utils';
 
 import { Card } from 'ant-design-vue';
 
 import { useDescription } from '#/components/description';
+import { DictTag } from '#/components/dict-tag';
 
 const props = withDefaults(
   defineProps<{
     mode?: 'kefu' | 'member';
     user: MemberUserApi.User;
-    wallet: PayWalletApi.Wallet;
   }>(),
   {
     mode: 'member',
@@ -24,39 +26,41 @@ const [Descriptions] = useDescription({
   column: props.mode === 'member' ? 2 : 1,
   schema: [
     {
-      field: 'levelName',
-      label: '等级',
+      field: 'username',
+      label: '订货账号',
       render: (val) => val || '-',
     },
     {
-      field: 'experience',
-      label: '成长值',
-      render: (val) => val || 0,
+      field: 'status',
+      label: '状态',
+      render: (val) =>
+        h(DictTag, { type: DICT_TYPE.COMMON_STATUS, value: val }),
+    },
+    // 一店三面绑定：门店（部门）与客户编号，后端只有 id，这里直接展示编号
+    {
+      field: 'customerId',
+      label: '所属客户',
+      render: (val) => val ?? '-',
     },
     {
-      field: 'point',
-      label: '当前积分',
-      render: (val) => val || 0,
+      field: 'deptId',
+      label: '所属部门',
+      render: (val) => val ?? '-',
     },
     {
-      field: 'totalPoint',
-      label: '总积分',
-      render: (val) => val || 0,
+      field: 'registerIp',
+      label: '注册 IP',
+      render: (val) => val || '-',
     },
     {
-      field: 'balance',
-      label: '当前余额',
-      render: (val) => fenToYuan(val || 0),
+      field: 'createTime',
+      label: '注册时间',
+      render: (val) => formatDate(val)?.toString() || '-',
     },
     {
-      field: 'totalExpense',
-      label: '支出金额',
-      render: (val) => fenToYuan(val || 0),
-    },
-    {
-      field: 'totalRecharge',
-      label: '充值金额',
-      render: (val) => fenToYuan(val || 0),
+      field: 'loginDate',
+      label: '最后登录时间',
+      render: (val) => formatDate(val)?.toString() || '-',
     },
   ],
 });
@@ -70,12 +74,6 @@ const [Descriptions] = useDescription({
     <template #extra>
       <slot name="extra"></slot>
     </template>
-    <Descriptions
-      :column="mode === 'member' ? 2 : 1"
-      :data="{
-        ...user,
-        ...wallet,
-      }"
-    />
+    <Descriptions :column="mode === 'member' ? 2 : 1" :data="{ ...user }" />
   </Card>
 </template>

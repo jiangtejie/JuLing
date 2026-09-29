@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * <p>
  * 以天为维度，统计全部的数据
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("trade_statistics")
 @KeySequence("trade_statistics_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -57,11 +57,6 @@ public class TradeStatisticsDO extends BaseDO {
      * 总退款金额，单位：分
      */
     private Integer afterSaleRefundPrice;
-
-    /**
-     * 佣金金额（已结算），单位：分
-     */
-    private Integer brokerageSettlementPrice;
 
     /**
      * 总支付金额（余额），单位：分

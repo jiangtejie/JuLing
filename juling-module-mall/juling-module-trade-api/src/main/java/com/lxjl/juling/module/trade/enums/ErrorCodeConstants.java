@@ -6,7 +6,7 @@ import com.lxjl.juling.framework.common.exception.ErrorCode;
  * Trade 错误码枚举类
  * trade 系统，使用 1-011-000-000 段
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 public interface ErrorCodeConstants {
@@ -32,17 +32,28 @@ public interface ErrorCodeConstants {
     ErrorCode ORDER_UPDATE_PRICE_FAIL_ALREADY = new ErrorCode(1_011_000_027, "支付订单调价失败，原因：已经修改过价格");
     ErrorCode ORDER_UPDATE_PRICE_FAIL_PRICE_ERROR = new ErrorCode(1_011_000_028, "支付订单调价失败，原因：调整后支付价格不能小于 0.01 元");
     ErrorCode ORDER_DELETE_FAIL_STATUS_NOT_CANCEL = new ErrorCode(1_011_000_029, "交易订单删除失败，订单不是【已取消】状态");
-    ErrorCode ORDER_RECEIVE_FAIL_DELIVERY_TYPE_NOT_PICK_UP = new ErrorCode(1_011_000_030, "交易订单自提失败，收货方式不是【用户自提】");
     ErrorCode ORDER_UPDATE_ADDRESS_FAIL_STATUS_NOT_DELIVERED = new ErrorCode(1_011_000_031, "交易订单修改收货地址失败，原因：订单不是【待发货】状态");
     ErrorCode ORDER_CREATE_FAIL_EXIST_UNPAID = new ErrorCode(1_011_000_032, "交易订单创建失败，原因：存在未付款订单");
     ErrorCode ORDER_CANCEL_PAID_FAIL = new ErrorCode(1_011_000_033, "交易订单取消支付失败，原因：订单不是【{}】状态");
     ErrorCode ORDER_UPDATE_PAID_ORDER_REFUNDED_FAIL_REFUND_NOT_FOUND = new ErrorCode(1_011_000_034, "交易订单更新支付订单退款状态失败，原因：退款单不存在");
     ErrorCode ORDER_UPDATE_PAID_ORDER_REFUNDED_FAIL_REFUND_STATUS_NOT_SUCCESS = new ErrorCode(1_011_000_035, "交易订单更新支付订单退款状态失败，原因：退款单状态不是【退款成功】");
-    ErrorCode ORDER_PICK_UP_FAIL_NOT_VERIFY_USER = new ErrorCode(1_011_000_036, "交易订单自提失败，原因：你没有核销该门店订单的权限");
-    ErrorCode ORDER_PICK_UP_FAIL_COMBINATION_NOT_SUCCESS = new ErrorCode(1_011_000_037, "交易订单自提失败，原因：商品拼团记录不是【成功】状态");
-    ErrorCode ORDER_CREATE_FAIL_INSUFFICIENT_USER_POINTS = new ErrorCode(1_011_000_038, "交易订单创建失败，原因：用户积分不足");
-    ErrorCode ORDER_PICK_UP_FAIL_STATUS_NOT_UNDELIVERED = new ErrorCode(1_011_000_039, "交易订单自提失败，订单不是【待核销】状态");
     ErrorCode ORDER_CREATE_FAIL_RECEIVER_INFO_INCOMPLETE = new ErrorCode(1_011_000_040, "交易订单创建失败，原因：收货信息不完整，请填写收货人、联系电话和收货地址");
+    // ========== 门店订货链 S1：归属与审核 ==========
+    ErrorCode ORDER_CREATE_FAIL_STORE_NOT_BOUND = new ErrorCode(1_011_000_041, "交易订单创建失败，原因：订货账号未绑定门店，请联系管理员在【会员管理】中配置");
+    ErrorCode ORDER_CREATE_FAIL_STORE_NOT_BELONG = new ErrorCode(1_011_000_042, "交易订单创建失败，原因：所选门店不属于当前订货账号");
+    ErrorCode ORDER_CREATE_FAIL_STORE_NOT_EXISTS = new ErrorCode(1_011_000_043, "交易订单创建失败，原因：门店不存在或已停用");
+    ErrorCode ORDER_AUDIT_FAIL_STATUS = new ErrorCode(1_011_000_044, "交易订单提交审核失败，原因：订单不是【待发货】或【已驳回】状态");
+    ErrorCode ORDER_DELIVERY_FAIL_AUDIT_NOT_APPROVE = new ErrorCode(1_011_000_045, "交易订单发货失败，原因：门店要货未通过审核");
+    ErrorCode ORDER_AUDIT_UPDATE_FAIL_NOT_PROCESS = new ErrorCode(1_011_000_046, "交易订单更新审核结果失败，原因：订单不处于【审核中】状态");
+    // ========== 门店订货链 S2：订单工作台 + 分料（统配 / 直拨） ==========
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ORDER_STATUS = new ErrorCode(1_011_000_050, "下推失败，原因：订单不是【待发货】或未通过审核（直营门店免审）");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ITEM_NOT_BELONG = new ErrorCode(1_011_000_051, "下推失败，原因：订单行({})不属于该订单");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ITEM_PUSHED = new ErrorCode(1_011_000_052, "下推失败，原因：订单行【{}】已下推过（{}），不能重复下推");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_ALLOC_MODE_INVALID = new ErrorCode(1_011_000_053, "下推失败，原因：分料方式({})不合法，只能是 CENTRAL 统配 / DIRECT 直拨");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_MODE_NOT_ALLOWED = new ErrorCode(1_011_000_054, "下推失败，原因：物料【{}】不允许{}");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_COUNT_EXCEED = new ErrorCode(1_011_000_055, "下推失败，原因：物料【{}】的下推数量({})必须大于 0 且不超过要货数量({})");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_PRODUCT_NOT_MATCH = new ErrorCode(1_011_000_056, "下推失败，原因：商品【{}】未对应到 ERP 物料（条码 {} 未建档），请先在 ERP 维护物料");
+    ErrorCode ORDER_WORKBENCH_PUSH_FAIL_SUPPLIER_REQUIRED = new ErrorCode(1_011_000_057, "下推失败，原因：直拨行【{}】必须指定供应商");
 
     // ========== After Sale 模块 1-011-000-100 ==========
     ErrorCode AFTER_SALE_NOT_FOUND = new ErrorCode(1_011_000_100, "售后单不存在");
@@ -89,31 +100,27 @@ public interface ErrorCodeConstants {
     ErrorCode EXPRESS_TEMPLATE_NAME_DUPLICATE = new ErrorCode(1_011_005_000, "已经存在该运费模板名");
     ErrorCode EXPRESS_TEMPLATE_NOT_EXISTS = new ErrorCode(1_011_005_001, "运费模板不存在");
 
-    // ==========  物流 PICK_UP 模块 1-011-006-000 ==========
-    ErrorCode PICK_UP_STORE_NOT_EXISTS = new ErrorCode(1_011_006_000, "自提门店不存在");
-    ErrorCode PICK_UP_STORE_STAFF_NOT_EXISTS = new ErrorCode(1_011_006_000, "自提门店店员不存在");
 
-    // ========== 分销用户 模块 1-011-007-000 ==========
-    ErrorCode BROKERAGE_USER_NOT_EXISTS = new ErrorCode(1_011_007_000, "分销用户不存在");
-    ErrorCode BROKERAGE_USER_FROZEN_PRICE_NOT_ENOUGH = new ErrorCode(1_011_007_001, "用户冻结佣金({})数量不足");
-    ErrorCode BROKERAGE_BIND_SELF = new ErrorCode(1_011_007_002, "不能绑定自己");
-    ErrorCode BROKERAGE_BIND_USER_NOT_ENABLED = new ErrorCode(1_011_007_003, "绑定用户没有推广资格");
-    ErrorCode BROKERAGE_BIND_CONDITION_ADMIN = new ErrorCode(1_011_007_004, "仅可在后台绑定推广员");
-    ErrorCode BROKERAGE_BIND_MODE_REGISTER = new ErrorCode(1_011_007_005, "只有在注册时可以绑定");
-    ErrorCode BROKERAGE_BIND_OVERRIDE = new ErrorCode(1_011_007_006, "已绑定了推广人");
-    ErrorCode BROKERAGE_BIND_LOOP = new ErrorCode(1_011_007_007, "下级不能绑定自己的上级");
-    ErrorCode BROKERAGE_USER_LEVEL_NOT_SUPPORT = new ErrorCode(1_011_007_008, "目前只支持 level 小于等于 2");
-    ErrorCode BROKERAGE_CREATE_USER_EXISTS = new ErrorCode(1_011_007_009, "分销用户已存在");
+    // ========== Order 付款凭证（线下收款）1-011-000-000 ==========
+    // 注意：付款凭证的错误码从 040 起，避免与上面订单的 020-039 撞号
+    ErrorCode ORDER_PAYMENT_PROOF_NOT_EXISTS = new ErrorCode(1_011_000_040, "交易订单付款凭证不存在");
+    ErrorCode ORDER_PAYMENT_PROOF_NOT_BELONG_TO_USER = new ErrorCode(1_011_000_042, "付款凭证不属于当前用户");
+    ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_043, "订单已进入审核流程，无法再上传付款凭证（如需补充请联系总部驳回后重传）");
+    ErrorCode ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF = new ErrorCode(1_011_000_073, "订单正在审核中，暂不能取消，如需取消请联系总部");
 
-    // ========== 分销提现 模块 1-011-008-000 ==========
-    ErrorCode BROKERAGE_WITHDRAW_NOT_EXISTS = new ErrorCode(1_011_008_000, "佣金提现记录不存在");
-    ErrorCode BROKERAGE_WITHDRAW_STATUS_NOT_AUDITING = new ErrorCode(1_011_008_001, "佣金提现记录状态不是审核中");
-    ErrorCode BROKERAGE_WITHDRAW_MIN_PRICE = new ErrorCode(1_011_008_002, "提现金额不能低于 {} 元");
-    ErrorCode BROKERAGE_WITHDRAW_USER_BALANCE_NOT_ENOUGH = new ErrorCode(1_011_008_003, "您当前最多可提现 {} 元");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_TRANSFER_ID_ERROR = new ErrorCode(1_011_008_005, "提现单更新转账状态失败，转账单不匹配");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_TRANSFER_STATUS_NOT_SUCCESS_OR_CLOSED = new ErrorCode(1_011_008_006, "提现单更新转账状态失败，转账单状态不是成功或关闭状态");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_PRICE_NOT_MATCH = new ErrorCode(1_011_008_007, "提现单更新转账状态失败，转账单金额不匹配");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_MERCHANT_EXISTS = new ErrorCode(1_011_008_008, "提现单更新转账状态失败，转账单的商户订单不匹配");
-    ErrorCode BROKERAGE_WITHDRAW_UPDATE_STATUS_FAIL_PAY_CHANNEL_NOT_MATCH = new ErrorCode(1_011_008_009, "提现单更新转账状态失败，转账渠道不匹配");
+    // ========== Order 门店收货（配送出库 → 门店确认收货 → 门店库存 / 门店往来）1-011-000-060 ==========
+    ErrorCode ORDER_RECEIPT_NOT_EXISTS = new ErrorCode(1_011_000_060, "门店收货单不存在");
+    ErrorCode ORDER_RECEIPT_STATUS_NOT_PENDING = new ErrorCode(1_011_000_061, "门店收货单不是【待确认】状态，无法提交或作废");
+    ErrorCode ORDER_RECEIPT_ORDER_NOT_DELIVERED = new ErrorCode(1_011_000_062, "确认收货失败，原因：订单尚未发货");
+    ErrorCode ORDER_RECEIPT_ITEM_NOT_BELONG = new ErrorCode(1_011_000_063, "收货单行({})不属于该收货单");
+    ErrorCode ORDER_RECEIPT_COUNT_ILLEGAL = new ErrorCode(1_011_000_064, "商品【{}】的实收数量({})不合法：不能为负数");
+    ErrorCode ORDER_RECEIPT_DIFF_REASON_REQUIRED = new ErrorCode(1_011_000_065, "商品【{}】的实收数量与发货数量不一致（差异 {}），必须填写差异原因");
+    ErrorCode ORDER_RECEIPT_ALREADY_CONFIRMED = new ErrorCode(1_011_000_066, "该订单已确认收货，不能重复提交");
+    ErrorCode ORDER_RECEIPT_CANCEL_FAIL_CONFIRMED = new ErrorCode(1_011_000_067, "收货单已确认收货，无法作废");
+    ErrorCode ORDER_RECEIPT_DELIVERY_CANCEL_FAIL = new ErrorCode(1_011_000_068, "配送出库单({})反审核失败：门店已确认收货，请先作废收货单或走退货流程");
+    ErrorCode ORDER_RECEIPT_NO_EXISTS = new ErrorCode(1_011_000_069, "生成门店收货单号失败，请重新提交");
+    ErrorCode ORDER_RECEIPT_NO_DELIVERED_ITEM = new ErrorCode(1_011_000_070, "确认收货失败，原因：该订单没有已发货的商品行");
+    ErrorCode ORDER_RECEIPT_ITEM_DUPLICATE = new ErrorCode(1_011_000_071, "确认收货失败，原因：收货明细里的商品行({})重复");
+    ErrorCode ORDER_CREATE_FAIL_STORE_REQUIRED = new ErrorCode(1_011_000_072, "下单失败，原因：该账号是代理人账号（管理多家门店），请先选择下单门店");
 
 }

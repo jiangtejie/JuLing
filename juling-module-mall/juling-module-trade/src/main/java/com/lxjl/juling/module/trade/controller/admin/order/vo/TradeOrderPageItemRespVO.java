@@ -20,9 +20,6 @@ public class TradeOrderPageItemRespVO extends TradeOrderBaseVO {
     @Schema(description = "用户信息", requiredMode = Schema.RequiredMode.REQUIRED)
     private MemberUserRespVO user;
 
-    @Schema(description = "推广人信息")
-    private MemberUserRespVO brokerageUser;
-
     @Schema(description = "管理后台 - 交易订单的分页项的订单项目")
     @Data
     public static class Item extends TradeOrderItemBaseVO {

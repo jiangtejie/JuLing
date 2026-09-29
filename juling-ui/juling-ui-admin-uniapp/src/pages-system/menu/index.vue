@@ -131,7 +131,7 @@ function getTypeIconBg(type: number): string {
     case SystemMenuTypeEnum.MENU:
       return 'yd-bg-success'
     case SystemMenuTypeEnum.BUTTON:
-      return 'bg-[#faad14]'
+      return 'yd-bg-warning-strong'
     default:
       return 'yd-bg-primary'
   }

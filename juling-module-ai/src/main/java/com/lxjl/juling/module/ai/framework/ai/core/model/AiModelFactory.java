@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * AI Model 模型工厂的接口类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface AiModelFactory {
 

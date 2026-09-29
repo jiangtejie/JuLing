@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * ERP 库存调拨单 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpStockMoveMapper extends BaseMapperX<ErpStockMoveDO> {

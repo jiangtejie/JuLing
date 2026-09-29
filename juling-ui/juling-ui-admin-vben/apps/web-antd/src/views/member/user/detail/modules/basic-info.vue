@@ -24,11 +24,11 @@ const [Descriptions] = useDescription({
   schema: [
     {
       field: 'name',
-      label: '用户名',
+      label: '真实姓名',
     },
     {
       field: 'nickname',
-      label: '昵称',
+      label: '联系人',
     },
     {
       field: 'mobile',
@@ -52,22 +52,8 @@ const [Descriptions] = useDescription({
       label: '所在地',
     },
     {
-      field: 'registerIp',
-      label: '注册 IP',
-    },
-    {
       field: 'birthday',
       label: '生日',
-      render: (val) => formatDate(val)?.toString() || '-',
-    },
-    {
-      field: 'createTime',
-      label: '注册时间',
-      render: (val) => formatDate(val)?.toString() || '-',
-    },
-    {
-      field: 'loginDate',
-      label: '最后登录时间',
       render: (val) => formatDate(val)?.toString() || '-',
     },
   ],

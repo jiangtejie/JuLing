@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * {@link MidjourneyApi} 集成测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class MidjourneyApiTests {
 

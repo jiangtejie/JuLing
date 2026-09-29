@@ -127,6 +127,10 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode STOCK_COUNT_NEGATIVE = new ErrorCode(1_030_404_000, "操作失败，产品({})所在仓库({})的库存：{}，小于变更数量：{}");
     ErrorCode STOCK_COUNT_NEGATIVE2 = new ErrorCode(1_030_404_001, "操作失败，产品({})所在仓库({})的库存不足");
 
+    // ========== 门店要货分料下推（订单工作台）1-030-700-000 ==========
+    ErrorCode STORE_ALLOC_RELATION_DUPLICATE = new ErrorCode(1_030_700_000, "单据已下推过，不能重复下推");
+    ErrorCode STORE_ALLOC_ITEM_COUNT_EXCEED = new ErrorCode(1_030_700_001, "下推数量不能超过要货数量");
+
     // ========== ERP 产品 1-030-500-000 ==========
     ErrorCode PRODUCT_NOT_EXISTS = new ErrorCode(1_030_500_000, "产品不存在");
     ErrorCode PRODUCT_NOT_ENABLE = new ErrorCode(1_030_500_001, "产品({})未启用");
@@ -164,5 +168,11 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode FINANCE_RECEIPT_APPROVE_FAIL = new ErrorCode(1_030_602_003, "审核失败，只有未审核的收款单才能审核");
     ErrorCode FINANCE_RECEIPT_NO_EXISTS = new ErrorCode(1_030_602_004, "生成收款单号失败，请重新提交");
     ErrorCode FINANCE_RECEIPT_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_602_005, "收款单({})已审核，无法修改");
+
+    // ========== ERP 门店往来台账 1-030-800-000 ==========
+    ErrorCode CUSTOMER_ACCOUNT_AMOUNT_ILLEGAL = new ErrorCode(1_030_800_000, "门店往来记账金额不能为 0");
+    ErrorCode CUSTOMER_ACCOUNT_BIZ_TYPE_ILLEGAL = new ErrorCode(1_030_800_001, "门店往来业务类型({})不合法");
+    ErrorCode CUSTOMER_ACCOUNT_CUSTOMER_NOT_EXISTS = new ErrorCode(1_030_800_002, "门店客户({})不存在，无法记账");
+    ErrorCode STORE_WAREHOUSE_NOT_EXISTS = new ErrorCode(1_030_800_010, "门店({})还没有门店仓，请先在「仓库」里为该门店配置门店仓");
 
 }

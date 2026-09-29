@@ -1,31 +1,21 @@
 package com.lxjl.juling.module.trade.convert.order;
 
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.lxjl.juling.framework.common.enums.UserTypeEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
-import com.lxjl.juling.framework.common.util.string.StrUtils;
 import com.lxjl.juling.framework.dict.core.DictFrameworkUtils;
 import com.lxjl.juling.framework.ip.core.utils.AreaUtils;
-import com.lxjl.juling.module.member.api.address.dto.MemberAddressRespDTO;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.pay.api.order.dto.PayOrderCreateReqDTO;
-import com.lxjl.juling.module.pay.enums.DictTypeConstants;
-import com.lxjl.juling.module.product.api.comment.dto.ProductCommentCreateReqDTO;
 import com.lxjl.juling.module.product.api.property.dto.ProductPropertyValueDetailRespDTO;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuRespDTO;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuUpdateStockReqDTO;
 import com.lxjl.juling.module.product.api.spu.dto.ProductSpuRespDTO;
-import com.lxjl.juling.module.promotion.api.combination.dto.CombinationRecordCreateReqDTO;
 import com.lxjl.juling.module.trade.api.order.dto.TradeOrderRespDTO;
 import com.lxjl.juling.module.trade.controller.admin.base.member.user.MemberUserRespVO;
 import com.lxjl.juling.module.trade.controller.admin.base.product.property.ProductPropertyValueDetailRespVO;
 import com.lxjl.juling.module.trade.controller.admin.order.vo.*;
 import com.lxjl.juling.module.trade.controller.app.base.property.AppProductPropertyValueDetailRespVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.*;
-import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemRespVO;
 import com.lxjl.juling.module.trade.dal.dataobject.cart.CartDO;
 import com.lxjl.juling.module.trade.dal.dataobject.delivery.DeliveryExpressDO;
@@ -35,7 +25,6 @@ import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderLogDO;
 import com.lxjl.juling.module.trade.enums.order.TradeOrderItemAfterSaleStatusEnum;
 import com.lxjl.juling.module.trade.framework.delivery.core.client.dto.ExpressTrackRespDTO;
 import com.lxjl.juling.module.trade.framework.order.config.TradeOrderProperties;
-import com.lxjl.juling.module.trade.service.brokerage.bo.BrokerageAddReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
 import org.mapstruct.Mapper;
@@ -50,7 +39,6 @@ import java.util.Map;
 
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertMap;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertMultiMap;
-import static com.lxjl.juling.framework.common.util.date.LocalDateTimeUtils.addTime;
 
 @Mapper
 public interface TradeOrderConvert {
@@ -60,15 +48,11 @@ public interface TradeOrderConvert {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(source = "userId", target = "userId"),
-            @Mapping(source = "createReqVO.couponId", target = "couponId"),
             @Mapping(target = "remark", ignore = true),
             @Mapping(source = "createReqVO.remark", target = "userRemark"),
             @Mapping(source = "calculateRespBO.price.totalPrice", target = "totalPrice"),
             @Mapping(source = "calculateRespBO.price.discountPrice", target = "discountPrice"),
             @Mapping(source = "calculateRespBO.price.deliveryPrice", target = "deliveryPrice"),
-            @Mapping(source = "calculateRespBO.price.couponPrice", target = "couponPrice"),
-            @Mapping(source = "calculateRespBO.price.pointPrice", target = "pointPrice"),
-            @Mapping(source = "calculateRespBO.price.vipPrice", target = "vipPrice"),
             @Mapping(source = "calculateRespBO.price.payPrice", target = "payPrice")
     })
     TradeOrderDO convert(Long userId, AppTradeOrderCreateReqVO createReqVO, TradePriceCalculateRespBO calculateRespBO);
@@ -81,7 +65,6 @@ public interface TradeOrderConvert {
             orderItem.setOrderId(tradeOrderDO.getId());
             orderItem.setUserId(tradeOrderDO.getUserId());
             orderItem.setAfterSaleStatus(TradeOrderItemAfterSaleStatusEnum.NONE.getStatus());
-            orderItem.setCommentStatus(false);
             return orderItem;
         });
     }
@@ -100,22 +83,6 @@ public interface TradeOrderConvert {
         return new ProductSkuUpdateStockReqDTO(items);
     }
 
-    default PayOrderCreateReqDTO convert(TradeOrderDO order, List<TradeOrderItemDO> orderItems,
-                                         TradeOrderProperties orderProperties) {
-        PayOrderCreateReqDTO createReqDTO = new PayOrderCreateReqDTO()
-                .setAppKey(orderProperties.getPayAppKey()).setUserIp(order.getUserIp())
-                .setUserId(order.getUserId()).setUserType(UserTypeEnum.MEMBER.getValue());
-        // 商户相关字段
-        createReqDTO.setMerchantOrderId(String.valueOf(order.getId()));
-        String subject = orderItems.get(0).getSpuName();
-        subject = StrUtils.maxLength(subject, PayOrderCreateReqDTO.SUBJECT_MAX_LENGTH); // 避免超过 32 位
-        createReqDTO.setSubject(subject);
-        createReqDTO.setBody(subject); // TODO 棱信矩灵：临时写死
-        // 订单相关字段
-        createReqDTO.setPrice(order.getPayPrice()).setExpireTime(addTime(orderProperties.getPayExpireTime()));
-        return createReqDTO;
-    }
-
     default PageResult<TradeOrderPageItemRespVO> convertPage(PageResult<TradeOrderDO> pageResult,
                                                              List<TradeOrderItemDO> orderItems,
                                                              Map<Long, MemberUserRespDTO> memberUserMap) {
@@ -128,8 +95,6 @@ public interface TradeOrderConvert {
             orderVO.setReceiverAreaName(AreaUtils.format(order.getReceiverAreaId()));
             // 增加用户信息
             orderVO.setUser(convertUser(memberUserMap.get(orderVO.getUserId())));
-            // 增加推广人信息
-            orderVO.setBrokerageUser(convertUser(memberUserMap.get(orderVO.getBrokerageUserId())));
             return orderVO;
         });
         return new PageResult<>(orderVOs, pageResult.getTotal());
@@ -143,13 +108,12 @@ public interface TradeOrderConvert {
 
     default TradeOrderDetailRespVO convert(TradeOrderDO order, List<TradeOrderItemDO> orderItems,
                                            List<TradeOrderLogDO> orderLogs,
-                                           MemberUserRespDTO user, MemberUserRespDTO brokerageUser) {
+                                           MemberUserRespDTO user) {
         TradeOrderDetailRespVO orderVO = convert2(order, orderItems);
         // 处理收货地址
         orderVO.setReceiverAreaName(AreaUtils.format(order.getReceiverAreaId()));
         // 处理用户信息
         orderVO.setUser(convert(user));
-        orderVO.setBrokerageUser(convert(brokerageUser));
         // 处理日志
         orderVO.setLogs(convertList03(orderLogs));
         return orderVO;
@@ -181,7 +145,8 @@ public interface TradeOrderConvert {
         AppTradeOrderDetailRespVO orderVO = convert3(order, orderItems);
         orderVO.setPayExpireTime(order.getCreateTime().plus(tradeOrderProperties.getPayExpireTime()));
         if (StrUtil.isNotEmpty(order.getPayChannelCode())) {
-            orderVO.setPayChannelName(DictFrameworkUtils.parseDictDataLabel(DictTypeConstants.CHANNEL_CODE, order.getPayChannelCode()));
+            // 收款渠道名取字典 pay_channel_code（线下收款后不再依赖 pay 模块的常量类）
+            orderVO.setPayChannelName(DictFrameworkUtils.parseDictDataLabel("pay_channel_code", order.getPayChannelCode()));
         }
         // 处理收货地址
         orderVO.setReceiverAreaName(AreaUtils.format(order.getReceiverAreaId()));
@@ -195,35 +160,14 @@ public interface TradeOrderConvert {
 
     AppTradeOrderItemRespVO convert03(TradeOrderItemDO bean);
 
-    @Mappings({
-            @Mapping(target = "skuId", source = "tradeOrderItemDO.skuId"),
-            @Mapping(target = "orderId", source = "tradeOrderItemDO.orderId"),
-            @Mapping(target = "orderItemId", source = "tradeOrderItemDO.id"),
-            @Mapping(target = "descriptionScores", source = "createReqVO.descriptionScores"),
-            @Mapping(target = "benefitScores", source = "createReqVO.benefitScores"),
-            @Mapping(target = "content", source = "createReqVO.content"),
-            @Mapping(target = "picUrls", source = "createReqVO.picUrls"),
-            @Mapping(target = "anonymous", source = "createReqVO.anonymous"),
-            @Mapping(target = "userId", source = "tradeOrderItemDO.userId")
-    })
-    ProductCommentCreateReqDTO convert04(AppTradeOrderItemCommentCreateReqVO createReqVO, TradeOrderItemDO tradeOrderItemDO);
-
     TradePriceCalculateReqBO convert(AppTradeOrderSettlementReqVO settlementReqVO);
 
     default TradePriceCalculateReqBO convert(Long userId, AppTradeOrderSettlementReqVO settlementReqVO,
                                              List<CartDO> cartList) {
         TradePriceCalculateReqBO reqBO = new TradePriceCalculateReqBO().setUserId(userId)
                 .setItems(new ArrayList<>(settlementReqVO.getItems().size()))
-                .setCouponId(settlementReqVO.getCouponId()).setPointStatus(settlementReqVO.getPointStatus())
                 // 物流信息
-                .setDeliveryType(settlementReqVO.getDeliveryType()).setAddressId(settlementReqVO.getAddressId())
-                .setPickUpStoreId(settlementReqVO.getPickUpStoreId())
-                // 各种活动
-                .setSeckillActivityId(settlementReqVO.getSeckillActivityId())
-                .setBargainRecordId(settlementReqVO.getBargainRecordId())
-                .setCombinationActivityId(settlementReqVO.getCombinationActivityId())
-                .setCombinationHeadId(settlementReqVO.getCombinationHeadId())
-                .setPointActivityId(settlementReqVO.getPointActivityId());
+                .setDeliveryType(settlementReqVO.getDeliveryType()).setAddressId(settlementReqVO.getAddressId());
         // 商品项的构建
         Map<Long, CartDO> cartMap = convertMap(cartList, CartDO::getId);
         for (AppTradeOrderSettlementReqVO.Item item : settlementReqVO.getItems()) {
@@ -244,15 +188,15 @@ public interface TradeOrderConvert {
         return reqBO;
     }
 
-    default AppTradeOrderSettlementRespVO convert(TradePriceCalculateRespBO calculate, MemberAddressRespDTO address) {
-        AppTradeOrderSettlementRespVO respVO = convert0(calculate, address);
-        if (address != null) {
-            respVO.getAddress().setAreaName(AreaUtils.format(address.getAreaId()));
-        }
-        return respVO;
+    default AppTradeOrderSettlementRespVO convert(TradePriceCalculateRespBO calculate) {
+        return convert0(calculate);
     }
 
-    AppTradeOrderSettlementRespVO convert0(TradePriceCalculateRespBO calculate, MemberAddressRespDTO address);
+    /**
+     * 会员中心（含会员地址簿）已下线，结算返回不再携带收货地址，address 恒为 null
+     */
+    @Mapping(target = "address", ignore = true)
+    AppTradeOrderSettlementRespVO convert0(TradePriceCalculateRespBO calculate);
 
     List<AppOrderExpressTrackRespDTO> convertList02(List<ExpressTrackRespDTO> list);
 
@@ -262,32 +206,7 @@ public interface TradeOrderConvert {
 
     TradeOrderDO convert(TradeOrderRemarkReqVO reqVO);
 
-    default BrokerageAddReqBO convert(MemberUserRespDTO user, TradeOrderItemDO item,
-                                      ProductSpuRespDTO spu, ProductSkuRespDTO sku) {
-        BrokerageAddReqBO bo = new BrokerageAddReqBO().setBizId(String.valueOf(item.getId())).setSourceUserId(item.getUserId())
-                .setBasePrice(item.getPayPrice())
-                .setTitle(StrUtil.format("{}成功购买{}", user.getNickname(), item.getSpuName()));
-        if (BooleanUtil.isTrue(spu.getSubCommissionType())) {
-            // 特殊：单独设置的佣金需要乘以购买数量。关联 上游仓库
-            bo.setFirstFixedPrice(ObjectUtil.defaultIfNull(sku.getFirstBrokeragePrice(), 0) * item.getCount())
-                    .setSecondFixedPrice(ObjectUtil.defaultIfNull(sku.getSecondBrokeragePrice(), 0) * item.getCount());
-        }
-        return bo;
-    }
-
     @Named("convertList04")
     List<TradeOrderRespDTO> convertList04(List<TradeOrderDO> list);
-
-    @Mappings({
-            @Mapping(target = "activityId", source = "order.combinationActivityId"),
-            @Mapping(target = "spuId", source = "item.spuId"),
-            @Mapping(target = "skuId", source = "item.skuId"),
-            @Mapping(target = "count", source = "item.count"),
-            @Mapping(target = "orderId", source = "order.id"),
-            @Mapping(target = "userId", source = "order.userId"),
-            @Mapping(target = "headId", source = "order.combinationHeadId"),
-            @Mapping(target = "combinationPrice", source = "item.payPrice"),
-    })
-    CombinationRecordCreateReqDTO convert(TradeOrderDO order, TradeOrderItemDO item);
 
 }

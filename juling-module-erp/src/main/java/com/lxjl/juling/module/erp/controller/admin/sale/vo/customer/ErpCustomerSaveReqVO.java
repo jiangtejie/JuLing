@@ -49,7 +49,7 @@ public class ErpCustomerSaveReqVO {
     @Schema(description = "税率", example = "10")
     private BigDecimal taxPercent;
 
-    @Schema(description = "开户行", example = "棱信矩灵")
+    @Schema(description = "开户行", example = "亚特")
     private String bankName;
 
     @Schema(description = "开户账号", example = "622908212277228617")
@@ -57,5 +57,23 @@ public class ErpCustomerSaveReqVO {
 
     @Schema(description = "开户地址", example = "兴业银行浦东支行")
     private String bankAddress;
+
+    @Schema(description = "所属部门（门店节点）编号", example = "134")
+    private Long deptId;
+
+    @Schema(description = "上级代理客户编号（代理 → 多门店）", example = "1")
+    private Long parentCustomerId;
+
+    @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "FRANCHISE")
+    private String storeType;
+
+    @Schema(description = "结算模式：PREPAID 先款后货 / MONTHLY 月结", example = "PREPAID")
+    private String settlementMode;
+
+    @Schema(description = "账期天数（月结时生效）", example = "30")
+    private Integer creditDays;
+
+    @Schema(description = "信用额度（月结时生效）", example = "50000")
+    private BigDecimal creditLimit;
 
 }

@@ -2,47 +2,45 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MemberUserApi } from '#/api/member/user';
 
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { DocAlert, Page, useVbenModal } from '@vben/common-ui';
-import { isEmpty } from '@vben/utils';
+import { useAccess } from '@vben/access';
+import { confirm, DocAlert, Page, useVbenModal } from '@vben/common-ui';
+
+import { message } from 'ant-design-vue';
 
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getUserPage } from '#/api/member/user';
+import {
+  deleteUser,
+  getUserPage,
+  updateUserStatus,
+} from '#/api/member/user';
 import { $t } from '#/locales';
 
-import { CouponSendForm } from '../../mall/promotion/coupon/components';
 import { useGridColumns, useGridFormSchema } from './data';
-import BalanceForm from './modules/balance-form.vue';
 import Form from './modules/form.vue';
-import LevelForm from './modules/level-form.vue';
-import PointForm from './modules/point-form.vue';
+import OrderAccountForm from './modules/order-account-form.vue';
+import ResetPasswordForm from './modules/reset-password-form.vue';
 
 const router = useRouter();
+/**
+ * 权限编码与后端 @PreAuthorize 对齐：member:user:create / member:user:reset-password。
+ * 行操作是数组配置项（不支持模板 v-if），所以走 TableAction 的 ifShow + hasAccessByCodes。
+ */
+const { hasAccessByCodes } = useAccess();
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
   destroyOnClose: true,
 });
 
-const [PointFormModal, pointFormModalApi] = useVbenModal({
-  connectedComponent: PointForm,
+const [OrderAccountFormModal, orderAccountFormModalApi] = useVbenModal({
+  connectedComponent: OrderAccountForm,
   destroyOnClose: true,
 });
 
-const [BalanceFormModal, balanceFormModalApi] = useVbenModal({
-  connectedComponent: BalanceForm,
-  destroyOnClose: true,
-});
-
-const [LevelFormModal, levelFormModalApi] = useVbenModal({
-  connectedComponent: LevelForm,
-  destroyOnClose: true,
-});
-
-const [CouponSendFormModal, couponSendFormModalApi] = useVbenModal({
-  connectedComponent: CouponSendForm,
+const [ResetPasswordFormModal, resetPasswordFormModalApi] = useVbenModal({
+  connectedComponent: ResetPasswordForm,
   destroyOnClose: true,
 });
 
@@ -51,45 +49,50 @@ function handleRefresh() {
   gridApi.query();
 }
 
-/** 编辑会员 */
+/** 编辑订货账号 */
 function handleEdit(row: MemberUserApi.User) {
   formModalApi.setData(row).open();
 }
 
-/** 修改会员等级 */
-function handleUpdateLevel(row: MemberUserApi.User) {
-  levelFormModalApi.setData(row).open();
+/** 开订货账号（订货人账号名 + 初始密码 + 绑定订货主体：门店或代理客户） */
+function handleCreateOrderAccount() {
+  orderAccountFormModalApi.open();
 }
 
-/** 修改会员积分 */
-function handleUpdatePoint(row: MemberUserApi.User) {
-  pointFormModalApi.setData(row).open();
+/** 重置订货账号密码（重置后该账号会被强制下线） */
+function handleResetPassword(row: MemberUserApi.User) {
+  resetPasswordFormModalApi.setData(row).open();
 }
 
-/** 修改会员余额 */
-function handleUpdateBalance(row: MemberUserApi.User) {
-  balanceFormModalApi.setData(row).open();
+/** 账号展示名：优先订货账号，其次昵称 / 手机号 */
+function accountLabel(row: MemberUserApi.User) {
+  return row.username || row.nickname || row.mobile || `#${row.id}`;
 }
 
-/** 发送优惠券 */
-async function handleSendCoupon() {
-  couponSendFormModalApi
-    .setData({
-      userIds: checkedIds.value,
-    })
-    .open();
+/** 停用 / 启用订货账号（停用后登不进来，但历史订单与往来台账仍可追溯） */
+async function handleUpdateStatus(row: MemberUserApi.User) {
+  const disabled = row.status === 1;
+  await confirm(
+    disabled
+      ? `启用订货账号「${accountLabel(row)}」？启用后该账号可以重新登录下单`
+      : `停用订货账号「${accountLabel(row)}」？停用后无法登录，历史订单与台账不受影响`,
+  );
+  await updateUserStatus(row.id!, disabled ? 0 : 1);
+  message.success(disabled ? '已启用' : '已停用');
+  handleRefresh();
 }
 
-const checkedIds = ref<number[]>([]);
-function handleRowCheckboxChange({
-  records,
-}: {
-  records: MemberUserApi.User[];
-}) {
-  checkedIds.value = records.map((item) => item.id!);
+/** 删除订货账号（已绑定门店/部门的账号后端会拒绝删除，请改用停用） */
+async function handleDelete(row: MemberUserApi.User) {
+  await confirm(
+    `删除订货账号「${accountLabel(row)}」？删除后该账号无法登录且不可恢复；如只是暂停使用，请改用「停用」`,
+  );
+  await deleteUser(row.id!);
+  message.success('删除成功');
+  handleRefresh();
 }
 
-/** 查看会员详情 */
+/** 查看订货账号详情 */
 function handleViewDetail(row: MemberUserApi.User) {
   router.push({
     name: 'MemberUserDetail',
@@ -127,10 +130,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       search: true,
     },
   } as VxeTableGridOptions<MemberUserApi.User>,
-  gridEvents: {
-    checkboxAll: handleRowCheckboxChange,
-    checkboxChange: handleRowCheckboxChange,
-  },
 });
 </script>
 
@@ -138,27 +137,24 @@ const [Grid, gridApi] = useVbenVxeGrid({
   <Page auto-content-height>
     <template #doc>
       <DocAlert
-        title="会员用户、标签、分组"
+        title="订货账号"
         url="https://github.com/jiangtejie/JuLing#readme"
       />
     </template>
 
     <FormModal @success="handleRefresh" />
-    <PointFormModal @success="handleRefresh" />
-    <BalanceFormModal @success="handleRefresh" />
-    <LevelFormModal @success="handleRefresh" />
-    <CouponSendFormModal />
-    <Grid table-title="会员列表">
+    <OrderAccountFormModal @success="handleRefresh" />
+    <ResetPasswordFormModal @success="handleRefresh" />
+    <Grid table-title="订货账号列表">
       <template #toolbar-tools>
         <TableAction
+          v-if="hasAccessByCodes(['member:user:create'])"
           :actions="[
             {
-              label: '发送优惠券',
+              label: '开订货账号',
               type: 'primary',
-              icon: 'lucide:mouse-pointer-2',
-              disabled: isEmpty(checkedIds),
-              auth: ['promotion:coupon:send'],
-              onClick: handleSendCoupon,
+              icon: 'lucide:user-plus',
+              onClick: handleCreateOrderAccount,
             },
           ]"
         />
@@ -182,22 +178,25 @@ const [Grid, gridApi] = useVbenVxeGrid({
               onClick: handleEdit.bind(null, row),
             },
             {
-              label: '修改等级',
+              label: '重置密码',
               type: 'link',
-              auth: ['member:user:update-level'],
-              onClick: handleUpdateLevel.bind(null, row),
+              ifShow: () => hasAccessByCodes(['member:user:reset-password']),
+              onClick: handleResetPassword.bind(null, row),
             },
             {
-              label: '修改积分',
+              // 停用后无法登录，历史订单与台账仍可追溯；启用即恢复登录
+              label: row.status === 1 ? '启用' : '停用',
               type: 'link',
-              auth: ['member:user:update-point'],
-              onClick: handleUpdatePoint.bind(null, row),
+              auth: ['member:user:update-status'],
+              onClick: handleUpdateStatus.bind(null, row),
             },
             {
-              label: '修改余额',
+              // 已绑定门店/部门的账号后端会拒绝删除（历史订单会失去归属），提示改用停用
+              label: $t('common.delete'),
               type: 'link',
-              auth: ['pay:wallet:update-balance'],
-              onClick: handleUpdateBalance.bind(null, row),
+              danger: true,
+              auth: ['member:user:delete'],
+              onClick: handleDelete.bind(null, row),
             },
           ]"
         />

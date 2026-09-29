@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * 校验工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ValidationUtils {
 

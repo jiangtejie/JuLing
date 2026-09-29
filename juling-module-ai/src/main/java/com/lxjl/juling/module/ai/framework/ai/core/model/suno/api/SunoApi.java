@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  * <p>
  * 对接 Suno Proxy：<a href="https://github.com/gcui-art/suno-api">suno-api</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class SunoApi {

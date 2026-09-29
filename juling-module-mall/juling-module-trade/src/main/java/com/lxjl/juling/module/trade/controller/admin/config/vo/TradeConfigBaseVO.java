@@ -1,12 +1,7 @@
 package com.lxjl.juling.module.trade.controller.admin.config.vo;
 
-import com.lxjl.juling.framework.common.validation.InEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageBindModeEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageEnabledConditionEnum;
-import com.lxjl.juling.module.trade.enums.brokerage.BrokerageWithdrawTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.hibernate.validator.constraints.Range;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -43,58 +38,5 @@ public class TradeConfigBaseVO {
     @NotNull(message = "全场包邮的最小金额不能为空")
     @PositiveOrZero(message = "全场包邮的最小金额不能是负数")
     private Integer deliveryExpressFreePrice;
-
-    @Schema(description = "是否开启自提", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "是否开启自提不能为空")
-    private Boolean deliveryPickUpEnabled;
-
-    // ========== 分销相关 ==========
-
-    @Schema(description = "是否启用分佣", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "是否启用分佣不能为空")
-    private Boolean brokerageEnabled;
-
-    @Schema(description = "分佣模式", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
-    @NotNull(message = "分佣模式不能为空")
-    @InEnum(value = BrokerageEnabledConditionEnum.class, message = "分佣模式必须是 {value}")
-    private Integer brokerageEnabledCondition;
-
-    @Schema(description = "分销关系绑定模式", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
-    @NotNull(message = "分销关系绑定模式不能为空")
-    @InEnum(value = BrokerageBindModeEnum.class, message = "分销关系绑定模式必须是 {value}")
-    private Integer brokerageBindMode;
-
-    @Schema(description = "分销海报图地址数组", requiredMode = Schema.RequiredMode.REQUIRED, example = "[上游社区")
-    private List<String> brokeragePosterUrls;
-
-    @Schema(description = "一级返佣比例", requiredMode = Schema.RequiredMode.REQUIRED, example = "5")
-    @NotNull(message = "一级返佣比例不能为空")
-    @Range(min = 0, max = 100, message = "一级返佣比例必须在 0 - 100 之间")
-    private Integer brokerageFirstPercent;
-
-    @Schema(description = "二级返佣比例", requiredMode = Schema.RequiredMode.REQUIRED, example = "5")
-    @NotNull(message = "二级返佣比例不能为空")
-    @Range(min = 0, max = 100, message = "二级返佣比例必须在 0 - 100 之间")
-    private Integer brokerageSecondPercent;
-
-    @Schema(description = "用户提现最低金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
-    @NotNull(message = "用户提现最低金额不能为空")
-    @PositiveOrZero(message = "用户提现最低金额不能是负数")
-    private Integer brokerageWithdrawMinPrice;
-
-    @Schema(description = "用户提现手续费百分比", requiredMode = Schema.RequiredMode.REQUIRED, example = "1000")
-    @NotNull(message = "用户提现手续费百分比不能为空")
-    @PositiveOrZero(message = "用户提现手续费百分比不能是负数")
-    private Integer brokerageWithdrawFeePercent;
-
-    @Schema(description = "佣金冻结时间(天)", requiredMode = Schema.RequiredMode.REQUIRED, example = "7")
-    @NotNull(message = "佣金冻结时间(天)不能为空")
-    @PositiveOrZero(message = "佣金冻结时间不能是负数")
-    private Integer brokerageFrozenDays;
-
-    @Schema(description = "提现方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "[0, 1]")
-    @NotEmpty(message = "提现方式不能为空")
-    @InEnum(value = BrokerageWithdrawTypeEnum.class, message = "提现方式必须是 {value}")
-    private List<Integer> brokerageWithdrawTypes;
 
 }

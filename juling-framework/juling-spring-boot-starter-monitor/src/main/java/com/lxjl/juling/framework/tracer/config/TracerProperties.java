@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * BizTracer配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties("juling.tracer")
 @Data

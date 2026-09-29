@@ -20,7 +20,7 @@ public class SocialClientSaveReqVO {
     @Schema(description = "编号", example = "27162")
     private Long id;
 
-    @Schema(description = "应用名", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵商城")
+    @Schema(description = "应用名", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特商城")
     @NotNull(message = "应用名不能为空")
     private String name;
 

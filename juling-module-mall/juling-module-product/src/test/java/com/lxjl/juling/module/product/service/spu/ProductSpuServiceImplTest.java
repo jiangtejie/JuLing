@@ -41,14 +41,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-// TODO @棱信矩灵：review 下单元测试
+// TODO @亚特：review 下单元测试
 
 /**
  * {@link ProductSpuServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@Disabled // TODO 棱信矩灵：后续 fix 补充的单测
+@Disabled // TODO 亚特：后续 fix 补充的单测
 @Import(ProductSpuServiceImpl.class)
 public class ProductSpuServiceImplTest extends BaseDbUnitTest {
 
@@ -79,7 +79,7 @@ public class ProductSpuServiceImplTest extends BaseDbUnitTest {
 
     public int generaInt(){return RandomUtil.randomInt(1,9999999);}
 
-    // TODO @棱信矩灵：单测后续 review 哈
+    // TODO @亚特：单测后续 review 哈
 
     @Test
     public void testCreateSpu_success() {
@@ -90,8 +90,6 @@ public class ProductSpuServiceImplTest extends BaseDbUnitTest {
             o.setPrice(generaInt());
             o.setMarketPrice(generaInt());
             o.setStock(generaInt());
-            o.setFirstBrokeragePrice(generaInt());
-            o.setSecondBrokeragePrice(generaInt());
             // 限制分数为两位数
             o.setWeight(RandomUtil.randomDouble(10,2, RoundingMode.HALF_UP));
             o.setVolume(RandomUtil.randomDouble(10,2, RoundingMode.HALF_UP));
@@ -136,8 +134,6 @@ public class ProductSpuServiceImplTest extends BaseDbUnitTest {
             o.setPrice(generaInt());
             o.setMarketPrice(generaInt());
             o.setStock(generaInt());
-            o.setFirstBrokeragePrice(generaInt());
-            o.setSecondBrokeragePrice(generaInt());
             // 限制分数为两位数
             o.setWeight(RandomUtil.randomDouble(10,2, RoundingMode.HALF_UP));
             o.setVolume(RandomUtil.randomDouble(10,2, RoundingMode.HALF_UP));

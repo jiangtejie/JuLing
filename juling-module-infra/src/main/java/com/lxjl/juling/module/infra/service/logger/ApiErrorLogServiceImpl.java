@@ -25,7 +25,7 @@ import static com.lxjl.juling.module.infra.enums.ErrorCodeConstants.API_ERROR_LO
 /**
  * API 错误日志 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

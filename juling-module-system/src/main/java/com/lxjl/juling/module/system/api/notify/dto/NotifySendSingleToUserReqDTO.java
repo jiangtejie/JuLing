@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 站内信发送给 Admin 或者 Member 用户
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class NotifySendSingleToUserReqDTO {

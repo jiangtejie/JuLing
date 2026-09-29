@@ -24,7 +24,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 工具：列出指定目录的文件列表
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component("directory_list")
 public class DirectoryListToolFunction implements Function<DirectoryListToolFunction.Request, DirectoryListToolFunction.Response> {

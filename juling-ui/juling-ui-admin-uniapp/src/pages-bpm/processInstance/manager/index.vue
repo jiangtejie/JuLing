@@ -55,7 +55,7 @@
                 </view>
               </view>
             </view>
-            <view class="mb-12rpx rounded-8rpx bg-[#f7f8f9] p-16rpx">
+            <view class="yd-bg-subtle mb-12rpx rounded-8rpx p-16rpx">
               <view class="mb-8rpx flex items-center justify-between text-26rpx">
                 <text class="yd-text-hint">发起时间</text>
                 <text class="yd-text-main">{{ formatDateTime(item.startTime) }}</text>

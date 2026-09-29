@@ -98,7 +98,7 @@ function handleAdd() {
     totalPrice: undefined,
     remark: undefined,
   };
-  // TODO 棱信矩灵
+  // TODO 亚特
   tableData.value.push(newRow);
   // 通知父组件更新
   emit('update:items', [...tableData.value]);
@@ -106,7 +106,7 @@ function handleAdd() {
 
 /** 处理删除 */
 function handleDelete(row: ErpStockInApi.StockInItem) {
-  // TODO 棱信矩灵
+  // TODO 亚特
   const index = tableData.value.findIndex((item) => item.seq === row.seq);
   if (index !== -1) {
     tableData.value.splice(index, 1);

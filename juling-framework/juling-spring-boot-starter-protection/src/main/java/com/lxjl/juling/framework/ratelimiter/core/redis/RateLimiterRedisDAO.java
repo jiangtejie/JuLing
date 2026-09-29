@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 限流 Redis DAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 public class RateLimiterRedisDAO {

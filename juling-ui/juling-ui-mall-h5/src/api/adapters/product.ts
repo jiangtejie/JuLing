@@ -5,6 +5,7 @@ import type {
   AppProductSpuDetailRespVO,
   AppProductSpuRespVO,
   BackendPage,
+  Category,
   PageResult,
   Product,
   Sku,
@@ -71,6 +72,7 @@ type SpuCommon = Pick<
   | 'salesCount'
   | 'stock'
   | 'categoryId'
+  | 'specType'
 >;
 
 /** 后端 SPU（列表项 / 详情公共字段）→ 前端 Product */
@@ -88,6 +90,8 @@ export function adaptSpu(raw: SpuCommon): Product {
     salesCount: raw.salesCount,
     stock: raw.stock,
     categoryId: raw.categoryId,
+    // 多规格标记：分类页据此决定卡片右下角是「＋」直接加购还是「选规格」跳详情
+    specType: raw.specType,
     // 后端无「阶梯价」概念，恒为 false → 列表页「阶梯价」标签不显示
     supportTierPrice: false,
   };
@@ -110,11 +114,31 @@ export function adaptProductPage(page: BackendPage<AppProductSpuRespVO>): PageRe
   };
 }
 
-/** 后端分类 → 前端分类 */
-export function adaptCategory(raw: AppCategoryRespVO): {
-  id: number;
-  name: string;
-  picUrl?: string;
-} {
-  return { id: raw.id, name: raw.name, picUrl: normalizeOptionalAssetUrl(raw.picUrl) };
+/** 后端分类 → 前端分类（保留 parentId，层级交给 buildCategoryTree 组装） */
+export function adaptCategory(raw: AppCategoryRespVO): Category {
+  return {
+    id: raw.id,
+    name: raw.name,
+    parentId: raw.parentId ?? 0,
+    picUrl: normalizeOptionalAssetUrl(raw.picUrl),
+  };
+}
+
+/**
+ * 平铺分类列表 → 两级分类树。
+ *
+ * 一级 = parentId 为 0，或父分类不在列表里的项。后者是「父分类被禁用、子分类仍在售」
+ * 的孤儿节点——提升为一级，避免分类在界面上凭空消失。
+ */
+export function buildCategoryTree(list: Category[]): Category[] {
+  const nodes = new Map<number, Category>();
+  list.forEach((item) => nodes.set(item.id, { ...item, children: [] }));
+
+  const roots: Category[] = [];
+  nodes.forEach((node) => {
+    const parent = node.parentId ? nodes.get(node.parentId) : undefined;
+    if (parent) (parent.children ??= []).push(node);
+    else roots.push(node);
+  });
+  return roots;
 }

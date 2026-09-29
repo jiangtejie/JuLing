@@ -15,7 +15,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * ERP 仓库 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ErpWarehouseService {
 
@@ -72,6 +72,14 @@ public interface ErpWarehouseService {
      * @return 仓库列表
      */
     List<ErpWarehouseDO> getWarehouseListByStatus(Integer status);
+
+    /**
+     * 获得指定类型的仓库列表（CENTER 中心库 / STORE 门店仓）
+     *
+     * @param warehouseType 仓库类型
+     * @return 仓库列表
+     */
+    List<ErpWarehouseDO> getWarehouseListByType(String warehouseType);
 
     /**
      * 获得仓库列表

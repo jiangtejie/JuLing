@@ -26,9 +26,9 @@ import static java.util.Collections.emptyList;
 /**
  * 购物车 Service 实现类
  *
- * // TODO 棱信矩灵：未来优化：购物车的价格计算，支持营销信息；目前不支持的原因，前端界面需要前端 pr 支持下；例如说：会员价格；
+ * // TODO 亚特：未来优化：购物车的价格计算，支持营销信息；目前不支持的原因，前端界面需要前端 pr 支持下；例如说：会员价格；
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -126,7 +126,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Integer getCartCount(Long userId) {
-        // TODO 棱信矩灵：需要算上 selected
+        // TODO 亚特：需要算上 selected
         return cartMapper.selectSumByUserId(userId);
     }
 

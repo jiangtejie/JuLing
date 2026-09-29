@@ -73,7 +73,7 @@
           <wd-form-item title="文章内容" title-width="200rpx" prop="content">
             <view class="w-full">
               <wd-textarea v-model="formData.content" clearable :maxlength="20000" placeholder="请输入文章内容" />
-              <view class="mt-8rpx text-22rpx text-[#fa3534] leading-32rpx">
+              <view class="yd-text-danger mt-8rpx text-22rpx leading-32rpx">
                 富文本内容建议前往 PC 端编辑（移动端为纯文本，保存会覆盖原有富文本）
               </view>
             </view>
@@ -184,7 +184,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:promotion-article:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

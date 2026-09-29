@@ -49,7 +49,7 @@
                 <view
                   v-if="selectMode"
                   class="yd-border-base h-44rpx w-44rpx flex shrink-0 items-center justify-center border rounded-full text-24rpx"
-                  :class="isSelected(item) ? 'border-[#1890ff] yd-bg-primary text-white' : 'bg-white text-transparent'"
+                  :class="isSelected(item) ? 'yd-border-accent-blue yd-bg-primary text-white' : 'bg-white text-transparent'"
                   @click.stop="toggleSelect(item)"
                 >
                   ✓

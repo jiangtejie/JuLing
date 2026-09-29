@@ -7,16 +7,13 @@ import com.lxjl.juling.module.trade.controller.admin.order.vo.TradeOrderUpdatePr
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderCreateReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderSettlementReqVO;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeOrderSettlementRespVO;
-import com.lxjl.juling.module.trade.controller.app.order.vo.item.AppTradeOrderItemCommentCreateReqVO;
 import com.lxjl.juling.module.trade.dal.dataobject.order.TradeOrderDO;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 /**
  * 交易订单【写】Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 public interface TradeOrderUpdateService {
@@ -40,25 +37,6 @@ public interface TradeOrderUpdateService {
      * @return 交易订单的
      */
     TradeOrderDO createOrder(Long userId, AppTradeOrderCreateReqVO createReqVO);
-
-    /**
-     * 更新交易订单已支付
-     *
-     * @param id         交易订单编号
-     * @param payOrderId 支付订单编号
-     */
-    void updateOrderPaid(Long id, Long payOrderId);
-
-    /**
-     * 同步订单的支付状态
-     *
-     * 1. Quietly 表示，即使同步失败，也不会抛出异常
-     * 2. 什么时候回出现异常？因为是主动同步，可能和支付模块的回调通知 {@link #updateOrderPaid(Long, Long)} 存在并发冲突，导致抛出异常
-     *
-     * @param id 订单编号
-     * @param payOrderId 支付订单编号
-     */
-    void syncOrderPayStatusQuietly(Long id, Long payOrderId);
 
     /**
      * 【管理员】发货交易订单
@@ -126,29 +104,6 @@ public interface TradeOrderUpdateService {
      */
     void updateOrderAddress(TradeOrderUpdateAddressReqVO reqVO);
 
-    /**
-     * 【管理员】核销订单
-     *
-     * @param userId 管理员编号
-     * @param id 订单编号
-     */
-    void pickUpOrderByAdmin(Long userId, Long id);
-
-    /**
-     * 【管理员】核销订单
-     *
-     * @param userId 管理员编号
-     * @param pickUpVerifyCode 自提核销码
-     */
-    void pickUpOrderByAdmin(Long userId, String pickUpVerifyCode);
-
-    /**
-     * 【管理员】根据自提核销码，查询订单
-     *
-     * @param pickUpVerifyCode 自提核销码
-     */
-    TradeOrderDO getByPickUpVerifyCode(String pickUpVerifyCode);
-
     // =================== Order Item ===================
 
     /**
@@ -175,32 +130,6 @@ public interface TradeOrderUpdateService {
     void updateOrderItemWhenAfterSaleCancel(@NotNull Long id);
 
     /**
-     * 【会员】创建订单项的评论
-     *
-     * @param userId      用户编号
-     * @param createReqVO 创建请求
-     * @return 得到评价 id
-     */
-    Long createOrderItemCommentByMember(Long userId, AppTradeOrderItemCommentCreateReqVO createReqVO);
-
-    /**
-     * 【系统】创建订单项的评论
-     *
-     * @return 被评论的订单数
-     */
-    int createOrderItemCommentBySystem();
-
-    /**
-     * 更新拼团相关信息到订单
-     *
-     * @param orderId             订单编号
-     * @param activityId          拼团活动编号
-     * @param combinationRecordId 拼团记录编号
-     * @param headId              团长编号
-     */
-    void updateOrderCombinationInfo(Long orderId, Long activityId, Long combinationRecordId, Long headId);
-
-    /**
      * 取消支付订单
      *
      * @param userId           用户编号
@@ -210,20 +139,15 @@ public interface TradeOrderUpdateService {
     void cancelPaidOrder(Long userId, Long orderId, Integer cancelType);
 
     /**
-     * 取消支付订单的退款回调
+     * 更新订单为「已收款、待发货」（线下收款用）
      *
-     * @param id               订单编号
-     * @param payRefundId      支付退款编号
-     */
-    void updatePaidOrderRefunded(Long id, Long payRefundId);
-
-    /**
-     * 更新下单赠送的优惠券编号到订单
+     * 后台核验付款凭证、累计收款金额达到应收金额时调用；
+     * 后置处理与线上支付成功完全一致（订单 handler 照常执行）。
      *
-     * @param userId        用户编号
-     * @param orderId       订单编号
-     * @param giveCouponIds 赠送的优惠券编号列表
+     * @param id             订单编号
+     * @param paidAmount     已确认收款金额，单位：分
+     * @param payChannelCode 收款渠道（字典 pay_channel_code 的线下值）
      */
-    void updateOrderGiveCouponIds(Long userId, Long orderId, List<Long> giveCouponIds);
+    void updateOrderPaidByOffline(Long id, Integer paidAmount, String payChannelCode);
 
 }

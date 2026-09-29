@@ -34,7 +34,7 @@ import static com.lxjl.juling.module.ai.enums.ErrorCodeConstants.MUSIC_NOT_EXIST
 /**
  * AI 音乐 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

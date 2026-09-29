@@ -19,7 +19,7 @@ import static com.lxjl.juling.module.system.dal.redis.RedisKeyConstants.OAUTH2_A
 /**
  * {@link OAuth2AccessTokenDO} 的 RedisDAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Repository
 public class OAuth2AccessTokenRedisDAO {

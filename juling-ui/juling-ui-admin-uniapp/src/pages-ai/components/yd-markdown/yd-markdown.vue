@@ -29,7 +29,7 @@ const htmlContent = computed(() => markdown.render(props.content))
 
 <style lang="scss" scoped>
 .yd-markdown {
-  color: #333;
+  color: var(--yd-text-main);
   font-size: 28rpx;
   line-height: 1.75;
   word-break: break-word;
@@ -39,7 +39,7 @@ const htmlContent = computed(() => markdown.render(props.content))
   :deep(h3),
   :deep(h4) {
     margin: 28rpx 0 16rpx;
-    color: #1f2329;
+    color: var(--yd-text-strong);
     font-weight: 600;
     line-height: 1.4;
   }
@@ -73,14 +73,14 @@ const htmlContent = computed(() => markdown.render(props.content))
 
   :deep(blockquote) {
     padding: 12rpx 20rpx;
-    border-left: 6rpx solid #4f7cff;
-    background: #f5f7ff;
-    color: #666;
+    border-left: 6rpx solid var(--yd-text-link);
+    background: var(--yd-surface-subtle);
+    color: var(--yd-text-sub);
   }
 
   :deep(code) {
     border-radius: 6rpx;
-    background: #f2f3f5;
+    background: var(--yd-surface-page);
     padding: 2rpx 8rpx;
     font-family: monospace;
   }
@@ -88,9 +88,9 @@ const htmlContent = computed(() => markdown.render(props.content))
   :deep(pre) {
     overflow-x: auto;
     border-radius: 12rpx;
-    background: #1f2329;
+    background: var(--yd-surface-dark);
     padding: 20rpx;
-    color: #f5f5f5;
+    color: var(--yd-text-inverse);
   }
 
   :deep(pre code) {
@@ -106,13 +106,13 @@ const htmlContent = computed(() => markdown.render(props.content))
 
   :deep(th),
   :deep(td) {
-    border: 1px solid #ddd;
+    border: 1px solid var(--yd-border-base);
     padding: 10rpx 12rpx;
     text-align: left;
   }
 
   :deep(a) {
-    color: #4f7cff;
+    color: var(--yd-text-link);
   }
 }
 </style>
