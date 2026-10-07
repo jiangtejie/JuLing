@@ -22,6 +22,9 @@ public class ErpProductUnitRespVO {
     @ExcelProperty("单位名字")
     private String name;
 
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
+
     @Schema(description = "单位状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty("单位状态")
     @DictFormat(DictTypeConstants.COMMON_STATUS)

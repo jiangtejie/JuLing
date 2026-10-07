@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.system.service.dept;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.annotation.Resource;
@@ -42,7 +45,11 @@ public class DeptServiceImpl implements DeptService {
     @Resource
     private DeptMapper deptMapper;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务：建档失败不留号
     @CacheEvict(cacheNames = RedisKeyConstants.DEPT_CHILDREN_ID_LIST,
             allEntries = true) // allEntries 清空所有缓存，因为操作一个部门，涉及到多个缓存
     public Long createDept(DeptSaveReqVO createReqVO) {
@@ -57,6 +64,8 @@ public class DeptServiceImpl implements DeptService {
         // 插入部门
         DeptDO dept = BeanUtils.toBean(createReqVO, DeptDO.class);
         normalizeDeptBusiness(dept); // 组织节点无营业状态；闭店写留痕
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        dept.setCode(codeRuleApi.generateCode("system_dept"));
         deptMapper.insert(dept);
         return dept.getId();
     }

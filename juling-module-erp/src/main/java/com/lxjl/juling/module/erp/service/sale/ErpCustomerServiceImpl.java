@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.erp.service.sale;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
@@ -30,10 +32,15 @@ public class ErpCustomerServiceImpl implements ErpCustomerService {
     @Resource
     private ErpCustomerMapper customerMapper;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
     public Long createCustomer(ErpCustomerSaveReqVO createReqVO) {
         // 插入
         ErpCustomerDO customer = BeanUtils.toBean(createReqVO, ErpCustomerDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        customer.setCode(codeRuleApi.generateCode("erp_customer"));
         customerMapper.insert(customer);
         // 返回
         return customer.getId();

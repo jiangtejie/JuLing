@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.erp.service.product;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.erp.controller.admin.product.vo.unit.ErpProductUnitPageReqVO;
@@ -31,6 +33,9 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
     private ErpProductUnitMapper productUnitMapper;
 
     @Resource
+    private CodeRuleApi codeRuleApi;
+
+    @Resource
     @Lazy // 延迟加载，避免循环依赖
     private ErpProductService productService;
 
@@ -40,6 +45,8 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
         validateProductUnitNameUnique(null, createReqVO.getName());
         // 2. 插入
         ErpProductUnitDO unit = BeanUtils.toBean(createReqVO, ErpProductUnitDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        unit.setCode(codeRuleApi.generateCode("erp_product_unit"));
         productUnitMapper.insert(unit);
         return unit.getId();
     }

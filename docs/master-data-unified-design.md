@@ -250,13 +250,22 @@ ERP      → 销售 → 客户管理 ｜ 采购 → 供应商 ｜ 商品 ｜ 库
 2. **`system_dept` 统一用 `BM` 前缀**，不再按门店/组织分裂成 `MD`/`BM` ——
    节点类型已由 `dept_type` 精确表达，编码前缀保持单一更稳定。
 
-**`code` 允许为 NULL**（唯一索引带 `code IS NOT NULL` 条件）：新建路径尚未接入编码生成时
-不会因 NOT NULL 直接插入失败。**因此还差两步才算完成**：
+**`code` 允许为 NULL**（唯一索引带 `code IS NOT NULL` 条件）：这样即便某条建档路径漏接编码生成，
+也不会因 NOT NULL 直接插入失败。
 
-| 待做 | 说明 |
+**生成与展示也已落地**：
+
+| 层 | 内容 |
 |---|---|
-| 生成服务 | system 模块的 `CodeRuleService#generateCode(ruleKey)`（`SELECT … FOR UPDATE` 串行化规则行，避免并发重码）+ 各主数据 create 路径接入 |
-| 界面 | 各主数据列表/表单展示并允许查看编码（金蝶的编码是人工可识别的引用键） |
+| Service | `CodeRuleService#generateCode(ruleKey)` —— 先 `SELECT … FOR UPDATE` 锁规则行，再自增、拼「前缀 + 左补零流水」。**并发取号在规则行上串行，不会发出重复编码**；调用方需在事务内，取号与建档同事务（建档失败则号一起回滚，不留空洞） |
+| 跨模块 | `CodeRuleApi` / `CodeRuleApiImpl`（system 的 api 包）—— 其它模块只经接口取号，不直连 `system_code_rule` 表 |
+| 接入 | 6 个建档入口：`ErpCustomer` / `ErpSupplier` / `ErpWarehouse` / `ErpProductUnit` / `ProductSpu` / `Dept`（后者顺带补了 `@Transactional`） |
+| 透出 | 6 个 `RespVO` 加 `code`；后台 6 个列表加「编码」列。**`SaveReqVO` 刻意不加** —— 编码建档后只读，不允许人工改 |
+
+**验证**：取号 SQL 干跑（`SELECT … FOR UPDATE` → 自增 → 格式化）在事务内实测得到 `KH000016`，回滚后库无改动；
+`mvn -T 1C compile` BUILD SUCCESS；后台 typecheck 错误数与基线持平（本次改动文件 0 错误）。
+
+**仍未做**：把编码显示到「选中主数据」的下拉里（现在下拉仍只显示名称）；引入「组织内唯一」（等组织维度定案，见 §8）。
 
 ---
 

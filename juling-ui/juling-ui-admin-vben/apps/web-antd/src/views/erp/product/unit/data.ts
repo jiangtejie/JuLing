@@ -74,6 +74,12 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       minWidth: 100,
     },
     {
+      field: 'code',
+      title: '编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
       field: 'name',
       title: '单位名称',
       minWidth: 200,

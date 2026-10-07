@@ -15,6 +15,9 @@ public class DeptRespVO {
     @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
+
     @Schema(description = "父部门 ID", example = "1024")
     private Long parentId;
 

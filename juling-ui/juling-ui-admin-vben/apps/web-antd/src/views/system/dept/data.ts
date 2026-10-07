@@ -158,6 +158,12 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
   return [
     { type: 'checkbox', width: 40 },
     {
+      field: 'code',
+      title: '编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
       field: 'name',
       title: '节点名称',
       minWidth: 150,

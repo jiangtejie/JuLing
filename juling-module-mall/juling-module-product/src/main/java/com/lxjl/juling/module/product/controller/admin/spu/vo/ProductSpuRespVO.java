@@ -25,6 +25,9 @@ public class ProductSpuRespVO {
     @ExcelProperty("商品名称")
     private String name;
 
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
+
     @Schema(description = "关键字", requiredMode = Schema.RequiredMode.REQUIRED, example = "清凉丝滑不出汗")
     @ExcelProperty("关键字")
     private String keyword;

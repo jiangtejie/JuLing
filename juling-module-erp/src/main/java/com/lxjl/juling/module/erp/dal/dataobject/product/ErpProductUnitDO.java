@@ -32,6 +32,10 @@ public class ErpProductUnitDO extends BaseDO {
      */
     private String name;
     /**
+     * 业务编码（由编码规则统一发号，见 docs/master-data-unified-design.md §4.2；建档后只读）
+     */
+    private String code;
+    /**
      * 单位状态
      */
     private Integer status;

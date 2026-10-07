@@ -24,6 +24,9 @@ public class ErpSupplierRespVO {
     @ExcelProperty("供应商名称")
     private String name;
 
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
+
     @Schema(description = "联系人", example = "亚特")
     @ExcelProperty("联系人")
     private String contact;

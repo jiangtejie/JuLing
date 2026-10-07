@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.product.service.spu;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
@@ -52,6 +54,9 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     @Resource
     private ProductCategoryService categoryService;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createSpu(ProductSpuSaveReqVO createReqVO) {
@@ -63,6 +68,8 @@ public class ProductSpuServiceImpl implements ProductSpuService {
         productSkuService.validateSkuList(skuSaveReqList, createReqVO.getSpecType());
 
         ProductSpuDO spu = BeanUtils.toBean(createReqVO, ProductSpuDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        spu.setCode(codeRuleApi.generateCode("product_spu"));
         // 初始化 SPU 中 SKU 相关属性
         initSpuFromSkus(spu, skuSaveReqList);
         // 插入 SPU

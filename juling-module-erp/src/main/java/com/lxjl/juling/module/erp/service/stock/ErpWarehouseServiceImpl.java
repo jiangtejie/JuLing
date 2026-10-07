@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.erp.service.stock;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
@@ -35,10 +37,15 @@ public class ErpWarehouseServiceImpl implements ErpWarehouseService {
     @Resource
     private ErpWarehouseMapper warehouseMapper;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
     public Long createWarehouse(ErpWarehouseSaveReqVO createReqVO) {
         // 插入
         ErpWarehouseDO warehouse = BeanUtils.toBean(createReqVO, ErpWarehouseDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        warehouse.setCode(codeRuleApi.generateCode("erp_warehouse"));
         warehouseMapper.insert(warehouse);
         // 返回
         return warehouse.getId();

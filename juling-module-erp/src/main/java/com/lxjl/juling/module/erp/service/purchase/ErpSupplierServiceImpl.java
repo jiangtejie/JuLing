@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.erp.service.purchase;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
@@ -29,9 +31,14 @@ public class ErpSupplierServiceImpl implements ErpSupplierService {
     @Resource
     private ErpSupplierMapper supplierMapper;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
     public Long createSupplier(ErpSupplierSaveReqVO createReqVO) {
         ErpSupplierDO supplier = BeanUtils.toBean(createReqVO, ErpSupplierDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        supplier.setCode(codeRuleApi.generateCode("erp_supplier"));
         supplierMapper.insert(supplier);
         return supplier.getId();
     }

@@ -33,6 +33,10 @@ public class ErpWarehouseDO extends BaseDO {
      */
     private String name;
     /**
+     * 业务编码（由编码规则统一发号，见 docs/master-data-unified-design.md §4.2；建档后只读）
+     */
+    private String code;
+    /**
      * 仓库地址
      */
     private String address;

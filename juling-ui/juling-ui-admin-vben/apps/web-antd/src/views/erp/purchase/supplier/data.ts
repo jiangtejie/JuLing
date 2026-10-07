@@ -180,6 +180,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useGridColumns(): VxeTableGridOptions['columns'] {
   return [
     {
+      field: 'code',
+      title: '编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
       field: 'name',
       title: '供应商名称',
       minWidth: 150,

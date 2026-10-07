@@ -37,6 +37,10 @@ public class DeptDO extends TenantBaseDO {
      */
     private String name;
     /**
+     * 业务编码（由编码规则统一发号，见 docs/master-data-unified-design.md §4.2；建档后只读）
+     */
+    private String code;
+    /**
      * 父部门ID
      *
      * 关联 {@link #id}
