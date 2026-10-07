@@ -86,11 +86,11 @@ psql -U root -d yate -f sql/local/65_purchase_price.sql
 psql -U root -d yate -f sql/local/66_cleanup_loose_ends.sql
 # 采购价目表吸纳金蝶常用字段（含税口径 + 定价员）
 psql -U root -d yate -f sql/local/67_purchase_price_kingdee_fields.sql
-# ⚠️ 68 是 DROP COLUMN（破坏性），**待用户确认后执行**
+# 采购价目表去掉「数量区间」（DROP COLUMN；先整表备份到 bak_drop_price_qty_range_20261007）
 psql -U root -d yate -f sql/local/68_purchase_price_drop_qty_range.sql
-# ⚠️ 54 会备份后**删除 4 个列**（不可逆）。必须等 53 执行完、且后端已切换到
-#    member_user_store 读取之后再执行；确认前保持注释：
-# psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
+# 订货账号授权：删 4 个遗留列 + 建门店↔客户一对一唯一索引
+#（DROP COLUMN，先备份到 bak_ordering_account_20261007。前置：53 已执行、后端已切到 member_user_store）
+psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
 ```
 
 > 全新环境按**文件名编号升序**执行一遍即可(当前到 `56`,其中 `54` 需人工确认后再执行);字典覆盖可用
@@ -163,7 +163,7 @@ psql -U root -d yate -f sql/local/68_purchase_price_drop_qty_range.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
-| 68_purchase_price_drop_qty_range.sql | ⚠️ **待执行（DROP COLUMN）**。去掉采购价目表的「数量区间」（\`from_qty\` / \`to_qty\`）—— 用户问「数量从/至是不是没用」，核实后**确实没用，但根因是实现缺口**：前端只在选物料那一刻取一次价、数量变化不重取，后端又只在单价为空时取价，所以**填了也不生效、还会存错价**。要修好需引入「自动价 vs 手工价」的隐藏状态 + 异步竞态处理，收益不明确，故一期去掉。**连带**：同一价目表里同一物料不可重复（校验由「区间不重叠」改为「物料不可重复」，错误码 1_030_104_001 改名）。备份到 \`bak_drop_price_qty_range_20261007\`。见 [docs/purchase-price-design.md](../../docs/purchase-price-design.md) §11 | 表 \`erp_purchase_price_item\` |
+| 68_purchase_price_drop_qty_range.sql | **已执行（DROP COLUMN，先整表备份）**。去掉采购价目表的「数量区间」（\`from_qty\` / \`to_qty\`）—— 用户问「数量从/至是不是没用」，核实后**确实没用，但根因是实现缺口**：前端只在选物料那一刻取一次价、数量变化不重取，后端又只在单价为空时取价，所以**填了也不生效、还会存错价**。要修好需引入「自动价 vs 手工价」的隐藏状态 + 异步竞态处理，收益不明确，故一期去掉。**连带**：同一价目表里同一物料不可重复（校验由「区间不重叠」改为「物料不可重复」，错误码 1_030_104_001 改名）。备份到 \`bak_drop_price_qty_range_20261007\`。见 [docs/purchase-price-design.md](../../docs/purchase-price-design.md) §11 | 表 \`erp_purchase_price_item\` |
 | 67_purchase_price_kingdee_fields.sql | **采购价目表吸纳金蝶常用字段**：\`erp_purchase_price\` 加 \`price_includes_tax\`（报价口径，只影响录入方向，行上的单价恒为不含税）与 \`pricer_user_id\`（定价员，与 creator 区分 —— 常见是采购经理定价、文员录入）。**刻意不吸纳 5 项**并写明理由（币别无汇率支撑、采购组织依赖未定的多组织模型、单据状态一期不做审批流、价格类型冗余、价目表对象一期只支持按物料）。幂等 | — |
 | 66_cleanup_loose_ends.sql | **隐患收尾（三处尾巴）**：① `product_spu`（商城商品）与 `erp_product`（ERP 物料）都用 `WL` 前缀，两套目录合并后编码肉眼无法区分 → 商城侧改 `SP`；② WMS 基础数据下 6270 物料品牌 / 6340 物料分类 已叫「物料」，中间的 6390 却叫「商品管理」→ 改「物料管理」；③ 组织节点 120「直营门店」下面曾挂过 6 家加盟店（店型权威已移到 `erp_customer.store_type`），名字宣称了错误的店型 → 改「门店」（当前 0 子节点）。备份到 `bak_cleanup_loose_ends_20261007`。幂等 | 菜单 6390、节点 120、schema `bak_cleanup_loose_ends_20261007` |
 | 65_purchase_price.sql | **采购价目表**（头 + 明细）。此前 \`erp_product.purchase_price\` 是「一个物料一个采购价」，表达不了「不同供应商不同价 / 调价 / 量大价优」；而**采购单价直接决定存货成本**（订单价 → 入库 unit_cost → 批次成本 → 出库成本），填错的价会一路进到成本且无据可查。建 \`erp_purchase_price\` + \`erp_purchase_price_item\`、编码规则 \`CJJM\`、菜单 12200（基础资料 → 公共资料）+ 按钮 12201-12205。**顺带补齐物料主数据的业务编码**（\`erp_product.code\` + 规则 \`WL\`，之前 6 个主数据都有、唯独物料漏了）。设计见 [docs/purchase-price-design.md](../../docs/purchase-price-design.md)。幂等 | 菜单 12200+、表 \`erp_purchase_price*\` |
@@ -177,7 +177,7 @@ psql -U root -d yate -f sql/local/68_purchase_price_drop_qty_range.sql
 | 57_code_rule_menu.sql | **编码规则菜单**：在「基础资料」(12180) 下补菜单 12190「编码规则」(component `system/code-rule/index`) + 按钮权限 12191-12194（`system:code-rule:query/create/update/delete`），并授给已拥有「基础资料」的 3 个角色（普通角色/财务/供应链）。补这个菜单是因为 56 建了规则表却没有维护入口 —— 管理员看不到前缀/流水，也没法为新主数据加规则。幂等 | 菜单 12190+ |
 | 56_code_rule.sql | **统一编码第一步**：新建 `system_code_rule`（编码规则：前缀 + 流水长度 + 当前值，对齐金蝶的「编码规则」）；`erp_customer`/`erp_supplier`/`erp_warehouse`/`erp_product_unit`/`product_spu`/`system_dept` 加 `code` 并按 id 升序回填（存量 0 条为空）；`(tenant_id, code)` 部分唯一索引；规则当前值对齐各表已用流水最大值。生成服务与界面接入见提交 `2a7385d5`。幂等 | 表 system_code_rule |
 | 55_master_data_menu.sql | **基础资料菜单归口**：新建一级目录「基础资料」(12180) + 「主数据」(12181) / 「公共资料」(12182)，把散在「系统管理 / ERP 销售·采购·库存·财务 / 商城系统」的 9 个主数据菜单迁入，并把新祖先链授给原本就有被迁菜单的角色（yudao 会剔除父菜单未授权的节点）。**只改菜单，不动表结构与 API 路径**。幂等 | 菜单 12180+ |
-| 54_drop_legacy_store_columns.sql | ⚠️ **不可逆，执行前须确认**：先把旧值备份到 schema `bak_ordering_account_20261007`，再软删「代理客户」（有下级客户的客户档案），建 `uk_erp_customer_dept_id`（门店节点 ↔ 客户档案一对一），最后删除 `member_user.dept_id`/`customer_id`、`trade_order.agent_customer_id`、`erp_customer.parent_customer_id`。**必须等 53 执行完且后端已切换到授权表读取之后再跑** | schema `bak_ordering_account_20261007` |
+| 54_drop_legacy_store_columns.sql | **已执行（DROP COLUMN，先备份到 `bak_ordering_account_20261007`）**：软删「代理客户」（有下级客户的客户档案），建 `uk_erp_customer_dept_id`（门店节点 ↔ 客户档案一对一），最后删除 `member_user.dept_id`/`customer_id`、`trade_order.agent_customer_id`、`erp_customer.parent_customer_id`。**必须等 53 执行完且后端已切换到授权表读取之后再跑** | schema `bak_ordering_account_20261007` |
 | 53_member_user_store.sql | **订货账号「授权门店」**：新表 `member_user_store`（账号 → 多门店 + 默认门店；唯一索引保证「一账号一门店一条」「一账号一个默认门店」），从客户树回填——主体客户有下级则授权其全部下级（**代理自身排除**），否则授权自身；再补 29 号脚本播种账号的演示授权（29 先于本脚本执行，故授权写在这里）。幂等 | 序列 `member_user_store_seq` |
 | 52_organization_architecture.sql | **组织架构**：`system_dept` 加 `dept_type`(ORG 组织 / STORE 门店) + `business_status`/`closed_time`/`closed_reason`（开店闭店）；按客户档案回填门店节点（实测命中 13 个：134-146）；字典 `system_dept_type`/`system_dept_business_status`；菜单「部门管理」(103) 改名「组织架构管理」+ 按钮权限 `system:dept:update-business-status`。**店型刻意不落本表**，以 `erp_customer.store_type` 为唯一权威。幂等 | 字典 11570+、菜单 12170 |
 
