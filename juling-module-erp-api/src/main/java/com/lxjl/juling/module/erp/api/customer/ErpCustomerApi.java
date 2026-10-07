@@ -30,14 +30,4 @@ public interface ErpCustomerApi {
      */
     List<ErpCustomerRespDTO> getCustomerList(Collection<Long> ids);
 
-    /**
-     * 获得某代理客户下的门店编号列表
-     *
-     * 用于"代理账号切换门店下单"的归属校验：可下单门店 = 自身 + 其下门店。
-     *
-     * @param parentCustomerId 代理客户编号
-     * @return 门店编号列表（不含代理自身）
-     */
-    List<Long> getChildCustomerIds(Long parentCustomerId);
-
 }

@@ -1,25 +1,28 @@
 package com.lxjl.juling.module.trade.service.order;
 
+import cn.hutool.core.collection.CollUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.module.erp.api.customer.ErpCustomerApi;
 import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerRespDTO;
-import com.lxjl.juling.module.member.api.user.MemberUserApi;
-import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.trade.enums.order.TradeSettlementModeEnum;
+import com.lxjl.juling.module.member.api.user.MemberUserStoreApi;
+import com.lxjl.juling.module.system.api.dept.DeptApi;
+import com.lxjl.juling.module.system.api.dept.dto.DeptRespDTO;
+import com.lxjl.juling.module.system.enums.dept.DeptBusinessStatusEnum;
+import com.lxjl.juling.module.system.enums.dept.DeptTypeEnum;
 import com.lxjl.juling.module.trade.service.order.bo.TradeOrderStoreBO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_NOT_BELONG;
 import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_NOT_BOUND;
-import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_NOT_EXISTS;
 import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE_FAIL_STORE_REQUIRED;
 
 /**
@@ -32,55 +35,38 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.ORDER_CREATE
 public class TradeOrderStoreServiceImpl implements TradeOrderStoreService {
 
     @Resource
-    private MemberUserApi memberUserApi;
+    private MemberUserStoreApi memberUserStoreApi;
     @Resource
     private ErpCustomerApi erpCustomerApi;
+    @Resource
+    private DeptApi deptApi;
 
     @Override
     public TradeOrderStoreBO resolveStore(Long userId, Long storeCustomerId) {
-        // 1. 校验订货账号已绑定门店（一店三面：账号面）
-        MemberUserRespDTO member = memberUserApi.getUser(userId);
-        if (member == null || member.getCustomerId() == null) {
-            throw exception(ORDER_CREATE_FAIL_STORE_NOT_BOUND);
-        }
-        // 2. 解析下单门店。账号绑定的「订货主体」有两种口径：
-        //    · 没有下级 → 门店账号，只能给自己下单（未指定门店时默认就是它）；
-        //    · 有下级   → 代理人账号，可给名下门店下单，但**代理本身不是收货门店**，
-        //                 所以必须显式选择，不能默认把订单挂到代理头上。
-        List<Long> childIds = erpCustomerApi.getChildCustomerIds(member.getCustomerId());
-        boolean agentAccount = !childIds.isEmpty();
-        Long storeId;
-        if (storeCustomerId != null) {
-            if (agentAccount && Objects.equals(storeCustomerId, member.getCustomerId())) {
+        List<ErpCustomerRespDTO> stores = getAuthorizedStores(userId);
+        ErpCustomerRespDTO store;
+        if (storeCustomerId == null) {
+            // 只有一家授权门店 = 加盟店账号，直接用；多家 = 片区订货管理人，必须显式选，
+            // 否则「把 A 店的货下到 B 店」——门店订货方反馈过的真实问题
+            if (stores.size() > 1) {
                 throw exception(ORDER_CREATE_FAIL_STORE_REQUIRED);
             }
-            if (!Objects.equals(storeCustomerId, member.getCustomerId()) && !childIds.contains(storeCustomerId)) {
-                throw exception(ORDER_CREATE_FAIL_STORE_NOT_BELONG);
-            }
-            storeId = storeCustomerId;
+            store = stores.get(0);
         } else {
-            if (agentAccount) {
-                throw exception(ORDER_CREATE_FAIL_STORE_REQUIRED);
-            }
-            storeId = member.getCustomerId();
+            store = stores.stream()
+                    .filter(item -> Objects.equals(item.getId(), storeCustomerId))
+                    .findFirst()
+                    .orElseThrow(() -> exception(ORDER_CREATE_FAIL_STORE_NOT_BELONG));
         }
-        // 3. 校验门店存在且启用
-        ErpCustomerRespDTO store = erpCustomerApi.getCustomer(storeId);
-        if (store == null || CommonStatusEnum.isDisable(store.getStatus())) {
-            throw exception(ORDER_CREATE_FAIL_STORE_NOT_EXISTS);
-        }
-        // 4. 组装（部门缺失时回退账号绑定部门）
-        TradeOrderStoreBO bo = new TradeOrderStoreBO();
-        bo.setCustomerId(store.getId());
-        bo.setCustomerName(store.getName());
-        bo.setDeptId(store.getDeptId() != null ? store.getDeptId() : member.getDeptId());
-        // 代理编号：门店挂在代理下且当前账号不是该门店自身账号时，记为代理下单
-        bo.setAgentCustomerId(!Objects.equals(store.getId(), member.getCustomerId())
-                ? member.getCustomerId() : store.getParentCustomerId());
-        bo.setSettlementMode(store.getSettlementMode() != null
-                ? store.getSettlementMode() : TradeSettlementModeEnum.DEFAULT_MODE);
-        bo.setStoreType(store.getStoreType());
-        return bo;
+        return TradeOrderStoreBO.of(store, null);
+    }
+
+    @Override
+    public List<TradeOrderStoreBO> getStoreList(Long userId) {
+        Long defaultStoreId = memberUserStoreApi.getDefaultStoreId(userId);
+        return getAuthorizedStores(userId).stream()
+                .map(store -> TradeOrderStoreBO.of(store, defaultStoreId))
+                .toList();
     }
 
     @Override
@@ -92,37 +78,46 @@ public class TradeOrderStoreServiceImpl implements TradeOrderStoreService {
         return customer != null && "FRANCHISE".equals(customer.getStoreType());
     }
 
-    @Override
-    public List<TradeOrderStoreBO> getStoreList(Long userId) {
-        // 1. 账号必须绑定门店
-        MemberUserRespDTO member = memberUserApi.getUser(userId);
-        if (member == null || member.getCustomerId() == null) {
+    /**
+     * 账号的**可用**授权门店
+     *
+     * <p>三道过滤，任一不满足即不可下单：
+     * <ol>
+     *   <li>账号有授权（无授权直接报错，不是返回空列表 —— 空列表会让 H5 显示成「没有可下单门店」而无从排查）；</li>
+     *   <li>门店主数据存在且启用；</li>
+     *   <li>门店挂在组织架构的**门店**节点上，且**未闭店**（已确认口径，见组织架构设计 §7）。</li>
+     * </ol>
+     */
+    private List<ErpCustomerRespDTO> getAuthorizedStores(Long userId) {
+        List<Long> storeIds = memberUserStoreApi.getStoreIds(userId);
+        if (CollUtil.isEmpty(storeIds)) {
             throw exception(ORDER_CREATE_FAIL_STORE_NOT_BOUND);
         }
-        // 2. 可下单门店：
-        //    · 门店账号（绑定的订货主体没有下级）→ 只有自己；
-        //    · 代理人账号（有下级）→ 只列名下门店。**代理本身不出现在列表里**：
-        //      代理是管理主体，不收货、不结算配送，把它当成可下单门店会让订单挂错主体。
-        List<Long> childIds = erpCustomerApi.getChildCustomerIds(member.getCustomerId());
-        List<Long> customerIds = childIds.isEmpty()
-                ? List.of(member.getCustomerId()) : new ArrayList<>(childIds);
-        List<ErpCustomerRespDTO> customers = erpCustomerApi.getCustomerList(customerIds);
-        // 3. 组装（保持自身在首位作为默认门店）
-        return customers.stream()
-                .filter(customer -> !CommonStatusEnum.isDisable(customer.getStatus()))
-                .sorted(Comparator.comparing(customer -> !Objects.equals(customer.getId(), member.getCustomerId())))
-                .map(customer -> {
-                    TradeOrderStoreBO bo = new TradeOrderStoreBO();
-                    bo.setCustomerId(customer.getId());
-                    bo.setCustomerName(customer.getName());
-                    bo.setDeptId(customer.getDeptId() != null ? customer.getDeptId() : member.getDeptId());
-                    bo.setAgentCustomerId(!Objects.equals(customer.getId(), member.getCustomerId())
-                            ? member.getCustomerId() : customer.getParentCustomerId());
-                    bo.setSettlementMode(customer.getSettlementMode() != null
-                            ? customer.getSettlementMode() : TradeSettlementModeEnum.DEFAULT_MODE);
-                    bo.setStoreType(customer.getStoreType());
-                    return bo;
-                }).toList();
+        List<ErpCustomerRespDTO> stores = erpCustomerApi.getCustomerList(storeIds).stream()
+                .filter(item -> !CommonStatusEnum.isDisable(item.getStatus()))
+                .toList();
+        if (CollUtil.isEmpty(stores)) {
+            throw exception(ORDER_CREATE_FAIL_STORE_NOT_BOUND);
+        }
+        Set<Long> deptIds = stores.stream().map(ErpCustomerRespDTO::getDeptId)
+                .filter(Objects::nonNull).collect(Collectors.toSet());
+        Map<Long, DeptRespDTO> deptMap = deptApi.getDeptMap(deptIds);
+        List<ErpCustomerRespDTO> openStores = stores.stream()
+                .filter(item -> isOpenStore(deptMap.get(item.getDeptId())))
+                .toList();
+        if (CollUtil.isEmpty(openStores)) {
+            throw exception(ORDER_CREATE_FAIL_STORE_NOT_BOUND);
+        }
+        return openStores;
+    }
+
+    /**
+     * 是否「可下单的门店」：组织架构里类型为门店，且未闭店
+     */
+    private boolean isOpenStore(DeptRespDTO dept) {
+        return dept != null
+                && DeptTypeEnum.STORE.getType().equals(dept.getDeptType())
+                && !DeptBusinessStatusEnum.CLOSED.getStatus().equals(dept.getBusinessStatus());
     }
 
 }

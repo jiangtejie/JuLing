@@ -61,9 +61,6 @@ public class ErpCustomerSaveReqVO {
     @Schema(description = "所属部门（门店节点）编号", example = "134")
     private Long deptId;
 
-    @Schema(description = "上级代理客户编号（代理 → 多门店）", example = "1")
-    private Long parentCustomerId;
-
     @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "FRANCHISE")
     private String storeType;
 

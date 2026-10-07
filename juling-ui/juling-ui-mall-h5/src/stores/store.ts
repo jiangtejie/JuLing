@@ -9,8 +9,8 @@ import { persistKey } from '@/utils/persist';
 /**
  * 下单门店状态（门店订货链 S1）。
  *
- * 背景：一个代理/经销商可能在多个品牌下拥有多家门店，若下错门店会把 A 店的货下到 B 店。
- * 因此账号登录后拉取"可下单门店"，并在下单页显式展示当前门店、允许切换。
+ * 背景：一个片区订货管理人可能同时管多家门店，若下错门店会把 A 店的货下到 B 店。
+ * 因此账号登录后拉取「授权门店」，并在下单页显式展示当前门店、允许切换。
  */
 export const useStoreStore = defineStore(
   'store',
@@ -19,22 +19,26 @@ export const useStoreStore = defineStore(
     const currentStoreId = ref<number | null>(null);
     const loading = ref(false);
 
-    /** 当前门店：未选择时取第一个（后端返回的第一个为默认门店） */
+    /** 当前门店：未选择时优先后端下发的默认门店，其次第一家 */
     const currentStore = computed<StoreOption | null>(
       () =>
         stores.value.find((item) => item.customerId === currentStoreId.value) ??
+        stores.value.find((item) => item.isDefault) ??
         stores.value[0] ??
         null,
     );
 
-    /** 拉取可下单门店；账号未绑定门店时由后端报错提示 */
+    /** 拉取「授权门店」；账号没有可下单门店时由后端报错提示 */
     async function fetchStores(): Promise<StoreOption[]> {
       loading.value = true;
       try {
         const list = await getStoreList();
         stores.value = list ?? [];
+        // 记住的门店不在授权范围内（换号 / 授权被调整）→ 回到后端下发的默认门店
         if (!stores.value.some((item) => item.customerId === currentStoreId.value)) {
-          currentStoreId.value = stores.value[0]?.customerId ?? null;
+          currentStoreId.value =
+            (stores.value.find((item) => item.isDefault) ?? stores.value[0])
+              ?.customerId ?? null;
         }
         return stores.value;
       } finally {

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 /**
  * 订货账号 DO
  *
- * 只保留「订货账号」能力：账号（username）+ 密码、绑定门店（客户 / 部门）。
+ * 只保留「订货账号」能力：账号（username）+ 密码、授权门店（见 {@link MemberUserStoreDO}）。
  * 会员中心的等级、积分、经验、标签、分组已整体下线，对应的字段不再存在于本表映射中。
  *
  * uk_mobile 索引：基于 {@link #mobile} 字段
@@ -123,20 +123,12 @@ public class MemberUserDO extends TenantBaseDO {
      */
     private String mark;
 
-    // ========== 订货主体 ==========
-
-    /**
-     * 所属部门（门店节点）编号
-     *
-     * 关联 {@link com.lxjl.juling.module.system.dal.dataobject.dept.DeptDO#getId()} 字段。
-     * 门店订货链「一店三面」：组织面（部门）+ 经营面（客户）+ 账号面（本表）。
-     */
-    private Long deptId;
-    /**
-     * 所属客户（门店 / 代理）编号
-     *
-     * 关联 ERP 客户，代理账号可切换其名下门店下单。
-     */
-    private Long customerId;
+    // ========== 可下单门店 ==========
+    //
+    // 刻意**不**在本表存「所属部门」与「所属客户」：
+    //   · 账号没有部门 —— 部门是门店的属性（system_dept 的门店节点）；
+    //   · 账号没有自己的经营主体 —— 它有的是一组授权门店（MemberUserStoreDO）。
+    // 早期这两个字段的兜底逻辑会把「下单账号的部门」写进订单，并顺着收货单沉进门店库存与
+    // 往来台账（docs/ordering-account-authorization-design.md §2.2 P2），已整体移除。
 
 }

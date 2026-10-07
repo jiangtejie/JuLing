@@ -129,14 +129,15 @@ export interface Order {
   receiptStatus?: number | null;
 }
 
-/** 可下单门店（门店订货链：代理账号可切换名下门店） */
+/** 可下单门店（门店订货链：账号的**授权门店**，一家店或多家的片区订货管理人） */
 export interface StoreOption {
   customerId: number;
   customerName: string;
-  deptId?: number;
   settlementMode?: string;
   /** 店型（DIRECT 直营 / FRANCHISE 加盟），后端已有则透传 */
   storeType?: string | null;
+  /** 是否账号的默认门店：H5 首次进入用它 */
+  isDefault?: boolean;
 }
 
 /** 创建订单参数 */

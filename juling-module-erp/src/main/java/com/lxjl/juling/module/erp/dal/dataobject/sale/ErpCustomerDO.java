@@ -92,10 +92,6 @@ public class ErpCustomerDO extends BaseDO {
      */
     private Long deptId;
     /**
-     * 上级代理客户编号（代理 → 多门店）
-     */
-    private Long parentCustomerId;
-    /**
      * 店型：DIRECT 直营 / FRANCHISE 加盟
      *
      * 字典 {@link com.lxjl.juling.module.erp.enums.DictTypeConstants#ERP_STORE_TYPE}

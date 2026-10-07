@@ -103,37 +103,20 @@ FROM (VALUES
 ) AS v(dept_id, store_type)
 JOIN system_dept d ON d.id = v.dept_id AND d.tenant_id = 1 AND d.deleted = 0;
 
--- 代理客户（挂在「直营门店」分支下，代表一个加盟商名下 3 家门店）
-INSERT INTO erp_customer (id, name, contact, mobile, telephone, email, fax, remark, status, sort, tax_no, tax_percent, bank_name, bank_account, bank_address, dept_id, parent_customer_id, store_type, settlement_mode, credit_days, credit_limit, tenant_id, creator, create_time, updater, update_time, deleted)
-VALUES ((SELECT COALESCE(MAX(id),0)+1 FROM erp_customer), '成都杨老头餐饮管理有限公司（代理）', '杨代理', '13900001000', '', '', '', 'demo-seed', 0, 10, '', 0, '', '', '', 144, NULL, 'FRANCHISE', 'PREPAID', NULL, NULL, 1, '1', now(), '1', now(), 0);
-
--- 把 3 家门店挂到代理名下（模拟"一个代理多门店"）
-UPDATE erp_customer SET parent_customer_id = (SELECT id FROM erp_customer WHERE remark = 'demo-seed' AND name LIKE '%（代理）%' LIMIT 1)
- WHERE remark = 'demo-seed' AND tenant_id = 1 AND name NOT LIKE '%（代理）%'
-   AND dept_id IN (SELECT d.id FROM system_dept d WHERE d.name IN ('成都杨老头', '萍姐成都', '卤校长广州店'));
-
 -- ---------- E) 订货账号 ----------
--- 3 个门店账号（分别绑直营店/加盟店/代理名下门店）+ 1 个代理账号
-INSERT INTO member_user (id, mobile, password, status, nickname, dept_id, customer_id, point, experience, tenant_id, creator, create_time, updater, update_time, deleted)
+-- 3 个门店账号（直营 / 加盟各一 + 一家）+ 1 个片区订货管理人账号（一个账号管多家门店）
+--
+-- 注意：**授权门店不在这里播种**。新模型下「账号能给哪些门店下单」在 member_user_store，
+-- 而该表由 53 号脚本创建，本脚本（29）先于它执行，故授权在 53 里补（见 53 第 6 节）。
+INSERT INTO member_user (id, mobile, password, status, nickname, point, experience, tenant_id, creator, create_time, updater, update_time, deleted)
 SELECT (SELECT COALESCE(MAX(id),0) FROM member_user) + row_number() OVER (),
-       v.mobile, '', 0, v.nickname,
-       c.dept_id, c.id, 0, 0, 1, '1', now(), '1', now(), 0
+       v.mobile, '', 0, v.nickname, 0, 0, 1, '1', now(), '1', now(), 0
 FROM (VALUES
     ('19000000101', '订货账号-耙二哥双碑店(直营)'),
     ('19000000102', '订货账号-卤校长杨家坪店(加盟)'),
-    ('19000000103', '订货账号-成都杨老头(代理名下)')
-) AS v(mobile, nickname)
-JOIN erp_customer c ON c.remark = 'demo-seed' AND c.tenant_id = 1
- AND c.name = CASE v.mobile WHEN '19000000101' THEN '耙二哥双碑店（门店）'
-                            WHEN '19000000102' THEN '卤校长杨家坪店（门店）'
-                            ELSE '成都杨老头（门店）' END;
-
--- 代理账号：绑定代理客户（可切换名下门店下单）
-INSERT INTO member_user (id, mobile, password, status, nickname, dept_id, customer_id, point, experience, tenant_id, creator, create_time, updater, update_time, deleted)
-VALUES ((SELECT COALESCE(MAX(id),0)+1 FROM member_user), '19000000109', '', 0, '订货账号-杨老头代理(多门店)',
-        (SELECT dept_id FROM erp_customer WHERE remark = 'demo-seed' AND name LIKE '%（代理）%' LIMIT 1),
-        (SELECT id FROM erp_customer WHERE remark = 'demo-seed' AND name LIKE '%（代理）%' LIMIT 1),
-        0, 0, 1, '1', now(), '1', now(), 0);
+    ('19000000103', '订货账号-成都杨老头'),
+    ('19000000109', '订货账号-杨老头片区(多门店)')
+) AS v(mobile, nickname);
 
 -- ---------- F) 仓库与期初库存 ----------
 INSERT INTO erp_warehouse (id, name, address, sort, remark, principal, warehouse_price, truckage_price, status, default_status, tenant_id, creator, create_time, updater, update_time, deleted)

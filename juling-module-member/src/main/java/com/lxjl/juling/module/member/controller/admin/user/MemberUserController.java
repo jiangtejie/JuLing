@@ -1,10 +1,14 @@
 package com.lxjl.juling.module.member.controller.admin.user;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.module.member.controller.admin.user.vo.*;
 import com.lxjl.juling.module.member.convert.user.MemberUserConvert;
 import com.lxjl.juling.module.member.dal.dataobject.user.MemberUserDO;
+import com.lxjl.juling.module.member.dal.dataobject.user.MemberUserStoreDO;
+import com.lxjl.juling.module.member.service.user.MemberUserStoreService;
 import com.lxjl.juling.module.member.service.user.MemberUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +19,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
+import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertSet;
 
 @Tag(name = "管理后台 - 订货账号")
 @RestController
@@ -25,6 +35,9 @@ public class MemberUserController {
 
     @Resource
     private MemberUserService memberUserService;
+
+    @Resource
+    private MemberUserStoreService memberUserStoreService;
 
     @PostMapping("/create")
     @Operation(summary = "开订货账号（私域加盟客户：账号名 + 初始密码 + 绑定门店）")
@@ -78,7 +91,9 @@ public class MemberUserController {
         if (user == null) {
             return success(null);
         }
-        return success(MemberUserConvert.INSTANCE.convert03(user));
+        MemberUserRespVO vo = MemberUserConvert.INSTANCE.convert03(user);
+        attachStoreGrants(ListUtil.toList(vo));
+        return success(vo);
     }
 
     @GetMapping("/page")
@@ -86,7 +101,34 @@ public class MemberUserController {
     @PreAuthorize("@ss.hasPermission('member:user:query')")
     public CommonResult<PageResult<MemberUserRespVO>> getUserPage(@Valid MemberUserPageReqVO pageVO) {
         PageResult<MemberUserDO> pageResult = memberUserService.getUserPage(pageVO);
-        return success(MemberUserConvert.INSTANCE.convertPage(pageResult));
+        PageResult<MemberUserRespVO> result = MemberUserConvert.INSTANCE.convertPage(pageResult);
+        attachStoreGrants(result.getList());
+        return success(result);
+    }
+
+    /**
+     * 装配「授权门店」
+     *
+     * <p>授权关系在 member_user_store 上而不是账号表里，所以走 VO 转换之后单独补；
+     * 批量查一次，避免列表页 N+1。
+     */
+    private void attachStoreGrants(List<MemberUserRespVO> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
+        List<MemberUserStoreDO> grants = memberUserStoreService
+                .getStoreListByUserIds(convertSet(list, MemberUserRespVO::getId));
+        Map<Long, List<Long>> storeIdMap = grants.stream().collect(Collectors.groupingBy(
+                MemberUserStoreDO::getUserId,
+                Collectors.mapping(MemberUserStoreDO::getCustomerId, Collectors.toList())));
+        Map<Long, Long> defaultMap = grants.stream()
+                .filter(item -> Boolean.TRUE.equals(item.getIsDefault()))
+                .collect(Collectors.toMap(MemberUserStoreDO::getUserId, MemberUserStoreDO::getCustomerId,
+                        (a, b) -> a));
+        list.forEach(vo -> {
+            vo.setStoreCustomerIds(storeIdMap.getOrDefault(vo.getId(), Collections.emptyList()));
+            vo.setDefaultStoreCustomerId(defaultMap.get(vo.getId()));
+        });
     }
 
 }

@@ -6,7 +6,10 @@
 >
 > 相关：[organization-model.md](./organization-model.md)（组织与一店三面）、
 > [store-ordering-flow-design.md](./store-ordering-flow-design.md)（订货链全局）。
-> 状态：**设计待确认**，未动代码。
+> 状态：**代码已落地**（2026-10）。[53 号脚本](../sql/local/53_member_user_store.sql) 已执行并验证幂等；
+> 后端（member 授权表 + trade 门店解析塌缩 + 四处冗余字段移除）已编译通过；
+> 后台与 H5 已切换。[54 号脚本](../sql/local/54_drop_legacy_store_columns.sql)（备份 + 删列）
+> 已在事务内干跑验证通过，**尚未正式执行**（删列不可逆，等确认）。落地记录见 §14。
 
 ## 1. 一句话结论
 
@@ -221,9 +224,10 @@ public static TradeOrderStoreBO of(ErpCustomerRespDTO store) {
 
 ### 5.4 账号维护的原子性
 
-开账号应该是一个原子动作（建账号 + 落授权），不该让前端分两步调。做法：
+开账号是一个原子动作（建账号 + 落授权），不让前端分两步调。实际做法：
 `MemberUserCreateReqVO` / `UpdateReqVO` 增加 `storeCustomerIds` 与 `defaultStoreCustomerId`，
-member 模块经 **trade-api** 调用新增的 `TradeOrderAccountStoreApi` 落库（member 已依赖 trade-api）。
+**member 模块直接写自己的表**（`MemberUserStoreService#replaceGrants`，与建号同一事务），
+对外经 `MemberUserStoreApi` 暴露给 trade 读取 —— 不新增跨模块写接口，依赖方向不变。
 
 > 备选：把授权表放 trade 模块。语义上更贴（订货域），但要新增一个跨模块 API 给 member 的建号事务用。
 > 本设计选 member 落表 + trade 校验，依赖方向不变、改动最小。
@@ -379,3 +383,38 @@ H5 页面不是 `system_menu`，无需清菜单权限。
    如业务希望闭店即解除授权，需要明确是否留痕。
 2. 组织架构里的**店型（直营/加盟）与 `erp_customer.store_type` 谁权威**？两处都存会漂移，
    这是 [organization-architecture-design.md](./organization-architecture-design.md) 的核心待决项。
+
+## 14. 落地记录（2026-10）
+
+### 14.1 已执行并验证
+
+| 层 | 落地内容 |
+|---|---|
+| DDL | [53_member_user_store.sql](../sql/local/53_member_user_store.sql)：建 `member_user_store` + 从客户树回填 + 演示授权。**实测连续 3 次执行结果一致**（19 条语句全成功） |
+| member | `MemberUserStoreDO` / `Mapper` / `Service` / `MemberUserStoreApi`；`MemberUserDO` 去掉 `deptId`/`customerId`；`MemberUserBaseVO` 改为透出 `storeCustomerIds`/`defaultStoreCustomerId`；`MemberUserCreateReqVO` 用 `@NotEmpty storeCustomerIds`；建号/改号在**同一事务**内 `replaceGrants`；错误码 `USER_STORE_NOT_BOUND` → `USER_STORE_NOT_GRANTED` |
+| trade | `TradeOrderStoreServiceImpl` 塌缩为「查授权 → 过滤（主数据启用 + 组织架构门店节点 + 未闭店）→ 取默认」；删掉 `getChildCustomerIds`、代理推断、两处 dept 兜底；`TradeOrderStoreBO` 去掉 `agentCustomerId`、新增静态工厂 `of(store, defaultStoreId)` |
+| erp | 删 `ErpCustomerApi#getChildCustomerIds` 及其实现；`parentCustomerId` 从 DO / SaveReqVO / RespVO / PageReqVO / RespDTO / Mapper 条件 / simple-list 透出**全部移除** |
+| 后台 | 会员页两套表单、列表列（改为「授权门店」并按门店名展示）、详情页、API 类型全部切换；删掉「选中客户自动带出部门」联动与代理标注逻辑 |
+| H5 | `StoreOption` 去掉 `deptId`、新增 `isDefault`；`fetchStores` / `currentStore` 优先用后端下发的默认门店 |
+
+**验证**：`mvn -T 1C compile` BUILD SUCCESS；H5 typecheck exit 0 + 单测 103/103；
+后台 typecheck 错误数与改动前基线持平（25 个既有错误，均在与本次无关的文件里）。
+
+### 14.2 待执行：54 号脚本（备份 + 删列）
+
+[sql/local/54_drop_legacy_store_columns.sql](../sql/local/54_drop_legacy_store_columns.sql) 做四件事：
+
+1. 把旧值备份到 `bak_ordering_account_20261007`（对齐 27 号脚本做法）；
+2. **软删「代理客户」**（有下级客户的客户档案）—— 实测 `erp_customer 144` 被门店 16 与代理 19 共用，
+   不清理则「一店一档」唯一索引建不起来；
+3. 建 `uk_erp_customer_dept_id`（门店节点 ↔ 客户档案一对一，组织架构设计 §7 决策 4）；
+4. 删 2 个索引 + 4 个列。
+
+**已在事务内干跑（BEGIN…ROLLBACK）验证**：15 条语句全成功，干跑后校验值为
+「旧列 0 处残留、在营客户 13（= 13 家门店）、授权 1 行、备份表 3 张」，**回滚后数据库未被改动**（已复查）。
+正式执行前需要人工确认 —— 删列不可逆。
+
+**执行顺序**：`29 < 52 < 53 < 54`。53 会建授权表并回填，54 才删列，全新环境按序重建不会失败。
+
+> 注：29 号脚本的演示账号授权已挪到 53 —— 新模型下授权表由 53 创建，而 29 先于 53 执行，
+> 写在 29 里会引用尚不存在的表。

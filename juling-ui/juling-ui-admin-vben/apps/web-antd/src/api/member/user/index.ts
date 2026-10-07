@@ -23,10 +23,10 @@ export namespace MemberUserApi {
     status?: number;
     areaId?: number;
     areaName?: string;
-    /** 所属部门（门店节点）编号 */
-    deptId?: number;
-    /** 所属客户（门店 / 代理）编号 */
-    customerId?: number;
+    /** 授权门店编号列表：账号可给哪些门店下单（加盟店账号一条，片区订货管理人多条） */
+    storeCustomerIds?: number[];
+    /** 默认门店编号：H5 首次进入用它 */
+    defaultStoreCustomerId?: number;
   }
 
   /** 开订货账号请求信息（后台给加盟客户开「账号名 + 初始密码 + 绑定门店」） */
@@ -35,9 +35,10 @@ export namespace MemberUserApi {
     username: string;
     /** 初始密码：6-32 位，必填 */
     password: string;
-    /** 所属客户（门店）编号，必填 */
-    customerId: number;
-    deptId?: number;
+    /** 授权门店编号列表：至少一个（一家店填一条，片区管理人多条） */
+    storeCustomerIds: number[];
+    /** 默认门店编号（不传或不在授权范围内时取第一家） */
+    defaultStoreCustomerId?: number;
     nickname?: string;
     mobile?: string;
     email?: string;
@@ -70,7 +71,7 @@ export function getUser(id: number) {
 }
 
 /**
- * 开订货账号（私域加盟客户：订货人账号名 + 初始密码 + 绑定门店）
+ * 开订货账号（私域加盟客户：订货人账号名 + 初始密码 + 授权门店）
  *
  * 返回新账号编号
  */

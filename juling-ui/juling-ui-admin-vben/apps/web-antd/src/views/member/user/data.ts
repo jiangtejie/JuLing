@@ -5,13 +5,15 @@ import { markRaw } from 'vue';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
-import { handleTree } from '@vben/utils';
 
 import { z } from '#/adapter/form';
 import { getCustomerSimpleList } from '#/api/erp/sale/customer';
-import { getSimpleDeptList } from '#/api/system/dept';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
+
+/** 门店编号 → 门店（列表列展示「授权门店」用；simple-list 只透出 id/name/storeType） */
+let customerList: OrderAccountCustomer[] = [];
+getCustomerSimpleList().then((data) => (customerList = data as OrderAccountCustomer[]));
 
 /** 新增/修改的表单 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -131,30 +133,34 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      fieldName: 'deptId',
-      label: '所属部门',
-      component: 'ApiTreeSelect',
-      componentProps: {
-        allowClear: true,
-        api: async () => handleTree(await getSimpleDeptList()),
-        labelField: 'name',
-        valueField: 'id',
-        childrenField: 'children',
-        placeholder: '请选择所属部门',
-        treeDefaultExpandAll: true,
-      },
-    },
-    {
-      fieldName: 'customerId',
-      label: '所属客户',
+      fieldName: 'storeCustomerIds',
+      label: '授权门店',
       component: 'ApiSelect',
       componentProps: {
         api: getCustomerSimpleList,
+        labelFn: formatOrderSubjectLabel,
+        labelField: 'name',
+        valueField: 'id',
+        mode: 'multiple',
+        allowClear: true,
+        placeholder: '请选择授权门店（可多选）',
+      },
+      help: '账号能给哪些门店下单：一家门店＝加盟店自己的账号；多家＝片区订货管理人',
+      rules: z.array(z.number()).min(1, '至少授权一个门店'),
+    },
+    {
+      fieldName: 'defaultStoreCustomerId',
+      label: '默认门店',
+      component: 'ApiSelect',
+      componentProps: {
+        api: getCustomerSimpleList,
+        labelFn: formatOrderSubjectLabel,
         labelField: 'name',
         valueField: 'id',
         allowClear: true,
-        placeholder: '请选择所属客户',
+        placeholder: '不填则取授权门店的第一家',
       },
+      help: '门店在 H5 首次进入时默认选中的门店',
     },
     {
       fieldName: 'mark',
@@ -250,14 +256,18 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       formatter: ({ cellValue }) => cellValue || '-',
     },
     {
-      field: 'customerId',
-      title: '所属客户',
-      minWidth: 100,
-    },
-    {
-      field: 'deptId',
-      title: '所属部门',
-      minWidth: 100,
+      field: 'storeCustomerIds',
+      title: '授权门店',
+      minWidth: 200,
+      formatter: ({ cellValue }) => {
+        const ids = (cellValue ?? []) as number[];
+        if (ids.length === 0) {
+          return '-';
+        }
+        return ids
+          .map((id) => customerList.find((item) => item.id === id)?.name ?? id)
+          .join('、');
+      },
     },
     {
       field: 'status',
@@ -291,41 +301,32 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
 
 /** 开订货账号表单值 */
 export interface OrderAccountFormValues {
-  customerId?: number;
-  deptId?: number;
+  defaultStoreCustomerId?: number;
   email?: string;
   mark?: string;
   mobile?: string;
   nickname?: string;
   password?: string;
   status?: number;
+  storeCustomerIds?: number[];
   username?: string;
 }
 
 /**
- * 订货主体（门店 / 代理客户）下拉项。
+ * 授权门店下拉项。
  *
- * simple-list 目前透出 id/name/deptId/storeType；parentCustomerId 与 isAgent 是前端补充的：
- * 被别的客户挂成「上级代理」的客户＝代理客户（名下有门店，H5 可切换名下门店下单）。
+ * simple-list 透出 id/name/storeType；店型用于标注「（直营）/（加盟）」，避免选错门店。
  */
 export interface OrderAccountCustomer {
-  deptId?: number;
   id?: number;
-  /** 是否代理客户（名下有门店）：由开账号弹窗拉列表时标注 */
-  isAgent?: boolean;
   name?: string;
-  /** 上级代理客户编号：simple-list 若已透出，可直接本地判定谁是代理 */
-  parentCustomerId?: number;
   /** 店型：DIRECT 直营 / FRANCHISE 加盟（字典 erp_store_type） */
   storeType?: string;
 }
 
-/** 订货主体下拉的显示名：代理客户最需要标出来，其次标店型，避免门店账号 / 代理人账号选错 */
+/** 授权门店下拉的显示名：标出店型，避免选错门店 */
 export function formatOrderSubjectLabel(item: OrderAccountCustomer): string {
   const name = item.name ?? '';
-  if (item.isAgent) {
-    return `${name}（代理）`;
-  }
   if (item.storeType === 'DIRECT') {
     return `${name}（直营）`;
   }
@@ -361,13 +362,8 @@ export function suggestOrderPassword(
 
 /** 开订货账号表单（工具栏「开订货账号」弹窗） */
 export function useOrderAccountFormSchema(options: {
-  /** 订货主体（门店 / 代理客户）下拉数据源 */
+  /** 授权门店下拉数据源 */
   getCustomerList: () => Promise<OrderAccountCustomer[]>;
-  /** 选中订货主体后的联动：能拿到 deptId 就自动带出所属部门 */
-  onCustomerChange?: (
-    values: Partial<OrderAccountFormValues>,
-    form: VbenFormApi,
-  ) => Promise<void> | void;
   /** 账号名 / 手机号变化后刷新默认建议密码 */
   onPasswordSourceChange?: (
     values: Partial<OrderAccountFormValues>,
@@ -415,8 +411,24 @@ export function useOrderAccountFormSchema(options: {
       },
     },
     {
-      fieldName: 'customerId',
-      label: '订货主体',
+      fieldName: 'storeCustomerIds',
+      label: '授权门店',
+      component: 'ApiSelect',
+      componentProps: {
+        api: options.getCustomerList,
+        labelFn: formatOrderSubjectLabel,
+        labelField: 'name',
+        valueField: 'id',
+        mode: 'multiple',
+        allowClear: true,
+        placeholder: '请选择授权门店（可多选）',
+      },
+      help: '一家门店＝加盟店自己的订货账号；多家＝片区订货管理人（登录后可在 H5 切换下单门店）',
+      rules: z.array(z.number()).min(1, '至少授权一个门店'),
+    },
+    {
+      fieldName: 'defaultStoreCustomerId',
+      label: '默认门店',
       component: 'ApiSelect',
       componentProps: {
         api: options.getCustomerList,
@@ -424,34 +436,9 @@ export function useOrderAccountFormSchema(options: {
         labelField: 'name',
         valueField: 'id',
         allowClear: true,
-        placeholder: '请选择订货主体（门店 / 代理客户）',
+        placeholder: '不填则取授权门店的第一家',
       },
-      help: '选门店＝该账号只管这一家门店；选代理客户＝代理人账号，登录后可在 H5 切换名下门店下单',
-      rules: 'selectRequired',
-      dependencies: {
-        triggerFields: ['customerId'],
-        trigger(values, _actions, controller) {
-          options.onCustomerChange?.(
-            values as Partial<OrderAccountFormValues>,
-            controller,
-          );
-        },
-      },
-    },
-    {
-      fieldName: 'deptId',
-      label: '所属部门',
-      component: 'ApiTreeSelect',
-      componentProps: {
-        allowClear: true,
-        api: async () => handleTree(await getSimpleDeptList()),
-        labelField: 'name',
-        valueField: 'id',
-        childrenField: 'children',
-        placeholder: '请选择所属部门（门店 / 代理部门）',
-        treeDefaultExpandAll: true,
-      },
-      help: '门店账号填门店部门；代理人账号填代理部门（仅门店自身没有部门时兜底）。选中订货主体后自动带出，可手动调整',
+      help: '门店在 H5 首次进入时默认选中的门店',
     },
     {
       fieldName: 'nickname',

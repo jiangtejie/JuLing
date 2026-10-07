@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
@@ -62,12 +63,11 @@ public class MemberUserBaseVO {
     @Schema(description = "会员备注", example = "我是小备注")
     private String mark;
 
-    @Schema(description = "订货主体的所属部门：门店账号=门店部门，代理人账号=代理部门",
-            example = "134")
-    private Long deptId;
+    @Schema(description = "授权门店编号列表：账号可给哪些门店下单（加盟店账号一条，片区订货管理人多条）",
+            example = "[6]")
+    private List<Long> storeCustomerIds;
 
-    @Schema(description = "订货主体（门店 / 代理客户）编号：填门店=只管这一家，填代理=可切换名下门店下单",
-            example = "1")
-    private Long customerId;
+    @Schema(description = "默认门店编号：H5 首次进入用它", example = "6")
+    private Long defaultStoreCustomerId;
 
 }

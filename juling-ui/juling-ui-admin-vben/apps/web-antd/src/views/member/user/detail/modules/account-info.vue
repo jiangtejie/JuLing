@@ -36,15 +36,16 @@ const [Descriptions] = useDescription({
       render: (val) =>
         h(DictTag, { type: DICT_TYPE.COMMON_STATUS, value: val }),
     },
-    // 一店三面绑定：门店（部门）与客户编号，后端只有 id，这里直接展示编号
+    // 授权门店：账号能给哪些门店下单。后端只下发门店编号，这里直接展示编号
     {
-      field: 'customerId',
-      label: '所属客户',
-      render: (val) => val ?? '-',
+      field: 'storeCustomerIds',
+      label: '授权门店',
+      render: (val: number[] | undefined) =>
+        val && val.length > 0 ? val.join('、') : '-',
     },
     {
-      field: 'deptId',
-      label: '所属部门',
+      field: 'defaultStoreCustomerId',
+      label: '默认门店',
       render: (val) => val ?? '-',
     },
     {

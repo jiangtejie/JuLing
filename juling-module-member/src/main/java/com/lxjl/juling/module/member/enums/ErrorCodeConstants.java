@@ -16,7 +16,7 @@ public interface ErrorCodeConstants {
     ErrorCode USER_EMAIL_USED = new ErrorCode(1_004_001_004, "修改邮箱失败，该邮箱({})已经被使用");
     ErrorCode USER_USERNAME_USED = new ErrorCode(1_004_001_005, "该订货账号({})已经被使用，请换一个");
     ErrorCode USER_OLD_PASSWORD_ERROR = new ErrorCode(1_004_001_006, "原密码不正确");
-    ErrorCode USER_STORE_NOT_BOUND = new ErrorCode(1_004_001_007, "订货账号必须绑定门店（所属客户不能为空），否则无法下单");
+    ErrorCode USER_STORE_NOT_GRANTED = new ErrorCode(1_004_001_007, "订货账号必须至少授权一个门店，否则无法下单");
     ErrorCode USER_USERNAME_BLANK = new ErrorCode(1_004_001_008, "订货账号不能为空");
     ErrorCode USER_DELETE_FAIL_HAS_ORDER = new ErrorCode(1_004_001_009, "该订货账号已有 {} 笔订单，删除会让历史订单失去归属，请改用「停用」");
 

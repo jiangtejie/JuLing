@@ -78,10 +78,6 @@ public class ErpCustomerRespVO {
     @ExcelProperty("所属部门编号")
     private Long deptId;
 
-    @Schema(description = "上级代理客户编号", example = "1")
-    @ExcelProperty("上级代理编号")
-    private Long parentCustomerId;
-
     @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "FRANCHISE")
     @ExcelProperty("店型")
     private String storeType;

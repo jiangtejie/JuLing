@@ -20,10 +20,10 @@ public class AppTradeOrderStoreRespVO {
     @Schema(description = "门店名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "耙二哥双碑店")
     private String customerName;
 
-    @Schema(description = "门店所属部门编号", example = "134")
-    private Long deptId;
-
     @Schema(description = "结算模式（PREPAID 先款后货 / MONTHLY 月结）", example = "PREPAID")
     private String settlementMode;
+
+    @Schema(description = "是否账号的默认门店：H5 首次进入用它", example = "true")
+    private Boolean isDefault;
 
 }

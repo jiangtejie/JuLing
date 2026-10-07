@@ -40,10 +40,6 @@ public class ErpCustomerRespDTO {
      */
     private Long deptId;
     /**
-     * 上级代理客户编号（代理 → 多门店）
-     */
-    private Long parentCustomerId;
-    /**
      * 店型：DIRECT 直营 / FRANCHISE 加盟
      */
     private String storeType;

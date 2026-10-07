@@ -156,12 +156,6 @@ public class TradeOrderDO extends BaseDO {
      */
     private Long customerId;
     /**
-     * 代理客户编号（快照）
-     *
-     * 代理账号切换门店下单时，记录代理客户；门店自身下单时为空
-     */
-    private Long agentCustomerId;
-    /**
      * 结算模式快照
      *
      * 枚举 {@link com.lxjl.juling.module.trade.enums.order.TradeSettlementModeEnum}

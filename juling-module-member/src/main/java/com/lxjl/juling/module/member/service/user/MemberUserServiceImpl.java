@@ -44,6 +44,10 @@ public class MemberUserServiceImpl implements MemberUserService {
     @Resource
     private MemberUserMapper memberUserMapper;
 
+    /** 授权门店：账号「能给哪些门店下单」存在 member_user_store 上，不在本表 */
+    @Resource
+    private MemberUserStoreService memberUserStoreService;
+
     /** 交易订单 API：删除订货账号前校验该账号是否已有订单 */
     @Resource
     private com.lxjl.juling.module.trade.api.order.TradeOrderApi tradeOrderApi;
@@ -77,9 +81,9 @@ public class MemberUserServiceImpl implements MemberUserService {
         }
         // 2. 手机号可选；填了就必须唯一（否则「手机兜底登录」会歧义）
         validateMobileUnique(null, createReqVO.getMobile());
-        // 3. 必须绑门店：订货账号不绑门店，下单时会被 TradeOrderStoreService 直接拦下，不如开号时就挡住
-        if (createReqVO.getCustomerId() == null) {
-            throw exception(USER_STORE_NOT_BOUND);
+        // 3. 必须授权门店：没有可下单门店的账号登进来也下不了单，不如开号时就挡住
+        if (CollUtil.isEmpty(createReqVO.getStoreCustomerIds())) {
+            throw exception(USER_STORE_NOT_GRANTED);
         }
         // 4. 落库（C 端那套昵称/头像对订货账号没意义，只留最小集合）
         MemberUserDO user = MemberUserDO.builder()
@@ -87,16 +91,17 @@ public class MemberUserServiceImpl implements MemberUserService {
                 .nickname(StrUtil.blankToDefault(createReqVO.getNickname(), username))
                 .mobile(StrUtil.trimToNull(createReqVO.getMobile()))
                 .email(StrUtil.trimToNull(createReqVO.getEmail()))
-                .deptId(createReqVO.getDeptId())
-                .customerId(createReqVO.getCustomerId())
                 .mark(createReqVO.getMark())
                 .status(ObjectUtil.defaultIfNull(createReqVO.getStatus(), CommonStatusEnum.ENABLE.getStatus()))
                 .password(encodePassword(createReqVO.getPassword()))
                 .registerIp(getClientIP())
                 .build();
         memberUserMapper.insert(user);
-        log.info("[createOrderUser][开订货账号({}) 成功，绑定门店({})，会员编号({})]",
-                username, createReqVO.getCustomerId(), user.getId());
+        // 5. 落授权门店：与账号同一个事务，开号失败不留下孤儿授权
+        memberUserStoreService.replaceGrants(user.getId(), createReqVO.getStoreCustomerIds(),
+                createReqVO.getDefaultStoreCustomerId());
+        log.info("[createOrderUser][开订货账号({}) 成功，授权门店({})，会员编号({})]",
+                username, createReqVO.getStoreCustomerIds(), user.getId());
         return user.getId();
     }
 
@@ -208,6 +213,12 @@ public class MemberUserServiceImpl implements MemberUserService {
             updateObj.setUsername(null);
         }
         memberUserMapper.updateById(updateObj);
+
+        // 授权门店：传了才替换 —— 不传表示本次不改授权，避免「编辑手机号」这类操作把授权清空
+        if (CollUtil.isNotEmpty(updateReqVO.getStoreCustomerIds())) {
+            memberUserStoreService.replaceGrants(updateReqVO.getId(), updateReqVO.getStoreCustomerIds(),
+                    updateReqVO.getDefaultStoreCustomerId());
+        }
 
         // 如果是禁用用户，则删除其 Token 信息
         if (CommonStatusEnum.isDisable(updateObj.getStatus())) {

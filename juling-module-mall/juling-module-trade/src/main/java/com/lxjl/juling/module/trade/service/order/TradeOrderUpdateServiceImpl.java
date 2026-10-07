@@ -185,7 +185,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
         // 门店订货链 S1：快照下单门店（组织面 deptId + 经营面 customerId / 结算模式），并初始化审核状态
         TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());
         order.setCustomerId(store.getCustomerId()).setDeptId(store.getDeptId())
-                .setAgentCustomerId(store.getAgentCustomerId()).setSettlementMode(store.getSettlementMode())
+                .setSettlementMode(store.getSettlementMode())
                 .setStoreType(store.getStoreType())
                 .setAuditStatus(TradeOrderAuditStatusEnum.DRAFT.getStatus());
         return order;

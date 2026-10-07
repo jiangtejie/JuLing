@@ -102,9 +102,6 @@ public class TradeOrderBaseVO {
     @Schema(description = "下单门店客户编号", example = "1")
     private Long customerId;
 
-    @Schema(description = "代理客户编号（代理账号切换门店下单时非空）", example = "1")
-    private Long agentCustomerId;
-
     @Schema(description = "结算模式（TradeSettlementModeEnum）：PREPAID 先款后货、MONTHLY 月结", example = "PREPAID")
     private String settlementMode;
 

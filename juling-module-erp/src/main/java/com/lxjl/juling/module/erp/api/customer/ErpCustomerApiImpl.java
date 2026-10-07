@@ -8,7 +8,6 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,15 +29,6 @@ public class ErpCustomerApiImpl implements ErpCustomerApi {
     @Override
     public List<ErpCustomerRespDTO> getCustomerList(Collection<Long> ids) {
         return BeanUtils.toBean(customerMapper.selectList(ErpCustomerDO::getId, ids), ErpCustomerRespDTO.class);
-    }
-
-    @Override
-    public List<Long> getChildCustomerIds(Long parentCustomerId) {
-        if (parentCustomerId == null) {
-            return Collections.emptyList();
-        }
-        return customerMapper.selectList(ErpCustomerDO::getParentCustomerId, parentCustomerId)
-                .stream().map(ErpCustomerDO::getId).toList();
     }
 
 }
