@@ -1,9 +1,9 @@
-package com.lxjl.juling.module.erp.controller.admin.purchase.vo.price;
+package com.lxjl.juling.module.erp.controller.admin.pricelist.vo;
 
-import com.lxjl.juling.framework.excel.core.annotations.DictFormat;
-import com.lxjl.juling.framework.excel.core.convert.DictConvert;
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
+import com.lxjl.juling.framework.excel.core.annotations.DictFormat;
+import com.lxjl.juling.framework.excel.core.convert.DictConvert;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,13 +12,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Schema(description = "管理后台 - 采购价目表 Response VO")
+@Schema(description = "管理后台 - 价目表 Response VO")
 @Data
 @ExcelIgnoreUnannotated
-public class ErpPurchasePriceRespVO {
+public class ErpPriceListRespVO {
 
     @Schema(description = "编号", example = "1024")
     private Long id;
+
+    @Schema(description = "价目表类型", example = "PURCHASE")
+    private String priceType;
 
     @Schema(description = "业务编码", example = "CJJM0001")
     @ExcelProperty("编码")
@@ -28,14 +31,11 @@ public class ErpPurchasePriceRespVO {
     @ExcelProperty("名称")
     private String name;
 
-    @Schema(description = "供应商编号", example = "1")
-    private Long supplierId;
+    @Schema(description = "适用范围摘要（供应商名 / 门店名，多个用 、 连接；通用范围为空）", example = "萍姐鸡煲香水门店")
+    @ExcelProperty("适用范围")
+    private String scopeSummary;
 
-    @Schema(description = "供应商名称（通用价目表为空）", example = "重庆彩云西南食品有限公司")
-    @ExcelProperty("供应商")
-    private String supplierName;
-
-    @Schema(description = "是否默认价目表", example = "true")
+    @Schema(description = "是否默认价目表（适用范围里任一行为默认即为 true，仅用于列表展示）", example = "true")
     @ExcelProperty("默认价目表")
     private Boolean isDefault;
 
@@ -74,8 +74,32 @@ public class ErpPurchasePriceRespVO {
     @ExcelProperty("创建时间")
     private LocalDateTime createTime;
 
+    @Schema(description = "适用范围")
+    private List<Scope> scopes;
+
     @Schema(description = "价目表明细")
     private List<Item> items;
+
+    @Schema(description = "适用范围行")
+    @Data
+    public static class Scope {
+
+        @Schema(description = "行编号", example = "2048")
+        private Long id;
+
+        @Schema(description = "适用对象编号；为空表示通用范围", example = "1")
+        private Long partnerId;
+
+        @Schema(description = "适用对象名称（供应商名 / 门店名；通用范围显示为「通用（不限）」）", example = "萍姐鸡煲香水门店")
+        private String partnerName;
+
+        @Schema(description = "该对象下的默认价目表", example = "false")
+        private Boolean isDefault;
+
+        @Schema(description = "备注", example = "")
+        private String remark;
+
+    }
 
     @Schema(description = "价目表明细行")
     @Data
@@ -93,7 +117,7 @@ public class ErpPurchasePriceRespVO {
         @Schema(description = "物料名称", example = "黑芝麻酱454g")
         private String productName;
 
-        @Schema(description = "规格型号（取物料的规格，仅展示用，价目表不落库）", example = "直径34cm")
+        @Schema(description = "规格型号（取物料的规格，仅展示）", example = "直径34cm")
         private String spec;
 
         @Schema(description = "计价单位名称（取物料的单位）", example = "瓶")

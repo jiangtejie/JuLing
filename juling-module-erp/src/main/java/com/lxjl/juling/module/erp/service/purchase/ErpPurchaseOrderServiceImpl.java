@@ -6,7 +6,9 @@ import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchaseOrderPageReqVO;
-import com.lxjl.juling.module.erp.controller.admin.purchase.vo.price.ErpPurchasePriceMatchRespVO;
+import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceMatchRespVO;
+import com.lxjl.juling.module.erp.enums.ErpPriceTypeEnum;
+import com.lxjl.juling.module.erp.service.pricelist.ErpPriceListService;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchaseOrderSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
@@ -57,7 +59,7 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Resource
     private ErpSupplierService supplierService;
     @Resource
-    private ErpPurchasePriceService purchasePriceService;
+    private ErpPriceListService priceListService;
     @Resource
     private ErpAccountService accountService;
     @Resource
@@ -199,8 +201,8 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
             item.setProductUnitId(productMap.get(item.getProductId()).getUnitId());
             // 1) 单价为空才取价（价目表命中不了时 matchPrice 内部会兜底到物料主数据的采购价）
             if (item.getProductPrice() == null) {
-                ErpPurchasePriceMatchRespVO match = purchasePriceService.matchPrice(
-                        supplier.getId(), item.getProductId(), null);
+                ErpPriceMatchRespVO match = priceListService.matchPrice(
+                        ErpPriceTypeEnum.PURCHASE.getType(), supplier.getId(), item.getProductId(), null);
                 if (match != null) {
                     item.setProductPrice(match.getPrice());
                     // 价目表行上的税率比供应商的开票税点更具体

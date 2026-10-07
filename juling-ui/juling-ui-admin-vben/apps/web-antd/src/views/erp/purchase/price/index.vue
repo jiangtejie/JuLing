@@ -21,6 +21,10 @@ import { $t } from '#/locales';
 import { useGridColumns, useGridFormSchema } from './data';
 import PriceForm from './modules/form.vue';
 
+const props = withDefaults(defineProps<{ priceType?: 'DELIVERY' | 'PURCHASE' }>(), {
+  priceType: 'PURCHASE',
+});
+
 defineOptions({ name: 'ErpPurchasePrice' });
 
 const [FormModal, formModalApi] = useVbenModal({
@@ -78,7 +82,7 @@ async function handleDeleteBatch() {
 
 async function handleExport() {
   const data = await exportPurchasePrice(await gridApi.formApi.getValues());
-  downloadFileFromBlobPart({ fileName: '采购价目表.xls', source: data });
+  downloadFileFromBlobPart({ fileName: '价目表.xls', source: data });
 }
 
 const checkedIds = ref<number[]>([]);
@@ -87,7 +91,7 @@ function handleRowCheckboxChange({ records }: { records: ErpPurchasePriceApi.Pri
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
-  formOptions: { schema: useGridFormSchema() },
+  formOptions: { schema: useGridFormSchema(props.priceType) },
   gridOptions: {
     columns: useGridColumns(),
     height: 'auto',
@@ -96,6 +100,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       ajax: {
         query: async ({ page }, formValues) => {
           return await getPurchasePricePage({
+            priceType: props.priceType,
             pageNo: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
@@ -112,7 +117,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
 <template>
   <Page auto-content-height>
-    <FormModal @success="handleRefresh" />
+    <FormModal :price-type="props.priceType" @success="handleRefresh" />
     <Grid table-title="采购价目表" @checkbox-change="handleRowCheckboxChange" @checkbox-all="handleRowCheckboxChange">
       <template #toolbar-tools>
         <TableAction

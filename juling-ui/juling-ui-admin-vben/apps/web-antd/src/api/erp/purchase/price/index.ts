@@ -6,10 +6,13 @@ export namespace ErpPurchasePriceApi {
   /** 采购价目表（头） */
   export interface Price {
     id?: number;
+    priceType?: 'DELIVERY' | 'PURCHASE'; // 价目表类型
     code?: string; // 业务编码（编码规则发号）
     name?: string; // 价目表名称
-    supplierId?: number; // 供应商编号；为空表示通用价目表
-    supplierName?: string; // 供应商名称（通用价目表为空）
+    scopes?: Scope[]; // 适用范围（采购=供应商 / 配送=门店）；为空或 partnerId 为空表示通用范围
+    scopeSummary?: string; // 适用范围摘要（列表展示用）
+    scopePartnerIds?: number[]; // 仅前端表单用：适用范围选中的对象编号
+    scopeIsDefault?: boolean; // 仅前端表单用：整张表的「默认价目表」
     isDefault?: boolean; // 是否默认价目表
     priceIncludesTax?: boolean; // 报价口径：true 表示供应商报的是含税价
     pricerUserId?: number; // 定价员编号
@@ -21,6 +24,15 @@ export namespace ErpPurchasePriceApi {
     itemCount?: number; // 明细行数
     createTime?: number;
     items?: Item[];
+  }
+
+  /** 适用范围行 */
+  export interface Scope {
+    id?: number;
+    partnerId?: number; // 适用对象编号；为空表示通用范围
+    partnerName?: string;
+    isDefault?: boolean; // 该对象下的默认价目表
+    remark?: string;
   }
 
   /** 价目表明细行 */
@@ -54,7 +66,7 @@ export namespace ErpPurchasePriceApi {
 /** 查询采购价目表分页 */
 export function getPurchasePricePage(params: PageParam) {
   return requestClient.get<PageResult<ErpPurchasePriceApi.Price>>(
-    '/erp/purchase-price/page',
+    '/erp/price-list/page',
     { params },
   );
 }
@@ -62,35 +74,35 @@ export function getPurchasePricePage(params: PageParam) {
 /** 查询采购价目表详情（含明细） */
 export function getPurchasePrice(id: number) {
   return requestClient.get<ErpPurchasePriceApi.Price>(
-    `/erp/purchase-price/get?id=${id}`,
+    `/erp/price-list/get?id=${id}`,
   );
 }
 
 /** 新增采购价目表 */
 export function createPurchasePrice(data: ErpPurchasePriceApi.Price) {
-  return requestClient.post('/erp/purchase-price/create', data);
+  return requestClient.post('/erp/price-list/create', data);
 }
 
 /** 修改采购价目表 */
 export function updatePurchasePrice(data: ErpPurchasePriceApi.Price) {
-  return requestClient.put('/erp/purchase-price/update', data);
+  return requestClient.put('/erp/price-list/update', data);
 }
 
 /** 删除采购价目表 */
 export function deletePurchasePrice(id: number) {
-  return requestClient.delete(`/erp/purchase-price/delete?id=${id}`);
+  return requestClient.delete(`/erp/price-list/delete?id=${id}`);
 }
 
 /** 批量删除采购价目表 */
 export function deletePurchasePriceList(ids: number[]) {
   return requestClient.delete(
-    `/erp/purchase-price/delete-list?ids=${ids.join(',')}`,
+    `/erp/price-list/delete-list?ids=${ids.join(',')}`,
   );
 }
 
 /** 导出采购价目表 Excel */
 export function exportPurchasePrice(params: any) {
-  return requestClient.download('/erp/purchase-price/export-excel', { params });
+  return requestClient.download('/erp/price-list/export-excel', { params });
 }
 
 /**
@@ -98,13 +110,14 @@ export function exportPurchasePrice(params: any) {
  *
  * 采购订单在「选物料」时调它带出默认单价；价目表没命中时后端会兜底到物料主数据的采购价。
  */
-export function matchPurchasePrice(params: {
-  supplierId?: number;
+export function matchPrice(params: {
+  priceType: 'DELIVERY' | 'PURCHASE';
+  partnerId?: number;
   productId: number;
   date?: string;
 }) {
   return requestClient.get<ErpPurchasePriceApi.MatchResult | null>(
-    '/erp/purchase-price/match',
+    '/erp/price-list/match',
     { params },
   );
 }

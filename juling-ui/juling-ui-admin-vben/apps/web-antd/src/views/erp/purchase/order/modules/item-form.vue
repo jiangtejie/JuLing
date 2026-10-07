@@ -14,7 +14,7 @@ import { Input, InputNumber, Select } from 'ant-design-vue';
 
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getProductSimpleList } from '#/api/erp/product/product';
-import { matchPurchasePrice } from '#/api/erp/purchase/price';
+import { matchPrice } from '#/api/erp/purchase/price';
 import { getStockCount } from '#/api/erp/stock/stock';
 
 import { useFormItemColumns } from '../data';
@@ -180,8 +180,9 @@ async function handleProductChange(productId: any, row: any) {
   row.productPrice = product.purchasePrice || 0;
   try {
     // 注意：不再传数量 —— 价目表已去掉数量区间（阶梯价），见 sql/local/68 的说明
-    const match = await matchPurchasePrice({
-      supplierId: props.supplierId,
+    const match = await matchPrice({
+      priceType: 'PURCHASE',
+      partnerId: props.supplierId,
       productId,
     });
     if (match?.price !== null && match?.price !== undefined) {

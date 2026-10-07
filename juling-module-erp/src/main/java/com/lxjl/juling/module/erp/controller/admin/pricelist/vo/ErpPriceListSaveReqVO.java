@@ -1,39 +1,35 @@
-package com.lxjl.juling.module.erp.controller.admin.purchase.vo.price;
+package com.lxjl.juling.module.erp.controller.admin.pricelist.vo;
 
-import com.lxjl.juling.framework.common.validation.InEnum;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
+import com.lxjl.juling.framework.common.validation.InEnum;
+import com.lxjl.juling.module.erp.enums.ErpPriceTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Schema(description = "管理后台 - 采购价目表新增/修改 Request VO")
+@Schema(description = "管理后台 - 价目表新增/修改 Request VO")
 @Data
-public class ErpPurchasePriceSaveReqVO {
+public class ErpPriceListSaveReqVO {
 
     @Schema(description = "编号", example = "1024")
     private Long id;
+
+    @Schema(description = "价目表类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "PURCHASE")
+    @NotEmpty(message = "价目表类型不能为空")
+    @InEnum(value = ErpPriceTypeEnum.class)
+    private String priceType;
 
     @Schema(description = "价目表名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "2026 年度彩云西南食品报价")
     @NotEmpty(message = "价目表名称不能为空")
     @Size(max = 64, message = "价目表名称长度不能超过 64 个字符")
     private String name;
 
-    @Schema(description = "供应商编号；**为空表示通用价目表**", example = "1")
-    private Long supplierId;
-
-    @Schema(description = "是否默认价目表", example = "true")
-    private Boolean isDefault;
-
-    @Schema(description = "报价口径：true 表示供应商报的是含税价（只影响录入方向，行上的单价恒为不含税）", example = "false")
+    @Schema(description = "报价口径：true 表示报的是含税价（只影响录入方向，行上的单价恒为不含税）", example = "false")
     private Boolean priceIncludesTax;
 
     @Schema(description = "定价员编号", example = "1")
@@ -54,10 +50,33 @@ public class ErpPurchasePriceSaveReqVO {
     @Size(max = 255, message = "备注长度不能超过 255 个字符")
     private String remark;
 
+    @Schema(description = "适用范围：适用哪些对象（采购=供应商 / 配送=门店）；留空或 partnerId 为空表示通用范围")
+    @Valid
+    private List<Scope> scopes;
+
     @Schema(description = "价目表明细", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "价目表明细不能为空")
     @Valid
     private List<Item> items;
+
+    @Schema(description = "适用范围行")
+    @Data
+    public static class Scope {
+
+        @Schema(description = "行编号", example = "2048")
+        private Long id;
+
+        @Schema(description = "适用对象编号；为空表示通用范围", example = "1")
+        private Long partnerId;
+
+        @Schema(description = "该对象下的默认价目表", example = "false")
+        private Boolean isDefault;
+
+        @Schema(description = "备注", example = "")
+        @Size(max = 255, message = "备注长度不能超过 255 个字符")
+        private String remark;
+
+    }
 
     @Schema(description = "价目表明细行")
     @Data

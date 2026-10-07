@@ -19,6 +19,11 @@ import { useFormSchema } from '../data';
 import PriceItemForm from './item-form.vue';
 
 type FormType = 'create' | 'detail' | 'edit';
+type PriceType = 'DELIVERY' | 'PURCHASE';
+
+const props = withDefaults(defineProps<{ priceType?: PriceType }>(), {
+  priceType: 'PURCHASE',
+});
 
 const emit = defineEmits(['success']);
 const formData = ref<ErpPurchasePriceApi.Price>();
@@ -43,7 +48,7 @@ const [Form, formApi] = useVbenForm({
   // 与采购订单等 ERP 表单保持一致用 vertical：
   // horizontal 下「默认价目表」这类较长的 label 会换行，且明细表会被 label 挤到右侧错位
   layout: 'vertical',
-  schema: useFormSchema('create'),
+  schema: useFormSchema('create', props.priceType),
   showDefaultActions: false,
 });
 
@@ -60,7 +65,16 @@ const [Modal, modalApi] = useVbenModal({
     }
     modalApi.lock();
     const data = (await formApi.getValues()) as ErpPurchasePriceApi.Price;
+    data.priceType = props.priceType;
     data.items = items;
+    // 适用范围：界面是「多选对象 + 一个默认开关」，落库拆成 N 行（数据库支持逐行默认，后续可细化）
+    data.scopes = (data.scopePartnerIds ?? []).map((partnerId) => ({
+      partnerId,
+      isDefault: data.scopeIsDefault,
+    }));
+    if (data.scopes.length === 0) {
+      data.scopes = [{ partnerId: undefined, isDefault: data.scopeIsDefault }];
+    }
     try {
       await (formType.value === 'create'
         ? createPurchasePrice(data)
@@ -80,7 +94,7 @@ const [Modal, modalApi] = useVbenModal({
     const data = modalApi.getData() as { formType: FormType; id?: number };
     formType.value = data.formType ?? 'create';
     formApi.setDisabled(formType.value === 'detail');
-    formApi.updateSchema(useFormSchema(formType.value));
+    formApi.updateSchema(useFormSchema(formType.value, props.priceType));
     if (!data || !data.id) {
       formData.value = { items: [] };
       await formApi.setValues({ status: 0, isDefault: false });
@@ -89,7 +103,13 @@ const [Modal, modalApi] = useVbenModal({
     modalApi.lock();
     try {
       formData.value = await getPurchasePrice(data.id);
-      await formApi.setValues(formData.value);
+      await formApi.setValues({
+        ...formData.value,
+        scopePartnerIds: (formData.value.scopes ?? [])
+          .map((s) => s.partnerId)
+          .filter((id): id is number => id !== null && id !== undefined),
+        scopeIsDefault: (formData.value.scopes ?? []).some((s) => s.isDefault),
+      });
     } finally {
       modalApi.unlock();
     }

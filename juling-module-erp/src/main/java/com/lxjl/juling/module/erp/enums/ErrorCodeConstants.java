@@ -15,10 +15,12 @@ public interface ErrorCodeConstants {
     ErrorCode SUPPLIER_NAME_DUPLICATE = new ErrorCode(1_030_100_002, "已存在同名供应商({})");
     ErrorCode SUPPLIER_HAS_REFERENCE = new ErrorCode(1_030_100_003, "供应商({})已被{}引用，无法删除；如需停止使用请改为「停用」");
 
-    // ========== ERP 采购价目表（1-030-104-000） ==========
-    ErrorCode PURCHASE_PRICE_NOT_EXISTS = new ErrorCode(1_030_104_000, "采购价目表不存在");
-    ErrorCode PURCHASE_PRICE_ITEM_PRODUCT_DUPLICATE = new ErrorCode(1_030_104_001, "物料({})在本价目表里出现了多行，去掉数量区间后无法区分取哪一行，请合并");
+    // ========== ERP 价目表（1-030-104-000） ==========
+    ErrorCode PRICE_LIST_NOT_EXISTS = new ErrorCode(1_030_104_000, "价目表不存在");
+    ErrorCode PRICE_LIST_ITEM_PRODUCT_DUPLICATE = new ErrorCode(1_030_104_001, "物料({})在本价目表里出现了多行，无法区分取哪一行，请合并");
+    ErrorCode PRICE_LIST_SCOPE_PARTNER_DUPLICATE = new ErrorCode(1_030_104_002, "适用范围里同一个对象出现了多行，请合并");
 
+    
     // ========== ERP 采购订单（1-030-101-000） ==========
     ErrorCode PURCHASE_ORDER_NOT_EXISTS = new ErrorCode(1_030_101_000, "采购订单不存在");
     ErrorCode PURCHASE_ORDER_DELETE_FAIL_APPROVE = new ErrorCode(1_030_101_001, "采购订单({})已审核，无法删除");

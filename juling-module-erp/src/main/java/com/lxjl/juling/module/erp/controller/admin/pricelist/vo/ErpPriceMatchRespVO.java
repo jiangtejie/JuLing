@@ -1,4 +1,4 @@
-package com.lxjl.juling.module.erp.controller.admin.purchase.vo.price;
+package com.lxjl.juling.module.erp.controller.admin.pricelist.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -6,15 +6,15 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * 采购取价结果 VO
+ * 取价结果 VO
  *
- * <p>供采购订单在「选供应商 + 选物料」时带出默认单价与税率。
+ * <p>采购价目表供采购订单带出单价；配送价目表供门店订货带出配送价。
  *
  * @author 亚特
  */
-@Schema(description = "管理后台 - 采购取价结果 VO")
+@Schema(description = "管理后台 - 取价结果 VO")
 @Data
-public class ErpPurchasePriceMatchRespVO {
+public class ErpPriceMatchRespVO {
 
     @Schema(description = "命中的价目表编号（为空表示价目表没命中，价格来自物料主数据兜底）", example = "1")
     private Long priceId;

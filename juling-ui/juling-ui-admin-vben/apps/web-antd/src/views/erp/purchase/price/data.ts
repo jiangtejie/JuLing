@@ -8,10 +8,15 @@ import { erpPriceInputFormatter } from '@vben/utils';
 
 import { z } from '#/adapter/form';
 import { getSupplierSimpleList } from '#/api/erp/purchase/supplier';
+import { getCustomerSimpleList } from '#/api/erp/sale/customer';
 import { getSimpleUserList } from '#/api/system/user';
 
 /** 新增/修改的表单（表头字段；明细用 items 插槽渲染） */
-export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormSchema[] {
+export function useFormSchema(
+  formType: 'create' | 'detail' | 'edit',
+  priceType: 'DELIVERY' | 'PURCHASE' = 'PURCHASE',
+): VbenFormSchema[] {
+  const isDelivery = priceType === 'DELIVERY';
   return [
     {
       component: 'Input',
@@ -29,22 +34,26 @@ export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormS
       },
     },
     {
-      fieldName: 'supplierId',
-      label: '供应商',
+      // 适用范围：一张价目表可以指定适用哪些对象（采购=供应商 / 配送=门店）
+      fieldName: 'scopePartnerIds',
+      label: isDelivery ? '适用门店' : '适用供应商',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '留空表示通用价目表（不限供应商）',
+        placeholder: isDelivery ? '留空表示通用（不限门店）' : '留空表示通用（不限供应商）',
         allowClear: true,
         showSearch: true,
-        api: getSupplierSimpleList,
+        mode: 'multiple',
+        api: isDelivery ? getCustomerSimpleList : getSupplierSimpleList,
         labelField: 'name',
         valueField: 'id',
         disabled: formType === 'detail',
       },
-      help: '留空 = 通用价目表，优先级低于供应商专项价目表',
+      help: isDelivery
+        ? '可以多选：这张配送价目表对哪些门店生效；留空 = 通用（不限门店）'
+        : '可以多选；留空 = 通用（不限供应商）',
     },
     {
-      fieldName: 'isDefault',
+      fieldName: 'scopeIsDefault',
       label: '默认价目表',
       component: 'Switch',
       componentProps: {
@@ -53,7 +62,7 @@ export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormS
         unCheckedChildren: '普通',
       },
       defaultValue: false,
-      help: '同层级（同供应商 / 通用）内取价时优先取它',
+      help: '取价时优先取它。注：当前界面是整张表一个开关，数据库支持「只对部分门店默认」，后续可细化',
     },
     {
       fieldName: 'priceIncludesTax',
@@ -139,7 +148,10 @@ export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormS
 }
 
 /** 搜索表单 */
-export function useGridFormSchema(): VbenFormSchema[] {
+export function useGridFormSchema(
+  priceType: 'DELIVERY' | 'PURCHASE' = 'PURCHASE',
+): VbenFormSchema[] {
+  const isDelivery = priceType === 'DELIVERY';
   return [
     {
       fieldName: 'code',
@@ -153,19 +165,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       component: 'Input',
       componentProps: { placeholder: '请输入价目表名称', allowClear: true },
     },
-    {
-      fieldName: 'supplierId',
-      label: '供应商',
-      component: 'ApiSelect',
-      componentProps: {
-        placeholder: '请选择供应商',
-        allowClear: true,
-        showSearch: true,
-        api: getSupplierSimpleList,
-        labelField: 'name',
-        valueField: 'id',
-      },
-    },
+
     {
       fieldName: 'status',
       label: '状态',
@@ -186,10 +186,10 @@ export function useGridColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Price>
     { field: 'code', title: '编码', width: 120, formatter: ({ cellValue }) => cellValue || '-' },
     { field: 'name', title: '名称', minWidth: 200 },
     {
-      field: 'supplierName',
-      title: '供应商',
+      field: 'scopeSummary',
+      title: '适用范围',
       minWidth: 180,
-      formatter: ({ cellValue }) => cellValue || '通用（不限供应商）',
+      formatter: ({ cellValue }) => cellValue || '通用（不限）',
     },
     {
       field: 'isDefault',
