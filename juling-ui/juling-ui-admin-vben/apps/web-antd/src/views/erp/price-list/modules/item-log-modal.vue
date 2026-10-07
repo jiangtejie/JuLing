@@ -48,11 +48,22 @@ const [Modal, modalApi] = useVbenModal({
       rows.value = [];
       return;
     }
-    const data = modalApi.getData() as { name?: string; priceId?: number };
-    title.value = `价格变更历史 - ${data.name ?? ''}`;
+    // 两种入口：从价目表行进来（看这张表的历次改价）、从物料行进来（看这个物料的历次改价）。
+    // 「按物料查」才是核算真正要用的 —— 它要回答的是「3 月份五花肉的配送价是多少」。
+    const data = modalApi.getData() as {
+      name?: string;
+      priceId?: number;
+      productId?: number;
+    };
+    title.value = data.productId
+      ? `价格变更历史 - 物料：${data.name ?? ''}`
+      : `价格变更历史 - ${data.name ?? ''}`;
     modalApi.lock();
     try {
-      rows.value = (await getPriceItemLog({ priceId: data.priceId })) ?? [];
+      rows.value =
+        (await getPriceItemLog(
+          data.productId ? { productId: data.productId } : { priceId: data.priceId },
+        )) ?? [];
       await gridApi.grid.reloadData(rows.value);
     } finally {
       modalApi.unlock();

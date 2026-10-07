@@ -16,12 +16,24 @@ import {
 import { $t } from '#/locales';
 
 import { useGridColumns, useGridFormSchema } from './data';
+import ItemLogModal from '#/views/erp/price-list/modules/item-log-modal.vue';
+
 import Form from './modules/form.vue';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
   destroyOnClose: true,
 });
+
+// 价格变更历史：**这是核算真正要用的入口** —— 回答「某物料的价什么时候、从多少改成多少」
+const [ItemLogModalComp, itemLogModalApi] = useVbenModal({
+  connectedComponent: ItemLogModal,
+  destroyOnClose: true,
+});
+
+function handleItemLog(row: ErpProductApi.Product) {
+  itemLogModalApi.setData({ productId: row.id, name: row.name }).open();
+}
 
 /** 刷新表格 */
 function handleRefresh() {
@@ -100,6 +112,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     </template>
 
     <FormModal @success="handleRefresh" />
+    <ItemLogModalComp />
     <Grid table-title="物料列表">
       <template #toolbar-tools>
         <TableAction
@@ -124,6 +137,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
       <template #actions="{ row }">
         <TableAction
           :actions="[
+            {
+              label: '价格变更历史',
+              type: 'link',
+              auth: ['erp:price-list:query'],
+              onClick: handleItemLog.bind(null, row),
+            },
             {
               label: $t('common.edit'),
               type: 'link',

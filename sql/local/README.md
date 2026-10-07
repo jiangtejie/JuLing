@@ -7,6 +7,22 @@
 > → `quartz.sql`(调度表)→ **本目录 01…56**(菜单/字典/表结构补齐)。
 > `act_*`/`flw_*` 由 `flowable.database-schema-update: true` 自动创建。
 
+## 开发库执行状态
+
+当前开发库（`yate`）**已执行到 74**。核对方式不是翻提交记录，而是直接查库：
+
+```sql
+-- 建表类脚本：看表在不在
+SELECT table_name FROM information_schema.tables WHERE table_schema='public'
+ AND table_name IN ('system_code_rule','erp_price_list','erp_price_list_scope','erp_price_list_item_log','member_user_store');
+
+-- 删列类脚本：看列还在不在（都应为 0 行）
+SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public'
+ AND column_name IN ('dept_id','customer_id','agent_customer_id','parent_customer_id','from_qty','to_qty');
+```
+
+**重建环境时不要依赖本状态** —— 按下面的顺序从头跑一遍即可（脚本都是幂等的）。
+
 ## 执行顺序
 
 ```bash

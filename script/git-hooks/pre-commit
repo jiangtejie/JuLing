@@ -55,4 +55,25 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q "^${H5_DIR}/"; then
     fi
 fi
 
+# ---------------------------------------------------------------------------
+# SQL 脚本「本地执行前」检查（sql/local 有改动时）
+#
+# 背景：本地没装 psql，用 DbTool 执行脚本，而它按 ";" + 换行切分语句，于是有两条隐含约定：
+#   多行 DO $ 块会被切碎、语句结尾的 ";" 后面必须跟换行。这个坑在开发中被反复踩，所以做成检查。
+#
+# **为什么是警告而不是拦截**：仓库里的脚本面向 psql（正式执行方式是 psql -f），
+#   psql 完全支持多行 DO 块 —— 拿 psql 正确的脚本去挡提交是错的。
+#   本检查只提示「本地用 DbTool 跑之前先看一眼」，不作门禁。
+# ---------------------------------------------------------------------------
+SQL_DIR="sql/local"
+if git diff --cached --name-only --diff-filter=ACM | grep -q "^${SQL_DIR}/"; then
+    if ! node script/tools/check-sql-scripts.mjs "${SQL_DIR}" >/dev/null 2>&1; then
+        echo ""
+        echo "提示:${SQL_DIR} 下有脚本不符合「本地 DbTool 执行」的切分约定。"
+        echo "  · 查看详情:node script/tools/check-sql-scripts.mjs"
+        echo "  · 若你打算用 psql 执行,可以忽略(psql 支持多行 DO 块)。"
+        echo "  · 仅提示,不阻止提交。"
+    fi
+fi
+
 exit 0
