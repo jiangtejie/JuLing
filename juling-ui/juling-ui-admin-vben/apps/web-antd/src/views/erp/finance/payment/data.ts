@@ -8,6 +8,7 @@ import { erpPriceInputFormatter } from '@vben/utils';
 import { getAccountSimpleList } from '#/api/erp/finance/account';
 import {
   formatSupplierLabel,
+  formatSupplierShortLabel,
   getSupplierSimpleList,
 } from '#/api/erp/purchase/supplier';
 import { getSimpleUserList } from '#/api/system/user';
@@ -255,7 +256,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
-        labelFn: formatSupplierLabel,
+        labelFn: formatSupplierShortLabel,
         labelField: 'name',
         valueField: 'id',
       },

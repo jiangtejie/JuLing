@@ -33,6 +33,14 @@ public class ErpPurchaseOrderRespVO {
     @ExcelProperty("供应商名称")
     private String supplierName;
 
+    @Schema(description = "结账方式", example = "MONTHLY")
+    @ExcelProperty("结账方式")
+    private String settlementType;
+
+    @Schema(description = "交期时间（天）", example = "7")
+    @ExcelProperty("交期时间(天)")
+    private Integer deliveryDays;
+
     @Schema(description = "结算账户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "311.89")
     @ExcelProperty("结算账户编号")
     private Long accountId;

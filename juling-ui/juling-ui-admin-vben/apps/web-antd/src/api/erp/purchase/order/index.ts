@@ -9,6 +9,8 @@ export namespace ErpPurchaseOrderApi {
     no?: string; // 采购订单号
     supplierId?: number; // 供应商编号
     supplierName?: string; // 供应商名称
+    settlementType?: string; // 结账方式（未填时从供应商带出，允许按单覆盖）
+    deliveryDays?: number; // 交期时间（天）（未填时从供应商带出，允许按单覆盖）
     orderTime?: Date | string; // 订单时间
     totalCount?: number; // 合计数量
     totalPrice?: number; // 合计金额，单位：元

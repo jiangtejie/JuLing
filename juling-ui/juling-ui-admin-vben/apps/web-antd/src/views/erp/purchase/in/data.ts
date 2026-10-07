@@ -10,6 +10,7 @@ import { getAccountSimpleList } from '#/api/erp/finance/account';
 import { getProductSimpleList } from '#/api/erp/product/product';
 import {
   formatSupplierLabel,
+  formatSupplierShortLabel,
   getSupplierSimpleList,
 } from '#/api/erp/purchase/supplier';
 import { getWarehouseSimpleList } from '#/api/erp/stock/warehouse';
@@ -374,7 +375,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
-        labelFn: formatSupplierLabel,
+        labelFn: formatSupplierShortLabel,
         labelField: 'name',
         valueField: 'id',
       },

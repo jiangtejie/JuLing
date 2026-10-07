@@ -72,6 +72,17 @@ export function formatSupplierLabel(supplier: ErpSupplierApi.Supplier): string {
   return extras.length > 0 ? `${head}（${extras.join(' · ')}）` : head;
 }
 
+/**
+ * 供应商下拉的**精简**显示名：仅编码 + 名称
+ *
+ * 用于**搜索/筛选**表单 —— 那里只是挑一个过滤值，带上结算方式/税点反而让下拉变长碍事。
+ */
+export function formatSupplierShortLabel(
+  supplier: ErpSupplierApi.Supplier,
+): string {
+  return [supplier.code, supplier.name].filter(Boolean).join(' ');
+}
+
 /** 查询供应商分页 */
 export function getSupplierPage(params: PageParam) {
   return requestClient.get<PageResult<ErpSupplierApi.Supplier>>(

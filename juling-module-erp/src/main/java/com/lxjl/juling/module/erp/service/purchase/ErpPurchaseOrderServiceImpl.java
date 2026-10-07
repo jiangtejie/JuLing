@@ -10,6 +10,7 @@ import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchase
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderItemDO;
+import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpSupplierDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderMapper;
 import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
@@ -62,10 +63,11 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createPurchaseOrder(ErpPurchaseOrderSaveReqVO createReqVO) {
-        // 1.1 校验订单项的有效性
-        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(createReqVO.getItems());
-        // 1.2 校验供应商
-        supplierService.validateSupplier(createReqVO.getSupplierId());
+        // 1.1 校验供应商（**接收返回值**：下面要用它的默认交易条件给订单与订单行兜底）
+        ErpSupplierDO supplier = supplierService.validateSupplier(createReqVO.getSupplierId());
+        // 1.2 校验订单项的有效性（行未填税率时用供应商的开票税点兜底）
+        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(
+                createReqVO.getItems(), supplier.getTaxPercent());
         // 1.3 校验结算账户
         if (createReqVO.getAccountId() != null) {
             accountService.validateAccount(createReqVO.getAccountId());
@@ -79,6 +81,9 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         // 2.1 插入订单
         ErpPurchaseOrderDO purchaseOrder = BeanUtils.toBean(createReqVO, ErpPurchaseOrderDO.class, in -> in
                 .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 结账方式 / 交期：单据上没填就用供应商档案的，填了就以单据为准（允许按单覆盖）
+                .setSettlementType(ObjectUtil.defaultIfNull(createReqVO.getSettlementType(), supplier.getSettlementType()))
+                .setDeliveryDays(ObjectUtil.defaultIfNull(createReqVO.getDeliveryDays(), supplier.getDeliveryDays()))
                 // 入库/退货数量必须初始化为 0（而不是 null）：否则“可采购入库”的查询条件
                 // t.in_count < t.total_count 在 SQL 三值逻辑下恒不成立，订单不会出现在入库单的“关联订单”弹窗里
                 .setInCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
@@ -105,17 +110,20 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         if (ErpAuditStatus.APPROVE.getStatus().equals(purchaseOrder.getStatus())) {
             throw exception(PURCHASE_ORDER_UPDATE_FAIL_APPROVE, purchaseOrder.getNo());
         }
-        // 1.2 校验供应商
-        supplierService.validateSupplier(updateReqVO.getSupplierId());
+        // 1.2 校验供应商（接收返回值用于带出默认交易条件）
+        ErpSupplierDO supplier = supplierService.validateSupplier(updateReqVO.getSupplierId());
         // 1.3 校验结算账户
         if (updateReqVO.getAccountId() != null) {
             accountService.validateAccount(updateReqVO.getAccountId());
         }
         // 1.4 校验订单项的有效性
-        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(updateReqVO.getItems());
+        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(
+                updateReqVO.getItems(), supplier.getTaxPercent());
 
         // 2.1 更新订单
-        ErpPurchaseOrderDO updateObj = BeanUtils.toBean(updateReqVO, ErpPurchaseOrderDO.class);
+        ErpPurchaseOrderDO updateObj = BeanUtils.toBean(updateReqVO, ErpPurchaseOrderDO.class, in -> in
+                .setSettlementType(ObjectUtil.defaultIfNull(updateReqVO.getSettlementType(), supplier.getSettlementType()))
+                .setDeliveryDays(ObjectUtil.defaultIfNull(updateReqVO.getDeliveryDays(), supplier.getDeliveryDays())));
         calculateTotalPrice(updateObj, purchaseOrderItems);
         purchaseOrderMapper.updateById(updateObj);
         // 2.2 更新订单项
@@ -164,7 +172,15 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         }
     }
 
-    private List<ErpPurchaseOrderItemDO> validatePurchaseOrderItems(List<ErpPurchaseOrderSaveReqVO.Item> list) {
+    /**
+     * 校验订单项并转成 DO
+     *
+     * @param defaultTaxPercent 供应商的开票税点：**行上没有填税率时用它兜底**。
+     *                          实测 {@code erp_product} 没有税率列，供应商是税率的唯一来源；
+     *                          用户填了就尊重填的（允许按单覆盖）。
+     */
+    private List<ErpPurchaseOrderItemDO> validatePurchaseOrderItems(List<ErpPurchaseOrderSaveReqVO.Item> list,
+                                                                   BigDecimal defaultTaxPercent) {
         // 1. 校验产品存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseOrderSaveReqVO.Item::getProductId));
@@ -172,6 +188,10 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         // 2. 转化为 ErpPurchaseOrderItemDO 列表
         return convertList(list, o -> BeanUtils.toBean(o, ErpPurchaseOrderItemDO.class, item -> {
             item.setProductUnitId(productMap.get(item.getProductId()).getUnitId());
+            // 注意顺序：必须在算 taxPrice **之前**兜底，否则税额不会跟着重算
+            if (item.getTaxPercent() == null) {
+                item.setTaxPercent(defaultTaxPercent);
+            }
             item.setTotalPrice(MoneyUtils.priceMultiply(item.getProductPrice(), item.getCount()));
             if (item.getTotalPrice() == null) {
                 return;

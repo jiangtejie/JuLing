@@ -52,6 +52,21 @@ public class ErpPurchaseOrderDO extends BaseDO {
      * 关联 {@link ErpAccountDO#getId()}
      */
     private Long accountId;
+
+    /**
+     * 结账方式
+     *
+     * 下单时从供应商带出（{@link ErpSupplierDO#getSettlementType()}），允许按单覆盖。
+     * <p>字典 erp_supplier_settlement_type
+     */
+    private String settlementType;
+    /**
+     * 交期时间（天）
+     *
+     * 下单时从供应商带出（{@link ErpSupplierDO#getDeliveryDays()}），允许按单覆盖。
+     */
+    private Integer deliveryDays;
+
     /**
      * 下单时间
      */

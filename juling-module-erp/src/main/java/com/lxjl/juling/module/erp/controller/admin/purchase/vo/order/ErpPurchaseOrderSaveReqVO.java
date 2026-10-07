@@ -32,6 +32,13 @@ public class ErpPurchaseOrderSaveReqVO {
     @Schema(description = "定金金额，单位：元", example = "7127")
     private BigDecimal depositPrice;
 
+    @Schema(description = "结账方式（未填时从供应商带出）", example = "MONTHLY")
+    private String settlementType;
+
+    @Schema(description = "交期时间（天）（未填时从供应商带出）", example = "7")
+    private Integer deliveryDays;
+
+
     @Schema(description = "附件地址", example = "https://github.com/jiangtejie/JuLing")
     private String fileUrl;
 

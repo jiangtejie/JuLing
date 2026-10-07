@@ -22,6 +22,13 @@ interface Props {
   items?: ErpPurchaseOrderApi.PurchaseOrderItem[];
   disabled?: boolean;
   discountPercent?: number;
+  /**
+   * 供应商的开票税点：新增订单行时作为税率默认值
+   *
+   * 留空也可以 —— 后端建单时会用供应商的开票税点兜底（见 ErpPurchaseOrderServiceImpl）。
+   * 这里只是让用户新增行时就能看到默认值，不必等保存。
+   */
+  supplierTaxPercent?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -130,7 +137,8 @@ function handleAdd() {
     stockCount: undefined,
     count: 1,
     totalProductPrice: undefined,
-    taxPercent: 0,
+    // 默认带出供应商的开票税点；未选供应商时为 undefined，由后端兜底
+    taxPercent: props.supplierTaxPercent,
     taxPrice: undefined,
     totalPrice: undefined,
     remark: undefined,

@@ -12,6 +12,10 @@ import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { getAccountSimpleList } from '#/api/erp/finance/account';
 import {
+  getSupplierSimpleList,
+  type ErpSupplierApi,
+} from '#/api/erp/purchase/supplier';
+import {
   createPurchaseOrder,
   getPurchaseOrder,
   updatePurchaseOrder,
@@ -25,6 +29,10 @@ const emit = defineEmits(['success']);
 const formData = ref<ErpPurchaseOrderApi.PurchaseOrder>();
 const formType = ref<FormType>('create'); // 表单类型：'create' | 'edit' | 'detail'
 const itemFormRef = ref<InstanceType<typeof PurchaseOrderItemForm>>();
+/** 当前选中供应商的开票税点：传给明细表作为新增行的税率默认值 */
+const supplierTaxPercent = ref<number>();
+/** 供应商精简列表：选供应商时要按 id 反查它的结算方式 / 交期 / 税点 */
+let supplierList: ErpSupplierApi.Supplier[] = [];
 
 const getTitle = computed(() => {
   if (formType.value === 'create') {
@@ -47,10 +55,21 @@ const [Form, formApi] = useVbenForm({
   layout: 'vertical',
   schema: useFormSchema(formType.value),
   showDefaultActions: false,
-  handleValuesChange: (values, changedFields) => {
+  handleValuesChange: async (values, changedFields) => {
     // 目的：同步到 item-form 组件，触发整体的价格计算
     if (formData.value && changedFields.includes('discountPercent')) {
       formData.value.discountPercent = values.discountPercent;
+    }
+    // 切换供应商时带出结算方式 / 交期 / 开票税点。
+    // **总是覆盖**：换供应商本身就是"换一套交易条件"，保留旧条件反而会误导。
+    // 与后端一致（后端仅在单据上留空时兜底），这里覆盖是为了让用户立刻看到生效值。
+    if (changedFields.includes('supplierId')) {
+      const supplier = supplierList.find((s) => s.id === values.supplierId);
+      supplierTaxPercent.value = supplier?.taxPercent ?? undefined;
+      await formApi.setValues({
+        settlementType: supplier?.settlementType ?? undefined,
+        deliveryDays: supplier?.deliveryDays ?? undefined,
+      });
     }
   },
 });
@@ -130,6 +149,8 @@ const [Modal, modalApi] = useVbenModal({
     formType.value = data.formType;
     formApi.setDisabled(formType.value === 'detail');
     formApi.updateSchema(useFormSchema(formType.value));
+    // 供应商列表：供「切换供应商带出交易条件」反查（列表很小，整个取回即可）
+    supplierList = (await getSupplierSimpleList()) as ErpSupplierApi.Supplier[];
     if (!data || !data.id) {
       // 新增时，默认选中账户
       const accountList = await getAccountSimpleList();
@@ -144,6 +165,10 @@ const [Modal, modalApi] = useVbenModal({
       formData.value = await getPurchaseOrder(data.id);
       // 设置到 values
       await formApi.setValues(formData.value);
+      // 编辑态：明细表要跟着当前供应商的税点走
+      supplierTaxPercent.value = supplierList.find(
+        (s) => s.id === formData.value?.supplierId,
+      )?.taxPercent;
     } finally {
       modalApi.unlock();
     }
@@ -164,6 +189,7 @@ const [Modal, modalApi] = useVbenModal({
           :items="formData?.items ?? []"
           :disabled="formType === 'detail'"
           :discount-percent="formData?.discountPercent ?? 0"
+          :supplier-tax-percent="supplierTaxPercent"
           @update:items="handleUpdateItems"
           @update:discount-price="handleUpdateDiscountPrice"
           @update:total-price="handleUpdateTotalPrice"

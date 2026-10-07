@@ -10,6 +10,7 @@ import { getAccountSimpleList } from '#/api/erp/finance/account';
 import { getProductSimpleList } from '#/api/erp/product/product';
 import {
   formatSupplierLabel,
+  formatSupplierShortLabel,
   getSupplierSimpleList,
 } from '#/api/erp/purchase/supplier';
 import { getSimpleUserList } from '#/api/system/user';
@@ -64,6 +65,29 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
         valueField: 'id',
       },
       rules: 'required',
+    },
+    {
+      label: '结账方式',
+      fieldName: 'settlementType',
+      component: 'Select',
+      componentProps: {
+        placeholder: '留空则按供应商带出',
+        allowClear: true,
+        options: getDictOptions(DICT_TYPE.ERP_SUPPLIER_SETTLEMENT_TYPE),
+      },
+      help: '选供应商时自动带出，可改',
+    },
+    {
+      label: '交期时间(天)',
+      fieldName: 'deliveryDays',
+      component: 'InputNumber',
+      componentProps: {
+        class: '!w-full',
+        placeholder: '留空则按供应商带出',
+        min: 0,
+        precision: 0,
+      },
+      help: '下单到到货的承诺天数，可改',
     },
     {
       fieldName: 'remark',
@@ -298,7 +322,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
-        labelFn: formatSupplierLabel,
+        labelFn: formatSupplierShortLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -390,6 +414,21 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
       field: 'supplierName',
       title: '供应商',
       minWidth: 120,
+    },
+    {
+      field: 'settlementType',
+      title: '结账方式',
+      width: 120,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.ERP_SUPPLIER_SETTLEMENT_TYPE },
+      },
+    },
+    {
+      field: 'deliveryDays',
+      title: '交期(天)',
+      width: 90,
+      formatter: ({ cellValue }) => cellValue ?? '-',
     },
     {
       field: 'orderTime',
