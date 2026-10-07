@@ -20,9 +20,15 @@ import { $t } from '#/locales';
 
 import { useGridColumns } from './data';
 import Form from './modules/form.vue';
+import StoreForm from './modules/store-form.vue';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
+  destroyOnClose: true,
+});
+
+const [StoreFormModal, storeModalApi] = useVbenModal({
+  connectedComponent: StoreForm,
   destroyOnClose: true,
 });
 
@@ -57,6 +63,11 @@ function handleExpand() {
 /** 刷新表格 */
 function handleRefresh() {
   gridApi.query();
+}
+
+/** 建门店：以该节点为父节点（门店应挂在品牌或公司下） */
+function handleCreateStore(row: SystemDeptApi.Dept) {
+  storeModalApi.setData({ parentId: row.id, parentName: row.name }).open();
 }
 
 /** 创建部门 */
@@ -155,6 +166,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 <template>
   <Page auto-content-height>
     <FormModal @success="handleRefresh" />
+    <StoreFormModal @success="handleRefresh" />
     <Grid table-title="部门列表">
       <template #toolbar-tools>
         <TableAction
@@ -192,6 +204,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
               icon: ACTION_ICON.ADD,
               auth: ['system:dept:create'],
               onClick: handleAppend.bind(null, row),
+            },
+            {
+              label: '建门店',
+              type: 'link',
+              // 门店必须挂在品牌或公司下，不能再挂到门店下（否则品牌维度会从组织树里消失）
+              disabled: row.deptType === 'STORE',
+              auth: ['erp:customer:create'],
+              onClick: handleCreateStore.bind(null, row),
             },
             {
               label: $t('common.edit'),
