@@ -6,7 +6,10 @@ import { getDictOptions } from '@vben/hooks';
 import { erpPriceInputFormatter } from '@vben/utils';
 
 import { getAccountSimpleList } from '#/api/erp/finance/account';
-import { getSupplierSimpleList } from '#/api/erp/purchase/supplier';
+import {
+  formatSupplierLabel,
+  getSupplierSimpleList,
+} from '#/api/erp/purchase/supplier';
 import { getSimpleUserList } from '#/api/system/user';
 import { getRangePickerDefaultProps } from '#/utils';
 
@@ -56,6 +59,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -251,6 +255,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierLabel,
         labelField: 'name',
         valueField: 'id',
       },

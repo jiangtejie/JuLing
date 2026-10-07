@@ -12,6 +12,7 @@ import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
@@ -40,6 +41,7 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
     private ErpProductService productService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务，避免建档失败却消耗号段
     public Long createProductUnit(ErpProductUnitSaveReqVO createReqVO) {
         // 1. 校验名字唯一
         validateProductUnitNameUnique(null, createReqVO.getName());

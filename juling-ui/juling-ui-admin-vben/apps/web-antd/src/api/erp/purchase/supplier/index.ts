@@ -1,5 +1,8 @@
 import type { PageParam, PageResult } from '@vben/request';
 
+import { DICT_TYPE } from '@vben/constants';
+import { getDictLabel } from '@vben/hooks';
+
 import { requestClient } from '#/api/request';
 
 export namespace ErpSupplierApi {
@@ -7,6 +10,7 @@ export namespace ErpSupplierApi {
   export interface Supplier {
     id?: number; // 供应商编号
     name: string; // 供应商名称
+    code?: string; // 业务编码（编码规则统一发号，建档后只读）
     contact: string; // 联系人
     mobile: string; // 手机号码
     telephone: string; // 联系电话
@@ -34,6 +38,38 @@ export namespace ErpSupplierApi {
     businessLicenseUrls: string; // 营业执照（逗号分隔）
     productionLicenseUrls: string; // 生产许可证（逗号分隔）
   }
+}
+
+/**
+ * 供应商下拉的显示名：编码 + 名称 + 采购决策要点
+ *
+ * simple-list 会带出结算方式 / 开票税点 / 交期，把它们直接拼进下拉项，
+ * 采购下单、财务付款在**选供应商这一步**就能看到关键信息，不必再点进档案页查。
+ * （见 docs/supplier-master-data-design.md §3「下游怎么拿到」）
+ */
+export function formatSupplierLabel(supplier: ErpSupplierApi.Supplier): string {
+  const head = [supplier.code, supplier.name].filter(Boolean).join(' ');
+  const extras: string[] = [];
+  if (supplier.settlementType) {
+    const label = getDictLabel(
+      DICT_TYPE.ERP_SUPPLIER_SETTLEMENT_TYPE,
+      supplier.settlementType,
+    );
+    if (label && label !== '-') {
+      extras.push(label);
+    }
+  }
+  if (supplier.taxPercent !== null && supplier.taxPercent !== undefined) {
+    extras.push(
+      Number(supplier.taxPercent) === 0
+        ? '免税'
+        : `税点 ${supplier.taxPercent}%`,
+    );
+  }
+  if (supplier.deliveryDays !== null && supplier.deliveryDays !== undefined) {
+    extras.push(`交期 ${supplier.deliveryDays} 天`);
+  }
+  return extras.length > 0 ? `${head}（${extras.join(' · ')}）` : head;
 }
 
 /** 查询供应商分页 */

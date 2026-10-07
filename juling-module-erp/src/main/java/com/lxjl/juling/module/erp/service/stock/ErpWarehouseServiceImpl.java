@@ -41,6 +41,7 @@ public class ErpWarehouseServiceImpl implements ErpWarehouseService {
     private CodeRuleApi codeRuleApi;
 
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务，避免建档失败却消耗号段
     public Long createWarehouse(ErpWarehouseSaveReqVO createReqVO) {
         // 插入
         ErpWarehouseDO warehouse = BeanUtils.toBean(createReqVO, ErpWarehouseDO.class);

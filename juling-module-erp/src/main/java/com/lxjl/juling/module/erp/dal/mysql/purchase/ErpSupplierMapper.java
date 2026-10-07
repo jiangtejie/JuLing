@@ -34,4 +34,8 @@ public interface ErpSupplierMapper extends BaseMapperX<ErpSupplierDO> {
         return selectList(ErpSupplierDO::getStatus, status);
     }
 
+    default ErpSupplierDO selectByName(String name) {
+        return selectOne(ErpSupplierDO::getName, name);
+    }
+
 }

@@ -101,11 +101,12 @@ public interface ErrorCodeConstants {
     ErrorCode EXPRESS_TEMPLATE_NOT_EXISTS = new ErrorCode(1_011_005_001, "运费模板不存在");
 
 
-    // ========== Order 付款凭证（线下收款）1-011-000-000 ==========
-    // 注意：付款凭证的错误码从 040 起，避免与上面订单的 020-039 撞号
-    ErrorCode ORDER_PAYMENT_PROOF_NOT_EXISTS = new ErrorCode(1_011_000_040, "交易订单付款凭证不存在");
-    ErrorCode ORDER_PAYMENT_PROOF_NOT_BELONG_TO_USER = new ErrorCode(1_011_000_042, "付款凭证不属于当前用户");
-    ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_043, "订单已进入审核流程，无法再上传付款凭证（如需补充请联系总部驳回后重传）");
+    // ========== Order 付款凭证（线下收款）1-011-000-074 ==========
+    // 注：原先占用 040/042/043，但「门店订货链 S1」后来也用了 040-046，两段撞号
+    // （付款凭证不存在 → 会被解析成「门店不存在或已停用」之类）。此处改到空闲的 074 段。
+    ErrorCode ORDER_PAYMENT_PROOF_NOT_EXISTS = new ErrorCode(1_011_000_074, "交易订单付款凭证不存在");
+    ErrorCode ORDER_PAYMENT_PROOF_NOT_BELONG_TO_USER = new ErrorCode(1_011_000_075, "付款凭证不属于当前用户");
+    ErrorCode ORDER_PAYMENT_PROOF_ORDER_ALREADY_PAID = new ErrorCode(1_011_000_076, "订单已进入审核流程，无法再上传付款凭证（如需补充请联系总部驳回后重传）");
     ErrorCode ORDER_CANCEL_FAIL_HAS_PENDING_PAYMENT_PROOF = new ErrorCode(1_011_000_073, "订单正在审核中，暂不能取消，如需取消请联系总部");
 
     // ========== Order 门店收货（配送出库 → 门店确认收货 → 门店库存 / 门店往来）1-011-000-060 ==========

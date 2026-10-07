@@ -11,7 +11,9 @@ public interface ErrorCodeConstants {
 
     // ========== ERP 供应商（1-030-100-000） ==========
     ErrorCode SUPPLIER_NOT_EXISTS = new ErrorCode(1_030_100_000, "供应商不存在");
-    ErrorCode SUPPLIER_NOT_ENABLE = new ErrorCode(1_030_100_000, "供应商({})未启用");
+    ErrorCode SUPPLIER_NOT_ENABLE = new ErrorCode(1_030_100_001, "供应商({})未启用");
+    ErrorCode SUPPLIER_NAME_DUPLICATE = new ErrorCode(1_030_100_002, "已存在同名供应商({})");
+    ErrorCode SUPPLIER_HAS_REFERENCE = new ErrorCode(1_030_100_003, "供应商({})已被{}引用，无法删除；如需停止使用请改为「停用」");
 
     // ========== ERP 采购订单（1-030-101-000） ==========
     ErrorCode PURCHASE_ORDER_NOT_EXISTS = new ErrorCode(1_030_101_000, "采购订单不存在");
@@ -107,13 +109,16 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode STOCK_OUT_NO_EXISTS = new ErrorCode(1_030_402_004, "生成出库单失败，请重新提交");
     ErrorCode STOCK_OUT_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_402_005, "其它出库单({})已审核，无法修改");
 
-    // ========== ERP 库存调拨单 1-030-403-000 ==========
-    ErrorCode STOCK_MOVE_NOT_EXISTS = new ErrorCode(1_030_402_000, "库存调拨单不存在");
-    ErrorCode STOCK_MOVE_DELETE_FAIL_APPROVE = new ErrorCode(1_030_402_001, "库存调拨单({})已审核，无法删除");
-    ErrorCode STOCK_MOVE_PROCESS_FAIL = new ErrorCode(1_030_402_002, "反审核失败，只有已审核的调拨单才能反审核");
-    ErrorCode STOCK_MOVE_APPROVE_FAIL = new ErrorCode(1_030_402_003, "审核失败，只有未审核的调拨单才能审核");
-    ErrorCode STOCK_MOVE_NO_EXISTS = new ErrorCode(1_030_402_004, "生成调拨号失败，请重新提交");
-    ErrorCode STOCK_MOVE_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_402_005, "库存调拨单({})已审核，无法修改");
+    // ========== ERP 库存调拨单 1-030-406-000 ==========
+    // 注：原先这 6 个值误用了 1_030_402_xxx（其它出库单的段），且注释段号 403 已被盘点单占用，
+    // 导致「其它出库单」与「库存调拨单」的错误码完全重复。
+    // 405 段已被 ErpStockBatchErrorCodeConstants（库存批次）占用，故用空闲的 406 段。
+    ErrorCode STOCK_MOVE_NOT_EXISTS = new ErrorCode(1_030_406_000, "库存调拨单不存在");
+    ErrorCode STOCK_MOVE_DELETE_FAIL_APPROVE = new ErrorCode(1_030_406_001, "库存调拨单({})已审核，无法删除");
+    ErrorCode STOCK_MOVE_PROCESS_FAIL = new ErrorCode(1_030_406_002, "反审核失败，只有已审核的调拨单才能反审核");
+    ErrorCode STOCK_MOVE_APPROVE_FAIL = new ErrorCode(1_030_406_003, "审核失败，只有未审核的调拨单才能审核");
+    ErrorCode STOCK_MOVE_NO_EXISTS = new ErrorCode(1_030_406_004, "生成调拨号失败，请重新提交");
+    ErrorCode STOCK_MOVE_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_406_005, "库存调拨单({})已审核，无法修改");
 
     // ========== ERP 库存盘点单 1-030-403-000 ==========
     ErrorCode STOCK_CHECK_NOT_EXISTS = new ErrorCode(1_030_403_000, "库存盘点单不存在");
@@ -142,7 +147,7 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode PRODUCT_CATEGORY_PARENT_ERROR = new ErrorCode(1_030_501_003, "不能设置自己为父产品分类");
     ErrorCode PRODUCT_CATEGORY_NAME_DUPLICATE = new ErrorCode(1_030_501_004, "已经存在该分类名称的产品分类");
     ErrorCode PRODUCT_CATEGORY_PARENT_IS_CHILD = new ErrorCode(1_030_501_005, "不能设置自己的子分类为父分类");
-    ErrorCode PRODUCT_CATEGORY_EXITS_PRODUCT = new ErrorCode(1_030_502_002, "存在产品使用该分类，无法删除");
+    ErrorCode PRODUCT_CATEGORY_EXITS_PRODUCT = new ErrorCode(1_030_501_006, "存在产品使用该分类，无法删除");
 
     // ========== ERP 产品单位 1-030-502-000 ==========
     ErrorCode PRODUCT_UNIT_NOT_EXISTS = new ErrorCode(1_030_502_000, "产品单位不存在");

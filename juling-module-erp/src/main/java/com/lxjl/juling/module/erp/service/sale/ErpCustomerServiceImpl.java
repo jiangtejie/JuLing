@@ -11,6 +11,7 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpCustomerDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpCustomerMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
@@ -36,6 +37,7 @@ public class ErpCustomerServiceImpl implements ErpCustomerService {
     private CodeRuleApi codeRuleApi;
 
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务，避免建档失败却消耗号段
     public Long createCustomer(ErpCustomerSaveReqVO createReqVO) {
         // 插入
         ErpCustomerDO customer = BeanUtils.toBean(createReqVO, ErpCustomerDO.class);

@@ -8,7 +8,10 @@ import { erpNumberFormatter, erpPriceInputFormatter } from '@vben/utils';
 import { z } from '#/adapter/form';
 import { getAccountSimpleList } from '#/api/erp/finance/account';
 import { getProductSimpleList } from '#/api/erp/product/product';
-import { getSupplierSimpleList } from '#/api/erp/purchase/supplier';
+import {
+  formatSupplierLabel,
+  getSupplierSimpleList,
+} from '#/api/erp/purchase/supplier';
 import { getWarehouseSimpleList } from '#/api/erp/stock/warehouse';
 import { getSimpleUserList } from '#/api/system/user';
 import { getRangePickerDefaultProps } from '#/utils';
@@ -70,6 +73,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -352,6 +356,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierLabel,
         labelField: 'name',
         valueField: 'id',
       },
