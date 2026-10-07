@@ -63,6 +63,31 @@ export namespace ErpPurchasePriceApi {
   }
 }
 
+/** 价格变更留痕（供核算追溯） */
+export interface PriceItemLog {
+  changeType?: 'CREATE' | 'DELETE' | 'UPDATE';
+  productId?: number;
+  productCode?: string;
+  productName?: string;
+  beforePrice?: number;
+  afterPrice?: number;
+  beforeTaxPercent?: number;
+  afterTaxPercent?: number;
+  priceCode?: string;
+  priceName?: string;
+  createTime?: string;
+  creator?: string;
+}
+
+/**
+ * 查询价格变更历史
+ *
+ * 传 priceId 看某张价目表的历次改价；传 productId 看**某物料的历次改价**（核算主要用后者）。
+ */
+export function getPriceItemLog(params: { priceId?: number; productId?: number }) {
+  return requestClient.get<PriceItemLog[]>('/erp/price-list/item-log', { params });
+}
+
 /** 查询采购价目表分页 */
 export function getPurchasePricePage(params: PageParam) {
   return requestClient.get<PageResult<ErpPurchasePriceApi.Price>>(

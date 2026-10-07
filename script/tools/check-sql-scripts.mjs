@@ -26,10 +26,13 @@ for (const f of files) {
   const path = join(dir, f);
   if (!statSync(path).isFile()) continue;
   const text = readFileSync(path, 'utf8');
-  const lines = text.split(/\r?\n/);
+  // **必须先剥掉注释行再检查**：注释里引用 `DO $$ ... $$` 是在讲约定，不是真代码。
+  // 之前没剥，结果我把 69 的约定注释改对后，它立刻把注释当成真代码又报了一次 —— 误报。
+  const code = text.replace(/^\s*--.*$/gm, '');
+  const lines = code.split(/\r?\n/);
 
   // 检查 1：`$$` 是否成对（出现 `DO $ ` 说明被 replace 吃过）
-  const dollars = (text.match(/\$\$/g) ?? []).length;
+  const dollars = (code.match(/\$\$/g) ?? []).length;
   if (dollars % 2 !== 0) problems.push(`${f}: \`$$\` 出现 ${dollars} 次（不是偶数），可能是被 String.replace 吃掉了`);
   lines.forEach((l, i) => {
     if (/DO\s+\$\s+/.test(l) || /END\s+\$;/.test(l)) problems.push(`${f}:${i + 1}: 检测到 DO 单美元符（应为两个），可能是被 String.replace 吃掉了`);
@@ -47,7 +50,7 @@ for (const f of files) {
   if (inBlock) problems.push(`${f}:${blockStart}: DO $$ 块没有闭合`);
 
   // 检查 3：模拟 DbTool 的切分，报告切出来但不像完整语句的片段
-  text.split(/;\s*\r?\n/).forEach((raw, i) => {
+  code.split(/;\s*\r?\n/).forEach((raw, i) => {
     const s = raw.replace(/^\s*--.*$/gm, '').trim();
     if (!s) return;
     if (s.startsWith('END $$') || s.startsWith('END IF') || s === '$$') {

@@ -20,12 +20,22 @@ import { $t } from '#/locales';
 
 import { useGridColumns, useGridFormSchema } from './data';
 import PriceForm from './modules/form.vue';
+import ItemLogModal from './modules/item-log-modal.vue';
 
 const props = withDefaults(defineProps<{ priceType?: 'DELIVERY' | 'PURCHASE' }>(), {
   priceType: 'PURCHASE',
 });
 
 defineOptions({ name: 'ErpPurchasePrice' });
+
+const [ItemLogModalComp, itemLogModalApi] = useVbenModal({
+  connectedComponent: ItemLogModal,
+  destroyOnClose: true,
+});
+
+function handleItemLog(row: ErpPurchasePriceApi.Price) {
+  itemLogModalApi.setData({ priceId: row.id, name: row.name }).open();
+}
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: PriceForm,
@@ -118,6 +128,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 <template>
   <Page auto-content-height>
     <FormModal :price-type="props.priceType" @success="handleRefresh" />
+    <ItemLogModalComp />
     <Grid table-title="采购价目表" @checkbox-change="handleRowCheckboxChange" @checkbox-all="handleRowCheckboxChange">
       <template #toolbar-tools>
         <TableAction
@@ -160,6 +171,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
               icon: ACTION_ICON.EDIT,
               auth: ['erp:price-list:update'],
               onClick: handleEdit.bind(null, row),
+            },
+            {
+              label: '变更历史',
+              type: 'link',
+              onClick: handleItemLog.bind(null, row),
             },
             {
               label: $t('common.delete'),
