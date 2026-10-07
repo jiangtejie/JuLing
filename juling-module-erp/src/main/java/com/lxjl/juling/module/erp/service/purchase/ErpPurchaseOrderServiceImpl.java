@@ -200,7 +200,7 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
             // 1) 单价为空才取价（价目表命中不了时 matchPrice 内部会兜底到物料主数据的采购价）
             if (item.getProductPrice() == null) {
                 ErpPurchasePriceMatchRespVO match = purchasePriceService.matchPrice(
-                        supplier.getId(), item.getProductId(), item.getCount(), null);
+                        supplier.getId(), item.getProductId(), null);
                 if (match != null) {
                     item.setProductPrice(match.getPrice());
                     // 价目表行上的税率比供应商的开票税点更具体

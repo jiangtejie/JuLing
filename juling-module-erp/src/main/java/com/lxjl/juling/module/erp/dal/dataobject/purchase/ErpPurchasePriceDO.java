@@ -11,7 +11,7 @@ import java.time.LocalDate;
 /**
  * ERP 采购价目表 DO（头）
  *
- * <p>一套报价的容器：可以按供应商、带有效期、支持阶梯价。取价逻辑见
+ * <p>一套报价的容器：可以按供应商、带有效期。取价逻辑见
  * {@link com.lxjl.juling.module.erp.service.purchase.ErpPurchasePriceService#matchPrice}。
  *
  * <p>设计取舍见 sql/local/65_purchase_price.sql 的脚本头注释。

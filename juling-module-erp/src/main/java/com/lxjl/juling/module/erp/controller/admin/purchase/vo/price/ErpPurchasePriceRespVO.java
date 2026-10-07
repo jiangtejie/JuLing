@@ -99,12 +99,6 @@ public class ErpPurchasePriceRespVO {
         @Schema(description = "计价单位名称（取物料的单位）", example = "瓶")
         private String unitName;
 
-        @Schema(description = "数量区间起（含）", example = "0")
-        private BigDecimal fromQty;
-
-        @Schema(description = "数量区间止（不含）", example = "10")
-        private BigDecimal toQty;
-
         @Schema(description = "单价（不含税）", example = "27.64")
         private BigDecimal price;
 

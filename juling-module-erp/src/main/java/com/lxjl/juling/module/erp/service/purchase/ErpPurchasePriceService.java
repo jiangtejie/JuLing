@@ -40,22 +40,21 @@ public interface ErpPurchasePriceService {
     List<ErpPurchasePriceDO> getPurchasePriceList(Collection<Long> ids);
 
     /**
-     * 取价：给定「供应商 + 物料 + 数量 + 日期」，返回适用的单价与税率
+     * 取价：给定「供应商 + 物料 + 日期」，返回适用的单价与税率
      *
-     * <p>优先级（详见 sql/local/65_purchase_price.sql）：
+     * <p>优先级（详见 sql/local/65_purchase_price.sql 与 68 号的说明）：
      * <ol>
      *   <li>供应商专项价目表 优先于 通用价目表（supplier_id 为空）</li>
      *   <li>同层级内：默认价目表 优先</li>
      *   <li>再：生效日期新 优先</li>
-     *   <li>再：数量区间档位高 优先（阶梯价取中到的那一档）</li>
      * </ol>
-     * 过滤条件：价目表已启用 + 当日落在有效期内 + 物料匹配 + 数量落在 [fromQty, toQty)。
+     * 过滤条件：价目表已启用 + 当日落在有效期内 + 物料匹配。
      *
      * <p>价目表都没命中时，兜底取物料主数据的 purchase_price（老数据不失效），
      * 此时返回结果的 source 为 PRODUCT。
      *
      * @return 命中的价格；物料不存在或没有任何价格来源时返回 null
      */
-    ErpPurchasePriceMatchRespVO matchPrice(Long supplierId, Long productId, BigDecimal quantity, LocalDate date);
+    ErpPurchasePriceMatchRespVO matchPrice(Long supplierId, Long productId, LocalDate date);
 
 }

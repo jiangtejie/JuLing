@@ -91,8 +91,6 @@ async function handleAdd() {
     seq: ++rowSeq,
     productId: undefined,
     unitName: undefined,
-    fromQty: undefined,
-    toQty: undefined,
     price: undefined,
     taxPercent: undefined,
     remark: undefined,
@@ -169,26 +167,6 @@ defineExpose({ handleAdd });
         show-search
         style="width: 100%"
         @change="(val: any) => handleProductChange(val, row)"
-      />
-    </template>
-    <template #fromQty="{ row }">
-      <InputNumber
-        v-model:value="row.fromQty"
-        :disabled="disabled"
-        :min="0"
-        placeholder="不限"
-        style="width: 100%"
-        @change="notify"
-      />
-    </template>
-    <template #toQty="{ row }">
-      <InputNumber
-        v-model:value="row.toQty"
-        :disabled="disabled"
-        :min="0"
-        placeholder="不限"
-        style="width: 100%"
-        @change="notify"
       />
     </template>
     <template #price="{ row }">

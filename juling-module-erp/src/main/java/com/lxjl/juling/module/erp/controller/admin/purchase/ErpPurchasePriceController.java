@@ -143,15 +143,14 @@ public class ErpPurchasePriceController {
     }
 
     @GetMapping("/match")
-    @Operation(summary = "取价", description = "按「供应商 + 物料 + 数量 + 日期」取适用单价与税率；价目表没命中时兜底取物料主数据上的采购价")
+    @Operation(summary = "取价", description = "按「供应商 + 物料 + 日期」取适用单价与税率；价目表没命中时兜底取物料主数据上的采购价")
     public CommonResult<ErpPurchasePriceMatchRespVO> matchPrice(
             @RequestParam(value = "supplierId", required = false) Long supplierId,
             @RequestParam("productId") Long productId,
-            @RequestParam(value = "quantity", required = false) BigDecimal quantity,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         // 故意不加 @PreAuthorize：这是采购订单录入时的辅助取价，与 simple-list 同性质，
         // 若要求 erp:purchase-price:query 会导致只有订单权限的采购员取不到价
-        return success(purchasePriceService.matchPrice(supplierId, productId, quantity, date));
+        return success(purchasePriceService.matchPrice(supplierId, productId, date));
     }
 
     /** 补供应商名（通用价目表留空）与定价员名称 */

@@ -179,10 +179,10 @@ async function handleProductChange(productId: any, row: any) {
   // 用户之后仍可手工改这个单价（允许按单覆盖）。
   row.productPrice = product.purchasePrice || 0;
   try {
+    // 注意：不再传数量 —— 价目表已去掉数量区间（阶梯价），见 sql/local/68 的说明
     const match = await matchPurchasePrice({
       supplierId: props.supplierId,
       productId,
-      quantity: row.count,
     });
     if (match?.price !== null && match?.price !== undefined) {
       row.productPrice = match.price;

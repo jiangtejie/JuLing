@@ -17,8 +17,7 @@ public interface ErrorCodeConstants {
 
     // ========== ERP 采购价目表（1-030-104-000） ==========
     ErrorCode PURCHASE_PRICE_NOT_EXISTS = new ErrorCode(1_030_104_000, "采购价目表不存在");
-    ErrorCode PURCHASE_PRICE_ITEM_QTY_RANGE_ILLEGAL = new ErrorCode(1_030_104_001, "数量区间不合法：起({})必须小于止({})");
-    ErrorCode PURCHASE_PRICE_ITEM_QTY_OVERLAP = new ErrorCode(1_030_104_002, "同一物料({})存在重叠的数量区间，会导致取价结果不确定，请调整");
+    ErrorCode PURCHASE_PRICE_ITEM_PRODUCT_DUPLICATE = new ErrorCode(1_030_104_001, "物料({})在本价目表里出现了多行，去掉数量区间后无法区分取哪一行，请合并");
 
     // ========== ERP 采购订单（1-030-101-000） ==========
     ErrorCode PURCHASE_ORDER_NOT_EXISTS = new ErrorCode(1_030_101_000, "采购订单不存在");

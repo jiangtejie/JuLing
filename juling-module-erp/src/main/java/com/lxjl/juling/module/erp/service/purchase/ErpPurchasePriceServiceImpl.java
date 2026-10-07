@@ -104,36 +104,18 @@ public class ErpPurchasePriceServiceImpl implements ErpPurchasePriceService {
     /**
      * 校验明细
      *
-     * <p>除了区间本身要 起 &lt; 止，还要求**同一物料的两行区间不重叠** ——
-     * 重叠会让取价结果取决于排序细节，属于「配置错了但表现随机」的坑，所以保存在这里就拦下。
+     * <p>去掉数量区间之后，同一价目表里**同一物料只能有一行** —— 否则取价时两条都命中，
+     * 取哪条取决于排序细节，属于「配置错了但表现随机」的坑，所以在保存时就拦下。
+     * （原先拦的是「数量区间不重叠」，是同一个道理的旧形式。）
      */
     private void validateItems(List<ErpPurchasePriceSaveReqVO.Item> items) {
-        items.forEach(item -> {
-            if (item.getFromQty() != null && item.getToQty() != null
-                    && item.getFromQty().compareTo(item.getToQty()) >= 0) {
-                throw exception(PURCHASE_PRICE_ITEM_QTY_RANGE_ILLEGAL, item.getFromQty(), item.getToQty());
-            }
-        });
         Map<Long, List<ErpPurchasePriceSaveReqVO.Item>> byProduct =
                 convertMultiMap(items, ErpPurchasePriceSaveReqVO.Item::getProductId);
         byProduct.forEach((productId, list) -> {
-            for (int i = 0; i < list.size(); i++) {
-                for (int j = i + 1; j < list.size(); j++) {
-                    if (isOverlap(list.get(i), list.get(j))) {
-                        throw exception(PURCHASE_PRICE_ITEM_QTY_OVERLAP, productId);
-                    }
-                }
+            if (list.size() > 1) {
+                throw exception(PURCHASE_PRICE_ITEM_PRODUCT_DUPLICATE, productId);
             }
         });
-    }
-
-    /** 两个数量区间是否重叠（半开区间 [from, to)；null 表示无界） */
-    private boolean isOverlap(ErpPurchasePriceSaveReqVO.Item a, ErpPurchasePriceSaveReqVO.Item b) {
-        boolean aUpperGtBLower = a.getToQty() == null || b.getFromQty() == null
-                || a.getToQty().compareTo(b.getFromQty()) > 0;
-        boolean bUpperGtALower = b.getToQty() == null || a.getFromQty() == null
-                || b.getToQty().compareTo(a.getFromQty()) > 0;
-        return aUpperGtBLower && bUpperGtALower;
     }
 
     private void validatePurchasePriceExists(Long id) {
@@ -171,12 +153,11 @@ public class ErpPurchasePriceServiceImpl implements ErpPurchasePriceService {
     }
 
     @Override
-    public ErpPurchasePriceMatchRespVO matchPrice(Long supplierId, Long productId, BigDecimal quantity, LocalDate date) {
+    public ErpPurchasePriceMatchRespVO matchPrice(Long supplierId, Long productId, LocalDate date) {
         if (productId == null) {
             return null;
         }
         LocalDate day = date != null ? date : LocalDate.now();
-        BigDecimal qty = quantity != null ? quantity : BigDecimal.ONE;
 
         // 1. 该物料在所有价目表里的候选行
         List<ErpPurchasePriceItemDO> candidates = purchasePriceItemMapper.selectListByProductId(productId);
@@ -203,13 +184,6 @@ public class ErpPurchasePriceServiceImpl implements ErpPurchasePriceService {
             if (header.getSupplierId() != null && !header.getSupplierId().equals(supplierId)) {
                 return null;
             }
-            // 数量区间 [fromQty, toQty)
-            if (item.getFromQty() != null && qty.compareTo(item.getFromQty()) < 0) {
-                return null;
-            }
-            if (item.getToQty() != null && qty.compareTo(item.getToQty()) >= 0) {
-                return null;
-            }
             return item;
         });
         if (CollUtil.isEmpty(hits)) {
@@ -230,12 +204,7 @@ public class ErpPurchasePriceServiceImpl implements ErpPurchasePriceService {
                 return c;
             }
             // 生效日期新的优先
-            c = compareNullableDesc(ha.getEffectiveDate(), hb.getEffectiveDate());
-            if (c != 0) {
-                return c;
-            }
-            // 阶梯档位高的优先
-            return compareNullableDesc(a.getFromQty(), b.getFromQty());
+            return compareNullableDesc(ha.getEffectiveDate(), hb.getEffectiveDate());
         });
         ErpPurchasePriceItemDO best = hits.get(0);
         ErpPurchasePriceDO bestHeader = headerMap.get(best.getPriceId());

@@ -33,8 +33,6 @@ export namespace ErpPurchasePriceApi {
     productName?: string; // 物料名称
     spec?: string; // 规格型号（取物料的规格，仅展示）
     unitName?: string; // 计价单位（取物料的单位）
-    fromQty?: number; // 数量区间起（含）
-    toQty?: number; // 数量区间止（不含）
     price?: number; // 单价（不含税，权威值）
     taxPrice?: number; // 含税单价（后端算好的展示值）
     taxPercent?: number; // 税率(%)
@@ -103,7 +101,6 @@ export function exportPurchasePrice(params: any) {
 export function matchPurchasePrice(params: {
   supplierId?: number;
   productId: number;
-  quantity?: number;
   date?: string;
 }) {
   return requestClient.get<ErpPurchasePriceApi.MatchResult | null>(

@@ -250,8 +250,6 @@ export function useItemColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Item>[
       minWidth: 80,
       formatter: ({ cellValue }) => cellValue || '-',
     },
-    { field: 'fromQty', title: '数量起', width: 85, slots: { default: 'fromQty' } },
-    { field: 'toQty', title: '数量止', width: 85, slots: { default: 'toQty' } },
     { field: 'price', title: '单价(不含税)', width: 110, slots: { default: 'price' } },
     { field: 'taxPercent', title: '税率%', width: 75, slots: { default: 'taxPercent' } },
     // 含税单价：与「单价(不含税)」互算 —— 改任一个，另一个自动跟着变

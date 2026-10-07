@@ -70,14 +70,6 @@ public class ErpPurchasePriceSaveReqVO {
         @NotNull(message = "物料不能为空")
         private Long productId;
 
-        @Schema(description = "数量区间起（含）；为空表示不限", example = "0")
-        @DecimalMin(value = "0", message = "数量区间起不能为负")
-        private BigDecimal fromQty;
-
-        @Schema(description = "数量区间止（不含）；为空表示不限", example = "10")
-        @DecimalMin(value = "0", message = "数量区间止不能为负")
-        private BigDecimal toQty;
-
         @Schema(description = "单价（不含税）", requiredMode = Schema.RequiredMode.REQUIRED, example = "27.64")
         @NotNull(message = "单价不能为空")
         @DecimalMin(value = "0", message = "单价不能为负")
