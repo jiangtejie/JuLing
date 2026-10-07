@@ -130,6 +130,9 @@ const ERP_DICT = {
   ERP_AUDIT_STATUS: 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE: 'erp_stock_record_biz_type', // 库存明细的业务类型
   ERP_STORE_TYPE: 'erp_store_type', // ERP 客户/门店 - 店型
+  ERP_SUPPLIER_SETTLEMENT_TYPE: 'erp_supplier_settlement_type', // ERP 供应商 - 结账方式（月结 / 半月结 / 次结）
+  ERP_SUPPLIER_INVOICE_MODE: 'erp_supplier_invoice_mode', // ERP 供应商 - 开票情况（全额 / 按比例 / 需加税点 / 不开）
+  ERP_SUPPLIER_INVOICE_TYPE: 'erp_supplier_invoice_type', // ERP 供应商 - 开票类型（普票 / 专票）
 } as const;
 
 /** ========== FMS - 财务管理模块 ========== */

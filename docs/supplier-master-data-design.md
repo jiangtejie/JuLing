@@ -1,5 +1,9 @@
 # 供应商主数据扩展设计（采购部门需求）
 
+> **状态：一期已落地**（2026-10，[sql/local/62](../sql/local/62_supplier_profile.sql)）。落地字段与本文 §2.1
+> 原提案**不完全一致** —— 按用户最新清单收敛（账户与合同做成主表字段，未做多账户/合同-组织子表），
+> 实际落地以 §2.1 的「实际落地」表为准。
+>
 > 来源：采购部门 —— 金蝶建档时采购端口只能录供应商名称，缺开票资质、结账方式、税点、
 > 账户、合同签订（含签订的组织）、交期等信息，导致下游报销/财务/计划拿不到这些数据。
 > 本文给出在这套系统里的落地方案。相关蓝图见 `docs/intelligent-system-blueprint.md`。
@@ -30,20 +34,45 @@ taxNo / taxPercent / bankName / bankAccount / bankAddress`（+ 租户与审计�
 
 ## 2. 数据模型
 
-### 2.1 `erp_supplier` 扩展列（一期）
+### 2.1 `erp_supplier` 扩展列（一期）—— **实际落地**
 
-| 列 | 类型 | 说明 |
+**复用现有列（不重复造字段）**：供应商名称 → `name`；税号 → `tax_no`；银行账号 → `bank_account`；
+开户银行 → `bank_name`；**开票税点 → `tax_percent`**（语义明确为开票税率，0 表示免税）。
+`bank_address`（开户地址）保留 —— 它与新增的注册地址是两回事：注册地址是开专票要的营业地址，
+开户地址是银行侧的地址。
+
+**新增 12 列**（[sql/local/62](../sql/local/62_supplier_profile.sql)，实测连续执行 3 次结果一致）：
+
+| 需求项 | 列 | 类型 | 说明 |
+|---|---|---|---|
+| 账户信息 | `account_name` | varchar(128) | 户名（银行账户的开户名称） |
+| 账户信息 | `registered_address` | varchar(255) | 注册地址（营业执照地址；开专票需要） |
+| 结账方式 | `settlement_type` | varchar(32) | 字典 `erp_supplier_settlement_type`：月结 / 半月结 / 次结(先款后货) / 次结(先货后款) |
+| 结账方式 | `credit_days` | int4 | 账期天数（月结 30、半月结 15） |
+| 开票情况 | `invoice_mode` | varchar(32) | 字典 `erp_supplier_invoice_mode`：全额开票 / 按销售额比例开票 / 需加税点 / 不开发票 |
+| 开票情况 | `invoice_ratio` | numeric(5,2) | 开票比例(%)，如 15~25 |
+| 开票类型 | `invoice_type` | varchar(32) | 字典 `erp_supplier_invoice_type`：增值税普通发票 / 增值税专用发票 |
+| 交期时间 | `delivery_days` | int4 | 下单到到货的承诺天数 |
+| 合同签订 | `contract_signed` | boolean | 是否已签订 |
+| 合同签订 | `contract_entity` | varchar(128) | 签订主体（由亚特哪个公司签订） |
+| 证照 | `business_license_urls` | varchar(1024) | 营业执照（文件/图片，逗号分隔） |
+| 证照 | `production_license_urls` | varchar(1024) | 生产许可证（文件/图片，逗号分隔） |
+
+**与原提案的差异（有意收敛）**：
+
+| 原提案 | 实际 | 原因 |
 |---|---|---|
-| `invoiceable` | int2 / boolean | 是否能开票（是/否）；报销单据据此校验 |
-| `invoice_type` | varchar | 默认发票类型：专票 / 普票 / 收据 / 不开发票（字典） |
-| `tax_percent` | numeric | 开票税点（沿用现有列，语义改为「默认税率」，采购/应付单据带出、可覆盖） |
-| `settlement_type` | varchar | 结账方式：现结 / 月结 / 货到付款 / 预付（字典） |
-| `credit_days` | int | 账期天数（月结时为 30/60/90，供到期日计算） |
-| `settle_day` | int | 月结日（如 25 表示每月 25 日结算） |
-| `delivery_days` | int | 承诺交期（天）——下单到到货 |
-| `cooperation_status` | varchar | 合作状态：正常 / 暂停 / 淘汰（字典，替代单一 status） |
-| `license_url` | varchar | 营业执照（附件） |
-| `license_expiry` | date | 证照到期日（到期预警） |
+| `invoiceable` 是否能开票 | 并入 `invoice_mode` 的「不开发票」选项 | 一个字段能表达完，不必两个 |
+| 结账方式 = 现结/月结/货到付款/预付 | 改为月结/半月结/次结(先款后货/先货后款) | 按采购实际口径 |
+| 多账户子表 | **未做**，主表单账户 + 户名 | 用户要求主表字段；子表留二期 |
+| 合同×组织子表 | **未做**，主表 `contract_signed` + `contract_entity` | 同上；`contract_entity` 为自由文本，将来可升级为指向 `system_dept` |
+| `cooperation_status` / `license_expiry` / `settle_day` | **未做** | 用户清单里没有，避免过度设计 |
+
+**配套**：3 个字典（11580-11582）；后端 DO / SaveReqVO / RespVO（含 `@ExcelProperty` 导出）/
+PageReqVO 与 Mapper 筛选（结账方式、开票情况、开票类型、是否签订合同）；前端表单按
+「基础信息 / 账户与税务 / 开票 / 结算与交期 / 合同与证照」五组用 `Divider` 分组，
+列表新增结账方式/账期/开票情况/开票类型/税点/交期/合同/签订主体 8 列，
+搜索新增结账方式/开票情况/是否签订合同，弹窗宽度 `w-1/2` → `w-3/4`。
 
 ### 2.2 新增子表（二期）
 

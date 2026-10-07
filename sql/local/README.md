@@ -74,6 +74,8 @@ psql -U root -d yate -f sql/local/59_drop_backup_schemas.sql
 # 下线用不到的功能：监控中心（含链路追踪）与代码生成
 psql -U root -d yate -f sql/local/60_remove_monitor_and_codegen.sql
 psql -U root -d yate -f sql/local/61_remove_infra_devtools.sql
+# 供应商档案扩展（采购部门需求：账户/开票/结账/交期/合同/证照）
+psql -U root -d yate -f sql/local/62_supplier_profile.sql
 # ⚠️ 54 会备份后**删除 4 个列**（不可逆）。必须等 53 执行完、且后端已切换到
 #    member_user_store 读取之后再执行；确认前保持注释：
 # psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
@@ -149,6 +151,7 @@ psql -U root -d yate -f sql/local/61_remove_infra_devtools.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
+| 62_supplier_profile.sql | **供应商档案扩展**（采购部门需求）：`erp_supplier` 新增 12 列 —— 账户户名、注册地址、结账方式、账期天数、开票情况、开票比例、开票类型、交期天数、是否签订合同、签订主体、营业执照、生产许可证；新增字典 `erp_supplier_settlement_type`（月结/半月结/次结-先款后货/次结-先货后款）、`erp_supplier_invoice_mode`（全额/按比例/需加税点/不开）、`erp_supplier_invoice_type`（普票/专票）。**复用现有列不重复造**：名称→`name`、税号→`tax_no`、账号→`bank_account`、开户行→`bank_name`、开票税点→`tax_percent`（0=免税）。设计见 [docs/supplier-master-data-design.md](../../docs/supplier-master-data-design.md)。幂等 | 字典 11580-11582 |
 | 61_remove_infra_devtools.sql | **下线「表单构建」「API 接口」「数据源配置」**（承接 60，同为用不到的开发期工具）。删菜单 114 / 116 / 1255 与按钮 1256-1260（含任何挂在其下的未知子菜单）；删表 `infra_data_source_config`（0 行）+ 序列。菜单与授权备份到 `bak_infra_devtools_20261007`。连带删除已成孤儿的 `DatabaseTableService`（唯一消费者是被 60 删掉的 CodegenService）；`DataSourceConfigService` 经核查无框架层引用（运行时动态数据源走 `application.yaml`）故一并删。**保留** `components/form-create`（BPM 流程表单共用，18 个文件引用）。幂等 | 菜单 114/116/1255、schema `bak_infra_devtools_20261007` |
 | 60_remove_monitor_and_codegen.sql | **下线「监控中心」与「代码生成」**（用户明确要求，功能用不到）。删菜单 13 条 —— 监控中心(2740)子树 7 条（2740/111 MySQL监控/112 Java监控/113 Redis监控/1077 链路追踪/1066/1067）+ 代码生成(115)及其 5 个按钮（1056-1060）；删对应角色授权；删表 `infra_codegen_table` / `infra_codegen_column`（实测均 0 行）与两个序列。菜单与授权备份到 `bak_infra_codegen_monitor_20261007`。**不动** 114 表单构建 / 116 API 接口（基础设施直属，不在范围）。两张表由基线创建，本脚本在重建后再次删除 —— 与 45 号脚本同模式。幂等 | 菜单 2740/115 子树、schema `bak_infra_codegen_monitor_20261007` |
 | 59_drop_backup_schemas.sql | **删除历史备份 schema**（10 个 / 398 张表：`bak_cleanup_20260929`、`bak_erp_ctr(_2)_20260922`、`bak_member_center_20260929`、`bak_pay_archive_20260929`、`bak_promotion_20260929`、`bak_tenant123_20260928`、`bak_test_erp_20260929`、`bak_test_orders_20260929`、`bak_unused_modules_20260929`）。它们装的是**已经删过的**历史数据（下线模块 MES/PMS/CRM/HRM/IM/IoT、支付归档、营销评价、会员中心、测试订单/ERP），实测合计仅约 391 行、其余是空表壳。⚠️ **不可回退**。保留 `bak_testdata_20261007` 作为 58 的回退路径。幂等 | schema `bak_*` |

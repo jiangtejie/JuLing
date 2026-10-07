@@ -68,4 +68,40 @@ public class ErpSupplierSaveReqVO {
     @Schema(description = "开户地址", example = "兴业银行浦东支行")
     private String bankAddress;
 
+    @Schema(description = "账户户名", example = "重庆彩云西南食品有限公司")
+    private String accountName;
+
+    @Schema(description = "注册地址", example = "重庆市渝北区XX路1号")
+    private String registeredAddress;
+
+    @Schema(description = "结账方式", example = "MONTHLY")
+    private String settlementType;
+
+    @Schema(description = "账期天数", example = "30")
+    private Integer creditDays;
+
+    @Schema(description = "开票情况", example = "FULL")
+    private String invoiceMode;
+
+    @Schema(description = "开票比例(%)", example = "20.00")
+    private BigDecimal invoiceRatio;
+
+    @Schema(description = "开票类型", example = "VAT_SPECIAL")
+    private String invoiceType;
+
+    @Schema(description = "交期时间（天）", example = "7")
+    private Integer deliveryDays;
+
+    @Schema(description = "是否已签订合同", example = "true")
+    private Boolean contractSigned;
+
+    @Schema(description = "合同签订主体", example = "亚特萍姐商贸公司")
+    private String contractEntity;
+
+    @Schema(description = "营业执照（文件/图片，逗号分隔）")
+    private String businessLicenseUrls;
+
+    @Schema(description = "生产许可证（文件/图片，逗号分隔）")
+    private String productionLicenseUrls;
+
 }

@@ -21,4 +21,16 @@ public class ErpSupplierPageReqVO extends PageParam {
     @Schema(description = "联系电话", example = "18818288888")
     private String telephone;
 
+    @Schema(description = "结账方式", example = "MONTHLY")
+    private String settlementType;
+
+    @Schema(description = "开票情况", example = "FULL")
+    private String invoiceMode;
+
+    @Schema(description = "开票类型", example = "VAT_SPECIAL")
+    private String invoiceType;
+
+    @Schema(description = "是否已签订合同", example = "true")
+    private Boolean contractSigned;
+
 }
