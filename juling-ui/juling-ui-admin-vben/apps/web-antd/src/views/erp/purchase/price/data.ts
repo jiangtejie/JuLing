@@ -151,7 +151,6 @@ export function useFormSchema(
 export function useGridFormSchema(
   priceType: 'DELIVERY' | 'PURCHASE' = 'PURCHASE',
 ): VbenFormSchema[] {
-  const isDelivery = priceType === 'DELIVERY';
   return [
     {
       fieldName: 'code',
