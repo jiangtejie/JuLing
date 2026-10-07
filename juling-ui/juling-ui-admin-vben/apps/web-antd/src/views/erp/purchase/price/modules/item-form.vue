@@ -109,10 +109,40 @@ async function handleDelete(row: ErpPurchasePriceApi.Item) {
   await notify();
 }
 
-/** 选择物料后带出计价单位（单位由物料决定，见 sql/local/65 的设计说明） */
+/** 选择物料后带出计价单位与规格（都取自物料，见 sql/local/65、67 的设计说明） */
 async function handleProductChange(productId: number, row: ErpPurchasePriceApi.Item) {
   const product = productOptions.value.find((p) => p.id === productId);
   row.unitName = product?.unitName;
+  row.spec = (product as any)?.standard;
+  await notify();
+}
+
+/** 税率 → 百分数小数 */
+function rateOf(row: ErpPurchasePriceApi.Item) {
+  return Number(row.taxPercent ?? 0) / 100;
+}
+
+/** 改不含税单价 → 重算含税单价 */
+async function handlePriceChange(row: ErpPurchasePriceApi.Item) {
+  row.taxPrice = row.price === undefined || row.price === null
+    ? undefined
+    : Number((row.price * (1 + rateOf(row))).toFixed(6));
+  await notify();
+}
+
+/** 改含税单价 → 反算不含税单价（后端只存不含税） */
+async function handleTaxPriceChange(row: ErpPurchasePriceApi.Item) {
+  row.price = row.taxPrice === undefined || row.taxPrice === null
+    ? undefined
+    : Number((row.taxPrice / (1 + rateOf(row))).toFixed(6));
+  await notify();
+}
+
+/** 改税率 → 按不含税单价重算含税单价 */
+async function handleTaxPercentChange(row: ErpPurchasePriceApi.Item) {
+  if (row.price !== undefined && row.price !== null) {
+    row.taxPrice = Number((row.price * (1 + rateOf(row))).toFixed(6));
+  }
   await notify();
 }
 
@@ -169,7 +199,18 @@ defineExpose({ handleAdd });
         :precision="6"
         placeholder="不含税单价"
         style="width: 100%"
-        @change="notify"
+        @change="handlePriceChange(row)"
+      />
+    </template>
+    <template #taxPrice="{ row }">
+      <InputNumber
+        v-model:value="row.taxPrice"
+        :disabled="disabled"
+        :min="0"
+        :precision="6"
+        placeholder="含税单价"
+        style="width: 100%"
+        @change="handleTaxPriceChange(row)"
       />
     </template>
     <template #taxPercent="{ row }">
@@ -181,7 +222,7 @@ defineExpose({ handleAdd });
         :precision="2"
         placeholder="如 13"
         style="width: 100%"
-        @change="notify"
+        @change="handleTaxPercentChange(row)"
       />
     </template>
     <template #remark="{ row }">

@@ -84,6 +84,8 @@ psql -U root -d yate -f sql/local/64_rename_product_to_material.sql
 psql -U root -d yate -f sql/local/65_purchase_price.sql
 # 隐患收尾：编码前缀冲突 / WMS 菜单术语 / 组织节点名不副实
 psql -U root -d yate -f sql/local/66_cleanup_loose_ends.sql
+# 采购价目表吸纳金蝶常用字段（含税口径 + 定价员）
+psql -U root -d yate -f sql/local/67_purchase_price_kingdee_fields.sql
 # ⚠️ 54 会备份后**删除 4 个列**（不可逆）。必须等 53 执行完、且后端已切换到
 #    member_user_store 读取之后再执行；确认前保持注释：
 # psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
@@ -159,6 +161,7 @@ psql -U root -d yate -f sql/local/66_cleanup_loose_ends.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
+| 67_purchase_price_kingdee_fields.sql | **采购价目表吸纳金蝶常用字段**：\`erp_purchase_price\` 加 \`price_includes_tax\`（报价口径，只影响录入方向，行上的单价恒为不含税）与 \`pricer_user_id\`（定价员，与 creator 区分 —— 常见是采购经理定价、文员录入）。**刻意不吸纳 5 项**并写明理由（币别无汇率支撑、采购组织依赖未定的多组织模型、单据状态一期不做审批流、价格类型冗余、价目表对象一期只支持按物料）。幂等 | — |
 | 66_cleanup_loose_ends.sql | **隐患收尾（三处尾巴）**：① `product_spu`（商城商品）与 `erp_product`（ERP 物料）都用 `WL` 前缀，两套目录合并后编码肉眼无法区分 → 商城侧改 `SP`；② WMS 基础数据下 6270 物料品牌 / 6340 物料分类 已叫「物料」，中间的 6390 却叫「商品管理」→ 改「物料管理」；③ 组织节点 120「直营门店」下面曾挂过 6 家加盟店（店型权威已移到 `erp_customer.store_type`），名字宣称了错误的店型 → 改「门店」（当前 0 子节点）。备份到 `bak_cleanup_loose_ends_20261007`。幂等 | 菜单 6390、节点 120、schema `bak_cleanup_loose_ends_20261007` |
 | 65_purchase_price.sql | **采购价目表**（头 + 明细）。此前 \`erp_product.purchase_price\` 是「一个物料一个采购价」，表达不了「不同供应商不同价 / 调价 / 量大价优」；而**采购单价直接决定存货成本**（订单价 → 入库 unit_cost → 批次成本 → 出库成本），填错的价会一路进到成本且无据可查。建 \`erp_purchase_price\` + \`erp_purchase_price_item\`、编码规则 \`CJJM\`、菜单 12200（基础资料 → 公共资料）+ 按钮 12201-12205。**顺带补齐物料主数据的业务编码**（\`erp_product.code\` + 规则 \`WL\`，之前 6 个主数据都有、唯独物料漏了）。设计见 [docs/purchase-price-design.md](../../docs/purchase-price-design.md)。幂等 | 菜单 12200+、表 \`erp_purchase_price*\` |
 | 64_rename_product_to_material.sql | **术语统一：ERP 主数据「产品」→「物料」**。金蝶把这类主数据叫「物料」，而本系统**下游订货链与库存页面早已在用「物料」**（`ERP 物料编号` / `请选择物料` / `物料数`），只有主数据页还叫「产品」，术语分裂。本脚本把 10 条菜单改名（物料管理/物料信息/物料查询/物料创建/物料更新/物料删除/物料导出/物料分类/物料单位/物料库存），备份到 `bak_rename_product_to_material_20261007`。**只改显示名，不动 permission 标识**（`erp:product:*` 改了会让存量角色授权失效）；类名/表名/路由同样是 ASCII 未动。顺带把 ERP「物料」与商城「商品」在中文上区分开。幂等 | 菜单 2564/2565/2566-2570/2571/2577/2590 |

@@ -53,6 +53,20 @@ public class ErpPurchasePriceDO extends BaseDO {
      */
     private Boolean isDefault;
     /**
+     * 报价口径：true 表示供应商报的是**含税价**
+     *
+     * <p>**只影响录入方向** —— 明细行上的 {@code price} 恒为不含税（权威、无歧义），
+     * 这个标记记录的是「报价方当时怎么说的」，界面据此决定让用户录含税还是不含税。
+     */
+    private Boolean priceIncludesTax;
+    /**
+     * 定价员编号
+     *
+     * <p>与 BaseDO 的 creator 区分：常见是采购经理定价、文员录入，**责任人不等于录入人**。
+     * 关联 {@link com.lxjl.juling.module.system.dal.dataobject.user.AdminUserDO#getId()}
+     */
+    private Long pricerUserId;
+    /**
      * 状态
      *
      * 枚举 {@link com.lxjl.juling.framework.common.enums.CommonStatusEnum}；仅启用中的价目表参与取价

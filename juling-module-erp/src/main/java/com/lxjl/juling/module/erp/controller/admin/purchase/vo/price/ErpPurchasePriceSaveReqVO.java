@@ -33,6 +33,12 @@ public class ErpPurchasePriceSaveReqVO {
     @Schema(description = "是否默认价目表", example = "true")
     private Boolean isDefault;
 
+    @Schema(description = "报价口径：true 表示供应商报的是含税价（只影响录入方向，行上的单价恒为不含税）", example = "false")
+    private Boolean priceIncludesTax;
+
+    @Schema(description = "定价员编号", example = "1")
+    private Long pricerUserId;
+
     @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
     @NotNull(message = "状态不能为空")
     @InEnum(value = CommonStatusEnum.class)

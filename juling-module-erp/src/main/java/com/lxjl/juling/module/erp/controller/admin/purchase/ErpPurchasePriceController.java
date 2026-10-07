@@ -17,6 +17,8 @@ import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpSupplierDO;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.purchase.ErpPurchasePriceService;
 import com.lxjl.juling.module.erp.service.purchase.ErpSupplierService;
+import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.system.api.user.dto.AdminUserRespDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,6 +54,8 @@ public class ErpPurchasePriceController {
     private ErpSupplierService supplierService;
     @Resource
     private ErpProductService productService;
+    @Resource
+    private AdminUserApi adminUserApi;
 
     @PostMapping("/create")
     @Operation(summary = "创建采购价目表")
@@ -150,7 +154,7 @@ public class ErpPurchasePriceController {
         return success(purchasePriceService.matchPrice(supplierId, productId, quantity, date));
     }
 
-    /** 补供应商名（通用价目表留空） */
+    /** 补供应商名（通用价目表留空）与定价员名称 */
     private void fillSupplierName(List<ErpPurchasePriceRespVO> list) {
         if (list.isEmpty()) {
             return;
@@ -158,10 +162,16 @@ public class ErpPurchasePriceController {
         Map<Long, ErpSupplierDO> supplierMap = convertMap(
                 supplierService.getSupplierList(convertSet(list, ErpPurchasePriceRespVO::getSupplierId)),
                 ErpSupplierDO::getId);
+        Map<Long, AdminUserRespDTO> userMap = adminUserApi.getUserMap(
+                convertSet(list, ErpPurchasePriceRespVO::getPricerUserId));
         list.forEach(vo -> {
             ErpSupplierDO supplier = supplierMap.get(vo.getSupplierId());
             if (supplier != null) {
                 vo.setSupplierName(supplier.getName());
+            }
+            AdminUserRespDTO user = userMap.get(vo.getPricerUserId());
+            if (user != null) {
+                vo.setPricerUserName(user.getNickname());
             }
         });
     }
@@ -181,6 +191,7 @@ public class ErpPurchasePriceController {
             item.setProductCode(product.getCode());
             item.setProductName(product.getName());
             item.setUnitName(product.getUnitName());
+            item.setSpec(product.getStandard()); // 规格型号：取物料的规格，仅展示
             // 含税单价是计算值，不落库（见 sql/local/65 的设计说明）
             if (item.getPrice() != null) {
                 BigDecimal rate = item.getTaxPercent() == null ? BigDecimal.ZERO : item.getTaxPercent();

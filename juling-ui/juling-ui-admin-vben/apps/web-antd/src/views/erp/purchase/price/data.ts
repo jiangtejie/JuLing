@@ -8,6 +8,7 @@ import { erpPriceInputFormatter } from '@vben/utils';
 
 import { z } from '#/adapter/form';
 import { getSupplierSimpleList } from '#/api/erp/purchase/supplier';
+import { getSimpleUserList } from '#/api/system/user';
 
 /** 新增/修改的表单（表头字段；明细用 items 插槽渲染） */
 export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormSchema[] {
@@ -53,6 +54,33 @@ export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormS
       },
       defaultValue: false,
       help: '同层级（同供应商 / 通用）内取价时优先取它',
+    },
+    {
+      fieldName: 'priceIncludesTax',
+      label: '含税报价',
+      component: 'Switch',
+      componentProps: {
+        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
+        checkedChildren: '含税',
+        unCheckedChildren: '不含税',
+      },
+      defaultValue: false,
+      help: '供应商报价的口径；明细行两个单价列可互算，存的一直是不含税价',
+    },
+    {
+      fieldName: 'pricerUserId',
+      label: '定价员',
+      component: 'ApiSelect',
+      componentProps: {
+        placeholder: '请选择定价员',
+        allowClear: true,
+        showSearch: true,
+        api: getSimpleUserList,
+        labelField: 'nickname',
+        valueField: 'id',
+        disabled: formType === 'detail',
+      },
+      help: '价格的制定人，与「录入人」区分',
     },
     {
       fieldName: 'status',
@@ -170,6 +198,13 @@ export function useGridColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Price>
       formatter: ({ cellValue }) => (cellValue ? '是' : '否'),
     },
     {
+      field: 'priceIncludesTax',
+      title: '报价口径',
+      width: 100,
+      formatter: ({ cellValue }) => (cellValue ? '含税' : '不含税'),
+    },
+    { field: 'pricerUserName', title: '定价员', width: 100, formatter: ({ cellValue }) => cellValue || '-' },
+    {
       field: 'status',
       title: '状态',
       width: 90,
@@ -203,6 +238,13 @@ export function useItemColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Item>[
       slots: { default: 'productId' },
     },
     {
+      field: 'spec',
+      title: '规格型号',
+      minWidth: 100,
+      showOverflow: 'tooltip',
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
       field: 'unitName',
       title: '计价单位',
       minWidth: 80,
@@ -212,16 +254,9 @@ export function useItemColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Item>[
     { field: 'toQty', title: '数量止', width: 85, slots: { default: 'toQty' } },
     { field: 'price', title: '单价(不含税)', width: 110, slots: { default: 'price' } },
     { field: 'taxPercent', title: '税率%', width: 75, slots: { default: 'taxPercent' } },
-    {
-      field: 'taxPrice',
-      title: '含税单价',
-      width: 95,
-      formatter: ({ row }) => {
-        const price = Number(row.price ?? 0);
-        const rate = Number(row.taxPercent ?? 0);
-        return (price * (1 + rate / 100)).toFixed(2);
-      },
-    },
+    // 含税单价：与「单价(不含税)」互算 —— 改任一个，另一个自动跟着变
+    // （后端只存不含税，见 sql/local/67 的设计说明）
+    { field: 'taxPrice', title: '含税单价', width: 95, slots: { default: 'taxPrice' } },
     { field: 'remark', title: '备注', minWidth: 120, slots: { default: 'remark' } },
     { title: '操作', width: 70, fixed: 'right', slots: { default: 'actions' } },
   ];

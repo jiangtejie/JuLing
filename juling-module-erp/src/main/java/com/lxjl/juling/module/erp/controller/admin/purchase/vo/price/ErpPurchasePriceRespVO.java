@@ -39,6 +39,17 @@ public class ErpPurchasePriceRespVO {
     @ExcelProperty("默认价目表")
     private Boolean isDefault;
 
+    @Schema(description = "报价口径：true 表示含税报价", example = "false")
+    @ExcelProperty("含税报价")
+    private Boolean priceIncludesTax;
+
+    @Schema(description = "定价员编号", example = "1")
+    private Long pricerUserId;
+
+    @Schema(description = "定价员名称", example = "张新宇")
+    @ExcelProperty("定价员")
+    private String pricerUserName;
+
     @Schema(description = "状态", example = "0")
     @ExcelProperty(value = "状态", converter = DictConvert.class)
     @DictFormat("common_status")
@@ -81,6 +92,9 @@ public class ErpPurchasePriceRespVO {
 
         @Schema(description = "物料名称", example = "黑芝麻酱454g")
         private String productName;
+
+        @Schema(description = "规格型号（取物料的规格，仅展示用，价目表不落库）", example = "直径34cm")
+        private String spec;
 
         @Schema(description = "计价单位名称（取物料的单位）", example = "瓶")
         private String unitName;

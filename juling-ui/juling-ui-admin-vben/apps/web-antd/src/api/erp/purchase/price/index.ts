@@ -11,6 +11,9 @@ export namespace ErpPurchasePriceApi {
     supplierId?: number; // 供应商编号；为空表示通用价目表
     supplierName?: string; // 供应商名称（通用价目表为空）
     isDefault?: boolean; // 是否默认价目表
+    priceIncludesTax?: boolean; // 报价口径：true 表示供应商报的是含税价
+    pricerUserId?: number; // 定价员编号
+    pricerUserName?: string; // 定价员名称
     status?: number; // 状态：0 启用 / 1 停用
     effectiveDate?: string; // 生效日期
     expiryDate?: string; // 失效日期
@@ -28,6 +31,7 @@ export namespace ErpPurchasePriceApi {
     productId?: number; // 物料编号
     productCode?: string; // 物料编码
     productName?: string; // 物料名称
+    spec?: string; // 规格型号（取物料的规格，仅展示）
     unitName?: string; // 计价单位（取物料的单位）
     fromQty?: number; // 数量区间起（含）
     toQty?: number; // 数量区间止（不含）
