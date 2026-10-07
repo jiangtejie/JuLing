@@ -3,6 +3,7 @@ package com.lxjl.juling.module.system.controller.admin.dept;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.pojo.CommonResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptBizStatusUpdateReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptRespVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
@@ -44,6 +45,14 @@ public class DeptController {
     @PreAuthorize("@ss.hasPermission('system:dept:update')")
     public CommonResult<Boolean> updateDept(@Valid @RequestBody DeptSaveReqVO updateReqVO) {
         deptService.updateDept(updateReqVO);
+        return success(true);
+    }
+
+    @PutMapping("/update-business-status")
+    @Operation(summary = "门店开店 / 闭店", description = "只对门店节点（dept_type = STORE）有效；已闭店门店不可被订货账号授权、不可下单")
+    @PreAuthorize("@ss.hasPermission('system:dept:update-business-status')")
+    public CommonResult<Boolean> updateDeptBusinessStatus(@Valid @RequestBody DeptBizStatusUpdateReqVO reqVO) {
+        deptService.updateDeptBusinessStatus(reqVO);
         return success(true);
     }
 

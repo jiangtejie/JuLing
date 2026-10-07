@@ -3,7 +3,9 @@
 > 目标：把 `system_dept` 从一棵**无类型的部门树**升级为**组织架构树** —— 节点区分「组织」与「门店」，
 > 门店再分加盟/直营，并支持**开店 / 闭店**；后台「部门管理」更名为「组织架构管理」。
 >
-> 状态：**设计待确认**（§7 有 5 个待拍板项），未动代码。
+> 状态：**阶段一已落地**（2026-10）。DDL 见 [sql/local/52](../sql/local/52_organization_architecture.sql)；
+> 后端（DeptDO / VO / Service / Controller / 枚举 / 错误码）与后台「组织架构管理」页面均已就绪。
+> §7 的 5 个待拍板项已按推荐值定案。
 > 相关：[organization-model.md](./organization-model.md)（组织与一店三面）、
 > [ordering-account-authorization-design.md](./ordering-account-authorization-design.md)（订货账号授权门店）。
 
@@ -91,11 +93,41 @@
 
 第 1、2 步与订货账号授权改造**互不阻塞**，可以先做；第 4 步依赖前 3 步完成。
 
-## 7. 需要拍板（5 项）
+## 7. 已定案（5 项）
 
-1. **店型放哪**：`system_dept` 上再存一份店型，还是以 `erp_customer.store_type` 为唯一权威？
-   （两处都存必然漂移 —— 这是本文最关键的一项）
-2. **节点类型用 2 值（组织/门店）+ 独立店型，还是 3 值枚举**？（§2.1 推荐前者）
-3. **闭店是状态还是删除**？闭店可逆吗？已闭店门店的历史订单与授权怎么处理？
-4. **一个门店节点是否强制绑定 `erp_customer` 档案**（一对一）？还是允许只建组织节点先不建档？
-5. **改名范围**：只改菜单名与组织架构管理页文案，还是连带用户管理/数据权限等处的「部门」一起改？（§3 建议只改前者）
+| # | 决策 | 理由 |
+|---|---|---|
+| 1 | **店型以 `erp_customer.store_type` 为唯一权威**，`system_dept` **不存店型** | 两处都存必然漂移。组织树只需知道「这是门店」（`dept_type = STORE`）；「直营 / 加盟」是经营属性，落在客户档案上 |
+| 2 | **节点类型用 2 值（`ORG` / `STORE`）+ 独立店型**，不用 3 值枚举 | 判断「能否下单」只看 `dept_type`，判断「是否免审」才看店型 —— 两件事不挤在一个字段 |
+| 3 | **闭店是状态（可逆）**，不是删除；闭店写 `closed_time` + `closed_reason`，复开清空 | 保留组织节点与历史订单、台账的引用；闭店门店的历史订单/收货/往来账不受影响，只是**不能再被授权、不能再下单** |
+| 4 | **门店节点与 `erp_customer` 强制一对一**，由「建门店」一个动作同时建档（§6 第 3 步） | 避免只建组织节点不建档导致订单部门/结算口径悬空 |
+| 5 | **改名只改菜单名 + 组织架构管理页自己的文案** | 用户管理「所属部门」、数据权限、BPM 审批人策略里的「部门」本就该叫部门，全面改名收益低、改动面大 |
+
+## 8. 阶段一落地记录（2026-10）
+
+**DDL**：`sql/local/52_organization_architecture.sql`（幂等，实测连续执行 3 次结果一致）
+
+| 动作 | 内容 |
+|---|---|
+| 加列 | `system_dept.dept_type`（默认 `ORG`）、`business_status`（默认 0 营业）、`closed_time`、`closed_reason` |
+| 回填 | 门店 = 被「非代理」客户档案引用的部门 → **实测正好命中 13 个门店节点（134-146）**，其余 35 个为组织 |
+| 索引 | `idx_system_dept_dept_type`（`deleted = 0` 部分索引） |
+| 字典 | `system_dept_type`（组织 / 门店）、`system_dept_business_status`（营业 / 已闭店） |
+| 菜单 | 「部门管理」(103) → **「组织架构管理」**；新增按钮权限 `system:dept:update-business-status`（已按祖先链授予原有权角色） |
+
+**后端**：`DeptTypeEnum` / `DeptBusinessStatusEnum`（新增）、`DeptDO`、`DeptSaveReqVO`、`DeptRespVO`、
+`DeptRespDTO`、`DictTypeConstants`、`ErrorCodeConstants`（`1_002_004_005`）、
+`DeptService#updateDeptBusinessStatus` + 实现、`PUT /system/dept/update-business-status`。
+
+两处实现细节值得记住：
+
+1. **`updateById` 会忽略 null 字段** —— 复开门店时 `closed_time` / `closed_reason` 无法靠 `updateById` 清空，
+   必须走 `LambdaUpdateWrapper` 显式 `set(null)`（`DeptServiceImpl#clearDeptClosedFields`）；
+2. **组织节点恒为「营业」** —— `normalizeDeptBusiness` 里统一归一，避免组织节点残留闭店状态。
+
+**前端**：`DICT_TYPE.SYSTEM_DEPT_TYPE` / `SYSTEM_DEPT_BUSINESS_STATUS`、
+`api/system/dept`（类型 + `updateDeptBusinessStatus`）、`views/system/dept/data.ts`（节点类型 / 营业状态两列 + 表单联动）、
+`index.vue`（行操作「闭店 / 重新开店」，非门店节点禁用）。
+
+**验证**：`mvn -T 1C compile` BUILD SUCCESS；后台 typecheck 中本次改动文件 **0 错误**
+（该工程 typecheck 本身有 25 个既有错误，分布在 14 个与本次无关的文件里）。

@@ -33,6 +33,18 @@ public class DeptRespVO {
     @Schema(description = "状态,见 CommonStatusEnum 枚举", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer status;
 
+    @Schema(description = "节点类型：ORG 组织 / STORE 门店", example = "STORE")
+    private String deptType;
+
+    @Schema(description = "营业状态：0 营业 / 1 已闭店（仅门店有意义）", example = "0")
+    private Integer businessStatus;
+
+    @Schema(description = "闭店时间")
+    private LocalDateTime closedTime;
+
+    @Schema(description = "闭店原因")
+    private String closedReason;
+
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "时间戳格式")
     private LocalDateTime createTime;
 

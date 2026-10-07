@@ -11,6 +11,14 @@ export namespace SystemDeptApi {
     leaderUserId: number;
     phone: string;
     email: string;
+    /** 节点类型：ORG 组织 / STORE 门店 */
+    deptType?: string;
+    /** 营业状态：0 营业 / 1 已闭店（仅门店有意义） */
+    businessStatus?: number;
+    /** 闭店时间 */
+    closedTime?: Date;
+    /** 闭店原因 */
+    closedReason?: string;
     createTime: Date;
     children?: Dept[];
   }
@@ -39,6 +47,15 @@ export async function createDept(data: SystemDeptApi.Dept) {
 /** 修改部门 */
 export async function updateDept(data: SystemDeptApi.Dept) {
   return requestClient.put('/system/dept/update', data);
+}
+
+/** 门店开店 / 闭店（只对门店节点有效） */
+export async function updateDeptBusinessStatus(data: {
+  id: number;
+  businessStatus: number;
+  closedReason?: string;
+}) {
+  return requestClient.put('/system/dept/update-business-status', data);
 }
 
 /** 删除部门 */

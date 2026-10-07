@@ -9,6 +9,8 @@ const COMMON_DICT = {
 /** ========== SYSTEM - 系统模块 ========== */
 const SYSTEM_DICT = {
   SYSTEM_USER_SEX: 'system_user_sex',
+  SYSTEM_DEPT_TYPE: 'system_dept_type', // 组织架构节点类型（组织 / 门店）
+  SYSTEM_DEPT_BUSINESS_STATUS: 'system_dept_business_status', // 门店营业状态（营业 / 已闭店）
   SYSTEM_MENU_TYPE: 'system_menu_type',
   SYSTEM_ROLE_TYPE: 'system_role_type',
   SYSTEM_DATA_SCOPE: 'system_data_scope',

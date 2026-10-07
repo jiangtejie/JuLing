@@ -5,11 +5,15 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.framework.datapermission.core.annotation.DataPermission;
+import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptBizStatusUpdateReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.lxjl.juling.module.system.dal.dataobject.dept.DeptDO;
 import com.lxjl.juling.module.system.dal.mysql.dept.DeptMapper;
 import com.lxjl.juling.module.system.dal.redis.RedisKeyConstants;
+import com.lxjl.juling.module.system.enums.dept.DeptBusinessStatusEnum;
+import com.lxjl.juling.module.system.enums.dept.DeptTypeEnum;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -51,6 +56,7 @@ public class DeptServiceImpl implements DeptService {
 
         // 插入部门
         DeptDO dept = BeanUtils.toBean(createReqVO, DeptDO.class);
+        normalizeDeptBusiness(dept); // 组织节点无营业状态；闭店写留痕
         deptMapper.insert(dept);
         return dept.getId();
     }
@@ -71,7 +77,72 @@ public class DeptServiceImpl implements DeptService {
 
         // 更新部门
         DeptDO updateObj = BeanUtils.toBean(updateReqVO, DeptDO.class);
+        boolean clearClosed = normalizeDeptBusiness(updateObj);
         deptMapper.updateById(updateObj);
+        if (clearClosed) {
+            // updateById 会忽略 null 字段：复开 / 组织节点必须显式清空闭店留痕
+            clearDeptClosedFields(updateObj.getId());
+        }
+    }
+
+    @Override
+    @CacheEvict(cacheNames = RedisKeyConstants.DEPT_CHILDREN_ID_LIST,
+            allEntries = true) // allEntries 清空所有缓存，因为操作一个部门，涉及到多个缓存
+    public void updateDeptBusinessStatus(DeptBizStatusUpdateReqVO reqVO) {
+        DeptDO dept = getDept(reqVO.getId());
+        if (dept == null) {
+            throw exception(DEPT_NOT_FOUND);
+        }
+        if (!DeptTypeEnum.STORE.getType().equals(dept.getDeptType())) {
+            throw exception(DEPT_BUSINESS_STATUS_ONLY_STORE);
+        }
+        boolean closed = DeptBusinessStatusEnum.CLOSED.getStatus().equals(reqVO.getBusinessStatus());
+        DeptDO updateObj = new DeptDO();
+        updateObj.setId(reqVO.getId());
+        updateObj.setBusinessStatus(reqVO.getBusinessStatus());
+        if (closed) {
+            updateObj.setClosedTime(LocalDateTime.now());
+            updateObj.setClosedReason(reqVO.getClosedReason());
+        }
+        deptMapper.updateById(updateObj);
+        if (!closed) {
+            clearDeptClosedFields(reqVO.getId());
+        }
+    }
+
+    /**
+     * 归一化「营业状态 / 闭店留痕」
+     *
+     * <p>· 组织节点没有营业状态 —— 强制「营业」且不留闭店痕迹；
+     * <br>· 门店闭店 —— 记闭店时间（原因由 VO 带入）；
+     * <br>· 门店复开 —— 清空留痕。
+     *
+     * @return 是否需要显式清空 closed_time / closed_reason（updateById 会忽略 null 字段）
+     */
+    private boolean normalizeDeptBusiness(DeptDO dept) {
+        if (!DeptTypeEnum.STORE.getType().equals(dept.getDeptType())) {
+            dept.setDeptType(DeptTypeEnum.ORG.getType());
+            dept.setBusinessStatus(DeptBusinessStatusEnum.OPEN.getStatus());
+            dept.setClosedTime(null);
+            dept.setClosedReason(null);
+            return true;
+        }
+        if (DeptBusinessStatusEnum.CLOSED.getStatus().equals(dept.getBusinessStatus())) {
+            dept.setClosedTime(LocalDateTime.now());
+            return false;
+        }
+        dept.setBusinessStatus(DeptBusinessStatusEnum.OPEN.getStatus());
+        dept.setClosedTime(null);
+        dept.setClosedReason(null);
+        return true;
+    }
+
+    /** 显式清空闭店留痕（updateById 忽略 null 字段，只能走 UpdateWrapper） */
+    private void clearDeptClosedFields(Long id) {
+        deptMapper.update(null, new LambdaUpdateWrapper<DeptDO>()
+                .eq(DeptDO::getId, id)
+                .set(DeptDO::getClosedTime, null)
+                .set(DeptDO::getClosedReason, null));
     }
 
     @Override

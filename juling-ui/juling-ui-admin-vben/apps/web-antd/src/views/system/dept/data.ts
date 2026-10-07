@@ -101,6 +101,45 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: z.string().email('邮箱格式不正确').or(z.literal('')).optional(),
     },
     {
+      fieldName: 'deptType',
+      label: '节点类型',
+      component: 'RadioGroup',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.SYSTEM_DEPT_TYPE),
+        buttonStyle: 'solid',
+        optionType: 'button',
+      },
+      rules: z.string().default('ORG'),
+      help: '门店才可被订货账号授权、可下单、可建门店仓；店型（直营/加盟）在客户档案上维护',
+    },
+    {
+      fieldName: 'businessStatus',
+      label: '营业状态',
+      component: 'RadioGroup',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.SYSTEM_DEPT_BUSINESS_STATUS, 'number'),
+        buttonStyle: 'solid',
+        optionType: 'button',
+      },
+      rules: z.number().default(0),
+      dependencies: {
+        triggerFields: ['deptType'],
+        show: (values) => values.deptType === 'STORE',
+      },
+    },
+    {
+      fieldName: 'closedReason',
+      label: '闭店原因',
+      component: 'Input',
+      componentProps: {
+        placeholder: '闭店时填写',
+      },
+      dependencies: {
+        triggerFields: ['deptType', 'businessStatus'],
+        show: (values) => values.deptType === 'STORE' && values.businessStatus === 1,
+      },
+    },
+    {
       fieldName: 'status',
       label: '状态',
       component: 'RadioGroup',
@@ -120,11 +159,29 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
     { type: 'checkbox', width: 40 },
     {
       field: 'name',
-      title: '部门名称',
+      title: '节点名称',
       minWidth: 150,
       align: 'left',
       fixed: 'left',
       treeNode: true,
+    },
+    {
+      field: 'deptType',
+      title: '节点类型',
+      width: 100,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.SYSTEM_DEPT_TYPE },
+      },
+    },
+    {
+      field: 'businessStatus',
+      title: '营业状态',
+      width: 100,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.SYSTEM_DEPT_BUSINESS_STATUS },
+      },
     },
     {
       field: 'leaderUserId',
@@ -140,7 +197,7 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
     },
     {
       field: 'status',
-      title: '部门状态',
+      title: '节点状态',
       minWidth: 100,
       cellRender: {
         name: 'CellDict',

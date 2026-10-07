@@ -3,11 +3,15 @@ package com.lxjl.juling.module.system.dal.dataobject.dept;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.tenant.core.db.TenantBaseDO;
 import com.lxjl.juling.module.system.dal.dataobject.user.AdminUserDO;
+import com.lxjl.juling.module.system.enums.dept.DeptBusinessStatusEnum;
+import com.lxjl.juling.module.system.enums.dept.DeptTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 部门表
@@ -62,5 +66,26 @@ public class DeptDO extends TenantBaseDO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
+
+    /**
+     * 节点类型：组织 / 门店
+     *
+     * 枚举 {@link DeptTypeEnum}
+     */
+    private String deptType;
+    /**
+     * 营业状态（仅门店有意义）；组织节点恒为「营业」
+     *
+     * 枚举 {@link DeptBusinessStatusEnum}
+     */
+    private Integer businessStatus;
+    /**
+     * 闭店时间（复开时清空）
+     */
+    private LocalDateTime closedTime;
+    /**
+     * 闭店原因
+     */
+    private String closedReason;
 
 }
