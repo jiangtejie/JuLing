@@ -6,6 +6,7 @@ import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptBizStatusUpdateReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptRespVO;
+import com.lxjl.juling.module.system.enums.dept.DeptTypeEnum;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptSimpleRespVO;
 import com.lxjl.juling.module.system.dal.dataobject.dept.DeptDO;
@@ -79,7 +80,22 @@ public class DeptController {
     @PreAuthorize("@ss.hasPermission('system:dept:query')")
     public CommonResult<List<DeptRespVO>> getDeptList(DeptListReqVO reqVO) {
         List<DeptDO> list = deptService.getDeptList(reqVO);
-        return success(BeanUtils.toBean(list, DeptRespVO.class));
+        List<DeptRespVO> result = BeanUtils.toBean(list, DeptRespVO.class);
+        result.forEach(this::maskOrgBusinessStatus);
+        return success(result);
+    }
+
+    /**
+     * 营业状态只对门店节点有意义
+     *
+     * <p>存储层把组织节点的 `business_status` 强制为「营业」只是为满足 `NOT NULL` 的实现细节
+     * （见 DeptServiceImpl#normalizeDeptBusiness）；领域事实是**组织节点没有营业状态**，
+     * 所以对外不透出 —— 否则「财务部」「萍姐」旁边会挂一个没有意义的「营业」。
+     */
+    private void maskOrgBusinessStatus(DeptRespVO vo) {
+        if (!DeptTypeEnum.STORE.getType().equals(vo.getDeptType())) {
+            vo.setBusinessStatus(null);
+        }
     }
 
     @GetMapping(value = {"/list-all-simple", "/simple-list"})
@@ -96,7 +112,9 @@ public class DeptController {
     @PreAuthorize("@ss.hasPermission('system:dept:query')")
     public CommonResult<DeptRespVO> getDept(@RequestParam("id") Long id) {
         DeptDO dept = deptService.getDept(id);
-        return success(BeanUtils.toBean(dept, DeptRespVO.class));
+        DeptRespVO result = BeanUtils.toBean(dept, DeptRespVO.class);
+        maskOrgBusinessStatus(result);
+        return success(result);
     }
 
 }

@@ -158,18 +158,20 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
   return [
     { type: 'checkbox', width: 40 },
     {
-      field: 'code',
-      title: '编码',
-      width: 130,
-      formatter: ({ cellValue }) => cellValue || '-',
-    },
-    {
+      // ⚠️ 树列必须紧跟多选框列：vxe-table 会强制把 treeNode 列拉到第一位，
+      // 若有其它列插在它前面，多选框会被挤到树列右侧，表头顺序错乱。
       field: 'name',
       title: '节点名称',
       minWidth: 150,
       align: 'left',
       fixed: 'left',
       treeNode: true,
+    },
+    {
+      field: 'code',
+      title: '编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
     },
     {
       field: 'deptType',
