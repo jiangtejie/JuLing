@@ -66,6 +66,7 @@ psql -U root -d yate -f sql/local/52_organization_architecture.sql
 psql -U root -d yate -f sql/local/53_member_user_store.sql
 psql -U root -d yate -f sql/local/55_master_data_menu.sql
 psql -U root -d yate -f sql/local/56_code_rule.sql
+psql -U root -d yate -f sql/local/57_code_rule_menu.sql
 # ⚠️ 54 会备份后**删除 4 个列**（不可逆）。必须等 53 执行完、且后端已切换到
 #    member_user_store 读取之后再执行；确认前保持注释：
 # psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
@@ -141,6 +142,7 @@ psql -U root -d yate -f sql/local/56_code_rule.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
+| 57_code_rule_menu.sql | **编码规则菜单**：在「基础资料」(12180) 下补菜单 12190「编码规则」(component `system/code-rule/index`) + 按钮权限 12191-12194（`system:code-rule:query/create/update/delete`），并授给已拥有「基础资料」的 3 个角色（普通角色/财务/供应链）。补这个菜单是因为 56 建了规则表却没有维护入口 —— 管理员看不到前缀/流水，也没法为新主数据加规则。幂等 | 菜单 12190+ |
 | 56_code_rule.sql | **统一编码第一步**：新建 `system_code_rule`（编码规则：前缀 + 流水长度 + 当前值，对齐金蝶的「编码规则」）；`erp_customer`/`erp_supplier`/`erp_warehouse`/`erp_product_unit`/`product_spu`/`system_dept` 加 `code` 并按 id 升序回填（存量 0 条为空）；`(tenant_id, code)` 部分唯一索引；规则当前值对齐各表已用流水最大值。生成服务与界面接入见提交 `2a7385d5`。幂等 | 表 system_code_rule |
 | 55_master_data_menu.sql | **基础资料菜单归口**：新建一级目录「基础资料」(12180) + 「主数据」(12181) / 「公共资料」(12182)，把散在「系统管理 / ERP 销售·采购·库存·财务 / 商城系统」的 9 个主数据菜单迁入，并把新祖先链授给原本就有被迁菜单的角色（yudao 会剔除父菜单未授权的节点）。**只改菜单，不动表结构与 API 路径**。幂等 | 菜单 12180+ |
 | 54_drop_legacy_store_columns.sql | ⚠️ **不可逆，执行前须确认**：先把旧值备份到 schema `bak_ordering_account_20261007`，再软删「代理客户」（有下级客户的客户档案），建 `uk_erp_customer_dept_id`（门店节点 ↔ 客户档案一对一），最后删除 `member_user.dept_id`/`customer_id`、`trade_order.agent_customer_id`、`erp_customer.parent_customer_id`。**必须等 53 执行完且后端已切换到授权表读取之后再跑** | schema `bak_ordering_account_20261007` |

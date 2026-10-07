@@ -1,6 +1,9 @@
 package com.lxjl.juling.module.system.dal.mysql.code;
 
+import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.mybatis.core.mapper.BaseMapperX;
+import com.lxjl.juling.framework.mybatis.core.query.LambdaQueryWrapperX;
+import com.lxjl.juling.module.system.controller.admin.code.vo.SystemCodeRulePageReqVO;
 import com.lxjl.juling.module.system.dal.dataobject.code.SystemCodeRuleDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,6 +19,13 @@ public interface SystemCodeRuleMapper extends BaseMapperX<SystemCodeRuleDO> {
 
     default SystemCodeRuleDO selectByRuleKey(String ruleKey) {
         return selectOne(SystemCodeRuleDO::getRuleKey, ruleKey);
+    }
+
+    default PageResult<SystemCodeRuleDO> selectPage(SystemCodeRulePageReqVO reqVO) {
+        return selectPage(reqVO, new LambdaQueryWrapperX<SystemCodeRuleDO>()
+                .likeIfPresent(SystemCodeRuleDO::getRuleKey, reqVO.getRuleKey())
+                .likeIfPresent(SystemCodeRuleDO::getName, reqVO.getName())
+                .orderByAsc(SystemCodeRuleDO::getId));
     }
 
     /**

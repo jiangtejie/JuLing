@@ -171,5 +171,6 @@ public interface ErrorCodeConstants {
 
     // ========== 编码规则 1-002-029-000 ==========
     ErrorCode CODE_RULE_NOT_EXISTS = new ErrorCode(1_002_029_000, "编码规则({})不存在，请先在「基础资料 → 编码规则」里配置");
+    ErrorCode CODE_RULE_KEY_DUPLICATE = new ErrorCode(1_002_029_001, "规则标识({})已存在");
 
 }
