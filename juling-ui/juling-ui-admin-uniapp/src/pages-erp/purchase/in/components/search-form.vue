@@ -65,7 +65,7 @@ const emit = defineEmits<{
   reset: []
 }>()
 const visible = ref(false)
-const productPickerRef = ref<InstanceType<typeof ProductSearchPicker>>() // 产品选择器
+const productPickerRef = ref<InstanceType<typeof ProductSearchPicker>>() // 物料选择器
 const supplierPickerRef = ref<InstanceType<typeof SupplierSearchPicker>>() // 供应商选择器
 const warehousePickerRef = ref<InstanceType<typeof WarehouseSearchPicker>>() // 仓库选择器
 const accountPickerRef = ref<InstanceType<typeof AccountSearchPicker>>() // 结算账户选择器
@@ -102,7 +102,7 @@ const placeholder = computed(() => {
     conditions.push(`单号:${formData.no}`)
   }
   if (formData.productId) {
-    conditions.push(`产品:${productPickerRef.value?.format(formData.productId) || formData.productId}`)
+    conditions.push(`物料:${productPickerRef.value?.format(formData.productId) || formData.productId}`)
   }
   if (formData.inTime[0] && formData.inTime[1]) {
     conditions.push(`入库时间:${formatDate(formData.inTime[0])}~${formatDate(formData.inTime[1])}`)

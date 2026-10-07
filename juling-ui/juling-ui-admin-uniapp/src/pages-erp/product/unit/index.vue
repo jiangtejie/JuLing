@@ -2,7 +2,7 @@
   <view class="yd-page-container yd-page-container-paging">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="产品单位"
+      title="物料单位"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -10,7 +10,7 @@
     <!-- 搜索组件 -->
     <SearchForm @search="handleQuery" @reset="handleReset" />
 
-    <!-- 产品单位列表 -->
+    <!-- 物料单位列表 -->
     <z-paging
       ref="pagingRef"
       v-model="list"
@@ -20,7 +20,7 @@
       :refresher-enabled="true"
       :inside-more="true"
       :loading-more-default-as-loading="true"
-      empty-view-text="暂无产品单位数据"
+      empty-view-text="暂无物料单位数据"
       @query="queryList"
     >
       <view class="p-24rpx">
@@ -85,7 +85,7 @@ function handleBack() {
   navigateBackPlus()
 }
 
-/** 查询产品单位列表 */
+/** 查询物料单位列表 */
 async function queryList(pageNo: number, pageSize: number) {
   try {
     const params = {
@@ -116,7 +116,7 @@ function reload() {
   pagingRef.value?.reload()
 }
 
-/** 新增产品单位 */
+/** 新增物料单位 */
 function handleAdd() {
   uni.navigateTo({
     url: '/pages-erp/product/unit/form/index',

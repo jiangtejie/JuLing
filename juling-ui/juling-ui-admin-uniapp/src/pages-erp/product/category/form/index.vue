@@ -77,7 +77,7 @@ definePage({
 })
 
 const toast = useToast()
-const getTitle = computed(() => props.id ? '编辑产品分类' : '新增产品分类')
+const getTitle = computed(() => props.id ? '编辑物料分类' : '新增物料分类')
 const formLoading = ref(false) // 表单提交状态
 
 /** 创建默认表单数据 */
@@ -94,7 +94,7 @@ function createDefaultFormData(): ProductCategory {
 
 const formData = ref<ProductCategory>(createDefaultFormData()) // 表单数据
 const formRef = ref<FormInstance>() // 表单组件引用
-const categoryTree = ref<ProductCategory[]>([]) // 产品分类树
+const categoryTree = ref<ProductCategory[]>([]) // 物料分类树
 const formSchema = createFormSchema({
   parentId: [{ required: true, message: '父级分类不能为空' }],
   name: [{ required: true, message: '分类名称不能为空' }],
@@ -119,7 +119,7 @@ async function loadCategoryTree() {
   categoryTree.value = [
     {
       id: 0,
-      name: '顶级产品分类',
+      name: '顶级物料分类',
       children: handleTree(categoryList || []),
     },
   ]
@@ -135,7 +135,7 @@ function applyQueryDefaults() {
   }
 }
 
-/** 加载产品分类详情 */
+/** 加载物料分类详情 */
 async function getDetail() {
   if (!props.id) {
     return

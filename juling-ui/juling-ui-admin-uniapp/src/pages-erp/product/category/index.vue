@@ -2,7 +2,7 @@
   <view class="yd-page-container">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="产品分类"
+      title="物料分类"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -56,7 +56,7 @@
 
         <!-- 空状态 -->
         <view v-if="!loading && currentList.length === 0" class="py-100rpx text-center">
-          <wd-empty icon="content" tip="暂无产品分类数据" />
+          <wd-empty icon="content" tip="暂无物料分类数据" />
         </view>
       </view>
     </scroll-view>
@@ -119,7 +119,7 @@ function handleEnterChildren(item: ProductCategory) {
   breadcrumbRef.value?.enter({ id: item.id, name: item.name })
 }
 
-/** 查询产品分类列表 */
+/** 查询物料分类列表 */
 async function getList() {
   loading.value = true
   try {
@@ -143,7 +143,7 @@ function handleReset() {
   handleQuery()
 }
 
-/** 新增产品分类 */
+/** 新增物料分类 */
 function handleAdd() {
   uni.navigateTo({
     url: `/pages-erp/product/category/form/index?parentId=${currentParentId.value}`,

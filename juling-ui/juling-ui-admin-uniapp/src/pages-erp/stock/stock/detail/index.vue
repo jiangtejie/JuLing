@@ -1,7 +1,7 @@
 <template>
   <view class="yd-page-container">
     <!-- 顶部导航栏 -->
-    <wd-navbar title="产品库存详情" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
+    <wd-navbar title="物料库存详情" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
 
     <!-- 详情内容 -->
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
@@ -16,12 +16,12 @@
         </view>
       </view>
       <wd-cell-group border>
-        <wd-cell title="产品名称" :value="formData?.productName || '-'" />
-        <wd-cell title="产品分类" :value="formData?.categoryName || '-'" />
-        <wd-cell title="产品单位" :value="formData?.unitName || '-'" />
+        <wd-cell title="物料名称" :value="formData?.productName || '-'" />
+        <wd-cell title="物料分类" :value="formData?.categoryName || '-'" />
+        <wd-cell title="物料单位" :value="formData?.unitName || '-'" />
         <wd-cell title="仓库" :value="formData?.warehouseName || '-'" />
         <wd-cell title="库存数量" :value="formatCount(formData?.count)" />
-        <wd-cell title="产品编号" :value="formData?.productId ?? '-'" />
+        <wd-cell title="物料编号" :value="formData?.productId ?? '-'" />
         <wd-cell title="仓库编号" :value="formData?.warehouseId ?? '-'" />
       </wd-cell-group>
     </scroll-view>
@@ -54,7 +54,7 @@ function handleBack() {
   navigateBackPlus('/pages-erp/stock/stock/index')
 }
 
-/** 加载产品库存详情 */
+/** 加载物料库存详情 */
 async function getDetail() {
   if (!props.id) {
     return

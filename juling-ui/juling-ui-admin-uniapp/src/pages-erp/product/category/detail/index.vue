@@ -2,7 +2,7 @@
   <view class="yd-page-container">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="产品分类详情"
+      title="物料分类详情"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -69,7 +69,7 @@ const { hasAccessByCodes } = useAccess()
 const dialog = useDialog()
 const toast = useToast()
 const formData = ref<ProductCategory>() // 详情数据
-const categoryList = ref<ProductCategory[]>([]) // 产品分类列表
+const categoryList = ref<ProductCategory[]>([]) // 物料分类列表
 const deleting = ref(false) // 删除状态
 
 /** 返回上一页 */
@@ -80,13 +80,13 @@ function handleBack() {
 /** 获取父级分类名称 */
 function getParentName() {
   if (!formData.value?.parentId || formData.value.parentId === 0) {
-    return '顶级产品分类'
+    return '顶级物料分类'
   }
   const parent = categoryList.value.find(item => item.id === formData.value?.parentId)
   return parent?.name || '未知'
 }
 
-/** 加载产品分类详情 */
+/** 加载物料分类详情 */
 async function getDetail() {
   if (!props.id || deleting.value) {
     return
@@ -99,14 +99,14 @@ async function getDetail() {
   }
 }
 
-/** 编辑产品分类 */
+/** 编辑物料分类 */
 function handleEdit() {
   uni.navigateTo({
     url: `/pages-erp/product/category/form/index?id=${props.id}`,
   })
 }
 
-/** 删除产品分类 */
+/** 删除物料分类 */
 async function handleDelete() {
   if (!props.id) {
     return
@@ -114,7 +114,7 @@ async function handleDelete() {
   try {
     await dialog.confirm({
       title: '提示',
-      msg: '确定要删除该产品分类吗？',
+      msg: '确定要删除该物料分类吗？',
     })
   } catch {
     return

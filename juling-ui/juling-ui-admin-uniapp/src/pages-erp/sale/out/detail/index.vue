@@ -30,7 +30,7 @@
       <!-- 出库明细 -->
       <view v-if="items.length > 0" class="mt-24rpx">
         <view class="yd-text-sub px-24rpx py-16rpx text-28rpx">
-          出库产品清单
+          出库物料清单
         </view>
         <view class="px-24rpx">
           <view
@@ -46,7 +46,7 @@
               <text class="min-w-0 flex-1">{{ item.warehouseName || '-' }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
-              <text class="yd-text-hint mr-8rpx shrink-0">产品：</text>
+              <text class="yd-text-hint mr-8rpx shrink-0">物料：</text>
               <text class="min-w-0 flex-1">{{ item.productName || '-' }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
@@ -70,7 +70,7 @@
               <text class="min-w-0 flex-1">{{ formatCount(item.count) }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
-              <text class="yd-text-hint mr-8rpx shrink-0">产品单价：</text>
+              <text class="yd-text-hint mr-8rpx shrink-0">物料单价：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.productPrice) }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">

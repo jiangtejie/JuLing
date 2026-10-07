@@ -22,7 +22,7 @@
       <!-- 搜索区域 -->
       <view class="bg-white px-24rpx pb-20rpx">
         <wd-input v-model="queryParams.no" placeholder="请输入订单单号" clearable />
-        <ProductFormPicker v-model="queryParams.productId" label="" placeholder="请选择产品" class="mt-12rpx" />
+        <ProductFormPicker v-model="queryParams.productId" label="" placeholder="请选择物料" class="mt-12rpx" />
         <yd-search-date-range v-model="queryParams.orderTime" class="mt-12rpx" label="订单时间" />
         <view class="mt-16rpx flex gap-16rpx">
           <wd-button class="flex-1" variant="plain" @click="handleReset">
@@ -65,7 +65,7 @@
               <text class="yd-text-hint mr-8rpx">客户：</text>{{ item.customerName || '-' }}
             </view>
             <view v-if="item.productNames" class="yd-text-sub mb-8rpx text-26rpx">
-              <text class="yd-text-hint mr-8rpx">产品：</text>
+              <text class="yd-text-hint mr-8rpx">物料：</text>
               <text class="line-clamp-1">{{ item.productNames }}</text>
             </view>
             <view class="yd-text-sub mb-8rpx text-26rpx">

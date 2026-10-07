@@ -34,7 +34,7 @@
             },
             {
               "key": "dept",
-              "name": "部门管理",
+              "name": "组织架构管理",
               "icon": "organization",
               "iconColor": "#13c2c2",
               "url": "/pages-system/dept/index",
@@ -202,16 +202,8 @@
               "permission": "infra:config:query"
             },
             {
-              "key": "dataSourceConfig",
-              "name": "数据源配置",
-              "icon": "storage",
-              "iconColor": "#9254de",
-              "url": "/pages-infra/data-source-config/index",
-              "permission": "infra:data-source-config:query"
-            },
-            {
               "key": "file",
-              "name": "文件管理",
+              "name": "文件列表",
               "icon": "folder",
               "iconColor": "#2f54eb",
               "url": "/pages-infra/file/index",
@@ -231,69 +223,6 @@
               "iconColor": "#fa8c16",
               "url": "/pages-infra/job/index",
               "permission": "infra:job:query"
-            }
-          ]
-        },
-        {
-          "key": "dev",
-          "name": "开发工具",
-          "menus": [
-            {
-              "key": "codegen",
-              "name": "代码生成",
-              "icon": "code",
-              "iconColor": "#52c41a",
-              "url": "/pages-infra/codegen/index",
-              "permission": "infra:codegen:query"
-            },
-            {
-              "key": "build",
-              "name": "表单构建",
-              "icon": "edit",
-              "iconColor": "#73d13d",
-              "onlyPc": true
-            },
-            {
-              "key": "swagger",
-              "name": "API 接口",
-              "icon": "link",
-              "iconColor": "#95de64",
-              "onlyPc": true
-            }
-          ]
-        },
-        {
-          "key": "monitor",
-          "name": "监控中心",
-          "menus": [
-            {
-              "key": "mysql",
-              "name": "MySQL 监控",
-              "icon": "desktop",
-              "iconColor": "#1890ff",
-              "onlyPc": true
-            },
-            {
-              "key": "redis",
-              "name": "Redis 监控",
-              "icon": "folder",
-              "iconColor": "#cf1322",
-              "url": "/pages-statistics/infra/redis/index",
-              "permission": "infra:redis:get-monitor-info"
-            },
-            {
-              "key": "java",
-              "name": "Java 监控",
-              "icon": "settings",
-              "iconColor": "#52c41a",
-              "onlyPc": true
-            },
-            {
-              "key": "skywalking",
-              "name": "链路追踪",
-              "icon": "apps",
-              "iconColor": "#722ed1",
-              "onlyPc": true
             }
           ]
         }
@@ -431,73 +360,11 @@
           "menus": [
             {
               "key": "memberUser",
-              "name": "会员管理",
+              "name": "订货账号列表",
               "icon": "user",
               "iconColor": "#1890ff",
               "url": "/pages-member/user/index",
               "permission": "member:user:query"
-            },
-            {
-              "key": "memberTag",
-              "name": "会员标签",
-              "icon": "tag",
-              "iconColor": "#52c41a",
-              "url": "/pages-member/tag/index",
-              "permission": "member:tag:query"
-            },
-            {
-              "key": "memberLevel",
-              "name": "会员等级",
-              "icon": "star",
-              "iconColor": "#faad14",
-              "url": "/pages-member/level/index",
-              "permission": "member:level:query"
-            },
-            {
-              "key": "memberGroup",
-              "name": "会员分组",
-              "icon": "user-group",
-              "iconColor": "#13c2c2",
-              "url": "/pages-member/group/index",
-              "permission": "member:group:query"
-            }
-          ]
-        },
-        {
-          "key": "point",
-          "name": "积分与签到",
-          "menus": [
-            {
-              "key": "memberPointRecord",
-              "name": "会员积分",
-              "icon": "star",
-              "iconColor": "#fa8c16",
-              "url": "/pages-member/point/record/index",
-              "permission": "point:record:query"
-            },
-            {
-              "key": "memberSignInConfig",
-              "name": "签到配置",
-              "icon": "calendar-line",
-              "iconColor": "#2f54eb",
-              "url": "/pages-member/signin/config/index",
-              "permission": "point:sign-in-config:query"
-            },
-            {
-              "key": "memberSignInRecord",
-              "name": "签到记录",
-              "icon": "calendar-line",
-              "iconColor": "#722ed1",
-              "url": "/pages-member/signin/record/index",
-              "permission": "point:sign-in-record:query"
-            },
-            {
-              "key": "memberConfig",
-              "name": "会员配置",
-              "icon": "settings",
-              "iconColor": "#eb2f96",
-              "url": "/pages-member/config/index",
-              "permission": "member:config:query"
             }
           ]
         }
@@ -517,14 +384,6 @@
               "icon": "dashboard",
               "iconColor": "#1677ff",
               "url": "/pages-statistics/mall/home/index"
-            },
-            {
-              "key": "mallKefu",
-              "name": "客服会话",
-              "icon": "message",
-              "iconColor": "#722ed1",
-              "url": "/pages-mall/kefu/index",
-              "permission": "promotion:kefu-conversation:query"
             }
           ]
         },
@@ -621,140 +480,6 @@
           ]
         },
         {
-          "key": "promotion",
-          "name": "营销管理",
-          "menus": [
-            {
-              "key": "mallPromotionBanner",
-              "name": "Banner",
-              "icon": "image",
-              "iconColor": "#722ed1",
-              "url": "/pages-mall/promotion/banner/index",
-              "permission": "promotion:banner:query"
-            },
-            {
-              "key": "mallPromotionArticle",
-              "name": "文章列表",
-              "icon": "edit",
-              "iconColor": "#eb2f96",
-              "url": "/pages-mall/promotion/article/index",
-              "permission": "promotion:article:query"
-            },
-            {
-              "key": "mallPromotionArticleCategory",
-              "name": "文章分类",
-              "icon": "folder",
-              "iconColor": "#c41d7f",
-              "url": "/pages-mall/promotion/article/category/index",
-              "permission": "promotion:article-category:query"
-            },
-            {
-              "key": "mallPromotionCouponTemplate",
-              "name": "优惠券列表",
-              "icon": "tags",
-              "iconColor": "#eb2f96",
-              "url": "/pages-mall/promotion/coupon/template/index",
-              "permission": "promotion:coupon-template:query"
-            },
-            {
-              "key": "mallPromotionCoupon",
-              "name": "领取记录",
-              "icon": "tags",
-              "iconColor": "#f759ab",
-              "url": "/pages-mall/promotion/coupon/index",
-              "permission": "promotion:coupon:query"
-            },
-            {
-              "key": "mallPromotionSeckillActivity",
-              "name": "秒杀商品",
-              "icon": "clock-circle",
-              "iconColor": "#fa8c16",
-              "url": "/pages-mall/promotion/seckill/activity/index",
-              "permission": "promotion:seckill-activity:query"
-            },
-            {
-              "key": "mallPromotionSeckillConfig",
-              "name": "秒杀时段",
-              "icon": "time-line",
-              "iconColor": "#faad14",
-              "url": "/pages-mall/promotion/seckill/config/index",
-              "permission": "promotion:seckill-config:query"
-            },
-            {
-              "key": "mallPromotionCombinationActivity",
-              "name": "拼团商品",
-              "icon": "user-group",
-              "iconColor": "#52c41a",
-              "url": "/pages-mall/promotion/combination/activity/index",
-              "permission": "promotion:combination-activity:query"
-            },
-            {
-              "key": "mallPromotionCombinationRecord",
-              "name": "拼团记录",
-              "icon": "list",
-              "iconColor": "#389e0d",
-              "url": "/pages-mall/promotion/combination/record/index",
-              "permission": "promotion:combination-record:query"
-            },
-            {
-              "key": "mallPromotionBargainActivity",
-              "name": "砍价商品",
-              "icon": "scissor",
-              "iconColor": "#13c2c2",
-              "url": "/pages-mall/promotion/bargain/activity/index",
-              "permission": "promotion:bargain-activity:query"
-            },
-            {
-              "key": "mallPromotionBargainRecord",
-              "name": "砍价记录",
-              "icon": "list",
-              "iconColor": "#08979c",
-              "url": "/pages-mall/promotion/bargain/record/index",
-              "permission": "promotion:bargain-record:query"
-            },
-            {
-              "key": "mallPromotionDiscountActivity",
-              "name": "限时折扣",
-              "icon": "tag",
-              "iconColor": "#f5222d",
-              "url": "/pages-mall/promotion/discount-activity/index",
-              "permission": "promotion:discount-activity:query"
-            },
-            {
-              "key": "mallPromotionRewardActivity",
-              "name": "满减送",
-              "icon": "gift",
-              "iconColor": "#fa541c",
-              "url": "/pages-mall/promotion/reward-activity/index",
-              "permission": "promotion:reward-activity:query"
-            },
-            {
-              "key": "mallPromotionPointActivity",
-              "name": "积分商城",
-              "icon": "star",
-              "iconColor": "#1677ff",
-              "url": "/pages-mall/promotion/point/activity/index",
-              "permission": "promotion:point-activity:query"
-            },
-            {
-              "key": "mallPromotionDiyPage",
-              "name": "装修页面",
-              "icon": "layout",
-              "iconColor": "#2f54eb",
-              "url": "/pages-mall/promotion/diy/page/index",
-              "permission": "promotion:diy-page:query"
-            },
-            {
-              "key": "mallPromotionDiyTemplate",
-              "name": "装修模板",
-              "icon": "copy",
-              "iconColor": "#597ef7",
-              "url": "/pages-mall/promotion/diy/template/index",
-              "permission": "promotion:diy-template:query"
-            }
-          ]
-        },
-        {
           "key": "statistics",
           "name": "统计中心",
           "menus": [
@@ -803,11 +528,11 @@
         },
         {
           "key": "product",
-          "name": "产品管理",
+          "name": "物料管理",
           "menus": [
             {
               "key": "erpProductCategory",
-              "name": "产品分类",
+              "name": "物料分类",
               "icon": "folder",
               "iconColor": "#13c2c2",
               "url": "/pages-erp/product/category/index",
@@ -815,7 +540,7 @@
             },
             {
               "key": "erpProduct",
-              "name": "产品信息",
+              "name": "物料信息",
               "icon": "apps",
               "iconColor": "#1890ff",
               "url": "/pages-erp/product/product/index",
@@ -823,7 +548,7 @@
             },
             {
               "key": "erpProductUnit",
-              "name": "产品单位",
+              "name": "物料单位",
               "icon": "apps",
               "iconColor": "#2f54eb",
               "url": "/pages-erp/product/unit/index",
@@ -921,7 +646,7 @@
             },
             {
               "key": "erpStock",
-              "name": "产品库存",
+              "name": "物料库存",
               "icon": "dashboard",
               "iconColor": "#9254de",
               "url": "/pages-erp/stock/stock/index",
@@ -1041,7 +766,7 @@
             },
             {
               "key": "wmsItemCategory",
-              "name": "商品分类",
+              "name": "物料分类",
               "icon": "folder",
               "iconColor": "#faad14",
               "url": "/pages-wms/md/item/category/index",
@@ -1049,7 +774,7 @@
             },
             {
               "key": "wmsItemBrand",
-              "name": "商品品牌",
+              "name": "物料品牌",
               "icon": "store",
               "iconColor": "#fa8c16",
               "url": "/pages-wms/md/item/brand/index",
@@ -1057,7 +782,7 @@
             },
             {
               "key": "wmsItem",
-              "name": "商品管理",
+              "name": "物料管理",
               "icon": "archive",
               "iconColor": "#f5222d",
               "url": "/pages-wms/md/item/index",
@@ -1093,7 +818,7 @@
           "menus": [
             {
               "key": "wmsReceiptOrder",
-              "name": "入库单",
+              "name": "入库管理",
               "icon": "download",
               "iconColor": "#36cfc9",
               "url": "/pages-wms/order/receipt/index",
@@ -1101,7 +826,7 @@
             },
             {
               "key": "wmsShipmentOrder",
-              "name": "出库单",
+              "name": "出库管理",
               "icon": "upload",
               "iconColor": "#13c2c2",
               "url": "/pages-wms/order/shipment/index",
@@ -1109,7 +834,7 @@
             },
             {
               "key": "wmsMovementOrder",
-              "name": "移库单",
+              "name": "移库管理",
               "icon": "swap",
               "iconColor": "#5cdbd3",
               "url": "/pages-wms/order/movement/index",
@@ -1117,7 +842,7 @@
             },
             {
               "key": "wmsCheckOrder",
-              "name": "盘库单",
+              "name": "盘库管理",
               "icon": "check-circle",
               "iconColor": "#87e8de",
               "url": "/pages-wms/order/check/index",

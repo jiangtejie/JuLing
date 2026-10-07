@@ -20,7 +20,7 @@
 
         <!-- 盘点明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="yd-text-main text-28rpx font-semibold">盘点产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">盘点物料清单</text>
           <wd-button size="small" type="primary" variant="plain" @click="itemEditorRef?.handleAdd()">
             添加
           </wd-button>
@@ -92,7 +92,7 @@ const formData = ref<StockCheck>({
 }) // 表单数据
 const formRef = ref<FormInstance>() // 表单组件引用
 const itemEditorRef = ref<InstanceType<typeof CheckItemForm>>() // 明细组件引用
-const productOptions = ref<Product[]>([]) // 产品选项
+const productOptions = ref<Product[]>([]) // 物料选项
 const warehouseOptions = ref<Warehouse[]>([]) // 仓库选项
 const dateVisible = reactive({
   checkTime: false,

@@ -1,13 +1,13 @@
 <template>
   <view class="yd-page-container yd-page-container-paging">
     <!-- 顶部导航栏 -->
-    <wd-navbar title="产品库存" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
+    <wd-navbar title="物料库存" left-arrow placeholder safe-area-inset-top fixed @click-left="handleBack" />
 
     <!-- 搜索组件 -->
     <SearchForm @search="handleQuery" @reset="handleReset" />
 
-    <!-- 产品库存列表 -->
-    <z-paging ref="pagingRef" v-model="list" :fixed="false" class="min-h-0 flex-1" :default-page-size="10" :refresher-enabled="true" :inside-more="true" :loading-more-default-as-loading="true" empty-view-text="暂无产品库存数据" @query="queryList">
+    <!-- 物料库存列表 -->
+    <z-paging ref="pagingRef" v-model="list" :fixed="false" class="min-h-0 flex-1" :default-page-size="10" :refresher-enabled="true" :inside-more="true" :loading-more-default-as-loading="true" empty-view-text="暂无物料库存数据" @query="queryList">
       <view class="p-24rpx">
         <view v-for="item in list" :key="item.id" class="mb-24rpx overflow-hidden rounded-12rpx bg-white shadow-sm" @click="handleDetail(item)">
           <view class="p-24rpx">
@@ -66,7 +66,7 @@ function handleBack() {
   navigateBackPlus()
 }
 
-/** 查询产品库存列表 */
+/** 查询物料库存列表 */
 async function queryList(pageNo: number, pageSize: number) {
   try {
     const data = await getStockPage({ ...queryParams.value, pageNo, pageSize })

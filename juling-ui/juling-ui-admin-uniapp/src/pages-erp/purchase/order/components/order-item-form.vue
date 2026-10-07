@@ -10,10 +10,10 @@
 
       <yd-form-picker
         v-model="item.productId"
-        label="产品"
+        label="物料"
         label-width="180rpx"
         :columns="productOptions" label-key="name" value-key="id"
-        placeholder="请选择产品"
+        placeholder="请选择物料"
         :disabled="disabled"
         @confirm="value => handleProductConfirm(index, value)"
       />
@@ -125,7 +125,7 @@ function handleRemove(index: number) {
   items.value.splice(index, 1)
 }
 
-/** 选择产品后回填产品基础信息与库存 */
+/** 选择物料后回填物料基础信息与库存 */
 async function handleProductConfirm(index: number, productId?: number | string) {
   const item = items.value[index]
   if (!item) {
@@ -158,7 +158,7 @@ function refreshItemAmount(item: Record<string, any>) {
 /** 校验明细 */
 function validate() {
   if (items.value.length === 0) {
-    toast.warning('请至少添加一个采购产品')
+    toast.warning('请至少添加一个采购物料')
     return false
   }
   const invalidIndex = items.value.findIndex(item => !item.productId || !item.count || !item.productPrice)

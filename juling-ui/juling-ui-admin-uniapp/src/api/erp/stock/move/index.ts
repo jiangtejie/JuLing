@@ -30,7 +30,7 @@ export interface StockMove {
   creator?: string // 创建人
   creatorName?: string // 创建人名称
   createTime?: Date // 创建时间
-  productNames?: string // 产品信息
+  productNames?: string // 物料信息
   remark?: string // 备注
   fileUrl?: string // 附件地址
   items?: StockMoveItem[] // 调拨明细

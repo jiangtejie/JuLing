@@ -37,9 +37,9 @@
           </wd-form-item>
         </wd-cell-group>
 
-        <!-- 产品明细 -->
+        <!-- 物料明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="yd-text-main text-28rpx font-semibold">订单产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">订单物料清单</text>
           <wd-button size="small" type="primary" variant="plain" @click="itemEditorRef?.handleAdd()">
             添加
           </wd-button>
@@ -128,7 +128,7 @@ const formData = ref<SaleOrder>({
 }) // 表单数据
 const formRef = ref<FormInstance>() // 表单组件引用
 const itemEditorRef = ref<InstanceType<typeof OrderItemForm>>() // 明细组件引用
-const productOptions = ref<Product[]>([]) // 产品选项
+const productOptions = ref<Product[]>([]) // 物料选项
 const dateVisible = reactive({
   orderTime: false,
 }) // 日期选择器状态

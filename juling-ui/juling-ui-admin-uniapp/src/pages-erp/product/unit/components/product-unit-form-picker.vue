@@ -39,9 +39,9 @@ const emit = defineEmits<{
   'update:modelValue': [value: number | undefined]
 }>()
 
-const options = ref<ProductUnit[]>([]) // 产品单位选项
+const options = ref<ProductUnit[]>([]) // 物料单位选项
 
-/** 加载产品单位选项 */
+/** 加载物料单位选项 */
 async function loadOptions() {
   try {
     options.value = await getProductUnitSimpleList()
@@ -57,7 +57,7 @@ function ensureOptions() {
   }
 }
 
-/** 更新产品单位编号 */
+/** 更新物料单位编号 */
 function handleUpdate(value?: number) {
   emit('update:modelValue', value)
 }

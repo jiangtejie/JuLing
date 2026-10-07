@@ -142,7 +142,7 @@ export const MesWmItemReceiptStatusEnum = {
   CANCELED: 5,
 } as const
 
-/** MES 产品入库单状态 */
+/** MES 物料入库单状态 */
 export const MesWmProductReceiptStatusEnum = {
   PREPARE: 0,
   APPROVING: 2,

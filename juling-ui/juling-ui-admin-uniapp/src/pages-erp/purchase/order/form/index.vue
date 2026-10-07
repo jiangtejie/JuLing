@@ -19,9 +19,9 @@
           </wd-form-item>
         </wd-cell-group>
 
-        <!-- 产品明细 -->
+        <!-- 物料明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="yd-text-main text-28rpx font-semibold">订单产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">订单物料清单</text>
           <wd-button size="small" type="primary" variant="plain" @click="itemEditorRef?.handleAdd()">
             添加
           </wd-button>

@@ -139,7 +139,7 @@ definePage({
 })
 
 const toast = useToast()
-const getTitle = computed(() => props.id ? '编辑产品' : '新增产品')
+const getTitle = computed(() => props.id ? '编辑物料' : '新增物料')
 const formLoading = ref(false) // 表单提交状态
 const formData = ref<Product>({
   id: undefined,
@@ -157,13 +157,13 @@ const formData = ref<Product>({
   minPrice: undefined,
 }) // 表单数据
 const formRef = ref<FormInstance>() // 表单组件引用
-const categoryTree = ref<ProductCategory[]>([]) // 产品分类树
+const categoryTree = ref<ProductCategory[]>([]) // 物料分类树
 const formSchema = createFormSchema({
-  name: [{ required: true, message: '产品名称不能为空' }],
-  barCode: [{ required: true, message: '产品条码不能为空' }],
-  categoryId: [{ required: true, message: '产品分类不能为空' }],
+  name: [{ required: true, message: '物料名称不能为空' }],
+  barCode: [{ required: true, message: '物料条码不能为空' }],
+  categoryId: [{ required: true, message: '物料分类不能为空' }],
   unitId: [{ required: true, message: '单位不能为空' }],
-  status: [{ required: true, message: '产品状态不能为空' }],
+  status: [{ required: true, message: '物料状态不能为空' }],
 })
 
 /** 返回上一页 */
@@ -176,7 +176,7 @@ async function loadOptions() {
   categoryTree.value = handleTree(await getProductCategorySimpleList())
 }
 
-/** 加载产品详情 */
+/** 加载物料详情 */
 async function getDetail() {
   if (!props.id) {
     return

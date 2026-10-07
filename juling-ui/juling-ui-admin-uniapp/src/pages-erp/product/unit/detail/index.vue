@@ -2,7 +2,7 @@
   <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="产品单位详情"
+      title="物料单位详情"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -70,7 +70,7 @@ function handleBack() {
   navigateBackPlus('/pages-erp/product/unit/index')
 }
 
-/** 加载产品单位详情 */
+/** 加载物料单位详情 */
 async function getDetail() {
   if (!props.id || deleting.value) {
     return
@@ -83,14 +83,14 @@ async function getDetail() {
   }
 }
 
-/** 编辑产品单位 */
+/** 编辑物料单位 */
 function handleEdit() {
   uni.navigateTo({
     url: `/pages-erp/product/unit/form/index?id=${props.id}`,
   })
 }
 
-/** 删除产品单位 */
+/** 删除物料单位 */
 async function handleDelete() {
   if (!props.id) {
     return
@@ -98,7 +98,7 @@ async function handleDelete() {
   try {
     await dialog.confirm({
       title: '提示',
-      msg: '确定要删除该产品单位吗？',
+      msg: '确定要删除该物料单位吗？',
     })
   } catch {
     return

@@ -6,9 +6,9 @@
     <!-- 详情内容 -->
     <scroll-view class="min-h-0 flex-1" scroll-y scroll-with-animation>
       <wd-cell-group border>
-        <wd-cell title="产品名称" :value="formData?.productName || '-'" />
-        <wd-cell title="产品分类" :value="formData?.categoryName || '-'" />
-        <wd-cell title="产品单位" :value="formData?.unitName || '-'" />
+        <wd-cell title="物料名称" :value="formData?.productName || '-'" />
+        <wd-cell title="物料分类" :value="formData?.categoryName || '-'" />
+        <wd-cell title="物料单位" :value="formData?.unitName || '-'" />
         <wd-cell title="仓库" :value="formData?.warehouseName || '-'" />
         <wd-cell title="业务类型">
           <dict-tag :type="DICT_TYPE.ERP_STOCK_RECORD_BIZ_TYPE" :value="formData?.bizType" />

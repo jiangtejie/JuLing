@@ -63,7 +63,7 @@ definePage({
 })
 
 const toast = useToast()
-const getTitle = computed(() => props.id ? '编辑产品单位' : '新增产品单位')
+const getTitle = computed(() => props.id ? '编辑物料单位' : '新增物料单位')
 const formLoading = ref(false) // 表单提交状态
 const formData = ref<ProductUnit>({
   id: undefined,
@@ -81,7 +81,7 @@ function handleBack() {
   navigateBackPlus('/pages-erp/product/unit/index')
 }
 
-/** 加载产品单位详情 */
+/** 加载物料单位详情 */
 async function getDetail() {
   if (!props.id) {
     return

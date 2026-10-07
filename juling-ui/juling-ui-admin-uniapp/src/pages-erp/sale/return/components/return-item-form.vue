@@ -19,7 +19,7 @@
       />
       <view class="grid grid-cols-2 mb-20rpx gap-16rpx">
         <view class="yd-bg-subtle col-span-2 rounded-8rpx p-16rpx">
-          <text class="yd-text-hint block text-24rpx">产品</text>
+          <text class="yd-text-hint block text-24rpx">物料</text>
           <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ item.productName || '-' }}
           </text>
@@ -58,7 +58,7 @@
       <wd-form-item title="数量" title-width="180rpx" center>
         <wd-input-number v-model="item.count" :min="0.001" :precision="3" :disabled="disabled" />
       </wd-form-item>
-      <wd-form-item title="产品单价" title-width="180rpx" center>
+      <wd-form-item title="物料单价" title-width="180rpx" center>
         <wd-input-number v-model="item.productPrice" :min="0.01" :precision="2" :disabled="disabled" />
       </wd-form-item>
       <wd-form-item title="税率(%)" title-width="180rpx" center>

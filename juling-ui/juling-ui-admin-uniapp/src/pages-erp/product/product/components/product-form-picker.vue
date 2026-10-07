@@ -31,9 +31,9 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   clearable?: boolean
 }>(), {
-  label: '产品',
+  label: '物料',
   labelWidth: '220rpx',
-  placeholder: '请选择产品',
+  placeholder: '请选择物料',
   prop: '',
   disabled: false,
   clearable: false,
@@ -44,10 +44,10 @@ const emit = defineEmits<{
   'change': [item: Product | undefined]
 }>()
 
-const options = ref<Product[]>([]) // 产品选项
-let loadingPromise: Promise<void> | undefined // 加载中的产品请求
+const options = ref<Product[]>([]) // 物料选项
+let loadingPromise: Promise<void> | undefined // 加载中的物料请求
 
-/** 加载产品选项 */
+/** 加载物料选项 */
 async function loadOptions() {
   if (options.value.length > 0) {
     return
@@ -68,22 +68,22 @@ async function loadOptions() {
   }
 }
 
-/** 打开前确保产品选项 */
+/** 打开前确保物料选项 */
 function ensureOptions() {
   loadOptions()
 }
 
-/** 更新产品编号 */
+/** 更新物料编号 */
 function handleUpdate(value?: number) {
   emit('update:modelValue', value)
 }
 
-/** 选择产品 */
+/** 选择物料 */
 function handleConfirm(value?: number) {
   emit('change', options.value.find(item => item.id === value))
 }
 
-/** 清空产品 */
+/** 清空物料 */
 function handleClear() {
   emit('change', undefined)
 }

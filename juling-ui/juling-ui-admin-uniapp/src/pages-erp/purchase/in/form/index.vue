@@ -22,7 +22,7 @@
 
         <!-- 入库明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="yd-text-main text-28rpx font-semibold">入库产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">入库物料清单</text>
         </view>
         <view class="px-24rpx">
           <InItemForm ref="itemEditorRef" v-model="formData.items" :warehouse-options="warehouseOptions" />
