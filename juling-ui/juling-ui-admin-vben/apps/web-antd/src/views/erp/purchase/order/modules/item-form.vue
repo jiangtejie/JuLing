@@ -14,7 +14,7 @@ import { Input, InputNumber, Select } from 'ant-design-vue';
 
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getProductSimpleList } from '#/api/erp/product/product';
-import { matchPrice } from '#/api/erp/purchase/price';
+import { matchPrice } from '#/api/erp/price-list';
 import { getStockCount } from '#/api/erp/stock/stock';
 
 import { useFormItemColumns } from '../data';

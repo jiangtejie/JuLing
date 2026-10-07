@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { ErpProductApi } from '#/api/erp/product/product';
-import type { ErpPurchasePriceApi } from '#/api/erp/purchase/price';
+import type { ErpPurchasePriceApi } from '#/api/erp/price-list';
 
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 

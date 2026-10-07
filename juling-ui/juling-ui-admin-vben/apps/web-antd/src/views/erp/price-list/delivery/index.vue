@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import PriceListPage from '../price/index.vue';
+import PriceList from '../List.vue';
 
 defineOptions({ name: 'ErpDeliveryPrice' });
 </script>
 
 <template>
-  <PriceListPage price-type="DELIVERY" />
+  <PriceList price-type="DELIVERY" />
 </template>

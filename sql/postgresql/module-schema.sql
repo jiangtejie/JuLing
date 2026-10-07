@@ -4,7 +4,17 @@
 -- 背景：本仓库此前**只有** system + infra 的基线（sql/postgresql/juling-baseline.sql），
 --   业务模块的 123 张表只存在于开发机的数据库里 —— 按仓库脚本重建环境会整块缺失。
 --   本文件由数据库元数据还原（information_schema + pg_get_indexdef + pg_description），
---   对齐当前库结构，供全新环境重建使用。
+--   是**业务模块的基线**，供全新环境重建使用。
+--
+-- ⚠️ **本文件是生成时的快照，之后的结构变更一律在 sql/local/ 里以增量脚本表达。**
+--   也就是说它**不等于"当前库结构"**：生成之后新增的表/列（如 system_code_rule、
+--   erp_price_list* 等）不在这里，而在 sql/local 的对应脚本里。
+--
+--   这是**有意为之**的基线 + 迁移模型：若把后续变更也并回本文件，同一份 DDL 就会有两个来源
+--   （本文件与 sql/local 的脚本），两边一旦不同步反而更危险。
+--
+--   完整重建顺序见 sql/local/README.md 开头：juling-baseline → module-schema → quartz
+--   → sql/local/01…NN。**只导入本文件是不完整的。**
 --
 -- 不含：
 --   · act_* / flw_*（Flowable 引擎表）—— 由 flowable.database-schema-update: true 自动创建；

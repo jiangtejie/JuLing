@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ErpPurchasePriceApi } from '#/api/erp/purchase/price';
+import type { ErpPurchasePriceApi } from '#/api/erp/price-list';
 
 import { ref } from 'vue';
 
@@ -15,7 +15,7 @@ import {
   deletePurchasePriceList,
   exportPurchasePrice,
   getPurchasePricePage,
-} from '#/api/erp/purchase/price';
+} from '#/api/erp/price-list';
 import { $t } from '#/locales';
 
 import { useGridColumns, useGridFormSchema } from './data';

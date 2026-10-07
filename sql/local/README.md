@@ -92,6 +92,10 @@ psql -U root -d yate -f sql/local/68_purchase_price_drop_qty_range.sql
 psql -U root -d yate -f sql/local/69_unify_price_list.sql
 # 价目表适用范围补唯一约束
 psql -U root -d yate -f sql/local/70_price_scope_unique.sql
+# 价目表菜单 component 归口到 erp/price-list（配送不再挂在 purchase 下）
+psql -U root -d yate -f sql/local/71_price_list_menu_path.sql
+# 组织架构：门店直接挂品牌下，软删空的「门店」中间层
+psql -U root -d yate -f sql/local/72_org_store_under_brand.sql
 # 订货账号授权：删 4 个遗留列 + 建门店↔客户一对一唯一索引
 #（DROP COLUMN，先备份到 bak_ordering_account_20261007。前置：53 已执行、后端已切到 member_user_store）
 psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
@@ -167,6 +171,8 @@ psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
+| 72_org_store_under_brand.sql | **组织架构：门店直接挂品牌下**。§9.1 复核发现：13 家门店全挂在 `120 门店` 下，而它与品牌节点是**兄弟** → 「卤校长杨家坪店」的组织位置看不出属于 122 卤校长品牌，**品牌维度只在店名里、不在结构里**；且这个按店型命名的分组把「店型以 erp_customer.store_type 为唯一权威」的决策架空了一半。软删空的 `120 门店`（**可逆**，**带守卫**：0 子节点且 0 客户档案引用才删，以后挂了门店重跑也不会误删）。设计见 [organization-architecture-design.md](../../docs/organization-architecture-design.md) §10 | 节点 120 |
+| 71_price_list_menu_path.sql | **价目表菜单 component 归口**：后端早已在通用的 `pricelist`，前端还挂在 `erp/purchase/price` —— 而且配送价目表也是（`purchase/delivery-price`），「采购下的配送」读起来就是错的。新布局 `erp/price-list/{List.vue, purchase/, delivery/}`。幂等 | 菜单 12200 / 12210 |
 | 70_price_scope_unique.sql | **价目表适用范围补唯一约束**：\`(price_id, COALESCE(partner_id,0))\` 部分唯一索引。代码层已拦「同一张表里同一对象只能有一行」，但 DB 层没有 —— 并发写入 / 脚本直接改库 / 以后别的代码路径都可能绕过。**partner_id 可为空（=通用范围）而 PG 的唯一索引把 NULL 视为互不相同**，所以要 COALESCE 后才能建，否则能插多行通用范围。幂等 | 表 \`erp_price_list_scope\` |
 | 69_unify_price_list.sql | **价目表统一重构**：采购价目表与配送价目表合并为「价目表 + 类型」—— \`erp_purchase_price\`→\`erp_price_list\`（+\`price_type\`）、\`_item\` 改名、**新建 \`erp_price_list_scope\` 适用范围表**（一张表可适用 N 个对象，\`partner_id\` 为空=通用范围，\`is_default\` 放在范围行上）。编码规则拆成 CJJM/PSJM、新增配送价目表菜单 12210、权限统一为 \`erp:price-list:*\`。设计见 [docs/price-list-design.md](../../docs/price-list-design.md) §12。幂等 | 菜单 12210+、表 \`erp_price_list*\` |
 | 68_purchase_price_drop_qty_range.sql | **已执行（DROP COLUMN，先整表备份）**。去掉采购价目表的「数量区间」（\`from_qty\` / \`to_qty\`）—— 用户问「数量从/至是不是没用」，核实后**确实没用，但根因是实现缺口**：前端只在选物料那一刻取一次价、数量变化不重取，后端又只在单价为空时取价，所以**填了也不生效、还会存错价**。要修好需引入「自动价 vs 手工价」的隐藏状态 + 异步竞态处理，收益不明确，故一期去掉。**连带**：同一价目表里同一物料不可重复（校验由「区间不重叠」改为「物料不可重复」，错误码 1_030_104_001 改名）。备份到 \`bak_drop_price_qty_range_20261007\`。见 [docs/price-list-design.md](../../docs/price-list-design.md) §11 | 表 \`erp_purchase_price_item\` |

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ErpPurchasePriceApi } from '#/api/erp/purchase/price';
+import type { ErpPurchasePriceApi } from '#/api/erp/price-list';
 
 import { computed, ref } from 'vue';
 
@@ -12,7 +12,7 @@ import {
   createPurchasePrice,
   getPurchasePrice,
   updatePurchasePrice,
-} from '#/api/erp/purchase/price';
+} from '#/api/erp/price-list';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';

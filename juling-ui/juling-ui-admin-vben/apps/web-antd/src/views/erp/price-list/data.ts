@@ -1,6 +1,6 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ErpPurchasePriceApi } from '#/api/erp/purchase/price';
+import type { ErpPurchasePriceApi } from '#/api/erp/price-list';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';

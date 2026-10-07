@@ -13,11 +13,12 @@ import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceMatchRes
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListScopeDO;
-import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
+
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpSupplierDO;
 import com.lxjl.juling.module.erp.enums.ErpPriceTypeEnum;
 import com.lxjl.juling.module.erp.service.pricelist.ErpPriceListService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
+import com.lxjl.juling.module.erp.service.sale.ErpCustomerService;
 import com.lxjl.juling.module.erp.service.purchase.ErpSupplierService;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
 import com.lxjl.juling.module.system.api.user.dto.AdminUserRespDTO;
@@ -66,7 +67,7 @@ public class ErpPriceListController {
     @Resource
     private AdminUserApi adminUserApi;
     @Resource
-    private com.lxjl.juling.module.erp.dal.mysql.sale.ErpCustomerMapper customerMapper;
+    private ErpCustomerService customerService;
 
     @PostMapping("/create")
     @Operation(summary = "创建价目表")
@@ -201,7 +202,9 @@ public class ErpPriceListController {
             return Map.of();
         }
         if (ErpPriceTypeEnum.DELIVERY.getType().equals(priceType)) {
-            return convertMap(customerMapper.selectByIds(ids), ErpCustomerDO -> ErpCustomerDO.getId(), ErpCustomerDO -> ErpCustomerDO.getName());
+            // 门店就是客户档案（店型权威在 erp_customer.store_type，见 organization-architecture-design §7 决策 ①）
+            return convertMap(customerService.getCustomerList(ids),
+                    ErpCustomerDO -> ErpCustomerDO.getId(), ErpCustomerDO -> ErpCustomerDO.getName());
         }
         Map<Long, ErpSupplierDO> supplierMap = convertMap(supplierService.getSupplierList(ids), ErpSupplierDO::getId);
         Map<Long, String> result = new java.util.HashMap<>();
