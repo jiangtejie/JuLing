@@ -1,7 +1,12 @@
 import type { PageParam, PageResult } from '@/http/types'
 import { http } from '@/http/http'
 
-/** 会员用户 */
+/**
+ * 订货账号（member_user）
+ *
+ * 注：会员等级 / 积分 / 成长值 / 标签 / 分组 随会员中心一并下线，
+ * 对应的字段与 update-level、update-point 接口已从后端删除，这里同步移除。
+ */
 export interface MemberUser {
   id?: number
   avatar?: string
@@ -19,51 +24,19 @@ export interface MemberUser {
   status?: number
   areaId?: number
   areaName?: string
-  tagIds?: number[]
-  tagNames?: string[]
-  levelId?: number
-  levelName?: string
-  groupId?: number
-  groupName?: string
-  point?: number
-  totalPoint?: number
-  experience?: number
 }
 
-/** 会员等级修改 */
-export interface MemberUserLevelUpdateReq {
-  id?: number
-  levelId?: number
-  reason?: string
-}
-
-/** 会员积分修改 */
-export interface MemberUserPointUpdateReq {
-  id?: number
-  point: number
-}
-
-/** 获取会员用户分页列表 */
+/** 获取订货账号分页列表 */
 export function getMemberUserPage(params: PageParam) {
   return http.get<PageResult<MemberUser>>('/member/user/page', params)
 }
 
-/** 获取会员用户详情 */
+/** 获取订货账号详情 */
 export function getMemberUser(id: number) {
   return http.get<MemberUser>(`/member/user/get?id=${id}`)
 }
 
-/** 更新会员用户 */
+/** 更新订货账号 */
 export function updateMemberUser(data: MemberUser) {
   return http.put<boolean>('/member/user/update', data)
-}
-
-/** 修改会员用户等级 */
-export function updateMemberUserLevel(data: MemberUserLevelUpdateReq) {
-  return http.put<boolean>('/member/user/update-level', data)
-}
-
-/** 修改会员用户积分 */
-export function updateMemberUserPoint(data: MemberUserPointUpdateReq) {
-  return http.put<boolean>('/member/user/update-point', data)
 }

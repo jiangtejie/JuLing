@@ -283,22 +283,6 @@
           "name": "流程管理",
           "menus": [
             {
-              "key": "bpmModel",
-              "name": "流程模型",
-              "icon": "apps",
-              "iconColor": "#722ed1",
-              "onlyPc": true,
-              "permission": "bpm:process-definition:query"
-            },
-            {
-              "key": "bpmForm",
-              "name": "流程表单",
-              "icon": "edit",
-              "iconColor": "#9254de",
-              "onlyPc": true,
-              "permission": "bpm:form:query"
-            },
-            {
               "key": "bpmCategory",
               "name": "流程分类",
               "icon": "folder",
@@ -352,11 +336,11 @@
     },
     {
       "key": "member",
-      "name": "会员中心",
+      "name": "订货账号",
       "subGroups": [
         {
           "key": "manage",
-          "name": "会员管理",
+          "name": "账号管理",
           "menus": [
             {
               "key": "memberUser",

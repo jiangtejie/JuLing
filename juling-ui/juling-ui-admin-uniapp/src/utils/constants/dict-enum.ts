@@ -138,15 +138,8 @@ const WMS_DICT = {
 } as const
 
 /** 字典类型枚举 - 统一导出 */
-/** ========== MEMBER - 会员模块（**临时保留**：用到它的会员页面仍存在，待页面一并删除时再移除） ========== */
-const MEMBER_DICT = {
-  MEMBER_POINT_BIZ_TYPE: 'member_point_biz_type', // 会员积分业务类型
-  MEMBER_EXPERIENCE_BIZ_TYPE: 'member_experience_biz_type', // 会员经验业务类型
-} as const
-
 export const DICT_TYPE = {
   ...WMS_DICT,
-  ...MEMBER_DICT,
   ...AI_DICT,
   ...MALL_DICT,
   ...FMS_DICT,

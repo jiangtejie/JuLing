@@ -8,7 +8,7 @@
   >
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="会员详情"
+      title="订货账号详情"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -22,7 +22,7 @@
 
     <!-- 基本信息 -->
     <template v-if="activeTab === 'basic'">
-      <!-- 会员概览 -->
+      <!-- 账号概览 -->
       <view class="bg-white p-24rpx">
         <view class="mb-24rpx flex items-center gap-20rpx">
           <wd-img
@@ -37,7 +37,7 @@
             v-else
             class="yd-bg-primary h-112rpx w-112rpx flex items-center justify-center rounded-full text-40rpx text-white"
           >
-            {{ (formData?.nickname || formData?.mobile || '会').charAt(0) }}
+            {{ (formData?.nickname || formData?.mobile || '订').charAt(0) }}
           </view>
           <view class="min-w-0 flex-1">
             <view class="yd-text-main truncate text-36rpx font-semibold">
@@ -50,32 +50,6 @@
           <dict-tag v-if="formData?.status != null" :type="DICT_TYPE.COMMON_STATUS" :value="formData?.status" />
           <text v-else class="yd-text-hint text-26rpx">-</text>
         </view>
-        <view class="yd-bg-subtle grid grid-cols-3 gap-12rpx rounded-8rpx p-16rpx text-center">
-          <view>
-            <view class="yd-text-main text-32rpx font-semibold">
-              {{ formData?.point ?? 0 }}
-            </view>
-            <view class="yd-text-hint mt-4rpx text-22rpx">
-              当前积分
-            </view>
-          </view>
-          <view>
-            <view class="yd-text-main text-32rpx font-semibold">
-              {{ formData?.totalPoint ?? 0 }}
-            </view>
-            <view class="yd-text-hint mt-4rpx text-22rpx">
-              总积分
-            </view>
-          </view>
-          <view>
-            <view class="yd-text-main text-32rpx font-semibold">
-              {{ formData?.experience ?? 0 }}
-            </view>
-            <view class="yd-text-hint mt-4rpx text-22rpx">
-              成长值
-            </view>
-          </view>
-        </view>
       </view>
 
       <!-- 基础字段 -->
@@ -87,26 +61,19 @@
           <text v-else>-</text>
         </wd-cell>
         <wd-cell title="所在地" :value="formData?.areaName || '-'" />
-        <wd-cell title="会员等级" :value="formData?.levelName || '-'" />
-        <wd-cell title="用户分组" :value="formData?.groupName || '-'" />
         <wd-cell title="注册 IP" :value="formData?.registerIp || '-'" />
         <wd-cell title="最后登录 IP" :value="formData?.loginIp || '-'" />
         <wd-cell title="生日" :value="formatDate(formData?.birthday) || '-'" />
         <wd-cell title="注册时间" :value="formatDateTime(formData?.createTime) || '-'" />
         <wd-cell title="最后登录时间" :value="formatDateTime(formData?.loginDate) || '-'" />
-        <wd-cell title="会员备注" :value="formData?.mark || '-'" />
+        <wd-cell title="备注" :value="formData?.mark || '-'" />
       </wd-cell-group>
     </template>
 
     <!-- 明细列表 -->
-    <PointList v-if="loadedTabs.has('point')" v-show="activeTab === 'point'" class="min-h-0 flex-1" :user-id="props.id" />
-    <SignList v-if="loadedTabs.has('sign')" v-show="activeTab === 'sign'" class="min-h-0 flex-1" :user-id="props.id" />
-    <ExperienceList v-if="loadedTabs.has('experience')" v-show="activeTab === 'experience'" class="min-h-0 flex-1" :user-id="props.id" />
-    <AddressList v-if="loadedTabs.has('address')" v-show="activeTab === 'address'" :user-id="props.id" />
     <OrderList v-if="loadedTabs.has('order')" v-show="activeTab === 'order'" class="min-h-0 flex-1" :user-id="props.id" />
     <AfterSaleList v-if="loadedTabs.has('after-sale')" v-show="activeTab === 'after-sale'" class="min-h-0 flex-1" :user-id="props.id" />
     <FavoriteList v-if="loadedTabs.has('favorite')" v-show="activeTab === 'favorite'" class="min-h-0 flex-1" :user-id="props.id" />
-    <CouponList v-if="loadedTabs.has('coupon')" v-show="activeTab === 'coupon'" class="min-h-0 flex-1" :user-id="props.id" />
 
     <!-- 底部操作按钮 -->
     <view class="yd-detail-footer">
@@ -117,23 +84,8 @@
         >
           编辑
         </wd-button>
-        <wd-button
-          v-if="hasMoreActions"
-          class="flex-1" type="info" @click="moreActionVisible = true"
-        >
-          更多
-        </wd-button>
       </view>
     </view>
-
-    <!-- 更多操作菜单 -->
-    <wd-action-sheet v-model="moreActionVisible" :actions="moreActions" @select="handleMoreAction" />
-    <!-- 修改等级弹窗 -->
-    <LevelUpdateForm v-model="levelFormVisible" :user-id="props.id" @success="handleActionSuccess" />
-    <!-- 修改积分弹窗 -->
-    <PointUpdateForm v-model="pointFormVisible" :user-id="props.id" @success="handleActionSuccess" />
-    <!-- 发送优惠券弹窗 -->
-    <CouponSendForm v-model="couponSendVisible" :user-id="props.id" @success="handleActionSuccess" />
   </view>
 </template>
 
@@ -141,23 +93,15 @@
 import type { MemberUser } from '@/api/member/user'
 import { onUnload } from '@dcloudio/uni-app'
 import { useToast } from '@wot-ui/ui/components/wd-toast'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { getMemberUser } from '@/api/member/user'
 import { useAccess } from '@/hooks/useAccess'
 import { navigateBackPlus } from '@/utils'
 import { DICT_TYPE } from '@/utils/constants'
 import { formatDate, formatDateTime } from '@/utils/date'
-import AddressList from './components/address-list.vue'
 import AfterSaleList from './components/after-sale-list.vue'
-import CouponList from './components/coupon-list.vue'
-import CouponSendForm from './components/coupon-send-form.vue'
-import ExperienceList from './components/experience-list.vue'
 import FavoriteList from './components/favorite-list.vue'
-import LevelUpdateForm from './components/level-update-form.vue'
 import OrderList from './components/order-list.vue'
-import PointList from './components/point-list.vue'
-import PointUpdateForm from './components/point-update-form.vue'
-import SignList from './components/sign-list.vue'
 
 const props = defineProps<{
   id?: number | any
@@ -170,42 +114,22 @@ definePage({
   },
 })
 
-const tabs: { key: string, title: string }[] = [ // 详情分类
+// 详情分类：只保留后端仍在的功能。
+// 积分 / 签到 / 成长值 / 收货地址 / 优惠券 / 会员等级 随会员中心一并下线（后端菜单与接口均已删除），
+// 对应的 tab、组件与「更多操作」里的修改入口同步移除。
+const tabs: { key: string, title: string }[] = [
   { key: 'basic', title: '基本信息' },
-  { key: 'point', title: '积分' },
-  { key: 'sign', title: '签到' },
-  { key: 'experience', title: '成长值' },
-  { key: 'address', title: '收货地址' },
   { key: 'order', title: '订单管理' },
   { key: 'after-sale', title: '售后管理' },
   { key: 'favorite', title: '收藏记录' },
-  { key: 'coupon', title: '优惠券' },
 ]
 const { hasAccessByCodes } = useAccess()
 const toast = useToast()
 const formData = ref<MemberUser>() // 详情数据
 const tabIndex = ref(0) // 当前详情分类下标
 const loadedTabs = ref(new Set<string>(['basic'])) // 已加载过的分类；懒加载，避免打开详情即并发全部列表请求
-const moreActionVisible = ref(false) // 更多操作菜单
-const levelFormVisible = ref(false) // 修改等级弹窗
-const pointFormVisible = ref(false) // 修改积分弹窗
-const couponSendVisible = ref(false) // 发送优惠券弹窗
 const activeTab = computed(() => tabs[tabIndex.value]?.key || 'basic') // 当前详情分类
-const isPagingTab = computed(() => !['basic', 'address'].includes(activeTab.value)) // 分页详情分类使用固定高布局
-const moreActions = computed(() => { // 更多操作菜单项
-  const actions = []
-  if (hasAccessByCodes(['member:user:update-level'])) {
-    actions.push({ name: '修改等级', value: 'update-level' })
-  }
-  if (hasAccessByCodes(['member:user:update-point'])) {
-    actions.push({ name: '修改积分', value: 'update-point' })
-  }
-  if (hasAccessByCodes(['promotion:coupon:send'])) {
-    actions.push({ name: '发送优惠券', value: 'send-coupon' })
-  }
-  return actions
-})
-const hasMoreActions = computed(() => moreActions.value.length > 0) // 是否显示更多操作
+const isPagingTab = computed(() => activeTab.value !== 'basic') // 分页详情分类使用固定高布局
 
 /** 切换详情分类时记录已加载分类，实现懒加载 */
 watch(activeTab, value => loadedTabs.value.add(value))
@@ -215,7 +139,7 @@ function handleBack() {
   navigateBackPlus('/pages-member/user/index')
 }
 
-/** 加载会员详情 */
+/** 加载账号详情 */
 async function getDetail() {
   if (!props.id) {
     return
@@ -228,35 +152,11 @@ async function getDetail() {
   }
 }
 
-/** 编辑会员 */
+/** 编辑账号 */
 function handleEdit() {
   uni.navigateTo({
     url: `/pages-member/user/form/index?id=${props.id}`,
   })
-}
-
-/** 打开更多操作表单 */
-function openMoreActionForm(value: string) {
-  if (value === 'update-level') {
-    levelFormVisible.value = true
-  } else if (value === 'update-point') {
-    pointFormVisible.value = true
-  } else if (value === 'send-coupon') {
-    couponSendVisible.value = true
-  }
-}
-
-/** 更多操作 */
-function handleMoreAction({ item }: { item: { value: string } }) {
-  moreActionVisible.value = false
-  nextTick(() => {
-    setTimeout(() => openMoreActionForm(item.value), 220)
-  })
-}
-
-/** 操作成功 */
-function handleActionSuccess() {
-  uni.$emit('member:user:reload')
 }
 
 /** 初始化 */

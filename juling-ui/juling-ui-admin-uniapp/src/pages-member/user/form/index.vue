@@ -2,7 +2,7 @@
   <view class="yd-page-container yd-page-with-footer">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="编辑会员"
+      title="编辑订货账号"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -87,13 +87,11 @@
             placeholder="请选择所在地"
             title="请选择所在地"
           />
-          <TagFormPicker v-model="formData.tagIds" label="用户标签" prop="tagIds" />
-          <GroupFormPicker v-model="formData.groupId" label="用户分组" prop="groupId" />
-          <wd-form-item title="会员备注" title-width="180rpx" prop="mark">
+          <wd-form-item title="备注" title-width="180rpx" prop="mark">
             <wd-textarea
               v-model="formData.mark"
               clearable
-              placeholder="请输入会员备注"
+              placeholder="请输入备注"
               :maxlength="200"
               show-word-limit
             />
@@ -125,8 +123,6 @@ import { onMounted, ref } from 'vue'
 import { getMemberUser, updateMemberUser } from '@/api/member/user'
 import { getAreaTree } from '@/api/system/area'
 import { getIntDictOptions } from '@/hooks/useDict'
-import GroupFormPicker from '@/pages-member/group/components/group-form-picker.vue'
-import TagFormPicker from '@/pages-member/tag/components/tag-form-picker.vue'
 import { delay, navigateBackPlus } from '@/utils'
 import { CommonStatusEnum, DICT_TYPE } from '@/utils/constants'
 import { formatDate } from '@/utils/date'
@@ -159,8 +155,6 @@ const formData = ref<MemberUser>({
   areaId: undefined,
   birthday: '',
   mark: '',
-  tagIds: [],
-  groupId: undefined,
 }) // 表单数据
 const formSchema = createFormSchema({
   mobile: [{ required: true, message: '手机号不能为空' }],
@@ -174,7 +168,7 @@ function handleBack() {
   navigateBackPlus('/pages-member/user/index')
 }
 
-/** 加载会员详情 */
+/** 加载订货账号详情 */
 async function getDetail() {
   if (!props.id) {
     return
@@ -183,7 +177,6 @@ async function getDetail() {
   formData.value = {
     ...data,
     birthday: data.birthday || '',
-    tagIds: data.tagIds || [],
   }
 }
 
