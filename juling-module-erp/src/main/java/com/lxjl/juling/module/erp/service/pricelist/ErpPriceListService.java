@@ -6,6 +6,7 @@ import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceListSave
 import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceMatchRespVO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemDO;
+import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemLogDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListScopeDO;
 
 import java.time.LocalDate;
@@ -40,6 +41,12 @@ public interface ErpPriceListService {
 
     /** 分页列表用：一次取回多张价目表的适用范围 */
     List<ErpPriceListScopeDO> getScopeListByPriceIds(Collection<Long> priceIds);
+
+    /** 按价目表查价格变更历史（新的在前） */
+    List<ErpPriceListItemLogDO> getItemLogList(Long priceId);
+
+    /** 按物料查价格变更历史 —— **核算主要用这个**：某物料历次改价 */
+    List<ErpPriceListItemLogDO> getItemLogListByProductId(Long productId);
 
     PageResult<ErpPriceListDO> getPriceListPage(ErpPriceListPageReqVO pageReqVO);
 

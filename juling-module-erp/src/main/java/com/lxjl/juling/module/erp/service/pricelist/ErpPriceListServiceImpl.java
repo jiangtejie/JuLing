@@ -9,8 +9,10 @@ import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceListSave
 import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceMatchRespVO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemDO;
+import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemLogDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListScopeDO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
+import com.lxjl.juling.module.erp.dal.mysql.pricelist.ErpPriceListItemLogMapper;
 import com.lxjl.juling.module.erp.dal.mysql.pricelist.ErpPriceListItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.pricelist.ErpPriceListMapper;
 import com.lxjl.juling.module.erp.dal.mysql.pricelist.ErpPriceListScopeMapper;
@@ -24,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,8 @@ public class ErpPriceListServiceImpl implements ErpPriceListService {
     @Resource
     private ErpPriceListItemMapper itemMapper;
     @Resource
+    private ErpPriceListItemLogMapper itemLogMapper;
+    @Resource
     private ErpProductMapper productMapper;
     @Resource
     private CodeRuleApi codeRuleApi;
@@ -65,6 +70,8 @@ public class ErpPriceListServiceImpl implements ErpPriceListService {
         priceListMapper.insert(priceList);
         insertScopes(priceList.getId(), createReqVO.getScopes());
         insertItems(priceList.getId(), createReqVO.getItems());
+        // 价格留痕（见 sql/local/74）：新建即全部 CREATE
+        logItemChanges(priceList, List.of(), itemMapper.selectListByPriceId(priceList.getId()));
         return priceList.getId();
     }
 
@@ -78,11 +85,16 @@ public class ErpPriceListServiceImpl implements ErpPriceListService {
         ErpPriceListDO updateObj = BeanUtils.toBean(updateReqVO, ErpPriceListDO.class);
         updateObj.setPriceType(null);
         priceListMapper.updateById(updateObj);
+        // **必须在删除旧明细之前读出来**，否则变更留痕无从对比
+        List<ErpPriceListItemDO> beforeItems = itemMapper.selectListByPriceId(updateReqVO.getId());
         // 范围与明细整体替换：它们没有外部引用，整体替换比 diff 更简单可靠
         scopeMapper.deleteByPriceId(updateReqVO.getId());
         itemMapper.deleteByPriceId(updateReqVO.getId());
         insertScopes(updateReqVO.getId(), updateReqVO.getScopes());
         insertItems(updateReqVO.getId(), updateReqVO.getItems());
+        // 价格留痕：对比新旧明细，只记价格/税率有变化的行
+        logItemChanges(priceListMapper.selectById(updateReqVO.getId()), beforeItems,
+                itemMapper.selectListByPriceId(updateReqVO.getId()));
     }
 
     private void insertScopes(Long priceId, List<ErpPriceListSaveReqVO.Scope> scopes) {
@@ -104,6 +116,75 @@ public class ErpPriceListServiceImpl implements ErpPriceListService {
             item.setPriceId(priceId);
         });
         itemMapper.insertBatch(list);
+    }
+
+    /**
+     * 写价格变更留痕：对比新旧明细，把**价格或税率有变化**的行记下来
+     *
+     * <p>这是核算追溯的基础（见 sql/local/74）。**用户操作不变** —— 保存时系统自动 diff，
+     * 不要求用户「改价前先新建版本」，否则历史能不能积累就取决于使用者的纪律了。
+     *
+     * <p>比对用 {@code compareTo} 而不是 {@code equals}：{@code BigDecimal} 的 equals 连标度一起比，
+     * {@code 10.0} 与 {@code 10.00} 会被判为不同，从而产生一堆无意义的「变更」记录。
+     */
+    private void logItemChanges(ErpPriceListDO priceList, List<ErpPriceListItemDO> beforeList,
+                                List<ErpPriceListItemDO> afterList) {
+        if (priceList == null) {
+            return;
+        }
+        Map<Long, ErpPriceListItemDO> beforeMap = convertMap(beforeList, ErpPriceListItemDO::getProductId);
+        Map<Long, ErpPriceListItemDO> afterMap = convertMap(afterList, ErpPriceListItemDO::getProductId);
+        List<ErpPriceListItemLogDO> logs = new ArrayList<>();
+        afterMap.forEach((productId, after) -> {
+            ErpPriceListItemDO before = beforeMap.get(productId);
+            if (before == null) {
+                logs.add(buildItemLog(priceList, null, after, "CREATE", null, null));
+            } else if (!isSameDecimal(before.getPrice(), after.getPrice())
+                    || !isSameDecimal(before.getTaxPercent(), after.getTaxPercent())) {
+                logs.add(buildItemLog(priceList, before.getId(), after, "UPDATE",
+                        before.getPrice(), before.getTaxPercent()));
+            }
+        });
+        beforeMap.forEach((productId, before) -> {
+            if (!afterMap.containsKey(productId)) {
+                logs.add(buildItemLog(priceList, before.getId(), before, "DELETE",
+                        before.getPrice(), before.getTaxPercent()));
+            }
+        });
+        if (!logs.isEmpty()) {
+            itemLogMapper.insertBatch(logs);
+        }
+    }
+
+    private ErpPriceListItemLogDO buildItemLog(ErpPriceListDO priceList, Long itemId, ErpPriceListItemDO item,
+                                               String changeType, BigDecimal beforePrice, BigDecimal beforeTaxPercent) {
+        return ErpPriceListItemLogDO.builder()
+                .priceId(priceList.getId()).itemId(itemId).productId(item.getProductId())
+                .changeType(changeType).beforePrice(beforePrice).afterPrice(item.getPrice())
+                .beforeTaxPercent(beforeTaxPercent).afterTaxPercent(item.getTaxPercent())
+                .priceCode(priceList.getCode()).priceName(priceList.getName())
+                .build();
+    }
+
+    /** 两个 BigDecimal 数值上是否相等（忽略标度差异） */
+    private static boolean isSameDecimal(BigDecimal a, BigDecimal b) {
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a == null || b == null) {
+            return false;
+        }
+        return a.compareTo(b) == 0;
+    }
+
+    @Override
+    public List<ErpPriceListItemLogDO> getItemLogList(Long priceId) {
+        return itemLogMapper.selectListByPriceId(priceId);
+    }
+
+    @Override
+    public List<ErpPriceListItemLogDO> getItemLogListByProductId(Long productId) {
+        return itemLogMapper.selectListByProductId(productId);
     }
 
     /**
@@ -147,6 +228,7 @@ public class ErpPriceListServiceImpl implements ErpPriceListService {
     public void deletePriceList(Long id) {
         validatePriceListExists(id);
         // 采购订单 / 门店订货单都只存快照价、不引用价目表，所以这里不需要引用校验
+        logItemChanges(priceListMapper.selectById(id), itemMapper.selectListByPriceId(id), List.of());
         priceListMapper.deleteById(id);
         scopeMapper.deleteByPriceId(id);
         itemMapper.deleteByPriceId(id);

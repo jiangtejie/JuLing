@@ -12,6 +12,7 @@ import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceListSave
 import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceMatchRespVO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemDO;
+import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListItemLogDO;
 import com.lxjl.juling.module.erp.dal.dataobject.pricelist.ErpPriceListScopeDO;
 
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpSupplierDO;
@@ -173,6 +174,29 @@ public class ErpPriceListController {
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         // 故意不加 @PreAuthorize：这是采购订单 / 门店订货录入时的辅助取价，与 simple-list 同性质
         return success(priceListService.matchPrice(priceType, partnerId, productId, date));
+    }
+
+    @GetMapping("/item-log")
+    @Operation(summary = "价格变更历史", description = "供核算追溯：传 priceId 看某张价目表的历次改价，传 productId 看某物料的历次改价")
+    @PreAuthorize("@ss.hasPermission('erp:price-list:query')")
+    public CommonResult<List<ErpPriceListRespVO.ItemLog>> getItemLogList(
+            @RequestParam(value = "priceId", required = false) Long priceId,
+            @RequestParam(value = "productId", required = false) Long productId) {
+        if (priceId == null && productId == null) {
+            return success(List.of());
+        }
+        List<ErpPriceListItemLogDO> logs = priceId != null
+                ? priceListService.getItemLogList(priceId)
+                : priceListService.getItemLogListByProductId(productId);
+        List<ErpPriceListRespVO.ItemLog> result = BeanUtils.toBean(logs, ErpPriceListRespVO.ItemLog.class);
+        productService.getProductVOMap(convertSet(result, ErpPriceListRespVO.ItemLog::getProductId))
+                .forEach((id, product) -> result.stream()
+                        .filter(log -> java.util.Objects.equals(log.getProductId(), id))
+                        .forEach(log -> {
+                            log.setProductCode(product.getCode());
+                            log.setProductName(product.getName());
+                        }));
+        return success(result);
     }
 
     /** 补定价员名称 */

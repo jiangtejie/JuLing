@@ -101,6 +101,48 @@ public class ErpPriceListRespVO {
 
     }
 
+    @Schema(description = "价格变更留痕（供核算追溯）")
+    @Data
+    public static class ItemLog {
+
+        @Schema(description = "变更类型：CREATE 新增 / UPDATE 改价 / DELETE 删行", example = "UPDATE")
+        private String changeType;
+
+        @Schema(description = "物料编号", example = "2048")
+        private Long productId;
+
+        @Schema(description = "物料编码", example = "WL000001")
+        private String productCode;
+
+        @Schema(description = "物料名称", example = "黑芝麻酱454g")
+        private String productName;
+
+        @Schema(description = "变更前单价（不含税）", example = "27.64")
+        private BigDecimal beforePrice;
+
+        @Schema(description = "变更后单价（不含税）", example = "29.80")
+        private BigDecimal afterPrice;
+
+        @Schema(description = "变更前税率(%)", example = "13")
+        private BigDecimal beforeTaxPercent;
+
+        @Schema(description = "变更后税率(%)", example = "13")
+        private BigDecimal afterTaxPercent;
+
+        @Schema(description = "价目表编码（冗余，价目表删除后历史仍可读）", example = "CJJM0001")
+        private String priceCode;
+
+        @Schema(description = "价目表名称", example = "2026 年度彩云西南食品报价")
+        private String priceName;
+
+        @Schema(description = "操作时间")
+        private LocalDateTime createTime;
+
+        @Schema(description = "操作人")
+        private String creator;
+
+    }
+
     @Schema(description = "价目表明细行")
     @Data
     public static class Item {
