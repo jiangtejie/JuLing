@@ -15,6 +15,10 @@ public interface ErrorCodeConstants {
     ErrorCode SUPPLIER_NAME_DUPLICATE = new ErrorCode(1_030_100_002, "已存在同名供应商({})");
     ErrorCode SUPPLIER_HAS_REFERENCE = new ErrorCode(1_030_100_003, "供应商({})已被{}引用，无法删除；如需停止使用请改为「停用」");
 
+    // ========== ERP 建门店（1-030-105-000） ==========
+    ErrorCode STORE_PARENT_NOT_EXISTS = new ErrorCode(1_030_105_000, "父组织节点不存在");
+    ErrorCode STORE_PARENT_IS_STORE = new ErrorCode(1_030_105_001, "不能在门店({})下再建门店，门店应直接挂在品牌或公司节点下");
+
     // ========== ERP 价目表（1-030-104-000） ==========
     ErrorCode PRICE_LIST_NOT_EXISTS = new ErrorCode(1_030_104_000, "价目表不存在");
     ErrorCode PRICE_LIST_ITEM_PRODUCT_DUPLICATE = new ErrorCode(1_030_104_001, "物料({})在本价目表里出现了多行，无法区分取哪一行，请合并");
