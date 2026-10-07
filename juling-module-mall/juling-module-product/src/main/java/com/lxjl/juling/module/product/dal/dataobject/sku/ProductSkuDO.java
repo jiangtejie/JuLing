@@ -61,6 +61,15 @@ public class ProductSkuDO extends BaseDO {
      */
     private String barCode;
     /**
+     * 对应的 ERP 物料编号（1 物料 : 1 SKU，唯一）
+     *
+     * <p>原先商城与 ERP 两套物料目录靠 {@code barCode} 字符串 join 相连，有三个失效模式：
+     * 条码改了断链 / 条码重复取错物料 / 条码没维护静默失配。改为显式外键（见 sql/local/73）。
+     *
+     * <p>为空表示未关联（商城的非订货展示商品）。关联 {@code erp_product.id}
+     */
+    private Long erpProductId;
+    /**
      * 图片地址
      */
     private String picUrl;

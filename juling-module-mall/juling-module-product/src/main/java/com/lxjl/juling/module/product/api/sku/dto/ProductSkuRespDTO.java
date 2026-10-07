@@ -43,6 +43,9 @@ public class ProductSkuRespDTO {
      * SKU 的条形码
      */
     private String barCode;
+
+    /** 对应的 ERP 物料编号（1 物料 : 1 SKU）；为空表示未关联。见 sql/local/73 */
+    private Long erpProductId;
     /**
      * 图片地址
      */

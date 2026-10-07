@@ -1,9 +1,9 @@
 package com.lxjl.juling.module.trade.service.price;
 
 import com.lxjl.juling.module.erp.api.pricelist.ErpPriceApi;
-import com.lxjl.juling.module.erp.api.pricelist.dto.ErpPriceMatchRespDTO;
 import com.lxjl.juling.module.erp.api.product.ErpProductApi;
 import com.lxjl.juling.module.erp.api.product.dto.ErpProductRespDTO;
+import com.lxjl.juling.module.erp.api.pricelist.dto.ErpPriceMatchRespDTO;
 import com.lxjl.juling.module.product.api.sku.ProductSkuApi;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuRespDTO;
 import com.lxjl.juling.module.product.api.spu.ProductSpuApi;
@@ -89,18 +89,29 @@ public class TradePriceServiceImpl implements TradePriceService {
     private void applyDeliveryPrice(TradePriceCalculateReqBO reqBO, List<ProductSkuRespDTO> skuList,
                                     TradePriceCalculateRespBO calculateRespBO) {
         Map<Long, ProductSkuRespDTO> skuMap = convertMap(skuList, ProductSkuRespDTO::getId);
-        // SKU 条码 → ERP 物料
-        List<String> barCodes = skuList.stream().map(ProductSkuRespDTO::getBarCode)
-                .filter(StrUtil::isNotBlank).distinct().toList();
-        if (barCodes.isEmpty()) {
-            return;
+        // **过渡兜底**：外键 erp_product_id 已建（sql/local/73），但 SKU 表单还没加「对应物料」选择器，
+        // 所以存量数据的外键都是空的。在表单补齐、存量回填之前，外键为空时按条码退回匹配一次，
+        // 避免「迁移没做完就把配送价功能弄坏」。表单与回填完成后，这段应当删掉。
+        Map<String, Long> barCodeProductIdMap = Map.of();
+        if (skuList.stream().anyMatch(s -> s.getErpProductId() == null)) {
+            List<String> barCodes = skuList.stream().map(ProductSkuRespDTO::getBarCode)
+                    .filter(StrUtil::isNotBlank).distinct().toList();
+            if (!barCodes.isEmpty()) {
+                barCodeProductIdMap = convertMap(erpProductApi.getProductListByBarCodes(barCodes),
+                        ErpProductRespDTO::getBarCode, ErpProductRespDTO::getId);
+            }
         }
-        Map<String, Long> barCodeProductIdMap = convertMap(erpProductApi.getProductListByBarCodes(barCodes),
-                ErpProductRespDTO::getBarCode, ErpProductRespDTO::getId);
+        final Map<String, Long> barCodeMap = barCodeProductIdMap;
         calculateRespBO.getItems().forEach(item -> {
             ProductSkuRespDTO sku = skuMap.get(item.getSkuId());
-            Long productId = sku == null ? null : barCodeProductIdMap.get(sku.getBarCode());
+            // 直接走外键。原先按 barCode 字符串 join，条码没维护时会**静默失配**（悄悄回退 SKU 价）
+            Long productId = sku == null ? null : sku.getErpProductId();
+            if (productId == null && sku != null) {
+                productId = barCodeMap.get(sku.getBarCode()); // 过渡兜底：见方法开头的说明
+            }
             if (productId == null) {
+                log.info("[applyDeliveryPrice][SKU({}) 既没有对应物料、条码也匹配不上，回退 SKU 价({})。请在商品里维护「对应物料」]",
+                        item.getSkuId(), item.getPrice());
                 return;
             }
             ErpPriceMatchRespDTO match = erpPriceApi.matchPrice(PRICE_TYPE_DELIVERY, reqBO.getCustomerId(), productId);
