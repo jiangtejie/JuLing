@@ -156,10 +156,17 @@ export function useFormSchema(): VbenFormSchema[] {
 /** 列表的字段 */
 export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['columns'] {
   return [
-    { type: 'checkbox', width: 40 },
     {
-      // ⚠️ 树列必须紧跟多选框列：vxe-table 会强制把 treeNode 列拉到第一位，
-      // 若有其它列插在它前面，多选框会被挤到树列右侧，表头顺序错乱。
+      // ⚠️ 多选框必须也在左侧固定区。
+      // 树列是 fixed:'left'，会先渲染进固定区；多选框若不固定就留在主区，
+      // 结果被排到树列右侧（表头看起来像「节点名称 | 多选框 | 编码」）。
+      // VXE 并不会因为 treeNode 就重排列序（见 vxe-table/es/table/src/table.js:1689），
+      // 顺序完全由 fixed 分区 + 定义顺序决定。
+      type: 'checkbox',
+      width: 40,
+      fixed: 'left',
+    },
+    {
       field: 'name',
       title: '节点名称',
       minWidth: 150,
