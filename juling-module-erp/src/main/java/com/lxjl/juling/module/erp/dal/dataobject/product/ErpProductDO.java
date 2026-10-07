@@ -9,7 +9,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
- * ERP 产品 DO
+ * ERP 物料 DO
  *
  * @author 亚特
  */
@@ -24,20 +24,20 @@ import java.math.BigDecimal;
 public class ErpProductDO extends BaseDO {
 
     /**
-     * 产品编号
+     * 物料编号
      */
     @TableId
     private Long id;
     /**
-     * 产品名称
+     * 物料名称
      */
     private String name;
     /**
-     * 产品条码
+     * 物料条码
      */
     private String barCode;
     /**
-     * 产品分类编号
+     * 物料分类编号
      *
      * 关联 {@link ErpProductCategoryDO#getId()}
      */
@@ -49,17 +49,17 @@ public class ErpProductDO extends BaseDO {
      */
     private Long unitId;
     /**
-     * 产品状态
+     * 物料状态
      *
      * 枚举 {@link com.lxjl.juling.framework.common.enums.CommonStatusEnum}
      */
     private Integer status;
     /**
-     * 产品规格
+     * 物料规格
      */
     private String standard;
     /**
-     * 产品备注
+     * 物料备注
      */
     private String remark;
     /**

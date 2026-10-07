@@ -139,7 +139,7 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     }
 
     private List<ErpStockMoveItemDO> validateStockMoveItems(List<ErpStockMoveSaveReqVO.Item> list) {
-        // 1.1 校验产品存在
+        // 1.1 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpStockMoveSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

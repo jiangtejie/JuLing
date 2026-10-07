@@ -3,29 +3,29 @@ import type { PageParam, PageResult } from '@vben/request';
 import { requestClient } from '#/api/request';
 
 export namespace ErpStockApi {
-  /** 产品库存信息 */
+  /** 物料库存信息 */
   export interface Stock {
     id?: number; // 编号
-    productId: number; // 产品编号
+    productId: number; // 物料编号
     warehouseId: number; // 仓库编号
     count: number; // 库存数量
   }
 
-  /** 产品库存查询参数 */
+  /** 物料库存查询参数 */
   export interface StockQueryReqVO {
     productId: number;
     warehouseId: number;
   }
 }
 
-/** 查询产品库存分页 */
+/** 查询物料库存分页 */
 export function getStockPage(params: PageParam) {
   return requestClient.get<PageResult<ErpStockApi.Stock>>('/erp/stock/page', {
     params,
   });
 }
 
-/** 获得产品库存数量 */
+/** 获得物料库存数量 */
 export function getStockCount(productId: number, warehouseId?: number) {
   const params: any = { productId };
   if (warehouseId !== undefined) {
@@ -36,7 +36,7 @@ export function getStockCount(productId: number, warehouseId?: number) {
   });
 }
 
-/** 导出产品库存 Excel */
+/** 导出物料库存 Excel */
 export function exportStock(params: any) {
   return requestClient.download('/erp/stock/export-excel', {
     params,

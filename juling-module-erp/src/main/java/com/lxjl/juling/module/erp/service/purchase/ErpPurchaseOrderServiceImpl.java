@@ -181,7 +181,7 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
      */
     private List<ErpPurchaseOrderItemDO> validatePurchaseOrderItems(List<ErpPurchaseOrderSaveReqVO.Item> list,
                                                                    BigDecimal defaultTaxPercent) {
-        // 1. 校验产品存在
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseOrderSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

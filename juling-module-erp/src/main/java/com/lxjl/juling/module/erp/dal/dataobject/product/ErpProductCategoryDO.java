@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 /**
- * ERP 产品分类 DO
+ * ERP 物料分类 DO
  *
  * @author 亚特
  */

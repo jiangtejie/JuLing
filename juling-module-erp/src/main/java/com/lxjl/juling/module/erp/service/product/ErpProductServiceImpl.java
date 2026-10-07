@@ -23,7 +23,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
 /**
- * ERP 产品 Service 实现类
+ * ERP 物料 Service 实现类
  *
  * @author 亚特
  */

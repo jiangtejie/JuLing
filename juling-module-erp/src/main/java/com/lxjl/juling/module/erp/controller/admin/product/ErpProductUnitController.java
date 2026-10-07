@@ -29,7 +29,7 @@ import static com.lxjl.juling.framework.apilog.core.enums.OperateTypeEnum.EXPORT
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertList;
 
-@Tag(name = "管理后台 - ERP 产品单位")
+@Tag(name = "管理后台 - ERP 物料单位")
 @RestController
 @RequestMapping("/erp/product-unit")
 @Validated
@@ -39,14 +39,14 @@ public class ErpProductUnitController {
     private ErpProductUnitService productUnitService;
 
     @PostMapping("/create")
-    @Operation(summary = "创建产品单位")
+    @Operation(summary = "创建物料单位")
     @PreAuthorize("@ss.hasPermission('erp:product-unit:create')")
     public CommonResult<Long> createProductUnit(@Valid @RequestBody ErpProductUnitSaveReqVO createReqVO) {
         return success(productUnitService.createProductUnit(createReqVO));
     }
 
     @PutMapping("/update")
-    @Operation(summary = "更新产品单位")
+    @Operation(summary = "更新物料单位")
     @PreAuthorize("@ss.hasPermission('erp:product-unit:update')")
     public CommonResult<Boolean> updateProductUnit(@Valid @RequestBody ErpProductUnitSaveReqVO updateReqVO) {
         productUnitService.updateProductUnit(updateReqVO);
@@ -54,7 +54,7 @@ public class ErpProductUnitController {
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "删除产品单位")
+    @Operation(summary = "删除物料单位")
     @Parameter(name = "id", description = "编号", required = true)
     @PreAuthorize("@ss.hasPermission('erp:product-unit:delete')")
     public CommonResult<Boolean> deleteProductUnit(@RequestParam("id") Long id) {
@@ -63,7 +63,7 @@ public class ErpProductUnitController {
     }
 
     @GetMapping("/get")
-    @Operation(summary = "获得产品单位")
+    @Operation(summary = "获得物料单位")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('erp:product-unit:query')")
     public CommonResult<ErpProductUnitRespVO> getProductUnit(@RequestParam("id") Long id) {
@@ -72,7 +72,7 @@ public class ErpProductUnitController {
     }
 
     @GetMapping("/page")
-    @Operation(summary = "获得产品单位分页")
+    @Operation(summary = "获得物料单位分页")
     @PreAuthorize("@ss.hasPermission('erp:product-unit:query')")
     public CommonResult<PageResult<ErpProductUnitRespVO>> getProductUnitPage(@Valid ErpProductUnitPageReqVO pageReqVO) {
         PageResult<ErpProductUnitDO> pageResult = productUnitService.getProductUnitPage(pageReqVO);
@@ -80,7 +80,7 @@ public class ErpProductUnitController {
     }
 
     @GetMapping("/simple-list")
-    @Operation(summary = "获得产品单位精简列表", description = "只包含被开启的单位，主要用于前端的下拉选项")
+    @Operation(summary = "获得物料单位精简列表", description = "只包含被开启的单位，主要用于前端的下拉选项")
     public CommonResult<List<ErpProductUnitRespVO>> getProductUnitSimpleList() {
         List<ErpProductUnitDO> list = productUnitService.getProductUnitListByStatus(CommonStatusEnum.ENABLE.getStatus());
         // 除 id/name 外额外透出 code：下拉里用编码区分同名单位
@@ -89,7 +89,7 @@ public class ErpProductUnitController {
     }
 
     @GetMapping("/export-excel")
-    @Operation(summary = "导出产品单位 Excel")
+    @Operation(summary = "导出物料单位 Excel")
     @PreAuthorize("@ss.hasPermission('erp:product-unit:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportProductUnitExcel(@Valid ErpProductUnitPageReqVO pageReqVO,
@@ -97,7 +97,7 @@ public class ErpProductUnitController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<ErpProductUnitDO> list = productUnitService.getProductUnitPage(pageReqVO).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "产品单位.xls", "数据", ErpProductUnitRespVO.class,
+        ExcelUtils.write(response, "物料单位.xls", "数据", ErpProductUnitRespVO.class,
                         BeanUtils.toBean(list, ErpProductUnitRespVO.class));
     }
 

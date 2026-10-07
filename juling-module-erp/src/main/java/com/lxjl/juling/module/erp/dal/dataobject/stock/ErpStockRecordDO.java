@@ -11,7 +11,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
- * ERP 产品库存明细 DO
+ * ERP 物料库存明细 DO
  *
  * @author 亚特
  */
@@ -31,7 +31,7 @@ public class ErpStockRecordDO extends BaseDO {
     @TableId
     private Long id;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */

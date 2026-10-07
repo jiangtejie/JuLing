@@ -48,23 +48,23 @@ public class ErpStockMoveItemDO extends BaseDO {
      */
     private Long toWarehouseId;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */
     private Long productId;
     /**
-     * 产品单位编号
+     * 物料单位编号
      *
      * 冗余 {@link ErpProductDO#getUnitId()}
      */
     private Long productUnitId;
     /**
-     * 产品单价
+     * 物料单价
      */
     private BigDecimal productPrice;
     /**
-     * 产品数量
+     * 物料数量
      */
     private BigDecimal count;
     /**

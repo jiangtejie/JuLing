@@ -117,7 +117,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   <Page auto-content-height>
     <template #doc>
       <DocAlert
-        title="【库存】产品库存、库存明细"
+        title="【库存】物料库存、库存明细"
         url="https://github.com/jiangtejie/JuLing#readme"
       />
     </template>

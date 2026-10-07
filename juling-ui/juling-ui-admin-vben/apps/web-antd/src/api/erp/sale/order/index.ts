@@ -18,11 +18,11 @@ export namespace ErpSaleOrderApi {
     fileUrl?: string; // 附件地址
     inCount?: number; // 采购入库数量
     returnCount: number; // 销售退货数量
-    totalProductPrice?: number; // 产品金额，单位：元
+    totalProductPrice?: number; // 物料金额，单位：元
     discountPercent?: number; // 优惠率，百分比
     discountPrice?: number; // 优惠金额，单位：元
     depositPrice?: number; // 定金金额，单位：元
-    items?: SaleOrderItem[]; // 销售订单产品明细列表
+    items?: SaleOrderItem[]; // 销售订单物料明细列表
   }
 
   /** 销售订单项 */
@@ -30,13 +30,13 @@ export namespace ErpSaleOrderApi {
     id?: number; // 订单项编号
     seq?: number; // 前端行号
     orderId?: number; // 采购订单编号
-    productId?: number; // 产品编号
-    productName?: string; // 产品名称
-    productBarCode?: string; // 产品条码
-    productUnitId?: number; // 产品单位编号
-    productUnitName?: string; // 产品单位名称
-    productPrice?: number; // 产品单价，单位：元
-    totalProductPrice?: number; // 产品总价，单位：元
+    productId?: number; // 物料编号
+    productName?: string; // 物料名称
+    productBarCode?: string; // 物料条码
+    productUnitId?: number; // 物料单位编号
+    productUnitName?: string; // 物料单位名称
+    productPrice?: number; // 物料单价，单位：元
+    totalProductPrice?: number; // 物料总价，单位：元
     count?: number; // 数量
     totalPrice?: number; // 总价，单位：元
     taxPercent?: number; // 税率，百分比

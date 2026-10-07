@@ -295,7 +295,7 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     }
 
     private List<ErpPurchaseInItemDO> validatePurchaseInItems(List<ErpPurchaseInSaveReqVO.Item> list) {
-        // 1. 校验产品存在
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseInSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

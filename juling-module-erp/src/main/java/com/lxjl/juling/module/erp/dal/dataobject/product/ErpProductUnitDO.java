@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
 
 /**
- * ERP 产品单位 DO
+ * ERP 物料单位 DO
  *
  * @author 亚特
  */

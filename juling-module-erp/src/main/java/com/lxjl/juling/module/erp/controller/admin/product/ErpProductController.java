@@ -29,7 +29,7 @@ import static com.lxjl.juling.framework.apilog.core.enums.OperateTypeEnum.EXPORT
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertList;
 
-@Tag(name = "管理后台 - ERP 产品")
+@Tag(name = "管理后台 - ERP 物料")
 @RestController
 @RequestMapping("/erp/product")
 @Validated
@@ -39,14 +39,14 @@ public class ErpProductController {
     private ErpProductService productService;
 
     @PostMapping("/create")
-    @Operation(summary = "创建产品")
+    @Operation(summary = "创建物料")
     @PreAuthorize("@ss.hasPermission('erp:product:create')")
     public CommonResult<Long> createProduct(@Valid @RequestBody ProductSaveReqVO createReqVO) {
         return success(productService.createProduct(createReqVO));
     }
 
     @PutMapping("/update")
-    @Operation(summary = "更新产品")
+    @Operation(summary = "更新物料")
     @PreAuthorize("@ss.hasPermission('erp:product:update')")
     public CommonResult<Boolean> updateProduct(@Valid @RequestBody ProductSaveReqVO updateReqVO) {
         productService.updateProduct(updateReqVO);
@@ -54,7 +54,7 @@ public class ErpProductController {
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "删除产品")
+    @Operation(summary = "删除物料")
     @Parameter(name = "id", description = "编号", required = true)
     @PreAuthorize("@ss.hasPermission('erp:product:delete')")
     public CommonResult<Boolean> deleteProduct(@RequestParam("id") Long id) {
@@ -63,7 +63,7 @@ public class ErpProductController {
     }
 
     @GetMapping("/get")
-    @Operation(summary = "获得产品")
+    @Operation(summary = "获得物料")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('erp:product:query')")
     public CommonResult<ErpProductRespVO> getProduct(@RequestParam("id") Long id) {
@@ -72,14 +72,14 @@ public class ErpProductController {
     }
 
     @GetMapping("/page")
-    @Operation(summary = "获得产品分页")
+    @Operation(summary = "获得物料分页")
     @PreAuthorize("@ss.hasPermission('erp:product:query')")
     public CommonResult<PageResult<ErpProductRespVO>> getProductPage(@Valid ErpProductPageReqVO pageReqVO) {
         return success(productService.getProductVOPage(pageReqVO));
     }
 
     @GetMapping("/simple-list")
-    @Operation(summary = "获得产品精简列表", description = "只包含被开启的产品，主要用于前端的下拉选项")
+    @Operation(summary = "获得物料精简列表", description = "只包含被开启的物料，主要用于前端的下拉选项")
     public CommonResult<List<ErpProductRespVO>> getProductSimpleList() {
         List<ErpProductRespVO> list = productService.getProductVOListByStatus(CommonStatusEnum.ENABLE.getStatus());
         return success(convertList(list, product -> new ErpProductRespVO().setId(product.getId())
@@ -90,7 +90,7 @@ public class ErpProductController {
     }
 
     @GetMapping("/export-excel")
-    @Operation(summary = "导出产品 Excel")
+    @Operation(summary = "导出物料 Excel")
     @PreAuthorize("@ss.hasPermission('erp:product:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportProductExcel(@Valid ErpProductPageReqVO pageReqVO,
@@ -98,7 +98,7 @@ public class ErpProductController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         PageResult<ErpProductRespVO> pageResult = productService.getProductVOPage(pageReqVO);
         // 导出 Excel
-        ExcelUtils.write(response, "产品.xls", "数据", ErpProductRespVO.class,
+        ExcelUtils.write(response, "物料.xls", "数据", ErpProductRespVO.class,
                 pageResult.getList());
     }
 

@@ -16,7 +16,7 @@ import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.STOCK_COUNT_NE
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.STOCK_COUNT_NEGATIVE2;
 
 /**
- * ERP 产品库存 Service 实现类
+ * ERP 物料库存 Service 实现类
  *
  * @author 亚特
  */

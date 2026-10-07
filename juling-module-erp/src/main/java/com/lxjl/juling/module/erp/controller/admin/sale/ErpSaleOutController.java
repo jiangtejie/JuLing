@@ -142,7 +142,7 @@ public class ErpSaleOutController {
         List<ErpSaleOutItemDO> saleOutItemList = saleOutService.getSaleOutItemListByOutIds(
                 convertSet(pageResult.getList(), ErpSaleOutDO::getId));
         Map<Long, List<ErpSaleOutItemDO>> saleOutItemMap = convertMultiMap(saleOutItemList, ErpSaleOutItemDO::getOutId);
-        // 1.2 产品信息
+        // 1.2 物料信息
         Map<Long, ErpProductRespVO> productMap = productService.getProductVOMap(
                 convertSet(saleOutItemList, ErpSaleOutItemDO::getProductId));
         // 1.3 客户信息

@@ -14,7 +14,7 @@ export namespace ErpPurchaseOrderApi {
     orderTime?: Date | string; // 订单时间
     totalCount?: number; // 合计数量
     totalPrice?: number; // 合计金额，单位：元
-    totalProductPrice?: number; // 产品金额，单位：元
+    totalProductPrice?: number; // 物料金额，单位：元
     discountPercent?: number; // 优惠率，百分比
     discountPrice?: number; // 优惠金额，单位：元
     depositPrice?: number; // 定金金额，单位：元
@@ -27,7 +27,7 @@ export namespace ErpPurchaseOrderApi {
     returnCount?: number; // 采购退货数量
     inStatus?: number; // 入库状态
     returnStatus?: number; // 退货状态
-    productNames?: string; // 产品名称列表
+    productNames?: string; // 物料名称列表
     creatorName?: string; // 创建人名称
     createTime?: Date; // 创建时间
     items?: PurchaseOrderItem[]; // 订单项列表
@@ -38,13 +38,13 @@ export namespace ErpPurchaseOrderApi {
     id?: number; // 订单项编号
     seq?: number; // 前端行号
     orderId?: number; // 采购订单编号
-    productId?: number; // 产品编号
-    productName?: string; // 产品名称
-    productBarCode?: string; // 产品条码
-    productUnitId?: number; // 产品单位编号
-    productUnitName?: string; // 产品单位名称
-    productPrice?: number; // 产品单价，单位：元
-    totalProductPrice?: number; // 产品总价，单位：元
+    productId?: number; // 物料编号
+    productName?: string; // 物料名称
+    productBarCode?: string; // 物料条码
+    productUnitId?: number; // 物料单位编号
+    productUnitName?: string; // 物料单位名称
+    productPrice?: number; // 物料单价，单位：元
+    totalProductPrice?: number; // 物料总价，单位：元
     count?: number; // 数量
     totalPrice?: number; // 总价，单位：元
     taxPercent?: number; // 税率，百分比

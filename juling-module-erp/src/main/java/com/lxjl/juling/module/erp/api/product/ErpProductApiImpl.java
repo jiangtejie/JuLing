@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * ERP 物料（产品）API 实现
+ * ERP 物料（物料）API 实现
  *
  * @author 亚特
  */

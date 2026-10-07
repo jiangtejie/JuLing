@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ERP 产品库存 Mapper
+ * ERP 物料库存 Mapper
  *
  * @author 亚特
  */

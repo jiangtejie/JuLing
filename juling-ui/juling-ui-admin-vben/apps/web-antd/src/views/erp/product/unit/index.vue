@@ -31,20 +31,20 @@ function handleRefresh() {
 /** 导出表格 */
 async function handleExport() {
   const data = await exportProductUnit(await gridApi.formApi.getValues());
-  downloadFileFromBlobPart({ fileName: '产品单位.xls', source: data });
+  downloadFileFromBlobPart({ fileName: '物料单位.xls', source: data });
 }
 
-/** 创建产品单位 */
+/** 创建物料单位 */
 function handleCreate() {
   formModalApi.setData(null).open();
 }
 
-/** 编辑产品单位 */
+/** 编辑物料单位 */
 function handleEdit(row: ErpProductUnitApi.ProductUnit) {
   formModalApi.setData(row).open();
 }
 
-/** 删除产品单位 */
+/** 删除物料单位 */
 async function handleDelete(row: ErpProductUnitApi.ProductUnit) {
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
@@ -94,17 +94,17 @@ const [Grid, gridApi] = useVbenVxeGrid({
   <Page auto-content-height>
     <template #doc>
       <DocAlert
-        title="【产品】产品信息、分类、单位"
+        title="【物料】物料信息、分类、单位"
         url="https://github.com/jiangtejie/JuLing#readme"
       />
     </template>
     <FormModal @success="handleRefresh" />
-    <Grid table-title="产品单位列表">
+    <Grid table-title="物料单位列表">
       <template #toolbar-tools>
         <TableAction
           :actions="[
             {
-              label: $t('ui.actionTitle.create', ['产品单位']),
+              label: $t('ui.actionTitle.create', ['物料单位']),
               type: 'primary',
               icon: ACTION_ICON.ADD,
               auth: ['erp:product-unit:create'],

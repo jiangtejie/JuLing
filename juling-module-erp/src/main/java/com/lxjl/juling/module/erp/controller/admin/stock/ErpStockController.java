@@ -39,7 +39,7 @@ import static com.lxjl.juling.framework.apilog.core.enums.OperateTypeEnum.EXPORT
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertSet;
 
-@Tag(name = "管理后台 - ERP 产品库存")
+@Tag(name = "管理后台 - ERP 物料库存")
 @RestController
 @RequestMapping("/erp/stock")
 @Validated
@@ -53,10 +53,10 @@ public class ErpStockController {
     private ErpWarehouseService warehouseService;
 
     @GetMapping("/get")
-    @Operation(summary = "获得产品库存")
+    @Operation(summary = "获得物料库存")
     @Parameters({
             @Parameter(name = "id", description = "编号", example = "1"), // 方案一：传递 id
-            @Parameter(name = "productId", description = "产品编号", example = "10"), // 方案二：传递 productId + warehouseId
+            @Parameter(name = "productId", description = "物料编号", example = "10"), // 方案二：传递 productId + warehouseId
             @Parameter(name = "warehouseId", description = "仓库编号", example = "2")
     })
     @PreAuthorize("@ss.hasPermission('erp:stock:query')")
@@ -68,14 +68,14 @@ public class ErpStockController {
     }
 
     @GetMapping("/get-count")
-    @Operation(summary = "获得产品库存数量")
-    @Parameter(name = "productId", description = "产品编号", example = "10")
+    @Operation(summary = "获得物料库存数量")
+    @Parameter(name = "productId", description = "物料编号", example = "10")
     public CommonResult<BigDecimal> getStockCount(@RequestParam("productId") Long productId) {
         return success(stockService.getStockCount(productId));
     }
 
     @GetMapping("/page")
-    @Operation(summary = "获得产品库存分页")
+    @Operation(summary = "获得物料库存分页")
     @PreAuthorize("@ss.hasPermission('erp:stock:query')")
     public CommonResult<PageResult<ErpStockRespVO>> getStockPage(@Valid ErpStockPageReqVO pageReqVO) {
         PageResult<ErpStockDO> pageResult = stockService.getStockPage(pageReqVO);
@@ -83,7 +83,7 @@ public class ErpStockController {
     }
 
     @GetMapping("/export-excel")
-    @Operation(summary = "导出产品库存 Excel")
+    @Operation(summary = "导出物料库存 Excel")
     @PreAuthorize("@ss.hasPermission('erp:stock:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportStockExcel(@Valid ErpStockPageReqVO pageReqVO,
@@ -91,7 +91,7 @@ public class ErpStockController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<ErpStockRespVO> list = buildStockVOPageResult(stockService.getStockPage(pageReqVO)).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "产品库存.xls", "数据", ErpStockRespVO.class, list);
+        ExcelUtils.write(response, "物料库存.xls", "数据", ErpStockRespVO.class, list);
     }
 
     private PageResult<ErpStockRespVO> buildStockVOPageResult(PageResult<ErpStockDO> pageResult) {

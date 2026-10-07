@@ -15,23 +15,23 @@ export namespace ErpStockInApi {
     status: number; // 状态
     remark: string; // 备注
     fileUrl?: string; // 附件
-    productNames?: string; // 产品信息
+    productNames?: string; // 物料信息
     creatorName?: string; // 创建人
-    items?: StockInItem[]; // 入库产品清单
+    items?: StockInItem[]; // 入库物料清单
   }
 
-  /** 其它入库单产品信息 */
+  /** 其它入库单物料信息 */
   export interface StockInItem {
     id?: number; // 编号
     seq?: number; // 前端行号
     warehouseId?: number; // 仓库编号
-    productId?: number; // 产品编号
-    productName?: string; // 产品名称
-    productUnitId?: number; // 产品单位编号
-    productUnitName?: string; // 产品单位名称
-    productBarCode?: string; // 产品条码
+    productId?: number; // 物料编号
+    productName?: string; // 物料名称
+    productUnitId?: number; // 物料单位编号
+    productUnitName?: string; // 物料单位名称
+    productBarCode?: string; // 物料条码
     count?: number; // 数量
-    productPrice?: number; // 产品单价
+    productPrice?: number; // 物料单价
     totalPrice?: number; // 总价
     stockCount?: number; // 库存数量
     remark?: string; // 备注

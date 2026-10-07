@@ -178,7 +178,7 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
     }
 
     private List<ErpSaleOrderItemDO> validateSaleOrderItems(List<ErpSaleOrderSaveReqVO.Item> list) {
-        // 1. 校验产品存在
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpSaleOrderSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

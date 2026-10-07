@@ -22,7 +22,7 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
 /**
- * ERP 产品单位 Service 实现类
+ * ERP 物料单位 Service 实现类
  *
  * @author 亚特
  */
@@ -83,7 +83,7 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
     public void deleteProductUnit(Long id) {
         // 1.1 校验存在
         validateProductUnitExists(id);
-        // 1.2 校验产品是否使用
+        // 1.2 校验物料是否使用
         if (productService.getProductCountByUnitId(id) > 0) {
             throw exception(PRODUCT_UNIT_EXITS_PRODUCT);
         }

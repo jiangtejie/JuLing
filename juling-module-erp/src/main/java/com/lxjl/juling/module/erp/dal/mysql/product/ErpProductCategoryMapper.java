@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * ERP 产品分类 Mapper
+ * ERP 物料分类 Mapper
  *
  * @author 亚特
  */

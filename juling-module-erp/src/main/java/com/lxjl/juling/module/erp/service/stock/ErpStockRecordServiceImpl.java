@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ERP 产品库存明细 Service 实现类
+ * ERP 物料库存明细 Service 实现类
  *
  * @author 亚特
  */

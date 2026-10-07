@@ -116,7 +116,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
     },
     {
       fieldName: 'items',
-      label: '入库产品清单',
+      label: '入库物料清单',
       component: 'Input',
       formItemClass: 'col-span-3',
     },
@@ -221,7 +221,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productId',
-      title: '产品名称',
+      title: '物料名称',
       minWidth: 200,
       slots: { default: 'productId' },
     },
@@ -289,7 +289,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productPrice',
-      title: '产品单价',
+      title: '物料单价',
       fixed: 'right',
       minWidth: 120,
       slots: { default: 'productPrice' },
@@ -297,7 +297,7 @@ export function useFormItemColumns(
     {
       field: 'totalProductPrice',
       fixed: 'right',
-      title: '产品金额',
+      title: '物料金额',
       minWidth: 120,
       formatter: 'formatAmount2',
     },
@@ -346,10 +346,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -480,7 +480,7 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'productNames',
-      title: '产品信息',
+      title: '物料信息',
       showOverflow: 'tooltip',
       minWidth: 120,
     },
@@ -558,10 +558,10 @@ export function useOrderGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -597,7 +597,7 @@ export function useOrderGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'productNames',
-      title: '产品信息',
+      title: '物料信息',
       showOverflow: 'tooltip',
       minWidth: 120,
     },

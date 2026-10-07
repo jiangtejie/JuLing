@@ -41,7 +41,7 @@ const emit = defineEmits([
 ]);
 
 const tableData = ref<ErpPurchaseInApi.PurchaseInItem[]>([]); // 表格数据
-const productOptions = ref<any[]>([]); // 产品下拉选项
+const productOptions = ref<any[]>([]); // 物料下拉选项
 const warehouseOptions = ref<any[]>([]); // 仓库下拉选项
 
 /** 获取表格合计数据 */
@@ -184,7 +184,7 @@ function validate() {
         throw new Error(`第 ${i + 1} 行：仓库不能为空`);
       }
       if (!item.count || item.count <= 0) {
-        throw new Error(`第 ${i + 1} 行：产品数量不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料数量不能为空`);
       }
     }
   }
@@ -222,7 +222,7 @@ onMounted(async () => {
         :options="productOptions"
         :field-names="{ label: 'name', value: 'id' }"
         class="w-full"
-        placeholder="请选择产品"
+        placeholder="请选择物料"
         show-search
       />
     </template>
@@ -301,7 +301,7 @@ onMounted(async () => {
             type: 'link',
             danger: true,
             popConfirm: {
-              title: '确认删除该产品吗？',
+              title: '确认删除该物料吗？',
               confirm: handleDelete.bind(null, row),
             },
           },

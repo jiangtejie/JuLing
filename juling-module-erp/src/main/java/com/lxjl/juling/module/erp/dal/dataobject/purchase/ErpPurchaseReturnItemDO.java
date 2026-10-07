@@ -50,20 +50,20 @@ public class ErpPurchaseReturnItemDO extends BaseDO {
      */
     private Long warehouseId;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */
     private Long productId;
     /**
-     * 产品单位单位
+     * 物料单位单位
      *
      * 冗余 {@link ErpProductDO#getUnitId()}
      */
     private Long productUnitId;
 
     /**
-     * 产品单位单价，单位：元
+     * 物料单位单价，单位：元
      */
     private BigDecimal productPrice;
     /**

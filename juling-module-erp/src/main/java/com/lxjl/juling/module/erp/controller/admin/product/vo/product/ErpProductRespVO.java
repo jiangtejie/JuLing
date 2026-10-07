@@ -8,27 +8,27 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Schema(description = "管理后台 - ERP 产品 Response VO")
+@Schema(description = "管理后台 - ERP 物料 Response VO")
 @Data
 @ExcelIgnoreUnannotated
 public class ErpProductRespVO {
 
-    @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15672")
-    @ExcelProperty("产品编号")
+    @Schema(description = "物料编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15672")
+    @ExcelProperty("物料编号")
     private Long id;
 
-    @Schema(description = "产品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
-    @ExcelProperty("产品名称")
+    @Schema(description = "物料名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
+    @ExcelProperty("物料名称")
     private String name;
 
-    @Schema(description = "产品条码", requiredMode = Schema.RequiredMode.REQUIRED, example = "X110")
-    @ExcelProperty("产品条码")
+    @Schema(description = "物料条码", requiredMode = Schema.RequiredMode.REQUIRED, example = "X110")
+    @ExcelProperty("物料条码")
     private String barCode;
 
-    @Schema(description = "产品分类编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11161")
+    @Schema(description = "物料分类编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11161")
     private Long categoryId;
-    @Schema(description = "产品分类", requiredMode = Schema.RequiredMode.REQUIRED, example = "水果")
-    @ExcelProperty("产品分类")
+    @Schema(description = "物料分类", requiredMode = Schema.RequiredMode.REQUIRED, example = "水果")
+    @ExcelProperty("物料分类")
     private String categoryName;
 
     @Schema(description = "单位编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "8869")
@@ -37,16 +37,16 @@ public class ErpProductRespVO {
     @ExcelProperty("单位")
     private String unitName;
 
-    @Schema(description = "产品状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @ExcelProperty("产品状态")
+    @Schema(description = "物料状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
+    @ExcelProperty("物料状态")
     private Integer status;
 
-    @Schema(description = "产品规格", example = "红色")
-    @ExcelProperty("产品规格")
+    @Schema(description = "物料规格", example = "红色")
+    @ExcelProperty("物料规格")
     private String standard;
 
-    @Schema(description = "产品备注", example = "你猜")
-    @ExcelProperty("产品备注")
+    @Schema(description = "物料备注", example = "你猜")
+    @ExcelProperty("物料备注")
     private String remark;
 
     @Schema(description = "保质期天数", example = "10")

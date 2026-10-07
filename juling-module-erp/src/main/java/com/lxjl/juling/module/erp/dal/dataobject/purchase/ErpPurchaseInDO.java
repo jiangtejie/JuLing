@@ -88,7 +88,7 @@ public class ErpPurchaseInDO extends BaseDO {
     private BigDecimal paymentPrice;
 
     /**
-     * 合计产品价格，单位：元
+     * 合计物料价格，单位：元
      */
     private BigDecimal totalProductPrice;
     /**

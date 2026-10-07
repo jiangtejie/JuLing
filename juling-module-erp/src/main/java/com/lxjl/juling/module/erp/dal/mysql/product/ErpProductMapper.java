@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ERP 产品 Mapper
+ * ERP 物料 Mapper
  *
  * @author 亚特
  */

@@ -10,7 +10,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
- * ERP 产品库存 DO
+ * ERP 物料库存 DO
  *
  * @author 亚特
  */
@@ -30,7 +30,7 @@ public class ErpStockDO extends BaseDO {
     @TableId
     private Long id;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */

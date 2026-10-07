@@ -12,14 +12,14 @@ import java.util.Map;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertMap;
 
 /**
- * ERP 产品分类 Service 接口
+ * ERP 物料分类 Service 接口
  *
  * @author 亚特
  */
 public interface ErpProductCategoryService {
 
     /**
-     * 创建产品分类
+     * 创建物料分类
      *
      * @param createReqVO 创建信息
      * @return 编号
@@ -27,48 +27,48 @@ public interface ErpProductCategoryService {
     Long createProductCategory(@Valid ErpProductCategorySaveReqVO createReqVO);
 
     /**
-     * 更新产品分类
+     * 更新物料分类
      *
      * @param updateReqVO 更新信息
      */
     void updateProductCategory(@Valid ErpProductCategorySaveReqVO updateReqVO);
 
     /**
-     * 删除产品分类
+     * 删除物料分类
      *
      * @param id 编号
      */
     void deleteProductCategory(Long id);
 
     /**
-     * 获得产品分类
+     * 获得物料分类
      *
      * @param id 编号
-     * @return 产品分类
+     * @return 物料分类
      */
     ErpProductCategoryDO getProductCategory(Long id);
 
     /**
-     * 获得产品分类列表
+     * 获得物料分类列表
      *
      * @param listReqVO 查询条件
-     * @return 产品分类列表
+     * @return 物料分类列表
      */
     List<ErpProductCategoryDO> getProductCategoryList(ErpProductCategoryListReqVO listReqVO);
 
     /**
-     * 获得产品分类列表
+     * 获得物料分类列表
      *
      * @param ids 编号数组
-     * @return 产品分类列表
+     * @return 物料分类列表
      */
     List<ErpProductCategoryDO> getProductCategoryList(Collection<Long> ids);
 
     /**
-     * 获得产品分类 Map
+     * 获得物料分类 Map
      *
      * @param ids 编号数组
-     * @return 产品分类 Map
+     * @return 物料分类 Map
      */
     default Map<Long, ErpProductCategoryDO> getProductCategoryMap(Collection<Long> ids) {
         return convertMap(getProductCategoryList(ids), ErpProductCategoryDO::getId);
