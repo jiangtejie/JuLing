@@ -10,6 +10,7 @@ import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockMoveDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockMoveItemDO;
 import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
 import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockMoveItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockMoveMapper;
@@ -17,6 +18,7 @@ import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +35,6 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 亚特：记录操作日志
 
 /**
  * ERP 库存调拨单 Service 实现类
@@ -79,6 +80,11 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
         // 2.2 插入出库单项
         stockMoveItems.forEach(o -> o.setMoveId(stockMove.getId()));
         stockMoveItemMapper.insertBatch(stockMoveItems);
+        // 单据平台：写创建日志（留痕；与采购/销售单据同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.STOCK_TRANSFER).setBillId(stockMove.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(stockMove.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return stockMove.getId();
     }
 

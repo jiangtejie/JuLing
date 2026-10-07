@@ -10,6 +10,7 @@ import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockCheckDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockCheckItemDO;
 import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
 import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockCheckItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockCheckMapper;
@@ -17,6 +18,7 @@ import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,6 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 亚特：记录操作日志
 
 /**
  * ERP 库存盘点单 Service 实现类
@@ -78,6 +79,11 @@ public class ErpStockCheckServiceImpl implements ErpStockCheckService {
         // 2.2 插入盘点单项
         stockCheckItems.forEach(o -> o.setCheckId(stockCheck.getId()));
         stockCheckItemMapper.insertBatch(stockCheckItems);
+        // 单据平台：写创建日志（留痕；与采购/销售单据同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.STOCK_CHECK).setBillId(stockCheck.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(stockCheck.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return stockCheck.getId();
     }
 
