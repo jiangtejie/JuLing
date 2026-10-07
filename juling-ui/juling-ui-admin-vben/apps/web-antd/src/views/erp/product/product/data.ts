@@ -238,6 +238,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useGridColumns(): VxeTableGridOptions['columns'] {
   return [
     {
+      field: 'code',
+      title: '物料编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
       field: 'barCode',
       title: '条码',
       minWidth: 120,

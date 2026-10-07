@@ -22,7 +22,8 @@ public interface ErrorCodeConstants {
 
     // ========== API 聊天角色 1-040-002-000 ==========
     ErrorCode CHAT_ROLE_NOT_EXISTS = new ErrorCode(1_040_002_000, "聊天角色不存在");
-    ErrorCode CHAT_ROLE_DISABLE = new ErrorCode(1_040_001_001, "聊天角色({})已禁用!");
+    // 注：原先误用了 1_040_001_001（模型段），与 MODEL_DISABLE 撞号，已改到本段
+    ErrorCode CHAT_ROLE_DISABLE = new ErrorCode(1_040_002_001, "聊天角色({})已禁用!");
 
     // ========== API 聊天会话 1-040-003-000 ==========
     ErrorCode CHAT_CONVERSATION_NOT_EXISTS = new ErrorCode(1_040_003_000, "对话不存在!");
@@ -42,7 +43,8 @@ public interface ErrorCodeConstants {
 
     // ========== API 写作 1-040-007-000 ==========
     ErrorCode WRITE_NOT_EXISTS = new ErrorCode(1_040_007_000, "作文不存在!");
-    ErrorCode WRITE_STREAM_ERROR = new ErrorCode(1_040_07_001, "写作生成异常!");
+    // 注：原先写的是 1_040_07_001（少一位，只有 9 位），格式错误，已修正为 10 位
+    ErrorCode WRITE_STREAM_ERROR = new ErrorCode(1_040_007_001, "写作生成异常!");
 
     // ========== API 思维导图 1-040-008-000 ==========
     ErrorCode MIND_MAP_NOT_EXISTS = new ErrorCode(1_040_008_000, "思维导图不存在!");
@@ -51,9 +53,10 @@ public interface ErrorCodeConstants {
     ErrorCode KNOWLEDGE_NOT_EXISTS = new ErrorCode(1_040_009_000, "知识库不存在!");
 
     ErrorCode KNOWLEDGE_DOCUMENT_NOT_EXISTS = new ErrorCode(1_040_009_101, "文档不存在!");
+    // 注：原先三条共用 1_040_009_102，日志与监控无法区分是"内容为空/下载失败/加载失败"，已拆开
     ErrorCode KNOWLEDGE_DOCUMENT_FILE_EMPTY = new ErrorCode(1_040_009_102, "文档内容为空!");
-    ErrorCode KNOWLEDGE_DOCUMENT_FILE_DOWNLOAD_FAIL = new ErrorCode(1_040_009_102, "文件下载失败!");
-    ErrorCode KNOWLEDGE_DOCUMENT_FILE_READ_FAIL = new ErrorCode(1_040_009_102, "文档加载失败!");
+    ErrorCode KNOWLEDGE_DOCUMENT_FILE_DOWNLOAD_FAIL = new ErrorCode(1_040_009_103, "文件下载失败!");
+    ErrorCode KNOWLEDGE_DOCUMENT_FILE_READ_FAIL = new ErrorCode(1_040_009_104, "文档加载失败!");
 
     ErrorCode KNOWLEDGE_SEGMENT_NOT_EXISTS = new ErrorCode(1_040_009_202, "段落不存在!");
     ErrorCode KNOWLEDGE_SEGMENT_CONTENT_TOO_LONG = new ErrorCode(1_040_009_203, "内容 Token 数为 {}，超过最大限制 {}");
