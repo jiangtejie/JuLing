@@ -315,18 +315,20 @@ export interface OrderAccountFormValues {
 /**
  * 授权门店下拉项。
  *
- * simple-list 透出 id/name/storeType；店型用于标注「（直营）/（加盟）」，避免选错门店。
+ * simple-list 透出 id/name/code/storeType；编码用于区分同名门店，店型用于标注「（直营）/（加盟）」。
  */
 export interface OrderAccountCustomer {
   id?: number;
   name?: string;
+  /** 业务编码（门店编码，如 KH000001）：同名门店靠它区分 */
+  code?: string;
   /** 店型：DIRECT 直营 / FRANCHISE 加盟（字典 erp_store_type） */
   storeType?: string;
 }
 
-/** 授权门店下拉的显示名：标出店型，避免选错门店 */
+/** 授权门店下拉的显示名：编码 + 店型，避免选错门店（同名靠编码区分） */
 export function formatOrderSubjectLabel(item: OrderAccountCustomer): string {
-  const name = item.name ?? '';
+  const name = item.code ? `${item.code} ${item.name ?? ''}` : (item.name ?? '');
   if (item.storeType === 'DIRECT') {
     return `${name}（直营）`;
   }

@@ -83,7 +83,9 @@ public class ErpProductUnitController {
     @Operation(summary = "获得产品单位精简列表", description = "只包含被开启的单位，主要用于前端的下拉选项")
     public CommonResult<List<ErpProductUnitRespVO>> getProductUnitSimpleList() {
         List<ErpProductUnitDO> list = productUnitService.getProductUnitListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(convertList(list, unit -> new ErpProductUnitRespVO().setId(unit.getId()).setName(unit.getName())));
+        // 除 id/name 外额外透出 code：下拉里用编码区分同名单位
+        return success(convertList(list, unit -> new ErpProductUnitRespVO().setId(unit.getId())
+                .setName(unit.getName()).setCode(unit.getCode())));
     }
 
     @GetMapping("/export-excel")

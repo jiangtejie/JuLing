@@ -83,7 +83,9 @@ public class ErpSupplierController {
     @Operation(summary = "获得供应商精简列表", description = "只包含被开启的供应商，主要用于前端的下拉选项")
     public CommonResult<List<ErpSupplierRespVO>> getSupplierSimpleList() {
         List<ErpSupplierDO> list = supplierService.getSupplierListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(convertList(list, supplier -> new ErpSupplierRespVO().setId(supplier.getId()).setName(supplier.getName())));
+        // 除 id/name 外额外透出 code：下拉里用编码区分同名供应商
+        return success(convertList(list, supplier -> new ErpSupplierRespVO().setId(supplier.getId())
+                .setName(supplier.getName()).setCode(supplier.getCode())));
     }
 
     @GetMapping("/export-excel")

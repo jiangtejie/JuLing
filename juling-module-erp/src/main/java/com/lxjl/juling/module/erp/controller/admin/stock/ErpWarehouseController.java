@@ -96,8 +96,10 @@ public class ErpWarehouseController {
     @Operation(summary = "获得仓库精简列表", description = "只包含被开启的仓库，主要用于前端的下拉选项")
     public CommonResult<List<ErpWarehouseRespVO>> getWarehouseSimpleList() {
         List<ErpWarehouseDO> list = warehouseService.getWarehouseListByStatus(CommonStatusEnum.ENABLE.getStatus());
+        // 除 id/name 外额外透出 code：下拉里用编码区分同名仓库
         return success(convertList(list, warehouse -> new ErpWarehouseRespVO().setId(warehouse.getId())
-                .setName(warehouse.getName()).setDefaultStatus(warehouse.getDefaultStatus())));
+                .setName(warehouse.getName()).setDefaultStatus(warehouse.getDefaultStatus())
+                .setCode(warehouse.getCode())));
     }
 
     @GetMapping("/export-excel")

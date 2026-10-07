@@ -16,6 +16,10 @@ public class DeptSimpleRespVO {
 
     @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
+    /**
+     * 组织节点编码（如 BM0001）；下拉里用于区分同名节点
+     */
+    private String code;
 
     @Schema(description = "父部门 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long parentId;
