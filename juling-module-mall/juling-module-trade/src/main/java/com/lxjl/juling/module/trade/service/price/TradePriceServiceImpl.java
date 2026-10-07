@@ -105,10 +105,17 @@ public class TradePriceServiceImpl implements TradePriceService {
             }
             ErpPriceMatchRespDTO match = erpPriceApi.matchPrice(PRICE_TYPE_DELIVERY, reqBO.getCustomerId(), productId);
             if (match == null || match.getPrice() == null) {
+                // 配送价没命中，保持 SKU 价。**必须留痕**：配送价是「价目表 → 物料销售价 → SKU 价」
+                // 三层兜底，不记的话线上排查「为什么是这个价」只能靠猜（见 docs/price-list-design.md §13.1）
+                log.info("[applyDeliveryPrice][门店({}) 物料({}) SKU({}) 未命中配送价目表，回退 SKU 价({})]",
+                        reqBO.getCustomerId(), productId, item.getSkuId(), item.getPrice());
                 return;
             }
             int priceInCent = match.getPrice().multiply(BigDecimal.valueOf(100))
                     .setScale(0, RoundingMode.HALF_UP).intValueExact();
+            log.info("[applyDeliveryPrice][门店({}) 物料({}) SKU({}) 配送价({}分) 来源({}) 价目表({})]",
+                    reqBO.getCustomerId(), productId, item.getSkuId(), priceInCent,
+                    match.getSource(), match.getPriceName());
             item.setPrice(priceInCent).setPayPrice(priceInCent * item.getCount());
         });
         // 单价被覆盖了，合计要重算

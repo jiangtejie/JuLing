@@ -184,7 +184,7 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
      *
      * <p>取值优先级（都在「用户没填」的前提下才生效，即**允许按单覆盖**）：
      * <ol>
-     *   <li>单价：采购价目表（供应商专项 &gt; 通用，见 ErpPurchasePriceService#matchPrice）</li>
+     *   <li>单价：采购价目表（供应商专项 &gt; 通用，见 ErpPriceListService#matchPrice）</li>
      *   <li>税率：价目表行上的税率 &gt; 供应商的开票税点</li>
      * </ol>
      * <p>取价只在**单价为空**时触发 —— 用户既然已经把单价填了，就不该再替他改税率，
