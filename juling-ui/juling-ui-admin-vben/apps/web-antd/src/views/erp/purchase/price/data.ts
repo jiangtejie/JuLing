@@ -148,9 +148,7 @@ export function useFormSchema(
 }
 
 /** 搜索表单 */
-export function useGridFormSchema(
-  priceType: 'DELIVERY' | 'PURCHASE' = 'PURCHASE',
-): VbenFormSchema[] {
+export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       fieldName: 'code',

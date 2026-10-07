@@ -91,7 +91,7 @@ function handleRowCheckboxChange({ records }: { records: ErpPurchasePriceApi.Pri
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
-  formOptions: { schema: useGridFormSchema(props.priceType) },
+  formOptions: { schema: useGridFormSchema() },
   gridOptions: {
     columns: useGridColumns(),
     height: 'auto',
