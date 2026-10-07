@@ -271,7 +271,7 @@ member 模块经 **trade-api** 调用新增的 `TradeOrderAccountStoreApi` 落�
 |---|---|
 | `src/api/order.ts` `getStoreList` | 数据源语义从「名下门店」变「授权门店」（同一个接口） |
 | `src/stores/store.ts` | 首次进入优先用后端下发的 `isDefault`；用户手动切换后本地记忆覆盖（现状 `currentStoreId` 持久化保留） |
-| `src/types/order.ts:136`、`types/backend.ts:459`、`types/storeAccount.ts:21`、`api/storeAccount.ts:40` | 删掉 `deptId` 类型透传（4 处） |
+| `src/types/order.ts:136`、`types/backend.ts:459`、`types/storeAccount:21`、`api/storeAccount:40` | 删掉 `deptId` 类型透传（4 处） |
 | 门店选择器（`views/order/confirm.vue`、`views/order/list.vue`） | 建议加**搜索** —— 片区管理人可能被授权十几家店，纯列表会很长 |
 
 ### 8.1 删除「我的账」（已确认）
@@ -281,9 +281,9 @@ member 模块经 **trade-api** 调用新增的 `TradeOrderAccountStoreApi` 落�
 
 | # | 要删的东西 | 说明 |
 |---|---|---|
-| 1 | `src/views/user/account.vue` | 整页（约 300 行） |
-| 2 | `src/api/storeAccount.ts` | 整个 API 模块（`/trade/store-account/summary`、`/page`） |
-| 3 | `src/types/storeAccount.ts` | 整个领域模型模块 |
+| 1 | `src/views/user/account`（.vue，已删除） | 整页 454 行 |
+| 2 | `src/api/storeAccount`（.ts，已删除） | 整个 API 模块（`/trade/store-account/summary`、`/page`） |
+| 3 | `src/types/storeAccount`（.ts，已删除） | 整个领域模型模块 |
 | 4 | `src/types/backend.ts` 的 `AppStoreAccountSummaryRespVO` / `AppStoreAccountDetailRespVO` | 两个后端 VO 类型 |
 | 5 | `src/router/routes.ts` 的 `/user/account` 路由 | 含 `meta.title: '我的账'` |
 | 6 | `src/views/user/index.vue` 的「我的账」菜单项 | 第 40-41 行 |
@@ -315,7 +315,7 @@ H5 页面不是 `system_menu`，无需清菜单权限。
 
 数据量极小，可无损迁移。**分两个脚本，先加后删**：
 
-### `sql/local/52_member_user_store.sql`（建表 + 回填，不删列）
+### `sql/local/53_member_user_store.sql`（建表 + 回填，不删列）
 1. 建 `member_user_store` 表与索引；
 2. 回填：对每个 `customer_id` 非空的订货账号 ——
    - 该客户**有下级** → 授权 = 全部下级，`is_default` = 列表首个；
@@ -325,7 +325,7 @@ H5 页面不是 `system_menu`，无需清菜单权限。
 
 > 此时旧字段仍在、旧代码仍能跑，是**可回退**的状态。
 
-### `sql/local/53_drop_legacy_store_columns.sql`（代码切换并验证后再跑）
+### `sql/local/54_drop_legacy_store_columns.sql`（代码切换并验证后再跑）
 1. 把待删列的值备份到 `bak_ordering_account_<日期>` schema（对齐 `sql/local/27` 的既有做法）；
 2. 删列：`member_user.dept_id`、`member_user.customer_id`、`trade_order.agent_customer_id`、`erp_customer.parent_customer_id`；
 3. 删索引：`idx_member_user_customer_id`、`idx_erp_customer_parent_id`；
@@ -337,7 +337,7 @@ H5 页面不是 `system_menu`，无需清菜单权限。
 并从 `erp_customer.dept_id` 复制——正是「账号部门是抄门店的」的病根。改为：种子数据直接写授权表，
 不再设 `parent_customer_id`。
 
-> 执行顺序安全：`29 < 52 < 53`，全新环境按序重建不会失败。
+> 执行顺序安全：`29 < 52 < 53 < 54`（`52` 是组织架构脚本），全新环境按序重建不会失败。
 
 ## 10. 连带要改的文档
 
@@ -351,17 +351,17 @@ H5 页面不是 `system_menu`，无需清菜单权限。
 
 | 步 | 内容 | 验证 |
 |---|---|---|
-| 1 | 脚本 52：建表 + 回填 | 查授权表行数与人工核对一致；旧功能不受影响 |
+| 1 | 脚本 53：建表 + 回填 | 查授权表行数与人工核对一致；旧功能不受影响 |
 | 2 | 后端重构：`TradeOrderStoreService` 塌缩 + VO/错误码 + member 建号带授权 | H5 下单、门店切换、门店往来可见范围；加盟/直营分流不受影响 |
 | 3 | 后台 UI + H5 | 开账号能选多家门店；H5 默认门店正确 |
-| 4 | 脚本 53：备份 + 删列；改写脚本 29；清理文档 | 全新环境重建走通；旧字段在代码里零引用 |
+| 4 | 脚本 54：备份 + 删列；改写脚本 29；清理文档 | 全新环境重建走通；旧字段在代码里零引用 |
 
 ## 12. 风险与回滚
 
-- **删列不可逆** → 脚本 53 先备份到 `bak_` schema；代码切换完成并验证后才执行。
+- **删列不可逆** → 脚本 54 先备份到 `bak_` schema；代码切换完成并验证后才执行。
 - **门店未挂部门会暴露出来** → 这是**有意的**：静默写错值比留空并提示更危险。配套要尽快把 13 家门店建档 + 挂部门节点。
 - **授权配错会让门店看到不属于自己的往来账** → 门店往来可见范围与下单门店是同一个开关（都走 `getStoreList`）。建议授权变更加留痕（谁在何时改了哪个账号的授权）。
-- **回滚**：脚本 52 阶段直接回退代码即可；脚本 53 之后需从 `bak_` schema 恢复列。
+- **回滚**：脚本 53 阶段直接回退代码即可；脚本 54 之后需从 `bak_` schema 恢复列。
 
 ## 13. 结论与剩余待确认
 
