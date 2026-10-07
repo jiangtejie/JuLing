@@ -43,6 +43,7 @@ export namespace MallSpuApi {
     marketPrice?: number | string; // 市场价
     costPrice?: number | string; // 成本价
     barCode?: string; // 商品条码
+  erpProductId?: number; // 对应的 ERP 物料编号（1 物料 : 1 SKU）；为空表示未关联，见 sql/local/73
     picUrl?: string; // 图片地址
     stock?: number; // 库存
     weight?: number; // 商品重量，单位：kg 千克
