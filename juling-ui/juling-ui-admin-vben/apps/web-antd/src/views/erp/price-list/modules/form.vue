@@ -67,12 +67,15 @@ const [Modal, modalApi] = useVbenModal({
     const data = (await formApi.getValues()) as ErpPurchasePriceApi.Price;
     data.priceType = props.priceType;
     data.items = items;
-    // 适用范围：界面是「多选对象 + 一个默认开关」，落库拆成 N 行（数据库支持逐行默认，后续可细化）
+    // 适用范围：界面是「适用对象多选 + 其中哪些默认」，落库拆成 N 行 ——
+    // 数据库的 is_default 就在适用范围行上，所以「只对部分门店默认」能完整表达
+    const defaultIds = data.defaultPartnerIds ?? [];
     data.scopes = (data.scopePartnerIds ?? []).map((partnerId) => ({
       partnerId,
-      isDefault: data.scopeIsDefault,
+      isDefault: defaultIds.includes(partnerId),
     }));
     if (data.scopes.length === 0) {
+      // 没选对象 = 通用范围，此时用整表那个开关
       data.scopes = [{ partnerId: undefined, isDefault: data.scopeIsDefault }];
     }
     try {
@@ -108,7 +111,12 @@ const [Modal, modalApi] = useVbenModal({
         scopePartnerIds: (formData.value.scopes ?? [])
           .map((s) => s.partnerId)
           .filter((id): id is number => id !== null && id !== undefined),
-        scopeIsDefault: (formData.value.scopes ?? []).some((s) => s.isDefault),
+        // 逐行默认：只有「对象行」才进这个多选；通用范围行（partnerId 为空）走整表开关
+        defaultPartnerIds: (formData.value.scopes ?? [])
+          .filter((s) => s.isDefault && s.partnerId !== null && s.partnerId !== undefined)
+          .map((s) => s.partnerId as number),
+        scopeIsDefault: (formData.value.scopes ?? [])
+          .some((s) => s.isDefault && (s.partnerId === null || s.partnerId === undefined)),
       });
     } finally {
       modalApi.unlock();

@@ -53,16 +53,43 @@ export function useFormSchema(
         : '可以多选；留空 = 通用（不限供应商）',
     },
     {
+      // 「默认」是**按适用对象**标的（数据库里 is_default 在适用范围行上）——
+      // 同一张价目表可以只对部分门店默认，所以这里不是一个整表开关。
+      // 选对象时用下面的多选指定「其中哪些是默认」；没选对象（通用范围）时才用这个开关。
       fieldName: 'scopeIsDefault',
       label: '默认价目表',
       component: 'Switch',
       componentProps: {
-        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
+        class: '!w-auto',
         checkedChildren: '默认',
         unCheckedChildren: '普通',
       },
       defaultValue: false,
-      help: '取价时优先取它。注：当前界面是整张表一个开关，数据库支持「只对部分门店默认」，后续可细化',
+      help: '通用范围（不限对象）时生效：取价时优先取它',
+      dependencies: {
+        triggerFields: ['scopePartnerIds'],
+        show: (values) => !(values.scopePartnerIds ?? []).length,
+      },
+    },
+    {
+      fieldName: 'defaultPartnerIds',
+      label: '其中默认为',
+      component: 'ApiSelect',
+      componentProps: {
+        placeholder: '在上面选中的对象里，哪些把它作为默认价目表',
+        allowClear: true,
+        showSearch: true,
+        mode: 'multiple',
+        api: isDelivery ? getCustomerSimpleList : getSupplierSimpleList,
+        labelField: 'name',
+        valueField: 'id',
+        disabled: formType === 'detail',
+      },
+      help: '留空 = 都不设为默认（取价时按生效日期取最新的）',
+      dependencies: {
+        triggerFields: ['scopePartnerIds'],
+        show: (values) => (values.scopePartnerIds ?? []).length > 0,
+      },
     },
     {
       fieldName: 'priceIncludesTax',

@@ -12,7 +12,8 @@ export namespace ErpPurchasePriceApi {
     scopes?: Scope[]; // 适用范围（采购=供应商 / 配送=门店）；为空或 partnerId 为空表示通用范围
     scopeSummary?: string; // 适用范围摘要（列表展示用）
     scopePartnerIds?: number[]; // 仅前端表单用：适用范围选中的对象编号
-    scopeIsDefault?: boolean; // 仅前端表单用：整张表的「默认价目表」
+    scopeIsDefault?: boolean; // 仅前端表单用：通用范围（未选对象）时的「默认价目表」
+    defaultPartnerIds?: number[]; // 仅前端表单用：在选中的适用对象里，哪些把它作为默认价目表
     isDefault?: boolean; // 是否默认价目表
     priceIncludesTax?: boolean; // 报价口径：true 表示供应商报的是含税价
     pricerUserId?: number; // 定价员编号
