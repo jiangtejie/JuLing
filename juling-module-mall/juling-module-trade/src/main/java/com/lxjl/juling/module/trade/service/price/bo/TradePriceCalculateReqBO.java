@@ -35,6 +35,14 @@ public class TradePriceCalculateReqBO {
      * 会员中心（含会员地址簿）已下线，恒为空、不再消费；仅为兼容 H5 保留字段
      */
     private Long addressId;
+
+    /**
+     * 下单门店（erp_customer.id）
+     *
+     * <p>用于按「配送价目表」定价 —— 配送价可以针对不同门店不同（见 sql/local/69）。
+     * 为空时只匹配通用范围的配送价目表。
+     */
+    private Long customerId;
     /**
      * 商品 SKU 数组
      */

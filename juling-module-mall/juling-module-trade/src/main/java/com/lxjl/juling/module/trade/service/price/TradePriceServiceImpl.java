@@ -1,5 +1,9 @@
 package com.lxjl.juling.module.trade.service.price;
 
+import com.lxjl.juling.module.erp.api.pricelist.ErpPriceApi;
+import com.lxjl.juling.module.erp.api.pricelist.dto.ErpPriceMatchRespDTO;
+import com.lxjl.juling.module.erp.api.product.ErpProductApi;
+import com.lxjl.juling.module.erp.api.product.dto.ErpProductRespDTO;
 import com.lxjl.juling.module.product.api.sku.ProductSkuApi;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuRespDTO;
 import com.lxjl.juling.module.product.api.spu.ProductSpuApi;
@@ -13,9 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.util.StrUtil;
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.product.enums.ErrorCodeConstants.SKU_NOT_EXISTS;
@@ -36,6 +43,13 @@ public class TradePriceServiceImpl implements TradePriceService {
     private ProductSkuApi productSkuApi;
     @Resource
     private ProductSpuApi productSpuApi;
+    @Resource
+    private ErpPriceApi erpPriceApi;
+    @Resource
+    private ErpProductApi erpProductApi;
+
+    /** 价目表类型：配送（门店订货的结算价） */
+    private static final String PRICE_TYPE_DELIVERY = "DELIVERY";
 
     @Override
     public TradePriceCalculateRespBO calculateOrderPrice(TradePriceCalculateReqBO calculateReqBO) {
@@ -50,6 +64,8 @@ public class TradePriceServiceImpl implements TradePriceService {
         // 价格就是「SKU 单价 × 数量」，因此不再保留空的扩展点。
         TradePriceCalculateRespBO calculateRespBO = TradePriceCalculatorHelper
                 .buildCalculateResp(calculateReqBO, spuList, skuList);
+        // 2.1.1 配送价目表定价：门店订货的结算价以配送价目表为准，没命中才用 SKU 价
+        applyDeliveryPrice(calculateReqBO, skuList, calculateRespBO);
         // 2.2  如果最终支付金额小于等于 0，则抛出业务异常
         if (calculateRespBO.getPrice().getPayPrice() <= 0) {
             log.error("[calculatePrice][价格计算不正确，请求 calculateReqDTO({})，结果 priceCalculate({})]",
@@ -57,6 +73,46 @@ public class TradePriceServiceImpl implements TradePriceService {
             throw exception(PRICE_CALCULATE_PAY_PRICE_ILLEGAL);
         }
         return calculateRespBO;
+    }
+
+    /**
+     * 用配送价目表给订单项定价
+     *
+     * <p>链路：SKU → 条码 → ERP 物料（**这是既有的对应约定**，见 TradeOrderWorkbenchServiceImpl:137）
+     * → 按「门店 + 物料 + 日期」取配送价 → 覆盖订单项单价。
+     *
+     * <p>**任何一步拿不到就保持 SKU 价**（条码没维护、物料不存在、价目表没命中），
+     * 保证不会因为价目表没配好就让门店下不了单。
+     *
+     * <p>单位换算：价目表存的是**元**，订单项的价格是**分**。
+     */
+    private void applyDeliveryPrice(TradePriceCalculateReqBO reqBO, List<ProductSkuRespDTO> skuList,
+                                    TradePriceCalculateRespBO calculateRespBO) {
+        Map<Long, ProductSkuRespDTO> skuMap = convertMap(skuList, ProductSkuRespDTO::getId);
+        // SKU 条码 → ERP 物料
+        List<String> barCodes = skuList.stream().map(ProductSkuRespDTO::getBarCode)
+                .filter(StrUtil::isNotBlank).distinct().toList();
+        if (barCodes.isEmpty()) {
+            return;
+        }
+        Map<String, Long> barCodeProductIdMap = convertMap(erpProductApi.getProductListByBarCodes(barCodes),
+                ErpProductRespDTO::getBarCode, ErpProductRespDTO::getId);
+        calculateRespBO.getItems().forEach(item -> {
+            ProductSkuRespDTO sku = skuMap.get(item.getSkuId());
+            Long productId = sku == null ? null : barCodeProductIdMap.get(sku.getBarCode());
+            if (productId == null) {
+                return;
+            }
+            ErpPriceMatchRespDTO match = erpPriceApi.matchPrice(PRICE_TYPE_DELIVERY, reqBO.getCustomerId(), productId);
+            if (match == null || match.getPrice() == null) {
+                return;
+            }
+            int priceInCent = match.getPrice().multiply(BigDecimal.valueOf(100))
+                    .setScale(0, RoundingMode.HALF_UP).intValueExact();
+            item.setPrice(priceInCent).setPayPrice(priceInCent * item.getCount());
+        });
+        // 单价被覆盖了，合计要重算
+        TradePriceCalculatorHelper.recountAllPrice(calculateRespBO);
     }
 
     private List<ProductSkuRespDTO> checkSkuList(TradePriceCalculateReqBO reqBO) {

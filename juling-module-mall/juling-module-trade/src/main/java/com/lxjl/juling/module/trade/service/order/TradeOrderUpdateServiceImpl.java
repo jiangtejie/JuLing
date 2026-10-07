@@ -110,8 +110,10 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
 
     @Override
     public AppTradeOrderSettlementRespVO settlementOrder(Long userId, AppTradeOrderSettlementReqVO settlementReqVO) {
-        // 1. 计算价格
-        TradePriceCalculateRespBO calculateRespBO = calculatePrice(userId, settlementReqVO);
+        // 1. 先解析门店：配送价目表按门店定价，所以必须在算价之前拿到（见 sql/local/69 的说明）
+        TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, settlementReqVO.getStoreCustomerId());
+        // 2. 计算价格
+        TradePriceCalculateRespBO calculateRespBO = calculatePrice(userId, settlementReqVO, store.getCustomerId());
 
         // 2. 拼接返回
         return TradeOrderConvert.INSTANCE.convert(calculateRespBO);
@@ -124,13 +126,15 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
      * @param settlementReqVO 结算信息
      * @return 订单价格
      */
-    private TradePriceCalculateRespBO calculatePrice(Long userId, AppTradeOrderSettlementReqVO settlementReqVO) {
+    private TradePriceCalculateRespBO calculatePrice(Long userId, AppTradeOrderSettlementReqVO settlementReqVO,
+                                                     Long customerId) {
         // 1. 如果来自购物车，则获得购物车的商品
         List<CartDO> cartList = cartService.getCartList(userId,
                 convertSet(settlementReqVO.getItems(), AppTradeOrderSettlementReqVO.Item::getCartId));
 
         // 2. 计算价格
         TradePriceCalculateReqBO calculateReqBO = TradeOrderConvert.INSTANCE.convert(userId, settlementReqVO, cartList);
+        calculateReqBO.setCustomerId(customerId); // 配送价目表按门店定价
         calculateReqBO.getItems().forEach(item -> Assert.isTrue(item.getSelected(), // 防御性编程，保证都是选中的
                 "商品({}) 未设置为选中", item.getSkuId()));
         return tradePriceService.calculateOrderPrice(calculateReqBO);
@@ -140,10 +144,12 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     @Transactional(rollbackFor = Exception.class)
     @TradeOrderLog(operateType = TradeOrderOperateTypeEnum.MEMBER_CREATE)
     public TradeOrderDO createOrder(Long userId, AppTradeOrderCreateReqVO createReqVO) {
-        // 1.1 价格计算
-        TradePriceCalculateRespBO calculateRespBO = calculatePrice(userId, createReqVO);
-        // 1.2 构建订单
-        TradeOrderDO order = buildTradeOrder(userId, createReqVO, calculateRespBO);
+        // 1.1 先解析下单门店：配送价目表按门店定价，必须在算价之前（原先算价在前、解析门店在后）
+        TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());
+        // 1.2 价格计算
+        TradePriceCalculateRespBO calculateRespBO = calculatePrice(userId, createReqVO, store.getCustomerId());
+        // 1.3 构建订单
+        TradeOrderDO order = buildTradeOrder(userId, createReqVO, calculateRespBO, store);
         List<TradeOrderItemDO> orderItems = buildTradeOrderItems(order, calculateRespBO);
 
         // 2. 订单创建前的逻辑
@@ -160,7 +166,7 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
     }
 
     private TradeOrderDO buildTradeOrder(Long userId, AppTradeOrderCreateReqVO createReqVO,
-                                         TradePriceCalculateRespBO calculateRespBO) {
+                                         TradePriceCalculateRespBO calculateRespBO, TradeOrderStoreBO store) {
         TradeOrderDO order = TradeOrderConvert.INSTANCE.convert(userId, createReqVO, calculateRespBO);
         order.setType(calculateRespBO.getType());
         order.setNo(tradeNoRedisDAO.generate(TradeNoRedisDAO.TRADE_ORDER_NO_PREFIX));
@@ -183,7 +189,6 @@ public class TradeOrderUpdateServiceImpl implements TradeOrderUpdateService {
                     .setReceiverDetailAddress(createReqVO.getReceiverDetailAddress());
         }
         // 门店订货链 S1：快照下单门店（组织面 deptId + 经营面 customerId / 结算模式），并初始化审核状态
-        TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(userId, createReqVO.getStoreCustomerId());
         order.setCustomerId(store.getCustomerId()).setDeptId(store.getDeptId())
                 .setSettlementMode(store.getSettlementMode())
                 .setStoreType(store.getStoreType())

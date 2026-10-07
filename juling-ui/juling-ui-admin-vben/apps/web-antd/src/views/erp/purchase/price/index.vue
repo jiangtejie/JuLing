@@ -126,21 +126,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
               label: $t('ui.actionTitle.create', ['采购价目表']),
               type: 'primary',
               icon: ACTION_ICON.ADD,
-              auth: ['erp:purchase-price:create'],
+              auth: ['erp:price-list:create'],
               onClick: handleCreate,
             },
             {
               label: $t('ui.actionTitle.export'),
               type: 'primary',
               icon: ACTION_ICON.DOWNLOAD,
-              auth: ['erp:purchase-price:export'],
+              auth: ['erp:price-list:export'],
               onClick: handleExport,
             },
             {
               label: $t('ui.actionTitle.deleteBatch'),
               type: 'primary',
               danger: true,
-              auth: ['erp:purchase-price:delete'],
+              auth: ['erp:price-list:delete'],
               onClick: handleDeleteBatch,
             },
           ]"
@@ -158,7 +158,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
               label: $t('common.edit'),
               type: 'link',
               icon: ACTION_ICON.EDIT,
-              auth: ['erp:purchase-price:update'],
+              auth: ['erp:price-list:update'],
               onClick: handleEdit.bind(null, row),
             },
             {
@@ -166,7 +166,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
               type: 'link',
               danger: true,
               icon: ACTION_ICON.DELETE,
-              auth: ['erp:purchase-price:delete'],
+              auth: ['erp:price-list:delete'],
               popConfirm: {
                 title: $t('ui.actionMessage.deleteConfirm', [row.name]),
                 confirm: handleDelete.bind(null, row),
