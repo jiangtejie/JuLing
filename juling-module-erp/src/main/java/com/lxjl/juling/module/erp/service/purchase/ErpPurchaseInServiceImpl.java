@@ -213,6 +213,15 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
             throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
         }
 
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_IN).setBillId(id).setBillNo(purchaseIn.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(purchaseIn.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
+
         // 3. 变更库存（S2 库存中心：按批次入账 / 冲销；内部同时写库存流水并增量更新 erp_stock.count）
         List<ErpPurchaseInItemDO> purchaseInItems = purchaseInItemMapper.selectListByInId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.PURCHASE_IN.getType()

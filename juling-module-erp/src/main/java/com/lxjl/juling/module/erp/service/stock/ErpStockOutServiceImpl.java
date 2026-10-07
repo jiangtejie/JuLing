@@ -133,6 +133,15 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
             throw exception(approve ? STOCK_OUT_APPROVE_FAIL : STOCK_OUT_PROCESS_FAIL);
         }
 
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.OTHER_OUT).setBillId(id).setBillNo(stockOut.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(stockOut.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
+
         // 3. 变更库存（S2 库存中心：出库按批次 FIFO 扣减并结转成本；反审核按原流水逐批回滚）
         List<ErpStockOutItemDO> stockOutItems = stockOutItemMapper.selectListByOutId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.OTHER_OUT.getType()
