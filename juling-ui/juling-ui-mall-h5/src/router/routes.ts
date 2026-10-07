@@ -47,14 +47,6 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '修改密码', auth: true },
   },
   {
-    // 我的账（门店往来）：只读台账，多门店账号可按门店查看逐笔明细
-    path: '/user/account',
-    name: 'UserAccount',
-    component: () => import('@/views/user/account.vue'),
-    meta: { title: '我的账', auth: true },
-  },
-
-  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),

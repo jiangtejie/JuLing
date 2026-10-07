@@ -37,8 +37,6 @@
     // 「我的订货单」= 已提交的门店订货单，落点应是订单列表；
     // 原先指向 /cart（底部「订货单」tab 的购物车），文案与落点不符，这里改到 /order/list
     { label: '我的订货单', icon: 'i-carbon-receipt', to: '/order/list' },
-    // 我的账：门店往来台账（只读），名下多门店时可按门店看逐笔明细
-    { label: '我的账', icon: 'i-carbon-wallet', to: '/user/account' },
     { label: '修改密码', icon: 'i-carbon-password', to: '/user/password' },
   ];
 

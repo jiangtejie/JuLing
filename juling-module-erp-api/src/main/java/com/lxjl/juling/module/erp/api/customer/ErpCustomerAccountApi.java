@@ -1,13 +1,8 @@
 package com.lxjl.juling.module.erp.api.customer;
 
-import com.lxjl.juling.framework.common.pojo.PageResult;
-import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerAccountDetailRespDTO;
 import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerAccountRecordReqDTO;
-import com.lxjl.juling.module.erp.api.customer.dto.ErpCustomerAccountSummaryRespDTO;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * ERP 门店往来台账 API（门店应收 / 收款 / 差异调整）
@@ -48,26 +43,5 @@ public interface ErpCustomerAccountApi {
      * @return 净额（无记录返回 0）
      */
     BigDecimal getPostedAmount(String sourceType, Long sourceId);
-
-    /**
-     * 门店往来余额汇总（按门店客户）
-     *
-     * 用途：订货 H5 的「我的账」——门店自己看「欠多少 / 已付多少 / 余款多少」。
-     *
-     * @param customerIds 门店客户编号集合；为空返回空列表
-     * @return 一家门店一行（含门店名称）
-     */
-    List<ErpCustomerAccountSummaryRespDTO> getSummaryList(Collection<Long> customerIds);
-
-    /**
-     * 门店往来明细分页（按门店客户集合过滤）
-     *
-     * @param customerIds 门店客户编号集合；为空返回空分页
-     * @param pageNo      页码
-     * @param pageSize    每页条数
-     * @return 明细分页（含门店名称与业务类型名称）
-     */
-    PageResult<ErpCustomerAccountDetailRespDTO> getAccountPage(Collection<Long> customerIds,
-                                                               Integer pageNo, Integer pageSize);
 
 }
