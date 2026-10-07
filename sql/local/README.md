@@ -80,6 +80,8 @@ psql -U root -d yate -f sql/local/62_supplier_profile.sql
 psql -U root -d yate -f sql/local/63_purchase_order_terms.sql
 # 术语统一：ERP 主数据「产品」→「物料」
 psql -U root -d yate -f sql/local/64_rename_product_to_material.sql
+# 采购价目表（头+明细）+ 顺带补齐物料主数据的业务编码
+psql -U root -d yate -f sql/local/65_purchase_price.sql
 # ⚠️ 54 会备份后**删除 4 个列**（不可逆）。必须等 53 执行完、且后端已切换到
 #    member_user_store 读取之后再执行；确认前保持注释：
 # psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
@@ -155,6 +157,7 @@ psql -U root -d yate -f sql/local/64_rename_product_to_material.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
+| 65_purchase_price.sql | **采购价目表**（头 + 明细）。此前 \`erp_product.purchase_price\` 是「一个物料一个采购价」，表达不了「不同供应商不同价 / 调价 / 量大价优」；而**采购单价直接决定存货成本**（订单价 → 入库 unit_cost → 批次成本 → 出库成本），填错的价会一路进到成本且无据可查。建 \`erp_purchase_price\` + \`erp_purchase_price_item\`、编码规则 \`CJJM\`、菜单 12200（基础资料 → 公共资料）+ 按钮 12201-12205。**顺带补齐物料主数据的业务编码**（\`erp_product.code\` + 规则 \`WL\`，之前 6 个主数据都有、唯独物料漏了）。设计见 [docs/purchase-price-design.md](../../docs/purchase-price-design.md)。幂等 | 菜单 12200+、表 \`erp_purchase_price*\` |
 | 64_rename_product_to_material.sql | **术语统一：ERP 主数据「产品」→「物料」**。金蝶把这类主数据叫「物料」，而本系统**下游订货链与库存页面早已在用「物料」**（`ERP 物料编号` / `请选择物料` / `物料数`），只有主数据页还叫「产品」，术语分裂。本脚本把 10 条菜单改名（物料管理/物料信息/物料查询/物料创建/物料更新/物料删除/物料导出/物料分类/物料单位/物料库存），备份到 `bak_rename_product_to_material_20261007`。**只改显示名，不动 permission 标识**（`erp:product:*` 改了会让存量角色授权失效）；类名/表名/路由同样是 ASCII 未动。顺带把 ERP「物料」与商城「商品」在中文上区分开。幂等 | 菜单 2564/2565/2566-2570/2571/2577/2590 |
 | 63_purchase_order_terms.sql | **采购订单记住「结算方式」与「交期」**：`erp_purchase_order` 加 `settlement_type` / `delivery_days` 两列。下单时从供应商带出默认值、**允许按单覆盖**；落库而非每次实时查档案，是为了保留**当时的约定**（供应商条件会变，历史订单不该跟着变）。配套：后端建单/改单时用供应商兜底（订单两字段 + 订单行税率，行未填税率时用供应商开票税点 —— 实测 `erp_product` 无税率列，供应商是唯一来源）；前端选供应商时自动带出三处、明细表新增行默认带出税点。幂等 | — |
 | 62_supplier_profile.sql | **供应商档案扩展**（采购部门需求）：`erp_supplier` 新增 12 列 —— 账户户名、注册地址、结账方式、账期天数、开票情况、开票比例、开票类型、交期天数、是否签订合同、签订主体、营业执照、生产许可证；新增字典 `erp_supplier_settlement_type`（月结/半月结/次结-先款后货/次结-先货后款）、`erp_supplier_invoice_mode`（全额/按比例/需加税点/不开）、`erp_supplier_invoice_type`（普票/专票）。**复用现有列不重复造**：名称→`name`、税号→`tax_no`、账号→`bank_account`、开户行→`bank_name`、开票税点→`tax_percent`（0=免税）。设计见 [docs/supplier-master-data-design.md](../../docs/supplier-master-data-design.md)。幂等 | 字典 11580-11582 |

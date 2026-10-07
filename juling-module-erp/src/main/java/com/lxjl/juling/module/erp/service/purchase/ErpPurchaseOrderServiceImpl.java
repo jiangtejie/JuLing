@@ -6,6 +6,7 @@ import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchaseOrderPageReqVO;
+import com.lxjl.juling.module.erp.controller.admin.purchase.vo.price.ErpPurchasePriceMatchRespVO;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchaseOrderSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
@@ -56,6 +57,8 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Resource
     private ErpSupplierService supplierService;
     @Resource
+    private ErpPurchasePriceService purchasePriceService;
+    @Resource
     private ErpAccountService accountService;
     @Resource
     private com.lxjl.juling.module.bill.api.BillPlatformApi billPlatformApi;
@@ -67,7 +70,7 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         ErpSupplierDO supplier = supplierService.validateSupplier(createReqVO.getSupplierId());
         // 1.2 校验订单项的有效性（行未填税率时用供应商的开票税点兜底）
         List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(
-                createReqVO.getItems(), supplier.getTaxPercent());
+                createReqVO.getItems(), supplier);
         // 1.3 校验结算账户
         if (createReqVO.getAccountId() != null) {
             accountService.validateAccount(createReqVO.getAccountId());
@@ -118,7 +121,7 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         }
         // 1.4 校验订单项的有效性
         List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(
-                updateReqVO.getItems(), supplier.getTaxPercent());
+                updateReqVO.getItems(), supplier);
 
         // 2.1 更新订单
         ErpPurchaseOrderDO updateObj = BeanUtils.toBean(updateReqVO, ErpPurchaseOrderDO.class, in -> in
@@ -175,12 +178,18 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     /**
      * 校验订单项并转成 DO
      *
-     * @param defaultTaxPercent 供应商的开票税点：**行上没有填税率时用它兜底**。
-     *                          实测 {@code erp_product} 没有税率列，供应商是税率的唯一来源；
-     *                          用户填了就尊重填的（允许按单覆盖）。
+     * @param supplier 供应商：用于取价（价目表 / 物料主数据兜底）与税率兜底
+     *
+     * <p>取值优先级（都在「用户没填」的前提下才生效，即**允许按单覆盖**）：
+     * <ol>
+     *   <li>单价：采购价目表（供应商专项 &gt; 通用，见 ErpPurchasePriceService#matchPrice）</li>
+     *   <li>税率：价目表行上的税率 &gt; 供应商的开票税点</li>
+     * </ol>
+     * <p>取价只在**单价为空**时触发 —— 用户既然已经把单价填了，就不该再替他改税率，
+     * 否则「我明明填了价，税率怎么变了」很难解释。
      */
     private List<ErpPurchaseOrderItemDO> validatePurchaseOrderItems(List<ErpPurchaseOrderSaveReqVO.Item> list,
-                                                                   BigDecimal defaultTaxPercent) {
+                                                                   ErpSupplierDO supplier) {
         // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseOrderSaveReqVO.Item::getProductId));
@@ -188,10 +197,23 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         // 2. 转化为 ErpPurchaseOrderItemDO 列表
         return convertList(list, o -> BeanUtils.toBean(o, ErpPurchaseOrderItemDO.class, item -> {
             item.setProductUnitId(productMap.get(item.getProductId()).getUnitId());
-            // 注意顺序：必须在算 taxPrice **之前**兜底，否则税额不会跟着重算
-            if (item.getTaxPercent() == null) {
-                item.setTaxPercent(defaultTaxPercent);
+            // 1) 单价为空才取价（价目表命中不了时 matchPrice 内部会兜底到物料主数据的采购价）
+            if (item.getProductPrice() == null) {
+                ErpPurchasePriceMatchRespVO match = purchasePriceService.matchPrice(
+                        supplier.getId(), item.getProductId(), item.getCount(), null);
+                if (match != null) {
+                    item.setProductPrice(match.getPrice());
+                    // 价目表行上的税率比供应商的开票税点更具体
+                    if (item.getTaxPercent() == null) {
+                        item.setTaxPercent(match.getTaxPercent());
+                    }
+                }
             }
+            // 2) 税率仍为空则用供应商的开票税点
+            if (item.getTaxPercent() == null) {
+                item.setTaxPercent(supplier.getTaxPercent());
+            }
+            // 注意顺序：必须在算 taxPrice **之前**兜底，否则税额不会跟着重算
             item.setTotalPrice(MoneyUtils.priceMultiply(item.getProductPrice(), item.getCount()));
             if (item.getTotalPrice() == null) {
                 return;

@@ -12,8 +12,10 @@ import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductCategoryDO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductUnitDO;
 import com.lxjl.juling.module.erp.dal.mysql.product.ErpProductMapper;
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
@@ -33,6 +35,8 @@ public class ErpProductServiceImpl implements ErpProductService {
 
     @Resource
     private ErpProductMapper productMapper;
+    @Resource
+    private CodeRuleApi codeRuleApi;
 
     @Resource
     private ErpProductCategoryService productCategoryService;
@@ -40,10 +44,13 @@ public class ErpProductServiceImpl implements ErpProductService {
     private ErpProductUnitService productUnitService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务，避免建档失败却消耗号段
     public Long createProduct(ProductSaveReqVO createReqVO) {
         // TODO 亚特：校验分类
         // 插入
         ErpProductDO product = BeanUtils.toBean(createReqVO, ErpProductDO.class);
+        // 物料编码：由编码规则统一发号（见 sql/local/65_purchase_price.sql 第 6 节）
+        product.setCode(codeRuleApi.generateCode("erp_product"));
         productMapper.insert(product);
         // 返回
         return product.getId();

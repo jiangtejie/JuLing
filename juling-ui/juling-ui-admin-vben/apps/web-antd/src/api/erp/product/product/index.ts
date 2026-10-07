@@ -7,6 +7,7 @@ export namespace ErpProductApi {
   export interface Product {
     id?: number; // 物料编号
     name: string; // 物料名称
+    code?: string; // 物料编码（编码规则发号，建档后只读）
     barCode: string; // 物料条码
     categoryId: number; // 物料类型编号
     unitId: number; // 单位编号

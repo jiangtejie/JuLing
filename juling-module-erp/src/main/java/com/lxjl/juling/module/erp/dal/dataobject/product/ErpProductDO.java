@@ -29,6 +29,10 @@ public class ErpProductDO extends BaseDO {
     @TableId
     private Long id;
     /**
+     * 物料编码（编码规则统一发号，建档后只读）
+     */
+    private String code;
+    /**
      * 物料名称
      */
     private String name;

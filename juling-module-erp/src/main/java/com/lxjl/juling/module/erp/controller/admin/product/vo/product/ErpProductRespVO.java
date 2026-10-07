@@ -17,6 +17,10 @@ public class ErpProductRespVO {
     @ExcelProperty("物料编号")
     private Long id;
 
+    @Schema(description = "物料编码", example = "WL000001")
+    @ExcelProperty("物料编码")
+    private String code;
+
     @Schema(description = "物料名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
     @ExcelProperty("物料名称")
     private String name;

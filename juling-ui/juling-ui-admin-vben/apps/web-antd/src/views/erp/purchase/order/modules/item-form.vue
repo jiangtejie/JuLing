@@ -14,6 +14,7 @@ import { Input, InputNumber, Select } from 'ant-design-vue';
 
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getProductSimpleList } from '#/api/erp/product/product';
+import { matchPurchasePrice } from '#/api/erp/purchase/price';
 import { getStockCount } from '#/api/erp/stock/stock';
 
 import { useFormItemColumns } from '../data';
@@ -29,6 +30,8 @@ interface Props {
    * 这里只是让用户新增行时就能看到默认值，不必等保存。
    */
   supplierTaxPercent?: number;
+  /** 当前选中的供应商编号：取价要用（价目表按供应商匹配） */
+  supplierId?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -171,8 +174,25 @@ async function handleProductChange(productId: any, row: any) {
   row.productUnitName = product.unitName;
   row.productName = product.name;
   row.stockCount = (await getStockCount(productId)) || 0;
-  row.productPrice = product.purchasePrice || 0;
   row.count = row.count || 1;
+  // 取价：采购价目表优先（按 供应商 + 物料 + 数量 匹配），没命中时后端兜底到物料主数据的采购价。
+  // 用户之后仍可手工改这个单价（允许按单覆盖）。
+  row.productPrice = product.purchasePrice || 0;
+  try {
+    const match = await matchPurchasePrice({
+      supplierId: props.supplierId,
+      productId,
+      quantity: row.count,
+    });
+    if (match?.price !== null && match?.price !== undefined) {
+      row.productPrice = match.price;
+      if (match.taxPercent !== null && match.taxPercent !== undefined) {
+        row.taxPercent = match.taxPercent;
+      }
+    }
+  } catch {
+    // 取价失败不阻断录入：保留物料主数据的采购价
+  }
   handleRowChange(row);
 }
 

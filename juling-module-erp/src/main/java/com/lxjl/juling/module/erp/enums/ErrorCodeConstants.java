@@ -15,6 +15,11 @@ public interface ErrorCodeConstants {
     ErrorCode SUPPLIER_NAME_DUPLICATE = new ErrorCode(1_030_100_002, "已存在同名供应商({})");
     ErrorCode SUPPLIER_HAS_REFERENCE = new ErrorCode(1_030_100_003, "供应商({})已被{}引用，无法删除；如需停止使用请改为「停用」");
 
+    // ========== ERP 采购价目表（1-030-104-000） ==========
+    ErrorCode PURCHASE_PRICE_NOT_EXISTS = new ErrorCode(1_030_104_000, "采购价目表不存在");
+    ErrorCode PURCHASE_PRICE_ITEM_QTY_RANGE_ILLEGAL = new ErrorCode(1_030_104_001, "数量区间不合法：起({})必须小于止({})");
+    ErrorCode PURCHASE_PRICE_ITEM_QTY_OVERLAP = new ErrorCode(1_030_104_002, "同一物料({})存在重叠的数量区间，会导致取价结果不确定，请调整");
+
     // ========== ERP 采购订单（1-030-101-000） ==========
     ErrorCode PURCHASE_ORDER_NOT_EXISTS = new ErrorCode(1_030_101_000, "采购订单不存在");
     ErrorCode PURCHASE_ORDER_DELETE_FAIL_APPROVE = new ErrorCode(1_030_101_001, "采购订单({})已审核，无法删除");

@@ -31,6 +31,8 @@ const formType = ref<FormType>('create'); // 表单类型：'create' | 'edit' | 
 const itemFormRef = ref<InstanceType<typeof PurchaseOrderItemForm>>();
 /** 当前选中供应商的开票税点：传给明细表作为新增行的税率默认值 */
 const supplierTaxPercent = ref<number>();
+/** 当前选中的供应商编号：传给明细表用于取价 */
+const supplierId = ref<number>();
 /** 供应商精简列表：选供应商时要按 id 反查它的结算方式 / 交期 / 税点 */
 let supplierList: ErpSupplierApi.Supplier[] = [];
 
@@ -65,6 +67,7 @@ const [Form, formApi] = useVbenForm({
     // 与后端一致（后端仅在单据上留空时兜底），这里覆盖是为了让用户立刻看到生效值。
     if (changedFields.includes('supplierId')) {
       const supplier = supplierList.find((s) => s.id === values.supplierId);
+      supplierId.value = supplier?.id;
       supplierTaxPercent.value = supplier?.taxPercent ?? undefined;
       await formApi.setValues({
         settlementType: supplier?.settlementType ?? undefined,
@@ -166,6 +169,7 @@ const [Modal, modalApi] = useVbenModal({
       // 设置到 values
       await formApi.setValues(formData.value);
       // 编辑态：明细表要跟着当前供应商的税点走
+      supplierId.value = formData.value?.supplierId ?? undefined;
       supplierTaxPercent.value = supplierList.find(
         (s) => s.id === formData.value?.supplierId,
       )?.taxPercent;
@@ -190,6 +194,7 @@ const [Modal, modalApi] = useVbenModal({
           :disabled="formType === 'detail'"
           :discount-percent="formData?.discountPercent ?? 0"
           :supplier-tax-percent="supplierTaxPercent"
+          :supplier-id="supplierId"
           @update:items="handleUpdateItems"
           @update:discount-price="handleUpdateDiscountPrice"
           @update:total-price="handleUpdateTotalPrice"
