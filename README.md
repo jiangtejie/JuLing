@@ -38,8 +38,17 @@ JuLing/
 | 位置 | 说明 |
 |---|---|
 | `sql/postgresql/juling-baseline.sql` | PostgreSQL 基线（system + infra 表结构与初始数据） |
+| `sql/postgresql/module-schema.sql` | **业务模块建表脚本**（erp / fms / wms / ai / product / trade / bpm / member 共 123 张表 + 122 个序列） |
 | `sql/postgresql/quartz.sql` | Quartz 调度表 |
 | `sql/local/` | **本项目补齐脚本**：缺失的业务模块菜单/字典/定时任务（幂等，重建环境时按该目录 README 的顺序执行） |
+
+> `act_*` / `flw_*`（Flowable 引擎表）由 `flowable.database-schema-update: true` 自动创建，不在上述脚本里。
+>
+> `module-schema.sql` 的来历：本仓库此前**只有** system + infra 的基线，业务模块的表只存在于开发机的
+> 数据库里——按仓库脚本重建环境会缺 123 张表。该文件由数据库元数据还原（`information_schema` +
+> `pg_get_indexdef` + `pg_description`）对齐当前库结构，并已在隔离 schema 中实测：422 条语句零失败、
+> 建出 123 张表 + 122 个序列。因为它是**当前结构快照**（已含各补丁的加列/加表结果），
+> `sql/local/` 的脚本全部以 `IF NOT EXISTS` / `IF EXISTS` 写成，在其之后重放是安全的。
 
 ## 快速启动
 
@@ -100,7 +109,7 @@ Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 2. `juling-server/pom.xml` 里放开对应 `<dependency>`；
 3. **先停后端**再构建（Windows 下运行中的进程会锁住 `juling-server.jar`，`mvn clean` 会失败）：
    `Stop-ScheduledTask -TaskName 'JuLing-Backend'` → `mvn -T 1C clean install -DskipTests` → `Start-ScheduledTask -TaskName 'JuLing-Backend'`；
-4. 数据库：模块自带表（见其 `src/test/resources/sql/create_tables.sql`）+ 菜单/字典（`sql/local/`，见该目录 README）；
+4. 数据库：业务模块表见 `sql/postgresql/module-schema.sql` + 菜单/字典（`sql/local/`，见该目录 README）；
 5. 前端：菜单在 `system_menu` 配置，页面在 `juling-ui/juling-ui-admin-vben/apps/web-antd/src/views/<模块>/`。
 
 各模块的额外前提：
@@ -118,6 +127,7 @@ Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 - **大文件拦截**（可选，每个克隆执行一次）：`git config core.hooksPath script/git-hooks`。
   提交超过 5MB 的文件会被拒绝（阈值可用环境变量 `LARGE_FILE_LIMIT_MB` 调整，`git commit --no-verify` 可临时绕过）；
   `.gitignore` 同时内置了常见大文件后缀（`*.exe` / `*.zip` / `*.mp4` / `*.psd` / `*.war` 等）。
+- **数据库重建顺序**：`juling-baseline.sql` → `module-schema.sql` → `quartz.sql` → `sql/local/`（按 README 顺序）。
 - **数据库**：本地库名 `juling`；本工作区（`JuLing-yate`）使用由 `juling` 复制的亚特专属库 `yate`，
   主干/发布工作区仍连 `juling`；模块补齐脚本、演示数据清理脚本与维护脚本都在 `sql/local/`，执行顺序见该目录 README。
 - **管理员密码**：已改为自定义强密码且不入库，仅存于本机 `script/local/admin-password.txt`；
