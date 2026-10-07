@@ -92,6 +92,7 @@ export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormS
       fieldName: 'remark',
       label: '备注',
       component: 'Textarea',
+      formItemClass: 'col-span-2',
       componentProps: {
         placeholder: '如：年度框架协议价',
         rows: 2,
@@ -99,7 +100,8 @@ export function useFormSchema(formType: 'create' | 'detail' | 'edit'): VbenFormS
       },
     },
     {
-      // 明细用插槽渲染：form.vue 里 <template #items>，字段名必须与插槽名一致
+      // 明细用插槽渲染：form.vue 里 <template #items>，字段名必须与插槽名一致。
+      // 标题由这里的 label 提供，item-form 里**不再重复写标题**（原先两处都有，界面上出现了两次）
       fieldName: 'items',
       label: '价目表明细',
       component: 'Input',

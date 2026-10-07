@@ -4,9 +4,9 @@ import type { ErpPurchasePriceApi } from '#/api/erp/purchase/price';
 
 import { nextTick, onMounted, ref, watch } from 'vue';
 
-import { Button, InputNumber, Select } from 'ant-design-vue';
+import { Button, Input, InputNumber, Select } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getProductSimpleList } from '#/api/erp/product/product';
 
 import { useItemColumns } from '../data';
@@ -34,7 +34,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
     columns: useItemColumns(),
     data: tableData.value,
-    minHeight: 300,
+    minHeight: 320,
     autoResize: true,
     border: true,
     rowConfig: { keyField: 'seq', isHover: true },
@@ -105,13 +105,7 @@ defineExpose({ handleAdd });
 </script>
 
 <template>
-  <div class="mb-2 flex items-center justify-between">
-    <span class="text-sm font-medium">价目表明细</span>
-    <Button v-if="!disabled" size="small" type="primary" @click="handleAdd">
-      添加明细行
-    </Button>
-  </div>
-  <Grid>
+  <Grid class="w-full">
     <template #productId="{ row }">
       <Select
         v-model:value="row.productId"
@@ -168,10 +162,9 @@ defineExpose({ handleAdd });
       />
     </template>
     <template #remark="{ row }">
-      <input
-        v-model="row.remark"
+      <Input
+        v-model:value="row.remark"
         :disabled="disabled"
-        class="w-full rounded border border-gray-300 px-2 py-1 text-sm disabled:bg-gray-100"
         placeholder="备注"
         @blur="notify"
       />
@@ -180,6 +173,21 @@ defineExpose({ handleAdd });
       <Button v-if="!disabled" danger size="small" type="link" @click="handleDelete(row)">
         删除
       </Button>
+    </template>
+    <!-- 注意：必须放进 vxe 的 #bottom 插槽，直接写在 Grid 里会落到默认插槽而不渲染
+         （写法对齐采购订单的明细表） -->
+    <template #bottom>
+      <TableAction
+        v-if="!disabled"
+        class="mt-2 flex justify-center"
+        :actions="[
+          {
+            label: '添加明细行',
+            type: 'default',
+            onClick: handleAdd,
+          },
+        ]"
+      />
     </template>
   </Grid>
 </template>

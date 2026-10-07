@@ -37,10 +37,12 @@ const getTitle = computed(() => {
 const [Form, formApi] = useVbenForm({
   commonConfig: {
     componentProps: { class: 'w-full' },
-    labelWidth: 100,
+    labelWidth: 120,
   },
   wrapperClass: 'grid-cols-2',
-  layout: 'horizontal',
+  // 与采购订单等 ERP 表单保持一致用 vertical：
+  // horizontal 下「默认价目表」这类较长的 label 会换行，且明细表会被 label 挤到右侧错位
+  layout: 'vertical',
   schema: useFormSchema('create'),
   showDefaultActions: false,
 });
