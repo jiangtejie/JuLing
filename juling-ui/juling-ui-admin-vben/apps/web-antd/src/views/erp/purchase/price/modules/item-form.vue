@@ -2,7 +2,7 @@
 import type { ErpProductApi } from '#/api/erp/product/product';
 import type { ErpPurchasePriceApi } from '#/api/erp/purchase/price';
 
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { Button, Input, InputNumber, Select } from 'ant-design-vue';
 
@@ -23,8 +23,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:items']);
 
+const rootRef = ref<HTMLElement>(); // 外层容器：用于监听宽度变化后让表格重新量宽
 const tableData = ref<ErpPurchasePriceApi.Item[]>([]); // 表格数据
 const productOptions = ref<ErpProductApi.Product[]>([]); // 物料下拉选项
+let rowSeq = 0; // 行序号：vxe 的 rowConfig.keyField 需要每行唯一（新增行还没有 id）
+let resizeObserver: ResizeObserver | undefined;
+let lastWidth = 0;
 
 /** 物料下拉选项（带编码，便于区分同名物料） */
 const productSelectOptions = ref<{ label: string; value: number }[]>([]);
@@ -58,6 +62,16 @@ watch(
 );
 
 onMounted(async () => {
+  resizeObserver = new ResizeObserver((entries) => {
+    const width = entries[0]?.contentRect.width ?? 0;
+    if (width > 0 && Math.abs(width - lastWidth) > 1) {
+      lastWidth = width;
+      (gridApi.grid as any)?.recalculate?.();
+    }
+  });
+  if (rootRef.value) {
+    resizeObserver.observe(rootRef.value);
+  }
   productOptions.value = (await getProductSimpleList()) as ErpProductApi.Product[];
   productSelectOptions.value = productOptions.value.map((p) => ({
     label: [p.code, p.name].filter(Boolean).join(' '),
@@ -74,6 +88,7 @@ async function notify() {
 /** 新增一行 */
 async function handleAdd() {
   tableData.value.push({
+    seq: ++rowSeq,
     productId: undefined,
     unitName: undefined,
     fromQty: undefined,
@@ -101,11 +116,19 @@ async function handleProductChange(productId: number, row: ErpPurchasePriceApi.I
   await notify();
 }
 
+onUnmounted(() => {
+  resizeObserver?.disconnect();
+});
+
 defineExpose({ handleAdd });
 </script>
 
 <template>
-  <Grid class="w-full">
+  <!-- 外层容器固定 w-full 并监听它自己的宽度变化：
+       vxe 在弹窗展开动画期间量到的容器宽度会偏窄（表格被压到实际宽度的一半左右），
+       而它自己的元素宽度没变、autoResize 就不会触发，所以这里主动 recalculate 一次 -->
+  <div ref="rootRef" class="w-full">
+    <Grid class="w-full">
     <template #productId="{ row }">
       <Select
         v-model:value="row.productId"
@@ -187,7 +210,8 @@ defineExpose({ handleAdd });
             onClick: handleAdd,
           },
         ]"
-      />
-    </template>
-  </Grid>
+        />
+      </template>
+    </Grid>
+  </div>
 </template>

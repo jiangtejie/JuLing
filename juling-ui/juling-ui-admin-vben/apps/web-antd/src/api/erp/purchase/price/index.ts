@@ -23,6 +23,8 @@ export namespace ErpPurchasePriceApi {
   /** 价目表明细行 */
   export interface Item {
     id?: number;
+    /** 行序号：仅前端使用，vxe 表格的 rowConfig.keyField 需要每行唯一（新增行还没有 id） */
+    seq?: number;
     productId?: number; // 物料编号
     productCode?: string; // 物料编码
     productName?: string; // 物料名称

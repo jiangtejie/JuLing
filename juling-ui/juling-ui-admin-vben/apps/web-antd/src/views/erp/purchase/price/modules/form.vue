@@ -107,16 +107,18 @@ function handleUpdateItems(items: ErpPurchasePriceApi.Item[]) {
 <template>
   <Modal
     :title="getTitle"
-    class="w-3/4"
+    class="w-2/3"
     :show-confirm-button="formType !== 'detail'"
   >
     <Form class="mx-3">
       <template #items>
-        <PriceItemForm
-          :items="formData?.items ?? []"
-          :disabled="formType === 'detail'"
-          @update:items="handleUpdateItems"
-        />
+        <div class="w-full">
+          <PriceItemForm
+            :items="formData?.items ?? []"
+            :disabled="formType === 'detail'"
+            @update:items="handleUpdateItems"
+          />
+        </div>
       </template>
     </Form>
   </Modal>

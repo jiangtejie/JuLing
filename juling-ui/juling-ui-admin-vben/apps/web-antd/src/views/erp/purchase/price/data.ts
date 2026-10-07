@@ -188,7 +188,7 @@ export function useGridColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Price>
       formatter: ({ cellValue }) => cellValue || '长期',
     },
     { field: 'itemCount', title: '明细行数', width: 100, formatter: ({ cellValue }) => cellValue ?? 0 },
-    { field: 'remark', title: '备注', minWidth: 120, showOverflow: 'tooltip' },
+    { field: 'remark', title: '备注', minWidth: 100, showOverflow: 'tooltip' },
     { title: '操作', width: 130, fixed: 'right', slots: { default: 'actions' } },
   ];
 }
@@ -199,23 +199,23 @@ export function useItemColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Item>[
     {
       field: 'productId',
       title: '物料',
-      minWidth: 180,
+      minWidth: 160,
       slots: { default: 'productId' },
     },
     {
       field: 'unitName',
       title: '计价单位',
-      width: 100,
+      minWidth: 80,
       formatter: ({ cellValue }) => cellValue || '-',
     },
-    { field: 'fromQty', title: '数量起', width: 100, slots: { default: 'fromQty' } },
-    { field: 'toQty', title: '数量止', width: 100, slots: { default: 'toQty' } },
-    { field: 'price', title: '单价(不含税)', width: 140, slots: { default: 'price' } },
-    { field: 'taxPercent', title: '税率%', width: 100, slots: { default: 'taxPercent' } },
+    { field: 'fromQty', title: '数量起', width: 85, slots: { default: 'fromQty' } },
+    { field: 'toQty', title: '数量止', width: 85, slots: { default: 'toQty' } },
+    { field: 'price', title: '单价(不含税)', width: 110, slots: { default: 'price' } },
+    { field: 'taxPercent', title: '税率%', width: 75, slots: { default: 'taxPercent' } },
     {
       field: 'taxPrice',
       title: '含税单价',
-      width: 120,
+      width: 95,
       formatter: ({ row }) => {
         const price = Number(row.price ?? 0);
         const rate = Number(row.taxPercent ?? 0);
@@ -223,7 +223,7 @@ export function useItemColumns(): VxeTableGridOptions<ErpPurchasePriceApi.Item>[
       },
     },
     { field: 'remark', title: '备注', minWidth: 120, slots: { default: 'remark' } },
-    { title: '操作', width: 80, fixed: 'right', slots: { default: 'actions' } },
+    { title: '操作', width: 70, fixed: 'right', slots: { default: 'actions' } },
   ];
 }
 
