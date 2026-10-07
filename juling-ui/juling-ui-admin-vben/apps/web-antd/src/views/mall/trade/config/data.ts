@@ -48,6 +48,9 @@ export const schema: VbenFormSchema[] = [
     fieldName: 'deliveryExpressFreeEnabled',
     label: '启用包邮',
     component: 'Switch',
+    componentProps: {
+      class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
+    },
     rules: 'required',
     dependencies: {
       triggerFields: ['type'],

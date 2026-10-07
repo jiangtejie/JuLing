@@ -146,6 +146,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '允许统配',
       component: 'Switch',
       componentProps: {
+        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
         checkedChildren: '允许',
         unCheckedChildren: '禁止',
       },
@@ -157,6 +158,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '允许直拨',
       component: 'Switch',
       componentProps: {
+        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
         checkedChildren: '允许',
         unCheckedChildren: '禁止',
       },

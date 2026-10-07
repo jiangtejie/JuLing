@@ -230,6 +230,7 @@ export function useFormSchema(): VbenFormSchema[] {
       label: '是否签订合同',
       component: 'Switch',
       componentProps: {
+        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
         checkedChildren: '已签订',
         unCheckedChildren: '未签订',
       },

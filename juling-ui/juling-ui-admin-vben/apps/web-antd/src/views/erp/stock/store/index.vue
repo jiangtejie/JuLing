@@ -167,6 +167,7 @@ function useGridFormSchema(): VbenFormSchema[] {
       component: 'Switch',
       defaultValue: true,
       componentProps: {
+        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
         checkedChildren: '只看有量',
         unCheckedChildren: '含零',
       },

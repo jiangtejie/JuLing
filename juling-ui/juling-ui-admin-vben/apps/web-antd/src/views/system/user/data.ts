@@ -247,6 +247,7 @@ export function useImportFormSchema(): VbenFormSchema[] {
       label: '是否覆盖',
       component: 'Switch',
       componentProps: {
+        class: '!w-auto', // 开关不该被表单的全局 w-full 拉满
         checkedChildren: '是',
         unCheckedChildren: '否',
       },
