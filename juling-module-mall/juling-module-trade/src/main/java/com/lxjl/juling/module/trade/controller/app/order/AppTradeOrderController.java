@@ -1,6 +1,7 @@
 package com.lxjl.juling.module.trade.controller.app.order;
 
 import com.lxjl.juling.framework.common.pojo.CommonResult;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.trade.controller.app.order.vo.*;
@@ -19,6 +20,7 @@ import com.lxjl.juling.module.trade.service.order.TradeOrderQueryService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderStoreService;
 import com.lxjl.juling.module.trade.service.order.TradeOrderUpdateService;
 import com.lxjl.juling.module.trade.service.price.TradePriceService;
+import com.lxjl.juling.module.trade.service.order.bo.TradeOrderStoreBO;
 import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -59,6 +61,16 @@ public class AppTradeOrderController {
     private TradeOrderPaymentProofService tradeOrderPaymentProofService;
     @Resource
     private TradeOrderStoreService tradeOrderStoreService;
+
+    @GetMapping("/store-price")
+    @Operation(summary = "获得门店维度的 SKU 实际下单价", description = "与下单算价同源。商品列表/详情必须用它展示，否则会出现「浏览看到商城价、结算变成配送价」")
+    @PermitAll
+    public CommonResult<Map<Long, Integer>> getStoreSkuPrice(@RequestParam("skuIds") List<Long> skuIds) {
+        // 门店解析与取价都和下单走同一条路（TradePriceService#getStoreSkuPriceMap 内部复用下单的解析函数）
+        TradeOrderStoreBO store = tradeOrderStoreService.resolveStore(
+                SecurityFrameworkUtils.getLoginUserId(), null);
+        return success(priceService.getStoreSkuPriceMap(store.getCustomerId(), skuIds));
+    }
 
     @Resource
     private com.lxjl.juling.module.erp.api.customer.ErpCustomerApi erpCustomerApi;

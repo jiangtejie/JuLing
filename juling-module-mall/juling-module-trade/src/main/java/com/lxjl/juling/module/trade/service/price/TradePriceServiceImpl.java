@@ -19,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -122,8 +124,7 @@ public class TradePriceServiceImpl implements TradePriceService {
                         reqBO.getCustomerId(), productId, item.getSkuId(), item.getPrice());
                 return;
             }
-            int priceInCent = match.getPrice().multiply(BigDecimal.valueOf(100))
-                    .setScale(0, RoundingMode.HALF_UP).intValueExact();
+            int priceInCent = toCent(match.getPrice());
             log.info("[applyDeliveryPrice][门店({}) 物料({}) SKU({}) 配送价({}分) 来源({}) 价目表({})]",
                     reqBO.getCustomerId(), productId, item.getSkuId(), priceInCent,
                     match.getSource(), match.getPriceName());
@@ -131,6 +132,41 @@ public class TradePriceServiceImpl implements TradePriceService {
         });
         // 单价被覆盖了，合计要重算
         TradePriceCalculatorHelper.recountAllPrice(calculateRespBO);
+    }
+
+    @Override
+    public Map<Long, Integer> getStoreSkuPriceMap(Long customerId, Collection<Long> skuIds) {
+        if (skuIds == null || skuIds.isEmpty()) {
+            return Map.of();
+        }
+        Map<Long, Integer> result = new LinkedHashMap<>();
+        productSkuApi.getSkuList(skuIds).forEach(sku -> {
+            Integer price = resolveDeliveryPriceInCent(customerId, sku);
+            if (price != null) {
+                result.put(sku.getId(), price);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * 单个 SKU 在指定门店下的配送价（分）
+     *
+     * <p>**下单算价与列表展示都调它** —— 这是两者同源的保证。
+     * 未关联 ERP 物料（外键为空）、或配送价目表没命中时返回 null，调用方回退 SKU 价。
+     */
+    private Integer resolveDeliveryPriceInCent(Long customerId, ProductSkuRespDTO sku) {
+        Long productId = sku.getErpProductId();
+        if (productId == null) {
+            return null;
+        }
+        ErpPriceMatchRespDTO match = erpPriceApi.matchPrice(PRICE_TYPE_DELIVERY, customerId, productId);
+        return match == null || match.getPrice() == null ? null : toCent(match.getPrice());
+    }
+
+    /** 元 → 分（订单项价格一律用分，价目表存的是元） */
+    private static int toCent(BigDecimal yuan) {
+        return yuan.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).intValueExact();
     }
 
     private List<ProductSkuRespDTO> checkSkuList(TradePriceCalculateReqBO reqBO) {
