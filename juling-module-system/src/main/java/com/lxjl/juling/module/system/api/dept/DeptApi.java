@@ -2,6 +2,7 @@ package com.lxjl.juling.module.system.api.dept;
 
 import cn.hutool.core.collection.CollUtil;
 import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
+import com.lxjl.juling.module.system.api.dept.dto.DeptCreateReqDTO;
 import com.lxjl.juling.module.system.api.dept.dto.DeptRespDTO;
 
 import java.util.Collection;
@@ -22,6 +23,18 @@ public interface DeptApi {
      * @param id 部门编号
      * @return 部门信息
      */
+    /**
+     * 创建部门（组织节点）
+     *
+     * <p>供 ERP 的「建门店」编排使用 —— 门店节点与客户档案必须**一次动作同时建**
+     * （organization-architecture-design §7 决策 ④），否则会出现"只有节点没档案"的悬空单。
+     * 调用方需处于事务中，本方法会随其一起回滚。
+     *
+     * @param reqDTO 创建信息
+     * @return 部门编号
+     */
+    Long createDept(DeptCreateReqDTO reqDTO);
+
     DeptRespDTO getDept(Long id);
 
     /**
