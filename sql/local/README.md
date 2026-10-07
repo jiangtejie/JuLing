@@ -67,6 +67,10 @@ psql -U root -d yate -f sql/local/53_member_user_store.sql
 psql -U root -d yate -f sql/local/55_master_data_menu.sql
 psql -U root -d yate -f sql/local/56_code_rule.sql
 psql -U root -d yate -f sql/local/57_code_rule_menu.sql
+# ⚠️ 全库测试数据清理：58 先整表备份到 bak_testdata_20261007 再删（可回退）；
+#    59 删历史备份 schema（不可回退）
+psql -U root -d yate -f sql/local/58_clean_all_test_data.sql
+psql -U root -d yate -f sql/local/59_drop_backup_schemas.sql
 # ⚠️ 54 会备份后**删除 4 个列**（不可逆）。必须等 53 执行完、且后端已切换到
 #    member_user_store 读取之后再执行；确认前保持注释：
 # psql -U root -d yate -f sql/local/54_drop_legacy_store_columns.sql
@@ -142,6 +146,8 @@ psql -U root -d yate -f sql/local/57_code_rule_menu.sql
 | 18_remove_pay_module.sql | 支付模块下线（本分支只走线下转账）：清理「支付管理」菜单树与 `pay:*` 权限、删除支付类字典（**保留 `pay_channel_code`**，线下收款渠道仍在用）与 5 个支付定时任务；14 张 `pay_*` 表**重命名**为 `zz_deprecated_pay_*` 归档（可回滚，确认无误后按脚本注释执行 DROP）。幂等 | — |
 | 16_trade_payment_proof.sql | 线下收款改造：新表 `trade_order_payment_proof`（一次上传一行，支持多图/多次上传/驳回重传/金额核定）、`trade_order` 增加 `paid_amount`\+`payment_proof_status`、字典 `trade_payment_proof_status`、`pay_channel_code` 增加 4 个线下渠道、按钮权限 `trade:order:payment-proof:audit` | — |
 | 15_add_missing_primary_keys.sql | 给「缺主键 + 有 id 列 + id 无 NULL 且唯一」的表补 `PRIMARY KEY (id)`。yate 库 552 张表里曾有 453 张没有主键(转换时丢失,id 数据本身干净),导致 PostgreSQL 无法做主键函数依赖推断,关联查询 + `GROUP BY` 主键时报 `column "t.xxx" must appear in the GROUP BY clause`(MySQL 宽松模式不报)。脚本幂等,id 有 NULL/重复的表会跳过并打印 NOTICE | — |
+| 59_drop_backup_schemas.sql | **删除历史备份 schema**（10 个 / 398 张表：`bak_cleanup_20260929`、`bak_erp_ctr(_2)_20260922`、`bak_member_center_20260929`、`bak_pay_archive_20260929`、`bak_promotion_20260929`、`bak_tenant123_20260928`、`bak_test_erp_20260929`、`bak_test_orders_20260929`、`bak_unused_modules_20260929`）。它们装的是**已经删过的**历史数据（下线模块 MES/PMS/CRM/HRM/IM/IoT、支付归档、营销评价、会员中心、测试订单/ERP），实测合计仅约 391 行、其余是空表壳。⚠️ **不可回退**。保留 `bak_testdata_20261007` 作为 58 的回退路径。幂等 | schema `bak_*` |
+| 58_clean_all_test_data.sql | **全库测试数据物理清理**：先整表备份到 `bak_testdata_20261007`（71 张表 / 约 4706 行）**再删除** —— 因此本次删除**可回退**。清理 A 测试业务数据 49 张表（库存/批次/流水、采购销售单据、收付款、门店往来台账、购物车/浏览/收藏/统计、售后日志、记账凭证、单据流水号）+ B 演示主数据 12 张表（客户 15 行全部 `remark='demo-seed'`、物料 22、商品 26、分类、供应商、会员账号与授权）+ C 运行时数据 7 张表（登录令牌 3607、登录日志、操作日志、API 错误日志、上传文件记录）+ system_dept 的 13 个门店节点 + erp_warehouse 的 13 门店仓与 1 门店虚拟仓。**不动**菜单/字典/角色/真实用户/单位/单据类型/会计科目/结转方案/AI 配置/真实流程定义/act_* 引擎表。幂等 | schema `bak_testdata_20261007` |
 | 57_code_rule_menu.sql | **编码规则菜单**：在「基础资料」(12180) 下补菜单 12190「编码规则」(component `system/code-rule/index`) + 按钮权限 12191-12194（`system:code-rule:query/create/update/delete`），并授给已拥有「基础资料」的 3 个角色（普通角色/财务/供应链）。补这个菜单是因为 56 建了规则表却没有维护入口 —— 管理员看不到前缀/流水，也没法为新主数据加规则。幂等 | 菜单 12190+ |
 | 56_code_rule.sql | **统一编码第一步**：新建 `system_code_rule`（编码规则：前缀 + 流水长度 + 当前值，对齐金蝶的「编码规则」）；`erp_customer`/`erp_supplier`/`erp_warehouse`/`erp_product_unit`/`product_spu`/`system_dept` 加 `code` 并按 id 升序回填（存量 0 条为空）；`(tenant_id, code)` 部分唯一索引；规则当前值对齐各表已用流水最大值。生成服务与界面接入见提交 `2a7385d5`。幂等 | 表 system_code_rule |
 | 55_master_data_menu.sql | **基础资料菜单归口**：新建一级目录「基础资料」(12180) + 「主数据」(12181) / 「公共资料」(12182)，把散在「系统管理 / ERP 销售·采购·库存·财务 / 商城系统」的 9 个主数据菜单迁入，并把新祖先链授给原本就有被迁菜单的角色（yudao 会剔除父菜单未授权的节点）。**只改菜单，不动表结构与 API 路径**。幂等 | 菜单 12180+ |
