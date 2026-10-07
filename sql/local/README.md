@@ -30,6 +30,7 @@ psql -U root -d juling -f sql/local/13_pay_app_seed.sql
 # 补齐转换时丢失的主键（缺主键会让 PostgreSQL 的「关联查询 + GROUP BY 主键」直接报错）
 psql -U root -d yate -f sql/local/15_add_missing_primary_keys.sql
 # 线下收款（付款凭证）改造：建凭证表 + 订单加收款字段 + 字典 + 收款核验按钮权限
+#   （注：其中「收款核验」按钮权限已由 48 号脚本停用——提交凭证即进两级审批，不再人工核验）
 psql -U root -d yate -f sql/local/16_trade_payment_proof.sql
 # 支付模块下线：清理支付菜单/字典/定时任务，pay_* 表重命名归档（pay_channel_code 字典保留）
 psql -U root -d yate -f sql/local/18_remove_pay_module.sql

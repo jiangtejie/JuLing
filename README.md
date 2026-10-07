@@ -5,7 +5,9 @@
 - 后端：Spring Boot 3.5 + JDK 17 + MyBatis-Plus + PostgreSQL 15 + Redis + Flowable + Quartz
 - 前端：Vue3 + Vben5 + Ant Design Vue（`juling-ui/juling-ui-admin-vben`），生产环境经 Nginx 发布
 - 移动端：uni-app（`juling-ui/juling-ui-admin-uniapp`）
-- 商城收款：**线下转账**（客户下单后上传付款截图，后台核验收款/驳回重传），不接入线上支付
+- 商城收款：**线下转账**（门店下单后上传付款截图，**提交即按申报金额置「已收款、待发货」并进入审批**：
+  加盟门店走 BPM 两级审批「供应链 → 财务出纳」，直营门店免审直接进订单工作台），不接入线上支付；
+  后台**没有**「收款核验」入口（2026-09-29 起下线，见 `sql/local/48_order_flow_drop_payment_verify.sql`），核收款职责由财务审批节点承接
 - 数据库：PostgreSQL 15，库名 `juling`
 
 ## 目录结构
@@ -18,8 +20,9 @@ JuLing/
 ├─ juling-module-infra/         基础设施(代码生成/文件/定时任务/日志/配置…)
 ├─ juling-module-member/        会员中心
 ├─ juling-module-bpm/           工作流(Flowable)
-├─ juling-module-mall/          商城(商品/交易/统计)
+├─ juling-module-mall/          商城聚合 POM(子模块:product 商品/trade 交易/statistics 统计/trade-api)
 ├─ juling-module-erp/           进销存
+├─ juling-module-erp-api/       ERP 对外 API(供商城等模块调用:门店客户/物料/库存/分料 + 出库审核事件)
 ├─ juling-module-wms/           仓储
 ├─ juling-module-fms/           财务
 ├─ juling-module-bill/          单据平台
@@ -84,7 +87,9 @@ pnpm -F @vben/web-antd run build           # 产物 apps/web-antd/dist
 Select-String -Path juling-server\pom.xml -Pattern '<artifactId>juling-module-'
 ```
 
-**已从本仓库移除的模块**（`pay` 支付、`report` 报表）不会注册任何 Controller，
+**已从本仓库移除的模块**（`pay` 支付、`report` 报表、`mp` 公众号、`crm`、`mes`、`hrm`、`iot`、`pms`、`im`，
+以及商城子系统 `promotion`；权威清单见 `juling-framework/juling-common` 下 `ServiceErrorCodeRange.java` 的「已移除模块」段，
+与 `sql/local/45_remove_unused_modules.sql`）不会注册任何 Controller，
 请求它们的路径由 `DefaultController` 兜底，返回 `code=501` 的可读提示（说明为何没有该能力）。
 而**工程内已有模块**的路径写错时，返回的是标准 `404 请求地址不存在`——不再被兜底伪装成「模块未启用」，
 便于排查拼错的接口地址。
