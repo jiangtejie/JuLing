@@ -313,10 +313,6 @@ FROM (VALUES (12121, '门店往来查询', 'erp:customer-account:query',  1),
 WHERE NOT EXISTS (SELECT 1 FROM system_menu WHERE id = v.id);
 
 -- 7.4 角色授权：凡是已拥有同级父菜单的角色，一并授予新菜单（含祖先链，避免「能调通看不到」）
--- 序列对齐：system_role_menu.id 无默认值，而 system_role_menu_seq 会**落后于 max(id)** ——
--- 前面的脚本（29~51 等）用显式 id 往 system_role_menu 插过行，菜单 id 在 12000+ 区间，
--- 序列却停在 6000 出头（28_fix_all_sequences.sql 只修到那一刻为止）。不对齐就会撞主键。
-SELECT setval('system_role_menu_seq', (SELECT COALESCE(MAX(id), 1) FROM system_role_menu), true);
 INSERT INTO system_role_menu (id, role_id, menu_id, creator, create_time, updater, update_time, deleted, tenant_id)
 SELECT nextval('system_role_menu_seq'), rm.role_id, m.id, 'script38', now(), 'script38', now(), 0, rm.tenant_id
 FROM (SELECT DISTINCT role_id, tenant_id FROM system_role_menu WHERE deleted = 0 AND menu_id IN (2072, 2583)) rm

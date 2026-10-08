@@ -52,11 +52,6 @@ UPDATE system_menu SET parent_id = 12182, sort = 4, updater = 'script55', update
 -- 3) 授权：把新祖先链补给它已有的角色
 --    （yudao 会剔除父菜单未授权的节点，不补祖先角色就看不到迁入的菜单）
 -- ---------------------------------------------------------------------------
--- 序列对齐：system_role_menu.id 无默认值，而 system_role_menu_seq 会**落后于 max(id)** ——
--- 前面的脚本（29~51 等）用显式 id 往 system_role_menu 插过行，菜单 id 在 12000+ 区间，
--- 序列却停在 6000 出头（28_fix_all_sequences.sql 只修到那一刻为止）。不对齐就会撞主键。
--- 位置要求：必须放在**整条 WITH ... INSERT 语句之前**，插在 INSERT 前面会把 CTE 拆散。
-SELECT setval('system_role_menu_seq', (SELECT COALESCE(MAX(id), 1) FROM system_role_menu), true);
 WITH moved(menu_id, new_parent_id) AS (VALUES
         (103, 12181), (2618, 12181), (2603, 12181), (2565, 12181), (2317, 12181),
         (2571, 12182), (2577, 12182), (2584, 12182), (2646, 12182)),
@@ -65,10 +60,6 @@ WITH moved(menu_id, new_parent_id) AS (VALUES
                  WHERE rm.deleted = 0),
      want AS (SELECT role_id, tenant_id, new_parent_id AS id FROM target
               UNION SELECT role_id, tenant_id, 12180 FROM target)
--- 序列对齐：system_role_menu.id 无默认值，而 system_role_menu_seq 会**落后于 max(id)** ——
--- 前面的脚本（29~51 等）用显式 id 往 system_role_menu 插过行，菜单 id 在 12000+ 区间，
--- 序列却停在 6000 出头（28_fix_all_sequences.sql 只修到那一刻为止）。不对齐就会撞主键。
-SELECT setval('system_role_menu_seq', (SELECT COALESCE(MAX(id), 1) FROM system_role_menu), true);
 INSERT INTO system_role_menu (id, role_id, menu_id, creator, create_time, updater, update_time, deleted, tenant_id)
 SELECT nextval('system_role_menu_seq'), w.role_id, w.id, 'script55', now(), 'script55', now(), 0, w.tenant_id
 FROM want w

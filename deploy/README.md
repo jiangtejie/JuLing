@@ -78,10 +78,10 @@ H5 的 .env.production 里 VITE_API_BASE_URL 留空 = 同源部署，靠 nginx �
 
 它会按顺序执行：
 
-    sql/postgresql/juling-baseline.sql   ① 基线
-    sql/postgresql/module-schema.sql     ② 模块表
-    sql/postgresql/quartz.sql            ③ 定时任务表
-    sql/local/*.sql                      ④ 增量脚本（按文件名排序）
+    sql/postgresql/baseline-schema.sql   ① 结构基线（236 表 / 515 序列）
+    sql/postgresql/baseline-seed.sql     ② 框架种子（菜单/字典/角色/用户/编码规则）
+
+    sql/local/ 是两年的演进历史，**新环境不需要执行**（见 sql/postgresql/README-baseline.md）
 
 **为什么不用 postgres 镜像的 entrypoint 做初始化**：它不递归子目录（我们的脚本分在两个目录），
 而且只在数据卷为空时执行一次 —— 之后改了脚本不会重跑，出问题很难排查。
@@ -165,8 +165,8 @@ H5 的 .env.production 里 VITE_API_BASE_URL 留空 = 同源部署，靠 nginx �
 手工 INSERT 数据时**必须带上正确的 tenant_id** —— 写成 0 的数据在界面上永远看不到
 （我调试时就踩过这个，灌进去的测试数据在页面上一条都不显示）。
 
-**④ 定时任务用数据库存 Job**：spring.quartz.job-store-type=jdbc，所以 quartz.sql 必须执行，
-否则启动时报找不到表。
+**④ 定时任务用数据库存 Job**：spring.quartz.job-store-type=jdbc。Quartz 的表已并入新基线
+（原 quartz.sql 已移除），不再需要单独执行。
 
 **⑤ 上传目录**：必须挂卷。否则容器一重建，所有已上传的附件就没了。
 

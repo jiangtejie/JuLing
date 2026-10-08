@@ -85,11 +85,6 @@ WHERE EXISTS (SELECT 1 FROM system_menu WHERE id = 103 AND deleted = 0)
   AND NOT EXISTS (SELECT 1 FROM system_menu WHERE id = v.id);
 
 -- 授给已有「组织架构管理」的角色，并补祖先链（yudao 会剔除父菜单未授权的节点）
--- 序列对齐：system_role_menu.id 无默认值，而 system_role_menu_seq 会**落后于 max(id)** ——
--- 前面的脚本（29~51 等）用显式 id 往 system_role_menu 插过行，菜单 id 在 12000+ 区间，
--- 序列却停在 6000 出头（28_fix_all_sequences.sql 只修到那一刻为止）。不对齐就会撞主键。
--- 位置要求：必须放在**整条 WITH ... INSERT 语句之前**，插在 INSERT 前面会把 CTE 拆散。
-SELECT setval('system_role_menu_seq', (SELECT COALESCE(MAX(id), 1) FROM system_role_menu), true);
 WITH RECURSIVE need AS (
     SELECT id, parent_id FROM system_menu WHERE id = 103 AND deleted = 0
     UNION ALL
@@ -100,10 +95,6 @@ WITH RECURSIVE need AS (
 ), want AS (
     SELECT id FROM need UNION ALL SELECT 12170
 )
--- 序列对齐：system_role_menu.id 无默认值，而 system_role_menu_seq 会**落后于 max(id)** ——
--- 前面的脚本（29~51 等）用显式 id 往 system_role_menu 插过行，菜单 id 在 12000+ 区间，
--- 序列却停在 6000 出头（28_fix_all_sequences.sql 只修到那一刻为止）。不对齐就会撞主键。
-SELECT setval('system_role_menu_seq', (SELECT COALESCE(MAX(id), 1) FROM system_role_menu), true);
 INSERT INTO system_role_menu (id, role_id, menu_id, creator, create_time, updater, update_time, deleted, tenant_id)
 SELECT nextval('system_role_menu_seq'), t.role_id, w.id, 'script52', now(), 'script52', now(), 0, t.tenant_id
 FROM target_role t CROSS JOIN want w

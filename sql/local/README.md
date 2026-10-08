@@ -23,20 +23,23 @@ SELECT table_name, column_name FROM information_schema.columns WHERE table_schem
 
 **重建环境时不要依赖本状态** —— 按下面的顺序从头跑一遍即可（脚本都是幂等的）。
 
-## 执行顺序
+## 执行顺序（已废弃）
 
-```bash
-# 在已导入基线 sql/postgresql/juling-baseline.sql + quartz.sql 的库上执行
-psql -U root -d juling -f sql/local/01_menu_fms_wms.sql
-psql -U root -d juling -f sql/local/02_menu_hrm_im_pms_crm.sql
-psql -U root -d juling -f sql/local/03_dict_missing.sql
-psql -U root -d juling -f sql/local/04_jobs_missing.sql
-psql -U root -d juling -f sql/local/05_patch_iot_ota_permission.sql
-# 清理演示数据(演示账号/租户、演示文件存储与邮箱/社交/短信渠道配置)
-psql -U root -d juling -f sql/local/06_clean_demo_users_tenants.sql
-psql -U root -d juling -f sql/local/07_clean_demo_configs.sql
-# FMS 标准科目模板(账套初始化的科目来源);仅在账套尚未初始化成功时执行
-psql -U root -d juling -f sql/local/08_fms_subject_template.sql
+> **重要：新环境不要再按本目录顺序重放脚本。**
+>
+> 本目录是**两年的演进历史**，不是部署产物。实测在全新库上按顺序重跑，78 个里会挂 9 个
+> （根因见 [../postgresql/README-baseline.md](../postgresql/README-baseline.md)），
+> 其中 52 号失败会让 `system_dept.dept_type` / `business_status` 建不出来 ——
+> **组织架构功能在全新环境上根本立不起来**。
+>
+> **新环境请用**：`sql/postgresql/baseline-schema.sql` + `baseline-seed.sql`
+> （从开发库导出的结构与框架种子，已在 PG 18.6 上逐项对过数）。
+>
+> 旧的 `juling-baseline.sql` / `module-schema.sql` / `quartz.sql` 已被取代并移除。
+>
+> **本目录保留的价值**：它是**唯一记录「每个字段是什么时候、为什么加的」**的地方 ——
+> 每个脚本的注释都在解释动机。删掉会丢失溯源，所以保留。
+ng -f sql/local/08_fms_subject_template.sql
 # 补齐代码引用但基线脚本缺失的字典
 psql -U root -d juling -f sql/local/09_dict_baseline_gaps.sql
 # T2 改名同步:数据库里存了 Java 类全名/历史域名的地方(文件存储 @class 等)
