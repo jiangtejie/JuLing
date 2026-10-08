@@ -33,6 +33,15 @@ public class AppProductSpuRespVO {
     private Boolean specType;
 
     @Schema(description = "商品价格，单位使用：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    /**
+     * 该 SPU 下的 SKU 编号
+     *
+     * <p>为什么列表要带上它：**下单价是门店维度、按 SKU 算的**（见 /trade/order/store-price），
+     * 列表按 SPU 展示时必须能反查到 SKU，否则列表只能显示商城价、
+     * 而结算显示配送价 —— 同一个商品两个价。
+     */
+    private List<Long> skuIds;
+
     private Integer price;
 
     @Schema(description = "市场价，单位使用：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
