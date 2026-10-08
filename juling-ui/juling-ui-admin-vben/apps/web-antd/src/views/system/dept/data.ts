@@ -227,7 +227,11 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
     },
     {
       title: '操作',
-      width: 220,
+      // 宽度按**实际按钮**算，不是拍脑袋：新增下级节点(6字≈84) + 建门店(3字≈42)
+      // 宽度按**实际按钮**算，不是拍脑袋：新增下级节点(6字+图标≈102) + 建门店(3字≈42)
+      // + 修改(2字+图标≈42) + 闭店/重新开店(28~56) + 删除(2字+图标≈42) ≈ 284，
+      // 加按钮间距与单元格内边距约需 330（按最坏情况算：闭店按钮会变成「重新开店」4 字）。
+      width: 360,
       fixed: 'right',
       slots: { default: 'actions' },
     },
