@@ -22,6 +22,7 @@ import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,13 +151,12 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePurchaseOrderStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpPurchaseOrderDO purchaseOrder = validatePurchaseOrderExists(id);
-        // 1.2 校验状态
-        if (purchaseOrder.getStatus().equals(status)) {
-            throw exception(approve ? PURCHASE_ORDER_APPROVE_FAIL : PURCHASE_ORDER_PROCESS_FAIL);
-        }
+        // 1.2 校验状态（同状态守卫：挡重复点击与并发）
+        BillAuditSupport.validateStatusChange(purchaseOrder.getStatus(), status,
+                PURCHASE_ORDER_APPROVE_FAIL, PURCHASE_ORDER_PROCESS_FAIL);
         // 1.3 存在采购入单，无法反审核
         if (!approve && purchaseOrder.getInCount() != null
                 && purchaseOrder.getInCount().compareTo(BigDecimal.ZERO) > 0) {
@@ -168,12 +168,11 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
             throw exception(PURCHASE_ORDER_PROCESS_FAIL_EXISTS_RETURN);
         }
 
-        // 2. 更新状态
-        int updateCount = purchaseOrderMapper.updateByIdAndStatus(id, purchaseOrder.getStatus(),
-                new ErpPurchaseOrderDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? PURCHASE_ORDER_APPROVE_FAIL : PURCHASE_ORDER_PROCESS_FAIL);
-        }
+        // 2. 更新状态（CAS：以旧状态为条件，影响 0 行说明被别人抢先改了）
+        BillAuditSupport.casUpdate(
+                () -> purchaseOrderMapper.updateByIdAndStatus(id, purchaseOrder.getStatus(),
+                        new ErpPurchaseOrderDO().setStatus(status)),
+                status, PURCHASE_ORDER_APPROVE_FAIL, PURCHASE_ORDER_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
