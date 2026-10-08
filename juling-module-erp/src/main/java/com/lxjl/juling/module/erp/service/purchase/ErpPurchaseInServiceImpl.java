@@ -29,6 +29,7 @@ import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchInReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -193,13 +194,11 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePurchaseInStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpPurchaseInDO purchaseIn = validatePurchaseInExists(id);
         // 1.2 校验状态
-        if (purchaseIn.getStatus().equals(status)) {
-            throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(purchaseIn.getStatus(), status, PURCHASE_IN_APPROVE_FAIL, PURCHASE_IN_PROCESS_FAIL);
         // 1.3 校验已付款
         if (!approve && purchaseIn.getPaymentPrice() != null
                 && purchaseIn.getPaymentPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -207,11 +206,10 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
         }
 
         // 2. 更新状态
-        int updateCount = purchaseInMapper.updateByIdAndStatus(id, purchaseIn.getStatus(),
-                new ErpPurchaseInDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> purchaseInMapper.updateByIdAndStatus(id, purchaseIn.getStatus(),
+                new ErpPurchaseInDO().setStatus(status)),
+                status, PURCHASE_IN_APPROVE_FAIL, PURCHASE_IN_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，

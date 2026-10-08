@@ -21,6 +21,7 @@ import com.lxjl.juling.module.erp.service.sale.ErpCustomerService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchOutReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,20 +119,17 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStockOutStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpStockOutDO stockOut = validateStockOutExists(id);
         // 1.2 校验状态
-        if (stockOut.getStatus().equals(status)) {
-            throw exception(approve ? STOCK_OUT_APPROVE_FAIL : STOCK_OUT_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(stockOut.getStatus(), status, STOCK_OUT_APPROVE_FAIL, STOCK_OUT_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = stockOutMapper.updateByIdAndStatus(id, stockOut.getStatus(),
-                new ErpStockOutDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? STOCK_OUT_APPROVE_FAIL : STOCK_OUT_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> stockOutMapper.updateByIdAndStatus(id, stockOut.getStatus(),
+                new ErpStockOutDO().setStatus(status)),
+                status, STOCK_OUT_APPROVE_FAIL, STOCK_OUT_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，

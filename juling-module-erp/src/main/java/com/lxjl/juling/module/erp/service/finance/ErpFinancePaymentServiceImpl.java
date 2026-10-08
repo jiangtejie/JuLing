@@ -24,6 +24,7 @@ import com.lxjl.juling.module.erp.service.purchase.ErpPurchaseInService;
 import com.lxjl.juling.module.erp.service.purchase.ErpPurchaseReturnService;
 import com.lxjl.juling.module.erp.service.purchase.ErpSupplierService;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,20 +149,17 @@ public class ErpFinancePaymentServiceImpl implements ErpFinancePaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateFinancePaymentStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpFinancePaymentDO payment = validateFinancePaymentExists(id);
         // 1.2 校验状态
-        if (payment.getStatus().equals(status)) {
-            throw exception(approve ? FINANCE_PAYMENT_APPROVE_FAIL : FINANCE_PAYMENT_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(payment.getStatus(), status, FINANCE_PAYMENT_APPROVE_FAIL, FINANCE_PAYMENT_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = financePaymentMapper.updateByIdAndStatus(id, payment.getStatus(),
-                new ErpFinancePaymentDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? FINANCE_PAYMENT_APPROVE_FAIL : FINANCE_PAYMENT_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> financePaymentMapper.updateByIdAndStatus(id, payment.getStatus(),
+                new ErpFinancePaymentDO().setStatus(status)),
+                status, FINANCE_PAYMENT_APPROVE_FAIL, FINANCE_PAYMENT_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，

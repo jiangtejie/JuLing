@@ -38,6 +38,7 @@ import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchOutReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -229,13 +230,11 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSaleOutStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpSaleOutDO saleOut = validateSaleOutExists(id);
         // 1.2 校验状态
-        if (saleOut.getStatus().equals(status)) {
-            throw exception(approve ? SALE_OUT_APPROVE_FAIL : SALE_OUT_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(saleOut.getStatus(), status, SALE_OUT_APPROVE_FAIL, SALE_OUT_PROCESS_FAIL);
         // 1.3 校验已退款
         if (!approve && saleOut.getReceiptPrice() != null
                 && saleOut.getReceiptPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -243,11 +242,10 @@ public class ErpSaleOutServiceImpl implements ErpSaleOutService {
         }
 
         // 2. 更新状态
-        int updateCount = saleOutMapper.updateByIdAndStatus(id, saleOut.getStatus(),
-                new ErpSaleOutDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? SALE_OUT_APPROVE_FAIL : SALE_OUT_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> saleOutMapper.updateByIdAndStatus(id, saleOut.getStatus(),
+                new ErpSaleOutDO().setStatus(status)),
+                status, SALE_OUT_APPROVE_FAIL, SALE_OUT_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，

@@ -21,6 +21,7 @@ import com.lxjl.juling.module.erp.service.purchase.ErpSupplierService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchInReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,20 +118,17 @@ public class ErpStockInServiceImpl implements ErpStockInService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStockInStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpStockInDO stockIn = validateStockInExists(id);
         // 1.2 校验状态
-        if (stockIn.getStatus().equals(status)) {
-            throw exception(approve ? STOCK_IN_APPROVE_FAIL : STOCK_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(stockIn.getStatus(), status, STOCK_IN_APPROVE_FAIL, STOCK_IN_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = stockInMapper.updateByIdAndStatus(id, stockIn.getStatus(),
-                new ErpStockInDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? STOCK_IN_APPROVE_FAIL : STOCK_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> stockInMapper.updateByIdAndStatus(id, stockIn.getStatus(),
+                new ErpStockInDO().setStatus(status)),
+                status, STOCK_IN_APPROVE_FAIL, STOCK_IN_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，

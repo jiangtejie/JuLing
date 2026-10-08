@@ -19,6 +19,7 @@ import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,20 +111,17 @@ public class ErpStockCheckServiceImpl implements ErpStockCheckService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStockCheckStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpStockCheckDO stockCheck = validateStockCheckExists(id);
         // 1.2 校验状态
-        if (stockCheck.getStatus().equals(status)) {
-            throw exception(approve ? STOCK_CHECK_APPROVE_FAIL : STOCK_CHECK_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(stockCheck.getStatus(), status, STOCK_CHECK_APPROVE_FAIL, STOCK_CHECK_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = stockCheckMapper.updateByIdAndStatus(id, stockCheck.getStatus(),
-                new ErpStockCheckDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? STOCK_CHECK_APPROVE_FAIL : STOCK_CHECK_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> stockCheckMapper.updateByIdAndStatus(id, stockCheck.getStatus(),
+                new ErpStockCheckDO().setStatus(status)),
+                status, STOCK_CHECK_APPROVE_FAIL, STOCK_CHECK_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，

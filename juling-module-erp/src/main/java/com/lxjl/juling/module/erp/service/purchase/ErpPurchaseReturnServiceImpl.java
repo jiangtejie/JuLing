@@ -23,6 +23,7 @@ import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.stock.ErpStockRecordService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -165,13 +166,11 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePurchaseReturnStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpPurchaseReturnDO purchaseReturn = validatePurchaseReturnExists(id);
         // 1.2 校验状态
-        if (purchaseReturn.getStatus().equals(status)) {
-            throw exception(approve ? PURCHASE_RETURN_APPROVE_FAIL : PURCHASE_RETURN_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(purchaseReturn.getStatus(), status, PURCHASE_RETURN_APPROVE_FAIL, PURCHASE_RETURN_PROCESS_FAIL);
         // 1.3 校验已退款
         if (!approve && purchaseReturn.getRefundPrice() != null
                 && purchaseReturn.getRefundPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -179,11 +178,10 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
         }
 
         // 2. 更新状态
-        int updateCount = purchaseReturnMapper.updateByIdAndStatus(id, purchaseReturn.getStatus(),
-                new ErpPurchaseReturnDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? PURCHASE_RETURN_APPROVE_FAIL : PURCHASE_RETURN_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> purchaseReturnMapper.updateByIdAndStatus(id, purchaseReturn.getStatus(),
+                new ErpPurchaseReturnDO().setStatus(status)),
+                status, PURCHASE_RETURN_APPROVE_FAIL, PURCHASE_RETURN_PROCESS_FAIL);
 
         // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
         //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
