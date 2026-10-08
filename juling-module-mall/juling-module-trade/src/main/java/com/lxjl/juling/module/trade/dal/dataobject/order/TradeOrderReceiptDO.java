@@ -101,10 +101,14 @@ public class TradeOrderReceiptDO extends BaseDO {
     private BigDecimal diffCount;
     /**
      * 应收金额合计（按配送价）
+     *
+     * <p>**单位：元** —— 直接传给 ERP 往来账（{@code erpCustomerAccountApi.record}），不再换算。
      */
     private BigDecimal totalPrice;
     /**
      * 实收金额合计（按配送价）
+     *
+     * <p>**单位：元** —— 与 totalPrice 之差（diffAmount）直接作为往来账调整金额，不再换算。
      */
     private BigDecimal receiptPrice;
     /**

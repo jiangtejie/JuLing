@@ -69,6 +69,10 @@ public class TradeOrderReceiptItemDO extends BaseDO {
     private Long productId;
     /**
      * 配送单价（门店进货成本；门店库存的批次单位成本）
+     *
+     * <p>**单位：元**。注意与 {@code trade_order_item.price}（单位：分）区分 ——
+     * 本字段在下推 ERP 之前**已经由调用方换算成元**（见 TradeOrderWorkbenchServiceImpl#unitPriceOf），
+     * 并直接作为 ERP 的 unitCost / 往来账金额使用，**此处不得再换算第二次**。
      */
     private BigDecimal price;
     /**
