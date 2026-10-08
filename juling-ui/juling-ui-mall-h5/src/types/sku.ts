@@ -63,6 +63,8 @@ export interface Product {
   subTitle?: string;
   /** 展示价（单位：分），多规格时取最低价 */
   price: number;
+  /** 该商品下的 SKU 编号（用于按门店价展示，见 api/product.ts）：下单价按 SKU 算，列表得能反查 */
+  skuIds?: number[];
   marketPrice?: number;
   salesCount?: number;
   stock?: number;

@@ -86,6 +86,8 @@ export function adaptSpu(raw: SpuCommon): Product {
     sliderPicUrls: raw.sliderPicUrls?.length ? raw.sliderPicUrls.map(normalizeAssetUrl) : undefined,
     subTitle: raw.introduction,
     price: raw.price,
+    // 下单价是门店维度、按 SKU 算的；列表/详情靠它去换门店价（见 api/product.ts）
+    skuIds: (raw as any).skuIds ?? [],
     marketPrice: raw.marketPrice,
     salesCount: raw.salesCount,
     stock: raw.stock,
