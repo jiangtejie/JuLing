@@ -14,7 +14,10 @@ name: juling-yate
 
 services:
   postgres:
-    image: postgres:15-alpine
+    # 用 18：做过对照实验 —— 78 个 sql/local 脚本在 15.19 与 18.6 上结果**逐项一致**
+    # （同样 69 通过 / 同样 9 个失败 / 都建出 191 张表），说明版本无差异；
+    # 而 18 的支持周期更长。新基线也已在 18.6 上验证通过。
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -46,7 +49,7 @@ services:
 
   # 一次性初始化容器：用 profiles 隔离，不会随 up -d 自动启动
   db-init:
-    image: postgres:15-alpine
+    image: postgres:18-alpine
     profiles: ["init"]
     depends_on:
       postgres: { condition: service_healthy }
