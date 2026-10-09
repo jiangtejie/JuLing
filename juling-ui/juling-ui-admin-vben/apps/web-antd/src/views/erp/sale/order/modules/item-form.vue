@@ -37,7 +37,7 @@ const emit = defineEmits([
 ]);
 
 const tableData = ref<ErpSaleOrderApi.SaleOrderItem[]>([]); // 表格数据
-const productOptions = ref<ErpProductApi.Product[]>([]); // 产品下拉选项
+const productOptions = ref<ErpProductApi.Product[]>([]); // 物料下拉选项
 
 /** 获取表格合计数据 */
 const summaries = computed(() => {
@@ -124,8 +124,8 @@ function handleAdd() {
   const newRow = {
     id: undefined,
     productId: undefined,
-    productUnitName: undefined, // 产品单位
-    productBarCode: undefined, // 产品条码
+    productUnitName: undefined, // 物料单位
+    productBarCode: undefined, // 物料条码
     productPrice: undefined,
     stockCount: undefined,
     count: 1,
@@ -142,7 +142,7 @@ function handleAdd() {
 
 /** 处理删除 */
 function handleDelete(row: ErpSaleOrderApi.SaleOrderItem) {
-  // TODO 棱信矩灵
+  // TODO 亚特
   const index = tableData.value.findIndex((item) => item.seq === row.seq);
   if (index !== -1) {
     tableData.value.splice(index, 1);
@@ -151,7 +151,7 @@ function handleDelete(row: ErpSaleOrderApi.SaleOrderItem) {
   emit('update:items', [...tableData.value]);
 }
 
-/** 处理产品变更 */
+/** 处理物料变更 */
 async function handleProductChange(productId: any, row: any) {
   const product = productOptions.value.find((p) => p.id === productId);
   if (!product) {
@@ -195,13 +195,13 @@ function validate() {
     const item = tableData.value[i];
     if (item) {
       if (!item.productId) {
-        throw new Error(`第 ${i + 1} 行：产品不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料不能为空`);
       }
       if (!item.count || item.count <= 0) {
-        throw new Error(`第 ${i + 1} 行：产品数量不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料数量不能为空`);
       }
       if (!item.productPrice || item.productPrice <= 0) {
-        throw new Error(`第 ${i + 1} 行：产品单价不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料单价不能为空`);
       }
     }
   }
@@ -229,7 +229,7 @@ onMounted(async () => {
         :options="productOptions"
         :field-names="{ label: 'name', value: 'id' }"
         class="w-full"
-        placeholder="请选择产品"
+        placeholder="请选择物料"
         show-search
         @change="handleProductChange($event, row)"
       />
@@ -277,7 +277,7 @@ onMounted(async () => {
             type: 'link',
             danger: true,
             popConfirm: {
-              title: '确认删除该产品吗？',
+              title: '确认删除该物料吗？',
               confirm: handleDelete.bind(null, row),
             },
           },
@@ -306,7 +306,7 @@ onMounted(async () => {
         class="mt-2 flex justify-center"
         :actions="[
           {
-            label: '添加销售产品',
+            label: '添加销售物料',
             type: 'default',
             onClick: handleAdd,
           },

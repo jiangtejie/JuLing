@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 /**
  * OA 请假单的结果的监听器实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmOALeaveStatusListener extends BpmProcessInstanceStatusEventListener {

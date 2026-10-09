@@ -10,9 +10,9 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
- * ERP 产品库存 DO
+ * ERP 物料库存 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_stock")
 @KeySequence("erp_stock_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -30,7 +30,7 @@ public class ErpStockDO extends BaseDO {
     @TableId
     private Long id;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */

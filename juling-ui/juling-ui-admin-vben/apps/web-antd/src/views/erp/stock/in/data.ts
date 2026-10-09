@@ -5,7 +5,11 @@ import { DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
 
 import { getProductSimpleList } from '#/api/erp/product/product';
-import { getSupplierSimpleList } from '#/api/erp/purchase/supplier';
+import {
+  formatSupplierLabel,
+  formatSupplierShortLabel,
+  getSupplierSimpleList,
+} from '#/api/erp/purchase/supplier';
 import { getWarehouseSimpleList } from '#/api/erp/stock/warehouse';
 import { getSimpleUserList } from '#/api/system/user';
 import { getRangePickerDefaultProps } from '#/utils';
@@ -54,6 +58,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -95,7 +100,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
     },
     {
       fieldName: 'items',
-      label: '入库产品清单',
+      label: '入库物料清单',
       component: 'Input',
       formItemClass: 'col-span-3',
     },
@@ -116,7 +121,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productId',
-      title: '产品名称',
+      title: '物料名称',
       minWidth: 200,
       slots: { default: 'productId' },
     },
@@ -151,7 +156,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productPrice',
-      title: '产品单价',
+      title: '物料单价',
       minWidth: 120,
       fixed: 'right',
       slots: { default: 'productPrice' },
@@ -187,10 +192,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -216,6 +221,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierShortLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -284,7 +290,7 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'productNames',
-      title: '产品信息',
+      title: '物料信息',
       showOverflow: 'tooltip',
       minWidth: 120,
     },

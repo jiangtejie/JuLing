@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 部门 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class DeptRespDTO {
@@ -33,5 +33,13 @@ public class DeptRespDTO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
+    /**
+     * 节点类型：组织 / 门店（{@code DeptTypeEnum}）
+     */
+    private String deptType;
+    /**
+     * 营业状态：0 营业 / 1 已闭店（{@code DeptBusinessStatusEnum}）
+     */
+    private Integer businessStatus;
 
 }

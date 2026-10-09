@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 表单内用户字段 {@link BpmTaskCandidateUserStrategy} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmTaskCandidateFormUserStrategy implements BpmTaskCandidateStrategy {

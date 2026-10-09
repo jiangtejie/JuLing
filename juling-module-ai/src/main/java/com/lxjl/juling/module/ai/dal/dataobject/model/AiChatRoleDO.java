@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * AI 聊天角色 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2024/4/24 19:39
  */
 @TableName(value = "ai_chat_role", autoResultMap = true)

@@ -3,7 +3,7 @@ package com.lxjl.juling.framework.security.core.service;
 /**
  * Security 框架 Service 接口，定义权限相关的校验操作
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface SecurityFrameworkService {
 

@@ -115,7 +115,7 @@
             <view
               v-for="(log, index) in formData.logs"
               :key="log.id ?? index"
-              class="relative flex gap-20rpx pb-28rpx before:absolute before:bottom-0 before:left-23rpx before:top-48rpx before:w-2rpx before:bg-[#ebebeb] last:pb-0 before:content-[''] last:before:hidden"
+              class="relative flex gap-20rpx pb-28rpx before:absolute before:bottom-0 before:left-23rpx before:top-48rpx before:w-2rpx before:bg-[var(--yd-surface-page)] last:pb-0 before:content-[''] last:before:hidden"
             >
               <view
                 class="z-1 h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-full text-24rpx text-white"

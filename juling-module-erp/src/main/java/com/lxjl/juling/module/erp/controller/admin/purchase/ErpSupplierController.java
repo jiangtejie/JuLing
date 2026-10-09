@@ -83,7 +83,18 @@ public class ErpSupplierController {
     @Operation(summary = "获得供应商精简列表", description = "只包含被开启的供应商，主要用于前端的下拉选项")
     public CommonResult<List<ErpSupplierRespVO>> getSupplierSimpleList() {
         List<ErpSupplierDO> list = supplierService.getSupplierListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(convertList(list, supplier -> new ErpSupplierRespVO().setId(supplier.getId()).setName(supplier.getName())));
+        // 除 id/name/code 外，额外透出「采购决策要看」的字段：结算方式 / 账期 / 开票情况 / 开票类型 /
+        // 开票税点 / 交期 / 是否已签合同。目的是让采购下单、财务付款在**选供应商这一步**就能看到关键信息，
+        // 而不是选中之后再去档案页查（见 docs/supplier-master-data-design.md §3「下游怎么拿到」）。
+        return success(convertList(list, supplier -> new ErpSupplierRespVO().setId(supplier.getId())
+                .setName(supplier.getName()).setCode(supplier.getCode())
+                .setSettlementType(supplier.getSettlementType())
+                .setCreditDays(supplier.getCreditDays())
+                .setInvoiceMode(supplier.getInvoiceMode())
+                .setInvoiceType(supplier.getInvoiceType())
+                .setTaxPercent(supplier.getTaxPercent())
+                .setDeliveryDays(supplier.getDeliveryDays())
+                .setContractSigned(supplier.getContractSigned())));
     }
 
     @GetMapping("/export-excel")

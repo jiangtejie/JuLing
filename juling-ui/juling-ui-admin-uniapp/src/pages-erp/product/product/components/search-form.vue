@@ -59,7 +59,7 @@ const emit = defineEmits<{
 }>()
 
 const visible = ref(false) // 搜索弹窗显示状态
-const categoryTree = ref<ProductCategory[]>([]) // 产品分类树
+const categoryTree = ref<ProductCategory[]>([]) // 物料分类树
 const formData = reactive({
   name: undefined as string | undefined,
   categoryId: undefined as number | undefined,
@@ -75,7 +75,7 @@ const placeholder = computed(() => {
   if (categoryName.value) {
     conditions.push(`分类:${categoryName.value}`)
   }
-  return conditions.length > 0 ? conditions.join(' | ') : '搜索产品'
+  return conditions.length > 0 ? conditions.join(' | ') : '搜索物料'
 })
 
 /** 查找分类名称 */

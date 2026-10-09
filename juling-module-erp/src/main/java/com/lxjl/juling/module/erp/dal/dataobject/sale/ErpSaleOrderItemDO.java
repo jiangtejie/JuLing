@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 /**
  * ERP 销售订单项 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_sale_order_items")
 @KeySequence("erp_sale_order_items_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -36,20 +36,20 @@ public class ErpSaleOrderItemDO extends BaseDO {
      */
     private Long orderId;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */
     private Long productId;
     /**
-     * 产品单位单位
+     * 物料单位单位
      *
      * 冗余 {@link ErpProductDO#getUnitId()}
      */
     private Long productUnitId;
 
     /**
-     * 产品单位单价，单位：元
+     * 物料单位单价，单位：元
      */
     private BigDecimal productPrice;
     /**

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * {@link OpenAiChatModel} 集成测试
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class OpenAIChatModelTests {
 
@@ -67,7 +67,7 @@ public class OpenAIChatModelTests {
         }).then().block();
     }
 
-    // TODO @棱信矩灵：无法触发思考的字段返回，需要 response api：https://github.com/spring-projects/spring-ai/issues/2962
+    // TODO @亚特：无法触发思考的字段返回，需要 response api：https://github.com/spring-projects/spring-ai/issues/2962
     @Test
     @Disabled
     public void testStream_thinking() {

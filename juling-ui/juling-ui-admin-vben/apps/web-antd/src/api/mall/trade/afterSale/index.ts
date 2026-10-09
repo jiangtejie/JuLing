@@ -34,7 +34,10 @@ export namespace MallAfterSaleApi {
     auditUserId?: number; // 审批人
     auditReason?: string; // 审批备注
     refundPrice?: number; // 退款金额，单位：分
-    payRefundId?: number; // 支付退款编号
+    payRefundId?: number; // 支付退款编号（线下退款后不再写入）
+    refundChannelCode?: string; // 线下退款渠道（字典 pay_channel_code 的线下值）
+    refundProofUrls?: string[]; // 线下退款凭证图片
+    refundRemark?: string; // 线下退款备注
     refundTime?: Date; // 退款时间
     logisticsId?: number; // 退货物流公司编号
     logisticsNo?: string; // 退货物流单号
@@ -44,6 +47,18 @@ export namespace MallAfterSaleApi {
     order?: MallOrderApi.Order; // 关联订单
     orderItem?: MallOrderApi.OrderItem; // 关联订单项
     logs?: any[]; // 关联售后日志
+  }
+
+  /** 确认退款请求（线下退款登记） */
+  export interface AfterSaleRefundReqVO {
+    /** 售后编号 */
+    id: number;
+    /** 线下退款渠道（字典 pay_channel_code 的线下值） */
+    refundChannelCode: string;
+    /** 线下退款凭证图片 */
+    refundProofUrls?: string[];
+    /** 线下退款备注 */
+    refundRemark?: string;
   }
 
   /** 拒绝售后请求 */
@@ -92,7 +107,7 @@ export function refuseAfterSale(id: number) {
   return requestClient.put(`/trade/after-sale/refuse?id=${id}`);
 }
 
-/** 确认退款 */
-export function refundAfterSale(id: number) {
-  return requestClient.put(`/trade/after-sale/refund?id=${id}`);
+/** 确认退款（线下退款登记，登记即视为退款完成） */
+export function refundAfterSale(data: MallAfterSaleApi.AfterSaleRefundReqVO) {
+  return requestClient.put('/trade/after-sale/refund', data);
 }

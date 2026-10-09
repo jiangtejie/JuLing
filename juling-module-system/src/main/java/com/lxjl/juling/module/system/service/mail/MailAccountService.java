@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 邮箱账号 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-03-21
  */
 public interface MailAccountService {

@@ -142,7 +142,7 @@ public class ErpPurchaseInController {
         List<ErpPurchaseInItemDO> purchaseInItemList = purchaseInService.getPurchaseInItemListByInIds(
                 convertSet(pageResult.getList(), ErpPurchaseInDO::getId));
         Map<Long, List<ErpPurchaseInItemDO>> purchaseInItemMap = convertMultiMap(purchaseInItemList, ErpPurchaseInItemDO::getInId);
-        // 1.2 产品信息
+        // 1.2 物料信息
         Map<Long, ErpProductRespVO> productMap = productService.getProductVOMap(
                 convertSet(purchaseInItemList, ErpPurchaseInItemDO::getProductId));
         // 1.3 供应商信息

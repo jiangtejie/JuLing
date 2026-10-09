@@ -4,7 +4,6 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.mybatis.core.mapper.BaseMapperX;
 import com.lxjl.juling.framework.mybatis.core.query.LambdaQueryWrapperX;
-import com.lxjl.juling.framework.mybatis.core.type.IntegerListTypeHandler;
 import com.lxjl.juling.module.product.controller.admin.spu.vo.ProductSpuPageReqVO;
 import com.lxjl.juling.module.product.controller.app.spu.vo.AppProductSpuPageReqVO;
 import com.lxjl.juling.module.product.dal.dataobject.spu.ProductSpuDO;
@@ -22,12 +21,11 @@ public interface ProductSpuMapper extends BaseMapperX<ProductSpuDO> {
 
     /**
      * 查询商品 SPU（包含已删除）
-     * 注意：使用 @Results 手动指定 typeHandler，否则 @Select 不会应用 autoResultMap，sliderPicUrls，deliveryTypes 字段无法解析 JSON
+     * 注意：使用 @Results 手动指定 typeHandler，否则 @Select 不会应用 autoResultMap，sliderPicUrls 字段无法解析 JSON
      */
     @Select("SELECT * FROM product_spu WHERE id = #{id}")
     @Results({
             @Result(column = "slider_pic_urls", property = "sliderPicUrls", typeHandler = JacksonTypeHandler.class),
-            @Result(column = "delivery_types", property = "deliveryTypes", typeHandler = IntegerListTypeHandler.class),
     })
     ProductSpuDO selectByIdIncludeDeleted(@Param("id") Long id);
 
@@ -37,11 +35,12 @@ public interface ProductSpuMapper extends BaseMapperX<ProductSpuDO> {
      * @param reqVO 分页请求参数
      * @return 商品 SPU 分页列表数据
      */
-    default PageResult<ProductSpuDO> selectPage(ProductSpuPageReqVO reqVO) {
+    default PageResult<ProductSpuDO> selectPage(ProductSpuPageReqVO reqVO, Set<Long> categoryIds) {
         Integer tabType = reqVO.getTabType();
         LambdaQueryWrapperX<ProductSpuDO> queryWrapper = new LambdaQueryWrapperX<ProductSpuDO>()
                 .likeIfPresent(ProductSpuDO::getName, reqVO.getName())
-                .eqIfPresent(ProductSpuDO::getCategoryId, reqVO.getCategoryId())
+                // 分类：入参已展开为「选中分类 + 其子分类」，因此一级分类也能筛出挂在二级分类下的商品
+                .inIfPresent(ProductSpuDO::getCategoryId, categoryIds)
                 .betweenIfPresent(ProductSpuDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(ProductSpuDO::getSort)
                 .orderByDesc(ProductSpuDO::getId);
@@ -153,10 +152,10 @@ public interface ProductSpuMapper extends BaseMapperX<ProductSpuDO> {
      * @param tabType Tab 标签类型
      * @return 数量
      */
-    default Long selectCountByTab(ProductSpuPageReqVO reqVO, Integer tabType) {
+    default Long selectCountByTab(ProductSpuPageReqVO reqVO, Integer tabType, Set<Long> categoryIds) {
         LambdaQueryWrapperX<ProductSpuDO> queryWrapper = new LambdaQueryWrapperX<ProductSpuDO>()
                 .likeIfPresent(ProductSpuDO::getName, reqVO.getName())
-                .eqIfPresent(ProductSpuDO::getCategoryId, reqVO.getCategoryId())
+                .inIfPresent(ProductSpuDO::getCategoryId, categoryIds)
                 .betweenIfPresent(ProductSpuDO::getCreateTime, reqVO.getCreateTime());
         appendTabQuery(tabType, queryWrapper);
         return selectCount(queryWrapper);

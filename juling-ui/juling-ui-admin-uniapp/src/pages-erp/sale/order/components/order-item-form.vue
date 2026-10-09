@@ -6,7 +6,7 @@
       class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
     >
       <view class="mb-16rpx flex items-center justify-between">
-        <text class="yd-text-main text-28rpx font-semibold">产品明细 {{ index + 1 }}</text>
+        <text class="yd-text-main text-28rpx font-semibold">物料明细 {{ index + 1 }}</text>
         <wd-button v-if="!disabled" size="small" type="danger" variant="plain" @click="handleRemove(index)">
           删除
         </wd-button>
@@ -14,10 +14,10 @@
 
       <yd-form-picker
         v-model="item.productId"
-        label="产品"
+        label="物料"
         label-width="180rpx"
         :columns="productOptions" label-key="name" value-key="id"
-        placeholder="请选择产品"
+        placeholder="请选择物料"
         :disabled="disabled"
         @confirm="value => handleProductConfirm(index, value)"
       />
@@ -46,7 +46,7 @@
       <wd-form-item title="数量" title-width="180rpx" center>
         <wd-input-number v-model="item.count" :min="0.001" :precision="3" :disabled="disabled" />
       </wd-form-item>
-      <wd-form-item title="产品单价" title-width="180rpx" center>
+      <wd-form-item title="物料单价" title-width="180rpx" center>
         <wd-input-number v-model="item.productPrice" :min="0.01" :precision="2" :disabled="disabled" />
       </wd-form-item>
       <wd-form-item title="税率(%)" title-width="180rpx" center>
@@ -128,7 +128,7 @@ function handleRemove(index: number) {
   items.value.splice(index, 1)
 }
 
-/** 选择产品 */
+/** 选择物料 */
 async function handleProductConfirm(index: number, productId?: number | string) {
   const item = items.value[index]
   if (!item) {
@@ -161,12 +161,12 @@ function refreshItemAmount(item: Record<string, any>) {
 /** 校验明细 */
 function validate() {
   if (items.value.length === 0) {
-    toast.warning('请至少添加一个销售产品')
+    toast.warning('请至少添加一个销售物料')
     return false
   }
   const invalidIndex = items.value.findIndex(item => !item.productId || !item.count)
   if (invalidIndex >= 0) {
-    toast.warning(`请完善产品明细 ${invalidIndex + 1}`)
+    toast.warning(`请完善物料明细 ${invalidIndex + 1}`)
     return false
   }
   return true

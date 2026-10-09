@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * 售后操作类型的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2023/6/13 13:53
  */
 @RequiredArgsConstructor

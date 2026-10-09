@@ -11,70 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.lxjl.juling.framework.common.exception.enums.GlobalErrorCodeConstants.NOT_IMPLEMENTED;
 
 /**
- * 默认 Controller，解决部分 module 未开启时的 404 提示。
- * 例如说，/bpm/** 路径，工作流
+ * 默认 Controller，解决**已从工程移除**的 module 的 404 提示（pay / report）。
  *
- * @author 棱信矩灵
+ * 注意：只保留「本仓库确实没有该模块」的兜底。已在工程内的模块（member/bpm/product/trade/statistics/
+ * erp/bill/ai/wms/fms）**不要**在这里加兜底——它会把「路径写错」误报成「模块未启用」，
+ * 掩盖真实原因（该返回的是一条普通 404「请求地址不存在」）。
+ *
+ * @author 亚特
  */
 @RestController
 @Slf4j
 public class DefaultController {
-
-    @RequestMapping("/admin-api/bpm/**")
-    public CommonResult<Boolean> bpm404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[工作流模块 juling-module-bpm 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping("/admin-api/mp/**")
-    public CommonResult<Boolean> mp404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[微信公众号 juling-module-mp 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping(value = { "/admin-api/product/**", // 商品中心
-            "/admin-api/trade/**", // 交易中心
-            "/admin-api/promotion/**" }) // 营销中心
-    public CommonResult<Boolean> mall404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[商城系统 juling-module-mall 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping("/admin-api/erp/**")
-    public CommonResult<Boolean> erp404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[ERP 模块 juling-module-erp 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping(value = { "/admin-api/wms/**"})
-    public CommonResult<Boolean> wms404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[WMS 仓库管理系统 juling-module-wms 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping("/admin-api/pms/**")
-    public CommonResult<Boolean> pms404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[PMS 项目管理系统 juling-module-pms 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping("/admin-api/crm/**")
-    public CommonResult<Boolean> crm404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[CRM 模块 juling-module-crm 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping(value = { "/admin-api/mes/**"})
-    public CommonResult<Boolean> mes404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[MES 系统 juling-module-mes 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping(value = { "/admin-api/im/**"})
-    public CommonResult<Boolean> im404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[IM 即时通讯 juling-module-im 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
 
     @RequestMapping(value = { "/admin-api/report/**"})
     public CommonResult<Boolean> report404() {
@@ -87,18 +34,6 @@ public class DefaultController {
     public CommonResult<Boolean> pay404() {
         return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                 "[支付模块 juling-module-pay 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping(value = { "/admin-api/ai/**"})
-    public CommonResult<Boolean> ai404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[AI 大模型 juling-module-ai 未启用或接口不存在][模块启停见 README「模块启停」章节]");
-    }
-
-    @RequestMapping(value = { "/admin-api/iot/**"})
-    public CommonResult<Boolean> iot404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[IoT 物联网 juling-module-iot 未启用或接口不存在][模块启停见 README「模块启停」章节]");
     }
 
     /**

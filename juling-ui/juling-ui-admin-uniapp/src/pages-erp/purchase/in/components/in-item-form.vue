@@ -20,7 +20,7 @@
 
       <view class="grid grid-cols-2 mb-20rpx gap-16rpx">
         <view class="yd-bg-subtle col-span-2 rounded-8rpx p-16rpx">
-          <text class="yd-text-hint block text-24rpx">产品</text>
+          <text class="yd-text-hint block text-24rpx">物料</text>
           <text class="yd-text-main mt-8rpx block break-all text-28rpx font-semibold">
             {{ item.productName || '-' }}
           </text>

@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * 多租户配置
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties(prefix = "juling.tenant")
 @Data

@@ -22,7 +22,7 @@
 
         <!-- 退货明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="yd-text-main text-28rpx font-semibold">退货产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">退货物料清单</text>
         </view>
         <view class="px-24rpx">
           <ReturnItemForm ref="itemEditorRef" v-model="formData.items" :warehouse-options="warehouseOptions" />

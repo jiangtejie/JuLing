@@ -16,9 +16,9 @@ import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.STOCK_COUNT_NE
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.STOCK_COUNT_NEGATIVE2;
 
 /**
- * ERP 产品库存 Service 实现类
+ * ERP 物料库存 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -27,7 +27,7 @@ public class ErpStockServiceImpl implements ErpStockService {
     /**
      * 允许库存为负数
      *
-     * TODO 棱信矩灵：后续做成 db 配置
+     * TODO 亚特：后续做成 db 配置
      */
     private static final Boolean NEGATIVE_STOCK_COUNT_ENABLE = false;
 

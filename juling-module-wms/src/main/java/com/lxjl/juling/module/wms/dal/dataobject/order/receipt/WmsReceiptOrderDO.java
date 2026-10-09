@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 /**
  * WMS 入库单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("wms_receipt_order")
 @KeySequence("wms_receipt_order_seq")

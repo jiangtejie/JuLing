@@ -20,7 +20,7 @@ import java.util.Map;
  * 相比 {@link LongestMatchColumnWidthStyleStrategy} 来说，额外处理了 DATE 类型！
  *
  * @see <a href="https://github.com/jiangtejie/JuLing">添加自适应列宽处理器，并替换默认列宽策略</a>
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class ColumnWidthMatchStyleStrategy extends AbstractColumnWidthStyleStrategy {
 

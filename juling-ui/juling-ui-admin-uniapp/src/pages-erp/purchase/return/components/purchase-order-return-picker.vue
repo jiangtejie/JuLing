@@ -22,7 +22,7 @@
       <!-- 搜索区域 -->
       <view class="bg-white px-24rpx pb-20rpx">
         <wd-input v-model="queryParams.no" placeholder="请输入订单单号" clearable />
-        <ProductFormPicker v-model="queryParams.productId" label="" placeholder="请选择产品" class="mt-12rpx" />
+        <ProductFormPicker v-model="queryParams.productId" label="" placeholder="请选择物料" class="mt-12rpx" />
         <yd-search-date-range v-model="queryParams.orderTime" class="mt-12rpx" label="订单时间" />
         <view class="mt-16rpx flex gap-16rpx">
           <wd-button class="flex-1" variant="plain" @click="handleReset">
@@ -52,7 +52,7 @@
             v-for="item in list"
             :key="item.id"
             class="mb-20rpx rounded-12rpx bg-white p-24rpx shadow-sm"
-            :class="currentOrder?.id === item.id ? 'ring-2 ring-[#1677ff]' : ''"
+            :class="currentOrder?.id === item.id ? 'ring-2 ring-[var(--yd-text-link)]' : ''"
             @click="handleSelect(item)"
           >
             <view class="mb-12rpx flex items-center justify-between gap-16rpx">
@@ -65,7 +65,7 @@
               <text class="yd-text-hint mr-8rpx">供应商：</text>{{ item.supplierName || '-' }}
             </view>
             <view v-if="item.productNames" class="yd-text-sub mb-8rpx text-26rpx">
-              <text class="yd-text-hint mr-8rpx">产品：</text>
+              <text class="yd-text-hint mr-8rpx">物料：</text>
               <text class="line-clamp-1">{{ item.productNames }}</text>
             </view>
             <view class="yd-text-sub mb-8rpx text-26rpx">

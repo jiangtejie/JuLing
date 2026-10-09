@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * FMS 现金流量表配置 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsCashFlowStatementConfigMapper extends BaseMapperX<FmsCashFlowStatementConfigDO> {

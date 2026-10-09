@@ -15,7 +15,7 @@
           删除
         </wd-button>
       </view>
-      <view class="yd-text-sub mb-20rpx inline-flex rounded-8rpx bg-[#f5f7fa] px-16rpx py-8rpx text-24rpx">
+      <view class="yd-text-sub yd-bg-subtle mb-20rpx inline-flex rounded-8rpx px-16rpx py-8rpx text-24rpx">
         {{ getBizTypeName(item.bizType) }}
       </view>
       <view class="grid grid-cols-2 mb-20rpx gap-16rpx">

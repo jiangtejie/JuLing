@@ -9,7 +9,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "管理后台 - ERP 产品单位 Response VO")
+@Schema(description = "管理后台 - ERP 物料单位 Response VO")
 @Data
 @ExcelIgnoreUnannotated
 public class ErpProductUnitRespVO {
@@ -18,9 +18,12 @@ public class ErpProductUnitRespVO {
     @ExcelProperty("单位编号")
     private Long id;
 
-    @Schema(description = "单位名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "单位名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @ExcelProperty("单位名字")
     private String name;
+
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
 
     @Schema(description = "单位状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty("单位状态")

@@ -14,7 +14,7 @@ import reactor.core.publisher.Flux;
 /**
  * 讯飞星火 {@link ChatModel} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class XingHuoChatModel implements ChatModel {

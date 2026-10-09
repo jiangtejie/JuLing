@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 订单 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TradeOrderApi {
 
@@ -36,5 +36,15 @@ public interface TradeOrderApi {
      * @param cancelType 取消类型
      */
     void cancelPaidOrder(Long userId, Long orderId, Integer cancelType);
+
+    /**
+     * 获得指定会员（订货账号）的订单数量
+     *
+     * 用途：删除订货账号前的校验——已经有订单的账号删掉会让历史订单失去归属，应改用「停用」。
+     *
+     * @param userId 会员编号
+     * @return 订单数量
+     */
+    Long getOrderCountByUserId(Long userId);
 
 }

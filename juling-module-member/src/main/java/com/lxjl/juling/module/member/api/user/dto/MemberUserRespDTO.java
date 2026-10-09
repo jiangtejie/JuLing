@@ -6,9 +6,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 用户信息 Response DTO
+ * 订货账号信息 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class MemberUserRespDTO {
@@ -43,17 +43,5 @@ public class MemberUserRespDTO {
      * 创建时间（注册时间）
      */
     private LocalDateTime createTime;
-
-    // ========== 其它信息 ==========
-
-    /**
-     * 会员级别编号
-     */
-    private Long levelId;
-
-    /**
-     * 积分
-     */
-    private Integer point;
 
 }

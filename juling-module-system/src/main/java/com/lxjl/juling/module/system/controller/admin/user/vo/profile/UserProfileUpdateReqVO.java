@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.URL;
 @Data
 public class UserProfileUpdateReqVO {
 
-    @Schema(description = "用户昵称", example = "棱信矩灵")
+    @Schema(description = "用户昵称", example = "亚特")
     @Size(max = 30, message = "用户昵称长度不能超过 30 个字符")
     private String nickname;
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 /**
  * ERP 库存盘点单项 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_stock_check_item")
 @KeySequence("erp_stock_check_item_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -42,19 +42,19 @@ public class ErpStockCheckItemDO extends BaseDO {
      */
     private Long warehouseId;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */
     private Long productId;
     /**
-     * 产品单位编号
+     * 物料单位编号
      *
      * 冗余 {@link ErpProductDO#getUnitId()}
      */
     private Long productUnitId;
     /**
-     * 产品单价
+     * 物料单价
      */
     private BigDecimal productPrice;
     /**

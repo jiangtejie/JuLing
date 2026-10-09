@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "用户 APP - 用户个人信息 Response VO")
+@Schema(description = "用户 APP - 订货账号个人信息 Response VO")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,13 +14,16 @@ public class AppMemberUserInfoRespVO {
     @Schema(description = "用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long id;
 
-    @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String nickname;
 
     @Schema(description = "用户头像", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://github.com/jiangtejie/JuLing")
     private String avatar;
 
-    @Schema(description = "用户手机号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15601691300")
+    @Schema(description = "订货账号（订货人的登录名，就是订货人名字）", example = "张三")
+    private String username;
+
+    @Schema(description = "手机号（私域订货场景可为空）", example = "15601691300")
     private String mobile;
 
     @Schema(description = "邮箱", example = "member@example.com")
@@ -28,35 +31,5 @@ public class AppMemberUserInfoRespVO {
 
     @Schema(description = "用户性别", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer sex;
-
-    @Schema(description = "积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-    private Integer point;
-
-    @Schema(description = "经验值", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Integer experience;
-
-    @Schema(description = "用户等级")
-    private Level level;
-
-    @Schema(description = "是否成为推广员", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean brokerageEnabled;
-
-    @Schema(description = "用户 App - 会员等级")
-    @Data
-    public static class Level {
-
-        @Schema(description = "等级编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Long id;
-
-        @Schema(description = "等级名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
-        private String name;
-
-        @Schema(description = "等级", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        private Integer level;
-
-        @Schema(description = "等级图标", example = "https://github.com/jiangtejie/JuLing")
-        private String icon;
-
-    }
 
 }

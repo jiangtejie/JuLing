@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link AiBoChaWebSearchClient} 集成测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AiBoChaWebSearchClientTest {
 

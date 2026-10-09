@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 售后订单，用于处理 {@link TradeOrderDO} 交易订单的退款退货流程
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "trade_after_sale", autoResultMap = true)
 @KeySequence("trade_after_sale_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -169,6 +169,21 @@ public class AfterSaleDO extends BaseDO {
      * 退款时间
      */
     private LocalDateTime refundTime;
+    /**
+     * 线下退款渠道
+     *
+     * 字典 pay_channel_code 的线下值：offline_transfer / offline_wx / offline_alipay / offline_cash
+     */
+    private String refundChannelCode;
+    /**
+     * 线下退款凭证图片（多图，如转账回单）
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<String> refundProofUrls;
+    /**
+     * 线下退款备注
+     */
+    private String refundRemark;
 
     // ========== 退货相关 ==========
     /**

@@ -9,14 +9,13 @@ import java.util.Arrays;
 /**
  * 配送方式枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor
 public enum DeliveryTypeEnum implements ArrayValuable<Integer> {
 
-    EXPRESS(1, "快递发货"),
-    PICK_UP(2, "用户自提"),;
+    EXPRESS(1, "快递发货");
 
     public static final Integer[] ARRAYS = Arrays.stream(values()).map(DeliveryTypeEnum::getType).toArray(Integer[]::new);
 

@@ -58,7 +58,7 @@
         仅展示前 {{ MAX_VISIBLE_ROWS }} 条
       </view>
     </view>
-    <!-- add by 棱信矩灵：区分「加载中 / 加载失败 / 确实没有数据」三种状态 -->
+    <!-- add by 亚特：区分「加载中 / 加载失败 / 确实没有数据」三种状态 -->
     <!-- 此前请求失败与加载中都会被渲染成「暂无统计数据」，用户无法区分，且没有重试入口 -->
     <view v-else-if="loading" class="flex justify-center py-40rpx">
       <wd-loading />

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // 单测直接跑在 Node 的 test runner 上：需要 node:test / node:assert 的类型声明。
+    // 只在这里放 node 类型，避免 Node 全局（process / Buffer…）误入 src 的业务代码。
+    "types": ["node"]
+  },
+  "include": ["tests/**/*.ts"]
+}

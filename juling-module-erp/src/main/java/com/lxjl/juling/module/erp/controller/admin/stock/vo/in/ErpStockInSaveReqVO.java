@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,19 +46,28 @@ public class ErpStockInSaveReqVO {
         @NotNull(message = "仓库编号不能为空")
         private Long warehouseId;
 
-        @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品编号不能为空")
+        @Schema(description = "物料编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
+        @NotNull(message = "物料编号不能为空")
         private Long productId;
 
-        @Schema(description = "产品单价", example = "100.00")
+        @Schema(description = "物料单价", example = "100.00")
         private BigDecimal productPrice;
 
-        @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @Schema(description = "物料数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
+        @NotNull(message = "物料数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "备注", example = "随便")
         private String remark;
+
+        @Schema(description = "批次号：为空时审核入库按 IN{yyyyMMdd}-{项id} 自动生成", example = "IN20260910-101")
+        private String batchNo;
+
+        @Schema(description = "生产日期")
+        private LocalDate productionDate;
+
+        @Schema(description = "到期日期：用于效期预警与 FIFO 次级排序")
+        private LocalDate expiryDate;
 
     }
 

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 库存明细的创建 Request BO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @NoArgsConstructor
@@ -18,9 +18,9 @@ import java.math.BigDecimal;
 public class ErpStockRecordCreateReqBO {
 
     /**
-     * 产品编号
+     * 物料编号
      */
-    @NotNull(message = "产品编号不能为空")
+    @NotNull(message = "物料编号不能为空")
     private Long productId;
     /**
      * 仓库编号
@@ -55,5 +55,48 @@ public class ErpStockRecordCreateReqBO {
      */
     @NotNull(message = "业务单号不能为空")
     private String bizNo;
+
+    // ==================== 批次库存（S2 切片一新增，可选） ====================
+
+    /**
+     * 批次号
+     *
+     * 出库按 FIFO 拆批后，一行流水对应一个批次；为空表示按物料整体记账
+     */
+    private String batchNo;
+    /**
+     * 库存状态
+     *
+     * 取值见 {@link com.lxjl.juling.module.erp.service.stock.ErpStockBatchService} 的 STATE_*；
+     * 为空按「在仓」处理
+     */
+    private String stockState;
+    /**
+     * 批次单位成本
+     */
+    private BigDecimal unitCost;
+    /**
+     * 本行成本金额 = count × unitCost
+     */
+    private BigDecimal totalCost;
+    /**
+     * SKU 编号（预留）：空/0 表示按物料记账
+     */
+    private Long skuId;
+
+    /**
+     * 兼容构造：既有调用方（采购入库/销售出库/调拨/盘点等模块）都用 7 参构造，
+     * 这里显式保留，避免它们因为新增字段而编译不过。
+     */
+    public ErpStockRecordCreateReqBO(Long productId, Long warehouseId, BigDecimal count,
+                                     Integer bizType, Long bizId, Long bizItemId, String bizNo) {
+        this.productId = productId;
+        this.warehouseId = warehouseId;
+        this.count = count;
+        this.bizType = bizType;
+        this.bizId = bizId;
+        this.bizItemId = bizItemId;
+        this.bizNo = bizNo;
+    }
 
 }

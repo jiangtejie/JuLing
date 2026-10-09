@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Xss 配置属性
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @ConfigurationProperties(prefix = "juling.xss")
 @Validated

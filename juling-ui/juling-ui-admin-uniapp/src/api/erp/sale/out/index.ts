@@ -42,14 +42,14 @@ export interface SaleOut {
   totalPrice?: number // 优惠后金额
   otherPrice?: number // 其它费用
   receiptPrice?: number // 应收金额
-  totalProductPrice?: number // 合计产品金额
+  totalProductPrice?: number // 合计物料金额
   totalTaxPrice?: number // 合计税额
   totalCount?: number // 合计数量
   status?: number // 状态
   creator?: string // 创建人
   creatorName?: string // 创建人名称
   createTime?: Date // 创建时间
-  productNames?: string // 产品信息
+  productNames?: string // 物料信息
   remark?: string // 备注
   fileUrl?: string // 附件地址
   items?: SaleOutItem[] // 出库明细

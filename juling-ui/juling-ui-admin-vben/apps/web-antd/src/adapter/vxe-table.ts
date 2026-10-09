@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 
 import type { ComponentPropsMap, ComponentType } from './component';
 
-import { h } from 'vue';
+import { h, onActivated, onDeactivated } from 'vue';
 
 import { IconifyIcon } from '@vben/icons';
 import { $te } from '@vben/locales';
@@ -166,7 +166,7 @@ setupVbenVxeTable({
     });
 
     // 表格配置项可以用 cellRender: { name: 'CellSwitch', props: { beforeChange: () => {} } },
-    // add by 棱信矩灵：from https://github.com/vbenjs/vue-vben-admin/blob/main/playground/src/adapter/vxe-table.ts#L97-L123
+    // add by 亚特：from https://github.com/vbenjs/vue-vben-admin/blob/main/playground/src/adapter/vxe-table.ts#L97-L123
     vxeUI.renderer.add('CellSwitch', {
       renderTableDefault({ attrs, props }, { column, row }) {
         const loadingKey = `__loading_${column.field}`;
@@ -198,7 +198,7 @@ setupVbenVxeTable({
     });
 
     // 注册表格的操作按钮渲染器 cellRender: { name: 'CellOperation', options: ['edit', 'delete'] }
-    // add by 棱信矩灵：from https://github.com/vbenjs/vue-vben-admin/blob/main/playground/src/adapter/vxe-table.ts#L125-L255
+    // add by 亚特：from https://github.com/vbenjs/vue-vben-admin/blob/main/playground/src/adapter/vxe-table.ts#L125-L255
     vxeUI.renderer.add('CellOperation', {
       renderTableDefault({ attrs, options, props }, { column, row }) {
         const defaultProps = { size: 'small', type: 'link', ...props };
@@ -385,9 +385,63 @@ export const useVbenVxeGrid = <
       TSubmitValues
     >
   >
-) =>
-  useGrid<T, ComponentType, ComponentPropsMap, TFormValues, TSubmitValues>(
-    ...rest,
+) => {
+  const result = useGrid<
+    T,
+    ComponentType,
+    ComponentPropsMap,
+    TFormValues,
+    TSubmitValues
+  >(...rest);
+
+  /**
+   * 页签缓存下的「回到列表自动刷新」。
+   *
+   * vben 的多页签会把已打开的页面 KeepAlive 缓存，列表页从详情页返回时不会重新 mount，
+   * 于是在别的页面改过的数据（订单状态、收款状态、核验结果等）在列表里看不到旧值。
+   * 这里统一在页面重新激活时刷新一次，避免每个列表页各写一遍。
+   *
+   * 注意：
+   * 1. 只有配置了 proxyConfig.ajax.query 的表格（真正的远程列表）才刷新，
+   *    详情页里用 setGridOptions 灌数据的静态表格不参与，避免无谓请求与报错；
+   * 2. 为什么不用「首次 onActivated 直接跳过」的写法：布局的
+   *    <KeepAlive :include="getCachedTabs"> 里，cachedTabs 由 tabbar store 在路由跳转之后
+   *    异步写入，首次进入某路由时组件已挂载而 include 里还没有当前路由名，KeepAlive 不会给
+   *    该实例打缓存标记，Vue 挂载时也就不会触发 onActivated（是否触发取决于写入与 vnode
+   *    创建是否同帧，属竞态、因页面而异）。于是「首次 onActivated 跳过」会把这个竞态
+   *    反过来用：首屏恰好触发过 activated 的页面（如 /bpm/manager/form）第一次切回能刷新，
+   *    而首屏没触发的页面（如 /mall/trade/order）第一次切回会被当成首屏吞掉、第二次切回才
+   *    刷新 —— 第一次切回的刷新是真的丢了。
+   * 3. 统一改写为与 #/utils/usePageActivateLoad 一致的守卫：只有实例确实被 KeepAlive
+   *    冻结过（onDeactivated 触发）再激活，才刷新一次。onDeactivated / onActivated 只在
+   *    KeepAlive 缓存内触发，未缓存的普通页面（无 KeepAlive 包裹）两者都不触发，
+   *    因此非缓存场景不会多出任何请求。
+   */
+  const hasProxyQuery = Boolean(
+    (rest[0] as undefined | { gridOptions?: VxeTableGridOptions })?.gridOptions
+      ?.proxyConfig?.ajax?.query,
   );
+  if (hasProxyQuery) {
+    /** 是否曾经被页签缓存「冻结」过，用于区分首次挂载（或未被缓存）与切回页签 */
+    let deactivated = false;
+    onDeactivated(() => {
+      deactivated = true;
+    });
+    onActivated(() => {
+      if (!deactivated) {
+        return;
+      }
+      deactivated = false;
+      try {
+        void Promise.resolve(result[1].query()).catch(() => {
+          // 刷新失败由表格自身的错误提示兜住，这里不再打扰用户
+        });
+      } catch {
+        // query 不可用时忽略（例如页面已被销毁）
+      }
+    });
+  }
+  return result;
+};
 
 export type * from '@vben/plugins/vxe-table';

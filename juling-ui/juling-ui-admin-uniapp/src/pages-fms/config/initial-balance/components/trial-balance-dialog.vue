@@ -20,7 +20,7 @@
       <view class="p-24rpx">
         <!-- 平衡结果 -->
         <view class="mb-24rpx rounded-12rpx bg-white p-32rpx text-center shadow-sm">
-          <view class="text-32rpx font-semibold" :class="result?.balanced ? 'text-[#34a853]' : 'yd-text-warning'">
+          <view class="text-32rpx font-semibold" :class="result?.balanced ? 'yd-text-success-strong' : 'yd-text-warning'">
             {{ result?.balanced ? '期初余额试算平衡' : '期初余额试算不平衡' }}
           </view>
           <view class="yd-text-hint mt-12rpx text-26rpx">

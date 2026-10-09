@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link DeptServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(DeptServiceImpl.class)
 public class DeptServiceImplTest extends BaseDbUnitTest {

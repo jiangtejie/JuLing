@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * AI 模型平台
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

@@ -10,7 +10,7 @@ public class SmsChannelSimpleRespVO {
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long id;
 
-    @Schema(description = "短信签名", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "短信签名", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String signature;
 
     @Schema(description = "渠道编码，参见 SmsChannelEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "YUN_PIAN")

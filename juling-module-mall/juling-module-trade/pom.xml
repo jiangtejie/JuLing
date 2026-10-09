@@ -30,17 +30,24 @@
         </dependency>
         <dependency>
             <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-pay</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
-            <artifactId>juling-module-promotion</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lxjl.boot</groupId>
             <artifactId>juling-module-member</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-erp-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!-- 门店收货单取号：走单据平台（STORE_RECEIPT → MDSH + yyyyMMdd + 6 位流水），与其它单据同一套序列 -->
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-bill</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!-- 门店要货审核：走 BPM 审批流 -->
+        <dependency>
+            <groupId>com.lxjl.boot</groupId>
+            <artifactId>juling-module-bpm</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>

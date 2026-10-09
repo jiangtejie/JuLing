@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * FMS 科目期初余额 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "fms_initial_balance", autoResultMap = true)
 @KeySequence("fms_initial_balance_seq")

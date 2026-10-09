@@ -1,6 +1,6 @@
-# juling-ui-mall-h5 · 矩灵订货商城 H5
+# juling-ui-mall-h5 · 亚特订货商城 H5
 
-炬信矩灵移动端**订货商城** H5 基座。面向微信公众号 / APP 内嵌 WebView / 手机浏览器，覆盖「商品浏览 → SKU 选择 → 阶梯价订货 → 提交订货单 → 订单跟踪」的完整链路骨架。
+亚特移动端**订货商城** H5 基座。面向微信公众号 / APP 内嵌 WebView / 手机浏览器，覆盖「商品浏览 → SKU 选择 → 阶梯价订货 → 提交订货单 → 订单跟踪」的完整链路骨架。
 
 ## 技术栈
 
@@ -119,7 +119,7 @@ juling-ui-mall-h5
 
 ### 2. 主题与换肤
 
-所有颜色集中在 `src/styles/variables.scss` 的 CSS 变量中，并同步覆盖 Vant 的 `--van-*` 变量。改主题只需改这一处：品牌色、品牌渐变（`--app-primary-gradient`）与订单状态色都已变量化，组件里不再出现写死的十六进制色值（首页 banner 的另外两个渐变色属于运营配色，不随主题）。
+所有颜色集中在 `src/styles/variables.scss` 的 CSS 变量中，并同步覆盖 Vant 的 `--van-*` 变量。改主题只需改这一处：品牌色、品牌渐变（`--app-primary-gradient`）与订单状态色都已变量化，组件里不再出现写死的十六进制色值。
 
 > 变量声明使用 `:root:root`：按需引入时 Vant 样式是异步 chunk，加载顺序不可控，提高一级选择器优先级可确保主题覆盖一定生效。
 >
@@ -143,6 +143,8 @@ const detail = await http.get<Product>('/product/spu/get-detail', { id: 1 });
 ```
 
 **与后端字段的差异在 `src/api/adapters` 收口**：字段改名（`introduction`→`subTitle`、`no`→`orderNo`、`count`→`quantity`）、订单状态 `Integer` ↔ 字符串 key、时间戳归一、`properties` 对象数组转 `Record`。视图与 store 只消费前端领域模型，后端字段变动只需改 adapter 一处。`src/types/backend.ts` 逐字对齐后端 App 端 VO，**业务代码不要直接消费**。
+
+分类接口返回的是**平铺列表**（靠 `parentId` 表达层级，含「父分类 + 子分类」），由 `api/product.ts` 的 `getCategoryTree()`（内部 `buildCategoryTree`）组装成两级树：分类页左侧只放一级分类，右侧按二级分类分组展示；父分类被禁用时，孤儿子分类会被提升为一级，避免分类在界面上消失。商品分页接口传一级分类 id 时，后端会连同子分类一起返回，所以右侧只需按商品的 `categoryId` 归组，不必逐个子分类发请求。
 
 ### 4. 状态管理
 
@@ -244,6 +246,8 @@ fix(cart): 修复订货单数量超过库存后未截断
 12. **列表首屏骨架的显示条件是 `!list.length && loading && !refreshing`**：下拉刷新时列表会被清空，若只判断前两项会闪一下骨架；同时把 `van-list` 的 `loading-text` 条件化为「列表非空时才显示」，避免首屏骨架与「加载中...」文案叠在一起。
 13. **Vant 的 `showConfirmDialog` 在「取消」时 reject**（`dialog/function-call.mjs` 里的 `(action === "confirm" ? resolve : reject)(action)`），而 Vue 会把事件处理器返回的 Promise rejection 交给 `app.config.errorHandler` —— 用户只是想放弃操作，却会看到兜底的「页面出现异常」Toast。**统一改用 `utils/confirm.ts` 的 `confirmDialog()`**（取消返回 `false`），需要 loading 反馈的操作用 `van-action-bar-button` / `van-button` 的 `loading` 属性而不是全局 loading。
 14. **后端返回的文件地址是内网绝对 URL**（`http://127.0.0.1:48080/admin-api/infra/file/...`），公网访问时浏览器会去请求访问者自己的 127.0.0.1，https 页面下还会触发混合内容拦截 —— 表现就是「页面能开、图片全裂」。`utils/asset.ts` 的 `normalizeAssetUrl()` 会把本机 / 内网来源（127.x / localhost / 10.x / 192.168.x / 172.16-31.x / ::1）改写成同源相对路径（保留 `/admin-api` 前缀），由 nginx 或 vite 代理转发；**部署侧必须存在 `/admin-api/` → 后端的转发**。
+15. **`van-swipe-cell` 的左滑按钮会从卡片右缘漏出约 1px 红边**：Vant 把右侧插槽放在 `right: 0` 再 `translate3d(100%, 0, 0)`，而按钮宽度是 px→vw 换算出来的小数，dpr=2 下裁剪边界与合成图层对不齐。订货单页在 `.cart__swipe` 里给 `:deep(.van-swipe-cell__right)` 额外外推 `calc(100% + 1px)`，把它彻底推进裁剪区（滑动展开后少 1px 不可见）。
+16. **订货单页的删除交互**：导航栏右上角只放「管理 / 完成」开关，删除入口统一收到两处——行左滑出来的按钮，以及管理态下底部 SubmitBar 的「删除(N)」（管理态下不显示金额、按钮走 danger，由 `cartStore.checkedItems` 决定可用性）；管理态下点击整行是勾选而不是进详情，与京东 / 美团购物车一致。删除走同一个 `removeItems()`，本地立即生效、登录态异步同步 `/trade/cart/*`。
 
 ## 后续建议
 
@@ -251,5 +255,6 @@ fix(cart): 修复订货单数量超过库存后未截断
 - **阶梯价**：需要后端在 SKU 上补区间价字段（`juling-module-product`），前端只需在 `adapters/product.ts` 接上映射，`resolvePrice` 逻辑已保留；
 - **收货地址**：当前为手工填写 + 必填校验（未预填任何示例数据），建议接入地址簿接口并把确认订单页改为「选择地址」；
 - **订货客户标识**：后端无 `verified` / `customerId`，「我的」页已降级为展示会员等级，待后端补齐；
+- **首页轮播**：目前是本地运营图（`src/assets/images/banner-1.jpg`，在 `views/home/index.vue` 的 `banners` 数组里配置，加图就往数组追加），接入后端 banner 接口后换成接口数据即可，模板与样式不用动；素材已按 375 宽的 2 倍图（750×350 / JPEG q85 / 约 42 KB）导出，新图请沿用这个尺寸与格式（不要直接塞 3 倍或原图，JPEG 是为兼容 iOS 12 才没用 WebP）；
 - 可按需引入 `vite-plugin-legacy` 支持更老的低端安卓机；
 - 若后续需要 SEO 或微信分享签名，可把 Hash 模式切为 History 模式并配置 nginx try_files。

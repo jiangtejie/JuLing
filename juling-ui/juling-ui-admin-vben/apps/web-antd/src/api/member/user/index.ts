@@ -3,9 +3,11 @@ import type { PageParam, PageResult } from '@vben/request';
 import { requestClient } from '#/api/request';
 
 export namespace MemberUserApi {
-  /** 会员用户信息 */
+  /** 订货账号信息（原 C 端会员用户） */
   export interface User {
     id?: number;
+    /** 订货账号（登录名 = 订货人名字；历史数据可能为空） */
+    username?: string;
     avatar?: string;
     birthday?: number;
     createTime?: number;
@@ -21,30 +23,39 @@ export namespace MemberUserApi {
     status?: number;
     areaId?: number;
     areaName?: string;
-    tagIds?: number[];
-    groupId?: number;
-    levelId?: number;
-    levelName?: null | string;
-    point?: null | number;
-    totalPoint?: null | number;
-    experience?: null | number;
+    /** 授权门店编号列表：账号可给哪些门店下单（加盟店账号一条，片区订货管理人多条） */
+    storeCustomerIds?: number[];
+    /** 默认门店编号：H5 首次进入用它 */
+    defaultStoreCustomerId?: number;
   }
 
-  /** 会员用户等级更新信息 */
-  export interface UserUpdateLevelReqVO {
-    id: number;
-    levelId: number;
-    reason: string;
+  /** 开订货账号请求信息（后台给加盟客户开「账号名 + 初始密码 + 绑定门店」） */
+  export interface UserCreateReqVO {
+    /** 订货账号（登录名 = 订货人名字）：2-64 位，必填 */
+    username: string;
+    /** 初始密码：6-32 位，必填 */
+    password: string;
+    /** 授权门店编号列表：至少一个（一家店填一条，片区管理人多条） */
+    storeCustomerIds: number[];
+    /** 默认门店编号（不传或不在授权范围内时取第一家） */
+    defaultStoreCustomerId?: number;
+    nickname?: string;
+    mobile?: string;
+    email?: string;
+    /** 状态：0 开启 / 1 关闭，不传默认开启 */
+    status?: number;
+    mark?: string;
   }
 
-  /** 会员用户积分更新信息 */
-  export interface UserPointUpdateReqVO {
+  /** 重置订货账号密码请求信息（重置后后端会强制该账号下线） */
+  export interface UserResetPasswordReqVO {
     id: number;
-    point: number;
+    /** 新密码：6-32 位 */
+    password: string;
   }
 }
 
-/** 查询会员用户列表 */
+/** 查询订货账号列表 */
 export function getUserPage(params: PageParam) {
   return requestClient.get<PageResult<MemberUserApi.User>>(
     '/member/user/page',
@@ -54,22 +65,38 @@ export function getUserPage(params: PageParam) {
   );
 }
 
-/** 查询会员用户详情 */
+/** 查询订货账号详情 */
 export function getUser(id: number) {
   return requestClient.get<MemberUserApi.User>(`/member/user/get?id=${id}`);
 }
 
-/** 修改会员用户 */
+/**
+ * 开订货账号（私域加盟客户：订货人账号名 + 初始密码 + 授权门店）
+ *
+ * 返回新账号编号
+ */
+export function createUser(data: MemberUserApi.UserCreateReqVO) {
+  return requestClient.post<number>('/member/user/create', data);
+}
+
+/** 重置订货账号密码（无需短信验证码，重置后后端会强制该账号下线） */
+export function resetUserPassword(data: MemberUserApi.UserResetPasswordReqVO) {
+  return requestClient.put<boolean>('/member/user/reset-password', data);
+}
+
+/** 修改订货账号 */
 export function updateUser(data: MemberUserApi.User) {
   return requestClient.put('/member/user/update', data);
 }
 
-/** 修改会员用户等级 */
-export function updateUserLevel(data: MemberUserApi.UserUpdateLevelReqVO) {
-  return requestClient.put('/member/user/update-level', data);
+/** 停用 / 启用订货账号（status：0 开启、1 停用；停用后无法登录，历史订单与台账仍可追溯） */
+export function updateUserStatus(id: number, status: number) {
+  return requestClient.put<boolean>(
+    `/member/user/update-status?id=${id}&status=${status}`,
+  );
 }
 
-/** 修改会员用户积分 */
-export function updateUserPoint(data: MemberUserApi.UserPointUpdateReqVO) {
-  return requestClient.put('/member/user/update-point', data);
+/** 删除订货账号（已绑定门店/部门的账号后端会拒绝，引导改用停用） */
+export function deleteUser(id: number) {
+  return requestClient.delete<boolean>(`/member/user/delete?id=${id}`);
 }

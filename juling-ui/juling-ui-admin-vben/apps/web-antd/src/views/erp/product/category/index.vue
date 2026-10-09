@@ -40,7 +40,7 @@ function handleRefresh() {
 /** 导出表格 */
 async function handleExport() {
   const data = await exportProductCategory(await gridApi.formApi.getValues());
-  downloadFileFromBlobPart({ fileName: '产品分类.xls', source: data });
+  downloadFileFromBlobPart({ fileName: '物料分类.xls', source: data });
 }
 
 /** 创建分类 */
@@ -113,18 +113,18 @@ const [Grid, gridApi] = useVbenVxeGrid({
   <Page auto-content-height>
     <template #doc>
       <DocAlert
-        title="【产品】产品信息、分类、单位"
+        title="【物料】物料信息、分类、单位"
         url="https://github.com/jiangtejie/JuLing#readme"
       />
     </template>
 
     <FormModal @success="handleRefresh" />
-    <Grid table-title="产品分类列表">
+    <Grid table-title="物料分类列表">
       <template #toolbar-tools>
         <TableAction
           :actions="[
             {
-              label: $t('ui.actionTitle.create', ['产品分类']),
+              label: $t('ui.actionTitle.create', ['物料分类']),
               type: 'primary',
               icon: ACTION_ICON.ADD,
               auth: ['erp:product-category:create'],

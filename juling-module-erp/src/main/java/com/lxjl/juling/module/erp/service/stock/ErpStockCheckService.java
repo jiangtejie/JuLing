@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * ERP 库存盘点单 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ErpStockCheckService {
 

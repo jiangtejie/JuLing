@@ -1,20 +1,19 @@
-import type { VbenFormSchema } from '#/adapter/form';
+import type { VbenFormApi, VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
-import { h, markRaw } from 'vue';
+import { markRaw } from 'vue';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
-import { convertToInteger, formatToFraction } from '@vben/utils';
-
-import { Tag } from 'ant-design-vue';
 
 import { z } from '#/adapter/form';
-import { getSimpleGroupList } from '#/api/member/group';
-import { getSimpleLevelList } from '#/api/member/level';
-import { getSimpleTagList } from '#/api/member/tag';
+import { getCustomerSimpleList } from '#/api/erp/sale/customer';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
+
+/** 门店编号 → 门店（列表列展示「授权门店」用；simple-list 只透出 id/name/storeType） */
+let customerList: OrderAccountCustomer[] = [];
+getCustomerSimpleList().then((data) => (customerList = data as OrderAccountCustomer[]));
 
 /** 新增/修改的表单 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -28,13 +27,33 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
+      fieldName: 'username',
+      label: '订货账号',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 64,
+        placeholder: '请输入订货账号（订货人名字，登录用）',
+      },
+      help: '订货人登录用的账号名，填订货人名字（如「张三」），2-64 位且不能与其它账号重复；清空表示不修改',
+      rules: z
+        .string()
+        .min(2, '订货账号长度为 2-64 位')
+        .max(64, '订货账号长度不能超过 64 位')
+        .or(z.literal(''))
+        .optional(),
+    },
+    {
       fieldName: 'mobile',
       label: '手机号',
       component: 'Input',
       componentProps: {
-        placeholder: '请输入手机号',
+        allowClear: true,
+        maxlength: 20,
+        placeholder: '选填，不填则只能用订货账号登录',
       },
-      rules: 'required',
+      help: '选填。不填则只能用账号名登录，填了就必须唯一',
+      rules: 'mobile',
     },
     {
       fieldName: 'email',
@@ -60,11 +79,13 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'nickname',
-      label: '用户昵称',
+      label: '联系人',
       component: 'Input',
       componentProps: {
-        placeholder: '请输入用户昵称',
+        allowClear: true,
+        placeholder: '请输入联系人',
       },
+      help: '订货账号的展示名；开账号时为空则取订货账号',
     },
     {
       fieldName: 'avatar',
@@ -112,34 +133,41 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      fieldName: 'tagIds',
-      label: '用户标签',
+      fieldName: 'storeCustomerIds',
+      label: '授权门店',
       component: 'ApiSelect',
       componentProps: {
-        api: getSimpleTagList,
+        api: getCustomerSimpleList,
+        labelFn: formatOrderSubjectLabel,
         labelField: 'name',
         valueField: 'id',
         mode: 'multiple',
-        placeholder: '请选择用户标签',
+        allowClear: true,
+        placeholder: '请选择授权门店（可多选）',
       },
+      help: '账号能给哪些门店下单：一家门店＝加盟店自己的账号；多家＝片区订货管理人',
+      rules: z.array(z.number()).min(1, '至少授权一个门店'),
     },
     {
-      fieldName: 'groupId',
-      label: '用户分组',
+      fieldName: 'defaultStoreCustomerId',
+      label: '默认门店',
       component: 'ApiSelect',
       componentProps: {
-        api: getSimpleGroupList,
+        api: getCustomerSimpleList,
+        labelFn: formatOrderSubjectLabel,
         labelField: 'name',
         valueField: 'id',
-        placeholder: '请选择用户分组',
+        allowClear: true,
+        placeholder: '不填则取授权门店的第一家',
       },
+      help: '门店在 H5 首次进入时默认选中的门店',
     },
     {
       fieldName: 'mark',
-      label: '会员备注',
+      label: '备注',
       component: 'Textarea',
       componentProps: {
-        placeholder: '请输入会员备注',
+        placeholder: '请输入备注',
       },
     },
   ];
@@ -149,11 +177,20 @@ export function useFormSchema(): VbenFormSchema[] {
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
-      fieldName: 'nickname',
-      label: '用户昵称',
+      fieldName: 'username',
+      label: '订货账号',
       component: 'Input',
       componentProps: {
-        placeholder: '请输入用户昵称',
+        placeholder: '请输入订货账号',
+        allowClear: true,
+      },
+    },
+    {
+      fieldName: 'nickname',
+      label: '联系人',
+      component: 'Input',
+      componentProps: {
+        placeholder: '请输入联系人',
         allowClear: true,
       },
     },
@@ -177,7 +214,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'loginDate',
-      label: '登录时间',
+      label: '最后登录时间',
       component: 'RangePicker',
       componentProps: {
         ...getRangePickerDefaultProps(),
@@ -193,43 +230,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
       },
     },
-    {
-      fieldName: 'tagIds',
-      label: '用户标签',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleTagList,
-        labelField: 'name',
-        valueField: 'id',
-        mode: 'multiple',
-        placeholder: '请选择用户标签',
-        allowClear: true,
-      },
-    },
-    {
-      fieldName: 'levelId',
-      label: '用户等级',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleLevelList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择用户等级',
-        allowClear: true,
-      },
-    },
-    {
-      fieldName: 'groupId',
-      label: '用户分组',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleGroupList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择用户分组',
-        allowClear: true,
-      },
-    },
   ];
 }
 
@@ -237,71 +237,37 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useGridColumns(): VxeTableGridOptions['columns'] {
   return [
     {
-      type: 'checkbox',
-      width: 50,
+      field: 'username',
+      title: '订货账号',
+      minWidth: 140,
+      formatter: ({ cellValue }) => cellValue || '-',
     },
     {
-      field: 'id',
-      title: '用户编号',
-      minWidth: 100,
-    },
-    {
-      field: 'avatar',
-      title: '头像',
-      minWidth: 80,
-      cellRender: {
-        name: 'CellImage',
-      },
+      field: 'nickname',
+      title: '联系人',
+      minWidth: 120,
+      formatter: ({ cellValue }) => cellValue || '-',
     },
     {
       field: 'mobile',
       title: '手机号',
       minWidth: 120,
+      // 私域订货场景手机号可选，历史会员也可能没有手机号
+      formatter: ({ cellValue }) => cellValue || '-',
     },
     {
-      field: 'email',
-      title: '邮箱',
-      minWidth: 180,
-    },
-    {
-      field: 'nickname',
-      title: '昵称',
-      minWidth: 120,
-    },
-    {
-      field: 'levelName',
-      title: '等级',
-      minWidth: 100,
-    },
-    {
-      field: 'groupName',
-      title: '分组',
-      minWidth: 100,
-    },
-    {
-      field: 'tagNames',
-      title: '用户标签',
-      minWidth: 150,
-      slots: {
-        default: ({ row }) => {
-          return row.tagNames?.map((tagName: string, index: number) => {
-            return h(
-              Tag,
-              {
-                key: index,
-                class: 'mr-1',
-                color: 'blue',
-              },
-              () => tagName,
-            );
-          });
-        },
+      field: 'storeCustomerIds',
+      title: '授权门店',
+      minWidth: 200,
+      formatter: ({ cellValue }) => {
+        const ids = (cellValue ?? []) as number[];
+        if (ids.length === 0) {
+          return '-';
+        }
+        return ids
+          .map((id) => customerList.find((item) => item.id === id)?.name ?? id)
+          .join('、');
       },
-    },
-    {
-      field: 'point',
-      title: '积分',
-      minWidth: 80,
     },
     {
       field: 'status',
@@ -314,7 +280,7 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'loginDate',
-      title: '登录时间',
+      title: '最后登录时间',
       minWidth: 160,
       formatter: 'formatDateTime',
     },
@@ -333,197 +299,248 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
   ];
 }
 
-/** 修改用户等级 */
-export function useLevelFormSchema(): VbenFormSchema[] {
+/** 开订货账号表单值 */
+export interface OrderAccountFormValues {
+  defaultStoreCustomerId?: number;
+  email?: string;
+  mark?: string;
+  mobile?: string;
+  nickname?: string;
+  password?: string;
+  status?: number;
+  storeCustomerIds?: number[];
+  username?: string;
+}
+
+/**
+ * 授权门店下拉项。
+ *
+ * simple-list 透出 id/name/code/storeType；编码用于区分同名门店，店型用于标注「（直营）/（加盟）」。
+ */
+export interface OrderAccountCustomer {
+  id?: number;
+  name?: string;
+  /** 业务编码（门店编码，如 KH000001）：同名门店靠它区分 */
+  code?: string;
+  /** 店型：DIRECT 直营 / FRANCHISE 加盟（字典 erp_store_type） */
+  storeType?: string;
+}
+
+/** 授权门店下拉的显示名：编码 + 店型，避免选错门店（同名靠编码区分） */
+export function formatOrderSubjectLabel(item: OrderAccountCustomer): string {
+  const name = item.code ? `${item.code} ${item.name ?? ''}` : (item.name ?? '');
+  if (item.storeType === 'DIRECT') {
+    return `${name}（直营）`;
+  }
+  if (item.storeType === 'FRANCHISE') {
+    return `${name}（加盟）`;
+  }
+  return name;
+}
+
+/**
+ * 订货账号默认建议密码：`yt@` + 手机号后 6 位；没填手机号时用账号名后 6 位
+ * （账号名不足 6 位就用账号名本身），长度与后端 6-32 位的校验对齐。
+ */
+export function suggestOrderPassword(
+  mobile?: string,
+  username?: string,
+): string {
+  const mobileText = (mobile ?? '').trim();
+  let password: string;
+  if (mobileText) {
+    const digits = mobileText.replace(/\D/g, '');
+    password = `yt@${(digits || mobileText).slice(-6)}`;
+  } else {
+    const usernameText = (username ?? '').trim();
+    if (!usernameText) {
+      return '';
+    }
+    password = `yt@${usernameText.slice(-6)}`;
+  }
+  // 账号名只有 2-3 位时拼出来不足 6 位会被后端拒绝，这里补足到最小长度
+  return password.padEnd(6, '0');
+}
+
+/** 开订货账号表单（工具栏「开订货账号」弹窗） */
+export function useOrderAccountFormSchema(options: {
+  /** 授权门店下拉数据源 */
+  getCustomerList: () => Promise<OrderAccountCustomer[]>;
+  /** 账号名 / 手机号变化后刷新默认建议密码 */
+  onPasswordSourceChange?: (
+    values: Partial<OrderAccountFormValues>,
+    form: VbenFormApi,
+  ) => void;
+}): VbenFormSchema[] {
   return [
     {
-      fieldName: 'id',
-      label: '用户编号',
+      fieldName: 'username',
+      label: '订货账号',
       component: 'Input',
       componentProps: {
-        disabled: true,
+        allowClear: true,
+        maxlength: 64,
+        placeholder: '请输入订货账号（订货人名字，如「张三」）',
+      },
+      help: '订货人登录用的账号名，填订货人名字，2-64 位且必须唯一',
+      rules: z
+        .string()
+        .min(2, '订货账号长度为 2-64 位')
+        .max(64, '订货账号长度不能超过 64 位'),
+    },
+    {
+      fieldName: 'password',
+      label: '初始密码',
+      component: 'InputPassword',
+      componentProps: {
+        allowClear: true,
+        maxlength: 32,
+        placeholder: '请输入 6-32 位初始密码',
+      },
+      help: '默认「yt@ + 手机号后 6 位」；没填手机号时取账号名后 6 位，可自行修改',
+      rules: z
+        .string()
+        .min(6, '密码长度为 6-32 位')
+        .max(32, '密码长度为 6-32 位'),
+      dependencies: {
+        triggerFields: ['mobile', 'username'],
+        trigger(values, _actions, controller) {
+          options.onPasswordSourceChange?.(
+            values as Partial<OrderAccountFormValues>,
+            controller,
+          );
+        },
       },
     },
     {
-      fieldName: 'nickname',
-      label: '用户昵称',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'levelId',
-      label: '用户等级',
+      fieldName: 'storeCustomerIds',
+      label: '授权门店',
       component: 'ApiSelect',
       componentProps: {
-        api: getSimpleLevelList,
+        api: options.getCustomerList,
+        labelFn: formatOrderSubjectLabel,
         labelField: 'name',
         valueField: 'id',
-        placeholder: '请选择用户等级',
+        mode: 'multiple',
         allowClear: true,
+        placeholder: '请选择授权门店（可多选）',
+      },
+      help: '一家门店＝加盟店自己的订货账号；多家＝片区订货管理人（登录后可在 H5 切换下单门店）',
+      rules: z.array(z.number()).min(1, '至少授权一个门店'),
+    },
+    {
+      fieldName: 'defaultStoreCustomerId',
+      label: '默认门店',
+      component: 'ApiSelect',
+      componentProps: {
+        api: options.getCustomerList,
+        labelFn: formatOrderSubjectLabel,
+        labelField: 'name',
+        valueField: 'id',
+        allowClear: true,
+        placeholder: '不填则取授权门店的第一家',
+      },
+      help: '门店在 H5 首次进入时默认选中的门店',
+    },
+    {
+      fieldName: 'nickname',
+      label: '联系人',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 30,
+        placeholder: '请输入联系人（不填则取订货账号）',
       },
     },
     {
-      fieldName: 'reason',
-      label: '修改原因',
+      fieldName: 'mobile',
+      label: '手机号',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 20,
+        placeholder: '选填，不填则只能用订货账号登录',
+      },
+      help: '选填；填了会校验格式且必须唯一',
+      rules: 'mobile',
+    },
+    {
+      fieldName: 'email',
+      label: '邮箱',
+      component: 'Input',
+      componentProps: {
+        allowClear: true,
+        maxlength: 50,
+        placeholder: '请输入邮箱',
+      },
+      rules: z.string().email('邮箱格式不正确').or(z.literal('')).optional(),
+    },
+    {
+      fieldName: 'mark',
+      label: '备注',
       component: 'Textarea',
       componentProps: {
-        placeholder: '请输入修改原因',
+        placeholder: '请输入备注',
       },
-      rules: 'required',
+      formItemClass: 'col-span-2',
+    },
+    {
+      fieldName: 'status',
+      label: '状态',
+      component: 'RadioGroup',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.COMMON_STATUS, 'number'),
+        buttonStyle: 'solid',
+        optionType: 'button',
+      },
+      rules: z.number().default(CommonStatusEnum.ENABLE).optional(),
     },
   ];
 }
 
-/** 修改用户余额 */
-export function useBalanceFormSchema(): VbenFormSchema[] {
+/** 重置订货账号密码表单（行操作「重置密码」弹窗） */
+export function useResetPasswordFormSchema(): VbenFormSchema[] {
   return [
     {
       fieldName: 'id',
-      label: '用户编号',
+      label: '账号编号',
       component: 'Input',
       componentProps: {
         disabled: true,
       },
+    },
+    {
+      fieldName: 'username',
+      label: '订货账号',
+      component: 'Input',
+      componentProps: {
+        disabled: true,
+        placeholder: '（暂无订货账号）',
+      },
+      help: '重置后该账号会被强制下线，订货人需要用新密码重新登录',
     },
     {
       fieldName: 'nickname',
-      label: '用户昵称',
+      label: '联系人',
       component: 'Input',
       componentProps: {
         disabled: true,
       },
     },
     {
-      fieldName: 'balance',
-      label: '变动前余额(元)',
-      component: 'Input',
+      fieldName: 'password',
+      label: '新密码',
+      component: 'InputPassword',
       componentProps: {
-        disabled: true,
+        allowClear: true,
+        maxlength: 32,
+        placeholder: '请输入 6-32 位新密码',
       },
-    },
-    {
-      fieldName: 'changeType',
-      label: '变动类型',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '增加', value: 1 },
-          { label: '减少', value: -1 },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 1,
-    },
-    {
-      fieldName: 'changeBalance',
-      label: '变动余额(元)',
-      component: 'InputNumber',
-      rules: 'required',
-      componentProps: {
-        class: '!w-full',
-        min: 0,
-        precision: 2,
-        step: 0.1,
-        placeholder: '请输入变动余额',
-      },
-      defaultValue: 0,
-    },
-    {
-      fieldName: 'balanceResult',
-      label: '变动后余额(元)',
-      component: 'Input',
-      dependencies: {
-        triggerFields: ['balance', 'changeBalance', 'changeType'],
-        disabled: true,
-        trigger(values, form) {
-          form.setFieldValue(
-            'balanceResult',
-            formatToFraction(
-              convertToInteger(values.balance) +
-                convertToInteger(values.changeBalance) * values.changeType,
-            ),
-          );
-        },
-      },
-    },
-  ];
-}
-
-/** 修改用户积分 */
-export function usePointFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      fieldName: 'id',
-      label: '用户编号',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'nickname',
-      label: '用户昵称',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'point',
-      label: '变动前积分',
-      component: 'Input',
-      componentProps: {
-        disabled: true,
-      },
-    },
-    {
-      fieldName: 'changeType',
-      label: '变动类型',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '增加', value: 1 },
-          { label: '减少', value: -1 },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 1,
-    },
-    {
-      fieldName: 'changePoint',
-      label: '变动积分',
-      component: 'InputNumber',
-      rules: 'required',
-      componentProps: {
-        class: '!w-full',
-        min: 0,
-        precision: 0,
-        placeholder: '请输入变动积分',
-      },
-    },
-    {
-      fieldName: 'pointResult',
-      label: '变动后积分',
-      component: 'Input',
-      componentProps: {
-        placeholder: '',
-      },
-      dependencies: {
-        triggerFields: ['point', 'changePoint', 'changeType'],
-        disabled: true,
-        trigger(values, form) {
-          form.setFieldValue(
-            'pointResult',
-            values.point + values.changePoint * values.changeType ||
-              values.point,
-          );
-        },
-      },
-      rules: z.number().min(0),
+      help: '默认「yt@ + 手机号后 6 位」（无手机号取账号名后 6 位），可自行修改',
+      rules: z
+        .string()
+        .min(6, '密码长度为 6-32 位')
+        .max(32, '密码长度为 6-32 位'),
     },
   ];
 }

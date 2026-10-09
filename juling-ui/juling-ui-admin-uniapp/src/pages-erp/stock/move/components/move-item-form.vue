@@ -30,10 +30,10 @@
 
       <yd-form-picker
         v-model="item.productId"
-        label="产品"
+        label="物料"
         label-width="180rpx"
         :columns="productOptions" label-key="name" value-key="id"
-        placeholder="请选择产品"
+        placeholder="请选择物料"
         :disabled="disabled"
         @confirm="value => handleProductConfirm(index, value)"
       />
@@ -62,7 +62,7 @@
       <wd-form-item title="数量" title-width="180rpx" center>
         <wd-input-number v-model="item.count" :min="0.001" :precision="3" :disabled="disabled" />
       </wd-form-item>
-      <wd-form-item title="产品单价" title-width="180rpx" center>
+      <wd-form-item title="物料单价" title-width="180rpx" center>
         <wd-input-number v-model="item.productPrice" :min="0.01" :precision="2" :disabled="disabled" />
       </wd-form-item>
       <view class="yd-bg-subtle mb-20rpx rounded-8rpx p-16rpx">
@@ -161,7 +161,7 @@ function handleToWarehouseConfirm(index: number, warehouseId?: number | string) 
   }
 }
 
-/** 选择产品 */
+/** 选择物料 */
 async function handleProductConfirm(index: number, productId?: number | string) {
   const item = items.value[index]
   if (!item) {
@@ -181,7 +181,7 @@ async function handleProductConfirm(index: number, productId?: number | string) 
 /** 校验明细 */
 function validate() {
   if (items.value.length === 0) {
-    toast.warning('请至少添加一个调拨产品')
+    toast.warning('请至少添加一个调拨物料')
     return false
   }
   const invalidIndex = items.value.findIndex(item => !item.fromWarehouseId || !item.toWarehouseId || !item.productId || !item.count)

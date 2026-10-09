@@ -32,4 +32,48 @@ if [ "$failed" -ne 0 ]; then
     exit 1
 fi
 
+# ---------------------------------------------------------------------------
+# 门店订货 H5 单测（纯逻辑、无网络无数据库，跑一轮几百毫秒到几秒）
+#
+# 为什么放在这里：本仓库 core.hooksPath = script/git-hooks，.husky/ 下的钩子不会执行，
+# 所以「测试进 pre-commit」只能落在本文件。
+# 只在「本次提交动了该前端工程」且「依赖已安装」时才跑，不影响其它模块的提交。
+# 需要绕过时：git commit --no-verify
+# ---------------------------------------------------------------------------
+H5_DIR="juling-ui/juling-ui-mall-h5"
+if git diff --cached --name-only --diff-filter=ACM | grep -q "^${H5_DIR}/"; then
+    # 单测依赖 Node 的原生 TS 剥离（>= 22.6）。版本不够就跳过，不要把"环境不行"变成"提交被拒"。
+    NODE_MAJOR=$(node -v 2>/dev/null | sed 's/^v//' | cut -d. -f1)
+    if [ -n "$NODE_MAJOR" ] && [ "$NODE_MAJOR" -ge 22 ] && [ -d "${H5_DIR}/node_modules" ]; then
+        if ! (cd "${H5_DIR}" && node --test "tests/*.test.ts" >/dev/null 2>&1); then
+            echo ""
+            echo "提交被拒绝:门店订货 H5 单测未通过。"
+            echo "  · 查看详情:cd ${H5_DIR} && pnpm run test"
+            echo "  · 确需跳过:git commit --no-verify"
+            exit 1
+        fi
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# SQL 脚本「本地执行前」检查（sql/local 有改动时）
+#
+# 背景：本地没装 psql，用 DbTool 执行脚本，而它按 ";" + 换行切分语句，于是有两条隐含约定：
+#   多行 DO $$ 块会被切碎、语句结尾的 ";" 后面必须跟换行。这个坑在开发中被反复踩，所以做成检查。
+#
+# **为什么是警告而不是拦截**：仓库里的脚本面向 psql（正式执行方式是 psql -f），
+#   psql 完全支持多行 DO 块 —— 拿 psql 正确的脚本去挡提交是错的。
+#   本检查只提示「本地用 DbTool 跑之前先看一眼」，不作门禁。
+# ---------------------------------------------------------------------------
+SQL_DIR="sql/local"
+if git diff --cached --name-only --diff-filter=ACM | grep -q "^${SQL_DIR}/"; then
+    if ! node script/tools/check-sql-scripts.mjs "${SQL_DIR}" >/dev/null 2>&1; then
+        echo ""
+        echo "提示:${SQL_DIR} 下有脚本不符合「本地 DbTool 执行」的切分约定。"
+        echo "  · 查看详情:node script/tools/check-sql-scripts.mjs"
+        echo "  · 若你打算用 psql 执行,可以忽略(psql 支持多行 DO 块)。"
+        echo "  · 仅提示,不阻止提交。"
+    fi
+fi
+
 exit 0

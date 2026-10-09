@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * BPM 模型的类型的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

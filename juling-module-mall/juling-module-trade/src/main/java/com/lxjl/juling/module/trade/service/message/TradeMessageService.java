@@ -5,7 +5,7 @@ import com.lxjl.juling.module.trade.service.message.bo.TradeOrderMessageWhenDeli
 /**
  * Trade 消息 service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TradeMessageService {
 

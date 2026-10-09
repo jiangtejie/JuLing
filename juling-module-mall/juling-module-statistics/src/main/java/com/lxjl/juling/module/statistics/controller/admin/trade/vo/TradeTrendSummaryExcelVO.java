@@ -12,7 +12,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 /**
  * 交易状况统计 Excel VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class TradeTrendSummaryExcelVO {
@@ -35,9 +35,6 @@ public class TradeTrendSummaryExcelVO {
 
     @ExcelProperty(value = "余额支付金额", converter = MoneyConvert.class)
     private Integer walletPayPrice;
-
-    @ExcelProperty(value = "支付佣金金额", converter = MoneyConvert.class)
-    private Integer brokerageSettlementPrice;
 
     @ExcelProperty(value = "商品退款金额", converter = MoneyConvert.class)
     private Integer afterSaleRefundPrice;

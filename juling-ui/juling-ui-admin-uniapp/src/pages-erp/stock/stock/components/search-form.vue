@@ -38,7 +38,7 @@ const emit = defineEmits<{
   reset: []
 }>()
 const visible = ref(false) // 搜索弹窗显示状态
-const productPickerRef = ref<InstanceType<typeof ProductSearchPicker>>() // 产品选择器
+const productPickerRef = ref<InstanceType<typeof ProductSearchPicker>>() // 物料选择器
 const warehousePickerRef = ref<InstanceType<typeof WarehouseSearchPicker>>() // 仓库选择器
 const formData = reactive({
   productId: undefined as number | undefined,
@@ -49,12 +49,12 @@ const formData = reactive({
 const placeholder = computed(() => {
   const conditions: string[] = []
   if (formData.productId) {
-    conditions.push(`产品:${productPickerRef.value?.format(formData.productId) || formData.productId}`)
+    conditions.push(`物料:${productPickerRef.value?.format(formData.productId) || formData.productId}`)
   }
   if (formData.warehouseId) {
     conditions.push(`仓库:${warehousePickerRef.value?.format(formData.warehouseId) || formData.warehouseId}`)
   }
-  return conditions.length > 0 ? conditions.join(' | ') : '搜索产品库存'
+  return conditions.length > 0 ? conditions.join(' | ') : '搜索物料库存'
 })
 
 /** 搜索按钮操作 */

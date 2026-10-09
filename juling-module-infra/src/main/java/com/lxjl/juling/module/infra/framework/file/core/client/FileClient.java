@@ -3,7 +3,7 @@ package com.lxjl.juling.module.infra.framework.file.core.client;
 /**
  * 文件客户端
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FileClient {
 

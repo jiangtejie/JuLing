@@ -80,14 +80,13 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-jdk8</artifactId> <!-- use mapstruct-jdk8 for Java 8 or higher -->
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-        </dependency>
+        <!--
+            注意：mapstruct-processor 只能出现在根 pom 的 maven-compiler-plugin / annotationProcessorPaths 里，
+            不要作为普通依赖引进来（曾经这里引过，导致 IDEA 同时从 classpath 与 processorPaths 加载两次
+            MapStruct，出现 FilerException: Attempt to recreate a file ... 以及
+            "No property named xxx exists in source parameter(s)" 这类假报错）。
+            mapstruct-jdk8 是 1.4 之后的空壳（1658 字节）老坐标，已由 mapstruct 取代，一并去掉。
+        -->
 
         <dependency>
             <groupId>com.google.guava</groupId>

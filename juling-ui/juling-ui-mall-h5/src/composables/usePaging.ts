@@ -33,6 +33,9 @@ export function usePaging<T, P extends object = Record<string, unknown>>(
   const error = ref(false);
   const refreshing = ref(false);
   const params = ref({ ...(defaultParams ?? {}) } as Partial<P>);
+  // 请求序号：快速切换筛选条件/页签时，先发出的旧请求可能后返回，
+  // 用它丢弃过期响应，避免旧数据覆盖当前列表
+  let requestSeq = 0;
 
   /** 加载下一页（绑定到 van-list 的 @load） */
   async function onLoad(): Promise<void> {
@@ -40,6 +43,7 @@ export function usePaging<T, P extends object = Record<string, unknown>>(
       loading.value = false;
       return;
     }
+    const seq = (requestSeq += 1);
     loading.value = true;
     error.value = false;
     try {
@@ -48,17 +52,25 @@ export function usePaging<T, P extends object = Record<string, unknown>>(
         pageNo: pageNo.value,
         pageSize,
       });
+      if (seq !== requestSeq) {
+        return; // 已被更新的请求取代，丢弃本次结果
+      }
       const rows = result?.list ?? [];
       list.value = pageNo.value === 1 ? rows : [...list.value, ...rows];
       total.value = result?.total ?? list.value.length;
       pageNo.value += 1;
       finished.value = list.value.length >= total.value || rows.length < pageSize;
     } catch {
+      if (seq !== requestSeq) {
+        return;
+      }
       error.value = true;
       finished.value = false;
     } finally {
-      loading.value = false;
-      refreshing.value = false;
+      if (seq === requestSeq) {
+        loading.value = false;
+        refreshing.value = false;
+      }
     }
   }
 
@@ -70,6 +82,7 @@ export function usePaging<T, P extends object = Record<string, unknown>>(
 
   /** 回到第一页重新查询 */
   async function reset(): Promise<void> {
+    requestSeq += 1; // 作废仍在途的旧请求
     pageNo.value = 1;
     finished.value = false;
     list.value = [];

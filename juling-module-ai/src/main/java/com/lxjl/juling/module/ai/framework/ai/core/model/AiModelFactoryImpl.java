@@ -115,7 +115,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * AI Model 模型工厂的实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class AiModelFactoryImpl implements AiModelFactory {
 
@@ -470,7 +470,7 @@ public class AiModelFactoryImpl implements AiModelFactory {
      * 可参考 {@link AzureOpenAiChatAutoConfiguration}
      */
     private static AzureOpenAiChatModel buildAzureOpenAiChatModel(String apiKey, String url) {
-        // TODO @棱信矩灵：使用前，请测试，暂时没密钥！！！
+        // TODO @亚特：使用前，请测试，暂时没密钥！！！
         OpenAIClientBuilder openAIClientBuilder = new OpenAIClientBuilder()
                 .endpoint(url).credential(new KeyCredential(apiKey));
         return AzureOpenAiChatModel.builder()
@@ -582,7 +582,7 @@ public class AiModelFactoryImpl implements AiModelFactory {
      * 可参考 {@link AzureOpenAiEmbeddingAutoConfiguration} 的 azureOpenAiEmbeddingModel 方法
      */
     private AzureOpenAiEmbeddingModel buildAzureOpenAiEmbeddingModel(String apiKey, String url, String model) {
-        // TODO @棱信矩灵：手头暂时没密钥，使用建议再测试下
+        // TODO @亚特：手头暂时没密钥，使用建议再测试下
         AzureOpenAiEmbeddingAutoConfiguration azureOpenAiAutoConfiguration = new AzureOpenAiEmbeddingAutoConfiguration();
         // 创建 OpenAIClientBuilder 对象
         OpenAIClientBuilder openAIClientBuilder = new OpenAIClientBuilder()

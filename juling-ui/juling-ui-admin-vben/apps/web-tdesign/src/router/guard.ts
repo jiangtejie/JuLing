@@ -162,7 +162,7 @@ function setupAccessGuard(router: Router) {
     // 当前登录用户拥有的角色标识列表
     let userInfo = userStore.userInfo;
     if (!userInfo) {
-      // add by 棱信矩灵：由于矩灵是 fetchUserInfo 统一加载用户 + 权限信息，所以将 fetchMenuListAsync
+      // add by 亚特：由于亚特是 fetchUserInfo 统一加载用户 + 权限信息，所以将 fetchMenuListAsync
       const loading = message.loading({
         content: `${$t('common.loadingMenu')}...`,
       });

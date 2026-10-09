@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 登录用户信息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class LoginUser {

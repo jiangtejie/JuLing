@@ -141,11 +141,11 @@ function normalizeTitle(title: string) {
 
 .mind-map-node {
   box-sizing: border-box;
-  border: 2rpx solid #d9e8d2;
+  border: 2rpx solid var(--yd-mindmap-l1);
   border-radius: 14rpx;
-  background: #fff;
+  background: var(--yd-surface-card);
   padding: 14rpx 18rpx;
-  color: #333;
+  color: var(--yd-text-main);
   font-size: 24rpx;
   line-height: 36rpx;
   word-break: break-word;
@@ -155,10 +155,10 @@ function normalizeTitle(title: string) {
   display: inline-block;
   max-width: 520rpx;
   margin: 0 0 38rpx 16rpx;
-  border-color: #52c41a;
-  background: #52c41a;
+  border-color: var(--yd-text-success);
+  background: var(--yd-text-success);
   padding: 18rpx 30rpx;
-  color: #fff;
+  color: var(--yd-text-inverse);
   font-size: 30rpx;
   font-weight: 600;
 }
@@ -168,7 +168,7 @@ function normalizeTitle(title: string) {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 28rpx;
-  border-top: 2rpx solid #b7dbaa;
+  border-top: 2rpx solid var(--yd-mindmap-l1-strong);
   padding-top: 30rpx;
 }
 
@@ -178,9 +178,9 @@ function normalizeTitle(title: string) {
 }
 
 .mind-map-node-level-two {
-  border-color: #95de64;
-  background: #f0f9eb;
-  color: #317214;
+  border-color: var(--yd-mindmap-l2);
+  background: var(--yd-bg-success-soft);
+  color: var(--yd-mindmap-l2-text);
   font-size: 26rpx;
   font-weight: 600;
 }
@@ -188,7 +188,7 @@ function normalizeTitle(title: string) {
 .mind-map-children,
 .mind-map-leaves {
   margin-left: 22rpx;
-  border-left: 2rpx solid #cfe8c5;
+  border-left: 2rpx solid var(--yd-mindmap-l3);
   padding-left: 18rpx;
 }
 
@@ -202,8 +202,8 @@ function normalizeTitle(title: string) {
 }
 
 .mind-map-node-level-three {
-  border-color: #b7dfaa;
-  background: #f8fcf6;
+  border-color: var(--yd-mindmap-l3-soft);
+  background: var(--yd-mindmap-bg);
 }
 
 .mind-map-leaves {
@@ -211,8 +211,8 @@ function normalizeTitle(title: string) {
 }
 
 .mind-map-node-level-four {
-  border-color: #e4efdf;
-  color: #666;
+  border-color: var(--yd-mindmap-l3-faint);
+  color: var(--yd-text-sub);
   font-size: 22rpx;
 }
 </style>

@@ -63,7 +63,7 @@
                       {{ level }} 级
                     </wd-radio>
                   </wd-radio-group>
-                  <view class="mt-8rpx text-24rpx text-[#e6a23c]">
+                  <view class="yd-text-warning mt-8rpx text-24rpx">
                     科目级次和编码长度调大后不能再调小，请谨慎操作
                   </view>
                 </wd-form-item>

@@ -17,7 +17,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * ERP 采购退货项 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpPurchaseReturnItemMapper extends BaseMapperX<ErpPurchaseReturnItemDO> {

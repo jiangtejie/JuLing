@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 商品分类 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ProductCategoryService {
 

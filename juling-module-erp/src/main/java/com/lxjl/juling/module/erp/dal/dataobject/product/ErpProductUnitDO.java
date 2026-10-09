@@ -8,9 +8,9 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.lxjl.juling.framework.mybatis.core.dataobject.BaseDO;
 
 /**
- * ERP 产品单位 DO
+ * ERP 物料单位 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_product_unit")
 @KeySequence("erp_product_unit_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -31,6 +31,10 @@ public class ErpProductUnitDO extends BaseDO {
      * 单位名字
      */
     private String name;
+    /**
+     * 业务编码（由编码规则统一发号，见 docs/master-data-unified-design.md §4.2；建档后只读）
+     */
+    private String code;
     /**
      * 单位状态
      */

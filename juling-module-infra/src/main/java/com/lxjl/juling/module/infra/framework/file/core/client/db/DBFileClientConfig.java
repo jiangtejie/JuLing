@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotEmpty;
 /**
  * 基于 DB 存储的文件客户端的配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class DBFileClientConfig implements FileClientConfig {

@@ -14,10 +14,17 @@ import java.time.LocalDateTime;
 /**
  * Erp 订单序号的 Redis DAO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Repository
 public class ErpNoRedisDAO {
+
+    // 注意：单号规则的唯一真相来源是「单据平台」的 bill_type 表（规则：前缀 + yyyyMMdd + 6 位流水），
+    // 取号统一走 billPlatformApi.generateNo(billType, orgId)。
+    // 已迁移的单据：采购订单(CGDD)、采购入库(CGRK)、采购退货(CGTH)、销售订单(XSDD)、
+    //              销售出库/配送出库(XSCK)、销售退货(XSTH)、付款单(FKD)、收款单(SKD)。
+    // 迁移一张就从这里删一个常量 —— 常量与平台规则并存 = 同一号码空间两个序列，同日两个入口会撞号。
+    // 本类目前只服务于尚未迁移的库存单据（其它入库 QTRK / 其它出库 QCKD / 调拨 QCDB / 盘点 QCPD）。
 
     /**
      * 其它入库 {@link com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockInDO}
@@ -38,47 +45,14 @@ public class ErpNoRedisDAO {
      */
     public static final String STOCK_CHECK_NO_PREFIX = "QCPD";
 
-    /**
-     * 销售订单 {@link com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOrderDO}
-     */
-    public static final String SALE_ORDER_NO_PREFIX = "XSDD";
-    /**
-     * 销售出库 {@link com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutDO}
-     */
-    public static final String SALE_OUT_NO_PREFIX = "XSCK";
-    /**
-     * 销售退货 {@link com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleReturnDO}
-     */
-    public static final String SALE_RETURN_NO_PREFIX = "XSTH";
-
-    /**
-     * 采购订单 {@link com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO}
-     */
-    public static final String PURCHASE_ORDER_NO_PREFIX = "CGDD";
-    /**
-     * 采购入库 {@link com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInDO}
-     */
-    public static final String PURCHASE_IN_NO_PREFIX = "CGRK";
-    /**
-     * 采购退货 {@link com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseReturnDO}
-     */
-    public static final String PURCHASE_RETURN_NO_PREFIX = "CGTH";
-
-    /**
-     * 付款单 {@link com.lxjl.juling.module.erp.dal.dataobject.finance.ErpFinancePaymentDO}
-     */
-    public static final String FINANCE_PAYMENT_NO_PREFIX = "FKD";
-    /**
-     * 收款单 {@link com.lxjl.juling.module.erp.dal.dataobject.finance.ErpFinanceReceiptDO}
-     */
-    public static final String FINANCE_RECEIPT_NO_PREFIX = "SKD";
-
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 生成序号，使用当前日期，格式为 {PREFIX} + yyyyMMdd + 6 位自增
      * 例如说：QTRK 202109 000001 （没有中间空格）
+     *
+     * 仅剩尚未迁移到单据平台的库存单据使用；新单据请用 BillPlatformApi#generateNo。
      *
      * @param prefix 前缀
      * @return 序号

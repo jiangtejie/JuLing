@@ -72,7 +72,7 @@ const userId = useUserStore().userInfo?.id;
 const isModelSorting = ref(false);
 const originalData = ref<BpmModelApi.Model[]>([]);
 const modelList = ref<BpmModelApi.Model[]>([]);
-// TODO @jason：可以全部展开么？ @棱信矩灵 上次讨论。好像是因为性能问题才只展开第一个分类
+// TODO @jason：可以全部展开么？ @亚特 上次讨论。好像是因为性能问题才只展开第一个分类
 const isExpand = ref(props.isFirst); // 根据是否为第一个分类, 来设置初始展开状态
 
 const sortableInstance = ref<any>(null); // 排序引用，以便后续启用或禁用排序

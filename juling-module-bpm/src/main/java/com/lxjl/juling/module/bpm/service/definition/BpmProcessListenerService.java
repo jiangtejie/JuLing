@@ -9,7 +9,7 @@ import com.lxjl.juling.framework.common.pojo.PageResult;
 /**
  * BPM 流程监听器 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface BpmProcessListenerService {
 

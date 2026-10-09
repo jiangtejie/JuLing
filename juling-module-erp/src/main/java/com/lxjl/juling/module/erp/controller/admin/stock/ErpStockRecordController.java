@@ -39,7 +39,7 @@ import static com.lxjl.juling.framework.apilog.core.enums.OperateTypeEnum.EXPORT
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertSet;
 
-@Tag(name = "管理后台 - ERP 产品库存明细")
+@Tag(name = "管理后台 - ERP 物料库存明细")
 @RestController
 @RequestMapping("/erp/stock-record")
 @Validated
@@ -56,7 +56,7 @@ public class ErpStockRecordController {
     private AdminUserApi adminUserApi;
 
     @GetMapping("/get")
-    @Operation(summary = "获得产品库存明细")
+    @Operation(summary = "获得物料库存明细")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('erp:stock-record:query')")
     public CommonResult<ErpStockRecordRespVO> getStockRecord(@RequestParam("id") Long id) {
@@ -65,7 +65,7 @@ public class ErpStockRecordController {
     }
 
     @GetMapping("/page")
-    @Operation(summary = "获得产品库存明细分页")
+    @Operation(summary = "获得物料库存明细分页")
     @PreAuthorize("@ss.hasPermission('erp:stock-record:query')")
     public CommonResult<PageResult<ErpStockRecordRespVO>> getStockRecordPage(@Valid ErpStockRecordPageReqVO pageReqVO) {
         PageResult<ErpStockRecordDO> pageResult = stockRecordService.getStockRecordPage(pageReqVO);
@@ -73,7 +73,7 @@ public class ErpStockRecordController {
     }
 
     @GetMapping("/export-excel")
-    @Operation(summary = "导出产品库存明细 Excel")
+    @Operation(summary = "导出物料库存明细 Excel")
     @PreAuthorize("@ss.hasPermission('erp:stock-record:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportStockRecordExcel(@Valid ErpStockRecordPageReqVO pageReqVO,
@@ -81,7 +81,7 @@ public class ErpStockRecordController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<ErpStockRecordRespVO> list = buildStockRecrodVOPageResult(stockRecordService.getStockRecordPage(pageReqVO)).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "产品库存明细.xls", "数据", ErpStockRecordRespVO.class, list);
+        ExcelUtils.write(response, "物料库存明细.xls", "数据", ErpStockRecordRespVO.class, list);
     }
 
     private PageResult<ErpStockRecordRespVO> buildStockRecrodVOPageResult(PageResult<ErpStockRecordDO> pageResult) {

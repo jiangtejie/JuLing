@@ -7,7 +7,7 @@ import org.flowable.engine.delegate.JavaDelegate;
 /**
  * 类型为 class 的 ExecutionListener 监听器示例
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class DemoDelegateClassExecutionListener implements JavaDelegate {

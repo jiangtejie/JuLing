@@ -9,6 +9,8 @@ const COMMON_DICT = {
 /** ========== SYSTEM - 系统模块 ========== */
 const SYSTEM_DICT = {
   SYSTEM_USER_SEX: 'system_user_sex',
+  SYSTEM_DEPT_TYPE: 'system_dept_type', // 组织架构节点类型（组织 / 门店）
+  SYSTEM_DEPT_BUSINESS_STATUS: 'system_dept_business_status', // 门店营业状态（营业 / 已闭店）
   SYSTEM_MENU_TYPE: 'system_menu_type',
   SYSTEM_ROLE_TYPE: 'system_role_type',
   SYSTEM_DATA_SCOPE: 'system_data_scope',
@@ -63,18 +65,6 @@ const PAY_DICT = {
   PAY_TRANSFER_TYPE: 'pay_transfer_type', // 转账类型
 } as const;
 
-/** ========== MP - 公众号模块 ========== */
-const MP_DICT = {
-  MP_AUTO_REPLY_REQUEST_MATCH: 'mp_auto_reply_request_match', // 自动回复请求匹配类型
-  MP_MESSAGE_TYPE: 'mp_message_type', // 消息类型
-} as const;
-
-/** ========== MEMBER - 会员模块 ========== */
-const MEMBER_DICT = {
-  MEMBER_EXPERIENCE_BIZ_TYPE: 'member_experience_biz_type', // 会员经验业务类型
-  MEMBER_POINT_BIZ_TYPE: 'member_point_biz_type', // 积分的业务类型
-} as const;
-
 /** ========== MALL - 商城模块 ========== */
 const MALL_DICT = {
   /** ========== MALL - 商品模块 ========== */
@@ -88,14 +78,11 @@ const MALL_DICT = {
   TRADE_DELIVERY_TYPE: 'trade_delivery_type', // 配送方式
   TRADE_ORDER_ITEM_AFTER_SALE_STATUS: 'trade_order_item_after_sale_status', // 订单项 - 售后状态
   TRADE_ORDER_STATUS: 'trade_order_status', // 订单 - 状态
+  TRADE_PAYMENT_PROOF_STATUS: 'trade_payment_proof_status', // 订单 - 收款状态（线下收款）
   TRADE_ORDER_TYPE: 'trade_order_type', // 订单 - 类型
-  BROKERAGE_BANK_NAME: 'brokerage_bank_name', // 佣金提现银行
-  BROKERAGE_BIND_MODE: 'brokerage_bind_mode', // 分销关系绑定模式
-  BROKERAGE_ENABLED_CONDITION: 'brokerage_enabled_condition', // 分佣模式
-  BROKERAGE_RECORD_BIZ_TYPE: 'brokerage_record_biz_type', // 佣金业务类型
-  BROKERAGE_RECORD_STATUS: 'brokerage_record_status', // 佣金状态
-  BROKERAGE_WITHDRAW_STATUS: 'brokerage_withdraw_status', // 佣金提现状态
-  BROKERAGE_WITHDRAW_TYPE: 'brokerage_withdraw_type', // 佣金提现类型
+  TRADE_ORDER_AUDIT_STATUS: 'trade_order_audit_status', // 交易订单 - 门店要货审核状态
+  TRADE_ORDER_ITEM_ALLOC_MODE: 'trade_order_item_alloc_mode', // 交易订单行 - 分料方式（统配/直拨）
+  TRADE_SETTLEMENT_MODE: 'trade_settlement_mode', // 门店 - 结算模式
 
   /** ========== MALL - 营销模块 ========== */
 
@@ -111,25 +98,14 @@ const MALL_DICT = {
   PROMOTION_PRODUCT_SCOPE: 'promotion_product_scope', // 营销的商品范围
 } as const;
 
-/** ========== CRM - 客户管理模块 ========== */
-const CRM_DICT = {
-  CRM_AUDIT_STATUS: 'crm_audit_status', // CRM 审批状态
-  CRM_BIZ_TYPE: 'crm_biz_type', // CRM 业务类型
-  CRM_BUSINESS_END_STATUS_TYPE: 'crm_business_end_status_type', // CRM 商机结束状态类型
-  CRM_CUSTOMER_INDUSTRY: 'crm_customer_industry', // CRM 客户所属行业
-  CRM_CUSTOMER_LEVEL: 'crm_customer_level', // CRM 客户级别
-  CRM_CUSTOMER_SOURCE: 'crm_customer_source', // CRM 客户来源
-  CRM_FOLLOW_UP_TYPE: 'crm_follow_up_type', // CRM 跟进方式
-  CRM_PERMISSION_LEVEL: 'crm_permission_level', // CRM 数据权限的级别
-  CRM_PRODUCT_STATUS: 'crm_product_status', // CRM 商品状态
-  CRM_PRODUCT_UNIT: 'crm_product_unit', // CRM 产品单位
-  CRM_RECEIVABLE_RETURN_TYPE: 'crm_receivable_return_type', // CRM 回款的还款方式
-} as const;
-
 /** ========== ERP - 企业资源计划模块 ========== */
 const ERP_DICT = {
   ERP_AUDIT_STATUS: 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE: 'erp_stock_record_biz_type', // 库存明细的业务类型
+  ERP_STORE_TYPE: 'erp_store_type', // ERP 客户/门店 - 店型
+  ERP_SUPPLIER_SETTLEMENT_TYPE: 'erp_supplier_settlement_type', // ERP 供应商 - 结账方式（月结 / 半月结 / 次结）
+  ERP_SUPPLIER_INVOICE_MODE: 'erp_supplier_invoice_mode', // ERP 供应商 - 开票情况（全额 / 按比例 / 需加税点 / 不开）
+  ERP_SUPPLIER_INVOICE_TYPE: 'erp_supplier_invoice_type', // ERP 供应商 - 开票类型（普票 / 专票）
 } as const;
 
 /** ========== FMS - 财务管理模块 ========== */
@@ -168,178 +144,6 @@ const AI_DICT = {
   AI_MCP_CLIENT_NAME: 'ai_mcp_client_name', // AI MCP Client 名字
 } as const;
 
-/** ========== IOT - 物联网模块 ========== */
-const IOT_DICT = {
-  IOT_ALERT_LEVEL: 'iot_alert_level', // IoT 告警级别
-  IOT_ALERT_RECEIVE_TYPE: 'iot_alert_receive_type', // IoT 告警接收类型
-  IOT_SERIALIZE_TYPE: 'iot_serialize_type', // IOT 序列化类型
-  IOT_DATA_FORMAT: 'iot_data_format', // IOT 数据格式
-  IOT_DATA_SINK_TYPE_ENUM: 'iot_data_sink_type_enum', // IoT 数据流转目的类型
-  IOT_DATA_TYPE: 'iot_data_type', // IOT 数据类型
-  IOT_DEVICE_STATE: 'iot_device_state', // IOT 设备状态
-  IOT_LOCATION_TYPE: 'iot_location_type', // IOT 定位类型
-  IOT_NET_TYPE: 'iot_net_type', // IOT 联网方式
-  IOT_OTA_TASK_DEVICE_SCOPE: 'iot_ota_task_device_scope', // IoT OTA任务设备范围
-  IOT_OTA_TASK_RECORD_STATUS: 'iot_ota_task_record_status', // IoT OTA 记录状态
-  IOT_OTA_TASK_STATUS: 'iot_ota_task_status', // IoT OTA 任务状态
-  IOT_PRODUCT_DEVICE_TYPE: 'iot_product_device_type', // IOT 产品设备类型
-  IOT_PRODUCT_FUNCTION_TYPE: 'iot_product_function_type', // IOT 产品功能类型
-  IOT_PRODUCT_STATUS: 'iot_product_status', // IOT 产品状态
-  IOT_PROTOCOL_TYPE: 'iot_protocol_type', // IOT 接入网关协议
-  IOT_RULE_SCENE_ACTION_TYPE_ENUM: 'iot_rule_scene_action_type_enum', // IoT 规则场景的触发类型枚举
-  IOT_RULE_SCENE_TRIGGER_TYPE_ENUM: 'iot_rule_scene_trigger_type_enum', // IoT 场景流转的触发类型枚举
-  IOT_RW_TYPE: 'iot_rw_type', // IOT 读写类型
-  IOT_THING_MODEL_TYPE: 'iot_thing_model_type', // IOT 产品功能类型
-  IOT_THING_MODEL_UNIT: 'iot_thing_model_unit', // IOT 物模型单位
-  IOT_UNIT_TYPE: 'iot_unit_type', // IOT 单位类型
-  IOT_VALIDATE_TYPE: 'iot_validate_type', // IOT 数据校验级别
-  IOT_MODBUS_MODE: 'iot_modbus_mode', // IoT Modbus 工作模式
-  IOT_MODBUS_FRAME_FORMAT: 'iot_modbus_frame_format', // IoT Modbus 帧格式
-} as const;
-
-/** ========== HRM - 人力资源模块 ========== */
-const HRM_DICT = {
-  HRM_EMPLOYEE_ENTRY_STATUS: 'hrm_employee_entry_status', // HRM 员工入职状态
-  HRM_EMPLOYEE_STATUS: 'hrm_employee_status', // HRM 员工状态
-  HRM_EMPLOYEE_TYPE: 'hrm_employee_type', // HRM 聘用形式
-  HRM_EMPLOYEE_EDUCATION: 'hrm_employee_education', // HRM 员工学历
-  HRM_SALARY_CHANGE_REASON: 'hrm_salary_change_reason', // HRM 薪资调整原因
-  HRM_SALARY_CHANGE_TYPE: 'hrm_salary_change_type', // HRM 薪资档案状态
-  HRM_SALARY_CHANGE_RECORD_STATUS: 'hrm_salary_change_record_status', // HRM 调薪记录状态
-  HRM_SALARY_SLIP_READ_STATUS: 'hrm_salary_slip_read_status', // HRM 工资条查看状态
-  HRM_SALARY_TAX_TYPE: 'hrm_salary_tax_type', // HRM 薪资计税类型
-  HRM_SALARY_YES_NO: 'hrm_salary_yes_no', // HRM 薪资是否
-  HRM_SALARY_OPTION_TYPE: 'hrm_salary_option_type', // HRM 薪资项加减类型
-  HRM_INSURANCE_PROJECT_TYPE: 'hrm_insurance_project_type', // HRM 社保项目类型
-  HRM_INSURANCE_SCHEME_TYPE: 'hrm_insurance_scheme_type', // HRM 社保方案类型
-  HRM_INSURANCE_EMP_STATUS: 'hrm_insurance_emp_status', // HRM 员工参保状态
-  HRM_ATTENDANCE_HOLIDAY_TYPE: 'hrm_attendance_holiday_type', // HRM 考勤节假日类型
-  HRM_RECRUIT_CANDIDATE_STATUS: 'hrm_recruit_candidate_status', // HRM 招聘候选人状态
-  HRM_RECRUIT_CANDIDATE_EDUCATION: 'hrm_recruit_candidate_education', // HRM 招聘候选人学历
-  HRM_RECRUIT_INTERVIEW_TYPE: 'hrm_recruit_interview_type', // HRM 招聘面试方式
-  HRM_RECRUIT_INTERVIEW_RESULT: 'hrm_recruit_interview_result', // HRM 招聘面试结果
-  HRM_RECRUIT_POST_STATUS: 'hrm_recruit_post_status', // HRM 招聘职位状态
-  HRM_RECRUIT_JOB_NATURE: 'hrm_recruit_job_nature', // HRM 招聘工作性质
-  HRM_RECRUIT_WORK_TIME: 'hrm_recruit_work_time', // HRM 招聘工作经验
-  HRM_RECRUIT_POST_EDUCATION: 'hrm_recruit_post_education', // HRM 招聘职位学历要求
-  HRM_RECRUIT_SALARY_UNIT: 'hrm_recruit_salary_unit', // HRM 招聘薪资单位
-  HRM_RECRUIT_EMERGENCY_LEVEL: 'hrm_recruit_emergency_level', // HRM 招聘紧急程度
-  HRM_ATTENDANCE_CLOCK_TYPE: 'hrm_attendance_clock_type', // HRM 打卡类型
-  HRM_ATTENDANCE_CLOCK_SOURCE: 'hrm_attendance_clock_source', // HRM 打卡来源
-  HRM_ATTENDANCE_CLOCK_STATUS: 'hrm_attendance_clock_status', // HRM 打卡状态
-  HRM_ATTENDANCE_LEAVE_TYPE: 'hrm_attendance_leave_type', // HRM 请假类型
-  HRM_ATTENDANCE_YES_NO: 'hrm_attendance_yes_no', // HRM 考勤是否
-  HRM_ATTENDANCE_LATE_EARLY_DEDUCT_METHOD:
-    'hrm_attendance_late_early_deduct_method', // HRM 迟到早退扣款方式
-  HRM_ATTENDANCE_ABSENTEEISM_DEDUCT_METHOD:
-    'hrm_attendance_absenteeism_deduct_method', // HRM 旷工扣款方式
-  HRM_ATTENDANCE_MISSCARD_DEDUCT_METHOD:
-    'hrm_attendance_misscard_deduct_method', // HRM 缺卡扣款方式
-  HRM_PERFORMANCE_PLAN_STATUS: 'hrm_performance_plan_status', // HRM 绩效计划状态
-  HRM_PERFORMANCE_STAGE_STATUS: 'hrm_performance_stage_status', // HRM 绩效阶段状态
-  HRM_PERFORMANCE_ASSESSMENT_STAGE_STATUS:
-    'hrm_performance_assessment_stage_status', // HRM 绩效考核阶段处理状态
-  HRM_PERFORMANCE_APPEAL_STATUS: 'hrm_performance_appeal_status', // HRM 绩效申诉状态
-  HRM_PERFORMANCE_SCORE_CALCULATION: 'hrm_performance_score_calculation', // HRM 绩效计分方式
-  HRM_PERFORMANCE_UPPER_LIMIT_TYPE: 'hrm_performance_upper_limit_type', // HRM 绩效上限类型
-  HRM_PERFORMANCE_YES_NO: 'hrm_performance_yes_no', // HRM 绩效是否
-} as const;
-
-/** ========== IM - 即时通讯模块 ========== */
-const IM_DICT = {
-  IM_CHANNEL_MATERIAL_TYPE: 'im_channel_material_type', // IM 频道素材类型
-  IM_CONTENT_TYPE: 'im_content_type', // IM 消息内容类型
-  IM_FRIEND_ADD_SOURCE: 'im_friend_add_source', // IM 好友添加来源
-  IM_FRIEND_REQUEST_HANDLE_RESULT: 'im_friend_request_handle_result', // IM 好友申请处理结果
-  IM_FRIEND_STATUS: 'im_friend_status', // IM 好友状态
-  IM_GROUP_ADD_SOURCE: 'im_group_add_source', // IM 加群来源
-  IM_GROUP_MEMBER_ROLE: 'im_group_member_role', // IM 群成员角色
-  IM_GROUP_REQUEST_HANDLE_RESULT: 'im_group_request_handle_result', // IM 加群申请处理结果
-  IM_GROUP_STATUS: 'im_group_status', // IM 群状态
-  IM_MESSAGE_RECEIPT_STATUS: 'im_message_receipt_status', // IM 消息回执状态（私聊 / 群聊共用）
-  IM_MESSAGE_STATUS: 'im_message_status', // IM 消息状态（私聊 / 群聊共用）
-  IM_RTC_CALL_CONVERSATION_TYPE: 'im_rtc_call_conversation_type', // IM 通话会话类型
-  IM_RTC_CALL_END_REASON: 'im_rtc_call_end_reason', // IM 通话结束原因
-  IM_RTC_CALL_MEDIA_TYPE: 'im_rtc_call_media_type', // IM 通话媒体类型
-  IM_RTC_CALL_STATUS: 'im_rtc_call_status', // IM 通话状态
-  IM_RTC_PARTICIPANT_ROLE: 'im_rtc_participant_role', // IM 通话参与者角色
-  IM_RTC_PARTICIPANT_STATUS: 'im_rtc_participant_status', // IM 通话参与者状态
-} as const;
-
-/** ========== MES - 制造执行模块 ========== */
-const MES_DICT = {
-  MES_MD_ITEM_OR_PRODUCT: 'mes_md_item_or_product', // MES 物料/产品标识
-  MES_MD_AUTO_CODE_CYCLE_METHOD: 'mes_md_auto_code_cycle_method', // MES 编码规则循环方式
-  MES_MD_AUTO_CODE_PADDED_METHOD: 'mes_md_auto_code_padded_method', // MES 编码规则补齐方式
-  MES_MD_AUTO_CODE_PART_TYPE: 'mes_md_auto_code_part_type', // MES 编码规则分段类型
-  MES_CLIENT_TYPE: 'mes_client_type', // MES 客户类型
-  MES_VENDOR_LEVEL: 'mes_vendor_level', // MES 供应商级别
-  MES_CAL_HOLIDAY_TYPE: 'mes_cal_holiday_type', // MES 假期类型
-  MES_CAL_SHIFT_TYPE: 'mes_cal_shift_type', // MES 轮班方式
-  MES_CAL_SHIFT_METHOD: 'mes_cal_shift_method', // MES 倒班方式
-  MES_CAL_CALENDAR_TYPE: 'mes_cal_calendar_type', // MES 班组类型
-  MES_CAL_PLAN_STATUS: 'mes_cal_plan_status', // MES 排班计划状态
-  MES_TM_TOOL_STATUS: 'mes_tm_tool_status', // MES 工具状态
-  MES_TM_MAINTEN_TYPE: 'mes_tm_mainten_type', // MES 保养维护类型
-  MES_DV_MACHINERY_STATUS: 'mes_dv_machinery_status', // MES 设备状态
-  MES_DV_SUBJECT_TYPE: 'mes_dv_subject_type', // MES 点检保养项目类型
-  MES_DV_CYCLE_TYPE: 'mes_dv_cycle_type', // MES 点检保养周期类型
-  MES_DV_CHECK_PLAN_STATUS: 'mes_dv_check_plan_status', // MES 点检保养方案状态
-  MES_MAINTEN_RECORD_STATUS: 'mes_mainten_record_status', // MES 保养记录状态
-  MES_MAINTEN_STATUS: 'mes_mainten_status', // MES 保养结果
-  MES_DV_REPAIR_STATUS: 'mes_dv_repair_status', // MES 维修工单状态
-  MES_DV_REPAIR_RESULT: 'mes_dv_repair_result', // MES 维修结果
-  MES_DV_CHECK_RECORD_STATUS: 'mes_dv_check_record_status', // MES 点检记录状态
-  MES_DV_CHECK_RESULT: 'mes_dv_check_result', // MES 点检结果
-  MES_PRO_LINK_TYPE: 'mes_pro_link_type', // MES 工序关系类型
-  MES_PRO_WORK_ORDER_STATUS: 'mes_pro_work_order_status', // MES 生产工单状态
-  MES_PRO_WORK_ORDER_TYPE: 'mes_pro_work_order_type', // MES 工单类型
-  MES_PRO_WORK_ORDER_SOURCE_TYPE: 'mes_pro_work_order_source_type', // MES 工单来源类型
-  MES_PRO_TASK_STATUS: 'mes_pro_task_status', // MES 生产任务状态
-  MES_PRO_FEEDBACK_STATUS: 'mes_pro_feedback_status', // MES 生产报工状态
-  MES_PRO_FEEDBACK_TYPE: 'mes_pro_feedback_type', // MES 生产报工类型
-  MES_PRO_FEEDBACK_CHANNEL: 'mes_pro_feedback_channel', // MES 生产报工途径
-  MES_PRO_ANDON_STATUS: 'mes_pro_andon_status', // MES 安灯处置状态
-  MES_PRO_ANDON_LEVEL: 'mes_pro_andon_level', // MES 安灯级别
-  MES_PRO_WORK_RECORD_TYPE: 'mes_pro_work_record_type', // MES 上下工状态类型
-  MES_TIME_UNIT_TYPE: 'mes_time_unit_type', // MES 时间单位
-  MES_ORDER_STATUS: 'mes_order_status', // MES 单据状态
-  MES_INDICATOR_TYPE: 'mes_indicator_type', // MES 检测项类型
-  MES_QC_RESULT_TYPE: 'mes_qc_result_type', // MES 质检结果值类型
-  MES_QC_TYPE: 'mes_qc_type', // MES 质检方案类型
-  MES_QC_CHECK_RESULT: 'mes_qc_check_result', // MES 检测结果
-  MES_QC_SOURCE_DOC_TYPE: 'mes_qc_source_doc_type', // MES 来源单据类型
-  MES_IPQC_TYPE: 'mes_ipqc_type', // MES IPQC 检验类型
-  MES_RQC_TYPE: 'mes_rqc_type', // MES 退货检验类型
-  MES_DEFECT_LEVEL: 'mes_defect_level', // MES 缺陷等级
-  MES_WM_BARCODE_BIZ_TYPE: 'mes_wm_barcode_biz_type', // MES 条码业务类型
-  MES_WM_BARCODE_FORMAT: 'mes_wm_barcode_format', // MES 条码格式
-  MES_WM_PACKAGE_STATUS: 'mes_wm_package_status', // MES 装箱单状态
-  MES_WM_PRODUCT_SALES_STATUS: 'mes_wm_product_sales_status', // MES 销售出库单状态
-  MES_WM_QUALITY_STATUS: 'mes_wm_quality_status', // MES 质量状态
-  MES_WM_MISC_ISSUE_TYPE: 'mes_wm_misc_issue_type', // MES 杂项出库类型
-  MES_WM_MISC_ISSUE_STATUS: 'mes_wm_misc_issue_status', // MES 杂项出库单状态
-  MES_WM_MISC_RECEIPT_TYPE: 'mes_wm_misc_receipt_type', // MES 杂项入库类型
-  MES_WM_MISC_RECEIPT_STATUS: 'mes_wm_misc_receipt_status', // MES 杂项入库单状态
-  MES_WM_OUTSOURCE_ISSUE_STATUS: 'mes_wm_outsource_issue_status', // MES 外协发料单状态
-  MES_WM_OUTSOURCE_RECEIPT_STATUS: 'mes_wm_outsource_receipt_status', // MES 外协入库单状态
-  MES_WM_ARRIVAL_NOTICE_STATUS: 'mes_wm_arrival_notice_status', // MES 到货通知单状态
-  MES_WM_ITEM_RECEIPT_STATUS: 'mes_wm_item_receipt_status', // MES 采购入库单状态
-  MES_WM_RETURN_VENDOR_STATUS: 'mes_wm_return_vendor_status', // MES 供应商退货单状态
-  MES_WM_SALES_NOTICE_STATUS: 'mes_wm_sales_notice_status', // MES 发货通知单状态
-  MES_WM_RETURN_SALES_STATUS: 'mes_wm_return_sales_status', // MES 销售退货单状态
-  MES_WM_RETURN_ISSUE_STATUS: 'mes_wm_return_issue_status', // MES 生产退料单状态
-  MES_WM_RETURN_ISSUE_TYPE: 'mes_wm_return_issue_type', // MES 退料类型
-  MES_WM_PRODUCT_ISSUE_STATUS: 'mes_wm_product_issue_status', // MES 领料出库单状态
-  MES_WM_PRODUCT_RECEIPT_STATUS: 'mes_wm_product_receipt_status', // MES 产品入库单状态
-  MES_WM_STOCK_TAKING_TYPE: 'mes_wm_stock_taking_type', // MES 盘点类型
-  MES_WM_STOCK_TAKING_TASK_STATUS: 'mes_wm_stock_taking_task_status', // MES 盘点任务状态
-  MES_WM_STOCK_TAKING_LINE_STATUS: 'mes_wm_stock_taking_task_line_status', // MES 盘点任务行状态
-  MES_WM_STOCK_TAKING_PLAN_PARAM_TYPE: 'mes_wm_stock_taking_plan_param_type', // MES 盘点方案参数类型
-  MES_WM_TRANSFER_STATUS: 'mes_wm_transfer_status', // MES 转移单状态
-  MES_WM_TRANSFER_TYPE: 'mes_wm_transfer_type', // MES 转移单类型
-} as const;
-
 /** ========== WMS - 仓储管理模块 ========== */
 const WMS_DICT = {
   WMS_MERCHANT_TYPE: 'merchant_type', // WMS 往来企业类型
@@ -349,46 +153,15 @@ const WMS_DICT = {
   WMS_SHIPMENT_ORDER_TYPE: 'wms_shipment_order_type', // WMS 出库单类型
 } as const;
 
-/** ========== PMS - 项目管理模块 ========== */
-const PMS_DICT = {
-  PMS_PROJECT_TYPE: 'pms_project_type', // PMS 项目类型
-  PMS_PROJECT_STATUS: 'pms_project_status', // PMS 项目状态
-  PMS_PROJECT_LEVEL: 'pms_project_level', // PMS 项目优先级
-  PMS_PROJECT_GROUP_TYPE: 'pms_project_group_type', // PMS 项目分组类型
-  PMS_PROJECT_SCENE_TYPE: 'pms_project_scene_type', // PMS 项目列表场景
-  PMS_PROJECT_SORT_TYPE: 'pms_project_sort_type', // PMS 项目排序类型
-  PMS_PROJECT_MEMBER_LEVEL: 'pms_project_member_level', // PMS 项目成员权限级别
-  PMS_ITERATION_STATUS: 'pms_iteration_status', // PMS 迭代状态
-  PMS_WORK_ITEM_TYPE: 'pms_work_item_type', // PMS 工作项类型
-  PMS_WORK_ITEM_STATUS_TYPE: 'pms_work_item_status_type', // PMS 工作项语义状态
-  PMS_WORK_ITEM_LIFECYCLE_STATUS: 'pms_work_item_lifecycle_status', // PMS 工作项生命周期状态
-  PMS_WORK_ITEM_PRIORITY: 'pms_work_item_priority', // PMS 工作项优先级
-  PMS_WORK_ITEM_DEFECT_TYPE: 'pms_work_item_defect_type', // PMS 工作项缺陷类型
-  PMS_KNOWLEDGE_OBJECT_TYPE: 'pms_knowledge_object_type', // PMS 知识对象类型
-  PMS_KNOWLEDGE_DOCUMENT_TYPE: 'pms_knowledge_document_type', // PMS 知识文档类型
-  PMS_KNOWLEDGE_DOCUMENT_STATUS: 'pms_knowledge_document_status', // PMS 知识文档状态
-  PMS_KNOWLEDGE_CONTENT_LEVEL: 'pms_knowledge_content_level', // PMS 知识内容协作等级
-  PMS_KNOWLEDGE_GROUP_TYPE: 'pms_knowledge_group_type', // PMS 知识库分组类型
-  PMS_KNOWLEDGE_LIBRARY_MEMBER_LEVEL: 'pms_knowledge_library_member_level', // PMS 知识库成员等级
-} as const;
-
 /** 字典类型枚举 - 统一导出 */
 const DICT_TYPE = {
   ...AI_DICT,
   ...BPM_DICT,
-  ...CRM_DICT,
   ...ERP_DICT,
   ...FMS_DICT,
   ...INFRA_DICT,
-  ...IM_DICT,
-  ...IOT_DICT,
-  ...HRM_DICT,
-  ...MES_DICT,
   ...WMS_DICT,
-  ...MEMBER_DICT,
-  ...MP_DICT,
   ...PAY_DICT,
-  ...PMS_DICT,
   ...MALL_DICT,
   ...SYSTEM_DICT,
   ...COMMON_DICT,

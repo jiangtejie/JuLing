@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * 默认的 {@link WebSocketSessionManager} 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class WebSocketSessionManagerImpl implements WebSocketSessionManager {
 

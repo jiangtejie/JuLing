@@ -17,7 +17,7 @@ import static com.lxjl.juling.framework.web.core.util.WebFrameworkUtils.HEADER_T
  *
  * Consumer 消费消息时，将消息的 Header 的租户编号，添加到 {@link TenantContextHolder} 中，通过 {@link InvocableHandlerMethod} 实现
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TenantRocketMQConsumeMessageHook implements ConsumeMessageHook {
 

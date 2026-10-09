@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
  * 1. 快递客户端工厂 {@link ExpressClientFactory}
  * 2. 默认的快递客户端实现 {@link ExpressClient}
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Configuration(proxyBeanMethods = false)
 public class ExpressClientConfig {

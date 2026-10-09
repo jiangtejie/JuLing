@@ -18,9 +18,9 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
 /**
- * ERP 产品分类 Service 实现类
+ * ERP 物料分类 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -65,11 +65,11 @@ public class ErpProductCategoryServiceImpl implements ErpProductCategoryService 
     public void deleteProductCategory(Long id) {
         // 1.1 校验存在
         validateProductCategoryExists(id);
-        // 1.2 校验是否有子产品分类
+        // 1.2 校验是否有子物料分类
         if (erpProductCategoryMapper.selectCountByParentId(id) > 0) {
             throw exception(PRODUCT_CATEGORY_EXITS_CHILDREN);
         }
-        // 1.3 校验是否有产品
+        // 1.3 校验是否有物料
         if (productService.getProductCountByCategoryId(id) > 0) {
             throw exception(PRODUCT_CATEGORY_EXITS_PRODUCT);
         }
@@ -87,16 +87,16 @@ public class ErpProductCategoryServiceImpl implements ErpProductCategoryService 
         if (parentId == null || ErpProductCategoryDO.PARENT_ID_ROOT.equals(parentId)) {
             return;
         }
-        // 1. 不能设置自己为父产品分类
+        // 1. 不能设置自己为父物料分类
         if (Objects.equals(id, parentId)) {
             throw exception(PRODUCT_CATEGORY_PARENT_ERROR);
         }
-        // 2. 父产品分类不存在
+        // 2. 父物料分类不存在
         ErpProductCategoryDO parentCategory = erpProductCategoryMapper.selectById(parentId);
         if (parentCategory == null) {
             throw exception(PRODUCT_CATEGORY_PARENT_NOT_EXITS);
         }
-        // 3. 递归校验父产品分类，如果父产品分类是自己的子产品分类，则报错，避免形成环路
+        // 3. 递归校验父物料分类，如果父物料分类是自己的子物料分类，则报错，避免形成环路
         if (id == null) { // id 为空，说明新增，不需要考虑环路
             return;
         }
@@ -106,7 +106,7 @@ public class ErpProductCategoryServiceImpl implements ErpProductCategoryService 
             if (Objects.equals(id, parentId)) {
                 throw exception(PRODUCT_CATEGORY_PARENT_IS_CHILD);
             }
-            // 3.2 继续递归下一级父产品分类
+            // 3.2 继续递归下一级父物料分类
             if (parentId == null || ErpProductCategoryDO.PARENT_ID_ROOT.equals(parentId)) {
                 break;
             }
@@ -122,7 +122,7 @@ public class ErpProductCategoryServiceImpl implements ErpProductCategoryService 
         if (productCategory == null) {
             return;
         }
-        // 如果 id 为空，说明不用比较是否为相同 id 的产品分类
+        // 如果 id 为空，说明不用比较是否为相同 id 的物料分类
         if (id == null) {
             throw exception(PRODUCT_CATEGORY_NAME_DUPLICATE);
         }

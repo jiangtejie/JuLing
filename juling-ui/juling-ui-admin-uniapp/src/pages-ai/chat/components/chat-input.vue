@@ -29,7 +29,7 @@
             <wd-icon name="folder" size="30rpx" color="#666" />
             <view
               v-if="attachmentUrls.length"
-              class="absolute min-w-28rpx rounded-full bg-[#f5222d] px-6rpx text-center text-18rpx text-white leading-28rpx -right-6rpx -top-6rpx"
+              class="yd-bg-danger absolute min-w-28rpx rounded-full px-6rpx text-center text-18rpx text-white leading-28rpx -right-6rpx -top-6rpx"
             >
               {{ attachmentUrls.length }}
             </view>
@@ -51,7 +51,7 @@
         </view>
         <view
           class="h-68rpx w-68rpx flex items-center justify-center rounded-full"
-          :class="inProgress || prompt.trim() ? 'yd-bg-primary' : 'bg-[#d9d9d9]'"
+          :class="inProgress || prompt.trim() ? 'yd-bg-primary' : 'yd-bg-disabled'"
           @click="handleSubmit"
         >
           <view v-if="inProgress" class="h-22rpx w-22rpx rounded-4rpx bg-white" />

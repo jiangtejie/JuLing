@@ -11,17 +11,27 @@ import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseInItemDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
+import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockBatchDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseInItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseInMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
+import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockBatchMapper;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.api.dto.BillRelationCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
+import com.lxjl.juling.module.erp.service.stock.ErpStockBatchService;
 import com.lxjl.juling.module.erp.service.stock.ErpStockRecordService;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchInReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,13 +47,17 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 采购入库 Service 实现类
  *
- * @author 棱信矩灵
+ * S2 库存中心（切片二）：审核通过时逐行按批次入账（{@link ErpStockBatchService#receiveBatch}），
+ * 反审核按原批次冲回；批次记账内部会写带批次/成本的库存流水并增量更新 erp_stock.count（双写），
+ * 因此不再直接调用 {@link ErpStockRecordService#createStockRecord}，只有历史单据才退回旧口径。
+ *
+ * @author 亚特
  */
+@Slf4j
 @Service
 @Validated
 public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
@@ -53,8 +67,6 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     @Resource
     private ErpPurchaseInItemMapper purchaseInItemMapper;
 
-    @Resource
-    private ErpNoRedisDAO noRedisDAO;
 
     @Resource
     private ErpProductService productService;
@@ -65,9 +77,19 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     private ErpAccountService accountService;
     @Resource
     private ErpStockRecordService stockRecordService;
+    @Resource
+    private ErpStockBatchService stockBatchService;
+    /**
+     * 只用于「反审核时判断来源项在批次表里有没有批次」：
+     * 没有 = 接批次之前审核的历史单据，反审核要退回旧口径（只冲 erp_stock）
+     */
+    @Resource
+    private ErpStockBatchMapper stockBatchMapper;
 
     @Resource
     private AdminUserApi adminUserApi;
+    @Resource
+    private com.lxjl.juling.module.bill.api.BillPlatformApi billPlatformApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -78,8 +100,8 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
         List<ErpPurchaseInItemDO> purchaseInItems = validatePurchaseInItems(createReqVO.getItems());
         // 1.3 校验结算账户
         accountService.validateAccount(createReqVO.getAccountId());
-        // 1.4 生成入库单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.PURCHASE_IN_NO_PREFIX);
+        // 1.4 生成入库单号（走单据平台）
+        String no = billPlatformApi.generateNo(BillTypeConstants.PURCHASE_IN, null);
         if (purchaseInMapper.selectByNo(no) != null) {
             throw exception(PURCHASE_IN_NO_EXISTS);
         }
@@ -99,6 +121,17 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
 
         // 3. 更新采购订单的入库数量
         updatePurchaseOrderInCount(createReqVO.getOrderId());
+
+        // 4. 单据平台：登记"采购订单 → 采购入库"下推关联 + 操作日志（供追溯与防重复下推）
+        billPlatformApi.addRelation(new BillRelationCreateReqDTO()
+                .setSourceType(BillTypeConstants.PURCHASE_ORDER).setSourceId(purchaseOrder.getId())
+                .setSourceNo(purchaseOrder.getNo())
+                .setTargetType(BillTypeConstants.PURCHASE_IN).setTargetId(purchaseIn.getId()).setTargetNo(no));
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_IN).setBillId(purchaseIn.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(purchaseIn.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId())
+                .setRemark("由采购订单 " + purchaseOrder.getNo() + " 下推"));
         return purchaseIn.getId();
     }
 
@@ -161,13 +194,11 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePurchaseInStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpPurchaseInDO purchaseIn = validatePurchaseInExists(id);
         // 1.2 校验状态
-        if (purchaseIn.getStatus().equals(status)) {
-            throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(purchaseIn.getStatus(), status, PURCHASE_IN_APPROVE_FAIL, PURCHASE_IN_PROCESS_FAIL);
         // 1.3 校验已付款
         if (!approve && purchaseIn.getPaymentPrice() != null
                 && purchaseIn.getPaymentPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -175,22 +206,84 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
         }
 
         // 2. 更新状态
-        int updateCount = purchaseInMapper.updateByIdAndStatus(id, purchaseIn.getStatus(),
-                new ErpPurchaseInDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? PURCHASE_IN_APPROVE_FAIL : PURCHASE_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> purchaseInMapper.updateByIdAndStatus(id, purchaseIn.getStatus(),
+                new ErpPurchaseInDO().setStatus(status)),
+                status, PURCHASE_IN_APPROVE_FAIL, PURCHASE_IN_PROCESS_FAIL);
 
-        // 3. 变更库存
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_IN).setBillId(id).setBillNo(purchaseIn.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(purchaseIn.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
+
+        // 3. 变更库存（S2 库存中心：按批次入账 / 冲销；内部同时写库存流水并增量更新 erp_stock.count）
         List<ErpPurchaseInItemDO> purchaseInItems = purchaseInItemMapper.selectListByInId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.PURCHASE_IN.getType()
                 : ErpStockRecordBizTypeEnum.PURCHASE_IN_CANCEL.getType();
         purchaseInItems.forEach(purchaseInItem -> {
-            BigDecimal count = approve ? purchaseInItem.getCount() : purchaseInItem.getCount().negate();
-            stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
-                    purchaseInItem.getProductId(), purchaseInItem.getWarehouseId(), count,
-                    bizType, purchaseInItem.getInId(), purchaseInItem.getId(), purchaseIn.getNo()));
+            if (approve) {
+                receivePurchaseInItemBatch(purchaseInItem, purchaseIn);
+            } else {
+                reversePurchaseInItemBatch(purchaseInItem, purchaseIn, bizType);
+            }
         });
+    }
+
+    /**
+     * 采购入库项入账：按 仓库 × 物料 × 批次 记一批库存（幂等键 = 采购入库/入库项）
+     *
+     * 批次号/生产日期/到期日期取入库项字段（为空时按 IN{yyyyMMdd}-{项id} 自动生成）；
+     * in_date 取单据的入库时间（FIFO 的「先入库先出」按它排序）；unit_cost 取入库单价。
+     */
+    private void receivePurchaseInItemBatch(ErpPurchaseInItemDO purchaseInItem, ErpPurchaseInDO purchaseIn) {
+        ErpStockBatchInReqBO inReqBO = new ErpStockBatchInReqBO();
+        inReqBO.setWarehouseId(purchaseInItem.getWarehouseId());
+        inReqBO.setProductId(purchaseInItem.getProductId());
+        inReqBO.setBatchNo(purchaseInItem.getBatchNo());
+        inReqBO.setProductionDate(purchaseInItem.getProductionDate());
+        inReqBO.setExpiryDate(purchaseInItem.getExpiryDate());
+        // 入库日期取单据的入库时间：FIFO 的「先入库先出」按它排序
+        inReqBO.setInDate(purchaseIn.getInTime() != null ? purchaseIn.getInTime().toLocalDate() : null);
+        inReqBO.setCount(purchaseInItem.getCount());
+        // 成本取采购入库单价
+        inReqBO.setUnitCost(purchaseInItem.getProductPrice());
+        inReqBO.setBizType(ErpStockRecordBizTypeEnum.PURCHASE_IN.getType());
+        inReqBO.setBizId(purchaseInItem.getInId());
+        inReqBO.setBizItemId(purchaseInItem.getId());
+        inReqBO.setBizNo(purchaseIn.getNo());
+        inReqBO.setRemark(purchaseInItem.getRemark());
+        stockBatchService.receiveBatch(inReqBO);
+    }
+
+    /**
+     * 采购入库项反审核：按原批次冲回（既有可逆机制，批次已被出库导致余额不足时明确报错拒绝）
+     *
+     * 历史兼容：接批次之前审核的采购入库单，批次表里没有来源批次，无从冲回；
+     * 此时退回旧口径只写 erp_stock 流水，并打告警日志——这是 erp_stock 与 erp_stock_batch
+     * 已知偏差的来源之一，判据见 docs/stock-center.md §6。
+     */
+    private void reversePurchaseInItemBatch(ErpPurchaseInItemDO purchaseInItem, ErpPurchaseInDO purchaseIn,
+                                            Integer cancelBizType) {
+        ErpStockBatchDO sourceBatch = stockBatchMapper.selectBySource(
+                ErpStockRecordBizTypeEnum.PURCHASE_IN.getType(), purchaseInItem.getId());
+        if (sourceBatch != null) {
+            stockBatchService.reverseReceive(new ErpStockBatchReverseReqBO()
+                    .setSourceBizType(ErpStockRecordBizTypeEnum.PURCHASE_IN.getType())
+                    .setSourceBizItemId(purchaseInItem.getId())
+                    .setTargetBizType(cancelBizType)
+                    .setBizId(purchaseInItem.getInId())
+                    .setBizNo(purchaseIn.getNo()));
+            return;
+        }
+        stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
+                purchaseInItem.getProductId(), purchaseInItem.getWarehouseId(), purchaseInItem.getCount().negate(),
+                cancelBizType, purchaseInItem.getInId(), purchaseInItem.getId(), purchaseIn.getNo()));
+        log.warn("[updatePurchaseInStatus][历史单据({}) 入库项({}) 在批次表无来源批次，反审核按旧口径仅冲减 erp_stock({} 个)，"
+                        + "不产生批次流水]", purchaseIn.getNo(), purchaseInItem.getId(), purchaseInItem.getCount());
     }
 
     @Override
@@ -208,7 +301,7 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
     }
 
     private List<ErpPurchaseInItemDO> validatePurchaseInItems(List<ErpPurchaseInSaveReqVO.Item> list) {
-        // 1. 校验产品存在
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseInSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

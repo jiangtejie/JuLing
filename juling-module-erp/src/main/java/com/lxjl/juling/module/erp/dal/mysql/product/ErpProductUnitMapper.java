@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * ERP 产品单位 Mapper
+ * ERP 物料单位 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpProductUnitMapper extends BaseMapperX<ErpProductUnitDO> {

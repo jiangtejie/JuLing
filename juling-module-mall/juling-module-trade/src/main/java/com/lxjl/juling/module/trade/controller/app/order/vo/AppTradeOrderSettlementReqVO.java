@@ -1,6 +1,5 @@
 package com.lxjl.juling.module.trade.controller.app.order.vo;
 
-import cn.hutool.core.util.ObjUtil;
 import com.lxjl.juling.framework.common.validation.InEnum;
 import com.lxjl.juling.framework.common.validation.Mobile;
 import com.lxjl.juling.module.trade.enums.delivery.DeliveryTypeEnum;
@@ -24,60 +23,26 @@ public class AppTradeOrderSettlementReqVO {
     @NotEmpty(message = "商品不能为空")
     private List<Item> items;
 
-    @Schema(description = "优惠劵编号", example = "1024")
-    private Long couponId;
-
-    @Schema(description = "是否使用积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "是否使用积分不能为空")
-    private Boolean pointStatus;
+    // ========== 门店订货链：下单门店 ==========
+    @Schema(description = "下单门店客户编号（代理账号切换门店时传；不传则使用账号绑定门店）", example = "1")
+    private Long storeCustomerId;
 
     // ========== 配送相关相关字段 ==========
     @Schema(description = "配送方式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @InEnum(value = DeliveryTypeEnum.class, message = "配送方式不正确")
     private Integer deliveryType;
 
-    @Schema(description = "收件地址编号", example = "1")
+    // 会员中心（含会员地址簿）已下线，恒为空、不再消费；仅为兼容 H5 保留字段
+    @Schema(description = "收件地址编号（会员中心已下线，恒为空）", example = "1")
     private Long addressId;
 
-    @Schema(description = "自提门店编号", example = "1088")
-    private Long pickUpStoreId;
-    @Schema(description = "收件人名称", example = "棱信矩灵") // 选择门店自提时，该字段为联系人名
+    @Schema(description = "收件人名称", example = "亚特")
     private String receiverName;
-    @Schema(description = "收件人手机", example = "15601691300") // 选择门店自提时，该字段为联系人手机
+    @Schema(description = "收件人手机", example = "15601691300")
     @Mobile(message = "收件人手机格式不正确")
     private String receiverMobile;
     @Schema(description = "收件详细地址", example = "重庆市江北区xx路 1 号") // 未选择收件地址时，手填的收货详细地址
     private String receiverDetailAddress;
-
-    // ========== 秒杀活动相关字段 ==========
-    @Schema(description = "秒杀活动编号", example = "1024")
-    private Long seckillActivityId;
-
-    // ========== 拼团活动相关字段 ==========
-    @Schema(description = "拼团活动编号", example = "1024")
-    private Long combinationActivityId;
-
-    @Schema(description = "拼团团长编号", example = "2048")
-    private Long combinationHeadId;
-
-    // ========== 砍价活动相关字段 ==========
-    @Schema(description = "砍价记录编号", example = "123")
-    private Long bargainRecordId;
-
-    // ========== 积分商城活动相关字段 ==========
-    @Schema(description = "积分商城活动编号", example = "123")
-    private Long pointActivityId;
-
-    @AssertTrue(message = "活动商品每次只能购买一种规格")
-    @JsonIgnore
-    public boolean isValidActivityItems() {
-        // 校验是否是活动订单
-        if (ObjUtil.isAllEmpty(seckillActivityId, combinationActivityId, combinationHeadId, bargainRecordId)) {
-            return true;
-        }
-        // 校验订单项是否超出
-        return items.size() == 1;
-    }
 
     @Data
     @Schema(description = "用户 App - 商品项")

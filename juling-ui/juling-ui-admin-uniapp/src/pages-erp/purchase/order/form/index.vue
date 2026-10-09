@@ -19,9 +19,9 @@
           </wd-form-item>
         </wd-cell-group>
 
-        <!-- 产品明细 -->
+        <!-- 物料明细 -->
         <view class="flex items-center justify-between px-24rpx py-16rpx">
-          <text class="yd-text-main text-28rpx font-semibold">订单产品清单</text>
+          <text class="yd-text-main text-28rpx font-semibold">订单物料清单</text>
           <wd-button size="small" type="primary" variant="plain" @click="itemEditorRef?.handleAdd()">
             添加
           </wd-button>
@@ -168,7 +168,7 @@ async function handleSubmit() {
     }
     uni.$emit('erp:purchase-order:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

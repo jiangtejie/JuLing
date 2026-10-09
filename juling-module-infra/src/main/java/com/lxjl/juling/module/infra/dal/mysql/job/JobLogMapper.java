@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 /**
  * 任务日志 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface JobLogMapper extends BaseMapperX<JobLogDO> {

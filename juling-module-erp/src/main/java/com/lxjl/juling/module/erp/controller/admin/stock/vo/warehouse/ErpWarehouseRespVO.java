@@ -24,6 +24,9 @@ public class ErpWarehouseRespVO {
     @ExcelProperty("仓库名称")
     private String name;
 
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
+
     @Schema(description = "仓库地址", example = "上海陆家嘴")
     @ExcelProperty("仓库地址")
     private String address;

@@ -12,7 +12,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * FMS 辅助核算类别 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FmsAuxiliaryTypeService {
 

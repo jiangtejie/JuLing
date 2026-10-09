@@ -106,19 +106,19 @@ function handleUploaded(url: string, name?: string, size?: number) {
   justify-content: center;
   width: 160rpx;
   height: 160rpx;
-  border: 1rpx dashed #dcdee0;
+  border: 1rpx dashed var(--yd-border-base);
   border-radius: 12rpx;
-  background: #f7f8fa;
+  background: var(--yd-surface-subtle);
 }
 
 .yd-upload-file__num {
   margin-top: 8rpx;
   font-size: 24rpx;
-  color: #969799;
+  color: var(--yd-text-hint);
 }
 
 :deep(.yd-upload-file__icon) {
   font-size: 56rpx;
-  color: #c8c9cc;
+  color: var(--yd-text-faint);
 }
 </style>

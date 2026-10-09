@@ -1,23 +1,59 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeGridPropTypes } from '#/adapter/vxe-table';
-import type { MallDeliveryPickUpStoreApi } from '#/api/mall/trade/delivery/pickUpStore';
 
-import { markRaw } from 'vue';
+import { h, markRaw } from 'vue';
 
 import { DeliveryTypeEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
 import { convertToInteger, formatToFraction } from '@vben/utils';
 
+import { Tag } from 'ant-design-vue';
+
 import { getSimpleDeliveryExpressList } from '#/api/mall/trade/delivery/express';
-import { getSimpleDeliveryPickUpStoreList } from '#/api/mall/trade/delivery/pickUpStore';
 import { AreaCascader } from '#/components/area';
 import { getRangePickerDefaultProps } from '#/utils';
 
-/** 关联数据 */
-let pickUpStoreList: MallDeliveryPickUpStoreApi.DeliveryPickUpStore[] = [];
-getSimpleDeliveryPickUpStoreList().then((data) => {
-  pickUpStoreList = data;
-});
+import { deriveOrderStatus } from './status';
+
+/**
+ * 「业务状态」筛选：与列表展示口径一致（见 {@link deriveOrderStatus}）
+ *
+ * 值用 `status:auditStatus` 组合编码，查询时由 {@link parseBusinessStatus} 拆成后端参数：
+ * - `0` → status=0（待支付）
+ * - `10:0` / `10:10` / `10:30` / `10:20` → status=10 + 对应审核状态（待提交审核 / 审核中 / 审核已驳回 / 待发货）
+ * - `20` / `30` / `40` → status=20 / 30 / 40
+ *
+ * 为什么不用字典 trade_order_status 直接筛：status=10 同时覆盖「审核中 / 已驳回 / 已通过」，
+ * 筛「待发货」会把还在审批的单也带出来，与列表展示的「审核中」自相矛盾。
+ */
+export const BUSINESS_STATUS_OPTIONS = [
+  { label: '待支付', value: '0' },
+  { label: '待提交审核', value: '10:0' },
+  { label: '审核中', value: '10:10' },
+  { label: '审核已驳回', value: '10:30' },
+  { label: '待发货', value: '10:20' },
+  { label: '已发货', value: '20' },
+  { label: '已完成', value: '30' },
+  { label: '已取消', value: '40' },
+];
+
+/** 把「业务状态」筛选值拆成后端的分页查询参数（空值返回空对象，等价于不过滤） */
+export function parseBusinessStatus(value?: number | string): {
+  auditStatus?: number;
+  status?: number;
+} {
+  if (value === undefined || value === null || value === '') {
+    return {};
+  }
+  const [status, auditStatus] = String(value).split(':');
+  return {
+    status: status === undefined || status === '' ? undefined : Number(status),
+    auditStatus:
+      auditStatus === undefined || auditStatus === ''
+        ? undefined
+        : Number(auditStatus),
+  };
+}
 
 /** 列表的搜索表单 */
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -27,7 +63,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: '订单状态',
       component: 'Select',
       componentProps: {
-        options: getDictOptions(DICT_TYPE.TRADE_ORDER_STATUS, 'number'),
+        options: BUSINESS_STATUS_OPTIONS,
         placeholder: '请选择订单状态',
         allowClear: true,
       },
@@ -39,6 +75,16 @@ export function useGridFormSchema(): VbenFormSchema[] {
       componentProps: {
         options: getDictOptions(DICT_TYPE.PAY_CHANNEL_CODE, 'number'),
         placeholder: '请选择支付方式',
+        allowClear: true,
+      },
+    },
+    {
+      fieldName: 'paymentProofStatus',
+      label: '收款状态',
+      component: 'Select',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS, 'number'),
+        placeholder: '请选择收款状态',
         allowClear: true,
       },
     },
@@ -88,35 +134,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
       },
     },
     {
-      fieldName: 'pickUpStoreId',
-      label: '自提门店',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleDeliveryPickUpStoreList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择自提门店',
-        allowClear: true,
-      },
-      dependencies: {
-        triggerFields: ['deliveryType'],
-        show: (values) => values.deliveryType === DeliveryTypeEnum.PICK_UP.type,
-      },
-    },
-    {
-      fieldName: 'pickUpVerifyCode',
-      label: '核销码',
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入核销码',
-        allowClear: true,
-      },
-      dependencies: {
-        triggerFields: ['deliveryType'],
-        show: (values) => values.deliveryType === DeliveryTypeEnum.PICK_UP.type,
-      },
-    },
-    {
       fieldName: 'no',
       label: '订单号',
       component: 'Input',
@@ -159,9 +176,12 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useGridColumns(): VxeGridPropTypes.Columns {
   return [
     {
+      // 展开列：content 插槽是展开后的明细区域，default 插槽放自定义展开按钮。
+      // vxe 自带的展开按钮在本版本默认隐藏且点击无效，这里显式提供入口。
       type: 'expand',
-      width: 80,
-      slots: { content: 'expand_content' },
+      title: '明细',
+      width: 90,
+      slots: { default: 'expand_toggle', content: 'expand_content' },
       fixed: 'left',
     },
     {
@@ -201,34 +221,46 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       minWidth: 160,
     },
     {
-      field: 'type',
-      title: '订单类型',
-      cellRender: {
-        name: 'CellDict',
-        props: { type: DICT_TYPE.TRADE_ORDER_TYPE },
-      },
-      minWidth: 80,
-    },
-    {
       field: 'payPrice',
       title: '实际支付',
-      formatter: 'formatAmount2',
+      formatter: 'formatFenToYuanAmount',
       minWidth: 180,
+    },
+    {
+      field: 'paymentProofStatus',
+      title: '收款状态',
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_PAYMENT_PROOF_STATUS },
+      },
+      minWidth: 110,
+    },
+    {
+      // 新流程里 paidAmount 是「门店申报金额」口径（未被驳回的凭证申报金额合计），
+      // 「核验收款」下线后后台不再回写核定额
+      field: 'paidAmount',
+      title: '门店申报金额',
+      formatter: 'formatFenToYuanAmount',
+      minWidth: 120,
     },
     {
       field: 'user',
       title: '买家/收货人',
       formatter: ({ row }) => {
         if (row.deliveryType === DeliveryTypeEnum.EXPRESS.type) {
-          return `买家：${row.user?.nickname} / 收货人： ${row.receiverName} ${row.receiverMobile}${row.receiverAreaName}${row.receiverDetailAddress}`;
+          // 地区名可能为空（App 端下单未选地区），必须过滤，否则会拼出 'null'；
+          // 各段之间也要有分隔，避免手机号与地址粘在一起
+          const receiver = [
+            row.receiverName,
+            row.receiverMobile,
+            row.receiverAreaName,
+            row.receiverDetailAddress,
+          ]
+            .filter(Boolean)
+            .join(' ');
+          return `买家：${row.user?.nickname ?? '-'} / 收货人：${receiver || '-'}`;
         }
-        if (row.deliveryType === DeliveryTypeEnum.PICK_UP.type) {
-          return `门店名称：${pickUpStoreList.find((item) => item.id === row.pickUpStoreId)?.name} /
-                  门店手机：${pickUpStoreList.find((item) => item.id === row.pickUpStoreId)?.phone} /
-                  自提门店：${pickUpStoreList.find((item) => item.id === row.pickUpStoreId)?.detailAddress}
-                  `;
-        }
-        return '';
+        return '-';
       },
       minWidth: 180,
     },
@@ -244,11 +276,47 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
     {
       field: 'status',
       title: '订单状态',
-      cellRender: {
-        name: 'CellDict',
-        props: { type: DICT_TYPE.TRADE_ORDER_STATUS },
+      // 门店要货：状态文案不能只靠字典——待发货要按 auditStatus 细分出
+      // 「审核中 / 审核已驳回」（审批通过前不允许发货），统一走 deriveOrderStatus
+      slots: {
+        default: ({ row }) => {
+          const { color, text } = deriveOrderStatus(row);
+          return h(Tag, { color }, () => text);
+        },
       },
       minWidth: 80,
+    },
+    {
+      // 门店要货：下单的门店客户（后端只返回编号）
+      field: 'customerId',
+      title: '门店客户',
+      formatter: ({ row }) => row.customerId ?? '-',
+      minWidth: 110,
+    },
+    {
+      // 门店要货：门店所属部门（后端只返回编号）
+      field: 'deptId',
+      title: '所属部门',
+      formatter: ({ row }) => row.deptId ?? '-',
+      minWidth: 110,
+    },
+    {
+      field: 'settlementMode',
+      title: '结算模式',
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_SETTLEMENT_MODE },
+      },
+      minWidth: 110,
+    },
+    {
+      field: 'auditStatus',
+      title: '审核状态',
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_ORDER_AUDIT_STATUS },
+      },
+      minWidth: 110,
     },
     {
       title: '操作',
@@ -388,63 +456,6 @@ export function useAddressFormSchema(): VbenFormSchema[] {
         placeholder: '请输入收件人详细地址',
         type: 'textarea',
         rows: 3,
-      },
-      rules: 'required',
-    },
-  ];
-}
-
-/** 订单发货表单配置 */
-export function useDeliveryFormSchema(): VbenFormSchema[] {
-  return [
-    {
-      component: 'Input',
-      fieldName: 'id',
-      dependencies: {
-        triggerFields: [''],
-        show: () => false,
-      },
-    },
-    {
-      fieldName: 'expressType',
-      label: '发货方式',
-      component: 'RadioGroup',
-      componentProps: {
-        options: [
-          { label: '快递', value: 'express' },
-          { label: '无需发货', value: 'none' },
-        ],
-        buttonStyle: 'solid',
-        optionType: 'button',
-      },
-      defaultValue: 'express',
-    },
-    {
-      fieldName: 'logisticsId',
-      label: '物流公司',
-      component: 'ApiSelect',
-      componentProps: {
-        api: getSimpleDeliveryExpressList,
-        labelField: 'name',
-        valueField: 'id',
-        placeholder: '请选择物流公司',
-      },
-      dependencies: {
-        triggerFields: ['expressType'],
-        show: (values) => values.expressType === 'express',
-      },
-      rules: 'required',
-    },
-    {
-      fieldName: 'logisticsNo',
-      label: '物流单号',
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入物流单号',
-      },
-      dependencies: {
-        triggerFields: ['expressType'],
-        show: (values) => values.expressType === 'express',
       },
       rules: 'required',
     },

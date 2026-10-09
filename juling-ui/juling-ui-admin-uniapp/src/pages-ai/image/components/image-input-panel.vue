@@ -24,11 +24,11 @@
       <view class="mt-14rpx flex items-center justify-between">
         <view class="yd-bg-page max-w-500rpx flex items-center gap-8rpx rounded-full px-18rpx py-10rpx" @click="emit('openSettings')">
           <wd-icon name="settings" size="26rpx" color="#666" />
-          <text class="truncate text-22rpx text-[#555]">{{ selectedModelName }}</text>
+          <text class="yd-text-sub truncate text-22rpx">{{ selectedModelName }}</text>
         </view>
         <view
           class="h-64rpx w-64rpx flex items-center justify-center rounded-full"
-          :class="formData.prompt.trim() && !drawing ? 'bg-[#615ced]' : 'bg-[#d9d9d9]'"
+          :class="formData.prompt.trim() && !drawing ? 'yd-bg-accent-indigo' : 'yd-bg-disabled'"
           @click="emit('draw')"
         >
           <wd-loading v-if="drawing" color="#fff" size="34rpx" />

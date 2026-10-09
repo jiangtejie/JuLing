@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * BPM 消息 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -37,8 +37,9 @@ public class BpmMessageServiceImpl implements BpmMessageService {
         Map<String, Object> templateParams = new HashMap<>();
         templateParams.put("processInstanceName", reqDTO.getProcessInstanceName());
         templateParams.put("detailUrl", getProcessInstanceDetailUrl(reqDTO.getProcessInstanceId()));
-        smsSendApi.sendSingleSmsToAdmin(BpmMessageConvert.INSTANCE.convert(reqDTO.getStartUserId(),
-                BpmMessageEnum.PROCESS_INSTANCE_APPROVE.getSmsTemplateCode(), templateParams));
+        sendSmsQuietly("流程审批通过通知", () -> smsSendApi.sendSingleSmsToAdmin(
+                BpmMessageConvert.INSTANCE.convert(reqDTO.getStartUserId(),
+                        BpmMessageEnum.PROCESS_INSTANCE_APPROVE.getSmsTemplateCode(), templateParams)));
     }
 
     @Override
@@ -47,8 +48,9 @@ public class BpmMessageServiceImpl implements BpmMessageService {
         templateParams.put("processInstanceName", reqDTO.getProcessInstanceName());
         templateParams.put("reason", reqDTO.getReason());
         templateParams.put("detailUrl", getProcessInstanceDetailUrl(reqDTO.getProcessInstanceId()));
-        smsSendApi.sendSingleSmsToAdmin(BpmMessageConvert.INSTANCE.convert(reqDTO.getStartUserId(),
-                BpmMessageEnum.PROCESS_INSTANCE_REJECT.getSmsTemplateCode(), templateParams));
+        sendSmsQuietly("流程审批驳回通知", () -> smsSendApi.sendSingleSmsToAdmin(
+                BpmMessageConvert.INSTANCE.convert(reqDTO.getStartUserId(),
+                        BpmMessageEnum.PROCESS_INSTANCE_REJECT.getSmsTemplateCode(), templateParams)));
     }
 
     @Override
@@ -58,8 +60,9 @@ public class BpmMessageServiceImpl implements BpmMessageService {
         templateParams.put("taskName", reqDTO.getTaskName());
         templateParams.put("startUserNickname", reqDTO.getStartUserNickname());
         templateParams.put("detailUrl", getProcessInstanceDetailUrl(reqDTO.getProcessInstanceId()));
-        smsSendApi.sendSingleSmsToAdmin(BpmMessageConvert.INSTANCE.convert(reqDTO.getAssigneeUserId(),
-                BpmMessageEnum.TASK_ASSIGNED.getSmsTemplateCode(), templateParams));
+        sendSmsQuietly("任务待办通知", () -> smsSendApi.sendSingleSmsToAdmin(
+                BpmMessageConvert.INSTANCE.convert(reqDTO.getAssigneeUserId(),
+                        BpmMessageEnum.TASK_ASSIGNED.getSmsTemplateCode(), templateParams)));
     }
 
     @Override
@@ -68,8 +71,23 @@ public class BpmMessageServiceImpl implements BpmMessageService {
         templateParams.put("processInstanceName", reqDTO.getProcessInstanceName());
         templateParams.put("taskName", reqDTO.getTaskName());
         templateParams.put("detailUrl", getProcessInstanceDetailUrl(reqDTO.getProcessInstanceId()));
-        smsSendApi.sendSingleSmsToAdmin(BpmMessageConvert.INSTANCE.convert(reqDTO.getAssigneeUserId(),
-                BpmMessageEnum.TASK_TIMEOUT.getSmsTemplateCode(), templateParams));
+        sendSmsQuietly("任务超时通知", () -> smsSendApi.sendSingleSmsToAdmin(
+                BpmMessageConvert.INSTANCE.convert(reqDTO.getAssigneeUserId(),
+                        BpmMessageEnum.TASK_TIMEOUT.getSmsTemplateCode(), templateParams)));
+    }
+
+    /**
+     * 发送短信通知（旁路，失败只记录日志）
+     *
+     * 背景：短信渠道/模板未配置时 {@link SmsSendApi} 会抛异常。通知属于旁路能力，
+     * 不能因为"没配短信"把审批事务整体回滚（亚特：门店要货审核通过后必须能落状态）。
+     */
+    private void sendSmsQuietly(String scene, Runnable action) {
+        try {
+            action.run();
+        } catch (Throwable e) {
+            log.warn("[sendSmsQuietly][{} 发送失败，已忽略：{}]", scene, e.getMessage());
+        }
     }
 
     private String getProcessInstanceDetailUrl(String taskId) {

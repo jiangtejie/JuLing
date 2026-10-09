@@ -5,7 +5,7 @@ import com.lxjl.juling.framework.desensitize.core.slider.annotation.CarLicenseDe
 /**
  * {@link CarLicenseDesensitize} 的脱敏处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class CarLicenseDesensitization extends AbstractSliderDesensitizationHandler<CarLicenseDesensitize> {
 

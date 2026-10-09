@@ -138,10 +138,10 @@ public class ErpStockMoveController {
         List<ErpStockMoveItemDO> stockMoveItemList = stockMoveService.getStockMoveItemListByMoveIds(
                 convertSet(pageResult.getList(), ErpStockMoveDO::getId));
         Map<Long, List<ErpStockMoveItemDO>> stockMoveItemMap = convertMultiMap(stockMoveItemList, ErpStockMoveItemDO::getMoveId);
-        // 1.2 产品信息
+        // 1.2 物料信息
         Map<Long, ErpProductRespVO> productMap = productService.getProductVOMap(
                 convertSet(stockMoveItemList, ErpStockMoveItemDO::getProductId));
-        // 1.3 TODO 棱信矩灵：搞仓库信息
+        // 1.3 TODO 亚特：搞仓库信息
         // 1.4 管理员信息
         Map<Long, AdminUserRespDTO> userMap = adminUserApi.getUserMap(
                 convertSet(pageResult.getList(), stockMove -> Long.parseLong(stockMove.getCreator())));
@@ -151,7 +151,7 @@ public class ErpStockMoveController {
                     item -> MapUtils.findAndThen(productMap, item.getProductId(), product -> item.setProductName(product.getName())
                             .setProductBarCode(product.getBarCode()).setProductUnitName(product.getUnitName()))));
             stockMove.setProductNames(CollUtil.join(stockMove.getItems(), "，", ErpStockMoveRespVO.Item::getProductName));
-            // TODO 棱信矩灵：
+            // TODO 亚特：
 //            MapUtils.findAndThen(customerMap, stockMove.getCustomerId(), supplier -> stockMove.setCustomerName(supplier.getName()));
             MapUtils.findAndThen(userMap, Long.parseLong(stockMove.getCreator()), user -> stockMove.setCreatorName(user.getNickname()));
         });

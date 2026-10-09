@@ -19,7 +19,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 商品 SPU Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ProductSpuConvert {

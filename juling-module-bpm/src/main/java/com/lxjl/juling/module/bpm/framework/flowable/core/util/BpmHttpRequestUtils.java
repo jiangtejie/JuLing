@@ -31,7 +31,7 @@ import static com.lxjl.juling.module.bpm.enums.ErrorCodeConstants.PROCESS_INSTAN
 /**
  * 工作流发起 HTTP 请求工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class BpmHttpRequestUtils {

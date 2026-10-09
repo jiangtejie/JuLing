@@ -33,7 +33,7 @@ import static com.lxjl.juling.module.system.enums.ErrorCodeConstants.*;
 /**
  * 短信发送 Service 发送的实现
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Slf4j

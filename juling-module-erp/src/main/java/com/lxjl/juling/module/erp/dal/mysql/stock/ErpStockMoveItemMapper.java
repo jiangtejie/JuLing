@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * ERP 库存调拨单项 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpStockMoveItemMapper extends BaseMapperX<ErpStockMoveItemDO> {

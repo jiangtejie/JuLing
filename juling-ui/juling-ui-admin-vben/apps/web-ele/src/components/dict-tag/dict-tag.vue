@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-// import { isHexColor } from '@/utils/color' // TODO @棱信矩灵：【可优化】增加 cssClass 的处理 上游仓库 @xingyu：这个要适配掉 ele 版本里么？
+// import { isHexColor } from '@/utils/color' // TODO @亚特：【可优化】增加 cssClass 的处理 上游仓库 @xingyu：这个要适配掉 ele 版本里么？
 import { getDictObj } from '@vben/hooks';
 
 import { ElTag } from 'element-plus';

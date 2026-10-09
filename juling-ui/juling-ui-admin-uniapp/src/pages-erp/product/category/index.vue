@@ -2,7 +2,7 @@
   <view class="yd-page-container">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="产品分类"
+      title="物料分类"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -26,7 +26,7 @@
             <view class="flex items-start justify-between gap-16rpx">
               <view class="min-w-0 flex-1">
                 <view class="mb-12rpx flex items-center">
-                  <view class="mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx bg-[#13c2c2]">
+                  <view class="yd-bg-accent-teal mr-16rpx h-48rpx w-48rpx flex shrink-0 items-center justify-center rounded-8rpx">
                     <wd-icon name="folder" size="20px" color="#fff" />
                   </view>
                   <view class="yd-text-main min-w-0 flex-1 truncate text-32rpx font-semibold">
@@ -47,7 +47,7 @@
                 class="mt-4rpx flex shrink-0 items-center"
                 @click.stop="handleEnterChildren(item)"
               >
-                <text class="text-24rpx text-[#13c2c2]">子分类({{ item.children.length }})</text>
+                <text class="yd-text-accent-teal text-24rpx">子分类({{ item.children.length }})</text>
                 <wd-icon name="arrow-right" size="12px" color="#13c2c2" />
               </view>
             </view>
@@ -56,7 +56,7 @@
 
         <!-- 空状态 -->
         <view v-if="!loading && currentList.length === 0" class="py-100rpx text-center">
-          <wd-empty icon="content" tip="暂无产品分类数据" />
+          <wd-empty icon="content" tip="暂无物料分类数据" />
         </view>
       </view>
     </scroll-view>
@@ -119,7 +119,7 @@ function handleEnterChildren(item: ProductCategory) {
   breadcrumbRef.value?.enter({ id: item.id, name: item.name })
 }
 
-/** 查询产品分类列表 */
+/** 查询物料分类列表 */
 async function getList() {
   loading.value = true
   try {
@@ -143,7 +143,7 @@ function handleReset() {
   handleQuery()
 }
 
-/** 新增产品分类 */
+/** 新增物料分类 */
 function handleAdd() {
   uni.navigateTo({
     url: `/pages-erp/product/category/form/index?parentId=${currentParentId.value}`,

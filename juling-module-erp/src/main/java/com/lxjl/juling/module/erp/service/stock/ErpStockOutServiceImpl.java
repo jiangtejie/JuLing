@@ -9,14 +9,19 @@ import com.lxjl.juling.module.erp.controller.admin.stock.vo.out.ErpStockOutSaveR
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockOutDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockOutItemDO;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockOutItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockOutMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.sale.ErpCustomerService;
-import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchOutReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +37,11 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 其它出库单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -49,7 +53,7 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
     private ErpStockOutItemMapper stockOutItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -58,7 +62,7 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
     @Resource
     private ErpCustomerService customerService;
     @Resource
-    private ErpStockRecordService stockRecordService;
+    private ErpStockBatchService stockBatchService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -67,8 +71,8 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
         List<ErpStockOutItemDO> stockOutItems = validateStockOutItems(createReqVO.getItems());
         // 1.2 校验客户
         customerService.validateCustomer(createReqVO.getCustomerId());
-        // 1.3 生成出库单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.STOCK_OUT_NO_PREFIX);
+        // 1.3 生成出库单号（单据平台：OTHER_OUT → QCKD + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.OTHER_OUT, null);
         if (stockOutMapper.selectByNo(no) != null) {
             throw exception(STOCK_OUT_NO_EXISTS);
         }
@@ -82,6 +86,11 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
         // 2.2 插入出库单项
         stockOutItems.forEach(o -> o.setOutId(stockOut.getId()));
         stockOutItemMapper.insertBatch(stockOutItems);
+        // 单据平台：写创建日志（留痕；与采购/销售单据同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.OTHER_OUT).setBillId(stockOut.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(stockOut.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return stockOut.getId();
     }
 
@@ -110,35 +119,57 @@ public class ErpStockOutServiceImpl implements ErpStockOutService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStockOutStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpStockOutDO stockOut = validateStockOutExists(id);
         // 1.2 校验状态
-        if (stockOut.getStatus().equals(status)) {
-            throw exception(approve ? STOCK_OUT_APPROVE_FAIL : STOCK_OUT_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(stockOut.getStatus(), status, STOCK_OUT_APPROVE_FAIL, STOCK_OUT_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = stockOutMapper.updateByIdAndStatus(id, stockOut.getStatus(),
-                new ErpStockOutDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? STOCK_OUT_APPROVE_FAIL : STOCK_OUT_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> stockOutMapper.updateByIdAndStatus(id, stockOut.getStatus(),
+                new ErpStockOutDO().setStatus(status)),
+                status, STOCK_OUT_APPROVE_FAIL, STOCK_OUT_PROCESS_FAIL);
 
-        // 3. 变更库存
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.OTHER_OUT).setBillId(id).setBillNo(stockOut.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(stockOut.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
+
+        // 3. 变更库存（S2 库存中心：出库按批次 FIFO 扣减并结转成本；反审核按原流水逐批回滚）
         List<ErpStockOutItemDO> stockOutItems = stockOutItemMapper.selectListByOutId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.OTHER_OUT.getType()
                 : ErpStockRecordBizTypeEnum.OTHER_OUT_CANCEL.getType();
         stockOutItems.forEach(stockOutItem -> {
-            BigDecimal count = approve ? stockOutItem.getCount().negate() : stockOutItem.getCount();
-            stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
-                    stockOutItem.getProductId(), stockOutItem.getWarehouseId(), count,
-                    bizType, stockOutItem.getOutId(), stockOutItem.getId(), stockOut.getNo()));
+            if (approve) {
+                ErpStockBatchOutReqBO outReqBO = new ErpStockBatchOutReqBO();
+                outReqBO.setWarehouseId(stockOutItem.getWarehouseId());
+                outReqBO.setProductId(stockOutItem.getProductId());
+                outReqBO.setCount(stockOutItem.getCount());
+                outReqBO.setBizType(bizType);
+                outReqBO.setBizId(stockOutItem.getOutId());
+                outReqBO.setBizItemId(stockOutItem.getId());
+                outReqBO.setBizNo(stockOut.getNo());
+                outReqBO.setRemark(stockOutItem.getRemark());
+                // 返回值即 FIFO 扣减明细（批次/数量/单位成本）与结转成本，供后续成本核算使用
+                stockBatchService.issueByFifo(outReqBO);
+            } else {
+                stockBatchService.reverseIssue(new ErpStockBatchReverseReqBO()
+                        .setSourceBizType(ErpStockRecordBizTypeEnum.OTHER_OUT.getType())
+                        .setSourceBizItemId(stockOutItem.getId())
+                        .setTargetBizType(bizType)
+                        .setBizId(stockOutItem.getOutId())
+                        .setBizNo(stockOut.getNo()));
+            }
         });
     }
 
     private List<ErpStockOutItemDO> validateStockOutItems(List<ErpStockOutSaveReqVO.Item> list) {
-        // 1.1 校验产品存在
+        // 1.1 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpStockOutSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

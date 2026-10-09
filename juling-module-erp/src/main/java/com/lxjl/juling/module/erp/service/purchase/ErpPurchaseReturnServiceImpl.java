@@ -5,6 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.returns.ErpPurchaseReturnPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.returns.ErpPurchaseReturnSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -13,13 +17,13 @@ import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseReturnDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseReturnItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseReturnItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseReturnMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.stock.ErpStockRecordService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -36,12 +40,11 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 采购退货 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -53,7 +56,7 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
     private ErpPurchaseReturnItemMapper purchaseReturnItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -74,8 +77,8 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
         List<ErpPurchaseReturnItemDO> purchaseReturnItems = validatePurchaseReturnItems(createReqVO.getItems());
         // 1.3 校验结算账户
         accountService.validateAccount(createReqVO.getAccountId());
-        // 1.4 生成退货单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.PURCHASE_RETURN_NO_PREFIX);
+        // 1.4 生成退货单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.PURCHASE_RETURN, null);
         if (purchaseReturnMapper.selectByNo(no) != null) {
             throw exception(PURCHASE_RETURN_NO_EXISTS);
         }
@@ -92,6 +95,12 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
         // 2.2 插入退货项
         purchaseReturnItems.forEach(o -> o.setReturnId(purchaseReturn.getId()));
         purchaseReturnItemMapper.insertBatch(purchaseReturnItems);
+
+        // 2.3 单据平台：写创建日志（留痕；与采购订单/入库单同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_RETURN).setBillId(purchaseReturn.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(purchaseReturn.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新采购订单的退货数量
         updatePurchaseOrderReturnCount(createReqVO.getOrderId());
@@ -157,13 +166,11 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePurchaseReturnStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpPurchaseReturnDO purchaseReturn = validatePurchaseReturnExists(id);
         // 1.2 校验状态
-        if (purchaseReturn.getStatus().equals(status)) {
-            throw exception(approve ? PURCHASE_RETURN_APPROVE_FAIL : PURCHASE_RETURN_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(purchaseReturn.getStatus(), status, PURCHASE_RETURN_APPROVE_FAIL, PURCHASE_RETURN_PROCESS_FAIL);
         // 1.3 校验已退款
         if (!approve && purchaseReturn.getRefundPrice() != null
                 && purchaseReturn.getRefundPrice().compareTo(BigDecimal.ZERO) > 0) {
@@ -171,11 +178,19 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
         }
 
         // 2. 更新状态
-        int updateCount = purchaseReturnMapper.updateByIdAndStatus(id, purchaseReturn.getStatus(),
-                new ErpPurchaseReturnDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? PURCHASE_RETURN_APPROVE_FAIL : PURCHASE_RETURN_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> purchaseReturnMapper.updateByIdAndStatus(id, purchaseReturn.getStatus(),
+                new ErpPurchaseReturnDO().setStatus(status)),
+                status, PURCHASE_RETURN_APPROVE_FAIL, PURCHASE_RETURN_PROCESS_FAIL);
+
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_RETURN).setBillId(id).setBillNo(purchaseReturn.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(purchaseReturn.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 变更库存
         List<ErpPurchaseReturnItemDO> purchaseReturnItems = purchaseReturnItemMapper.selectListByReturnId(id);
@@ -204,7 +219,7 @@ public class ErpPurchaseReturnServiceImpl implements ErpPurchaseReturnService {
     }
 
     private List<ErpPurchaseReturnItemDO> validatePurchaseReturnItems(List<ErpPurchaseReturnSaveReqVO.Item> list) {
-        // 1. 校验产品存在
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseReturnSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

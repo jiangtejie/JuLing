@@ -3,7 +3,7 @@ package com.lxjl.juling.module.wms.enums;
 /**
  * WMS 字典类型常量
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DictTypeConstants {
 

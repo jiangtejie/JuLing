@@ -31,6 +31,50 @@ export function useDisagreeFormSchema(): VbenFormSchema[] {
   ];
 }
 
+/** 线下退款渠道在 pay_channel_code 字典中的前缀 */
+const OFFLINE_CHANNEL_PREFIX = 'offline';
+
+/** 确认退款（线下退款登记）表单的 schema 配置 */
+export function useRefundFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Select',
+      fieldName: 'refundChannelCode',
+      label: '退款渠道',
+      componentProps: {
+        // pay_channel_code 字典里线下渠道的值为 offline 前缀（offline_transfer 等）
+        options: getDictOptions(DICT_TYPE.PAY_CHANNEL_CODE, 'string').filter(
+          (item) => String(item.value).startsWith(OFFLINE_CHANNEL_PREFIX),
+        ),
+        placeholder: '请选择线下退款渠道',
+      },
+      defaultValue: 'offline_transfer',
+      rules: 'required',
+    },
+    {
+      component: 'ImageUpload',
+      fieldName: 'refundProofUrls',
+      label: '退款凭证',
+      componentProps: {
+        maxNumber: 5,
+        multiple: true,
+        maxSize: 10,
+      },
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'refundRemark',
+      label: '退款备注',
+      componentProps: {
+        placeholder: '例如：已通过对公转账退回，流水号 XXX',
+        rows: 3,
+        maxlength: 255,
+        showCount: true,
+      },
+    },
+  ];
+}
+
 /** 列表的搜索表单 */
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
@@ -126,7 +170,7 @@ export function useGridColumns(): VxeGridPropTypes.Columns {
       field: 'refundPrice',
       title: '订单金额',
       width: 120,
-      formatter: 'formatAmount2',
+      formatter: 'formatFenToYuanAmount',
     },
     {
       field: 'user.nickname',

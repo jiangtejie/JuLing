@@ -55,6 +55,7 @@ public interface ErrorCodeConstants {
     ErrorCode DEPT_PARENT_ERROR = new ErrorCode(1_002_004_004, "不能设置自己为父部门");
     ErrorCode DEPT_NOT_ENABLE = new ErrorCode(1_002_004_006, "部门({})不处于开启状态，不允许选择");
     ErrorCode DEPT_PARENT_IS_CHILD = new ErrorCode(1_002_004_007, "不能设置自己的子部门为父部门");
+    ErrorCode DEPT_BUSINESS_STATUS_ONLY_STORE = new ErrorCode(1_002_004_005, "只有门店类型的节点才有营业状态（开店/闭店）");
 
     // ========== 岗位模块 1-002-005-000 ==========
     ErrorCode POST_NOT_FOUND = new ErrorCode(1_002_005_000, "当前岗位不存在");
@@ -167,5 +168,9 @@ public interface ErrorCodeConstants {
 
     // ========== 站内信发送 1-002-028-000 ==========
     ErrorCode NOTIFY_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1_002_028_000, "模板参数({})缺失");
+
+    // ========== 编码规则 1-002-029-000 ==========
+    ErrorCode CODE_RULE_NOT_EXISTS = new ErrorCode(1_002_029_000, "编码规则({})不存在，请先在「基础资料 → 编码规则」里配置");
+    ErrorCode CODE_RULE_KEY_DUPLICATE = new ErrorCode(1_002_029_001, "规则标识({})已存在");
 
 }

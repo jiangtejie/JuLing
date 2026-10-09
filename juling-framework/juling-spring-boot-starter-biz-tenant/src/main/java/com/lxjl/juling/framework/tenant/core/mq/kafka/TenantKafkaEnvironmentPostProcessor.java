@@ -11,7 +11,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  *
  * Kafka Producer 发送消息时，增加 {@link TenantKafkaProducerInterceptor} 拦截器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 public class TenantKafkaEnvironmentPostProcessor implements EnvironmentPostProcessor {

@@ -2,42 +2,78 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MallOrderApi } from '#/api/mall/trade/order';
 
+import { onActivated, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { DocAlert, Page, useVbenModal } from '@vben/common-ui';
-import {
-  DeliveryTypeEnum,
-  DICT_TYPE,
-  TradeOrderStatusEnum,
-} from '@vben/constants';
+import { DICT_TYPE, TradeOrderStatusEnum } from '@vben/constants';
 import { fenToYuan } from '@vben/utils';
 
-import { Image, List, Tag } from 'ant-design-vue';
+import { Button, Image, List, message, Tag } from 'ant-design-vue';
 
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getOrderPage } from '#/api/mall/trade/order';
+import { getOrderPage, submitOrderAudit } from '#/api/mall/trade/order';
 import { DictTag } from '#/components/dict-tag';
 import { $t } from '#/locales';
 
-import { useGridColumns, useGridFormSchema } from './data';
-import DeliveryForm from './modules/delivery-form.vue';
+import {
+  parseBusinessStatus,
+  useGridColumns,
+  useGridFormSchema,
+} from './data';
 import RemarkForm from './modules/remark-form.vue';
 
 const { push } = useRouter();
-
-const [DeliveryFormModal, deliveryFormModalApi] = useVbenModal({
-  connectedComponent: DeliveryForm,
-  destroyOnClose: true,
-});
 
 const [RemarkFormModal, remarkFormModalApi] = useVbenModal({
   connectedComponent: RemarkForm,
   destroyOnClose: true,
 });
 
-/** 刷新表格 */
+/** 已展开明细的订单编号（用于按钮文案：明细 / 收起） */
+const expandedOrderIds = ref<number[]>([]);
+
+/** 刷新表格：刷新后展开态会被重置，这里同步清空 */
 function handleRefresh() {
+  expandedOrderIds.value = [];
   gridApi.query();
+}
+
+/**
+ * 回到本页时表格会自动刷新（见 adapter/vxe-table.ts），刷新后所有行都会收起，
+ * 因此同步清空本地的展开态，避免按钮文案还停留在「收起」。
+ */
+onActivated(() => {
+  expandedOrderIds.value = [];
+});
+
+/** 该行明细是否已展开 */
+function isExpanded(row: MallOrderApi.Order): boolean {
+  return row.id !== undefined && expandedOrderIds.value.includes(row.id);
+}
+
+/**
+ * 展开 / 收起某行的商品明细。
+ *
+ * vxe 内置的展开按钮在本版本默认隐藏且点击无效，因此自己渲染按钮，
+ * 通过 vben 暴露的 vxe 表格实例（gridApi.grid）调用 setRowExpand。
+ */
+function toggleExpand(row: MallOrderApi.Order) {
+  const id = row.id;
+  if (id === undefined) return;
+  const expanded = isExpanded(row);
+  const grid = gridApi.grid as unknown as {
+    setRowExpand?: (rows: MallOrderApi.Order[], expanded: boolean) => void;
+    toggleRowExpand?: (row: MallOrderApi.Order) => void;
+  };
+  if (grid?.setRowExpand) {
+    grid.setRowExpand([row], !expanded);
+  } else {
+    grid?.toggleRowExpand?.(row);
+  }
+  expandedOrderIds.value = expanded
+    ? expandedOrderIds.value.filter((item) => item !== id)
+    : [...expandedOrderIds.value, id];
 }
 
 /** 详情 */
@@ -45,14 +81,24 @@ function handleDetail(row: MallOrderApi.Order) {
   push({ name: 'TradeOrderDetail', params: { id: row.id } });
 }
 
-/** 发货 */
-function handleDelivery(row: MallOrderApi.Order) {
-  deliveryFormModalApi.setData(row).open();
-}
-
 /** 备注 */
 function handleRemark(row: MallOrderApi.Order) {
   remarkFormModalApi.setData(row).open();
+}
+
+/** 门店要货：提交审核（待提交 / 已驳回 且 待发货 的订单） */
+async function handleSubmitAudit(row: MallOrderApi.Order) {
+  const hideLoading = message.loading({
+    content: '提交审核中...',
+    duration: 0,
+  });
+  try {
+    await submitOrderAudit(row.id!);
+    message.success('提交审核成功');
+    handleRefresh();
+  } finally {
+    hideLoading();
+  }
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -60,9 +106,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     schema: useGridFormSchema(),
   },
   gridOptions: {
+    // 默认收起：订单多时每行都摊开商品明细会让列表无法快速扫读，需要时点左侧箭头展开。
+    // 这里不配 trigger/expandAll，用 vxe 默认行为（与 wms 明细列表一致）——
+    // 之前配的 trigger:'row' 会让展开列的图标不再渲染，收起后反而没有展开入口。
     expandConfig: {
-      trigger: 'row',
-      expandAll: true,
       padding: true,
     },
     columns: useGridColumns(),
@@ -71,10 +118,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }, formValues) => {
+          // 「订单状态」筛选是业务状态（status[:auditStatus] 组合），这里拆成后端参数，
+          // 保证筛选口径与列表展示的 deriveOrderStatus 一致
+          const { status, ...rest } = formValues ?? {};
           return await getOrderPage({
             pageNo: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...rest,
+            ...parseBusinessStatus(status),
           });
         },
       },
@@ -104,9 +155,13 @@ const [Grid, gridApi] = useVbenVxeGrid({
       />
     </template>
 
-    <DeliveryFormModal @success="handleRefresh" />
     <RemarkFormModal @success="handleRefresh" />
     <Grid table-title="订单列表">
+      <template #expand_toggle="{ row }">
+        <Button type="link" size="small" @click.stop="toggleExpand(row)">
+          {{ isExpanded(row) ? '收起' : '明细' }}
+        </Button>
+      </template>
       <template #expand_content="{ row }">
         <List item-layout="vertical" :data-source="row.items">
           <template #renderItem="{ item }">
@@ -153,13 +208,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
           ]"
           :drop-down-actions="[
             {
-              label: '发货',
+              // 门店要货：待提交(0) / 已驳回(30) 且订单待发货时，可提交审核
+              label: '提交审核',
               type: 'link',
+              auth: ['trade:order:audit:submit'],
               ifShow: () =>
-                row.deliveryType === DeliveryTypeEnum.EXPRESS.type &&
-                (row.status === TradeOrderStatusEnum.UNDELIVERED.status ||
-                  row.status === TradeOrderStatusEnum.DELIVERED.status),
-              onClick: handleDelivery.bind(null, row),
+                (row.auditStatus === 0 || row.auditStatus === 30) &&
+                row.status === TradeOrderStatusEnum.UNDELIVERED.status,
+              onClick: handleSubmitAudit.bind(null, row),
             },
             {
               label: '备注',

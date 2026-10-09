@@ -1,5 +1,5 @@
 /*
- * @author 棱信矩灵
+ * @author 亚特
  * address https://github.com/igdianov/activiti-bpmn-moddle
  * */
 

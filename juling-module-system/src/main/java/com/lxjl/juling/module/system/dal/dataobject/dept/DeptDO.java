@@ -3,17 +3,21 @@ package com.lxjl.juling.module.system.dal.dataobject.dept;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.tenant.core.db.TenantBaseDO;
 import com.lxjl.juling.module.system.dal.dataobject.user.AdminUserDO;
+import com.lxjl.juling.module.system.enums.dept.DeptBusinessStatusEnum;
+import com.lxjl.juling.module.system.enums.dept.DeptTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * 部门表
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  */
 @TableName("system_dept")
 @KeySequence("system_dept_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -32,6 +36,10 @@ public class DeptDO extends TenantBaseDO {
      * 部门名称
      */
     private String name;
+    /**
+     * 业务编码（由编码规则统一发号，见 docs/master-data-unified-design.md §4.2；建档后只读）
+     */
+    private String code;
     /**
      * 父部门ID
      *
@@ -62,5 +70,26 @@ public class DeptDO extends TenantBaseDO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
+
+    /**
+     * 节点类型：组织 / 门店
+     *
+     * 枚举 {@link DeptTypeEnum}
+     */
+    private String deptType;
+    /**
+     * 营业状态（仅门店有意义）；组织节点恒为「营业」
+     *
+     * 枚举 {@link DeptBusinessStatusEnum}
+     */
+    private Integer businessStatus;
+    /**
+     * 闭店时间（复开时清空）
+     */
+    private LocalDateTime closedTime;
+    /**
+     * 闭店原因
+     */
+    private String closedReason;
 
 }

@@ -9,7 +9,7 @@ import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberAnalys
 import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberAnalyseRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberAreaStatisticsRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberSummaryRespVO;
-import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
+import com.lxjl.juling.module.statistics.service.trade.bo.MemberAreaStatisticsRespBO;
 import com.lxjl.juling.module.statistics.service.pay.bo.RechargeSummaryRespBO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * 会员统计 Convert
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface MemberStatisticsConvert {

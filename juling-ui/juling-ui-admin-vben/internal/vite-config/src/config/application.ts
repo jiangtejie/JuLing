@@ -79,6 +79,11 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       server: {
         host: true,
         port,
+        // 关于 server.watch.ignored（忽略「临时目录 + 原子改名」产生的 .tmpdir/.tmp，
+        // 否则 Windows 上 fs.watch 抛 EBUSY 会直接搞挂 dev server）：
+        // 该键写在这里**不生效**——实测解析后的 server.watch 为 undefined（warmup 却保留），
+        // 会被后续 mergeConfig 丢掉。请写在各自 app 的 vite.config.ts 里，
+        // 参考 apps/web-antd/vite.config.ts 的 server.watch.ignored（用函数，不能用 glob）。
         warmup: {
           // 预热文件
           clientFiles: [

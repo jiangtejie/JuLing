@@ -11,7 +11,7 @@ import lombok.Data;
 /**
  * AI 知识库 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "ai_knowledge", autoResultMap = true)
 @KeySequence("ai_knowledge_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。

@@ -12,7 +12,6 @@ import com.lxjl.juling.module.system.api.social.SocialClientApi;
 import com.lxjl.juling.module.system.api.social.dto.SocialWxJsapiSignatureRespDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +23,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
-import static com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
 @Tag(name = "用户 APP - 认证")
 @RestController
@@ -43,7 +41,7 @@ public class AppAuthController {
     private SecurityProperties securityProperties;
 
     @PostMapping("/login")
-    @Operation(summary = "使用手机 + 密码登录")
+    @Operation(summary = "使用订货账号 + 密码登录")
     @PermitAll
     public CommonResult<AppAuthLoginRespVO> login(@RequestBody @Valid AppAuthLoginReqVO reqVO) {
         return success(authService.login(reqVO));
@@ -67,59 +65,6 @@ public class AppAuthController {
     @PermitAll
     public CommonResult<AppAuthLoginRespVO> refreshToken(@RequestParam("refreshToken") String refreshToken) {
         return success(authService.refreshToken(refreshToken));
-    }
-
-    // ========== 短信登录相关 ==========
-
-    @PostMapping("/sms-login")
-    @Operation(summary = "使用手机 + 验证码登录")
-    @PermitAll
-    public CommonResult<AppAuthLoginRespVO> smsLogin(@RequestBody @Valid AppAuthSmsLoginReqVO reqVO) {
-        return success(authService.smsLogin(reqVO));
-    }
-
-    @PostMapping("/send-sms-code")
-    @Operation(summary = "发送手机验证码")
-    @PermitAll
-    public CommonResult<Boolean> sendSmsCode(@RequestBody @Valid AppAuthSmsSendReqVO reqVO) {
-        authService.sendSmsCode(getLoginUserId(), reqVO);
-        return success(true);
-    }
-
-    @PostMapping("/validate-sms-code")
-    @Operation(summary = "校验手机验证码")
-    @PermitAll
-    public CommonResult<Boolean> validateSmsCode(@RequestBody @Valid AppAuthSmsValidateReqVO reqVO) {
-        authService.validateSmsCode(getLoginUserId(), reqVO);
-        return success(true);
-    }
-
-    // ========== 社交登录相关 ==========
-
-    @GetMapping("/social-auth-redirect")
-    @Operation(summary = "社交授权的跳转")
-    @Parameters({
-            @Parameter(name = "type", description = "社交类型", required = true),
-            @Parameter(name = "redirectUri", description = "回调路径")
-    })
-    @PermitAll
-    public CommonResult<String> socialAuthRedirect(@RequestParam("type") Integer type,
-                                                   @RequestParam("redirectUri") String redirectUri) {
-        return CommonResult.success(authService.getSocialAuthorizeUrl(type, redirectUri));
-    }
-
-    @PostMapping("/social-login")
-    @Operation(summary = "社交快捷登录，使用 code 授权码", description = "适合未登录的用户，但是社交账号已绑定用户")
-    @PermitAll
-    public CommonResult<AppAuthLoginRespVO> socialLogin(@RequestBody @Valid AppAuthSocialLoginReqVO reqVO) {
-        return success(authService.socialLogin(reqVO));
-    }
-
-    @PostMapping("/weixin-mini-app-login")
-    @Operation(summary = "微信小程序的一键登录")
-    @PermitAll
-    public CommonResult<AppAuthLoginRespVO> weixinMiniAppLogin(@RequestBody @Valid AppAuthWeixinMiniAppLoginReqVO reqVO) {
-        return success(authService.weixinMiniAppLogin(reqVO));
     }
 
     @PostMapping("/create-weixin-jsapi-signature")

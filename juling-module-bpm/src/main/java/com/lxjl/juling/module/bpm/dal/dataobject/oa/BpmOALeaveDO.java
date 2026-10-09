@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
  *
  * {@link #day} 请假天数，目前先简单做。一般是分成请假上午和下午，可以是 1 整天，可以是 0.5 半天
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  */
 @TableName("bpm_oa_leave")
 @KeySequence("bpm_oa_leave_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。

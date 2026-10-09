@@ -25,4 +25,10 @@ public class ErpCustomerPageReqVO extends PageParam {
     @Schema(description = "联系电话", example = "15601691300")
     private String telephone;
 
+    @Schema(description = "所属部门（门店节点）编号", example = "134")
+    private Long deptId;
+
+    @Schema(description = "店型：DIRECT 直营 / FRANCHISE 加盟", example = "FRANCHISE")
+    private String storeType;
+
 }

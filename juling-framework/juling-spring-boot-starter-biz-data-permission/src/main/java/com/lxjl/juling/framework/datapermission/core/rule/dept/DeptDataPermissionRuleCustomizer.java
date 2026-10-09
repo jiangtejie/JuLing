@@ -3,7 +3,7 @@ package com.lxjl.juling.framework.datapermission.core.rule.dept;
 /**
  * {@link DeptDataPermissionRule} 的自定义配置接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @FunctionalInterface
 public interface DeptDataPermissionRuleCustomizer {

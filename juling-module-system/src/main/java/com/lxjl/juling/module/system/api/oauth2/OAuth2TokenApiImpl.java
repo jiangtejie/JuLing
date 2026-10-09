@@ -14,7 +14,7 @@ import jakarta.annotation.Resource;
 /**
  * OAuth2.0 Token API 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class OAuth2TokenApiImpl implements OAuth2TokenCommonApi {

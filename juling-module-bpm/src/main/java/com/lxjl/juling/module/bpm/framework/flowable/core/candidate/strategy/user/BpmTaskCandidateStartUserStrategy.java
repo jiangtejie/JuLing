@@ -19,7 +19,7 @@ import java.util.Set;
  * <p>
  * 适合场景：用于需要发起人信息复核等场景
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 public class BpmTaskCandidateStartUserStrategy implements BpmTaskCandidateStrategy {

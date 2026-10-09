@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * Bpm 消息的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AllArgsConstructor
 @Getter

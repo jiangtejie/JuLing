@@ -3,7 +3,7 @@ package com.lxjl.juling.module.system.enums;
 /**
  * System 字典类型的枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DictTypeConstants {
 
@@ -22,5 +22,8 @@ public interface DictTypeConstants {
     String SMS_TEMPLATE_TYPE = "system_sms_template_type"; // 短信模板类型
     String SMS_SEND_STATUS = "system_sms_send_status"; // 短信发送状态
     String SMS_RECEIVE_STATUS = "system_sms_receive_status"; // 短信接收状态
+
+    String DEPT_TYPE = "system_dept_type"; // 组织架构节点类型（组织 / 门店）
+    String DEPT_BUSINESS_STATUS = "system_dept_business_status"; // 门店营业状态（营业 / 已闭店）
 
 }

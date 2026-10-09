@@ -27,7 +27,7 @@ import static com.lxjl.juling.framework.apilog.core.enums.OperateTypeEnum.EXPORT
 import static com.lxjl.juling.framework.common.pojo.CommonResult.success;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.convertList;
 
-@Tag(name = "管理后台 - ERP 产品分类")
+@Tag(name = "管理后台 - ERP 物料分类")
 @RestController
 @RequestMapping("/erp/product-category")
 @Validated
@@ -37,14 +37,14 @@ public class ErpProductCategoryController {
     private ErpProductCategoryService productCategoryService;
 
     @PostMapping("/create")
-    @Operation(summary = "创建产品分类")
+    @Operation(summary = "创建物料分类")
     @PreAuthorize("@ss.hasPermission('erp:product-category:create')")
     public CommonResult<Long> createProductCategory(@Valid @RequestBody ErpProductCategorySaveReqVO createReqVO) {
         return success(productCategoryService.createProductCategory(createReqVO));
     }
 
     @PutMapping("/update")
-    @Operation(summary = "更新产品分类")
+    @Operation(summary = "更新物料分类")
     @PreAuthorize("@ss.hasPermission('erp:product-category:update')")
     public CommonResult<Boolean> updateProductCategory(@Valid @RequestBody ErpProductCategorySaveReqVO updateReqVO) {
         productCategoryService.updateProductCategory(updateReqVO);
@@ -52,7 +52,7 @@ public class ErpProductCategoryController {
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "删除产品分类")
+    @Operation(summary = "删除物料分类")
     @Parameter(name = "id", description = "编号", required = true)
     @PreAuthorize("@ss.hasPermission('erp:product-category:delete')")
     public CommonResult<Boolean> deleteProductCategory(@RequestParam("id") Long id) {
@@ -61,7 +61,7 @@ public class ErpProductCategoryController {
     }
 
     @GetMapping("/get")
-    @Operation(summary = "获得产品分类")
+    @Operation(summary = "获得物料分类")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('erp:product-category:query')")
     public CommonResult<ErpProductCategoryRespVO> getProductCategory(@RequestParam("id") Long id) {
@@ -70,7 +70,7 @@ public class ErpProductCategoryController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "获得产品分类列表")
+    @Operation(summary = "获得物料分类列表")
     @PreAuthorize("@ss.hasPermission('erp:product-category:query')")
     public CommonResult<List<ErpProductCategoryRespVO>> getProductCategoryList(@Valid ErpProductCategoryListReqVO listReqVO) {
         List<ErpProductCategoryDO> list = productCategoryService.getProductCategoryList(listReqVO);
@@ -78,7 +78,7 @@ public class ErpProductCategoryController {
     }
 
     @GetMapping("/simple-list")
-    @Operation(summary = "获得产品分类精简列表", description = "只包含被开启的分类，主要用于前端的下拉选项")
+    @Operation(summary = "获得物料分类精简列表", description = "只包含被开启的分类，主要用于前端的下拉选项")
     public CommonResult<List<ErpProductCategoryRespVO>> getProductCategorySimpleList() {
         List<ErpProductCategoryDO> list = productCategoryService.getProductCategoryList(
                 new ErpProductCategoryListReqVO().setStatus(CommonStatusEnum.ENABLE.getStatus()));
@@ -87,14 +87,14 @@ public class ErpProductCategoryController {
     }
 
     @GetMapping("/export-excel")
-    @Operation(summary = "导出产品分类 Excel")
+    @Operation(summary = "导出物料分类 Excel")
     @PreAuthorize("@ss.hasPermission('erp:product-category:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportProductCategoryExcel(@Valid ErpProductCategoryListReqVO listReqVO,
               HttpServletResponse response) throws IOException {
         List<ErpProductCategoryDO> list = productCategoryService.getProductCategoryList(listReqVO);
         // 导出 Excel
-        ExcelUtils.write(response, "产品分类.xls", "数据", ErpProductCategoryRespVO.class,
+        ExcelUtils.write(response, "物料分类.xls", "数据", ErpProductCategoryRespVO.class,
                         BeanUtils.toBean(list, ErpProductCategoryRespVO.class));
     }
 

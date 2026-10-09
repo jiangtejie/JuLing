@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * 随机工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class RandomUtils {
 

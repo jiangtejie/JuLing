@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 商品 SKU 基础 Response VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class AppProductSkuBaseRespVO {

@@ -5,7 +5,7 @@ import com.lxjl.juling.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 /**
  * System Redis Key 枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface RedisKeyConstants {
 

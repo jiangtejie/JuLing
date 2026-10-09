@@ -4,7 +4,7 @@ import com.lxjl.juling.framework.mybatis.core.mapper.BaseMapperX;
 import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberRegisterCountRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberSexStatisticsRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.member.vo.MemberTerminalStatisticsRespVO;
-import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
+import com.lxjl.juling.module.statistics.service.trade.bo.MemberAreaStatisticsRespBO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 会员信息的统计 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 @SuppressWarnings("rawtypes")

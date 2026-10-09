@@ -2,6 +2,8 @@ package com.lxjl.juling.module.trade.controller.app.order.vo.item;
 
 import com.lxjl.juling.module.trade.controller.app.base.property.AppProductPropertyValueDetailRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.math.BigDecimal;
 import lombok.Data;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class AppTradeOrderItemRespVO {
 
     @Schema(description = "商品 SPU 编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long spuId;
-    @Schema(description = "商品 SPU 名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "商品 SPU 名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String spuName;
 
     @Schema(description = "商品 SKU 编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
@@ -35,9 +37,6 @@ public class AppTradeOrderItemRespVO {
     @Schema(description = "购买数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer count;
 
-    @Schema(description = "是否评价", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean commentStatus;
-
     // ========== 价格 + 支付基本信息 ==========
 
     @Schema(description = "商品原价（单）", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
@@ -46,10 +45,6 @@ public class AppTradeOrderItemRespVO {
     @Schema(description = "应付金额（总），单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
     private Integer payPrice;
 
-    // ========== 营销基本信息 ==========
-
-    // TODO 棱信矩灵：在捉摸一下
-
     // ========== 售后基本信息 ==========
 
     @Schema(description = "售后编号", example = "1024")
@@ -57,5 +52,13 @@ public class AppTradeOrderItemRespVO {
 
     @Schema(description = "售后状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer afterSaleStatus;
+
+    // ========== 门店订货链：数量进度（下单 → 已发货 → 门店已收） ==========
+
+    @Schema(description = "ERP 已发货数量（配送出库单审核后回写）", example = "10")
+    private BigDecimal deliveredCount;
+
+    @Schema(description = "门店已确认收货数量", example = "9")
+    private BigDecimal receiptCount;
 
 }

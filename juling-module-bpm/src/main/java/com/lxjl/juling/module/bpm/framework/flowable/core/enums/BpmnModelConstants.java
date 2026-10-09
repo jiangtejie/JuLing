@@ -5,7 +5,7 @@ import com.lxjl.juling.module.bpm.enums.definition.BpmModelTypeEnum;
 /**
  * BPMN XML 常量信息
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface BpmnModelConstants {
 

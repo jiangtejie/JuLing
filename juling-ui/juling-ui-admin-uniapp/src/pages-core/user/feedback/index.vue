@@ -90,18 +90,18 @@ async function handleSubmit() {
       images: images.value,
     }
 
-    // TODO @棱信矩灵：替换为真实反馈 API 调用
+    // TODO @亚特：替换为真实反馈 API 调用
     await mockSubmitFeedback(submitData)
 
     toast.success('提交成功，感谢您的反馈！')
     delay(handleBack, 1500)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }
 
 // ===================== Mock API =====================
-// TODO @棱信矩灵：后端 API 实现后，删除此 mock 函数
+// TODO @亚特：后端 API 实现后，删除此 mock 函数
 
 interface FeedbackData {
   content: string

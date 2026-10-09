@@ -140,3 +140,6 @@ run/*
 # 而本仓库 hooks 统一走 script/git-hooks（core.hooksPath），该文件为副产物
 
 /lefthook.yml
+
+# 部署配置（含密码），不要提交
+deploy/.env

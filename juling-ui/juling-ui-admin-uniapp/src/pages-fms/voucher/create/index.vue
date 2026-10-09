@@ -88,7 +88,7 @@
               <wd-cell title="贷方合计" :value="formatFmsAmount(creditTotal)" />
               <wd-cell title="合计大写" :value="balanced ? formatFmsUppercaseMoney(debitTotal) : '-'" />
               <wd-cell v-if="!balanced" title="平衡状态">
-                <text class="text-28rpx text-[#ee0a24]">借贷不平衡</text>
+                <text class="yd-text-danger text-28rpx">借贷不平衡</text>
               </wd-cell>
             </wd-cell-group>
           </view>
@@ -422,7 +422,7 @@ async function handleSubmit() {
     }
     uni.$emit('fms:voucher:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

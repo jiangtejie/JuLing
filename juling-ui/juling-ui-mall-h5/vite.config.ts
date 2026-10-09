@@ -9,7 +9,6 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig, loadEnv, type PluginOption } from 'vite';
 import { compression } from 'vite-plugin-compression2';
 import { VitePWA } from 'vite-plugin-pwa';
-import VueDevTools from 'vite-plugin-vue-devtools';
 
 const projectRoot = fileURLToPath(new URL('./', import.meta.url));
 
@@ -76,18 +75,15 @@ export default defineConfig(({ mode }) => {
       resolvers: [VantResolver()],
     }),
 
-    // 开发期组件调试面板
-    VueDevTools(),
-
     // PWA：Workbox 生成 Service Worker，实现离线访问
     VitePWA({
       disable: !enablePwa,
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
-        name: '矩灵订货商城',
-        short_name: '矩灵商城',
-        description: '炬信矩灵 · 移动端订货商城',
+        name: '亚特订货商城',
+        short_name: '亚特商城',
+        description: '亚特 · 移动端订货商城',
         lang: 'zh-CN',
         start_url: basePath,
         scope: basePath,
@@ -182,6 +178,19 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    /**
+     * 预构建白名单。
+     *
+     * 只被懒加载路由引入的依赖（如 motion-v）如果留给 Vite 在运行中发现，会触发一次
+     * 「重新预构建」：依赖哈希随之变化，已经打开的页面在下一次懒加载新路由时就会拿到
+     * 504 Outdated Optimize Dep，浏览器侧表现为
+     * 「Failed to fetch dynamically imported module」，只能刷新页面才能恢复。
+     * 显式列进来，让它们在 dev server 启动时一次性预构建好。
+     */
+    optimizeDeps: {
+      include: ['motion-v'],
+    },
+
     css: {
       devSourcemap: false,
     },
@@ -194,6 +203,13 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       port: Number(env.VITE_PORT) || 3001,
       open: false,
+      // Windows 上部分编辑器/工具采用「临时目录 + 原子改名」保存文件，会短暂产生
+      // 形如 `.<name>.vue.<pid>.<guid>.tmpdir/<name>.vue.tmp` 的路径。Vite 的 fs.watch
+      // 会尝试监听这个转瞬即逝且被占用的临时文件，抛 EBUSY 后整个 dev server 进程退出。
+      // 把这类中间产物排除在监听之外。
+      watch: {
+        ignored: ['**/*.tmpdir/**', '**/*.tmp'],
+      },
       proxy: enableProxy
         ? {
             [apiPrefix]: {

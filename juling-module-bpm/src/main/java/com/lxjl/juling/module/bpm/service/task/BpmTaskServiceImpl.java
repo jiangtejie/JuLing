@@ -76,8 +76,8 @@ import static com.lxjl.juling.module.bpm.framework.flowable.core.util.BpmnModelU
 /**
  * 流程任务实例 Service 实现类
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
  */
 @Slf4j
 @Service
@@ -252,7 +252,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 特殊：强制移除自动完成的“发起人”节点
         // 补充说明：由于 taskQuery 无法方面的过滤，所以暂时通过内存过滤
         tasks.removeIf(task -> task.getTaskDefinitionKey().equals(START_USER_NODE_ID));
-        // TODO @棱信矩灵：上游社区讨论 【flowable bug】：taskCreatedAfter、taskCreatedBefore 拼接的是 OR
+        // TODO @亚特：上游社区讨论 【flowable bug】：taskCreatedAfter、taskCreatedBefore 拼接的是 OR
         if (ArrayUtil.isNotEmpty(pageVO.getCreateTime())) {
             tasks.removeIf(task -> task.getCreateTime() == null
                     || task.getCreateTime().before(DateUtils.of(pageVO.getCreateTime()[0]))
@@ -283,7 +283,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             return PageResult.empty();
         }
         List<HistoricTaskInstance> tasks = taskQuery.listPage(PageUtils.getStart(pageVO), pageVO.getPageSize());
-        // TODO @棱信矩灵：上游社区讨论 【flowable bug】：taskCreatedAfter、taskCreatedBefore 拼接的是 OR
+        // TODO @亚特：上游社区讨论 【flowable bug】：taskCreatedAfter、taskCreatedBefore 拼接的是 OR
         if (ArrayUtil.isNotEmpty(pageVO.getCreateTime())) {
             tasks.removeIf(task -> task.getCreateTime() == null
                     || task.getCreateTime().before(DateUtils.of(pageVO.getCreateTime()[0]))
@@ -996,7 +996,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         //  改成 moveExecutionsToSingleActivityId 好像并没有遇到 ② 提到的超时提醒失效的问题。暂时先改回 moveExecutionsToSingleActivityId
         // ④ moveExecutionsToSingleActivityId 回退多实例的时候不会去删除多实例根, 应改成 moveActivityIdsToSingleActivityId
         // flowable 8.0.0  修复上面相关问题， 还修复了并行分支回退的问题 上游社区讨论。
-        // ⑤ 使用 moveExecutionsToSingleActivityId 方法进行回退操作时，如果是多实例的用户任务【矩灵用户任务默认为多实例】，不会删除多实例任务的根数据 ACT_RU_EXECUTION
+        // ⑤ 使用 moveExecutionsToSingleActivityId 方法进行回退操作时，如果是多实例的用户任务【亚特用户任务默认为多实例】，不会删除多实例任务的根数据 ACT_RU_EXECUTION
         // 会导致有一些问题，所以使用 moveActivityIdsToSingleActivityId。 但是该方法在 flowable 6.8.1 ~ 7.1.0 的版本会有 bug 阻塞回退功能
         // 相关 issue: https://github.com/flowable/flowable-engine/issues/3944
         runtimeService.createChangeActivityStateBuilder()
@@ -1129,7 +1129,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 .changeState();
 
         // 3. 特殊：如果跳转到 EndEvent 流程还未结束， 执行 deleteProcessInstance 方法
-        // TODO 棱信矩灵：目前发现并行分支情况下，会存在这个情况，后续看看有没更好的方案；
+        // TODO 亚特：目前发现并行分支情况下，会存在这个情况，后续看看有没更好的方案；
         List<Execution> executions = runtimeService.createExecutionQuery().processInstanceId(processInstanceId).list();
         if (CollUtil.isNotEmpty(executions)) {
             log.warn("[moveTaskToEnd][执行跳转到 EndEvent 后, 流程实例未结束，强制执行 deleteProcessInstance 方法]");
@@ -1321,7 +1321,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         if (CollUtil.isEmpty(nextUserTaskKeys)) {
             throw exception(TASK_WITHDRAW_FAIL_NEXT_TASK_NOT_ALLOW);
         }
-        // TODO @棱信矩灵：是否选择升级flowable版本解决taskCreatedAfter、taskCreatedBefore问题，升级7.1.0可以；包括 todo 和 done 那边的查询哇？？？ 是的！
+        // TODO @亚特：是否选择升级flowable版本解决taskCreatedAfter、taskCreatedBefore问题，升级7.1.0可以；包括 todo 和 done 那边的查询哇？？？ 是的！
         long nextUserTaskFinishedCount = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(processInstance.getProcessInstanceId()).taskDefinitionKeys(nextUserTaskKeys)
                 .taskCreatedAfter(taskInstance.getEndTime()).finished().count();

@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
 /**
  * {@link com.lxjl.juling.framework.common.pojo.PageParam} 工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class PageUtils {
 

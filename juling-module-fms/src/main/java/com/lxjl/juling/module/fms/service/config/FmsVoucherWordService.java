@@ -11,7 +11,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * FMS 凭证字 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FmsVoucherWordService {
 

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 商品 SKU 信息 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 @Data
@@ -43,6 +43,9 @@ public class ProductSkuRespDTO {
      * SKU 的条形码
      */
     private String barCode;
+
+    /** 对应的 ERP 物料编号（1 物料 : 1 SKU）；为空表示未关联。见 sql/local/73 */
+    private Long erpProductId;
     /**
      * 图片地址
      */
@@ -59,13 +62,4 @@ public class ProductSkuRespDTO {
      * 商品体积，单位：m^3 平米
      */
     private Double volume;
-    /**
-     * 一级分销的佣金，单位：分
-     */
-    private Integer firstBrokeragePrice;
-    /**
-     * 二级分销的佣金，单位：分
-     */
-    private Integer secondBrokeragePrice;
-
 }

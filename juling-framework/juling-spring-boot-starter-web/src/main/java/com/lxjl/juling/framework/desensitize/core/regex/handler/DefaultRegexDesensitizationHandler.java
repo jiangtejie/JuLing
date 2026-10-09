@@ -5,7 +5,7 @@ import com.lxjl.juling.framework.desensitize.core.regex.annotation.RegexDesensit
 /**
  * {@link RegexDesensitize} 的正则脱敏处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class DefaultRegexDesensitizationHandler extends AbstractRegexDesensitizationHandler<RegexDesensitize> {
 

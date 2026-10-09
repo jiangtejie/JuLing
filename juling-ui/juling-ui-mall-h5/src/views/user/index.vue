@@ -34,28 +34,39 @@
   }
 
   const menus = [
-    { label: '我的订货单', icon: 'i-carbon-shopping-cart', to: '/cart' },
-    { label: '收货地址', icon: 'i-carbon-location', to: '' },
-    { label: '企业资料', icon: 'i-carbon-building', to: '' },
-    { label: '联系客服', icon: 'i-carbon-headset', to: '' },
-    { label: '系统设置', icon: 'i-carbon-settings', to: '' },
+    // 「我的订货单」= 已提交的门店订货单，落点应是订单列表；
+    // 原先指向 /cart（底部「订货单」tab 的购物车），文案与落点不符，这里改到 /order/list
+    { label: '我的订货单', icon: 'i-carbon-receipt', to: '/order/list' },
+    { label: '修改密码', icon: 'i-carbon-password', to: '/user/password' },
   ];
+
+  /**
+   * 展示用账号：优先订货账号（username，总部下发的门店账号），
+   * 旧账号没有 username 时回退打码手机号；两者都没有则整行不展示。
+   */
+  const displayAccount = computed(() => {
+    const info = userStore.userInfo;
+    const username = info?.username?.trim();
+    if (username) return username;
+    return info?.mobile ? maskMobile(info.mobile) : '';
+  });
 
   function toLogin(): void {
     void router.push('/login');
   }
 
   function toOrderList(status?: string): void {
+    // 待收货：直接进入门店收货列表（逐行确认实收，含多收 / 少收 / 破损）
+    if (status === 'SHIPPED') {
+      void router.push('/order/receipt-list');
+      return;
+    }
     void router.push({ path: '/order/list', query: status ? { status } : {} });
   }
 
-  /** 菜单点击：已接入的直接跳转；未接入的（地址簿 / 企业资料 / 客服 / 设置）给出明确反馈 */
+  /** 菜单点击：本页菜单全部已接入（会员中心已下线，不再有占位入口） */
   function onMenuClick(menu: { label: string; to: string }): void {
-    if (menu.to) {
-      void router.push(menu.to);
-      return;
-    }
-    showToast('功能开发中，敬请期待');
+    void router.push(menu.to);
   }
 
   async function onLogout(): Promise<void> {
@@ -64,16 +75,32 @@
     showToast('已退出登录');
   }
 
-  onMounted(() => {
+  /** 拉取订单数量（进入页面、以及每次回到本 tab 时都会调用） */
+  async function refreshOrderCount(): Promise<void> {
     if (!userStore.isLogin) return;
+    try {
+      orderCount.value = await getOrderCount();
+    } catch (error) {
+      console.warn('[user] 拉取订单数量失败:', error);
+    }
+  }
 
-    void getOrderCount()
-      .then((res) => {
-        orderCount.value = res;
-      })
-      .catch((err) => {
-        console.warn('[user] 拉取订单数量失败:', err);
-      });
+  /**
+   * 本页是 keep-alive 的 tab 页：确认收货、下单等操作都发生在别的页面，
+   * 回到本页不会重新 mount，只在 onMounted 拉一次会让「待收货」等角标一直是旧值。
+   * onActivated 在首次挂载后也会触发一次，这里跳过首次，避免与 onMounted 重复请求。
+   */
+  let activatedOnce = false;
+  onActivated(() => {
+    if (!activatedOnce) {
+      activatedOnce = true;
+      return;
+    }
+    void refreshOrderCount();
+  });
+
+  onMounted(() => {
+    void refreshOrderCount();
 
     if (!userStore.userInfo) {
       void userStore.fetchProfile().catch((err) => {
@@ -102,10 +129,8 @@
         <template v-if="userStore.isLogin">
           <div class="user__name">{{ userStore.nickname }}</div>
           <div class="user__sub">
-            <!-- 后端未提供订货客户认证标识（verified / customerName），降级展示会员等级 -->
-            <van-tag v-if="userStore.userInfo?.levelName" type="success" plain>
-              {{ userStore.userInfo.levelName }}
-            </van-tag>
+            <!-- 会员等级已随会员中心下线，这里只展示订货账号（= 订货人姓名） -->
+            <van-tag v-if="displayAccount" type="success" plain>{{ displayAccount }}</van-tag>
           </div>
         </template>
         <template v-else>
@@ -158,9 +183,7 @@
     <div class="user__footer">
       <van-button v-if="userStore.isLogin" block round @click="onLogout">退出登录</van-button>
       <van-button v-else block round type="primary" @click="toLogin">立即登录</van-button>
-      <div v-if="userStore.userInfo?.mobile" class="user__mobile">
-        账号：{{ maskMobile(userStore.userInfo.mobile) }}
-      </div>
+      <div v-if="displayAccount" class="user__account">账号：{{ displayAccount }}</div>
     </div>
   </div>
 </template>
@@ -267,7 +290,7 @@
       padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
     }
 
-    &__mobile {
+    &__account {
       margin-top: 12px;
       text-align: center;
       font-size: 12px;

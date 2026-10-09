@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 短信客户端，用于对接各短信平台的 SDK，实现短信发送等功能
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021/1/25 14:14
  */
 public interface SmsClient {

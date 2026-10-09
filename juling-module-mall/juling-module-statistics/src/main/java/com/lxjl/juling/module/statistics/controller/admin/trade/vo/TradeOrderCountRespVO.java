@@ -10,13 +10,7 @@ public class TradeOrderCountRespVO {
     @Schema(description = "待发货", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long undelivered;
 
-    @Schema(description = "待核销", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Long pickUp;
-
     @Schema(description = "退款中", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long afterSaleApply;
-
-    @Schema(description = "提现待审核", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    private Long auditingWithdraw;
 
 }

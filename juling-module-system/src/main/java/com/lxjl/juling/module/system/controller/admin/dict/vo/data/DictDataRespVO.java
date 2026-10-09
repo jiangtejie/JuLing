@@ -23,7 +23,7 @@ public class DictDataRespVO {
     @ExcelProperty("字典排序")
     private Integer sort;
 
-    @Schema(description = "字典标签", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "字典标签", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @ExcelProperty("字典标签")
     private String label;
 

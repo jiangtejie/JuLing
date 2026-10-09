@@ -162,7 +162,7 @@ export function getEnvBaseUrl() {
 /**
  * 根据环境变量，获取基础路径的根路径，比如 http://localhost:48080
  *
- * add by 棱信矩灵：用户类似 websocket 这种需要根路径的场景
+ * add by 亚特：用户类似 websocket 这种需要根路径的场景
  *
  * @return 根路径
  */
@@ -187,7 +187,7 @@ export const HOME_PAGE = `/${(pages as PageMetaDatum[]).find(page => page.type =
 /**
  * 登录成功后跳转
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @param redirectUrl 重定向地址，为空则跳转到默认首页（HOME_PAGE）
  */
 export function redirectAfterLogin(redirectUrl?: string) {
@@ -214,7 +214,7 @@ export function redirectAfterLogin(redirectUrl?: string) {
  * 2. 如果不存在上一页，则跳转到传入的 fallbackUrl 地址
  * 3. 如果 fallbackUrl 也不存在，则跳转到首页
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @param fallbackUrl 备选跳转地址，当不存在上一页时使用
  */
 export function navigateBackPlus(fallbackUrl?: string) {

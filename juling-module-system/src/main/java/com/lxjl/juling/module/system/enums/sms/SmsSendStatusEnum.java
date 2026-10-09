@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 短信的发送状态枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @date 2021/2/1 13:39
  */
 @Getter

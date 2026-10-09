@@ -170,7 +170,7 @@ function refreshErpBusinessDocumentAmount(data: Record<string, any>) {
 }
 
 /**
- * 按产品与仓库加载库存数量，写入 item.stockCount
+ * 按物料与仓库加载库存数量，写入 item.stockCount
  * @param item 明细对象
  * @param warehouseField 仓库 ID 字段名，默认 'warehouseId'（调拨编辑器传 'fromWarehouseId'）
  */

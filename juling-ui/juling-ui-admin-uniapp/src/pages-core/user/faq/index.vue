@@ -86,14 +86,14 @@ function handleBack() {
 
 <style lang="scss" scoped>
 :deep(.faq-collapse) {
-  background: #fff;
+  background: var(--yd-surface-card);
 
   .wd-collapse-item__header {
     padding: 24rpx;
   }
 
   .wd-collapse-item__wrapper {
-    background: #f9fafb;
+    background: var(--yd-surface-subtle);
   }
 }
 </style>

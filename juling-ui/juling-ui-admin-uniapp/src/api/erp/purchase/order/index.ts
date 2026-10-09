@@ -32,7 +32,7 @@ export interface PurchaseOrder {
   orderTime?: Date | string | number // 订单时间
   discountPercent?: number // 优惠率
   discountPrice?: number // 付款优惠
-  totalProductPrice?: number // 合计产品金额
+  totalProductPrice?: number // 合计物料金额
   totalTaxPrice?: number // 合计税额
   totalPrice?: number // 优惠后金额
   depositPrice?: number // 支付订金
@@ -41,7 +41,7 @@ export interface PurchaseOrder {
   creator?: string // 创建人
   creatorName?: string // 创建人名称
   createTime?: Date // 创建时间
-  productNames?: string // 产品信息
+  productNames?: string // 物料信息
   remark?: string // 备注
   fileUrl?: string // 附件地址
   inCount?: number // 采购入库数量

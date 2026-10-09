@@ -12,7 +12,7 @@ import java.time.Duration;
 /**
  * 交易订单的配置项
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-09-15
  */
 @ConfigurationProperties(prefix = "juling.trade.order")
@@ -41,12 +41,6 @@ public class TradeOrderProperties {
      */
     @NotNull(message = "收货超时时间不能为空")
     private Duration receiveExpireTime;
-
-    /**
-     * 评论超时时间
-     */
-    @NotNull(message = "评论超时时间不能为空")
-    private Duration commentExpireTime;
 
     /**
      * 是否同步订单状态到微信小程序

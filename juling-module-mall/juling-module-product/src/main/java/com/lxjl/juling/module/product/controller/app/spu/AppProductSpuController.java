@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
+
+import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
+import java.util.Map;
 import java.util.Set;
 
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -45,6 +48,24 @@ public class AppProductSpuController {
     private ProductSpuService productSpuService;
     @Resource
     private ProductSkuService productSkuService;
+
+    /**
+     * 给列表补上每个 SPU 的 SKU 编号
+     *
+     * <p>列表展示的 SPU 价是商城价，而**实际下单价是门店维度、按 SKU 算的**。
+     * 前端拿到 skuIds 后可以调 /trade/order/store-price 换成门店价，
+     * 否则会出现「列表一个价、结算另一个价」。
+     */
+    private void fillSkuIds(List<AppProductSpuRespVO> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        Map<Long, List<ProductSkuDO>> skuMap = convertMultiMap(
+                productSkuService.getSkuListBySpuId(convertSet(list, AppProductSpuRespVO::getId)),
+                ProductSkuDO::getSpuId);
+        list.forEach(vo -> vo.setSkuIds(convertList(
+                skuMap.getOrDefault(vo.getId(), List.of()), ProductSkuDO::getId)));
+    }
     @Resource
     private ProductBrowseHistoryService productBrowseHistoryService;
 
@@ -61,6 +82,7 @@ public class AppProductSpuController {
         // 拼接返回
         list.forEach(spu -> spu.setSalesCount(spu.getSalesCount() + spu.getVirtualSalesCount()));
         List<AppProductSpuRespVO> voList = BeanUtils.toBean(list, AppProductSpuRespVO.class);
+        fillSkuIds(voList);
         return success(voList);
     }
 
@@ -76,6 +98,7 @@ public class AppProductSpuController {
         // 拼接返回
         pageResult.getList().forEach(spu -> spu.setSalesCount(spu.getSalesCount() + spu.getVirtualSalesCount()));
         PageResult<AppProductSpuRespVO> voPageResult = BeanUtils.toBean(pageResult, AppProductSpuRespVO.class);
+        fillSkuIds(voPageResult.getList());
         return success(voPageResult);
     }
 

@@ -15,20 +15,13 @@ export interface TradeOrderComparison {
 /** 交易订单数量 */
 export interface TradeOrderCount {
   undelivered?: number
-  pickUp?: number
   afterSaleApply?: number
-  auditingWithdraw?: number
 }
 
 /** 会员数量统计 */
 export interface MemberCountComparison {
   visitUserCount?: string | number
   registerUserCount?: number
-}
-
-/** 支付统计 */
-export interface PaySummary {
-  rechargePrice?: number
 }
 
 /** 会员统计 */
@@ -83,7 +76,6 @@ export interface TradeTrendSummary {
   rechargePrice?: number
   expensePrice?: number
   walletPayPrice?: number
-  brokerageSettlementPrice?: number
   afterSaleRefundPrice?: number
 }
 
@@ -100,11 +92,6 @@ export function getTradeOrderCount() {
 /** 获取会员数量对照 */
 export function getMemberUserCountComparison() {
   return http.get<DataComparison<MemberCountComparison>>('/statistics/member/user-count-comparison')
-}
-
-/** 获取钱包充值金额 */
-export function getWalletRechargePrice() {
-  return http.get<PaySummary>('/statistics/pay/summary')
 }
 
 /** 获取会员统计 */

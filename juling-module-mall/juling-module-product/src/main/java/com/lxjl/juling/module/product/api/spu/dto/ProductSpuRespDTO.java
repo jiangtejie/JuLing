@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 商品 SPU 信息 Response DTO
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-08-26
  */
 @Data
@@ -71,13 +71,6 @@ public class ProductSpuRespDTO {
     // ========== 物流相关字段 =========
 
     /**
-     * 配送方式数组
-     *
-     * 对应 DeliveryTypeEnum 枚举
-     */
-    private List<Integer> deliveryTypes;
-
-    /**
      * 物流配置模板编号
      *
      * 对应 TradeDeliveryExpressTemplateDO 的 id 编号
@@ -90,15 +83,5 @@ public class ProductSpuRespDTO {
      * 赠送积分
      */
     private Integer giveIntegral;
-
-    // ========== 分销相关字段 =========
-
-    /**
-     * 分销类型
-     *
-     * false - 默认
-     * true - 自行设置
-     */
-    private Boolean subCommissionType;
 
 }

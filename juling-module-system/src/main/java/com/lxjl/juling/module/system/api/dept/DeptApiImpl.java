@@ -1,7 +1,10 @@
 package com.lxjl.juling.module.system.api.dept;
 
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
+import com.lxjl.juling.module.system.api.dept.dto.DeptCreateReqDTO;
 import com.lxjl.juling.module.system.api.dept.dto.DeptRespDTO;
+import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.lxjl.juling.module.system.dal.dataobject.dept.DeptDO;
 import com.lxjl.juling.module.system.service.dept.DeptService;
 import org.springframework.stereotype.Service;
@@ -13,13 +16,22 @@ import java.util.List;
 /**
  * 部门 API 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 public class DeptApiImpl implements DeptApi {
 
     @Resource
     private DeptService deptService;
+
+    @Override
+    public Long createDept(DeptCreateReqDTO reqDTO) {
+        DeptSaveReqVO reqVO = new DeptSaveReqVO();
+        reqVO.setName(reqDTO.getName()).setParentId(reqDTO.getParentId())
+                .setDeptType(reqDTO.getDeptType()).setSort(reqDTO.getSort())
+                .setStatus(CommonStatusEnum.ENABLE.getStatus());
+        return deptService.createDept(reqVO);
+    }
 
     @Override
     public DeptRespDTO getDept(Long id) {

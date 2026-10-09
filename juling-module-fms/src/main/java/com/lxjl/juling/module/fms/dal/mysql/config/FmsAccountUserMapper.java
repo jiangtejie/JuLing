@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * FMS 账套用户 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface FmsAccountUserMapper extends BaseMapperX<FmsAccountUserDO> {

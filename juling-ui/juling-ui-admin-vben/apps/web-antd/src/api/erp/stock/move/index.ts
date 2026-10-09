@@ -17,7 +17,7 @@ export namespace ErpStockMoveApi {
     createTime: Date; // 创建时间
     creator: string; // 创建人
     creatorName: string; // 创建人名称
-    productNames: string; // 产品名称
+    productNames: string; // 物料名称
     items?: StockMoveItem[]; // 子表信息
   }
 
@@ -27,11 +27,11 @@ export namespace ErpStockMoveApi {
     fromWarehouseId?: number; // 来源仓库ID
     id?: number; // ID
     seq?: number; // 前端行号
-    productBarCode: string; // 产品条形码
-    productId?: number; // 产品ID
-    productName?: string; // 产品名称
-    productPrice: number; // 产品单价
-    productUnitName?: string; // 产品单位
+    productBarCode: string; // 物料条形码
+    productId?: number; // 物料ID
+    productName?: string; // 物料名称
+    productPrice: number; // 物料单价
+    productUnitName?: string; // 物料单位
     remark?: string; // 备注
     stockCount: number; // 库存数量
     toWarehouseId?: number; // 目标仓库ID

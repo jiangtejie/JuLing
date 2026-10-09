@@ -6,6 +6,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.finance.vo.receipt.ErpFinanceReceiptPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.finance.vo.receipt.ErpFinanceReceiptSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.finance.ErpFinanceReceiptDO;
@@ -14,13 +18,13 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOutDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleReturnDO;
 import com.lxjl.juling.module.erp.dal.mysql.finance.ErpFinanceReceiptItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.finance.ErpFinanceReceiptMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.common.ErpBizTypeEnum;
 import com.lxjl.juling.module.erp.service.sale.ErpCustomerService;
 import com.lxjl.juling.module.erp.service.sale.ErpSaleOutService;
 import com.lxjl.juling.module.erp.service.sale.ErpSaleReturnService;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,12 +39,11 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 收款单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -52,7 +55,7 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
     private ErpFinanceReceiptItemMapper financeReceiptItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpCustomerService customerService;
@@ -82,8 +85,8 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
         if (createReqVO.getFinanceUserId() != null) {
             adminUserApi.validateUser(createReqVO.getFinanceUserId());
         }
-        // 1.5 生成收款单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.FINANCE_RECEIPT_NO_PREFIX);
+        // 1.5 生成收款单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.FINANCE_RECEIPT, null);
         if (financeReceiptMapper.selectByNo(no) != null) {
             throw exception(FINANCE_RECEIPT_NO_EXISTS);
         }
@@ -96,6 +99,12 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
         // 2.2 插入收款单项
         receiptItems.forEach(o -> o.setReceiptId(receipt.getId()));
         financeReceiptItemMapper.insertBatch(receiptItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.FINANCE_RECEIPT).setBillId(receipt.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(receipt.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 更新销售出库、退货的收款金额情况
         updateSalePrice(receiptItems);
@@ -140,20 +149,26 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateFinanceReceiptStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpFinanceReceiptDO receipt = validateFinanceReceiptExists(id);
         // 1.2 校验状态
-        if (receipt.getStatus().equals(status)) {
-            throw exception(approve ? FINANCE_RECEIPT_APPROVE_FAIL : FINANCE_RECEIPT_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(receipt.getStatus(), status, FINANCE_RECEIPT_APPROVE_FAIL, FINANCE_RECEIPT_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = financeReceiptMapper.updateByIdAndStatus(id, receipt.getStatus(),
-                new ErpFinanceReceiptDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? FINANCE_RECEIPT_APPROVE_FAIL : FINANCE_RECEIPT_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> financeReceiptMapper.updateByIdAndStatus(id, receipt.getStatus(),
+                new ErpFinanceReceiptDO().setStatus(status)),
+                status, FINANCE_RECEIPT_APPROVE_FAIL, FINANCE_RECEIPT_PROCESS_FAIL);
+
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.FINANCE_RECEIPT).setBillId(id).setBillNo(receipt.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(receipt.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
     }
 
     private List<ErpFinanceReceiptItemDO> validateFinanceReceiptItems(

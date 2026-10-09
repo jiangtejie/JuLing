@@ -20,8 +20,8 @@ defineOptions({
 
 withDefaults(defineProps<Props>(), {
   description:
-    '是棱信矩灵的企业级中后台管理系统，基于 Vue 3、Vite、TypeScript 与 Ant Design Vue 构建，覆盖系统管理、工作流、进销存、财务、生产制造、人力资源等业务模块。',
-  name: '棱信矩灵 管理系统',
+    '是亚特的企业级中后台管理系统，基于 Vue 3、Vite、TypeScript 与 Ant Design Vue 构建，覆盖系统管理、工作流、进销存、财务、生产制造、人力资源等业务模块。',
+  name: '亚特 管理系统',
   title: '关于项目',
 });
 

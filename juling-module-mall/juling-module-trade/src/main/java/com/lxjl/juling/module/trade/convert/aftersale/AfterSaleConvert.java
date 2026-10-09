@@ -2,7 +2,6 @@ package com.lxjl.juling.module.trade.convert.aftersale;
 
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.module.member.api.user.dto.MemberUserRespDTO;
-import com.lxjl.juling.module.pay.api.refund.dto.PayRefundCreateReqDTO;
 import com.lxjl.juling.module.product.api.property.dto.ProductPropertyValueDetailRespDTO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleDetailRespVO;
 import com.lxjl.juling.module.trade.controller.admin.aftersale.vo.AfterSaleRespPageItemVO;
@@ -37,15 +36,6 @@ public interface AfterSaleConvert {
             @Mapping(target = "updater", ignore = true),
     })
     AfterSaleDO convert(AppAfterSaleCreateReqVO createReqVO, TradeOrderItemDO tradeOrderItem);
-
-    @Mappings({
-            @Mapping(source = "afterSale.orderId", target = "merchantOrderId"),
-            @Mapping(source = "afterSale.id", target = "merchantRefundId"),
-            @Mapping(source = "afterSale.applyReason", target = "reason"),
-            @Mapping(source = "afterSale.refundPrice", target = "price"),
-            @Mapping(source = "orderProperties.payAppKey", target = "appKey"),
-    })
-    PayRefundCreateReqDTO convert(String userIp, AfterSaleDO afterSale, TradeOrderProperties orderProperties);
 
     MemberUserRespVO convert(MemberUserRespDTO bean);
 

@@ -7,14 +7,14 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-@Schema(description = "管理后台 - ERP 产品单位新增/修改 Request VO")
+@Schema(description = "管理后台 - ERP 物料单位新增/修改 Request VO")
 @Data
 public class ErpProductUnitSaveReqVO {
 
     @Schema(description = "单位编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "31254")
     private Long id;
 
-    @Schema(description = "单位名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "单位名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @NotEmpty(message = "单位名字不能为空")
     private String name;
 

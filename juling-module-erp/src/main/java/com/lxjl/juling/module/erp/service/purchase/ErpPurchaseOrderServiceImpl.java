@@ -6,16 +6,23 @@ import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchaseOrderPageReqVO;
+import com.lxjl.juling.module.erp.controller.admin.pricelist.vo.ErpPriceMatchRespVO;
+import com.lxjl.juling.module.erp.enums.ErpPriceTypeEnum;
+import com.lxjl.juling.module.erp.service.pricelist.ErpPriceListService;
 import com.lxjl.juling.module.erp.controller.admin.purchase.vo.order.ErpPurchaseOrderSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderDO;
 import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpPurchaseOrderItemDO;
+import com.lxjl.juling.module.erp.dal.dataobject.purchase.ErpSupplierDO;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.purchase.ErpPurchaseOrderMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +38,11 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 采购订单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -47,29 +53,32 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Resource
     private ErpPurchaseOrderItemMapper purchaseOrderItemMapper;
 
-    @Resource
-    private ErpNoRedisDAO noRedisDAO;
 
     @Resource
     private ErpProductService productService;
     @Resource
     private ErpSupplierService supplierService;
     @Resource
+    private ErpPriceListService priceListService;
+    @Resource
     private ErpAccountService accountService;
+    @Resource
+    private com.lxjl.juling.module.bill.api.BillPlatformApi billPlatformApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createPurchaseOrder(ErpPurchaseOrderSaveReqVO createReqVO) {
-        // 1.1 校验订单项的有效性
-        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(createReqVO.getItems());
-        // 1.2 校验供应商
-        supplierService.validateSupplier(createReqVO.getSupplierId());
+        // 1.1 校验供应商（**接收返回值**：下面要用它的默认交易条件给订单与订单行兜底）
+        ErpSupplierDO supplier = supplierService.validateSupplier(createReqVO.getSupplierId());
+        // 1.2 校验订单项的有效性（行未填税率时用供应商的开票税点兜底）
+        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(
+                createReqVO.getItems(), supplier);
         // 1.3 校验结算账户
         if (createReqVO.getAccountId() != null) {
             accountService.validateAccount(createReqVO.getAccountId());
         }
-        // 1.4 生成订单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.PURCHASE_ORDER_NO_PREFIX);
+        // 1.4 生成订单号（走单据平台：按 bill_type 的编号规则 + 组织 + 期间，事务内原子递增）
+        String no = billPlatformApi.generateNo(BillTypeConstants.PURCHASE_ORDER, null);
         if (purchaseOrderMapper.selectByNo(no) != null) {
             throw exception(PURCHASE_ORDER_NO_EXISTS);
         }
@@ -77,6 +86,9 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         // 2.1 插入订单
         ErpPurchaseOrderDO purchaseOrder = BeanUtils.toBean(createReqVO, ErpPurchaseOrderDO.class, in -> in
                 .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus())
+                // 结账方式 / 交期：单据上没填就用供应商档案的，填了就以单据为准（允许按单覆盖）
+                .setSettlementType(ObjectUtil.defaultIfNull(createReqVO.getSettlementType(), supplier.getSettlementType()))
+                .setDeliveryDays(ObjectUtil.defaultIfNull(createReqVO.getDeliveryDays(), supplier.getDeliveryDays()))
                 // 入库/退货数量必须初始化为 0（而不是 null）：否则“可采购入库”的查询条件
                 // t.in_count < t.total_count 在 SQL 三值逻辑下恒不成立，订单不会出现在入库单的“关联订单”弹窗里
                 .setInCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
@@ -86,6 +98,12 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         purchaseOrderItems.forEach(o -> o.setOrderId(purchaseOrder.getId())
                 .setInCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         purchaseOrderItemMapper.insertBatch(purchaseOrderItems);
+
+        // 2.3 单据平台：写创建日志（留痕；后续接入状态机与审批时沿用同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_ORDER).setBillId(purchaseOrder.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(purchaseOrder.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return purchaseOrder.getId();
     }
 
@@ -97,17 +115,20 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
         if (ErpAuditStatus.APPROVE.getStatus().equals(purchaseOrder.getStatus())) {
             throw exception(PURCHASE_ORDER_UPDATE_FAIL_APPROVE, purchaseOrder.getNo());
         }
-        // 1.2 校验供应商
-        supplierService.validateSupplier(updateReqVO.getSupplierId());
+        // 1.2 校验供应商（接收返回值用于带出默认交易条件）
+        ErpSupplierDO supplier = supplierService.validateSupplier(updateReqVO.getSupplierId());
         // 1.3 校验结算账户
         if (updateReqVO.getAccountId() != null) {
             accountService.validateAccount(updateReqVO.getAccountId());
         }
         // 1.4 校验订单项的有效性
-        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(updateReqVO.getItems());
+        List<ErpPurchaseOrderItemDO> purchaseOrderItems = validatePurchaseOrderItems(
+                updateReqVO.getItems(), supplier);
 
         // 2.1 更新订单
-        ErpPurchaseOrderDO updateObj = BeanUtils.toBean(updateReqVO, ErpPurchaseOrderDO.class);
+        ErpPurchaseOrderDO updateObj = BeanUtils.toBean(updateReqVO, ErpPurchaseOrderDO.class, in -> in
+                .setSettlementType(ObjectUtil.defaultIfNull(updateReqVO.getSettlementType(), supplier.getSettlementType()))
+                .setDeliveryDays(ObjectUtil.defaultIfNull(updateReqVO.getDeliveryDays(), supplier.getDeliveryDays())));
         calculateTotalPrice(updateObj, purchaseOrderItems);
         purchaseOrderMapper.updateById(updateObj);
         // 2.2 更新订单项
@@ -130,13 +151,12 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePurchaseOrderStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpPurchaseOrderDO purchaseOrder = validatePurchaseOrderExists(id);
-        // 1.2 校验状态
-        if (purchaseOrder.getStatus().equals(status)) {
-            throw exception(approve ? PURCHASE_ORDER_APPROVE_FAIL : PURCHASE_ORDER_PROCESS_FAIL);
-        }
+        // 1.2 校验状态（同状态守卫：挡重复点击与并发）
+        BillAuditSupport.validateStatusChange(purchaseOrder.getStatus(), status,
+                PURCHASE_ORDER_APPROVE_FAIL, PURCHASE_ORDER_PROCESS_FAIL);
         // 1.3 存在采购入单，无法反审核
         if (!approve && purchaseOrder.getInCount() != null
                 && purchaseOrder.getInCount().compareTo(BigDecimal.ZERO) > 0) {
@@ -148,22 +168,61 @@ public class ErpPurchaseOrderServiceImpl implements ErpPurchaseOrderService {
             throw exception(PURCHASE_ORDER_PROCESS_FAIL_EXISTS_RETURN);
         }
 
-        // 2. 更新状态
-        int updateCount = purchaseOrderMapper.updateByIdAndStatus(id, purchaseOrder.getStatus(),
-                new ErpPurchaseOrderDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? PURCHASE_ORDER_APPROVE_FAIL : PURCHASE_ORDER_PROCESS_FAIL);
-        }
+        // 2. 更新状态（CAS：以旧状态为条件，影响 0 行说明被别人抢先改了）
+        BillAuditSupport.casUpdate(
+                () -> purchaseOrderMapper.updateByIdAndStatus(id, purchaseOrder.getStatus(),
+                        new ErpPurchaseOrderDO().setStatus(status)),
+                status, PURCHASE_ORDER_APPROVE_FAIL, PURCHASE_ORDER_PROCESS_FAIL);
+
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.PURCHASE_ORDER).setBillId(id).setBillNo(purchaseOrder.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(purchaseOrder.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
     }
 
-    private List<ErpPurchaseOrderItemDO> validatePurchaseOrderItems(List<ErpPurchaseOrderSaveReqVO.Item> list) {
-        // 1. 校验产品存在
+    /**
+     * 校验订单项并转成 DO
+     *
+     * @param supplier 供应商：用于取价（价目表 / 物料主数据兜底）与税率兜底
+     *
+     * <p>取值优先级（都在「用户没填」的前提下才生效，即**允许按单覆盖**）：
+     * <ol>
+     *   <li>单价：采购价目表（供应商专项 &gt; 通用，见 ErpPriceListService#matchPrice）</li>
+     *   <li>税率：价目表行上的税率 &gt; 供应商的开票税点</li>
+     * </ol>
+     * <p>取价只在**单价为空**时触发 —— 用户既然已经把单价填了，就不该再替他改税率，
+     * 否则「我明明填了价，税率怎么变了」很难解释。
+     */
+    private List<ErpPurchaseOrderItemDO> validatePurchaseOrderItems(List<ErpPurchaseOrderSaveReqVO.Item> list,
+                                                                   ErpSupplierDO supplier) {
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpPurchaseOrderSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);
         // 2. 转化为 ErpPurchaseOrderItemDO 列表
         return convertList(list, o -> BeanUtils.toBean(o, ErpPurchaseOrderItemDO.class, item -> {
             item.setProductUnitId(productMap.get(item.getProductId()).getUnitId());
+            // 1) 单价为空才取价（价目表命中不了时 matchPrice 内部会兜底到物料主数据的采购价）
+            if (item.getProductPrice() == null) {
+                ErpPriceMatchRespVO match = priceListService.matchPrice(
+                        ErpPriceTypeEnum.PURCHASE.getType(), supplier.getId(), item.getProductId(), null);
+                if (match != null) {
+                    item.setProductPrice(match.getPrice());
+                    // 价目表行上的税率比供应商的开票税点更具体
+                    if (item.getTaxPercent() == null) {
+                        item.setTaxPercent(match.getTaxPercent());
+                    }
+                }
+            }
+            // 2) 税率仍为空则用供应商的开票税点
+            if (item.getTaxPercent() == null) {
+                item.setTaxPercent(supplier.getTaxPercent());
+            }
+            // 注意顺序：必须在算 taxPrice **之前**兜底，否则税额不会跟着重算
             item.setTotalPrice(MoneyUtils.priceMultiply(item.getProductPrice(), item.getCount()));
             if (item.getTotalPrice() == null) {
                 return;

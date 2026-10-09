@@ -8,7 +8,11 @@ import { erpNumberFormatter, erpPriceInputFormatter } from '@vben/utils';
 import { z } from '#/adapter/form';
 import { getAccountSimpleList } from '#/api/erp/finance/account';
 import { getProductSimpleList } from '#/api/erp/product/product';
-import { getSupplierSimpleList } from '#/api/erp/purchase/supplier';
+import {
+  formatSupplierLabel,
+  formatSupplierShortLabel,
+  getSupplierSimpleList,
+} from '#/api/erp/purchase/supplier';
 import { getWarehouseSimpleList } from '#/api/erp/stock/warehouse';
 import { getSimpleUserList } from '#/api/system/user';
 import { getRangePickerDefaultProps } from '#/utils';
@@ -70,6 +74,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -111,7 +116,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
     },
     {
       fieldName: 'items',
-      label: '入库产品清单',
+      label: '入库物料清单',
       component: 'Input',
       formItemClass: 'col-span-3',
     },
@@ -216,7 +221,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productId',
-      title: '产品名称',
+      title: '物料名称',
       minWidth: 200,
       slots: { default: 'productId' },
     },
@@ -240,6 +245,24 @@ export function useFormItemColumns(
       title: '备注',
       minWidth: 150,
       slots: { default: 'remark' },
+    },
+    {
+      field: 'batchNo',
+      title: '批次号',
+      minWidth: 150,
+      slots: { default: 'batchNo' },
+    },
+    {
+      field: 'productionDate',
+      title: '生产日期',
+      minWidth: 150,
+      slots: { default: 'productionDate' },
+    },
+    {
+      field: 'expiryDate',
+      title: '有效期',
+      minWidth: 150,
+      slots: { default: 'expiryDate' },
     },
     {
       field: 'totalCount',
@@ -266,7 +289,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productPrice',
-      title: '产品单价',
+      title: '物料单价',
       fixed: 'right',
       minWidth: 120,
       slots: { default: 'productPrice' },
@@ -274,7 +297,7 @@ export function useFormItemColumns(
     {
       field: 'totalProductPrice',
       fixed: 'right',
-      title: '产品金额',
+      title: '物料金额',
       minWidth: 120,
       formatter: 'formatAmount2',
     },
@@ -323,10 +346,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -352,6 +375,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         showSearch: true,
         api: getSupplierSimpleList,
+        labelFn: formatSupplierShortLabel,
         labelField: 'name',
         valueField: 'id',
       },
@@ -456,7 +480,7 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'productNames',
-      title: '产品信息',
+      title: '物料信息',
       showOverflow: 'tooltip',
       minWidth: 120,
     },
@@ -534,10 +558,10 @@ export function useOrderGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -573,7 +597,7 @@ export function useOrderGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'productNames',
-      title: '产品信息',
+      title: '物料信息',
       showOverflow: 'tooltip',
       minWidth: 120,
     },

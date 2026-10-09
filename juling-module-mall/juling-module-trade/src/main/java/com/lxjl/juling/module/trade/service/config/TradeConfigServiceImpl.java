@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 交易中心配置 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

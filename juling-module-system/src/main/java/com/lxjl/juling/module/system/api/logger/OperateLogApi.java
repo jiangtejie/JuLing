@@ -8,7 +8,7 @@ import com.lxjl.juling.module.system.api.logger.dto.OperateLogRespDTO;
 /**
  * 操作日志 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface OperateLogApi extends OperateLogCommonApi {
 

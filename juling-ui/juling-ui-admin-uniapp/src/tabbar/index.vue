@@ -169,7 +169,7 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
   right: 0;
   z-index: 1000;
 
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--yd-border-light);
   box-sizing: border-box;
 }
 // 中间鼓包的样式
@@ -185,8 +185,8 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
   width: 250rpx;
   height: 250rpx;
   border-radius: 50%;
-  background-color: #fff;
-  box-shadow: inset 0 0 0 1px #fefefe;
+  background-color: var(--yd-surface-card);
+  box-shadow: inset 0 0 0 1px var(--yd-surface-card);
 
   &:active {
     // opacity: 0.8;

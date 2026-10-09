@@ -10,7 +10,7 @@ import lombok.*;
 /**
  * WMS 往来企业 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("wms_merchant")
 @KeySequence("wms_merchant_seq")

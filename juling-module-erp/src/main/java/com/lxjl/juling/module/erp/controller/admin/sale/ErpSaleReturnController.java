@@ -142,7 +142,7 @@ public class ErpSaleReturnController {
         List<ErpSaleReturnItemDO> saleReturnItemList = saleReturnService.getSaleReturnItemListByReturnIds(
                 convertSet(pageResult.getList(), ErpSaleReturnDO::getId));
         Map<Long, List<ErpSaleReturnItemDO>> saleReturnItemMap = convertMultiMap(saleReturnItemList, ErpSaleReturnItemDO::getReturnId);
-        // 1.2 产品信息
+        // 1.2 物料信息
         Map<Long, ErpProductRespVO> productMap = productService.getProductVOMap(
                 convertSet(saleReturnItemList, ErpSaleReturnItemDO::getProductId));
         // 1.3 客户信息

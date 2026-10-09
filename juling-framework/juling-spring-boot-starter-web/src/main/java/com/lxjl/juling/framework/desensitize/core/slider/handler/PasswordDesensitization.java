@@ -5,7 +5,7 @@ import com.lxjl.juling.framework.desensitize.core.slider.annotation.PasswordDese
 /**
  * {@link PasswordDesensitize} 的码脱敏处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class PasswordDesensitization extends AbstractSliderDesensitizationHandler<PasswordDesensitize> {
     @Override

@@ -3,7 +3,7 @@ package com.lxjl.juling.framework.lock4j.core;
 /**
  * Lock4j Redis Key 枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface Lock4jRedisKeyConstants {
 

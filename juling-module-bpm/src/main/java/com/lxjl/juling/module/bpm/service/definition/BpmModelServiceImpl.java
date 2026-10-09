@@ -50,9 +50,9 @@ import static com.lxjl.juling.module.bpm.framework.flowable.core.util.BpmnModelU
 /**
  * 流程模型实现：主要进行 Flowable {@link Model} 的维护
  *
- * @author 棱信矩灵
- * @author 棱信矩灵
- * @author 棱信矩灵
+ * @author 亚特
+ * @author 亚特
+ * @author 亚特
  */
 @Service
 @Validated

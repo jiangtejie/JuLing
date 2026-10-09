@@ -101,6 +101,45 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: z.string().email('邮箱格式不正确').or(z.literal('')).optional(),
     },
     {
+      fieldName: 'deptType',
+      label: '节点类型',
+      component: 'RadioGroup',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.SYSTEM_DEPT_TYPE),
+        buttonStyle: 'solid',
+        optionType: 'button',
+      },
+      rules: z.string().default('ORG'),
+      help: '门店才可被订货账号授权、可下单、可建门店仓；店型（直营/加盟）在客户档案上维护',
+    },
+    {
+      fieldName: 'businessStatus',
+      label: '营业状态',
+      component: 'RadioGroup',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.SYSTEM_DEPT_BUSINESS_STATUS, 'number'),
+        buttonStyle: 'solid',
+        optionType: 'button',
+      },
+      rules: z.number().default(0),
+      dependencies: {
+        triggerFields: ['deptType'],
+        show: (values) => values.deptType === 'STORE',
+      },
+    },
+    {
+      fieldName: 'closedReason',
+      label: '闭店原因',
+      component: 'Input',
+      componentProps: {
+        placeholder: '闭店时填写',
+      },
+      dependencies: {
+        triggerFields: ['deptType', 'businessStatus'],
+        show: (values) => values.deptType === 'STORE' && values.businessStatus === 1,
+      },
+    },
+    {
       fieldName: 'status',
       label: '状态',
       component: 'RadioGroup',
@@ -117,14 +156,47 @@ export function useFormSchema(): VbenFormSchema[] {
 /** 列表的字段 */
 export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['columns'] {
   return [
-    { type: 'checkbox', width: 40 },
+    {
+      // ⚠️ 多选框必须也在左侧固定区。
+      // 树列是 fixed:'left'，会先渲染进固定区；多选框若不固定就留在主区，
+      // 结果被排到树列右侧（表头看起来像「节点名称 | 多选框 | 编码」）。
+      // VXE 并不会因为 treeNode 就重排列序（见 vxe-table/es/table/src/table.js:1689），
+      // 顺序完全由 fixed 分区 + 定义顺序决定。
+      type: 'checkbox',
+      width: 40,
+      fixed: 'left',
+    },
     {
       field: 'name',
-      title: '部门名称',
+      title: '节点名称',
       minWidth: 150,
       align: 'left',
       fixed: 'left',
       treeNode: true,
+    },
+    {
+      field: 'code',
+      title: '编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
+    {
+      field: 'deptType',
+      title: '节点类型',
+      width: 100,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.SYSTEM_DEPT_TYPE },
+      },
+    },
+    {
+      field: 'businessStatus',
+      title: '营业状态',
+      width: 100,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.SYSTEM_DEPT_BUSINESS_STATUS },
+      },
     },
     {
       field: 'leaderUserId',
@@ -140,7 +212,7 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
     },
     {
       field: 'status',
-      title: '部门状态',
+      title: '节点状态',
       minWidth: 100,
       cellRender: {
         name: 'CellDict',
@@ -155,7 +227,11 @@ export function useGridColumns(): VxeTableGridOptions<SystemDeptApi.Dept>['colum
     },
     {
       title: '操作',
-      width: 220,
+      // 宽度按**实际按钮**算，不是拍脑袋：新增下级节点(6字≈84) + 建门店(3字≈42)
+      // 宽度按**实际按钮**算，不是拍脑袋：新增下级节点(6字+图标≈102) + 建门店(3字≈42)
+      // + 修改(2字+图标≈42) + 闭店/重新开店(28~56) + 删除(2字+图标≈42) ≈ 284，
+      // 加按钮间距与单元格内边距约需 330（按最坏情况算：闭店按钮会变成「重新开店」4 字）。
+      width: 360,
       fixed: 'right',
       slots: { default: 'actions' },
     },

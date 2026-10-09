@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * ERP 销售出库 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "erp_sale_out")
 @KeySequence("erp_sale_out_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -94,7 +94,7 @@ public class ErpSaleOutDO extends BaseDO {
     private BigDecimal receiptPrice;
 
     /**
-     * 合计产品价格，单位：元
+     * 合计物料价格，单位：元
      */
     private BigDecimal totalProductPrice;
     /**

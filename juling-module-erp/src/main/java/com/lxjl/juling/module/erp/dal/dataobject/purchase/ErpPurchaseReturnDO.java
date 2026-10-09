@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * ERP 采购退货 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "erp_purchase_return")
 @KeySequence("erp_purchase_return_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -88,7 +88,7 @@ public class ErpPurchaseReturnDO extends BaseDO {
     private BigDecimal refundPrice;
 
     /**
-     * 合计产品价格，单位：元
+     * 合计物料价格，单位：元
      */
     private BigDecimal totalProductPrice;
     /**

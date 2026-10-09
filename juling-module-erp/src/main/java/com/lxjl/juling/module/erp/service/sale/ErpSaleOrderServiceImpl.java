@@ -5,6 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.number.MoneyUtils;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.order.ErpSaleOrderPageReqVO;
 import com.lxjl.juling.module.erp.controller.admin.sale.vo.order.ErpSaleOrderSaveReqVO;
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
@@ -12,11 +16,11 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOrderDO;
 import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpSaleOrderItemDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOrderItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpSaleOrderMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.service.finance.ErpAccountService;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.system.api.user.AdminUserApi;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +36,11 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 销售订单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -49,7 +52,7 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
     private ErpSaleOrderItemMapper saleOrderItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -76,8 +79,8 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         if (createReqVO.getSaleUserId() != null) {
             adminUserApi.validateUser(createReqVO.getSaleUserId());
         }
-        // 1.5 生成订单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.SALE_ORDER_NO_PREFIX);
+        // 1.5 生成订单号（单据平台：bill_type 为唯一真相来源，前缀 + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.SALE_ORDER, null);
         if (saleOrderMapper.selectByNo(no) != null) {
             throw exception(SALE_ORDER_NO_EXISTS);
         }
@@ -94,6 +97,12 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         saleOrderItems.forEach(o -> o.setOrderId(saleOrder.getId())
                 .setOutCount(BigDecimal.ZERO).setReturnCount(BigDecimal.ZERO));
         saleOrderItemMapper.insertBatch(saleOrderItems);
+
+        // 2.3 单据平台：写创建日志（留痕）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.SALE_ORDER).setBillId(saleOrder.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(saleOrder.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return saleOrder.getId();
     }
 
@@ -142,13 +151,11 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSaleOrderStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpSaleOrderDO saleOrder = validateSaleOrderExists(id);
         // 1.2 校验状态
-        if (saleOrder.getStatus().equals(status)) {
-            throw exception(approve ? SALE_ORDER_APPROVE_FAIL : SALE_ORDER_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(saleOrder.getStatus(), status, SALE_ORDER_APPROVE_FAIL, SALE_ORDER_PROCESS_FAIL);
         // 1.3 存在销售出库单，无法反审核
         if (!approve && saleOrder.getOutCount() != null
                 && saleOrder.getOutCount().compareTo(BigDecimal.ZERO) > 0) {
@@ -161,15 +168,23 @@ public class ErpSaleOrderServiceImpl implements ErpSaleOrderService {
         }
 
         // 2. 更新状态
-        int updateCount = saleOrderMapper.updateByIdAndStatus(id, saleOrder.getStatus(),
-                new ErpSaleOrderDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? SALE_ORDER_APPROVE_FAIL : SALE_ORDER_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> saleOrderMapper.updateByIdAndStatus(id, saleOrder.getStatus(),
+                new ErpSaleOrderDO().setStatus(status)),
+                status, SALE_ORDER_APPROVE_FAIL, SALE_ORDER_PROCESS_FAIL);
+
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.SALE_ORDER).setBillId(id).setBillNo(saleOrder.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(saleOrder.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
     }
 
     private List<ErpSaleOrderItemDO> validateSaleOrderItems(List<ErpSaleOrderSaveReqVO.Item> list) {
-        // 1. 校验产品存在
+        // 1. 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpSaleOrderSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

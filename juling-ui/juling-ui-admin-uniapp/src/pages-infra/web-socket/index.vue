@@ -57,7 +57,7 @@
             class="yd-bg-subtle flex items-center justify-between rounded-12rpx p-24rpx"
             @click="isConnected && (pickerVisible.sendUserId = true)"
           >
-            <text class="text-28rpx" :class="isConnected ? 'yd-text-main' : 'text-[#c8c9cc]'">
+            <text class="text-28rpx" :class="isConnected ? 'yd-text-main' : 'yd-text-faint'">
               {{ selectedUserLabel }}
             </text>
             <wd-icon name="arrow-down" size="32rpx" :color="isConnected ? '#666' : '#c8c9cc'" />
@@ -126,7 +126,7 @@
         >
           <view v-if="messageList.length === 0" class="h-full flex flex-col items-center justify-center">
             <wd-icon name="message" size="80rpx" color="#c8c9cc" />
-            <text class="mt-16rpx text-26rpx text-[#c8c9cc]">暂无消息记录</text>
+            <text class="yd-text-faint mt-16rpx text-26rpx">暂无消息记录</text>
           </view>
           <view v-else class="p-20rpx">
             <view
@@ -147,7 +147,7 @@
                     用户 ID: {{ msg.userId }}
                   </text>
                 </view>
-                <text class="text-22rpx text-[#c8c9cc]">
+                <text class="yd-text-faint text-22rpx">
                   {{ formatDateTime(msg.time) }}
                 </text>
               </view>

@@ -9,11 +9,11 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
-// TODO @棱信矩灵：未来要不要放数据库中？考虑 saas 多租户时，不同租户使用不同的配置？
+// TODO @亚特：未来要不要放数据库中？考虑 saas 多租户时，不同租户使用不同的配置？
 /**
  * 交易运费快递的配置项
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Component
 @ConfigurationProperties(prefix = "juling.trade.express")

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ERP 供应商 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpSupplierMapper extends BaseMapperX<ErpSupplierDO> {
@@ -22,11 +22,20 @@ public interface ErpSupplierMapper extends BaseMapperX<ErpSupplierDO> {
                 .likeIfPresent(ErpSupplierDO::getName, reqVO.getName())
                 .likeIfPresent(ErpSupplierDO::getMobile, reqVO.getMobile())
                 .likeIfPresent(ErpSupplierDO::getTelephone, reqVO.getTelephone())
+                // 采购部门提供的筛选维度（见 sql/local/62_supplier_profile.sql）
+                .eqIfPresent(ErpSupplierDO::getSettlementType, reqVO.getSettlementType())
+                .eqIfPresent(ErpSupplierDO::getInvoiceMode, reqVO.getInvoiceMode())
+                .eqIfPresent(ErpSupplierDO::getInvoiceType, reqVO.getInvoiceType())
+                .eqIfPresent(ErpSupplierDO::getContractSigned, reqVO.getContractSigned())
                 .orderByDesc(ErpSupplierDO::getId));
     }
 
     default List<ErpSupplierDO> selectListByStatus(Integer status) {
         return selectList(ErpSupplierDO::getStatus, status);
+    }
+
+    default ErpSupplierDO selectByName(String name) {
+        return selectOne(ErpSupplierDO::getName, name);
     }
 
 }

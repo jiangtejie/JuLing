@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * 字符串工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class StrUtils {
 

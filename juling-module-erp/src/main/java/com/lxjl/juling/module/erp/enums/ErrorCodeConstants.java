@@ -11,8 +11,20 @@ public interface ErrorCodeConstants {
 
     // ========== ERP 供应商（1-030-100-000） ==========
     ErrorCode SUPPLIER_NOT_EXISTS = new ErrorCode(1_030_100_000, "供应商不存在");
-    ErrorCode SUPPLIER_NOT_ENABLE = new ErrorCode(1_030_100_000, "供应商({})未启用");
+    ErrorCode SUPPLIER_NOT_ENABLE = new ErrorCode(1_030_100_001, "供应商({})未启用");
+    ErrorCode SUPPLIER_NAME_DUPLICATE = new ErrorCode(1_030_100_002, "已存在同名供应商({})");
+    ErrorCode SUPPLIER_HAS_REFERENCE = new ErrorCode(1_030_100_003, "供应商({})已被{}引用，无法删除；如需停止使用请改为「停用」");
 
+    // ========== ERP 建门店（1-030-105-000） ==========
+    ErrorCode STORE_PARENT_NOT_EXISTS = new ErrorCode(1_030_105_000, "父组织节点不存在");
+    ErrorCode STORE_PARENT_IS_STORE = new ErrorCode(1_030_105_001, "不能在门店({})下再建门店，门店应直接挂在品牌或公司节点下");
+
+    // ========== ERP 价目表（1-030-104-000） ==========
+    ErrorCode PRICE_LIST_NOT_EXISTS = new ErrorCode(1_030_104_000, "价目表不存在");
+    ErrorCode PRICE_LIST_ITEM_PRODUCT_DUPLICATE = new ErrorCode(1_030_104_001, "物料({})在本价目表里出现了多行，无法区分取哪一行，请合并");
+    ErrorCode PRICE_LIST_SCOPE_PARTNER_DUPLICATE = new ErrorCode(1_030_104_002, "适用范围里同一个对象出现了多行，请合并");
+
+    
     // ========== ERP 采购订单（1-030-101-000） ==========
     ErrorCode PURCHASE_ORDER_NOT_EXISTS = new ErrorCode(1_030_101_000, "采购订单不存在");
     ErrorCode PURCHASE_ORDER_DELETE_FAIL_APPROVE = new ErrorCode(1_030_101_001, "采购订单({})已审核，无法删除");
@@ -107,13 +119,16 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode STOCK_OUT_NO_EXISTS = new ErrorCode(1_030_402_004, "生成出库单失败，请重新提交");
     ErrorCode STOCK_OUT_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_402_005, "其它出库单({})已审核，无法修改");
 
-    // ========== ERP 库存调拨单 1-030-403-000 ==========
-    ErrorCode STOCK_MOVE_NOT_EXISTS = new ErrorCode(1_030_402_000, "库存调拨单不存在");
-    ErrorCode STOCK_MOVE_DELETE_FAIL_APPROVE = new ErrorCode(1_030_402_001, "库存调拨单({})已审核，无法删除");
-    ErrorCode STOCK_MOVE_PROCESS_FAIL = new ErrorCode(1_030_402_002, "反审核失败，只有已审核的调拨单才能反审核");
-    ErrorCode STOCK_MOVE_APPROVE_FAIL = new ErrorCode(1_030_402_003, "审核失败，只有未审核的调拨单才能审核");
-    ErrorCode STOCK_MOVE_NO_EXISTS = new ErrorCode(1_030_402_004, "生成调拨号失败，请重新提交");
-    ErrorCode STOCK_MOVE_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_402_005, "库存调拨单({})已审核，无法修改");
+    // ========== ERP 库存调拨单 1-030-406-000 ==========
+    // 注：原先这 6 个值误用了 1_030_402_xxx（其它出库单的段），且注释段号 403 已被盘点单占用，
+    // 导致「其它出库单」与「库存调拨单」的错误码完全重复。
+    // 405 段已被 ErpStockBatchErrorCodeConstants（库存批次）占用，故用空闲的 406 段。
+    ErrorCode STOCK_MOVE_NOT_EXISTS = new ErrorCode(1_030_406_000, "库存调拨单不存在");
+    ErrorCode STOCK_MOVE_DELETE_FAIL_APPROVE = new ErrorCode(1_030_406_001, "库存调拨单({})已审核，无法删除");
+    ErrorCode STOCK_MOVE_PROCESS_FAIL = new ErrorCode(1_030_406_002, "反审核失败，只有已审核的调拨单才能反审核");
+    ErrorCode STOCK_MOVE_APPROVE_FAIL = new ErrorCode(1_030_406_003, "审核失败，只有未审核的调拨单才能审核");
+    ErrorCode STOCK_MOVE_NO_EXISTS = new ErrorCode(1_030_406_004, "生成调拨号失败，请重新提交");
+    ErrorCode STOCK_MOVE_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_406_005, "库存调拨单({})已审核，无法修改");
 
     // ========== ERP 库存盘点单 1-030-403-000 ==========
     ErrorCode STOCK_CHECK_NOT_EXISTS = new ErrorCode(1_030_403_000, "库存盘点单不存在");
@@ -123,27 +138,31 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode STOCK_CHECK_NO_EXISTS = new ErrorCode(1_030_403_004, "生成盘点号失败，请重新提交");
     ErrorCode STOCK_CHECK_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_403_005, "库存盘点单({})已审核，无法修改");
 
-    // ========== ERP 产品库存 1-030-404-000 ==========
-    ErrorCode STOCK_COUNT_NEGATIVE = new ErrorCode(1_030_404_000, "操作失败，产品({})所在仓库({})的库存：{}，小于变更数量：{}");
-    ErrorCode STOCK_COUNT_NEGATIVE2 = new ErrorCode(1_030_404_001, "操作失败，产品({})所在仓库({})的库存不足");
+    // ========== ERP 物料库存 1-030-404-000 ==========
+    ErrorCode STOCK_COUNT_NEGATIVE = new ErrorCode(1_030_404_000, "操作失败，物料({})所在仓库({})的库存：{}，小于变更数量：{}");
+    ErrorCode STOCK_COUNT_NEGATIVE2 = new ErrorCode(1_030_404_001, "操作失败，物料({})所在仓库({})的库存不足");
 
-    // ========== ERP 产品 1-030-500-000 ==========
-    ErrorCode PRODUCT_NOT_EXISTS = new ErrorCode(1_030_500_000, "产品不存在");
-    ErrorCode PRODUCT_NOT_ENABLE = new ErrorCode(1_030_500_001, "产品({})未启用");
+    // ========== 门店要货分料下推（订单工作台）1-030-700-000 ==========
+    ErrorCode STORE_ALLOC_RELATION_DUPLICATE = new ErrorCode(1_030_700_000, "单据已下推过，不能重复下推");
+    ErrorCode STORE_ALLOC_ITEM_COUNT_EXCEED = new ErrorCode(1_030_700_001, "下推数量不能超过要货数量");
 
-    // ========== ERP 产品分类 1-030-501-000 ==========
-    ErrorCode PRODUCT_CATEGORY_NOT_EXISTS = new ErrorCode(1_030_501_000, "产品分类不存在");
-    ErrorCode PRODUCT_CATEGORY_EXITS_CHILDREN = new ErrorCode(1_030_501_001, "存在存在子产品分类，无法删除");
-    ErrorCode PRODUCT_CATEGORY_PARENT_NOT_EXITS = new ErrorCode(1_030_501_002,"父级产品分类不存在");
-    ErrorCode PRODUCT_CATEGORY_PARENT_ERROR = new ErrorCode(1_030_501_003, "不能设置自己为父产品分类");
-    ErrorCode PRODUCT_CATEGORY_NAME_DUPLICATE = new ErrorCode(1_030_501_004, "已经存在该分类名称的产品分类");
+    // ========== ERP 物料 1-030-500-000 ==========
+    ErrorCode PRODUCT_NOT_EXISTS = new ErrorCode(1_030_500_000, "物料不存在");
+    ErrorCode PRODUCT_NOT_ENABLE = new ErrorCode(1_030_500_001, "物料({})未启用");
+
+    // ========== ERP 物料分类 1-030-501-000 ==========
+    ErrorCode PRODUCT_CATEGORY_NOT_EXISTS = new ErrorCode(1_030_501_000, "物料分类不存在");
+    ErrorCode PRODUCT_CATEGORY_EXITS_CHILDREN = new ErrorCode(1_030_501_001, "存在存在子物料分类，无法删除");
+    ErrorCode PRODUCT_CATEGORY_PARENT_NOT_EXITS = new ErrorCode(1_030_501_002,"父级物料分类不存在");
+    ErrorCode PRODUCT_CATEGORY_PARENT_ERROR = new ErrorCode(1_030_501_003, "不能设置自己为父物料分类");
+    ErrorCode PRODUCT_CATEGORY_NAME_DUPLICATE = new ErrorCode(1_030_501_004, "已经存在该分类名称的物料分类");
     ErrorCode PRODUCT_CATEGORY_PARENT_IS_CHILD = new ErrorCode(1_030_501_005, "不能设置自己的子分类为父分类");
-    ErrorCode PRODUCT_CATEGORY_EXITS_PRODUCT = new ErrorCode(1_030_502_002, "存在产品使用该分类，无法删除");
+    ErrorCode PRODUCT_CATEGORY_EXITS_PRODUCT = new ErrorCode(1_030_501_006, "存在物料使用该分类，无法删除");
 
-    // ========== ERP 产品单位 1-030-502-000 ==========
-    ErrorCode PRODUCT_UNIT_NOT_EXISTS = new ErrorCode(1_030_502_000, "产品单位不存在");
-    ErrorCode PRODUCT_UNIT_NAME_DUPLICATE = new ErrorCode(1_030_502_001, "已存在该名字的产品单位");
-    ErrorCode PRODUCT_UNIT_EXITS_PRODUCT = new ErrorCode(1_030_502_002, "存在产品使用该单位，无法删除");
+    // ========== ERP 物料单位 1-030-502-000 ==========
+    ErrorCode PRODUCT_UNIT_NOT_EXISTS = new ErrorCode(1_030_502_000, "物料单位不存在");
+    ErrorCode PRODUCT_UNIT_NAME_DUPLICATE = new ErrorCode(1_030_502_001, "已存在该名字的物料单位");
+    ErrorCode PRODUCT_UNIT_EXITS_PRODUCT = new ErrorCode(1_030_502_002, "存在物料使用该单位，无法删除");
 
     // ========== ERP 结算账户 1-030-600-000 ==========
     ErrorCode ACCOUNT_NOT_EXISTS = new ErrorCode(1_030_600_000, "结算账户不存在");
@@ -164,5 +183,11 @@ ErrorCode PURCHASE_ORDER_ITEM_RETURN_FAIL_IN_EXCEED = new ErrorCode(1_030_101_00
     ErrorCode FINANCE_RECEIPT_APPROVE_FAIL = new ErrorCode(1_030_602_003, "审核失败，只有未审核的收款单才能审核");
     ErrorCode FINANCE_RECEIPT_NO_EXISTS = new ErrorCode(1_030_602_004, "生成收款单号失败，请重新提交");
     ErrorCode FINANCE_RECEIPT_UPDATE_FAIL_APPROVE = new ErrorCode(1_030_602_005, "收款单({})已审核，无法修改");
+
+    // ========== ERP 门店往来台账 1-030-800-000 ==========
+    ErrorCode CUSTOMER_ACCOUNT_AMOUNT_ILLEGAL = new ErrorCode(1_030_800_000, "门店往来记账金额不能为 0");
+    ErrorCode CUSTOMER_ACCOUNT_BIZ_TYPE_ILLEGAL = new ErrorCode(1_030_800_001, "门店往来业务类型({})不合法");
+    ErrorCode CUSTOMER_ACCOUNT_CUSTOMER_NOT_EXISTS = new ErrorCode(1_030_800_002, "门店客户({})不存在，无法记账");
+    ErrorCode STORE_WAREHOUSE_NOT_EXISTS = new ErrorCode(1_030_800_010, "门店({})还没有门店仓，请先在「仓库」里为该门店配置门店仓");
 
 }

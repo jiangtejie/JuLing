@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.product.service.spu;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
@@ -30,13 +32,12 @@ import java.util.*;
 
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
-import static com.lxjl.juling.module.product.dal.dataobject.category.ProductCategoryDO.CATEGORY_LEVEL;
 import static com.lxjl.juling.module.product.enums.ErrorCodeConstants.*;
 
 /**
  * 商品 SPU Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -53,6 +54,9 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     @Resource
     private ProductCategoryService categoryService;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createSpu(ProductSpuSaveReqVO createReqVO) {
@@ -64,6 +68,8 @@ public class ProductSpuServiceImpl implements ProductSpuService {
         productSkuService.validateSkuList(skuSaveReqList, createReqVO.getSpecType());
 
         ProductSpuDO spu = BeanUtils.toBean(createReqVO, ProductSpuDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        spu.setCode(codeRuleApi.generateCode("product_spu"));
         // 初始化 SPU 中 SKU 相关属性
         initSpuFromSkus(spu, skuSaveReqList);
         // 插入 SPU
@@ -121,14 +127,13 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     /**
      * 校验商品分类是否合法
      *
+     * 说明：不强制要求挂在二级分类上——亚特的订货场景品类层级浅，一级分类下允许直接挂商品
+     * （一级分类若没有二级子分类，商品此前无处可挂）。分类树本身仍最多两级。
+     *
      * @param id 商品分类编号
      */
     private void validateCategory(Long id) {
         categoryService.validateCategory(id);
-        // 校验层级
-        if (categoryService.getCategoryLevel(id) < CATEGORY_LEVEL) {
-            throw exception(SPU_SAVE_FAIL_CATEGORY_LEVEL_ERROR);
-        }
     }
 
     @Override
@@ -168,7 +173,7 @@ public class ProductSpuServiceImpl implements ProductSpuService {
         if (ObjectUtil.notEqual(spuDO.getStatus(), ProductSpuStatusEnum.RECYCLE.getStatus())) {
             throw exception(SPU_NOT_RECYCLE);
         }
-        // TODO 棱信矩灵：【可选】参与活动中的商品，不允许删除？？？
+        // TODO 亚特：【可选】参与活动中的商品，不允许删除？？？
 
         // 删除 SPU
         productSpuMapper.deleteById(id);
@@ -214,19 +219,15 @@ public class ProductSpuServiceImpl implements ProductSpuService {
 
     @Override
     public PageResult<ProductSpuDO> getSpuPage(ProductSpuPageReqVO pageReqVO) {
-        return productSpuMapper.selectPage(pageReqVO);
+        // 分类筛选：连同子分类一起查（一级分类也能筛出挂在二级分类下的商品）
+        Set<Long> categoryIds = getCategoryIdsWithChildren(pageReqVO.getCategoryId());
+        return productSpuMapper.selectPage(pageReqVO, categoryIds);
     }
 
     @Override
     public PageResult<ProductSpuDO> getSpuPage(AppProductSpuPageReqVO pageReqVO) {
-        // 查找时，如果查找某个分类编号，则包含它的子分类。因为顶级分类不包含商品
-        Set<Long> categoryIds = new HashSet<>();
-        if (pageReqVO.getCategoryId() != null && pageReqVO.getCategoryId() > 0) {
-            categoryIds.add(pageReqVO.getCategoryId());
-            List<ProductCategoryDO> categoryChildren = categoryService.getCategoryList(new ProductCategoryListReqVO()
-                    .setStatus(CommonStatusEnum.ENABLE.getStatus()).setParentId(pageReqVO.getCategoryId()));
-            categoryIds.addAll(convertList(categoryChildren, ProductCategoryDO::getId));
-        }
+        // 查找时，如果查找某个分类编号，则包含它的子分类（一级分类下也可能直接挂商品）
+        Set<Long> categoryIds = new HashSet<>(getCategoryIdsWithChildren(pageReqVO.getCategoryId()));
         if (CollUtil.isNotEmpty(pageReqVO.getCategoryIds())) {
             categoryIds.addAll(pageReqVO.getCategoryIds());
             List<ProductCategoryDO> categoryChildren = categoryService.getCategoryList(new ProductCategoryListReqVO()
@@ -248,7 +249,7 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     public void updateSpuStatus(ProductSpuUpdateStatusReqVO updateReqVO) {
         // 校验存在
         validateSpuExists(updateReqVO.getId());
-        // TODO 棱信矩灵：【可选】参与活动中的商品，不允许下架？？？
+        // TODO 亚特：【可选】参与活动中的商品，不允许下架？？？
 
         // 更新状态
         ProductSpuDO productSpuDO = productSpuMapper.selectById(updateReqVO.getId()).setStatus(updateReqVO.getStatus());
@@ -258,18 +259,40 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     @Override
     public Map<Integer, Long> getTabsCount(ProductSpuPageReqVO reqVO) {
         Map<Integer, Long> counts = Maps.newLinkedHashMapWithExpectedSize(5);
+        // 分类范围与列表页保持一致（含子分类），否则 tab 数量与列表条数会对不上
+        Set<Long> categoryIds = getCategoryIdsWithChildren(reqVO.getCategoryId());
         // 每个 tab 的数量 = 筛选条件（name/categoryId/createTime）+ 该 tab 的状态/库存条件
         counts.put(ProductSpuPageReqVO.FOR_SALE,
-                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.FOR_SALE));
+                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.FOR_SALE, categoryIds));
         counts.put(ProductSpuPageReqVO.IN_WAREHOUSE,
-                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.IN_WAREHOUSE));
+                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.IN_WAREHOUSE, categoryIds));
         counts.put(ProductSpuPageReqVO.SOLD_OUT,
-                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.SOLD_OUT));
+                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.SOLD_OUT, categoryIds));
         counts.put(ProductSpuPageReqVO.ALERT_STOCK,
-                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.ALERT_STOCK));
+                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.ALERT_STOCK, categoryIds));
         counts.put(ProductSpuPageReqVO.RECYCLE_BIN,
-                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.RECYCLE_BIN));
+                productSpuMapper.selectCountByTab(reqVO, ProductSpuPageReqVO.RECYCLE_BIN, categoryIds));
         return counts;
+    }
+
+    /**
+     * 计算分类筛选范围：选中某个分类时，连同其（启用的）子分类一起筛选。
+     *
+     * 一级分类本身也可能直接挂商品，因此范围里始终包含入参分类自身。
+     *
+     * @param categoryId 选中的分类编号，可为空
+     * @return 分类编号集合；入参为空时返回空集合（表示不按分类筛选）
+     */
+    private Set<Long> getCategoryIdsWithChildren(Long categoryId) {
+        if (categoryId == null || categoryId <= 0) {
+            return Collections.emptySet();
+        }
+        Set<Long> categoryIds = new HashSet<>();
+        categoryIds.add(categoryId);
+        List<ProductCategoryDO> categoryChildren = categoryService.getCategoryList(new ProductCategoryListReqVO()
+                .setStatus(CommonStatusEnum.ENABLE.getStatus()).setParentId(categoryId));
+        categoryIds.addAll(convertList(categoryChildren, ProductCategoryDO::getId));
+        return categoryIds;
     }
 
     @Override

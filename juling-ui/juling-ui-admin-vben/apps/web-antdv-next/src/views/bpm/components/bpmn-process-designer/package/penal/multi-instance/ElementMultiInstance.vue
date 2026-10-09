@@ -481,7 +481,7 @@ watch(
             @change="() => updateLoopBase()"
           />
         </FormItem>
-        <!-- add by 棱信矩灵：由于「元素变量」暂时用不到，所以这里 display 为 none -->
+        <!-- add by 亚特：由于「元素变量」暂时用不到，所以这里 display 为 none -->
         <FormItem label="元素变量" key="elementVariable" class="hidden">
           <Input
             v-model:value="loopInstanceForm.elementVariable"
@@ -499,7 +499,7 @@ watch(
             "
           />
         </FormItem>
-        <!-- add by 棱信矩灵：由于「异步状态」暂时用不到，所以这里 display 为 none -->
+        <!-- add by 亚特：由于「异步状态」暂时用不到，所以这里 display 为 none -->
         <FormItem label="异步状态" key="async" class="hidden">
           <Checkbox
             v-model:checked="loopInstanceForm.asyncBefore"

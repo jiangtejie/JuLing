@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link OAuth2CodeServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(OAuth2CodeServiceImpl.class)
 class OAuth2CodeServiceImplTest extends BaseDbUnitTest {
@@ -50,7 +50,7 @@ class OAuth2CodeServiceImplTest extends BaseDbUnitTest {
                 scopes, redirectUri, state);
         // 断言
         OAuth2CodeDO dbCodeDO = oauth2CodeMapper.selectByCode(codeDO.getCode());
-        // TODO @棱信矩灵：expiresTime 被屏蔽，仅 win11 会复现，建议后续修复。
+        // TODO @亚特：expiresTime 被屏蔽，仅 win11 会复现，建议后续修复。
         assertPojoEquals(codeDO, dbCodeDO, "expiresTime", "createTime", "updateTime", "deleted");
         assertEquals(userId, codeDO.getUserId());
         assertEquals(userType, codeDO.getUserType());
@@ -93,7 +93,7 @@ class OAuth2CodeServiceImplTest extends BaseDbUnitTest {
 
         // 调用
         OAuth2CodeDO result = oauth2CodeService.consumeAuthorizationCode(code);
-        // TODO @棱信矩灵：expiresTime 被屏蔽，仅 win11 会复现，建议后续修复。
+        // TODO @亚特：expiresTime 被屏蔽，仅 win11 会复现，建议后续修复。
         assertPojoEquals(codeDO, result, "expiresTime");
         assertNull(oauth2CodeMapper.selectByCode(code));
     }

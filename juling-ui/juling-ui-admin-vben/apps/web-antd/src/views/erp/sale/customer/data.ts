@@ -3,8 +3,11 @@ import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
 import { CommonStatusEnum, DICT_TYPE } from '@vben/constants';
 import { getDictOptions } from '@vben/hooks';
+import { handleTree } from '@vben/utils';
 
 import { z } from '#/adapter/form';
+import { getCustomerSimpleList } from '#/api/erp/sale/customer';
+import { getSimpleDeptList } from '#/api/system/dept';
 
 /** 新增/修改的表单 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -76,6 +79,76 @@ export function useFormSchema(): VbenFormSchema[] {
         optionType: 'button',
       },
       rules: z.number().default(CommonStatusEnum.ENABLE),
+    },
+    {
+      fieldName: 'deptId',
+      label: '所属部门',
+      component: 'ApiTreeSelect',
+      componentProps: {
+        allowClear: true,
+        api: async () => handleTree(await getSimpleDeptList()),
+        labelField: 'name',
+        valueField: 'id',
+        childrenField: 'children',
+        placeholder: '请选择所属部门',
+        treeDefaultExpandAll: true,
+      },
+    },
+    {
+      fieldName: 'parentCustomerId',
+      label: '上级代理',
+      component: 'ApiSelect',
+      componentProps: {
+        api: getCustomerSimpleList,
+        labelField: 'name',
+        valueField: 'id',
+        allowClear: true,
+        placeholder: '请选择上级代理',
+      },
+    },
+    {
+      fieldName: 'storeType',
+      label: '店型',
+      component: 'Select',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.ERP_STORE_TYPE),
+        allowClear: true,
+        placeholder: '请选择店型',
+      },
+    },
+    {
+      fieldName: 'settlementMode',
+      label: '结算模式',
+      component: 'Select',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.TRADE_SETTLEMENT_MODE),
+        allowClear: true,
+        placeholder: '请选择结算模式',
+      },
+    },
+    {
+      fieldName: 'creditDays',
+      label: '账期天数',
+      component: 'InputNumber',
+      defaultValue: 0,
+      componentProps: {
+        class: '!w-full',
+        min: 0,
+        precision: 0,
+        placeholder: '请输入账期天数',
+      },
+    },
+    {
+      fieldName: 'creditLimit',
+      label: '信用额度(元)',
+      component: 'InputNumber',
+      defaultValue: 0,
+      componentProps: {
+        class: '!w-full',
+        min: 0,
+        precision: 2,
+        placeholder: '请输入信用额度',
+      },
     },
     {
       fieldName: 'sort',
@@ -174,12 +247,28 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
       },
     },
+    {
+      fieldName: 'storeType',
+      label: '店型',
+      component: 'Select',
+      componentProps: {
+        options: getDictOptions(DICT_TYPE.ERP_STORE_TYPE),
+        placeholder: '请选择店型',
+        allowClear: true,
+      },
+    },
   ];
 }
 
 /** 列表的字段 */
 export function useGridColumns(): VxeTableGridOptions['columns'] {
   return [
+    {
+      field: 'code',
+      title: '编码',
+      width: 130,
+      formatter: ({ cellValue }) => cellValue || '-',
+    },
     {
       field: 'name',
       title: '客户名称',
@@ -213,6 +302,35 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
         name: 'CellDict',
         props: { type: DICT_TYPE.COMMON_STATUS },
       },
+    },
+    {
+      field: 'storeType',
+      title: '店型',
+      minWidth: 100,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.ERP_STORE_TYPE },
+      },
+    },
+    {
+      field: 'settlementMode',
+      title: '结算模式',
+      minWidth: 110,
+      cellRender: {
+        name: 'CellDict',
+        props: { type: DICT_TYPE.TRADE_SETTLEMENT_MODE },
+      },
+    },
+    {
+      field: 'creditDays',
+      title: '账期天数',
+      minWidth: 100,
+    },
+    {
+      field: 'creditLimit',
+      title: '信用额度(元)',
+      minWidth: 120,
+      formatter: 'formatAmount2',
     },
     {
       field: 'sort',

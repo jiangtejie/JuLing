@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  *
  * 按会计期间保存报表配置的快照：名称、行次、公式、显示顺序、是否可编辑和层级冗余自 {@link FmsIncomeStatementConfigDO}，保证历史期间报表保留当时的公式，不受后续公式调整影响
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_income_statement_report")
 @KeySequence("fms_income_statement_report_seq")

@@ -59,10 +59,6 @@ public class ProductSpuSaveReqVO {
 
     // ========== 物流相关字段 =========
 
-    @Schema(description = "配送方式数组", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotEmpty(message = "配送方式不能为空")
-    private List<Integer> deliveryTypes;
-
     @Schema(description = "物流配置模板编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "111")
     private Long deliveryTemplateId;
 
@@ -71,10 +67,6 @@ public class ProductSpuSaveReqVO {
     @Schema(description = "赠送积分", requiredMode = Schema.RequiredMode.REQUIRED, example = "111")
     @NotNull(message = "商品赠送积分不能为空")
     private Integer giveIntegral;
-
-    @Schema(description = "分销类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "商品分销类型不能为空")
-    private Boolean subCommissionType;
 
     // ========== 统计相关字段 =========
 

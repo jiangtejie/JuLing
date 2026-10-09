@@ -6,17 +6,14 @@
  *
  * 两种业务表单的接入方式（见 form-detail.vue）：
  * 1. 同分包（如 OA 请假，详情组件就在 pages-bpm 内）：直接静态 import 内嵌组件，参考 LeaveDetail。
- * 2. 跨分包（如 CRM 合同 / 回款，详情组件在 pages-crm 内）：微信小程序不支持跨分包 import 组件，
- *    因此不内嵌，改为通过 uni.navigateTo 跳转到对应移动端详情页（跨分包"路由跳转"是被支持的）。
+ * 2. 跨分包（详情组件在别的分包内）：微信小程序不支持跨分包 import 组件，因此不内嵌，
+ *    改为通过 uni.navigateTo 跳转到对应移动端详情页（跨分包"路由跳转"是被支持的）。
+ *    原本的两条跨分包映射（CRM 合同 / 回款）随 CRM 模块整体下线一并移除。
  */
 const PC_TO_MOBILE_PATH_MAP: Record<string, string> = {
   // OA 请假（同分包，内嵌）
   '/bpm/oa/leave/create': '/pages-bpm/oa/leave/create/index',
   '/bpm/oa/leave/detail': '/pages-bpm/oa/leave/detail/index',
-  // CRM 合同审批（跨分包，仅详情，跳转）
-  '/crm/contract/detail': '/pages-crm/contract/detail/index',
-  // CRM 回款审批（跨分包，仅详情，跳转）
-  '/crm/receivable/detail': '/pages-crm/receivable/detail/index',
 }
 
 /**

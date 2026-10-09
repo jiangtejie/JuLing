@@ -44,11 +44,9 @@ const formData = ref<MallSpuApi.Spu>({
   picUrl: '',
   sliderPicUrls: [],
   introduction: '',
-  deliveryTypes: [],
   deliveryTemplateId: undefined,
   brandId: undefined,
   specType: false,
-  subCommissionType: false,
   skus: [
     {
       name: '', // SKU 名称，提交时会自动使用 SPU 名称
@@ -60,8 +58,6 @@ const formData = ref<MallSpuApi.Spu>({
       stock: 0,
       weight: 0,
       volume: 0,
-      firstBrokeragePrice: 0,
-      secondBrokeragePrice: 0,
     },
   ],
   description: '',
@@ -116,13 +112,6 @@ const [SkuForm, skuFormApi] = useVbenForm({
   handleValuesChange: (values, fieldsChanged) => {
     if (initializingForm.value) {
       return;
-    }
-    if (
-      fieldsChanged.includes('subCommissionType') &&
-      values.subCommissionType !== formData.value.subCommissionType
-    ) {
-      formData.value.subCommissionType = values.subCommissionType;
-      handleChangeSubCommissionType();
     }
     if (
       fieldsChanged.includes('specType') &&
@@ -210,8 +199,6 @@ async function handleSubmit() {
     price: convertToInteger(item.price),
     marketPrice: convertToInteger(item.marketPrice),
     costPrice: convertToInteger(item.costPrice),
-    firstBrokeragePrice: convertToInteger(item.firstBrokeragePrice),
-    secondBrokeragePrice: convertToInteger(item.secondBrokeragePrice),
   }));
   // 处理轮播图列表：上传组件可能返回对象或字符串，统一处理成字符串数组
   const newSliderPicUrls: any[] = [];
@@ -248,8 +235,6 @@ async function getDetail() {
       price: Number(formatToFraction(item.price)),
       marketPrice: Number(formatToFraction(item.marketPrice)),
       costPrice: Number(formatToFraction(item.costPrice)),
-      firstBrokeragePrice: Number(formatToFraction(item.firstBrokeragePrice)),
-      secondBrokeragePrice: Number(formatToFraction(item.secondBrokeragePrice)),
     }));
     initializingForm.value = true;
     formData.value = res;
@@ -281,15 +266,6 @@ function generateSkus(propertyList: PropertyAndValues[]) {
   skuListRef.value.generateTableData(propertyList);
 }
 
-/** 分销类型 */
-function handleChangeSubCommissionType() {
-  // 默认为零，类型切换后也要重置为零
-  for (const item of formData.value.skus!) {
-    item.firstBrokeragePrice = 0;
-    item.secondBrokeragePrice = 0;
-  }
-}
-
 /** 选择规格 */
 function handleChangeSpec() {
   // 重置商品属性列表
@@ -306,8 +282,6 @@ function handleChangeSpec() {
       stock: 0,
       weight: 0,
       volume: 0,
-      firstBrokeragePrice: 0,
-      secondBrokeragePrice: 0,
     },
   ];
 }

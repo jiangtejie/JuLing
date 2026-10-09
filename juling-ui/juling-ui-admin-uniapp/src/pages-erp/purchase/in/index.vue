@@ -37,7 +37,7 @@
                 <text class="yd-text-hint mr-8rpx">供应商：</text>{{ item.supplierName || '-' }}
               </view>
               <view v-if="item.productNames" class="yd-text-sub mb-12rpx text-28rpx">
-                <text class="yd-text-hint mr-8rpx">产品：</text>
+                <text class="yd-text-hint mr-8rpx">物料：</text>
                 <text class="line-clamp-1">{{ item.productNames }}</text>
               </view>
               <view class="yd-text-sub mb-12rpx text-28rpx">

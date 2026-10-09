@@ -10,7 +10,7 @@ import java.util.Set;
  * 数据权限规则接口
  * 通过实现接口，自定义数据规则。例如说，
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DataPermissionRule {
 

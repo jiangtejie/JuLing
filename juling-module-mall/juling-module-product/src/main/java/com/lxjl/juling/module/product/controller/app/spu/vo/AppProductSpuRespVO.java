@@ -12,7 +12,7 @@ public class AppProductSpuRespVO {
     @Schema(description = "商品 SPU 编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long id;
 
-    @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "商品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     private String name;
 
     @Schema(description = "商品简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "清凉小短袖简介")
@@ -33,6 +33,15 @@ public class AppProductSpuRespVO {
     private Boolean specType;
 
     @Schema(description = "商品价格，单位使用：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    /**
+     * 该 SPU 下的 SKU 编号
+     *
+     * <p>为什么列表要带上它：**下单价是门店维度、按 SKU 算的**（见 /trade/order/store-price），
+     * 列表按 SPU 展示时必须能反查到 SKU，否则列表只能显示商城价、
+     * 而结算显示配送价 —— 同一个商品两个价。
+     */
+    private List<Long> skuIds;
+
     private Integer price;
 
     @Schema(description = "市场价，单位使用：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
@@ -47,10 +56,5 @@ public class AppProductSpuRespVO {
 
     @Schema(description = "商品销量", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Integer salesCount;
-
-    // ========== 物流相关字段 =========
-
-    @Schema(description = "配送方式数组", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    private List<Integer> deliveryTypes;
 
 }

@@ -52,7 +52,7 @@ function getIconStyle(menu: MenuItem) {
   min-height: 40rpx;
   font-size: 24rpx;
   line-height: 32rpx;
-  color: #333;
+  color: var(--yd-text-main);
   overflow: hidden;
   display: -webkit-box;
   white-space: normal;

@@ -13,10 +13,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -73,17 +73,17 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
   return [
     {
       field: 'productName',
-      title: '产品名称',
+      title: '物料名称',
       minWidth: 150,
     },
     {
       field: 'categoryName',
-      title: '产品分类',
+      title: '物料分类',
       width: 120,
     },
     {
       field: 'unitName',
-      title: '产品单位',
+      title: '物料单位',
       width: 100,
     },
     {

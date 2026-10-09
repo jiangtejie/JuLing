@@ -146,14 +146,14 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testGetMenuList() {
         // mock 数据
-        MenuDO menuDO = randomPojo(MenuDO.class, o -> o.setName("棱信矩灵").setStatus(CommonStatusEnum.ENABLE.getStatus()));
+        MenuDO menuDO = randomPojo(MenuDO.class, o -> o.setName("亚特").setStatus(CommonStatusEnum.ENABLE.getStatus()));
         menuMapper.insert(menuDO);
         // 测试 status 不匹配
         menuMapper.insert(cloneIgnoreId(menuDO, o -> o.setStatus(CommonStatusEnum.DISABLE.getStatus())));
         // 测试 name 不匹配
         menuMapper.insert(cloneIgnoreId(menuDO, o -> o.setName("李")));
         // 准备参数
-        MenuListReqVO reqVO = new MenuListReqVO().setName("矩灵").setStatus(CommonStatusEnum.ENABLE.getStatus());
+        MenuListReqVO reqVO = new MenuListReqVO().setName("亚特").setStatus(CommonStatusEnum.ENABLE.getStatus());
 
         // 调用
         List<MenuDO> result = menuService.getMenuList(reqVO);

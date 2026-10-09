@@ -3,7 +3,7 @@ package com.lxjl.juling.module.ai.framework.ai.core.webserch;
 /**
  * 网络搜索客户端接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface AiWebSearchClient {
 

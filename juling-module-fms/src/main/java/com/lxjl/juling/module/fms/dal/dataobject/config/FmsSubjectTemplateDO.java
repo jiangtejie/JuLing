@@ -16,7 +16,7 @@ import lombok.ToString;
 /**
  * FMS 科目模板 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_subject_template")
 @KeySequence("fms_subject_template_seq")

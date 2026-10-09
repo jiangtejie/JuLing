@@ -21,7 +21,7 @@
       <!-- 盘点明细 -->
       <view v-if="items.length > 0" class="mt-24rpx">
         <view class="yd-text-sub px-24rpx py-16rpx text-28rpx">
-          盘点产品清单
+          盘点物料清单
         </view>
         <view class="px-24rpx">
           <view
@@ -37,7 +37,7 @@
               <text class="min-w-0 flex-1">{{ item.warehouseName || '-' }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
-              <text class="yd-text-hint mr-8rpx shrink-0">产品：</text>
+              <text class="yd-text-hint mr-8rpx shrink-0">物料：</text>
               <text class="min-w-0 flex-1">{{ item.productName || '-' }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
@@ -61,7 +61,7 @@
               <text class="min-w-0 flex-1">{{ formatCount(item.count) }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
-              <text class="yd-text-hint mr-8rpx shrink-0">产品单价：</text>
+              <text class="yd-text-hint mr-8rpx shrink-0">物料单价：</text>
               <text class="min-w-0 flex-1">{{ formatMoney(item.productPrice) }}</text>
             </view>
             <view class="yd-text-sub mb-10rpx flex text-26rpx">
@@ -187,7 +187,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('erp:stock-check:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

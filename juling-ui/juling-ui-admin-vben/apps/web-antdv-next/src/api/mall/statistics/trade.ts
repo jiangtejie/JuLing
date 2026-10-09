@@ -26,16 +26,13 @@ export namespace MallTradeStatisticsApi {
     rechargePrice: number;
     expensePrice: number;
     walletPayPrice: number;
-    brokerageSettlementPrice: number;
     afterSaleRefundPrice: number;
   }
 
   /** 交易订单数量 Response */
   export interface TradeOrderCountRespVO {
     undelivered?: number; // 待发货
-    pickUp?: number; // 待核销
     afterSaleApply?: number; // 退款中
-    auditingWithdraw?: number; // 提现待审核
   }
 
   /** 交易订单统计 Response */

@@ -29,7 +29,7 @@ import static com.lxjl.juling.module.trade.framework.delivery.core.client.conver
 /**
  * 快递 100 客户端
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Slf4j
 @AllArgsConstructor

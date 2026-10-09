@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * FMS 凭证导入模板 VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 @AllArgsConstructor

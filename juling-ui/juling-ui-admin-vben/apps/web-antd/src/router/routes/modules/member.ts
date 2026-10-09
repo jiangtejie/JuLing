@@ -6,7 +6,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('#/views/member/user/detail/index.vue'),
     name: 'MemberUserDetail',
     meta: {
-      title: '会员详情',
+      title: '订货账号详情',
       icon: 'lucide:user',
       activePath: '/member/user',
       hideInMenu: true,

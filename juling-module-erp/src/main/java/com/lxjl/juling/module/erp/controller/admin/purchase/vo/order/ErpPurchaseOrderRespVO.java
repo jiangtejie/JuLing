@@ -29,9 +29,17 @@ public class ErpPurchaseOrderRespVO {
 
     @Schema(description = "供应商编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
     private Long supplierId;
-    @Schema(description = "供应商名称", example = "矩灵")
+    @Schema(description = "供应商名称", example = "亚特")
     @ExcelProperty("供应商名称")
     private String supplierName;
+
+    @Schema(description = "结账方式", example = "MONTHLY")
+    @ExcelProperty("结账方式")
+    private String settlementType;
+
+    @Schema(description = "交期时间（天）", example = "7")
+    @ExcelProperty("交期时间(天)")
+    private Integer deliveryDays;
 
     @Schema(description = "结算账户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "311.89")
     @ExcelProperty("结算账户编号")
@@ -48,7 +56,7 @@ public class ErpPurchaseOrderRespVO {
     @ExcelProperty("最终合计价格")
     private BigDecimal totalPrice;
 
-    @Schema(description = "合计产品价格，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
+    @Schema(description = "合计物料价格，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
     private BigDecimal totalProductPrice;
 
     @Schema(description = "合计税额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
@@ -71,9 +79,9 @@ public class ErpPurchaseOrderRespVO {
     @ExcelProperty("备注")
     private String remark;
 
-    @Schema(description = "创建人", example = "矩灵")
+    @Schema(description = "创建人", example = "亚特")
     private String creator;
-    @Schema(description = "创建人名称", example = "矩灵")
+    @Schema(description = "创建人名称", example = "亚特")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -83,8 +91,8 @@ public class ErpPurchaseOrderRespVO {
     @Schema(description = "订单项列表", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<Item> items;
 
-    @Schema(description = "产品信息", requiredMode = Schema.RequiredMode.REQUIRED)
-    @ExcelProperty("产品信息")
+    @Schema(description = "物料信息", requiredMode = Schema.RequiredMode.REQUIRED)
+    @ExcelProperty("物料信息")
     private String productNames;
 
     // ========== 采购入库 ==========
@@ -103,17 +111,17 @@ public class ErpPurchaseOrderRespVO {
         @Schema(description = "订单项编号", example = "11756")
         private Long id;
 
-        @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
+        @Schema(description = "物料编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
         private Long productId;
 
-        @Schema(description = "产品单位单位", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
+        @Schema(description = "物料单位单位", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
         private Long productUnitId;
 
-        @Schema(description = "产品单价", example = "100.00")
+        @Schema(description = "物料单价", example = "100.00")
         private BigDecimal productPrice;
 
-        @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @Schema(description = "物料数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
+        @NotNull(message = "物料数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "税率，百分比", example = "99.88")
@@ -137,11 +145,11 @@ public class ErpPurchaseOrderRespVO {
 
         // ========== 关联字段 ==========
 
-        @Schema(description = "产品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "巧克力")
+        @Schema(description = "物料名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "巧克力")
         private String productName;
-        @Schema(description = "产品条码", requiredMode = Schema.RequiredMode.REQUIRED, example = "A9985")
+        @Schema(description = "物料条码", requiredMode = Schema.RequiredMode.REQUIRED, example = "A9985")
         private String productBarCode;
-        @Schema(description = "产品单位名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "盒")
+        @Schema(description = "物料单位名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "盒")
         private String productUnitName;
 
         @Schema(description = "库存数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")

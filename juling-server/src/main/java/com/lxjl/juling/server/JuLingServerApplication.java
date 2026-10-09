@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 如果你碰到启动的问题，请认真阅读 上游文档 文章
  * 如果你碰到启动的问题，请认真阅读 上游文档 文章
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @SuppressWarnings("SpringComponentScan") // 忽略 IDEA 无法识别 ${juling.info.base-package}
 @SpringBootApplication(scanBasePackages = {"${juling.info.base-package}.server", "${juling.info.base-package}.module"})

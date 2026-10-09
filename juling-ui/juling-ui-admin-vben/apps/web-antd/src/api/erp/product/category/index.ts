@@ -1,7 +1,7 @@
 import { requestClient } from '#/api/request';
 
 export namespace ErpProductCategoryApi {
-  /** 产品分类信息 */
+  /** 物料分类信息 */
   export interface ProductCategory {
     id?: number; // 分类编号
     parentId?: number; // 父分类编号
@@ -13,7 +13,7 @@ export namespace ErpProductCategoryApi {
   }
 }
 
-/** 查询产品分类列表 */
+/** 查询物料分类列表 */
 export function getProductCategoryList(params?: any) {
   return requestClient.get<ErpProductCategoryApi.ProductCategory[]>(
     '/erp/product-category/list',
@@ -21,40 +21,40 @@ export function getProductCategoryList(params?: any) {
   );
 }
 
-/** 查询产品分类精简列表 */
+/** 查询物料分类精简列表 */
 export function getProductCategorySimpleList() {
   return requestClient.get<ErpProductCategoryApi.ProductCategory[]>(
     '/erp/product-category/simple-list',
   );
 }
 
-/** 查询产品分类详情 */
+/** 查询物料分类详情 */
 export function getProductCategory(id: number) {
   return requestClient.get<ErpProductCategoryApi.ProductCategory>(
     `/erp/product-category/get?id=${id}`,
   );
 }
 
-/** 新增产品分类 */
+/** 新增物料分类 */
 export function createProductCategory(
   data: ErpProductCategoryApi.ProductCategory,
 ) {
   return requestClient.post('/erp/product-category/create', data);
 }
 
-/** 修改产品分类 */
+/** 修改物料分类 */
 export function updateProductCategory(
   data: ErpProductCategoryApi.ProductCategory,
 ) {
   return requestClient.put('/erp/product-category/update', data);
 }
 
-/** 删除产品分类 */
+/** 删除物料分类 */
 export function deleteProductCategory(id: number) {
   return requestClient.delete(`/erp/product-category/delete?id=${id}`);
 }
 
-/** 导出产品分类 Excel */
+/** 导出物料分类 Excel */
 export function exportProductCategory(params: any) {
   return requestClient.download('/erp/product-category/export-excel', {
     params,

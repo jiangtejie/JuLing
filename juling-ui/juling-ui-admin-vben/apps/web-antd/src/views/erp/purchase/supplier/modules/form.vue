@@ -84,7 +84,8 @@ defineExpose({
 </script>
 
 <template>
-  <Modal :title="getTitle" class="w-1/2">
+  <!-- 表单含 5 个分组、约 28 个字段，w-1/2 太窄 -->
+  <Modal :title="getTitle" class="w-3/4">
     <Form class="mx-4" />
   </Modal>
 </template>

@@ -9,14 +9,19 @@ import com.lxjl.juling.module.erp.controller.admin.stock.vo.in.ErpStockInSaveReq
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockInDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockInItemDO;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockInItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockInMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.purchase.ErpSupplierService;
-import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchInReqBO;
+import com.lxjl.juling.module.erp.service.stock.bo.ErpStockBatchReverseReqBO;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +37,10 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 /**
  * ERP 其它入库单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -48,7 +52,7 @@ public class ErpStockInServiceImpl implements ErpStockInService {
     private ErpStockInItemMapper stockInItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -57,7 +61,7 @@ public class ErpStockInServiceImpl implements ErpStockInService {
     @Resource
     private ErpSupplierService supplierService;
     @Resource
-    private ErpStockRecordService stockRecordService;
+    private ErpStockBatchService stockBatchService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -66,8 +70,8 @@ public class ErpStockInServiceImpl implements ErpStockInService {
         List<ErpStockInItemDO> stockInItems = validateStockInItems(createReqVO.getItems());
         // 1.2 校验供应商
         supplierService.validateSupplier(createReqVO.getSupplierId());
-        // 1.3 生成入库单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.STOCK_IN_NO_PREFIX);
+        // 1.3 生成入库单号（单据平台：OTHER_IN → QTRK + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.OTHER_IN, null);
         if (stockInMapper.selectByNo(no) != null) {
             throw exception(STOCK_IN_NO_EXISTS);
         }
@@ -81,6 +85,11 @@ public class ErpStockInServiceImpl implements ErpStockInService {
         // 2.2 插入入库单项
         stockInItems.forEach(o -> o.setInId(stockIn.getId()));
         stockInItemMapper.insertBatch(stockInItems);
+        // 单据平台：写创建日志（留痕；与采购/销售单据同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.OTHER_IN).setBillId(stockIn.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(stockIn.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return stockIn.getId();
     }
 
@@ -109,35 +118,63 @@ public class ErpStockInServiceImpl implements ErpStockInService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStockInStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpStockInDO stockIn = validateStockInExists(id);
         // 1.2 校验状态
-        if (stockIn.getStatus().equals(status)) {
-            throw exception(approve ? STOCK_IN_APPROVE_FAIL : STOCK_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(stockIn.getStatus(), status, STOCK_IN_APPROVE_FAIL, STOCK_IN_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = stockInMapper.updateByIdAndStatus(id, stockIn.getStatus(),
-                new ErpStockInDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? STOCK_IN_APPROVE_FAIL : STOCK_IN_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> stockInMapper.updateByIdAndStatus(id, stockIn.getStatus(),
+                new ErpStockInDO().setStatus(status)),
+                status, STOCK_IN_APPROVE_FAIL, STOCK_IN_PROCESS_FAIL);
 
-        // 3. 变更库存
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.OTHER_IN).setBillId(id).setBillNo(stockIn.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(stockIn.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
+
+        // 3. 变更库存（S2 库存中心：按批次入账 / 冲销；内部同时写库存流水并增量更新 erp_stock.count）
         List<ErpStockInItemDO> stockInItems = stockInItemMapper.selectListByInId(id);
         Integer bizType = approve ? ErpStockRecordBizTypeEnum.OTHER_IN.getType()
                 : ErpStockRecordBizTypeEnum.OTHER_IN_CANCEL.getType();
         stockInItems.forEach(stockInItem -> {
-            BigDecimal count = approve ? stockInItem.getCount() : stockInItem.getCount().negate();
-            stockRecordService.createStockRecord(new ErpStockRecordCreateReqBO(
-                    stockInItem.getProductId(), stockInItem.getWarehouseId(), count,
-                    bizType, stockInItem.getInId(), stockInItem.getId(), stockIn.getNo()));
+            if (approve) {
+                ErpStockBatchInReqBO inReqBO = new ErpStockBatchInReqBO();
+                inReqBO.setWarehouseId(stockInItem.getWarehouseId());
+                inReqBO.setProductId(stockInItem.getProductId());
+                inReqBO.setBatchNo(stockInItem.getBatchNo());
+                inReqBO.setProductionDate(stockInItem.getProductionDate());
+                inReqBO.setExpiryDate(stockInItem.getExpiryDate());
+                // 入库日期取单据的入库时间：FIFO 的「先入库先出」按它排序
+                inReqBO.setInDate(stockIn.getInTime() != null ? stockIn.getInTime().toLocalDate() : null);
+                inReqBO.setCount(stockInItem.getCount());
+                // 成本取入库单价
+                inReqBO.setUnitCost(stockInItem.getProductPrice());
+                inReqBO.setBizType(bizType);
+                inReqBO.setBizId(stockInItem.getInId());
+                inReqBO.setBizItemId(stockInItem.getId());
+                inReqBO.setBizNo(stockIn.getNo());
+                inReqBO.setRemark(stockInItem.getRemark());
+                stockBatchService.receiveBatch(inReqBO);
+            } else {
+                stockBatchService.reverseReceive(new ErpStockBatchReverseReqBO()
+                        .setSourceBizType(ErpStockRecordBizTypeEnum.OTHER_IN.getType())
+                        .setSourceBizItemId(stockInItem.getId())
+                        .setTargetBizType(bizType)
+                        .setBizId(stockInItem.getInId())
+                        .setBizNo(stockIn.getNo()));
+            }
         });
     }
 
     private List<ErpStockInItemDO> validateStockInItems(List<ErpStockInSaveReqVO.Item> list) {
-        // 1.1 校验产品存在
+        // 1.1 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpStockInSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

@@ -30,7 +30,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
  *
  * 参见 <a href="https://cloud.tencent.com/document/product/382/52077">文档</a>
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class TencentSmsClient extends AbstractSmsClient {
 

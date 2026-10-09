@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 /**
  * ERP 销售出库项 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_sale_out_items")
 @KeySequence("erp_sale_out_items_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -45,26 +45,33 @@ public class ErpSaleOutItemDO extends BaseDO {
      */
     private Long orderItemId;
     /**
+     * 来源业务行编号（门店要货单行 trade_order_item.id；手工出库单为空）
+     *
+     * 用途：配送出库单审核后，据此把「哪一条要货单行发了多少货」回写到门店收货单，
+     * 是「要货单行 → 出库单行 → 收货单行」的行级血缘（bill_relation 只有单据级关联）。
+     */
+    private Long sourceItemId;
+    /**
      * 仓库编号
      *
      * 关联 {@link ErpWarehouseDO#getId()}
      */
     private Long warehouseId;
     /**
-     * 产品编号
+     * 物料编号
      *
      * 关联 {@link ErpProductDO#getId()}
      */
     private Long productId;
     /**
-     * 产品单位单位
+     * 物料单位单位
      *
      * 冗余 {@link ErpProductDO#getUnitId()}
      */
     private Long productUnitId;
 
     /**
-     * 产品单位单价，单位：元
+     * 物料单位单价，单位：元
      */
     private BigDecimal productPrice;
     /**

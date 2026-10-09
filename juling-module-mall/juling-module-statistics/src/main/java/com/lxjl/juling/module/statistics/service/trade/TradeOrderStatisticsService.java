@@ -2,7 +2,7 @@ package com.lxjl.juling.module.statistics.service.trade;
 
 import com.lxjl.juling.module.statistics.controller.admin.common.vo.DataComparisonRespVO;
 import com.lxjl.juling.module.statistics.controller.admin.trade.vo.*;
-import com.lxjl.juling.module.statistics.service.member.bo.MemberAreaStatisticsRespBO;
+import com.lxjl.juling.module.statistics.service.trade.bo.MemberAreaStatisticsRespBO;
 import com.lxjl.juling.module.statistics.service.trade.bo.TradeOrderSummaryRespBO;
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 交易订单的统计 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface TradeOrderStatisticsService {
 

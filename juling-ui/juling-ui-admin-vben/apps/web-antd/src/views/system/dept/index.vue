@@ -10,16 +10,48 @@ import { isEmpty } from '@vben/utils';
 import { message } from 'ant-design-vue';
 
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteDept, deleteDeptList, getDeptList } from '#/api/system/dept';
+import {
+  deleteDept,
+  deleteDeptList,
+  getDeptList,
+  updateDeptBusinessStatus,
+} from '#/api/system/dept';
 import { $t } from '#/locales';
 
 import { useGridColumns } from './data';
 import Form from './modules/form.vue';
+import StoreForm from './modules/store-form.vue';
 
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
   destroyOnClose: true,
 });
+
+const [StoreFormModal, storeModalApi] = useVbenModal({
+  connectedComponent: StoreForm,
+  destroyOnClose: true,
+});
+
+/**
+ * 门店开店 / 闭店
+ *
+ * 口径（见 docs/organization-architecture-design.md）：已闭店门店不可被订货账号授权、不可下单。
+ * 闭店原因可在「编辑」表单里补填，快捷操作只做开关。
+ */
+async function handleBusinessStatus(row: SystemDeptApi.Dept) {
+  const closing = row.businessStatus !== 1;
+  await confirm(
+    closing
+      ? `确认关闭门店【${row.name}】？闭店后该门店不可被订货账号授权、不可下单。`
+      : `确认重新开店【${row.name}】？复开后该门店可被授权并下单。`,
+  );
+  await updateDeptBusinessStatus({
+    id: row.id!,
+    businessStatus: closing ? 1 : 0,
+  });
+  message.success(closing ? '已闭店' : '已开店');
+  handleRefresh();
+}
 
 /** 切换树形展开/收缩状态 */
 const isExpanded = ref(true);
@@ -31,6 +63,11 @@ function handleExpand() {
 /** 刷新表格 */
 function handleRefresh() {
   gridApi.query();
+}
+
+/** 建门店：以该节点为父节点（门店应挂在品牌或公司下） */
+function handleCreateStore(row: SystemDeptApi.Dept) {
+  storeModalApi.setData({ parentId: row.id, parentName: row.name }).open();
 }
 
 /** 创建部门 */
@@ -129,6 +166,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 <template>
   <Page auto-content-height>
     <FormModal @success="handleRefresh" />
+    <StoreFormModal @success="handleRefresh" />
     <Grid table-title="部门列表">
       <template #toolbar-tools>
         <TableAction
@@ -161,11 +199,19 @@ const [Grid, gridApi] = useVbenVxeGrid({
         <TableAction
           :actions="[
             {
-              label: '新增下级',
+              label: '新增下级节点',
               type: 'link',
               icon: ACTION_ICON.ADD,
               auth: ['system:dept:create'],
               onClick: handleAppend.bind(null, row),
+            },
+            {
+              label: '建门店',
+              type: 'link',
+              // 门店必须挂在品牌或公司下，不能再挂到门店下（否则品牌维度会从组织树里消失）
+              disabled: row.deptType === 'STORE',
+              auth: ['erp:customer:create'],
+              onClick: handleCreateStore.bind(null, row),
             },
             {
               label: $t('common.edit'),
@@ -173,6 +219,13 @@ const [Grid, gridApi] = useVbenVxeGrid({
               icon: ACTION_ICON.EDIT,
               auth: ['system:dept:update'],
               onClick: handleEdit.bind(null, row),
+            },
+            {
+              label: row.businessStatus === 1 ? '重新开店' : '闭店',
+              type: 'link',
+              auth: ['system:dept:update-business-status'],
+              disabled: row.deptType !== 'STORE',
+              onClick: handleBusinessStatus.bind(null, row),
             },
             {
               label: $t('common.delete'),

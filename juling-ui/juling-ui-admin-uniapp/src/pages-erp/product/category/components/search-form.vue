@@ -67,7 +67,7 @@ const placeholder = computed(() => {
   if (formData.status !== undefined) {
     conditions.push(`状态:${getDictLabel(DICT_TYPE.COMMON_STATUS, formData.status)}`)
   }
-  return conditions.length > 0 ? conditions.join(' | ') : '搜索产品分类'
+  return conditions.length > 0 ? conditions.join(' | ') : '搜索物料分类'
 })
 
 /** 搜索按钮操作 */

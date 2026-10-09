@@ -7,7 +7,7 @@ import lombok.Getter;
 /**
  * FMS 现金流量表跨报表取数参数类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

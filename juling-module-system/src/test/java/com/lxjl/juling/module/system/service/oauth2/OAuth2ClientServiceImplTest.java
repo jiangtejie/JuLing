@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mockStatic;
 /**
  * {@link OAuth2ClientServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(OAuth2ClientServiceImpl.class)
 public class OAuth2ClientServiceImplTest extends BaseDbUnitTest {

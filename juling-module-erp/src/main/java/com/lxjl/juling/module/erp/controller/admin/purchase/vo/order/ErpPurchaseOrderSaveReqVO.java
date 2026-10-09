@@ -32,6 +32,13 @@ public class ErpPurchaseOrderSaveReqVO {
     @Schema(description = "定金金额，单位：元", example = "7127")
     private BigDecimal depositPrice;
 
+    @Schema(description = "结账方式（未填时从供应商带出）", example = "MONTHLY")
+    private String settlementType;
+
+    @Schema(description = "交期时间（天）（未填时从供应商带出）", example = "7")
+    private Integer deliveryDays;
+
+
     @Schema(description = "附件地址", example = "https://github.com/jiangtejie/JuLing")
     private String fileUrl;
 
@@ -47,19 +54,19 @@ public class ErpPurchaseOrderSaveReqVO {
         @Schema(description = "订单项编号", example = "11756")
         private Long id;
 
-        @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品编号不能为空")
+        @Schema(description = "物料编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
+        @NotNull(message = "物料编号不能为空")
         private Long productId;
 
-        @Schema(description = "产品单位单位", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品单位单位不能为空")
+        @Schema(description = "物料单位单位", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
+        @NotNull(message = "物料单位单位不能为空")
         private Long productUnitId;
 
-        @Schema(description = "产品单价", example = "100.00")
+        @Schema(description = "物料单价", example = "100.00")
         private BigDecimal productPrice;
 
-        @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @Schema(description = "物料数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
+        @NotNull(message = "物料数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "税率，百分比", example = "99.88")

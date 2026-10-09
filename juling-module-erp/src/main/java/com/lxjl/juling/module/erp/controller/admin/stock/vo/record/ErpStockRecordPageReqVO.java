@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 
 import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
 
-@Schema(description = "管理后台 - ERP 产品库存明细分页 Request VO")
+@Schema(description = "管理后台 - ERP 物料库存明细分页 Request VO")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class ErpStockRecordPageReqVO extends PageParam {
 
-    @Schema(description = "产品编号", example = "10625")
+    @Schema(description = "物料编号", example = "10625")
     private Long productId;
 
     @Schema(description = "仓库编号", example = "32407")

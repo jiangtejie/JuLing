@@ -1,7 +1,11 @@
-import { initPreferences } from '@vben/preferences';
+import { initPreferences, preferences, updatePreferences } from '@vben/preferences';
 import { unmountGlobalLoading } from '@vben/utils';
 
-import { overridesPreferences, preferencesExtension } from './preferences';
+import {
+  DEFAULT_HOME_PATH,
+  overridesPreferences,
+  preferencesExtension,
+} from './preferences';
 
 /**
  * 应用初始化完成之后再进行页面加载渲染
@@ -19,6 +23,16 @@ async function initApplication() {
     namespace,
     overrides: overridesPreferences,
   });
+
+  // 修正历史缓存里的默认首页：
+  // initPreferences 合并偏好设置时是「缓存优先于代码默认值」，老版本浏览器里残留的
+  // app.defaultHomePath（例如 /erp/home）会盖掉代码里配置的 /home，表现为登录后、
+  // 以及打开根路径都被送进 ERP 首页，而不是「首页」欢迎页。
+  // defaultHomePath 是应用级常量、偏好设置面板也没有修改入口，所以这里直接以代码默认值为准
+  // 覆盖并写回缓存（只动这一个字段，不影响其它用户偏好设置）。
+  if (preferences.app.defaultHomePath !== DEFAULT_HOME_PATH) {
+    updatePreferences({ app: { defaultHomePath: DEFAULT_HOME_PATH } });
+  }
 
   // 启动应用并挂载
   // vue应用主要逻辑及视图

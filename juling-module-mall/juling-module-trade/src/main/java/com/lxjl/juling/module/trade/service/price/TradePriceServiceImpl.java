@@ -1,31 +1,30 @@
 package com.lxjl.juling.module.trade.service.price;
 
-import cn.hutool.core.collection.CollUtil;
-import com.lxjl.juling.framework.common.util.object.BeanUtils;
-import com.lxjl.juling.module.member.api.level.dto.MemberLevelRespDTO;
+import com.lxjl.juling.module.erp.api.pricelist.ErpPriceApi;
+import com.lxjl.juling.module.erp.api.product.ErpProductApi;
+import com.lxjl.juling.module.erp.api.product.dto.ErpProductRespDTO;
+import com.lxjl.juling.module.erp.api.pricelist.dto.ErpPriceMatchRespDTO;
 import com.lxjl.juling.module.product.api.sku.ProductSkuApi;
 import com.lxjl.juling.module.product.api.sku.dto.ProductSkuRespDTO;
 import com.lxjl.juling.module.product.api.spu.ProductSpuApi;
 import com.lxjl.juling.module.product.api.spu.dto.ProductSpuRespDTO;
-import com.lxjl.juling.module.promotion.api.discount.DiscountActivityApi;
-import com.lxjl.juling.module.promotion.api.discount.dto.DiscountProductRespDTO;
-import com.lxjl.juling.module.promotion.api.reward.RewardActivityApi;
-import com.lxjl.juling.module.promotion.api.reward.dto.RewardActivityMatchRespDTO;
-import com.lxjl.juling.module.promotion.enums.common.PromotionTypeEnum;
 import com.lxjl.juling.module.trade.controller.app.order.vo.AppTradeProductSettlementRespVO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateReqBO;
 import com.lxjl.juling.module.trade.service.price.bo.TradePriceCalculateRespBO;
-import com.lxjl.juling.module.trade.service.price.calculator.TradeDiscountActivityPriceCalculator;
-import com.lxjl.juling.module.trade.service.price.calculator.TradePriceCalculator;
 import com.lxjl.juling.module.trade.service.price.calculator.TradePriceCalculatorHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.util.StrUtil;
 import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.product.enums.ErrorCodeConstants.SKU_NOT_EXISTS;
@@ -35,7 +34,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.PRICE_CALCUL
 /**
  * 价格计算 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -47,15 +46,12 @@ public class TradePriceServiceImpl implements TradePriceService {
     @Resource
     private ProductSpuApi productSpuApi;
     @Resource
-    private DiscountActivityApi discountActivityApi;
+    private ErpPriceApi erpPriceApi;
     @Resource
-    private RewardActivityApi rewardActivityApi;
+    private ErpProductApi erpProductApi;
 
-    @Resource
-    private List<TradePriceCalculator> priceCalculators;
-
-    @Resource
-    private TradeDiscountActivityPriceCalculator discountActivityPriceCalculator;
+    /** 价目表类型：配送（门店订货的结算价） */
+    private static final String PRICE_TYPE_DELIVERY = "DELIVERY";
 
     @Override
     public TradePriceCalculateRespBO calculateOrderPrice(TradePriceCalculateReqBO calculateReqBO) {
@@ -65,17 +61,112 @@ public class TradePriceServiceImpl implements TradePriceService {
         List<ProductSpuRespDTO> spuList = checkSpuList(skuList);
 
         // 2.1 计算价格
+        // 说明：原先这里会遍历 {@code List<TradePriceCalculator>} 做营销/会员价/运费等二次计算。
+        // 亚特的商城只做私域订货（线下转账、中心库配送、无营销），这些计算器已随营销与会员中心一并物理删除，
+        // 价格就是「SKU 单价 × 数量」，因此不再保留空的扩展点。
         TradePriceCalculateRespBO calculateRespBO = TradePriceCalculatorHelper
                 .buildCalculateResp(calculateReqBO, spuList, skuList);
-        priceCalculators.forEach(calculator -> calculator.calculate(calculateReqBO, calculateRespBO));
+        // 2.1.1 配送价目表定价：门店订货的结算价以配送价目表为准，没命中才用 SKU 价
+        applyDeliveryPrice(calculateReqBO, skuList, calculateRespBO);
         // 2.2  如果最终支付金额小于等于 0，则抛出业务异常
-        if (calculateReqBO.getPointActivityId() == null // 积分订单，允许支付金额为 0
-                && calculateRespBO.getPrice().getPayPrice() <= 0) {
+        if (calculateRespBO.getPrice().getPayPrice() <= 0) {
             log.error("[calculatePrice][价格计算不正确，请求 calculateReqDTO({})，结果 priceCalculate({})]",
                     calculateReqBO, calculateRespBO);
             throw exception(PRICE_CALCULATE_PAY_PRICE_ILLEGAL);
         }
         return calculateRespBO;
+    }
+
+    /**
+     * 用配送价目表给订单项定价
+     *
+     * <p>链路：SKU → 条码 → ERP 物料（**这是既有的对应约定**，见 TradeOrderWorkbenchServiceImpl:137）
+     * → 按「门店 + 物料 + 日期」取配送价 → 覆盖订单项单价。
+     *
+     * <p>**任何一步拿不到就保持 SKU 价**（条码没维护、物料不存在、价目表没命中），
+     * 保证不会因为价目表没配好就让门店下不了单。
+     *
+     * <p>单位换算：价目表存的是**元**，订单项的价格是**分**。
+     */
+    private void applyDeliveryPrice(TradePriceCalculateReqBO reqBO, List<ProductSkuRespDTO> skuList,
+                                    TradePriceCalculateRespBO calculateRespBO) {
+        Map<Long, ProductSkuRespDTO> skuMap = convertMap(skuList, ProductSkuRespDTO::getId);
+        // **过渡兜底**：外键 erp_product_id 已建（sql/local/73），但 SKU 表单还没加「对应物料」选择器，
+        // 所以存量数据的外键都是空的。在表单补齐、存量回填之前，外键为空时按条码退回匹配一次，
+        // 避免「迁移没做完就把配送价功能弄坏」。表单与回填完成后，这段应当删掉。
+        Map<String, Long> barCodeProductIdMap = Map.of();
+        if (skuList.stream().anyMatch(s -> s.getErpProductId() == null)) {
+            List<String> barCodes = skuList.stream().map(ProductSkuRespDTO::getBarCode)
+                    .filter(StrUtil::isNotBlank).distinct().toList();
+            if (!barCodes.isEmpty()) {
+                barCodeProductIdMap = convertMap(erpProductApi.getProductListByBarCodes(barCodes),
+                        ErpProductRespDTO::getBarCode, ErpProductRespDTO::getId);
+            }
+        }
+        final Map<String, Long> barCodeMap = barCodeProductIdMap;
+        calculateRespBO.getItems().forEach(item -> {
+            ProductSkuRespDTO sku = skuMap.get(item.getSkuId());
+            // 直接走外键。原先按 barCode 字符串 join，条码没维护时会**静默失配**（悄悄回退 SKU 价）
+            Long productId = sku == null ? null : sku.getErpProductId();
+            if (productId == null && sku != null) {
+                productId = barCodeMap.get(sku.getBarCode()); // 过渡兜底：见方法开头的说明
+            }
+            if (productId == null) {
+                log.info("[applyDeliveryPrice][SKU({}) 既没有对应物料、条码也匹配不上，回退 SKU 价({})。请在商品里维护「对应物料」]",
+                        item.getSkuId(), item.getPrice());
+                return;
+            }
+            ErpPriceMatchRespDTO match = erpPriceApi.matchPrice(PRICE_TYPE_DELIVERY, reqBO.getCustomerId(), productId);
+            if (match == null || match.getPrice() == null) {
+                // 配送价没命中，保持 SKU 价。**必须留痕**：配送价是「价目表 → 物料销售价 → SKU 价」
+                // 三层兜底，不记的话线上排查「为什么是这个价」只能靠猜（见 docs/price-list-design.md §13.1）
+                log.info("[applyDeliveryPrice][门店({}) 物料({}) SKU({}) 未命中配送价目表，回退 SKU 价({})]",
+                        reqBO.getCustomerId(), productId, item.getSkuId(), item.getPrice());
+                return;
+            }
+            int priceInCent = toCent(match.getPrice());
+            log.info("[applyDeliveryPrice][门店({}) 物料({}) SKU({}) 配送价({}分) 来源({}) 价目表({})]",
+                    reqBO.getCustomerId(), productId, item.getSkuId(), priceInCent,
+                    match.getSource(), match.getPriceName());
+            item.setPrice(priceInCent).setPayPrice(priceInCent * item.getCount());
+        });
+        // 单价被覆盖了，合计要重算
+        TradePriceCalculatorHelper.recountAllPrice(calculateRespBO);
+    }
+
+    @Override
+    public Map<Long, Integer> getStoreSkuPriceMap(Long customerId, Collection<Long> skuIds) {
+        if (skuIds == null || skuIds.isEmpty()) {
+            return Map.of();
+        }
+        Map<Long, Integer> result = new LinkedHashMap<>();
+        productSkuApi.getSkuList(skuIds).forEach(sku -> {
+            Integer price = resolveDeliveryPriceInCent(customerId, sku);
+            if (price != null) {
+                result.put(sku.getId(), price);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * 单个 SKU 在指定门店下的配送价（分）
+     *
+     * <p>**下单算价与列表展示都调它** —— 这是两者同源的保证。
+     * 未关联 ERP 物料（外键为空）、或配送价目表没命中时返回 null，调用方回退 SKU 价。
+     */
+    private Integer resolveDeliveryPriceInCent(Long customerId, ProductSkuRespDTO sku) {
+        Long productId = sku.getErpProductId();
+        if (productId == null) {
+            return null;
+        }
+        ErpPriceMatchRespDTO match = erpPriceApi.matchPrice(PRICE_TYPE_DELIVERY, customerId, productId);
+        return match == null || match.getPrice() == null ? null : toCent(match.getPrice());
+    }
+
+    /** 元 → 分（订单项价格一律用分，价目表存的是元） */
+    private static int toCent(BigDecimal yuan) {
+        return yuan.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).intValueExact();
     }
 
     private List<ProductSkuRespDTO> checkSkuList(TradePriceCalculateReqBO reqBO) {
@@ -103,51 +194,16 @@ public class TradePriceServiceImpl implements TradePriceService {
 
     @Override
     public List<AppTradeProductSettlementRespVO> calculateProductPrice(Long userId, List<Long> spuIds) {
-        // 1.1 获得 SPU 与 SKU 的映射
+        // 1. 获得 SPU 与 SKU 的映射
         List<ProductSkuRespDTO> allSkuList = productSkuApi.getSkuListBySpuId(spuIds);
         Map<Long, List<ProductSkuRespDTO>> spuIdAndSkuListMap = convertMultiMap(allSkuList, ProductSkuRespDTO::getSpuId);
-        // 1.2 获得会员等级
-        MemberLevelRespDTO level = discountActivityPriceCalculator.getMemberLevel(userId);
-        // 1.3 获得限时折扣活动
-        Map<Long, DiscountProductRespDTO> skuIdAndDiscountMap = convertMap(
-                discountActivityApi.getMatchDiscountProductListBySkuIds(convertSet(allSkuList, ProductSkuRespDTO::getId)),
-                DiscountProductRespDTO::getSkuId);
-        // 1.4 获得满减送活动
-       List<RewardActivityMatchRespDTO> rewardActivityMap = rewardActivityApi.getMatchRewardActivityListBySpuIds(spuIds);
 
         // 2. 价格计算
         return convertList(spuIds, spuId -> {
             AppTradeProductSettlementRespVO spuVO = new AppTradeProductSettlementRespVO().setSpuId(spuId);
-            // 2.1 优惠价格
+            // 2.1 商品 SKU
             List<ProductSkuRespDTO> skuList = spuIdAndSkuListMap.get(spuId);
-            List<AppTradeProductSettlementRespVO.Sku> skuVOList = convertList(skuList, sku -> {
-                AppTradeProductSettlementRespVO.Sku skuVO = new AppTradeProductSettlementRespVO.Sku()
-                        .setId(sku.getId());
-                TradePriceCalculateRespBO.OrderItem orderItem = new TradePriceCalculateRespBO.OrderItem()
-                        .setPayPrice(sku.getPrice()).setCount(1);
-                // 计算限时折扣的优惠价格
-                DiscountProductRespDTO discountProduct = skuIdAndDiscountMap.get(sku.getId());
-                Integer discountPrice = discountActivityPriceCalculator.calculateActivityPrice(discountProduct, orderItem);
-                // 计算 VIP 优惠金额
-                Integer vipPrice = discountActivityPriceCalculator.calculateVipPrice(level, orderItem);
-                if (discountPrice <= 0 && vipPrice <= 0) {
-                    return skuVO;
-                }
-                // 选择一个大的优惠
-                if (discountPrice > vipPrice) {
-                    return skuVO.setPromotionPrice(sku.getPrice() - discountPrice)
-                            .setPromotionType(PromotionTypeEnum.DISCOUNT_ACTIVITY.getType())
-                            .setPromotionId(discountProduct.getId()).setPromotionEndTime(discountProduct.getActivityEndTime());
-                } else {
-                    return skuVO.setPromotionPrice(sku.getPrice() - vipPrice)
-                            .setPromotionType(PromotionTypeEnum.MEMBER_LEVEL.getType());
-                }
-            });
-            spuVO.setSkus(skuVOList);
-            // 2.2 满减送活动
-            RewardActivityMatchRespDTO rewardActivity = CollUtil.findOne(rewardActivityMap,
-                    activity -> CollUtil.contains(activity.getSpuIds(), spuId));
-            spuVO.setRewardActivity(BeanUtils.toBean(rewardActivity, AppTradeProductSettlementRespVO.RewardActivity.class));
+            spuVO.setSkus(convertList(skuList, sku -> new AppTradeProductSettlementRespVO.Sku().setId(sku.getId())));
             return spuVO;
         });
     }

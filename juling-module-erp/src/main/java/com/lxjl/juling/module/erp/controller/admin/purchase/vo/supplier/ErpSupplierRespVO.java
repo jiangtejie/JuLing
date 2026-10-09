@@ -20,11 +20,14 @@ public class ErpSupplierRespVO {
     @ExcelProperty("供应商编号")
     private Long id;
 
-    @Schema(description = "供应商名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "供应商名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @ExcelProperty("供应商名称")
     private String name;
 
-    @Schema(description = "联系人", example = "棱信矩灵")
+    @Schema(description = "业务编码（编码规则统一发号，建档后只读）", example = "KH000001")
+    private String code;
+
+    @Schema(description = "联系人", example = "亚特")
     @ExcelProperty("联系人")
     private String contact;
 
@@ -76,6 +79,54 @@ public class ErpSupplierRespVO {
     @Schema(description = "开户地址", example = "兴业银行浦东支行")
     @ExcelProperty("开户地址")
     private String bankAddress;
+
+    @Schema(description = "账户户名")
+    @ExcelProperty("账户户名")
+    private String accountName;
+
+    @Schema(description = "注册地址")
+    @ExcelProperty("注册地址")
+    private String registeredAddress;
+
+    @Schema(description = "结账方式")
+    @ExcelProperty("结账方式")
+    private String settlementType;
+
+    @Schema(description = "账期天数")
+    @ExcelProperty("账期天数")
+    private Integer creditDays;
+
+    @Schema(description = "开票情况")
+    @ExcelProperty("开票情况")
+    private String invoiceMode;
+
+    @Schema(description = "开票比例(%)")
+    @ExcelProperty("开票比例(%)")
+    private BigDecimal invoiceRatio;
+
+    @Schema(description = "开票类型")
+    @ExcelProperty("开票类型")
+    private String invoiceType;
+
+    @Schema(description = "交期时间(天)")
+    @ExcelProperty("交期时间(天)")
+    private Integer deliveryDays;
+
+    @Schema(description = "是否已签订合同")
+    @ExcelProperty("是否已签订合同")
+    private Boolean contractSigned;
+
+    @Schema(description = "合同签订主体")
+    @ExcelProperty("合同签订主体")
+    private String contractEntity;
+
+    @Schema(description = "营业执照")
+    @ExcelProperty("营业执照")
+    private String businessLicenseUrls;
+
+    @Schema(description = "生产许可证")
+    @ExcelProperty("生产许可证")
+    private String productionLicenseUrls;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")

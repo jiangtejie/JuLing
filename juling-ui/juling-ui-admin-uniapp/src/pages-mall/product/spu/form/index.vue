@@ -54,16 +54,6 @@
                   </wd-radio>
                 </wd-radio-group>
               </wd-form-item>
-              <wd-form-item title="单独分佣" title-width="200rpx" prop="subCommissionType" center>
-                <wd-radio-group v-model="formData.subCommissionType" type="button">
-                  <wd-radio :value="false">
-                    否
-                  </wd-radio>
-                  <wd-radio :value="true">
-                    是
-                  </wd-radio>
-                </wd-radio-group>
-              </wd-form-item>
             </wd-cell-group>
             <view class="px-24rpx py-20rpx">
               <view class="yd-text-main mb-16rpx text-28rpx font-medium">
@@ -72,7 +62,6 @@
               <SkuEditor
                 v-model="skus"
                 :spec-type="formData.specType"
-                :sub-commission-type="formData.subCommissionType"
               />
             </view>
           </view>
@@ -80,19 +69,7 @@
           <!-- 物流设置 -->
           <view v-show="activeTab === 2" class="mb-160rpx overflow-hidden rounded-12rpx bg-white shadow-sm">
             <wd-cell-group border>
-              <wd-form-item title="配送方式" title-width="200rpx" prop="deliveryTypes" center>
-                <wd-checkbox-group v-model="formData.deliveryTypes" type="button">
-                  <wd-checkbox
-                    v-for="dict in getIntDictOptions(DICT_TYPE.TRADE_DELIVERY_TYPE)"
-                    :key="dict.value"
-                    :name="dict.value"
-                  >
-                    {{ dict.label }}
-                  </wd-checkbox>
-                </wd-checkbox-group>
-              </wd-form-item>
               <TemplateSelect
-                v-if="formData.deliveryTypes?.includes(DeliveryTypeEnum.EXPRESS)"
                 v-model="formData.deliveryTemplateId"
                 label="运费模板"
                 label-width="200rpx"
@@ -144,12 +121,10 @@ import { useToast } from '@wot-ui/ui/components/wd-toast'
 import { computed, onMounted, ref } from 'vue'
 import { createProductSpu, getProductSpu, updateProductSpu } from '@/api/mall/product/spu'
 import { delay, navigateBackPlus } from '@/utils'
-import { DeliveryTypeEnum, DICT_TYPE } from '@/utils/constants'
 import BrandSelect from '@/pages-mall/product/brand/components/brand-select.vue'
 import CategorySelect from '@/pages-mall/product/category/components/category-select.vue'
 import SkuEditor from '@/pages-mall/product/spu/components/sku-editor.vue'
 import TemplateSelect from '@/pages-mall/trade/delivery/express-template/components/template-select.vue'
-import { getIntDictOptions } from '@/hooks/useDict'
 import { fenToYuan, yuanToFen } from '@/utils/format'
 import { createFormSchema } from '@/utils/wot'
 
@@ -176,11 +151,9 @@ const formData = ref<ProductSpu>({
   picUrl: '',
   sliderPicUrls: [],
   introduction: '',
-  deliveryTypes: [DeliveryTypeEnum.EXPRESS],
   deliveryTemplateId: undefined,
   brandId: undefined,
   specType: false,
-  subCommissionType: false,
   description: '',
   sort: 0,
   giveIntegral: 0,
@@ -195,10 +168,8 @@ const formSchema = createFormSchema({
   introduction: [{ required: true, message: '商品简介不能为空' }],
   picUrl: [{ required: true, message: '商品封面不能为空' }],
   sliderPicUrls: [{ required: true, message: '轮播图不能为空' }],
-  deliveryTypes: [{ required: true, message: '配送方式不能为空' }],
-  deliveryTemplateId: [{ required: (model: Record<string, any>) => !!model?.deliveryTypes?.includes(DeliveryTypeEnum.EXPRESS), message: '运费模板不能为空' }],
+  deliveryTemplateId: [{ required: true, message: '运费模板不能为空' }],
   specType: [{ required: true, message: '多规格不能为空' }],
-  subCommissionType: [{ required: true, message: '单独分佣不能为空' }],
   description: [{ required: true, message: '商品详情不能为空' }],
   sort: [{ required: true, message: '排序不能为空' }],
 })
@@ -211,8 +182,6 @@ const PROP_TAB: Record<string, number> = {
   picUrl: 0,
   sliderPicUrls: 0,
   specType: 1,
-  subCommissionType: 1,
-  deliveryTypes: 2,
   deliveryTemplateId: 2,
   description: 3,
   sort: 4,
@@ -230,8 +199,6 @@ function toYuanSku(sku: ProductSku): ProductSku {
     price: fenToYuan(sku.price),
     marketPrice: fenToYuan(sku.marketPrice),
     costPrice: fenToYuan(sku.costPrice),
-    firstBrokeragePrice: fenToYuan(sku.firstBrokeragePrice),
-    secondBrokeragePrice: fenToYuan(sku.secondBrokeragePrice),
   }
 }
 
@@ -244,8 +211,6 @@ function toCentSku(sku: ProductSku): ProductSku {
     price: yuanToFen(sku.price),
     marketPrice: yuanToFen(sku.marketPrice),
     costPrice: yuanToFen(sku.costPrice),
-    firstBrokeragePrice: yuanToFen(sku.firstBrokeragePrice),
-    secondBrokeragePrice: yuanToFen(sku.secondBrokeragePrice),
   }
 }
 
@@ -264,7 +229,6 @@ async function loadDetail() {
   formData.value = {
     ...data,
     sliderPicUrls: data.sliderPicUrls || [],
-    deliveryTypes: data.deliveryTypes || [],
   }
   skus.value = (data.skus || []).map(toYuanSku)
 }
@@ -276,7 +240,6 @@ function buildSubmitData(): ProductSpu {
     ...data,
     id: formId.value,
     sliderPicUrls: data.sliderPicUrls || [],
-    deliveryTypes: data.deliveryTypes || [],
     skus: skus.value.map(toCentSku),
   }
 }
@@ -315,7 +278,7 @@ async function handleSubmit() {
     }
     uni.$emit('mall:product-spu:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     formLoading.value = false
   }
 }

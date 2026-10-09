@@ -19,7 +19,7 @@ package com.lxjl.juling.module.ai.framework.ai.core.model.siliconflow;
 /**
  * SiliconFlow API 枚举类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public final class SiliconFlowApiConstants {
 

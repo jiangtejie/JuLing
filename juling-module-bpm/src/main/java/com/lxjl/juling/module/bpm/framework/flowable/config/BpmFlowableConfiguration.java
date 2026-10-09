@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * BPM 模块的 Flowable 配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Configuration(proxyBeanMethods = false)
 public class BpmFlowableConfiguration {

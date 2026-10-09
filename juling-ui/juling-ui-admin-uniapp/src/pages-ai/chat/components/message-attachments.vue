@@ -3,7 +3,7 @@
     <view
       v-for="url in urls"
       :key="url"
-      class="yd-bg-page flex items-center gap-14rpx rounded-16rpx px-18rpx py-16rpx active:bg-[#eee]"
+      class="yd-bg-page flex items-center gap-14rpx rounded-16rpx px-18rpx py-16rpx active:bg-[var(--yd-surface-page)]"
       @click="openAttachment(url)"
     >
       <view class="yd-bg-info-soft h-56rpx w-56rpx flex shrink-0 items-center justify-center rounded-12rpx">

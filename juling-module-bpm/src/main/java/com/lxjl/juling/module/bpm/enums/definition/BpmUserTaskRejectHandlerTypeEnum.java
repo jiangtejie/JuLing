@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * BPM 用户任务拒绝处理类型枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

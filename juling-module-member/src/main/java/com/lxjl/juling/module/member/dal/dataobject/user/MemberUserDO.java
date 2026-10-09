@@ -3,29 +3,27 @@ package com.lxjl.juling.module.member.dal.dataobject.user;
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.enums.TerminalEnum;
 import com.lxjl.juling.framework.ip.core.Area;
-import com.lxjl.juling.framework.mybatis.core.type.LongListTypeHandler;
 import com.lxjl.juling.framework.tenant.core.db.TenantBaseDO;
-import com.lxjl.juling.module.member.dal.dataobject.group.MemberGroupDO;
-import com.lxjl.juling.module.member.dal.dataobject.level.MemberLevelDO;
 import com.lxjl.juling.module.system.enums.common.SexEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * 会员用户 DO
+ * 订货账号 DO
+ *
+ * 只保留「订货账号」能力：账号（username）+ 密码、授权门店（见 {@link MemberUserStoreDO}）。
+ * 会员中心的等级、积分、经验、标签、分组已整体下线，对应的字段不再存在于本表映射中。
  *
  * uk_mobile 索引：基于 {@link #mobile} 字段
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
-@TableName(value = "member_user", autoResultMap = true)
+@TableName("member_user")
 @KeySequence("member_user_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -43,8 +41,18 @@ public class MemberUserDO extends TenantBaseDO {
     private Long id;
     /**
      * 手机
+     *
+     * 私域订货场景下**可选**（会员是加盟客户，不一定留手机号）。
      */
     private String mobile;
+    /**
+     * 订货账号（登录名）
+     *
+     * 私域订货 H5 不开放给 C 端，订货人用「名字 + 密码」登录，所以登录名是独立字段，
+     * **不复用 mobile**：mobile 是联系方式而不是身份键，复用会破坏语义，也无法与将来的 C 端账号共存。
+     * 唯一性由部分唯一索引 uk_member_user_username 保证（见 sql/local/39）。
+     */
+    private String username;
     /**
      * 邮箱
      */
@@ -115,35 +123,12 @@ public class MemberUserDO extends TenantBaseDO {
      */
     private String mark;
 
-    // ========== 其它信息 ==========
-
-    /**
-     * 积分
-     */
-    private Integer point;
-    // TODO 疯狂：增加一个 totalPoint；个人信息接口要返回
-
-    /**
-     * 会员标签列表，以逗号分隔
-     */
-    @TableField(typeHandler = LongListTypeHandler.class)
-    private List<Long> tagIds;
-
-    /**
-     * 会员级别编号
-     *
-     * 关联 {@link MemberLevelDO#getId()} 字段
-     */
-    private Long levelId;
-    /**
-     * 会员经验
-     */
-    private Integer experience;
-    /**
-     * 用户分组编号
-     *
-     * 关联 {@link MemberGroupDO#getId()} 字段
-     */
-    private Long groupId;
+    // ========== 可下单门店 ==========
+    //
+    // 刻意**不**在本表存「所属部门」与「所属客户」：
+    //   · 账号没有部门 —— 部门是门店的属性（system_dept 的门店节点）；
+    //   · 账号没有自己的经营主体 —— 它有的是一组授权门店（MemberUserStoreDO）。
+    // 早期这两个字段的兜底逻辑会把「下单账号的部门」写进订单，并顺着收货单沉进门店库存与
+    // 往来台账（docs/ordering-account-authorization-design.md §2.2 P2），已整体移除。
 
 }

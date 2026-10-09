@@ -141,7 +141,7 @@ public class ErpPurchaseOrderController {
         List<ErpPurchaseOrderItemDO> purchaseOrderItemList = purchaseOrderService.getPurchaseOrderItemListByOrderIds(
                 convertSet(pageResult.getList(), ErpPurchaseOrderDO::getId));
         Map<Long, List<ErpPurchaseOrderItemDO>> purchaseOrderItemMap = convertMultiMap(purchaseOrderItemList, ErpPurchaseOrderItemDO::getOrderId);
-        // 1.2 产品信息
+        // 1.2 物料信息
         Map<Long, ErpProductRespVO> productMap = productService.getProductVOMap(
                 convertSet(purchaseOrderItemList, ErpPurchaseOrderItemDO::getProductId));
         // 1.3 供应商信息

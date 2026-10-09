@@ -5,7 +5,7 @@ export enum DeviceStateEnum {
   OFFLINE = 2,
 }
 
-/** IoT 产品状态枚举 */
+/** IoT 物料状态枚举 */
 export enum ProductStatusEnum {
   UNPUBLISHED = 0,
   PUBLISHED = 1,
@@ -20,7 +20,7 @@ export const IOT_ALL_DEVICE_OPTION = {
   deviceName: '全部设备',
 } as const
 
-/** IoT 产品物模型类型枚举 */
+/** IoT 物料物模型类型枚举 */
 export const IoTThingModelTypeEnum = {
   PROPERTY: 1,
   SERVICE: 2,
@@ -53,20 +53,20 @@ export const IotDeviceMessageMethodEnum = {
   OTA_PROGRESS: { method: 'thing.ota.progress', name: 'OTA 升级进度上报', upstream: true },
 } as const
 
-/** IoT 产品物模型访问模式枚举 */
+/** IoT 物料物模型访问模式枚举 */
 export const IoTThingModelAccessModeEnum = {
   READ_WRITE: { label: '读写', value: 'rw' },
   READ_ONLY: { label: '只读', value: 'r' },
   WRITE_ONLY: { label: '只写', value: 'w' },
 } as const
 
-/** IoT 产品物模型服务调用方式枚举 */
+/** IoT 物料物模型服务调用方式枚举 */
 export const IoTThingModelServiceCallTypeEnum = {
   ASYNC: { label: '异步', value: 'async' },
   SYNC: { label: '同步', value: 'sync' },
 } as const
 
-/** IoT 产品物模型事件类型枚举 */
+/** IoT 物料物模型事件类型枚举 */
 export const IoTThingModelEventTypeEnum = {
   INFO: { label: '信息', value: 'info' },
   ALERT: { label: '告警', value: 'alert' },

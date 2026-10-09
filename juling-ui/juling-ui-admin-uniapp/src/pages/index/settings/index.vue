@@ -39,7 +39,7 @@
       <view v-if="favoriteMenus.length > 0" class="menu-list">
         <view v-for="(menu, idx) in favoriteMenus" :key="menu.key" class="menu-item">
           <view class="menu-item__left">
-            <view class="menu-item__icon" :style="{ backgroundColor: menu.iconColor ? `${menu.iconColor}20` : '#f5f5f5' }">
+            <view class="menu-item__icon" :style="{ backgroundColor: menu.iconColor ? `${menu.iconColor}20` : 'var(--yd-surface-page)' }">
               <wd-icon :name="menu.icon" size="40rpx" :color="menu.iconColor" />
             </view>
             <text class="menu-item__name">{{ menu.name }}</text>
@@ -74,7 +74,7 @@
         <view class="menu-list">
           <view v-for="menu in group.menus" :key="menu.key" class="menu-item">
             <view class="menu-item__left">
-              <view class="menu-item__icon" :style="{ backgroundColor: menu.iconColor ? `${menu.iconColor}20` : '#f5f5f5' }">
+              <view class="menu-item__icon" :style="{ backgroundColor: menu.iconColor ? `${menu.iconColor}20` : 'var(--yd-surface-page)' }">
                 <wd-icon :name="menu.icon" size="40rpx" :color="menu.iconColor" />
               </view>
               <text class="menu-item__name">{{ menu.name }}</text>
@@ -227,7 +227,7 @@ onLoad(() => {
   align-items: center;
   justify-content: space-between;
   padding: 20rpx 0;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1rpx solid var(--yd-border-light);
 
   &:last-child {
     border-bottom: none;
@@ -250,7 +250,7 @@ onLoad(() => {
 
   &__name {
     font-size: 30rpx;
-    color: #333;
+    color: var(--yd-text-main);
   }
 
   &__right {
@@ -269,11 +269,11 @@ onLoad(() => {
 }
 
 .toggle-add {
-  background: #3370ff;
+  background: var(--yd-text-link);
 }
 
 .toggle-remove {
-  background: #f2f3f5;
+  background: var(--yd-surface-page);
 }
 
 .toggle-bar-h,
@@ -298,10 +298,10 @@ onLoad(() => {
 
 .toggle-add .toggle-bar-h,
 .toggle-add .toggle-bar-v {
-  background: #fff;
+  background: var(--yd-surface-card);
 }
 
 .toggle-remove .toggle-bar-h {
-  background: #bbb;
+  background: var(--yd-text-muted);
 }
 </style>

@@ -12,7 +12,7 @@ import static com.lxjl.juling.module.trade.enums.ErrorCodeConstants.EXPRESS_CLIE
 /**
  * 未实现的快递客户端，用来提醒用户需要接入快递服务商，
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class NoProvideExpressClient implements ExpressClient {
 

@@ -1,11 +1,5 @@
 const toString = Object.prototype.toString;
 
-export const isString = (value: unknown): value is string => typeof value === 'string';
-export const isNumber = (value: unknown): value is number =>
-  typeof value === 'number' && !Number.isNaN(value);
-export const isBoolean = (value: unknown): value is boolean => typeof value === 'boolean';
-export const isFunction = (value: unknown): value is (...args: never[]) => unknown =>
-  typeof value === 'function';
 export const isArray = Array.isArray;
 export const isDate = (value: unknown): value is Date => toString.call(value) === '[object Date]';
 
@@ -24,4 +18,11 @@ export function isEmpty(value: unknown): boolean {
 /** 中国大陆手机号 */
 export const isMobile = (value: string): boolean => /^1[3-9]\d{9}$/.test(value);
 
-export const isExternal = (path: string): boolean => /^(https?:|mailto:|tel:)/.test(path);
+/**
+ * 订货账号：总部下发给订货人的登录账号，就是订货人姓名（如「张三」）。
+ * 允许中文 / 字母 / 数字，长度 2-64 位（与后端校验对齐），前后空白自动忽略。
+ */
+export function isAccount(value: string): boolean {
+  const account = value.trim();
+  return account.length >= 2 && account.length <= 64;
+}

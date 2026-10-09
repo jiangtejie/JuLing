@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * 商品浏览记录 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ProductBrowseHistoryMapper extends BaseMapperX<ProductBrowseHistoryDO> {

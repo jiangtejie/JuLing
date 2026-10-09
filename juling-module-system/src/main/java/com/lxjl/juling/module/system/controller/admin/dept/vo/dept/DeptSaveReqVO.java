@@ -2,6 +2,8 @@ package com.lxjl.juling.module.system.controller.admin.dept.vo.dept;
 
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.validation.InEnum;
+import com.lxjl.juling.module.system.enums.dept.DeptBusinessStatusEnum;
+import com.lxjl.juling.module.system.enums.dept.DeptTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -17,7 +19,7 @@ public class DeptSaveReqVO {
     @Schema(description = "部门编号", example = "1024")
     private Long id;
 
-    @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "矩灵")
+    @Schema(description = "部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @NotBlank(message = "部门名称不能为空")
     @Size(max = 30, message = "部门名称长度不能超过 30 个字符")
     private String name;
@@ -45,5 +47,17 @@ public class DeptSaveReqVO {
     @NotNull(message = "状态不能为空")
     @InEnum(value = CommonStatusEnum.class, message = "修改状态必须是 {value}")
     private Integer status;
+
+    @Schema(description = "节点类型：ORG 组织 / STORE 门店", requiredMode = Schema.RequiredMode.REQUIRED, example = "STORE")
+    @InEnum(value = DeptTypeEnum.class, message = "节点类型必须是 {value}")
+    private String deptType;
+
+    @Schema(description = "营业状态：0 营业 / 1 已闭店（仅门店有意义，组织节点会被归一为 0）", example = "0")
+    @InEnum(value = DeptBusinessStatusEnum.class, message = "营业状态必须是 {value}")
+    private Integer businessStatus;
+
+    @Schema(description = "闭店原因（闭店时填写）", example = "租约到期")
+    @Size(max = 255, message = "闭店原因长度不能超过 255 个字符")
+    private String closedReason;
 
 }

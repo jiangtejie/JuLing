@@ -148,12 +148,6 @@ async function expandChange(
     if (typeof item.costPrice === 'number') {
       item.costPrice = Math.round(item.costPrice * 100);
     }
-    if (typeof item.firstBrokeragePrice === 'number') {
-      item.firstBrokeragePrice = Math.round(item.firstBrokeragePrice * 100);
-    }
-    if (typeof item.secondBrokeragePrice === 'number') {
-      item.secondBrokeragePrice = Math.round(item.secondBrokeragePrice * 100);
-    }
   });
   propertyList.value = getPropertyList(res);
   spuData.value = res;

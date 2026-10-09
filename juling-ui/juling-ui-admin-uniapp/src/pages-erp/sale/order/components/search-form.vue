@@ -59,7 +59,7 @@ const emit = defineEmits<{
   reset: []
 }>()
 const visible = ref(false) // 搜索弹窗显示状态
-const productPickerRef = ref<InstanceType<typeof ProductSearchPicker>>() // 产品选择器
+const productPickerRef = ref<InstanceType<typeof ProductSearchPicker>>() // 物料选择器
 const customerPickerRef = ref<InstanceType<typeof CustomerSearchPicker>>() // 客户选择器
 const creatorPickerRef = ref<InstanceType<typeof UserSearchPicker>>() // 创建人选择器
 const statusPickerRef = ref<YdSearchPickerExpose>() // 审核状态选择器
@@ -93,7 +93,7 @@ const placeholder = computed(() => {
     conditions.push(`单号:${formData.no}`)
   }
   if (formData.productId) {
-    conditions.push(`产品:${productPickerRef.value?.format(formData.productId) || formData.productId}`)
+    conditions.push(`物料:${productPickerRef.value?.format(formData.productId) || formData.productId}`)
   }
   if (formData.orderTime[0] && formData.orderTime[1]) {
     conditions.push(`订单时间:${formatDate(formData.orderTime[0])}~${formatDate(formData.orderTime[1])}`)

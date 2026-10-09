@@ -31,7 +31,7 @@ import static com.lxjl.juling.module.system.enums.ErrorCodeConstants.*;
 /**
  * 邮箱发送 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2022-03-21
  */
 @Service

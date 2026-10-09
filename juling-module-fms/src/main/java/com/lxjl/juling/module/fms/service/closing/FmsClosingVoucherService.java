@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * FMS 结转凭证 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface FmsClosingVoucherService {
 

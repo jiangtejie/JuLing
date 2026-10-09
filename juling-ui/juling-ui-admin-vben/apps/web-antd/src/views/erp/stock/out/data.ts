@@ -97,7 +97,7 @@ export function useFormSchema(formType: FormType): VbenFormSchema[] {
     },
     {
       fieldName: 'items',
-      label: '出库产品清单',
+      label: '出库物料清单',
       component: 'Input',
       formItemClass: 'col-span-3',
     },
@@ -118,7 +118,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productId',
-      title: '产品名称',
+      title: '物料名称',
       minWidth: 200,
       slots: { default: 'productId' },
     },
@@ -153,7 +153,7 @@ export function useFormItemColumns(
     },
     {
       field: 'productPrice',
-      title: '产品单价',
+      title: '物料单价',
       minWidth: 120,
       fixed: 'right',
       slots: { default: 'productPrice' },
@@ -189,10 +189,10 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       fieldName: 'productId',
-      label: '产品',
+      label: '物料',
       component: 'ApiSelect',
       componentProps: {
-        placeholder: '请选择产品',
+        placeholder: '请选择物料',
         allowClear: true,
         showSearch: true,
         api: getProductSimpleList,
@@ -294,7 +294,7 @@ export function useGridColumns(): VxeTableGridOptions['columns'] {
     },
     {
       field: 'productNames',
-      title: '产品信息',
+      title: '物料信息',
       showOverflow: 'tooltip',
       minWidth: 120,
     },

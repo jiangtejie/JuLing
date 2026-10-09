@@ -30,7 +30,7 @@ import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.c
 /**
  * 阿里短信客户端的实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 2021/1/25 14:17
  */
 @Slf4j

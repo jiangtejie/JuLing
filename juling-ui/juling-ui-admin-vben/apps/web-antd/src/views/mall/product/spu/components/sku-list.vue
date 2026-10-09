@@ -7,7 +7,7 @@ import type {
   RuleConfig,
 } from '#/views/mall/product/spu/components';
 
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import {
   copyValueToTarget,
@@ -16,12 +16,37 @@ import {
   isEmpty,
 } from '@vben/utils';
 
-import { Button, Image, Input, InputNumber, message } from 'ant-design-vue';
+import { Button, Image, Input, InputNumber, message, Select } from 'ant-design-vue';
 
 import { VxeColumn, VxeTable } from '#/adapter/vxe-table';
+import { getProductSimpleList } from '#/api/erp/product/product';
 import { ImageUpload } from '#/components/upload';
 
 defineOptions({ name: 'SkuList' });
+
+/**
+ * 对应的 ERP 物料下拉
+ *
+ * 商城商品（SPU/SKU）与 ERP 物料是两套目录，原先靠 barCode 字符串匹配（条码没维护会**静默失配**），
+ * 现在改为显式外键 product_sku.erp_product_id（1 物料 : 1 SKU，见 sql/local/73）。
+ */
+const erpProductOptions = ref<{ label: string; value: number }[]>([]);
+const erpProductNameMap = ref<Record<number, string>>({});
+
+onMounted(async () => {
+  try {
+    const list = await getProductSimpleList();
+    erpProductOptions.value = list.map((p: any) => ({
+      label: [p.code, p.name].filter(Boolean).join(' '),
+      value: p.id,
+    }));
+    erpProductNameMap.value = Object.fromEntries(
+      erpProductOptions.value.map((o) => [o.value, o.label]),
+    );
+  } catch {
+    // 拿不到物料列表不影响商品编辑，只是这一列选不了
+  }
+});
 
 const props = withDefaults(
   defineProps<{
@@ -61,12 +86,11 @@ function createEmptySku(): MallSpuApi.Sku {
     marketPrice: 0,
     costPrice: 0,
     barCode: '',
+    erpProductId: undefined,
     picUrl: '',
     stock: 0,
     weight: 0,
     volume: 0,
-    firstBrokeragePrice: 0,
-    secondBrokeragePrice: 0,
   };
 }
 
@@ -345,6 +369,20 @@ defineExpose({
           <Input v-model:value="row.barCode" class="w-full" />
         </template>
       </VxeColumn>
+      <!-- 对应的 ERP 物料：配送价、库存都靠它定位（原先按条码字符串匹配，条码没维护会静默失配） -->
+      <VxeColumn align="center" title="对应 ERP 物料" width="200">
+        <template #default="{ row }">
+          <Select
+            v-model:value="row.erpProductId"
+            :options="erpProductOptions"
+            allow-clear
+            class="w-full"
+            option-filter-prop="label"
+            placeholder="请选择物料"
+            show-search
+          />
+        </template>
+      </VxeColumn>
       <VxeColumn align="center" title="销售价" width="168">
         <template #default="{ row }">
           <InputNumber
@@ -405,30 +443,6 @@ defineExpose({
           />
         </template>
       </VxeColumn>
-      <template v-if="formData?.subCommissionType">
-        <VxeColumn align="center" title="一级返佣(元)" width="168">
-          <template #default="{ row }">
-            <InputNumber
-              v-model:value="row.firstBrokeragePrice"
-              :min="0"
-              :precision="2"
-              :step="0.1"
-              class="w-full"
-            />
-          </template>
-        </VxeColumn>
-        <VxeColumn align="center" title="二级返佣(元)" width="168">
-          <template #default="{ row }">
-            <InputNumber
-              v-model:value="row.secondBrokeragePrice"
-              :min="0"
-              :precision="2"
-              :step="0.1"
-              class="w-full"
-            />
-          </template>
-        </VxeColumn>
-      </template>
       <VxeColumn
         v-if="formData?.specType"
         align="center"
@@ -504,6 +518,11 @@ defineExpose({
           {{ row.barCode }}
         </template>
       </VxeColumn>
+      <VxeColumn align="center" title="对应 ERP 物料" width="140">
+        <template #default="{ row }">
+          {{ erpProductNameMap[row.erpProductId!] || '-' }}
+        </template>
+      </VxeColumn>
       <VxeColumn align="center" title="销售价(元)" width="80">
         <template #default="{ row }">
           {{ formatDetailMoney(row.price) }}
@@ -534,18 +553,6 @@ defineExpose({
           {{ row.volume }}
         </template>
       </VxeColumn>
-      <template v-if="formData?.subCommissionType">
-        <VxeColumn align="center" title="一级返佣(元)" width="80">
-          <template #default="{ row }">
-            {{ formatDetailMoney(row.firstBrokeragePrice) }}
-          </template>
-        </VxeColumn>
-        <VxeColumn align="center" title="二级返佣(元)" width="80">
-          <template #default="{ row }">
-            {{ formatDetailMoney(row.secondBrokeragePrice) }}
-          </template>
-        </VxeColumn>
-      </template>
     </VxeTable>
 
     <!-- 情况三：作为活动组件 -->
@@ -592,6 +599,11 @@ defineExpose({
       <VxeColumn align="center" title="商品条码" width="100">
         <template #default="{ row }">
           {{ row.barCode }}
+        </template>
+      </VxeColumn>
+      <VxeColumn align="center" title="对应 ERP 物料" width="140">
+        <template #default="{ row }">
+          {{ erpProductNameMap[row.erpProductId!] || '-' }}
         </template>
       </VxeColumn>
       <VxeColumn align="center" title="销售价(元)" width="80">

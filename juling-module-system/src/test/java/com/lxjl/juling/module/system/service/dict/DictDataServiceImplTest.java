@@ -69,7 +69,7 @@ public class DictDataServiceImplTest extends BaseDbUnitTest {
     public void testGetDictDataPage() {
         // mock 数据
         DictDataDO dbDictData = randomPojo(DictDataDO.class, o -> { // 等会查询到
-            o.setLabel("棱信矩灵");
+            o.setLabel("亚特");
             o.setDictType("juling");
             o.setStatus(CommonStatusEnum.ENABLE.getStatus());
         });
@@ -82,7 +82,7 @@ public class DictDataServiceImplTest extends BaseDbUnitTest {
         dictDataMapper.insert(cloneIgnoreId(dbDictData, o -> o.setStatus(CommonStatusEnum.DISABLE.getStatus())));
         // 准备参数
         DictDataPageReqVO reqVO = new DictDataPageReqVO();
-        reqVO.setLabel("矩灵");
+        reqVO.setLabel("亚特");
         reqVO.setDictType("juling");
         reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
 

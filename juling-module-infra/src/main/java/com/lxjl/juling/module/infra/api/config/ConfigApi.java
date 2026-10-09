@@ -3,7 +3,7 @@ package com.lxjl.juling.module.infra.api.config;
 /**
  * 参数配置 API 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface ConfigApi {
 

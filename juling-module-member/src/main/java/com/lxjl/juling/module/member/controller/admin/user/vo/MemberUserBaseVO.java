@@ -14,14 +14,17 @@ import java.util.List;
 import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 /**
- * 会员用户 Base VO，提供给添加、修改、详细的子 VO 使用
+ * 订货账号 Base VO，提供给添加、修改、详细的子 VO 使用
  * 如果子 VO 存在差异的字段，请不要添加到这里，影响 Swagger 文档生成
  */
 @Data
 public class MemberUserBaseVO {
 
-    @Schema(description = "手机号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15601691300")
-    @NotNull(message = "手机号不能为空")
+    @Schema(description = "订货账号（订货人的登录名，就是订货人名字）", example = "张三")
+    @Size(max = 64, message = "订货账号长度不能超过 64 个字符")
+    private String username;
+
+    @Schema(description = "手机号（私域订货场景可选，不填则只能用订货账号登录）", example = "15601691300")
     private String mobile;
 
     @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
@@ -60,13 +63,11 @@ public class MemberUserBaseVO {
     @Schema(description = "会员备注", example = "我是小备注")
     private String mark;
 
-    @Schema(description = "会员标签", example = "[1, 2]")
-    private List<Long> tagIds;
+    @Schema(description = "授权门店编号列表：账号可给哪些门店下单（加盟店账号一条，片区订货管理人多条）",
+            example = "[6]")
+    private List<Long> storeCustomerIds;
 
-    @Schema(description = "会员等级编号", example = "1")
-    private Long levelId;
-
-    @Schema(description = "用户分组编号", example = "1")
-    private Long groupId;
+    @Schema(description = "默认门店编号：H5 首次进入用它", example = "6")
+    private Long defaultStoreCustomerId;
 
 }

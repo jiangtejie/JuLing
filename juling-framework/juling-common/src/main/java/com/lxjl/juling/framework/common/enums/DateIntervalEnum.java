@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * 时间间隔的枚举
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Getter
 @AllArgsConstructor

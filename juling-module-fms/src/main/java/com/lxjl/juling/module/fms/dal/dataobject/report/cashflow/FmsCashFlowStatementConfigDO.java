@@ -14,7 +14,7 @@ import lombok.ToString;
 /**
  * FMS 现金流量表配置 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("fms_cash_flow_statement_config")
 @KeySequence("fms_cash_flow_statement_config_seq")

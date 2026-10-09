@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 /**
  * ERP 客户 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName("erp_customer")
 @KeySequence("erp_customer_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -32,6 +32,10 @@ public class ErpCustomerDO extends BaseDO {
      * 客户名称
      */
     private String name;
+    /**
+     * 业务编码（由编码规则统一发号，见 docs/master-data-unified-design.md §4.2；建档后只读）
+     */
+    private String code;
     /**
      * 联系人
      */
@@ -86,5 +90,28 @@ public class ErpCustomerDO extends BaseDO {
      * 开户地址
      */
     private String bankAddress;
+
+    /**
+     * 所属部门（门店节点，system_dept.id）
+     */
+    private Long deptId;
+    /**
+     * 店型：DIRECT 直营 / FRANCHISE 加盟
+     *
+     * 字典 {@link com.lxjl.juling.module.erp.enums.DictTypeConstants#ERP_STORE_TYPE}
+     */
+    private String storeType;
+    /**
+     * 结算模式：PREPAID 先款后货 / MONTHLY 月结
+     */
+    private String settlementMode;
+    /**
+     * 账期天数（月结时生效）
+     */
+    private Integer creditDays;
+    /**
+     * 信用额度（月结时生效）
+     */
+    private BigDecimal creditLimit;
 
 }

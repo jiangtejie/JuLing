@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.erp.service.product;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
 import com.lxjl.juling.module.erp.controller.admin.product.vo.unit.ErpProductUnitPageReqVO;
@@ -10,6 +12,7 @@ import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
@@ -19,9 +22,9 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
 /**
- * ERP 产品单位 Service 实现类
+ * ERP 物料单位 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -31,15 +34,21 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
     private ErpProductUnitMapper productUnitMapper;
 
     @Resource
+    private CodeRuleApi codeRuleApi;
+
+    @Resource
     @Lazy // 延迟加载，避免循环依赖
     private ErpProductService productService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务，避免建档失败却消耗号段
     public Long createProductUnit(ErpProductUnitSaveReqVO createReqVO) {
         // 1. 校验名字唯一
         validateProductUnitNameUnique(null, createReqVO.getName());
         // 2. 插入
         ErpProductUnitDO unit = BeanUtils.toBean(createReqVO, ErpProductUnitDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        unit.setCode(codeRuleApi.generateCode("erp_product_unit"));
         productUnitMapper.insert(unit);
         return unit.getId();
     }
@@ -74,7 +83,7 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
     public void deleteProductUnit(Long id) {
         // 1.1 校验存在
         validateProductUnitExists(id);
-        // 1.2 校验产品是否使用
+        // 1.2 校验物料是否使用
         if (productService.getProductCountByUnitId(id) > 0) {
             throw exception(PRODUCT_UNIT_EXITS_PRODUCT);
         }

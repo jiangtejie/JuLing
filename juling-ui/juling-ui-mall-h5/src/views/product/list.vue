@@ -73,14 +73,20 @@
             <div class="product-list__info">
               <div class="text-ellipsis-2 product-list__name">{{ product.name }}</div>
               <div class="text-ellipsis product-list__sub">{{ product.subTitle }}</div>
-              <div class="flex-between mt-1">
-                <PriceText :value="product.price" size="large" />
-                <span class="product-list__sales"
-                  >已订 {{ formatCount(product.salesCount ?? 0) }}</span
-                >
+
+              <div class="product-list__meta">
+                <van-tag v-if="(product.stock ?? 0) > 0" plain type="primary">
+                  库存 {{ product.stock }}
+                </van-tag>
+                <van-tag v-else plain type="danger">缺货</van-tag>
+                <span class="product-list__sales">
+                  已订 {{ formatCount(product.salesCount ?? 0) }}
+                </span>
               </div>
-              <div class="product-list__tags">
-                <van-tag type="primary" plain>库存 {{ product.stock }}</van-tag>
+
+              <div class="product-list__foot">
+                <PriceText :value="product.price" size="large" />
+                <span class="product-list__unit">/ {{ product.unit ?? '件' }}</span>
               </div>
             </div>
           </div>
@@ -119,14 +125,23 @@
       padding: 10px;
     }
 
+    &__item:active {
+      background: var(--van-active-color);
+    }
+
     &__img {
       flex: none;
-      width: 96px;
-      height: 96px;
+      width: 84px;
+      height: 84px;
+      overflow: hidden;
+      background: var(--app-bg-color);
+      border-radius: var(--app-radius-md);
     }
 
     &__info {
+      display: flex;
       flex: 1;
+      flex-direction: column;
       min-width: 0;
     }
 
@@ -134,6 +149,7 @@
       font-size: 14px;
       font-weight: 500;
       line-height: 1.4;
+      color: var(--app-text-color);
     }
 
     &__sub {
@@ -142,15 +158,29 @@
       color: var(--app-text-color-secondary);
     }
 
+    &__meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
     &__sales {
       font-size: 12px;
       color: var(--app-text-color-secondary);
     }
 
-    &__tags {
+    &__foot {
       display: flex;
-      gap: 6px;
-      margin-top: 6px;
+      align-items: baseline;
+      gap: 2px;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    &__unit {
+      font-size: 12px;
+      color: var(--app-text-color-secondary);
     }
   }
 </style>

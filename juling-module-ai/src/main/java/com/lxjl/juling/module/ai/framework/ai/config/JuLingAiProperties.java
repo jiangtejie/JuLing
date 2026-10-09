@@ -4,9 +4,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 矩灵 AI 配置类
+ * 亚特 AI 配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  * @since 1.0
  */
 @ConfigurationProperties(prefix = "juling.ai")

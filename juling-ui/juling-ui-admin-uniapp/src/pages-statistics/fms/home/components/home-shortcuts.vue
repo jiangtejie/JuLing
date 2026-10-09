@@ -1,7 +1,7 @@
 <template>
   <!-- 常用功能：按权限和账套可写状态过滤 -->
   <view v-if="visibleShortcuts.length > 0" class="overflow-hidden rounded-12rpx bg-white shadow-sm">
-    <view class="border-b border-b-[#f0f0f0] px-24rpx py-20rpx">
+    <view class="yd-border-light border-b px-24rpx py-20rpx">
       <view class="yd-text-main text-30rpx font-semibold">
         常用功能
       </view>

@@ -3,7 +3,7 @@ package com.lxjl.juling.framework.quartz.core.handler;
 /**
  * 任务处理器
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface JobHandler {
 

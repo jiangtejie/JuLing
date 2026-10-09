@@ -22,11 +22,6 @@ public class TradeOrderDetailRespVO extends TradeOrderBaseVO {
      */
     private MemberUserRespVO user;
     /**
-     * 推广用户信息
-     */
-    private MemberUserRespVO brokerageUser;
-
-    /**
      * 操作日志列表
      */
     private List<OrderLog> logs;

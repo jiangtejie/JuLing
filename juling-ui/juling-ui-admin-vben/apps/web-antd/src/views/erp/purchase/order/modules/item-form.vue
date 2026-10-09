@@ -14,6 +14,7 @@ import { Input, InputNumber, Select } from 'ant-design-vue';
 
 import { TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getProductSimpleList } from '#/api/erp/product/product';
+import { matchPrice } from '#/api/erp/price-list';
 import { getStockCount } from '#/api/erp/stock/stock';
 
 import { useFormItemColumns } from '../data';
@@ -22,6 +23,15 @@ interface Props {
   items?: ErpPurchaseOrderApi.PurchaseOrderItem[];
   disabled?: boolean;
   discountPercent?: number;
+  /**
+   * 供应商的开票税点：新增订单行时作为税率默认值
+   *
+   * 留空也可以 —— 后端建单时会用供应商的开票税点兜底（见 ErpPurchaseOrderServiceImpl）。
+   * 这里只是让用户新增行时就能看到默认值，不必等保存。
+   */
+  supplierTaxPercent?: number;
+  /** 当前选中的供应商编号：取价要用（价目表按供应商匹配） */
+  supplierId?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,7 +47,7 @@ const emit = defineEmits([
 ]);
 
 const tableData = ref<ErpPurchaseOrderApi.PurchaseOrderItem[]>([]); // 表格数据
-const productOptions = ref<ErpProductApi.Product[]>([]); // 产品下拉选项
+const productOptions = ref<ErpProductApi.Product[]>([]); // 物料下拉选项
 
 /** 获取表格合计数据 */
 const summaries = computed(() => {
@@ -124,13 +134,14 @@ function handleAdd() {
   const newRow = {
     id: undefined,
     productId: undefined,
-    productUnitName: undefined, // 产品单位
-    productBarCode: undefined, // 产品条码
+    productUnitName: undefined, // 物料单位
+    productBarCode: undefined, // 物料条码
     productPrice: undefined,
     stockCount: undefined,
     count: 1,
     totalProductPrice: undefined,
-    taxPercent: 0,
+    // 默认带出供应商的开票税点；未选供应商时为 undefined，由后端兜底
+    taxPercent: props.supplierTaxPercent,
     taxPrice: undefined,
     totalPrice: undefined,
     remark: undefined,
@@ -142,7 +153,7 @@ function handleAdd() {
 
 /** 处理删除 */
 function handleDelete(row: ErpPurchaseOrderApi.PurchaseOrderItem) {
-  // TODO 棱信矩灵
+  // TODO 亚特
   const index = tableData.value.findIndex((item) => item.seq === row.seq);
   if (index !== -1) {
     tableData.value.splice(index, 1);
@@ -151,7 +162,7 @@ function handleDelete(row: ErpPurchaseOrderApi.PurchaseOrderItem) {
   emit('update:items', [...tableData.value]);
 }
 
-/** 处理产品变更 */
+/** 处理物料变更 */
 async function handleProductChange(productId: any, row: any) {
   const product = productOptions.value.find((p) => p.id === productId);
   if (!product) {
@@ -163,8 +174,26 @@ async function handleProductChange(productId: any, row: any) {
   row.productUnitName = product.unitName;
   row.productName = product.name;
   row.stockCount = (await getStockCount(productId)) || 0;
-  row.productPrice = product.purchasePrice || 0;
   row.count = row.count || 1;
+  // 取价：采购价目表优先（按 供应商 + 物料 + 数量 匹配），没命中时后端兜底到物料主数据的采购价。
+  // 用户之后仍可手工改这个单价（允许按单覆盖）。
+  row.productPrice = product.purchasePrice || 0;
+  try {
+    // 注意：不再传数量 —— 价目表已去掉数量区间（阶梯价），见 sql/local/68 的说明
+    const match = await matchPrice({
+      priceType: 'PURCHASE',
+      partnerId: props.supplierId,
+      productId,
+    });
+    if (match?.price !== null && match?.price !== undefined) {
+      row.productPrice = match.price;
+      if (match.taxPercent !== null && match.taxPercent !== undefined) {
+        row.taxPercent = match.taxPercent;
+      }
+    }
+  } catch {
+    // 取价失败不阻断录入：保留物料主数据的采购价
+  }
   handleRowChange(row);
 }
 
@@ -195,13 +224,13 @@ function validate() {
     const item = tableData.value[i];
     if (item) {
       if (!item.productId) {
-        throw new Error(`第 ${i + 1} 行：产品不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料不能为空`);
       }
       if (!item.count || item.count <= 0) {
-        throw new Error(`第 ${i + 1} 行：产品数量不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料数量不能为空`);
       }
       if (!item.productPrice || item.productPrice <= 0) {
-        throw new Error(`第 ${i + 1} 行：产品单价不能为空`);
+        throw new Error(`第 ${i + 1} 行：物料单价不能为空`);
       }
     }
   }
@@ -229,7 +258,7 @@ onMounted(async () => {
         :options="productOptions"
         :field-names="{ label: 'name', value: 'id' }"
         class="w-full"
-        placeholder="请选择产品"
+        placeholder="请选择物料"
         show-search
         @change="handleProductChange($event, row)"
       />
@@ -277,7 +306,7 @@ onMounted(async () => {
             type: 'link',
             danger: true,
             popConfirm: {
-              title: '确认删除该产品吗？',
+              title: '确认删除该物料吗？',
               confirm: handleDelete.bind(null, row),
             },
           },
@@ -306,7 +335,7 @@ onMounted(async () => {
         class="mt-2 flex justify-center"
         :actions="[
           {
-            label: '添加采购产品',
+            label: '添加采购物料',
             type: 'default',
             onClick: handleAdd,
           },

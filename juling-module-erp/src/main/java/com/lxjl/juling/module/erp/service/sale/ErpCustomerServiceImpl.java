@@ -1,5 +1,7 @@
 package com.lxjl.juling.module.erp.service.sale;
 
+import com.lxjl.juling.module.system.api.code.CodeRuleApi;
+
 import com.lxjl.juling.framework.common.enums.CommonStatusEnum;
 import com.lxjl.juling.framework.common.pojo.PageResult;
 import com.lxjl.juling.framework.common.util.object.BeanUtils;
@@ -9,6 +11,7 @@ import com.lxjl.juling.module.erp.dal.dataobject.sale.ErpCustomerDO;
 import com.lxjl.juling.module.erp.dal.mysql.sale.ErpCustomerMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
@@ -21,7 +24,7 @@ import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.CUSTOMER_NOT_E
 /**
  * ERP 客户 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -30,10 +33,16 @@ public class ErpCustomerServiceImpl implements ErpCustomerService {
     @Resource
     private ErpCustomerMapper customerMapper;
 
+    @Resource
+    private CodeRuleApi codeRuleApi;
+
     @Override
+    @Transactional(rollbackFor = Exception.class) // 与编码取号同事务，避免建档失败却消耗号段
     public Long createCustomer(ErpCustomerSaveReqVO createReqVO) {
         // 插入
         ErpCustomerDO customer = BeanUtils.toBean(createReqVO, ErpCustomerDO.class);
+        // 业务编码：由编码规则统一发号（见 docs/master-data-unified-design.md §4.2）
+        customer.setCode(codeRuleApi.generateCode("erp_customer"));
         customerMapper.insert(customer);
         // 返回
         return customer.getId();

@@ -1,5 +1,8 @@
 import type { PageParam, PageResult } from '@vben/request';
 
+import { DICT_TYPE } from '@vben/constants';
+import { getDictLabel } from '@vben/hooks';
+
 import { requestClient } from '#/api/request';
 
 export namespace ErpSupplierApi {
@@ -7,6 +10,7 @@ export namespace ErpSupplierApi {
   export interface Supplier {
     id?: number; // 供应商编号
     name: string; // 供应商名称
+    code?: string; // 业务编码（编码规则统一发号，建档后只读）
     contact: string; // 联系人
     mobile: string; // 手机号码
     telephone: string; // 联系电话
@@ -19,8 +23,64 @@ export namespace ErpSupplierApi {
     taxPercent: number; // 税率
     bankName: string; // 开户行
     bankAccount: string; // 开户账号
-    bankAddress: string; // 开户地址
+    bankAddress: string; // 开户地址（银行侧地址，与注册地址不同）
+    // ========== 采购部门需求扩展（见 sql/local/62_supplier_profile.sql） ==========
+    accountName: string; // 账户户名
+    registeredAddress: string; // 注册地址（开专票用）
+    settlementType: string; // 结账方式：MONTHLY 月结 / HALF_MONTH 半月结 / CASH_FIRST 次结(先款后货) / GOODS_FIRST 次结(先货后款)
+    creditDays: number; // 账期天数
+    invoiceMode: string; // 开票情况：FULL 全额 / RATIO 按比例 / PLUS_TAX 需加税点 / NONE 不开
+    invoiceRatio: number; // 开票比例(%)
+    invoiceType: string; // 开票类型：VAT_NORMAL 普票 / VAT_SPECIAL 专票
+    deliveryDays: number; // 交期时间（天）
+    contractSigned: boolean; // 是否已签订合同
+    contractEntity: string; // 合同签订主体
+    businessLicenseUrls: string; // 营业执照（逗号分隔）
+    productionLicenseUrls: string; // 生产许可证（逗号分隔）
   }
+}
+
+/**
+ * 供应商下拉的显示名：编码 + 名称 + 采购决策要点
+ *
+ * simple-list 会带出结算方式 / 开票税点 / 交期，把它们直接拼进下拉项，
+ * 采购下单、财务付款在**选供应商这一步**就能看到关键信息，不必再点进档案页查。
+ * （见 docs/supplier-master-data-design.md §3「下游怎么拿到」）
+ */
+export function formatSupplierLabel(supplier: ErpSupplierApi.Supplier): string {
+  const head = [supplier.code, supplier.name].filter(Boolean).join(' ');
+  const extras: string[] = [];
+  if (supplier.settlementType) {
+    const label = getDictLabel(
+      DICT_TYPE.ERP_SUPPLIER_SETTLEMENT_TYPE,
+      supplier.settlementType,
+    );
+    if (label && label !== '-') {
+      extras.push(label);
+    }
+  }
+  if (supplier.taxPercent !== null && supplier.taxPercent !== undefined) {
+    extras.push(
+      Number(supplier.taxPercent) === 0
+        ? '免税'
+        : `税点 ${supplier.taxPercent}%`,
+    );
+  }
+  if (supplier.deliveryDays !== null && supplier.deliveryDays !== undefined) {
+    extras.push(`交期 ${supplier.deliveryDays} 天`);
+  }
+  return extras.length > 0 ? `${head}（${extras.join(' · ')}）` : head;
+}
+
+/**
+ * 供应商下拉的**精简**显示名：仅编码 + 名称
+ *
+ * 用于**搜索/筛选**表单 —— 那里只是挑一个过滤值，带上结算方式/税点反而让下拉变长碍事。
+ */
+export function formatSupplierShortLabel(
+  supplier: ErpSupplierApi.Supplier,
+): string {
+  return [supplier.code, supplier.name].filter(Boolean).join(' ');
 }
 
 /** 查询供应商分页 */

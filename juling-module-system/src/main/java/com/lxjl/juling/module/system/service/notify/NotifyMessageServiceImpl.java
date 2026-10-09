@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 站内信 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

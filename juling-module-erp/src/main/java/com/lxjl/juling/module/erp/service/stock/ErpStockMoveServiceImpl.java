@@ -9,13 +9,17 @@ import com.lxjl.juling.module.erp.controller.admin.stock.vo.move.ErpStockMoveSav
 import com.lxjl.juling.module.erp.dal.dataobject.product.ErpProductDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockMoveDO;
 import com.lxjl.juling.module.erp.dal.dataobject.stock.ErpStockMoveItemDO;
+import com.lxjl.juling.module.bill.api.BillPlatformApi;
+import com.lxjl.juling.module.bill.api.dto.BillLogCreateReqDTO;
+import com.lxjl.juling.module.bill.enums.BillTypeConstants;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockMoveItemMapper;
 import com.lxjl.juling.module.erp.dal.mysql.stock.ErpStockMoveMapper;
-import com.lxjl.juling.module.erp.dal.redis.no.ErpNoRedisDAO;
 import com.lxjl.juling.module.erp.enums.ErpAuditStatus;
 import com.lxjl.juling.module.erp.enums.stock.ErpStockRecordBizTypeEnum;
 import com.lxjl.juling.module.erp.service.product.ErpProductService;
 import com.lxjl.juling.module.erp.service.stock.bo.ErpStockRecordCreateReqBO;
+import com.lxjl.juling.framework.security.core.util.SecurityFrameworkUtils;
+import com.lxjl.juling.module.erp.service.support.BillAuditSupport;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +36,11 @@ import static com.lxjl.juling.framework.common.exception.util.ServiceExceptionUt
 import static com.lxjl.juling.framework.common.util.collection.CollectionUtils.*;
 import static com.lxjl.juling.module.erp.enums.ErrorCodeConstants.*;
 
-// TODO 棱信矩灵：记录操作日志
 
 /**
  * ERP 库存调拨单 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated
@@ -49,7 +52,7 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     private ErpStockMoveItemMapper stockMoveItemMapper;
 
     @Resource
-    private ErpNoRedisDAO noRedisDAO;
+    private BillPlatformApi billPlatformApi;
 
     @Resource
     private ErpProductService productService;
@@ -63,8 +66,8 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     public Long createStockMove(ErpStockMoveSaveReqVO createReqVO) {
         // 1.1 校验出库项的有效性
         List<ErpStockMoveItemDO> stockMoveItems = validateStockMoveItems(createReqVO.getItems());
-        // 1.2 生成调拨单号，并校验唯一性
-        String no = noRedisDAO.generate(ErpNoRedisDAO.STOCK_MOVE_NO_PREFIX);
+        // 1.2 生成调拨单号（单据平台：STOCK_TRANSFER → QCDB + yyyyMMdd + 6 位流水），并校验唯一性
+        String no = billPlatformApi.generateNo(BillTypeConstants.STOCK_TRANSFER, null);
         if (stockMoveMapper.selectByNo(no) != null) {
             throw exception(STOCK_MOVE_NO_EXISTS);
         }
@@ -78,6 +81,11 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
         // 2.2 插入出库单项
         stockMoveItems.forEach(o -> o.setMoveId(stockMove.getId()));
         stockMoveItemMapper.insertBatch(stockMoveItems);
+        // 单据平台：写创建日志（留痕；与采购/销售单据同一入口）
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.STOCK_TRANSFER).setBillId(stockMove.getId()).setBillNo(no)
+                .setOperateType("CREATE").setAfterStatus(stockMove.getStatus())
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
         return stockMove.getId();
     }
 
@@ -104,20 +112,26 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStockMoveStatus(Long id, Integer status) {
-        boolean approve = ErpAuditStatus.APPROVE.getStatus().equals(status);
+        boolean approve = BillAuditSupport.isApprove(status);
         // 1.1 校验存在
         ErpStockMoveDO stockMove = validateStockMoveExists(id);
         // 1.2 校验状态
-        if (stockMove.getStatus().equals(status)) {
-            throw exception(approve ? STOCK_MOVE_APPROVE_FAIL : STOCK_MOVE_PROCESS_FAIL);
-        }
+        BillAuditSupport.validateStatusChange(stockMove.getStatus(), status, STOCK_MOVE_APPROVE_FAIL, STOCK_MOVE_PROCESS_FAIL);
 
         // 2. 更新状态
-        int updateCount = stockMoveMapper.updateByIdAndStatus(id, stockMove.getStatus(),
-                new ErpStockMoveDO().setStatus(status));
-        if (updateCount == 0) {
-            throw exception(approve ? STOCK_MOVE_APPROVE_FAIL : STOCK_MOVE_PROCESS_FAIL);
-        }
+        BillAuditSupport.casUpdate(
+                () -> stockMoveMapper.updateByIdAndStatus(id, stockMove.getStatus(),
+                new ErpStockMoveDO().setStatus(status)),
+                status, STOCK_MOVE_APPROVE_FAIL, STOCK_MOVE_PROCESS_FAIL);
+
+        // 3. 单据平台：写状态流转日志（留痕；与创建日志同一入口）
+        //    beforeStatus 取的是**更新前**读到的值 —— 上面用 updateByIdAndStatus，
+        //    不会改动本地对象，所以这里取到的仍是旧状态
+        billPlatformApi.log(new BillLogCreateReqDTO()
+                .setBillType(BillTypeConstants.STOCK_TRANSFER).setBillId(id).setBillNo(stockMove.getNo())
+                .setOperateType(approve ? "APPROVE" : "UNAPPROVE")
+                .setBeforeStatus(stockMove.getStatus()).setAfterStatus(status)
+                .setOperatorId(SecurityFrameworkUtils.getLoginUserId()));
 
         // 3. 变更库存
         List<ErpStockMoveItemDO> stockMoveItems = stockMoveItemMapper.selectListByMoveId(id);
@@ -138,7 +152,7 @@ public class ErpStockMoveServiceImpl implements ErpStockMoveService {
     }
 
     private List<ErpStockMoveItemDO> validateStockMoveItems(List<ErpStockMoveSaveReqVO.Item> list) {
-        // 1.1 校验产品存在
+        // 1.1 校验物料存在
         List<ErpProductDO> productList = productService.validProductList(
                 convertSet(list, ErpStockMoveSaveReqVO.Item::getProductId));
         Map<Long, ErpProductDO> productMap = convertMap(productList, ErpProductDO::getId);

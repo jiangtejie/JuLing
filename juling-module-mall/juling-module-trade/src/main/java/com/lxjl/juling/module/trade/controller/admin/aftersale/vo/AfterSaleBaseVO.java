@@ -99,6 +99,15 @@ public class AfterSaleBaseVO {
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime refundTime;
 
+    @Schema(description = "线下退款渠道（字典 pay_channel_code 的线下值）", example = "offline_transfer")
+    private String refundChannelCode;
+
+    @Schema(description = "线下退款凭证图片（多图，如转账回单）")
+    private List<String> refundProofUrls;
+
+    @Schema(description = "线下退款备注", example = "已对公转账退回")
+    private String refundRemark;
+
     @Schema(description = "退货物流公司编号", example = "10")
     private Long logisticsId;
 

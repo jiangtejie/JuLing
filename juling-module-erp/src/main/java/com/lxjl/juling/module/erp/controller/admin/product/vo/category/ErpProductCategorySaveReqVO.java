@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-@Schema(description = "管理后台 - ERP 产品分类新增/修改 Request VO")
+@Schema(description = "管理后台 - ERP 物料分类新增/修改 Request VO")
 @Data
 public class ErpProductCategorySaveReqVO {
 
@@ -16,7 +16,7 @@ public class ErpProductCategorySaveReqVO {
     @NotNull(message = "父分类编号不能为空")
     private Long parentId;
 
-    @Schema(description = "分类名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "棱信矩灵")
+    @Schema(description = "分类名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "亚特")
     @NotEmpty(message = "分类名称不能为空")
     private String name;
 

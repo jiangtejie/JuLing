@@ -12,7 +12,7 @@ import static com.lxjl.juling.module.infra.enums.ErrorCodeConstants.FILE_PATH_IN
 /**
  * 文件路径工具类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public class FilePathUtils {
 

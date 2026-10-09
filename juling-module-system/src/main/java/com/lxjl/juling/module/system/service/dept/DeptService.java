@@ -1,6 +1,7 @@
 package com.lxjl.juling.module.system.service.dept;
 
 import com.lxjl.juling.framework.common.util.collection.CollectionUtils;
+import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptBizStatusUpdateReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
 import com.lxjl.juling.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.lxjl.juling.module.system.dal.dataobject.dept.DeptDO;
@@ -10,7 +11,7 @@ import java.util.*;
 /**
  * 部门 Service 接口
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 public interface DeptService {
 
@@ -28,6 +29,16 @@ public interface DeptService {
      * @param updateReqVO 部门信息
      */
     void updateDept(DeptSaveReqVO updateReqVO);
+
+    /**
+     * 门店开店 / 闭店
+     *
+     * <p>只对门店节点（{@code dept_type = STORE}）有效；组织节点调用会抛异常。
+     * 口径：已闭店门店不可被订货账号授权、不可下单。
+     *
+     * @param reqVO 开店 / 闭店请求
+     */
+    void updateDeptBusinessStatus(DeptBizStatusUpdateReqVO reqVO);
 
     /**
      * 删除部门

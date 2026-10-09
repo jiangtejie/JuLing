@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 数据权限的自动配置类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @AutoConfiguration
 public class JuLingDataPermissionAutoConfiguration {

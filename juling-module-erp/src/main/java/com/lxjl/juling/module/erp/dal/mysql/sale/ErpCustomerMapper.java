@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ERP 客户 Mapper
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Mapper
 public interface ErpCustomerMapper extends BaseMapperX<ErpCustomerDO> {
@@ -22,6 +22,8 @@ public interface ErpCustomerMapper extends BaseMapperX<ErpCustomerDO> {
                 .likeIfPresent(ErpCustomerDO::getName, reqVO.getName())
                 .eqIfPresent(ErpCustomerDO::getMobile, reqVO.getMobile())
                 .eqIfPresent(ErpCustomerDO::getTelephone, reqVO.getTelephone())
+                .eqIfPresent(ErpCustomerDO::getDeptId, reqVO.getDeptId())
+                .eqIfPresent(ErpCustomerDO::getStoreType, reqVO.getStoreType())
                 .orderByDesc(ErpCustomerDO::getId));
     }
 

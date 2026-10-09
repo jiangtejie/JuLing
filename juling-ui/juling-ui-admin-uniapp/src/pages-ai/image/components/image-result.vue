@@ -44,7 +44,7 @@
       </view>
     </view>
     <view v-else class="h-full flex flex-col items-center justify-center px-64rpx text-center">
-      <view class="h-112rpx w-112rpx flex items-center justify-center rounded-32rpx bg-[#eeedff]">
+      <view class="yd-bg-accent-indigo-soft h-112rpx w-112rpx flex items-center justify-center rounded-32rpx">
         <wd-icon name="image" size="54rpx" color="#615ced" />
       </view>
       <view class="yd-text-main mt-28rpx text-32rpx font-semibold">

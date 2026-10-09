@@ -470,7 +470,7 @@ async function scrollToBottom(isIgnore?: boolean) {
   }
 }
 
-/** 自提滚动效果 */
+/** 自动滚动效果 */
 async function textRoll() {
   let index = 0;
   try {

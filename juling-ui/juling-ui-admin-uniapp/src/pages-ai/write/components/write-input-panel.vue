@@ -13,7 +13,7 @@
         <view class="flex items-center gap-12rpx">
           <view class="yd-bg-page flex items-center gap-8rpx rounded-full px-18rpx py-10rpx" @click="settingsVisible = true">
             <wd-icon name="settings" size="26rpx" color="#666" />
-            <text class="text-22rpx text-[#555]">{{ formData.type === AiWriteTypeEnum.WRITING ? '撰写' : '回复' }} · 参数</text>
+            <text class="yd-text-sub text-22rpx">{{ formData.type === AiWriteTypeEnum.WRITING ? '撰写' : '回复' }} · 参数</text>
           </view>
           <view v-if="hasResult" class="yd-bg-page yd-text-sub rounded-full px-18rpx py-10rpx text-22rpx" @click="emit('reset')">
             新建
@@ -21,7 +21,7 @@
         </view>
         <view
           class="h-64rpx w-64rpx flex items-center justify-center rounded-full"
-          :class="formData.prompt.trim() && !writing ? 'bg-[#615ced]' : 'bg-[#d9d9d9]'"
+          :class="formData.prompt.trim() && !writing ? 'yd-bg-accent-indigo' : 'yd-bg-disabled'"
           @click="writing ? emit('stop') : emit('submit')"
         >
           <wd-icon :name="writing ? 'stop' : 'arrow-up'" size="32rpx" color="#fff" />

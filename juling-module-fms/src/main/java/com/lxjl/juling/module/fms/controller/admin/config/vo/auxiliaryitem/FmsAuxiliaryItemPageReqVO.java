@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 /**
  * FMS 辅助核算项目分页 Request VO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Schema(description = "管理后台 - FMS 辅助核算项目分页 Request VO")
 @Data

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * ERP 采购订单 DO
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @TableName(value = "erp_purchase_order")
 @KeySequence("erp_purchase_order_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -52,6 +52,21 @@ public class ErpPurchaseOrderDO extends BaseDO {
      * 关联 {@link ErpAccountDO#getId()}
      */
     private Long accountId;
+
+    /**
+     * 结账方式
+     *
+     * 下单时从供应商带出（{@link ErpSupplierDO#getSettlementType()}），允许按单覆盖。
+     * <p>字典 erp_supplier_settlement_type
+     */
+    private String settlementType;
+    /**
+     * 交期时间（天）
+     *
+     * 下单时从供应商带出（{@link ErpSupplierDO#getDeliveryDays()}），允许按单覆盖。
+     */
+    private Integer deliveryDays;
+
     /**
      * 下单时间
      */
@@ -69,7 +84,7 @@ public class ErpPurchaseOrderDO extends BaseDO {
     private BigDecimal totalPrice;
 
     /**
-     * 合计产品价格，单位：元
+     * 合计物料价格，单位：元
      */
     private BigDecimal totalProductPrice;
     /**

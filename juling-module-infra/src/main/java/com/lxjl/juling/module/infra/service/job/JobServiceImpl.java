@@ -29,7 +29,7 @@ import static com.lxjl.juling.module.infra.enums.ErrorCodeConstants.*;
 /**
  * 定时任务 Service 实现类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Service
 @Validated

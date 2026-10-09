@@ -23,7 +23,7 @@ import java.util.List;
  * {@link com.lxjl.juling.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO}
  * 是一致的
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Data
 public class BpmModelMetaInfoVO {

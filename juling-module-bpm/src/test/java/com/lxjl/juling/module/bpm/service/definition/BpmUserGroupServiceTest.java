@@ -24,7 +24,7 @@ import static com.lxjl.juling.module.bpm.enums.ErrorCodeConstants.USER_GROUP_NOT
 /**
  * {@link BpmUserGroupServiceImpl} 的单元测试类
  *
- * @author 棱信矩灵
+ * @author 亚特
  */
 @Import(BpmUserGroupServiceImpl.class)
 public class BpmUserGroupServiceTest extends BaseDbUnitTest {
@@ -102,7 +102,7 @@ public class BpmUserGroupServiceTest extends BaseDbUnitTest {
     public void testGetUserGroupPage() {
        // mock 数据
        BpmUserGroupDO dbUserGroup = RandomUtils.randomPojo(BpmUserGroupDO.class, o -> { // 等会查询到
-           o.setName("棱信矩灵");
+           o.setName("亚特");
            o.setStatus(CommonStatusEnum.ENABLE.getStatus());
            o.setCreateTime(buildTime(2021, 11, 11));
        });
@@ -115,7 +115,7 @@ public class BpmUserGroupServiceTest extends BaseDbUnitTest {
        userGroupMapper.insert(cloneIgnoreId(dbUserGroup, o -> o.setCreateTime(buildTime(2021, 12, 12))));
        // 准备参数
        BpmUserGroupPageReqVO reqVO = new BpmUserGroupPageReqVO();
-       reqVO.setName("矩灵");
+       reqVO.setName("亚特");
        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
        reqVO.setCreateTime((new LocalDateTime[]{buildTime(2021, 11, 10),buildTime(2021, 11, 12)}));
 

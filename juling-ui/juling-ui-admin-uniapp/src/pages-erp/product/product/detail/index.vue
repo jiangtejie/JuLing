@@ -2,7 +2,7 @@
   <view class="yd-page-container">
     <!-- 顶部导航栏 -->
     <wd-navbar
-      title="产品详情"
+      title="物料详情"
       left-arrow placeholder safe-area-inset-top fixed
       @click-left="handleBack"
     />
@@ -79,7 +79,7 @@ const { hasAccessByCodes } = useAccess()
 const dialog = useDialog()
 const toast = useToast()
 const formData = ref<Product>() // 详情数据
-const categoryList = ref<ProductCategory[]>([]) // 产品分类列表
+const categoryList = ref<ProductCategory[]>([]) // 物料分类列表
 const unitList = ref<ProductUnit[]>([]) // 单位列表
 const deleting = ref(false) // 删除状态
 
@@ -100,7 +100,7 @@ function getUnitName() {
   return unit?.name
 }
 
-/** 加载产品详情 */
+/** 加载物料详情 */
 async function getDetail() {
   if (!props.id || deleting.value) {
     return
@@ -113,14 +113,14 @@ async function getDetail() {
   }
 }
 
-/** 编辑产品 */
+/** 编辑物料 */
 function handleEdit() {
   uni.navigateTo({
     url: `/pages-erp/product/product/form/index?id=${props.id}`,
   })
 }
 
-/** 删除产品 */
+/** 删除物料 */
 async function handleDelete() {
   if (!props.id) {
     return
@@ -128,7 +128,7 @@ async function handleDelete() {
   try {
     await dialog.confirm({
       title: '提示',
-      msg: '确定要删除该产品吗？',
+      msg: '确定要删除该物料吗？',
     })
   } catch {
     return
@@ -139,7 +139,7 @@ async function handleDelete() {
     toast.success('删除成功')
     uni.$emit('erp:product:reload')
     delay(handleBack)
-  } catch { // add by 棱信矩灵：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
+  } catch { // add by 亚特：成功分支不复位 loading（页面即将返回），仅失败时复位，避免 delay(handleBack) 的 500ms 窗口内重复提交
     deleting.value = false
   }
 }

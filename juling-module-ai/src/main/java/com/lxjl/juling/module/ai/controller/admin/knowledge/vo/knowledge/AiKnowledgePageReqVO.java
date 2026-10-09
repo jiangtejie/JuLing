@@ -15,7 +15,7 @@ import static com.lxjl.juling.framework.common.util.date.DateUtils.FORMAT_YEAR_M
 @Data
 public class AiKnowledgePageReqVO extends PageParam {
 
-    @Schema(description = "知识库名称", example = "棱信矩灵")
+    @Schema(description = "知识库名称", example = "亚特")
     private String name;
 
     @Schema(description = "是否启用", example = "1")
